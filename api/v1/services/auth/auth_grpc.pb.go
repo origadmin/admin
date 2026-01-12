@@ -23,6 +23,7 @@ const (
 	AuthService_Register_FullMethodName     = "/api.v1.services.auth.AuthService/Register"
 	AuthService_Logout_FullMethodName       = "/api.v1.services.auth.AuthService/Logout"
 	AuthService_RefreshToken_FullMethodName = "/api.v1.services.auth.AuthService/RefreshToken"
+	AuthService_ListMyViews_FullMethodName  = "/api.v1.services.auth.AuthService/ListMyViews"
 	AuthService_GetCaptcha_FullMethodName   = "/api.v1.services.auth.AuthService/GetCaptcha"
 	AuthService_Authenticate_FullMethodName = "/api.v1.services.auth.AuthService/Authenticate"
 )
@@ -41,6 +42,9 @@ type AuthServiceClient interface {
 	Logout(ctx context.Context, in *LogoutRequest, opts ...grpc.CallOption) (*LogoutResponse, error)
 	// RefreshToken provides a new access token.
 	RefreshToken(ctx context.Context, in *RefreshTokenRequest, opts ...grpc.CallOption) (*RefreshTokenResponse, error)
+	// ListMyViews retrieves the view tree for the currently authenticated user,
+	// filtered by their permissions.
+	ListMyViews(ctx context.Context, in *ListMyViewsRequest, opts ...grpc.CallOption) (*ListMyViewsResponse, error)
 	// GetCaptcha generates a new captcha.
 	GetCaptcha(ctx context.Context, in *GetCaptchaRequest, opts ...grpc.CallOption) (*GetCaptchaResponse, error)
 	// Authenticate is for internal use by the gateway to verify user access via gRPC.
@@ -96,6 +100,16 @@ func (c *authServiceClient) RefreshToken(ctx context.Context, in *RefreshTokenRe
 	return out, nil
 }
 
+func (c *authServiceClient) ListMyViews(ctx context.Context, in *ListMyViewsRequest, opts ...grpc.CallOption) (*ListMyViewsResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(ListMyViewsResponse)
+	err := c.cc.Invoke(ctx, AuthService_ListMyViews_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *authServiceClient) GetCaptcha(ctx context.Context, in *GetCaptchaRequest, opts ...grpc.CallOption) (*GetCaptchaResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(GetCaptchaResponse)
@@ -130,6 +144,9 @@ type AuthServiceServer interface {
 	Logout(context.Context, *LogoutRequest) (*LogoutResponse, error)
 	// RefreshToken provides a new access token.
 	RefreshToken(context.Context, *RefreshTokenRequest) (*RefreshTokenResponse, error)
+	// ListMyViews retrieves the view tree for the currently authenticated user,
+	// filtered by their permissions.
+	ListMyViews(context.Context, *ListMyViewsRequest) (*ListMyViewsResponse, error)
 	// GetCaptcha generates a new captcha.
 	GetCaptcha(context.Context, *GetCaptchaRequest) (*GetCaptchaResponse, error)
 	// Authenticate is for internal use by the gateway to verify user access via gRPC.
@@ -156,6 +173,9 @@ func (UnimplementedAuthServiceServer) Logout(context.Context, *LogoutRequest) (*
 }
 func (UnimplementedAuthServiceServer) RefreshToken(context.Context, *RefreshTokenRequest) (*RefreshTokenResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method RefreshToken not implemented")
+}
+func (UnimplementedAuthServiceServer) ListMyViews(context.Context, *ListMyViewsRequest) (*ListMyViewsResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ListMyViews not implemented")
 }
 func (UnimplementedAuthServiceServer) GetCaptcha(context.Context, *GetCaptchaRequest) (*GetCaptchaResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetCaptcha not implemented")
@@ -256,6 +276,24 @@ func _AuthService_RefreshToken_Handler(srv interface{}, ctx context.Context, dec
 	return interceptor(ctx, in, info, handler)
 }
 
+func _AuthService_ListMyViews_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListMyViewsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AuthServiceServer).ListMyViews(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: AuthService_ListMyViews_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AuthServiceServer).ListMyViews(ctx, req.(*ListMyViewsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _AuthService_GetCaptcha_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(GetCaptchaRequest)
 	if err := dec(in); err != nil {
@@ -314,6 +352,10 @@ var AuthService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "RefreshToken",
 			Handler:    _AuthService_RefreshToken_Handler,
+		},
+		{
+			MethodName: "ListMyViews",
+			Handler:    _AuthService_ListMyViews_Handler,
 		},
 		{
 			MethodName: "GetCaptcha",

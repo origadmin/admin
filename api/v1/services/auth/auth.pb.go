@@ -11,6 +11,7 @@ import (
 	_ "google.golang.org/genproto/googleapis/api/annotations"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
+	types "origadmin/application/admin/api/v1/services/types"
 	reflect "reflect"
 	sync "sync"
 	unsafe "unsafe"
@@ -471,6 +472,98 @@ func (x *RefreshTokenResponse) GetExpiresIn() int64 {
 	return 0
 }
 
+// The request message for the ListMyViews RPC.
+type ListMyViewsRequest struct {
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// The scope of the views to retrieve (e.g., "sidebar", "header").
+	Scope         string `protobuf:"bytes,1,opt,name=scope,proto3" json:"scope,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *ListMyViewsRequest) Reset() {
+	*x = ListMyViewsRequest{}
+	mi := &file_auth_auth_proto_msgTypes[8]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *ListMyViewsRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ListMyViewsRequest) ProtoMessage() {}
+
+func (x *ListMyViewsRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_auth_auth_proto_msgTypes[8]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ListMyViewsRequest.ProtoReflect.Descriptor instead.
+func (*ListMyViewsRequest) Descriptor() ([]byte, []int) {
+	return file_auth_auth_proto_rawDescGZIP(), []int{8}
+}
+
+func (x *ListMyViewsRequest) GetScope() string {
+	if x != nil {
+		return x.Scope
+	}
+	return ""
+}
+
+// The response message for the ListMyViews RPC.
+type ListMyViewsResponse struct {
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// The filtered view tree.
+	Views         []*types.View `protobuf:"bytes,1,rep,name=views,proto3" json:"views,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *ListMyViewsResponse) Reset() {
+	*x = ListMyViewsResponse{}
+	mi := &file_auth_auth_proto_msgTypes[9]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *ListMyViewsResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ListMyViewsResponse) ProtoMessage() {}
+
+func (x *ListMyViewsResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_auth_auth_proto_msgTypes[9]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ListMyViewsResponse.ProtoReflect.Descriptor instead.
+func (*ListMyViewsResponse) Descriptor() ([]byte, []int) {
+	return file_auth_auth_proto_rawDescGZIP(), []int{9}
+}
+
+func (x *ListMyViewsResponse) GetViews() []*types.View {
+	if x != nil {
+		return x.Views
+	}
+	return nil
+}
+
 // The request message for the GetCaptcha RPC.
 type GetCaptchaRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
@@ -484,7 +577,7 @@ type GetCaptchaRequest struct {
 
 func (x *GetCaptchaRequest) Reset() {
 	*x = GetCaptchaRequest{}
-	mi := &file_auth_auth_proto_msgTypes[8]
+	mi := &file_auth_auth_proto_msgTypes[10]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -496,7 +589,7 @@ func (x *GetCaptchaRequest) String() string {
 func (*GetCaptchaRequest) ProtoMessage() {}
 
 func (x *GetCaptchaRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_auth_auth_proto_msgTypes[8]
+	mi := &file_auth_auth_proto_msgTypes[10]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -509,7 +602,7 @@ func (x *GetCaptchaRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetCaptchaRequest.ProtoReflect.Descriptor instead.
 func (*GetCaptchaRequest) Descriptor() ([]byte, []int) {
-	return file_auth_auth_proto_rawDescGZIP(), []int{8}
+	return file_auth_auth_proto_rawDescGZIP(), []int{10}
 }
 
 func (x *GetCaptchaRequest) GetCaptchaId() string {
@@ -541,7 +634,7 @@ type GetCaptchaResponse struct {
 
 func (x *GetCaptchaResponse) Reset() {
 	*x = GetCaptchaResponse{}
-	mi := &file_auth_auth_proto_msgTypes[9]
+	mi := &file_auth_auth_proto_msgTypes[11]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -553,7 +646,7 @@ func (x *GetCaptchaResponse) String() string {
 func (*GetCaptchaResponse) ProtoMessage() {}
 
 func (x *GetCaptchaResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_auth_auth_proto_msgTypes[9]
+	mi := &file_auth_auth_proto_msgTypes[11]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -566,7 +659,7 @@ func (x *GetCaptchaResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetCaptchaResponse.ProtoReflect.Descriptor instead.
 func (*GetCaptchaResponse) Descriptor() ([]byte, []int) {
-	return file_auth_auth_proto_rawDescGZIP(), []int{9}
+	return file_auth_auth_proto_rawDescGZIP(), []int{11}
 }
 
 func (x *GetCaptchaResponse) GetCaptchaId() string {
@@ -602,7 +695,7 @@ type AuthenticateRequest struct {
 
 func (x *AuthenticateRequest) Reset() {
 	*x = AuthenticateRequest{}
-	mi := &file_auth_auth_proto_msgTypes[10]
+	mi := &file_auth_auth_proto_msgTypes[12]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -614,7 +707,7 @@ func (x *AuthenticateRequest) String() string {
 func (*AuthenticateRequest) ProtoMessage() {}
 
 func (x *AuthenticateRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_auth_auth_proto_msgTypes[10]
+	mi := &file_auth_auth_proto_msgTypes[12]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -627,7 +720,7 @@ func (x *AuthenticateRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use AuthenticateRequest.ProtoReflect.Descriptor instead.
 func (*AuthenticateRequest) Descriptor() ([]byte, []int) {
-	return file_auth_auth_proto_rawDescGZIP(), []int{10}
+	return file_auth_auth_proto_rawDescGZIP(), []int{12}
 }
 
 func (x *AuthenticateRequest) GetToken() string {
@@ -662,7 +755,7 @@ type AuthenticateResponse struct {
 
 func (x *AuthenticateResponse) Reset() {
 	*x = AuthenticateResponse{}
-	mi := &file_auth_auth_proto_msgTypes[11]
+	mi := &file_auth_auth_proto_msgTypes[13]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -674,7 +767,7 @@ func (x *AuthenticateResponse) String() string {
 func (*AuthenticateResponse) ProtoMessage() {}
 
 func (x *AuthenticateResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_auth_auth_proto_msgTypes[11]
+	mi := &file_auth_auth_proto_msgTypes[13]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -687,7 +780,7 @@ func (x *AuthenticateResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use AuthenticateResponse.ProtoReflect.Descriptor instead.
 func (*AuthenticateResponse) Descriptor() ([]byte, []int) {
-	return file_auth_auth_proto_rawDescGZIP(), []int{11}
+	return file_auth_auth_proto_rawDescGZIP(), []int{13}
 }
 
 func (x *AuthenticateResponse) GetAuthorized() bool {
@@ -708,7 +801,7 @@ var File_auth_auth_proto protoreflect.FileDescriptor
 
 const file_auth_auth_proto_rawDesc = "" +
 	"\n" +
-	"\x0fauth/auth.proto\x12\x14api.v1.services.auth\x1a\x1cgoogle/api/annotations.proto\x1a\x16policy/v1/policy.proto\"\x8a\x01\n" +
+	"\x0fauth/auth.proto\x12\x14api.v1.services.auth\x1a\x1cgoogle/api/annotations.proto\x1a\x16policy/v1/policy.proto\x1a\x12types/system.proto\"\x8a\x01\n" +
 	"\fLoginRequest\x12\x1a\n" +
 	"\busername\x18\x01 \x01(\tR\busername\x12\x1a\n" +
 	"\bpassword\x18\x02 \x01(\tR\bpassword\x12\x1e\n" +
@@ -747,7 +840,11 @@ const file_auth_auth_proto_rawDesc = "" +
 	"token_type\x12\x1e\n" +
 	"\n" +
 	"expires_in\x18\x04 \x01(\x03R\n" +
-	"expires_in\"W\n" +
+	"expires_in\"*\n" +
+	"\x12ListMyViewsRequest\x12\x14\n" +
+	"\x05scope\x18\x01 \x01(\tR\x05scope\"H\n" +
+	"\x13ListMyViewsResponse\x121\n" +
+	"\x05views\x18\x01 \x03(\v2\x1b.api.v1.services.types.ViewR\x05views\"W\n" +
 	"\x11GetCaptchaRequest\x12\x1e\n" +
 	"\n" +
 	"captcha_id\x18\x01 \x01(\tR\n" +
@@ -767,7 +864,7 @@ const file_auth_auth_proto_rawDesc = "" +
 	"\n" +
 	"authorized\x18\x01 \x01(\bR\n" +
 	"authorized\x12\x18\n" +
-	"\auser_id\x18\x02 \x01(\tR\auser_id2\xfc\x05\n" +
+	"\auser_id\x18\x02 \x01(\tR\auser_id2\x82\a\n" +
 	"\vAuthService\x12t\n" +
 	"\x05Login\x12\".api.v1.services.auth.LoginRequest\x1a#.api.v1.services.auth.LoginResponse\"\"\xea\xea\x1b\b\n" +
 	"\x06public\x82\xd3\xe4\x93\x02\x10:\x01*\"\v/auth/login\x12\x80\x01\n" +
@@ -777,7 +874,10 @@ const file_auth_auth_proto_rawDesc = "" +
 	"\n" +
 	"\bjwt-auth\x82\xd3\xe4\x93\x02\x11:\x01*\"\f/auth/logout\x12\x8b\x01\n" +
 	"\fRefreshToken\x12).api.v1.services.auth.RefreshTokenRequest\x1a*.api.v1.services.auth.RefreshTokenResponse\"$\xea\xea\x1b\b\n" +
-	"\x06public\x82\xd3\xe4\x93\x02\x12:\x01*\"\r/auth/refresh\x12\x82\x01\n" +
+	"\x06public\x82\xd3\xe4\x93\x02\x12:\x01*\"\r/auth/refresh\x12\x83\x01\n" +
+	"\vListMyViews\x12(.api.v1.services.auth.ListMyViewsRequest\x1a).api.v1.services.auth.ListMyViewsResponse\"\x1f\xea\xea\x1b\n" +
+	"\n" +
+	"\bjwt-auth\x82\xd3\xe4\x93\x02\v\x12\t/me/views\x12\x82\x01\n" +
 	"\n" +
 	"GetCaptcha\x12'.api.v1.services.auth.GetCaptchaRequest\x1a(.api.v1.services.auth.GetCaptchaResponse\"!\xea\xea\x1b\b\n" +
 	"\x06public\x82\xd3\xe4\x93\x02\x0f\x12\r/auth/captcha\x12e\n" +
@@ -796,7 +896,7 @@ func file_auth_auth_proto_rawDescGZIP() []byte {
 	return file_auth_auth_proto_rawDescData
 }
 
-var file_auth_auth_proto_msgTypes = make([]protoimpl.MessageInfo, 12)
+var file_auth_auth_proto_msgTypes = make([]protoimpl.MessageInfo, 14)
 var file_auth_auth_proto_goTypes = []any{
 	(*LoginRequest)(nil),         // 0: api.v1.services.auth.LoginRequest
 	(*LoginResponse)(nil),        // 1: api.v1.services.auth.LoginResponse
@@ -806,29 +906,35 @@ var file_auth_auth_proto_goTypes = []any{
 	(*LogoutResponse)(nil),       // 5: api.v1.services.auth.LogoutResponse
 	(*RefreshTokenRequest)(nil),  // 6: api.v1.services.auth.RefreshTokenRequest
 	(*RefreshTokenResponse)(nil), // 7: api.v1.services.auth.RefreshTokenResponse
-	(*GetCaptchaRequest)(nil),    // 8: api.v1.services.auth.GetCaptchaRequest
-	(*GetCaptchaResponse)(nil),   // 9: api.v1.services.auth.GetCaptchaResponse
-	(*AuthenticateRequest)(nil),  // 10: api.v1.services.auth.AuthenticateRequest
-	(*AuthenticateResponse)(nil), // 11: api.v1.services.auth.AuthenticateResponse
+	(*ListMyViewsRequest)(nil),   // 8: api.v1.services.auth.ListMyViewsRequest
+	(*ListMyViewsResponse)(nil),  // 9: api.v1.services.auth.ListMyViewsResponse
+	(*GetCaptchaRequest)(nil),    // 10: api.v1.services.auth.GetCaptchaRequest
+	(*GetCaptchaResponse)(nil),   // 11: api.v1.services.auth.GetCaptchaResponse
+	(*AuthenticateRequest)(nil),  // 12: api.v1.services.auth.AuthenticateRequest
+	(*AuthenticateResponse)(nil), // 13: api.v1.services.auth.AuthenticateResponse
+	(*types.View)(nil),           // 14: api.v1.services.types.View
 }
 var file_auth_auth_proto_depIdxs = []int32{
-	0,  // 0: api.v1.services.auth.AuthService.Login:input_type -> api.v1.services.auth.LoginRequest
-	2,  // 1: api.v1.services.auth.AuthService.Register:input_type -> api.v1.services.auth.RegisterRequest
-	4,  // 2: api.v1.services.auth.AuthService.Logout:input_type -> api.v1.services.auth.LogoutRequest
-	6,  // 3: api.v1.services.auth.AuthService.RefreshToken:input_type -> api.v1.services.auth.RefreshTokenRequest
-	8,  // 4: api.v1.services.auth.AuthService.GetCaptcha:input_type -> api.v1.services.auth.GetCaptchaRequest
-	10, // 5: api.v1.services.auth.AuthService.Authenticate:input_type -> api.v1.services.auth.AuthenticateRequest
-	1,  // 6: api.v1.services.auth.AuthService.Login:output_type -> api.v1.services.auth.LoginResponse
-	3,  // 7: api.v1.services.auth.AuthService.Register:output_type -> api.v1.services.auth.RegisterResponse
-	5,  // 8: api.v1.services.auth.AuthService.Logout:output_type -> api.v1.services.auth.LogoutResponse
-	7,  // 9: api.v1.services.auth.AuthService.RefreshToken:output_type -> api.v1.services.auth.RefreshTokenResponse
-	9,  // 10: api.v1.services.auth.AuthService.GetCaptcha:output_type -> api.v1.services.auth.GetCaptchaResponse
-	11, // 11: api.v1.services.auth.AuthService.Authenticate:output_type -> api.v1.services.auth.AuthenticateResponse
-	6,  // [6:12] is the sub-list for method output_type
-	0,  // [0:6] is the sub-list for method input_type
-	0,  // [0:0] is the sub-list for extension type_name
-	0,  // [0:0] is the sub-list for extension extendee
-	0,  // [0:0] is the sub-list for field type_name
+	14, // 0: api.v1.services.auth.ListMyViewsResponse.views:type_name -> api.v1.services.types.View
+	0,  // 1: api.v1.services.auth.AuthService.Login:input_type -> api.v1.services.auth.LoginRequest
+	2,  // 2: api.v1.services.auth.AuthService.Register:input_type -> api.v1.services.auth.RegisterRequest
+	4,  // 3: api.v1.services.auth.AuthService.Logout:input_type -> api.v1.services.auth.LogoutRequest
+	6,  // 4: api.v1.services.auth.AuthService.RefreshToken:input_type -> api.v1.services.auth.RefreshTokenRequest
+	8,  // 5: api.v1.services.auth.AuthService.ListMyViews:input_type -> api.v1.services.auth.ListMyViewsRequest
+	10, // 6: api.v1.services.auth.AuthService.GetCaptcha:input_type -> api.v1.services.auth.GetCaptchaRequest
+	12, // 7: api.v1.services.auth.AuthService.Authenticate:input_type -> api.v1.services.auth.AuthenticateRequest
+	1,  // 8: api.v1.services.auth.AuthService.Login:output_type -> api.v1.services.auth.LoginResponse
+	3,  // 9: api.v1.services.auth.AuthService.Register:output_type -> api.v1.services.auth.RegisterResponse
+	5,  // 10: api.v1.services.auth.AuthService.Logout:output_type -> api.v1.services.auth.LogoutResponse
+	7,  // 11: api.v1.services.auth.AuthService.RefreshToken:output_type -> api.v1.services.auth.RefreshTokenResponse
+	9,  // 12: api.v1.services.auth.AuthService.ListMyViews:output_type -> api.v1.services.auth.ListMyViewsResponse
+	11, // 13: api.v1.services.auth.AuthService.GetCaptcha:output_type -> api.v1.services.auth.GetCaptchaResponse
+	13, // 14: api.v1.services.auth.AuthService.Authenticate:output_type -> api.v1.services.auth.AuthenticateResponse
+	8,  // [8:15] is the sub-list for method output_type
+	1,  // [1:8] is the sub-list for method input_type
+	1,  // [1:1] is the sub-list for extension type_name
+	1,  // [1:1] is the sub-list for extension extendee
+	0,  // [0:1] is the sub-list for field type_name
 }
 
 func init() { file_auth_auth_proto_init() }
@@ -842,7 +948,7 @@ func file_auth_auth_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_auth_auth_proto_rawDesc), len(file_auth_auth_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   12,
+			NumMessages:   14,
 			NumExtensions: 0,
 			NumServices:   1,
 		},

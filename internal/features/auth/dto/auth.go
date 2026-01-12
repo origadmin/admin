@@ -18,4 +18,8 @@ type AuthRepo interface {
 	GetUserByUsername(ctx context.Context, username string) (*AuthedUser, error)
 	// UpdateLoginInfo updates the login-related fields for a user.
 	UpdateLoginInfo(ctx context.Context, userID int64, loginIP string) error
+	// GetAllViewsByScope retrieves all views for a given scope, ordered and structured as a tree.
+	GetAllViewsByScope(ctx context.Context, scope string) ([]*types.View, error)
+	// GetPermissionKeywordsByUserID retrieves all permission keywords associated with a user.
+	GetPermissionKeywordsByUserID(ctx context.Context, userID string) ([]string, error)
 }

@@ -486,6 +486,31 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/google.rpc.Status'
+    /me/views:
+        get:
+            tags:
+                - AuthService
+            description: "ListMyViews retrieves the view tree for the currently authenticated user,\r\n filtered by their permissions."
+            operationId: AuthService_ListMyViews
+            parameters:
+                - name: scope
+                  in: query
+                  description: The scope of the views to retrieve (e.g., "sidebar", "header").
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.v1.services.auth.ListMyViewsResponse'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/google.rpc.Status'
     /message/personal/logout:
         post:
             tags:
@@ -2212,6 +2237,15 @@ components:
                     type: array
                     items:
                         $ref: '#/components/schemas/api.v1.services.auth.GroupingRule'
+        api.v1.services.auth.ListMyViewsResponse:
+            type: object
+            properties:
+                views:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/api.v1.services.types.View'
+                    description: The filtered view tree.
+            description: The response message for the ListMyViews RPC.
         api.v1.services.auth.ListPoliciesResponse:
             type: object
             properties:

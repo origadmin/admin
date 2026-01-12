@@ -4,6 +4,7 @@ package api.v1.services.auth;
 
 import "google/api/annotations.proto";
 import "policy/v1/policy.proto";
+import "types/system.proto";
 
 option go_package = "origadmin/application/admin/api/v1/services/auth;auth";
 option java_multiple_files = true;
@@ -48,6 +49,15 @@ service AuthService {
       body: "*"
     };
     option (contrib.api.policy.v1.policy) = {name: "public"};
+  }
+
+  // --- User Profile & Permissions ---
+
+  // ListMyViews retrieves the view tree for the currently authenticated user,
+  // filtered by their permissions.
+  rpc ListMyViews(ListMyViewsRequest) returns (ListMyViewsResponse) {
+    option (google.api.http) = {get: "/me/views"};
+    option (contrib.api.policy.v1.policy) = {name: "jwt-auth"};
   }
 
   // --- Captcha ---
@@ -114,6 +124,18 @@ message RefreshTokenResponse {
   string refresh_token = 2 [json_name = "refresh_token"];
   string token_type = 3 [json_name = "token_type"];
   int64 expires_in = 4 [json_name = "expires_in"];
+}
+
+// The request message for the ListMyViews RPC.
+message ListMyViewsRequest {
+  // The scope of the views to retrieve (e.g., "sidebar", "header").
+  string scope = 1 [json_name = "scope"];
+}
+
+// The response message for the ListMyViews RPC.
+message ListMyViewsResponse {
+  // The filtered view tree.
+  repeated api.v1.services.types.View views = 1 [json_name = "views"];
 }
 
 // The request message for the GetCaptcha RPC.

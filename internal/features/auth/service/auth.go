@@ -31,6 +31,21 @@ func NewAuthService(uc *biz.AuthUseCase, cuc *biz.CaptchaUseCase, creator creden
 	return &AuthService{uc: uc, captchaUC: cuc, creator: creator, log: log.NewHelper(logger)}
 }
 
+// ListMyViews retrieves the menu tree for the currently authenticated user.
+func (s *AuthService) ListMyViews(ctx context.Context, req *v1.ListMyViewsRequest) (*v1.ListMyViewsResponse, error) {
+	p, ok := securityPrincipal.FromContext(ctx)
+	if !ok {
+		return nil, errors.Unauthorized("UNAUTHORIZED", "missing principal")
+	}
+
+	views, err := s.uc.ListMyViews(ctx, p, req.GetScope())
+	if err != nil {
+		return nil, err
+	}
+
+	return &v1.ListMyViewsResponse{Views: views}, nil
+}
+
 // Login authenticates a user and returns a token pair.
 func (s *AuthService) Login(ctx context.Context, req *v1.LoginRequest) (*v1.LoginResponse, error) {
 	// Verify captcha

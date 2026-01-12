@@ -32,6 +32,7 @@ const AuthServiceLoginBridgeOperation = "/api.v1.services.auth.AuthService/Login
 const AuthServiceRegisterBridgeOperation = "/api.v1.services.auth.AuthService/Register"
 const AuthServiceLogoutBridgeOperation = "/api.v1.services.auth.AuthService/Logout"
 const AuthServiceRefreshTokenBridgeOperation = "/api.v1.services.auth.AuthService/RefreshToken"
+const AuthServiceListMyViewsBridgeOperation = "/api.v1.services.auth.AuthService/ListMyViews"
 const AuthServiceGetCaptchaBridgeOperation = "/api.v1.services.auth.AuthService/GetCaptcha"
 const AuthServiceAuthenticateBridgeOperation = "/api.v1.services.auth.AuthService/Authenticate"
 
@@ -44,6 +45,9 @@ type AuthServiceBridgeServer interface {
 	Logout(context.Context, *LogoutRequest) (*LogoutResponse, error)
 	// RefreshToken provides a new access token.
 	RefreshToken(context.Context, *RefreshTokenRequest) (*RefreshTokenResponse, error)
+	// ListMyViews retrieves the view tree for the currently authenticated user,
+	// filtered by their permissions.
+	ListMyViews(context.Context, *ListMyViewsRequest) (*ListMyViewsResponse, error)
 	// GetCaptcha generates a new captcha.
 	GetCaptcha(context.Context, *GetCaptchaRequest) (*GetCaptchaResponse, error)
 	// Authenticate is for internal use by the gateway to verify user access via gRPC.
@@ -56,6 +60,7 @@ type AuthServiceHooker interface {
 	AuthServiceRegisterHooker
 	AuthServiceLogoutHooker
 	AuthServiceRefreshTokenHooker
+	AuthServiceListMyViewsHooker
 	AuthServiceGetCaptchaHooker
 	AuthServiceAuthenticateHooker
 }
@@ -80,6 +85,10 @@ type AuthServiceRefreshTokenHooker interface {
 	PrepareRefreshToken(http.Context, *RefreshTokenRequest) (context.Context, error)
 	CompleteRefreshToken(http.Context, *RefreshTokenRequest, *RefreshTokenResponse) error
 }
+type AuthServiceListMyViewsHooker interface {
+	PrepareListMyViews(http.Context, *ListMyViewsRequest) (context.Context, error)
+	CompleteListMyViews(http.Context, *ListMyViewsRequest, *ListMyViewsResponse) error
+}
 type AuthServiceGetCaptchaHooker interface {
 	PrepareGetCaptcha(http.Context, *GetCaptchaRequest) (context.Context, error)
 	CompleteGetCaptcha(http.Context, *GetCaptchaRequest, *GetCaptchaResponse) error
@@ -95,6 +104,7 @@ func RegisterAuthServiceBridgeServer(s *http.Server, srv AuthServiceHookedBridge
 	r.POST("/auth/register", _AuthService_Register0_Bridge_Handler(srv))
 	r.POST("/auth/logout", _AuthService_Logout0_Bridge_Handler(srv))
 	r.POST("/auth/refresh", _AuthService_RefreshToken0_Bridge_Handler(srv))
+	r.GET("/me/views", _AuthService_ListMyViews0_Bridge_Handler(srv))
 	r.GET("/auth/captcha", _AuthService_GetCaptcha0_Bridge_Handler(srv))
 }
 
@@ -202,6 +212,29 @@ func _AuthService_RefreshToken0_Bridge_Handler(srv AuthServiceHookedBridger) fun
 	}
 }
 
+func _AuthService_ListMyViews0_Bridge_Handler(srv AuthServiceHookedBridger) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in ListMyViewsRequest
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationAuthServiceListMyViews)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.ListMyViews(ctx, req.(*ListMyViewsRequest))
+		})
+
+		newctx, err := srv.PrepareListMyViews(ctx, &in)
+		if err != nil {
+			return err
+		}
+		out, err := h(newctx, &in)
+		if err != nil {
+			return err
+		}
+		return srv.CompleteListMyViews(ctx, &in, out.(*ListMyViewsResponse))
+	}
+}
+
 func _AuthService_GetCaptcha0_Bridge_Handler(srv AuthServiceHookedBridger) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
 		var in GetCaptchaRequest
@@ -264,6 +297,14 @@ func (UnimplementedAuthServiceHooked) CompleteRefreshToken(ctx http.Context, in 
 	return ctx.Result(200, out)
 }
 
+func (UnimplementedAuthServiceHooked) PrepareListMyViews(ctx http.Context, in *ListMyViewsRequest) (context.Context, error) {
+	return ctx, nil
+}
+
+func (UnimplementedAuthServiceHooked) CompleteListMyViews(ctx http.Context, in *ListMyViewsRequest, out *ListMyViewsResponse) error {
+	return ctx.Result(200, out)
+}
+
 func (UnimplementedAuthServiceHooked) PrepareGetCaptcha(ctx http.Context, in *GetCaptchaRequest) (context.Context, error) {
 	return ctx, nil
 }
@@ -318,6 +359,10 @@ func (c *AuthServiceHTTPBridgeImpl) RefreshToken(ctx context.Context, in *Refres
 	return c.client.RefreshToken(ctx, in)
 }
 
+func (c *AuthServiceHTTPBridgeImpl) ListMyViews(ctx context.Context, in *ListMyViewsRequest) (*ListMyViewsResponse, error) {
+	return c.client.ListMyViews(ctx, in)
+}
+
 func (c *AuthServiceHTTPBridgeImpl) GetCaptcha(ctx context.Context, in *GetCaptchaRequest) (*GetCaptchaResponse, error) {
 	return c.client.GetCaptcha(ctx, in)
 }
@@ -344,6 +389,10 @@ func (c *AuthServiceBridgeImpl) Logout(ctx context.Context, in *LogoutRequest) (
 
 func (c *AuthServiceBridgeImpl) RefreshToken(ctx context.Context, in *RefreshTokenRequest) (*RefreshTokenResponse, error) {
 	return c.client.RefreshToken(ctx, in)
+}
+
+func (c *AuthServiceBridgeImpl) ListMyViews(ctx context.Context, in *ListMyViewsRequest) (*ListMyViewsResponse, error) {
+	return c.client.ListMyViews(ctx, in)
 }
 
 func (c *AuthServiceBridgeImpl) GetCaptcha(ctx context.Context, in *GetCaptchaRequest) (*GetCaptchaResponse, error) {
@@ -380,6 +429,10 @@ func (c *AuthServiceGRPC2HTTPBridgeImpl) RefreshToken(ctx context.Context, in *R
 	return c.client.RefreshToken(ctx, in)
 }
 
+func (c *AuthServiceGRPC2HTTPBridgeImpl) ListMyViews(ctx context.Context, in *ListMyViewsRequest) (*ListMyViewsResponse, error) {
+	return c.client.ListMyViews(ctx, in)
+}
+
 func (c *AuthServiceGRPC2HTTPBridgeImpl) GetCaptcha(ctx context.Context, in *GetCaptchaRequest) (*GetCaptchaResponse, error) {
 	return c.client.GetCaptcha(ctx, in)
 }
@@ -406,6 +459,10 @@ func (c *AuthServiceHTTP2GRPCBridgeImpl) Logout(ctx context.Context, in *LogoutR
 
 func (c *AuthServiceHTTP2GRPCBridgeImpl) RefreshToken(ctx context.Context, in *RefreshTokenRequest) (*RefreshTokenResponse, error) {
 	return c.client.RefreshToken(ctx, in)
+}
+
+func (c *AuthServiceHTTP2GRPCBridgeImpl) ListMyViews(ctx context.Context, in *ListMyViewsRequest) (*ListMyViewsResponse, error) {
+	return c.client.ListMyViews(ctx, in)
 }
 
 func (c *AuthServiceHTTP2GRPCBridgeImpl) GetCaptcha(ctx context.Context, in *GetCaptchaRequest) (*GetCaptchaResponse, error) {
