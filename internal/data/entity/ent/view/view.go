@@ -38,8 +38,6 @@ const (
 	FieldPath = "path"
 	// FieldIcon holds the string denoting the icon field in the database.
 	FieldIcon = "icon"
-	// FieldVisible holds the string denoting the visible field in the database.
-	FieldVisible = "visible"
 	// FieldSequence holds the string denoting the sequence field in the database.
 	FieldSequence = "sequence"
 	// FieldTreePath holds the string denoting the tree_path field in the database.
@@ -112,7 +110,6 @@ var Columns = []string{
 	FieldComponent,
 	FieldPath,
 	FieldIcon,
-	FieldVisible,
 	FieldSequence,
 	FieldTreePath,
 	FieldDescription,
@@ -158,8 +155,6 @@ var (
 	DefaultPath string
 	// DefaultIcon holds the default value on creation for the "icon" field.
 	DefaultIcon string
-	// DefaultVisible holds the default value on creation for the "visible" field.
-	DefaultVisible bool
 	// DefaultSequence holds the default value on creation for the "sequence" field.
 	DefaultSequence int
 	// DefaultTreePath holds the default value on creation for the "tree_path" field.
@@ -270,11 +265,6 @@ func ByPath(opts ...sql.OrderTermOption) OrderOption {
 // ByIcon orders the results by the icon field.
 func ByIcon(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldIcon, opts...).ToFunc()
-}
-
-// ByVisible orders the results by the visible field.
-func ByVisible(opts ...sql.OrderTermOption) OrderOption {
-	return sql.OrderByField(FieldVisible, opts...).ToFunc()
 }
 
 // BySequence orders the results by the sequence field.

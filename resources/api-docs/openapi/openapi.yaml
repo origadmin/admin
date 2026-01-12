@@ -3508,9 +3508,6 @@ components:
                 icon:
                     type: string
                     description: Icon holds the value of the "icon" field.
-                visible:
-                    type: boolean
-                    description: Visible holds the value of the "visible" field.
                 path:
                     type: string
                     description: Path holds the value of the "path" field.

@@ -132,8 +132,6 @@ func (m *View) validate(all bool) error {
 
 	// no validation rules for Icon
 
-	// no validation rules for Visible
-
 	// no validation rules for Path
 
 	// no validation rules for TreePath

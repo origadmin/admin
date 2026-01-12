@@ -163,20 +163,6 @@ func (_c *ViewCreate) SetNillableIcon(v *string) *ViewCreate {
 	return _c
 }
 
-// SetVisible sets the "visible" field.
-func (_c *ViewCreate) SetVisible(v bool) *ViewCreate {
-	_c.mutation.SetVisible(v)
-	return _c
-}
-
-// SetNillableVisible sets the "visible" field if the given value is not nil.
-func (_c *ViewCreate) SetNillableVisible(v *bool) *ViewCreate {
-	if v != nil {
-		_c.SetVisible(*v)
-	}
-	return _c
-}
-
 // SetSequence sets the "sequence" field.
 func (_c *ViewCreate) SetSequence(v int) *ViewCreate {
 	_c.mutation.SetSequence(v)
@@ -408,10 +394,6 @@ func (_c *ViewCreate) defaults() {
 		v := view.DefaultIcon
 		_c.mutation.SetIcon(v)
 	}
-	if _, ok := _c.mutation.Visible(); !ok {
-		v := view.DefaultVisible
-		_c.mutation.SetVisible(v)
-	}
 	if _, ok := _c.mutation.Sequence(); !ok {
 		v := view.DefaultSequence
 		_c.mutation.SetSequence(v)
@@ -479,9 +461,6 @@ func (_c *ViewCreate) check() error {
 	}
 	if _, ok := _c.mutation.Icon(); !ok {
 		return &ValidationError{Name: "icon", err: errors.New(`ent: missing required field "View.icon"`)}
-	}
-	if _, ok := _c.mutation.Visible(); !ok {
-		return &ValidationError{Name: "visible", err: errors.New(`ent: missing required field "View.visible"`)}
 	}
 	if _, ok := _c.mutation.Sequence(); !ok {
 		return &ValidationError{Name: "sequence", err: errors.New(`ent: missing required field "View.sequence"`)}
@@ -574,10 +553,6 @@ func (_c *ViewCreate) createSpec() (*View, *sqlgraph.CreateSpec) {
 	if value, ok := _c.mutation.Icon(); ok {
 		_spec.SetField(view.FieldIcon, field.TypeString, value)
 		_node.Icon = value
-	}
-	if value, ok := _c.mutation.Visible(); ok {
-		_spec.SetField(view.FieldVisible, field.TypeBool, value)
-		_node.Visible = value
 	}
 	if value, ok := _c.mutation.Sequence(); ok {
 		_spec.SetField(view.FieldSequence, field.TypeInt, value)

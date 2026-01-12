@@ -41,8 +41,6 @@ type View struct {
 	Path string `json:"path,omitempty"`
 	// entity.view.field.icon
 	Icon string `json:"icon,omitempty"`
-	// entity.view.field.visible
-	Visible bool `json:"visible,omitempty"`
 	// entity.view.field.sequence
 	Sequence int `json:"sequence,omitempty"`
 	// entity.view.field.tree_path
@@ -139,8 +137,6 @@ func (*View) scanValues(columns []string) ([]any, error) {
 	values := make([]any, len(columns))
 	for i := range columns {
 		switch columns[i] {
-		case view.FieldVisible:
-			values[i] = new(sql.NullBool)
 		case view.FieldID, view.FieldParentID, view.FieldSequence, view.FieldStatus:
 			values[i] = new(sql.NullInt64)
 		case view.FieldKeyword, view.FieldScope, view.FieldName, view.FieldI18n, view.FieldType, view.FieldComponent, view.FieldPath, view.FieldIcon, view.FieldTreePath, view.FieldDescription, view.FieldProperties:
@@ -233,12 +229,6 @@ func (_m *View) assignValues(columns []string, values []any) error {
 				return fmt.Errorf("unexpected type %T for field icon", values[i])
 			} else if value.Valid {
 				_m.Icon = value.String
-			}
-		case view.FieldVisible:
-			if value, ok := values[i].(*sql.NullBool); !ok {
-				return fmt.Errorf("unexpected type %T for field visible", values[i])
-			} else if value.Valid {
-				_m.Visible = value.Bool
 			}
 		case view.FieldSequence:
 			if value, ok := values[i].(*sql.NullInt64); !ok {
@@ -368,9 +358,6 @@ func (_m *View) String() string {
 	builder.WriteString(", ")
 	builder.WriteString("icon=")
 	builder.WriteString(_m.Icon)
-	builder.WriteString(", ")
-	builder.WriteString("visible=")
-	builder.WriteString(fmt.Sprintf("%v", _m.Visible))
 	builder.WriteString(", ")
 	builder.WriteString("sequence=")
 	builder.WriteString(fmt.Sprintf("%v", _m.Sequence))

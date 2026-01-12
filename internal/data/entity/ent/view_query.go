@@ -1006,7 +1006,6 @@ func (_q *ViewQuery) Modify(modifiers ...func(s *sql.Selector)) *ViewSelect {
 //	  Component string `json:"component,omitempty"`
 //	  Path string `json:"path,omitempty"`
 //	  Icon string `json:"icon,omitempty"`
-//	  Visible bool `json:"visible,omitempty"`
 //	  Sequence int `json:"sequence,omitempty"`
 //	  TreePath string `json:"tree_path,omitempty"`
 //	  Description string `json:"description,omitempty"`
@@ -1027,7 +1026,6 @@ func (_q *ViewQuery) Modify(modifiers ...func(s *sql.Selector)) *ViewSelect {
 //	  view.FieldComponent,
 //	  view.FieldPath,
 //	  view.FieldIcon,
-//	  view.FieldVisible,
 //	  view.FieldSequence,
 //	  view.FieldTreePath,
 //	  view.FieldDescription,

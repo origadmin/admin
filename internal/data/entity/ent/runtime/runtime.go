@@ -683,28 +683,24 @@ func init() {
 	viewDescIcon := viewFields[8].Descriptor()
 	// view.DefaultIcon holds the default value on creation for the icon field.
 	view.DefaultIcon = viewDescIcon.Default.(string)
-	// viewDescVisible is the schema descriptor for visible field.
-	viewDescVisible := viewFields[9].Descriptor()
-	// view.DefaultVisible holds the default value on creation for the visible field.
-	view.DefaultVisible = viewDescVisible.Default.(bool)
 	// viewDescSequence is the schema descriptor for sequence field.
-	viewDescSequence := viewFields[10].Descriptor()
+	viewDescSequence := viewFields[9].Descriptor()
 	// view.DefaultSequence holds the default value on creation for the sequence field.
 	view.DefaultSequence = viewDescSequence.Default.(int)
 	// viewDescTreePath is the schema descriptor for tree_path field.
-	viewDescTreePath := viewFields[11].Descriptor()
+	viewDescTreePath := viewFields[10].Descriptor()
 	// view.DefaultTreePath holds the default value on creation for the tree_path field.
 	view.DefaultTreePath = viewDescTreePath.Default.(string)
 	// viewDescDescription is the schema descriptor for description field.
-	viewDescDescription := viewFields[12].Descriptor()
+	viewDescDescription := viewFields[11].Descriptor()
 	// view.DefaultDescription holds the default value on creation for the description field.
 	view.DefaultDescription = viewDescDescription.Default.(string)
 	// viewDescProperties is the schema descriptor for properties field.
-	viewDescProperties := viewFields[13].Descriptor()
+	viewDescProperties := viewFields[12].Descriptor()
 	// view.DefaultProperties holds the default value on creation for the properties field.
 	view.DefaultProperties = viewDescProperties.Default.(string)
 	// viewDescStatus is the schema descriptor for status field.
-	viewDescStatus := viewFields[14].Descriptor()
+	viewDescStatus := viewFields[13].Descriptor()
 	// view.DefaultStatus holds the default value on creation for the status field.
 	view.DefaultStatus = enums.Status(viewDescStatus.Default.(int8))
 	// viewDescID is the schema descriptor for id field.

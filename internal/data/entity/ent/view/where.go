@@ -106,11 +106,6 @@ func Icon(v string) predicate.View {
 	return predicate.View(sql.FieldEQ(FieldIcon, v))
 }
 
-// Visible applies equality check predicate on the "visible" field. It's identical to VisibleEQ.
-func Visible(v bool) predicate.View {
-	return predicate.View(sql.FieldEQ(FieldVisible, v))
-}
-
 // Sequence applies equality check predicate on the "sequence" field. It's identical to SequenceEQ.
 func Sequence(v int) predicate.View {
 	return predicate.View(sql.FieldEQ(FieldSequence, v))
@@ -720,16 +715,6 @@ func IconEqualFold(v string) predicate.View {
 // IconContainsFold applies the ContainsFold predicate on the "icon" field.
 func IconContainsFold(v string) predicate.View {
 	return predicate.View(sql.FieldContainsFold(FieldIcon, v))
-}
-
-// VisibleEQ applies the EQ predicate on the "visible" field.
-func VisibleEQ(v bool) predicate.View {
-	return predicate.View(sql.FieldEQ(FieldVisible, v))
-}
-
-// VisibleNEQ applies the NEQ predicate on the "visible" field.
-func VisibleNEQ(v bool) predicate.View {
-	return predicate.View(sql.FieldNEQ(FieldVisible, v))
 }
 
 // SequenceEQ applies the EQ predicate on the "sequence" field.

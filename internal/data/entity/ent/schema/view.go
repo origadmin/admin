@@ -59,9 +59,6 @@ func (View) Fields() []ent.Field {
 		field.String("icon").
 			Comment(i18n.Text("entity.view.field.icon")).
 			Default(""),
-		field.Bool("visible").
-			Comment(i18n.Text("entity.view.field.visible")).
-			Default(true),
 		field.Int("sequence").
 			Comment(i18n.Text("entity.view.field.sequence")).
 			Default(0),

@@ -3,50 +3,16 @@
 
 package dto
 
-import (
-	"origadmin/application/admin/internal/data/entity/ent/resource"
-	"origadmin/application/admin/internal/data/entity/ent/user"
-	"origadmin/application/admin/internal/data/entity/ent/view"
-)
-
-// ConvertGenderToString is a custom conversion function stub.
+// ConvertStringToStringMapToString is a custom conversion function stub.
 // Please implement this function to complete the conversion.
-func ConvertGenderToString(from user.Gender) string {
+func ConvertStringToStringMapToString(from map[string]string) string {
 	// TODO: Implement this custom conversion
 	panic("stub! not implemented")
 }
 
-// ConvertInt32ToStatus is a custom conversion function stub.
+// ConvertStringToStringToStringMap is a custom conversion function stub.
 // Please implement this function to complete the conversion.
-func ConvertInt32ToStatus(from int32) resource.Status {
-	// TODO: Implement this custom conversion
-	panic("stub! not implemented")
-}
-
-// ConvertStatusToInt32 is a custom conversion function stub.
-// Please implement this function to complete the conversion.
-func ConvertStatusToInt32(from resource.Status) int32 {
-	// TODO: Implement this custom conversion
-	panic("stub! not implemented")
-}
-
-// ConvertStringToGender is a custom conversion function stub.
-// Please implement this function to complete the conversion.
-func ConvertStringToGender(from string) user.Gender {
-	// TODO: Implement this custom conversion
-	panic("stub! not implemented")
-}
-
-// ConvertStringToType is a custom conversion function stub.
-// Please implement this function to complete the conversion.
-func ConvertStringToType(from string) view.Type {
-	// TODO: Implement this custom conversion
-	panic("stub! not implemented")
-}
-
-// ConvertTypeToString is a custom conversion function stub.
-// Please implement this function to complete the conversion.
-func ConvertTypeToString(from view.Type) string {
+func ConvertStringToStringToStringMap(from string) map[string]string {
 	// TODO: Implement this custom conversion
 	panic("stub! not implemented")
 }

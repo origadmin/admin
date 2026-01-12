@@ -172,20 +172,6 @@ func (_u *ViewUpdate) SetNillableIcon(v *string) *ViewUpdate {
 	return _u
 }
 
-// SetVisible sets the "visible" field.
-func (_u *ViewUpdate) SetVisible(v bool) *ViewUpdate {
-	_u.mutation.SetVisible(v)
-	return _u
-}
-
-// SetNillableVisible sets the "visible" field if the given value is not nil.
-func (_u *ViewUpdate) SetNillableVisible(v *bool) *ViewUpdate {
-	if v != nil {
-		_u.SetVisible(*v)
-	}
-	return _u
-}
-
 // SetSequence sets the "sequence" field.
 func (_u *ViewUpdate) SetSequence(v int) *ViewUpdate {
 	_u.mutation.ResetSequence()
@@ -561,9 +547,6 @@ func (_u *ViewUpdate) sqlSave(ctx context.Context) (_node int, err error) {
 	}
 	if value, ok := _u.mutation.Icon(); ok {
 		_spec.SetField(view.FieldIcon, field.TypeString, value)
-	}
-	if value, ok := _u.mutation.Visible(); ok {
-		_spec.SetField(view.FieldVisible, field.TypeBool, value)
 	}
 	if value, ok := _u.mutation.Sequence(); ok {
 		_spec.SetField(view.FieldSequence, field.TypeInt, value)
@@ -1042,20 +1025,6 @@ func (_u *ViewUpdateOne) SetNillableIcon(v *string) *ViewUpdateOne {
 	return _u
 }
 
-// SetVisible sets the "visible" field.
-func (_u *ViewUpdateOne) SetVisible(v bool) *ViewUpdateOne {
-	_u.mutation.SetVisible(v)
-	return _u
-}
-
-// SetNillableVisible sets the "visible" field if the given value is not nil.
-func (_u *ViewUpdateOne) SetNillableVisible(v *bool) *ViewUpdateOne {
-	if v != nil {
-		_u.SetVisible(*v)
-	}
-	return _u
-}
-
 // SetSequence sets the "sequence" field.
 func (_u *ViewUpdateOne) SetSequence(v int) *ViewUpdateOne {
 	_u.mutation.ResetSequence()
@@ -1461,9 +1430,6 @@ func (_u *ViewUpdateOne) sqlSave(ctx context.Context) (_node *View, err error) {
 	}
 	if value, ok := _u.mutation.Icon(); ok {
 		_spec.SetField(view.FieldIcon, field.TypeString, value)
-	}
-	if value, ok := _u.mutation.Visible(); ok {
-		_spec.SetField(view.FieldVisible, field.TypeBool, value)
 	}
 	if value, ok := _u.mutation.Sequence(); ok {
 		_spec.SetField(view.FieldSequence, field.TypeInt, value)

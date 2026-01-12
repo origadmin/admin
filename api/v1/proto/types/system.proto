@@ -34,8 +34,6 @@ message View {
   string type = 10 [json_name = "type"];
   // Icon holds the value of the "icon" field.
   string icon = 12 [json_name = "icon"];
-  // Visible holds the value of the "visible" field.
-  bool visible = 13 [json_name = "visible"];
   // Path holds the value of the "path" field.
   string path = 14 [json_name = "path"];
   // TreePath holds the value of the "tree_path" field.

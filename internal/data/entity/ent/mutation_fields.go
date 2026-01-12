@@ -1194,8 +1194,6 @@ func (m *ViewMutation) SetFields(input *View, fields ...string) error {
 			m.SetPath(input.Path)
 		case view.FieldIcon:
 			m.SetIcon(input.Icon)
-		case view.FieldVisible:
-			m.SetVisible(input.Visible)
 		case view.FieldSequence:
 			m.SetSequence(input.Sequence)
 		case view.FieldTreePath:
@@ -1274,10 +1272,6 @@ func (m *ViewMutation) SetFieldsSkipZero(input *View, fields ...string) error {
 			// check string with sql.NullString if it is empty
 			if input.Icon != "" {
 				m.SetIcon(input.Icon)
-			}
-		case view.FieldVisible:
-			if input.Visible {
-				m.SetVisible(input.Visible)
 			}
 		case view.FieldSequence:
 			// check int with sql.NullInt64 if it is zero

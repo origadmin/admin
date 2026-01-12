@@ -13695,7 +13695,6 @@ type ViewMutation struct {
 	component               *string
 	_path                   *string
 	icon                    *string
-	visible                 *bool
 	sequence                *int
 	addsequence             *int
 	tree_path               *string
@@ -14237,42 +14236,6 @@ func (m *ViewMutation) OldIcon(ctx context.Context) (v string, err error) {
 // ResetIcon resets all changes to the "icon" field.
 func (m *ViewMutation) ResetIcon() {
 	m.icon = nil
-}
-
-// SetVisible sets the "visible" field.
-func (m *ViewMutation) SetVisible(b bool) {
-	m.visible = &b
-}
-
-// Visible returns the value of the "visible" field in the mutation.
-func (m *ViewMutation) Visible() (r bool, exists bool) {
-	v := m.visible
-	if v == nil {
-		return
-	}
-	return *v, true
-}
-
-// OldVisible returns the old "visible" field's value of the View entity.
-// If the View object wasn't provided to the builder, the object is fetched from the database.
-// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *ViewMutation) OldVisible(ctx context.Context) (v bool, err error) {
-	if !m.op.Is(OpUpdateOne) {
-		return v, errors.New("OldVisible is only allowed on UpdateOne operations")
-	}
-	if m.id == nil || m.oldValue == nil {
-		return v, errors.New("OldVisible requires an ID field in the mutation")
-	}
-	oldValue, err := m.oldValue(ctx)
-	if err != nil {
-		return v, fmt.Errorf("querying old value for OldVisible: %w", err)
-	}
-	return oldValue.Visible, nil
-}
-
-// ResetVisible resets all changes to the "visible" field.
-func (m *ViewMutation) ResetVisible() {
-	m.visible = nil
 }
 
 // SetSequence sets the "sequence" field.
@@ -14826,7 +14789,7 @@ func (m *ViewMutation) Type() string {
 // order to get all numeric fields that were incremented/decremented, call
 // AddedFields().
 func (m *ViewMutation) Fields() []string {
-	fields := make([]string, 0, 17)
+	fields := make([]string, 0, 16)
 	if m.create_time != nil {
 		fields = append(fields, view.FieldCreateTime)
 	}
@@ -14859,9 +14822,6 @@ func (m *ViewMutation) Fields() []string {
 	}
 	if m.icon != nil {
 		fields = append(fields, view.FieldIcon)
-	}
-	if m.visible != nil {
-		fields = append(fields, view.FieldVisible)
 	}
 	if m.sequence != nil {
 		fields = append(fields, view.FieldSequence)
@@ -14908,8 +14868,6 @@ func (m *ViewMutation) Field(name string) (ent.Value, bool) {
 		return m.Path()
 	case view.FieldIcon:
 		return m.Icon()
-	case view.FieldVisible:
-		return m.Visible()
 	case view.FieldSequence:
 		return m.Sequence()
 	case view.FieldTreePath:
@@ -14951,8 +14909,6 @@ func (m *ViewMutation) OldField(ctx context.Context, name string) (ent.Value, er
 		return m.OldPath(ctx)
 	case view.FieldIcon:
 		return m.OldIcon(ctx)
-	case view.FieldVisible:
-		return m.OldVisible(ctx)
 	case view.FieldSequence:
 		return m.OldSequence(ctx)
 	case view.FieldTreePath:
@@ -15048,13 +15004,6 @@ func (m *ViewMutation) SetField(name string, value ent.Value) error {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.SetIcon(v)
-		return nil
-	case view.FieldVisible:
-		v, ok := value.(bool)
-		if !ok {
-			return fmt.Errorf("unexpected type %T for field %s", value, name)
-		}
-		m.SetVisible(v)
 		return nil
 	case view.FieldSequence:
 		v, ok := value.(int)
@@ -15208,9 +15157,6 @@ func (m *ViewMutation) ResetField(name string) error {
 		return nil
 	case view.FieldIcon:
 		m.ResetIcon()
-		return nil
-	case view.FieldVisible:
-		m.ResetVisible()
 		return nil
 	case view.FieldSequence:
 		m.ResetSequence()

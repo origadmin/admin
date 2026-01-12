@@ -595,7 +595,6 @@ var (
 		{Name: "component", Type: field.TypeString, Comment: "entity.view.field.component", Default: ""},
 		{Name: "path", Type: field.TypeString, Comment: "entity.view.field.path", Default: ""},
 		{Name: "icon", Type: field.TypeString, Comment: "entity.view.field.icon", Default: ""},
-		{Name: "visible", Type: field.TypeBool, Comment: "entity.view.field.visible", Default: true},
 		{Name: "sequence", Type: field.TypeInt, Comment: "entity.view.field.sequence", Default: 0},
 		{Name: "tree_path", Type: field.TypeString, Comment: "entity.view.field.tree_path", Default: ""},
 		{Name: "description", Type: field.TypeString, Comment: "entity.view.field.description", Default: ""},
@@ -612,7 +611,7 @@ var (
 		ForeignKeys: []*schema.ForeignKey{
 			{
 				Symbol:     "sys_views_sys_views_children",
-				Columns:    []*schema.Column{SysViewsColumns[17]},
+				Columns:    []*schema.Column{SysViewsColumns[16]},
 				RefColumns: []*schema.Column{SysViewsColumns[0]},
 				OnDelete:   schema.SetNull,
 			},

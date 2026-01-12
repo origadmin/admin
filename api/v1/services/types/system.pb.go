@@ -47,8 +47,6 @@ type View struct {
 	Type string `protobuf:"bytes,10,opt,name=type,proto3" json:"type,omitempty"`
 	// Icon holds the value of the "icon" field.
 	Icon string `protobuf:"bytes,12,opt,name=icon,proto3" json:"icon,omitempty"`
-	// Visible holds the value of the "visible" field.
-	Visible bool `protobuf:"varint,13,opt,name=visible,proto3" json:"visible,omitempty"`
 	// Path holds the value of the "path" field.
 	Path string `protobuf:"bytes,14,opt,name=path,proto3" json:"path,omitempty"`
 	// TreePath holds the value of the "tree_path" field.
@@ -178,13 +176,6 @@ func (x *View) GetIcon() string {
 		return x.Icon
 	}
 	return ""
-}
-
-func (x *View) GetVisible() bool {
-	if x != nil {
-		return x.Visible
-	}
-	return false
 }
 
 func (x *View) GetPath() string {
@@ -1978,7 +1969,7 @@ var File_types_system_proto protoreflect.FileDescriptor
 
 const file_types_system_proto_rawDesc = "" +
 	"\n" +
-	"\x12types/system.proto\x12\x15api.v1.services.types\x1a\x1fgoogle/protobuf/timestamp.proto\"\xf0\x05\n" +
+	"\x12types/system.proto\x12\x15api.v1.services.types\x1a\x1fgoogle/protobuf/timestamp.proto\"\xd6\x05\n" +
 	"\x04View\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\x03R\x02id\x12<\n" +
 	"\vcreate_time\x18\x02 \x01(\v2\x1a.google.protobuf.TimestampR\vcreate_time\x12<\n" +
@@ -1991,8 +1982,7 @@ const file_types_system_proto_rawDesc = "" +
 	"\bsequence\x18\t \x01(\x05R\bsequence\x12\x12\n" +
 	"\x04type\x18\n" +
 	" \x01(\tR\x04type\x12\x12\n" +
-	"\x04icon\x18\f \x01(\tR\x04icon\x12\x18\n" +
-	"\avisible\x18\r \x01(\bR\avisible\x12\x12\n" +
+	"\x04icon\x18\f \x01(\tR\x04icon\x12\x12\n" +
 	"\x04path\x18\x0e \x01(\tR\x04path\x12\x1c\n" +
 	"\ttree_path\x18\x0f \x01(\tR\ttree_path\x12\x1e\n" +
 	"\n" +

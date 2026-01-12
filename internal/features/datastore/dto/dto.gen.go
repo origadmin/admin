@@ -17,125 +17,74 @@ import (
 
 // Local type aliases for external types.
 type (
-	Department                = ent.Department
-	DepartmentEdges           = ent.DepartmentEdges
-	DepartmentEdgesPB         = types.DepartmentEdges
-	DepartmentPB              = types.Department
-	Departments               = []*ent.Department
-	DepartmentsPB             = []*types.Department
-	Permission                = ent.Permission
-	PermissionEdges           = ent.PermissionEdges
-	PermissionEdgesPB         = types.PermissionEdges
-	PermissionPB              = types.Permission
-	PermissionResource        = ent.PermissionResource
-	PermissionResourceEdges   = ent.PermissionResourceEdges
-	PermissionResourceEdgesPB = types.PermissionResourceEdges
-	PermissionResourcePB      = types.PermissionResource
-	PermissionResources       = []*ent.PermissionResource
-	PermissionResourcesPB     = []*types.PermissionResource
-	Permissions               = []*ent.Permission
-	PermissionsPB             = []*types.Permission
-	Position                  = ent.Position
-	PositionEdges             = ent.PositionEdges
-	PositionEdgesPB           = types.PositionEdges
-	PositionPB                = types.Position
-	PositionPermission        = ent.PositionPermission
-	PositionPermissionEdges   = ent.PositionPermissionEdges
-	PositionPermissionEdgesPB = types.PositionPermissionEdges
-	PositionPermissionPB      = types.PositionPermission
-	PositionPermissions       = []*ent.PositionPermission
-	PositionPermissionsPB     = []*types.PositionPermission
-	Positions                 = []*ent.Position
-	PositionsPB               = []*types.Position
-	Resource                  = ent.Resource
-	ResourceEdges             = ent.ResourceEdges
-	ResourceEdgesPB           = types.ResourceEdges
-	ResourcePB                = types.Resource
-	Resources                 = []*ent.Resource
-	ResourcesPB               = []*types.Resource
-	Role                      = ent.Role
-	RoleEdges                 = ent.RoleEdges
-	RoleEdgesPB               = types.RoleEdges
-	RolePB                    = types.Role
-	RolePermission            = ent.RolePermission
-	RolePermissionEdges       = ent.RolePermissionEdges
-	RolePermissionEdgesPB     = types.RolePermissionEdges
-	RolePermissionPB          = types.RolePermission
-	RolePermissions           = []*ent.RolePermission
-	RolePermissionsPB         = []*types.RolePermission
-	RoleViewPB                = types.RoleView
-	RoleViewsPB               = []*types.RoleView
-	Roles                     = []*ent.Role
-	RolesPB                   = []*types.Role
-	User                      = ent.User
-	UserDepartment            = ent.UserDepartment
-	UserDepartmentEdges       = ent.UserDepartmentEdges
-	UserDepartmentEdgesPB     = types.UserDepartmentEdges
-	UserDepartmentPB          = types.UserDepartment
-	UserDepartments           = []*ent.UserDepartment
-	UserDepartmentsPB         = []*types.UserDepartment
-	UserEdges                 = ent.UserEdges
-	UserEdgesPB               = types.UserEdges
-	UserPB                    = types.User
-	UserPosition              = ent.UserPosition
-	UserPositionEdges         = ent.UserPositionEdges
-	UserPositionEdgesPB       = types.UserPositionEdges
-	UserPositionPB            = types.UserPosition
-	UserPositions             = []*ent.UserPosition
-	UserPositionsPB           = []*types.UserPosition
-	UserRole                  = ent.UserRole
-	UserRoleEdges             = ent.UserRoleEdges
-	UserRoleEdgesPB           = types.UserRoleEdges
-	UserRolePB                = types.UserRole
-	UserRoles                 = []*ent.UserRole
-	UserRolesPB               = []*types.UserRole
-	Users                     = []*ent.User
-	UsersPB                   = []*types.User
-	View                      = ent.View
-	ViewEdges                 = ent.ViewEdges
-	ViewEdgesPB               = types.ViewEdges
-	ViewPB                    = types.View
-	ViewPermission            = ent.ViewPermission
-	ViewPermissionEdges       = ent.ViewPermissionEdges
-	ViewPermissions           = []*ent.ViewPermission
-	ViewResource              = ent.ViewResource
-	ViewResourceEdges         = ent.ViewResourceEdges
-	ViewResources             = []*ent.ViewResource
-	Views                     = []*ent.View
-	ViewsPB                   = []*types.View
+	Department              = ent.Department
+	DepartmentEdges         = ent.DepartmentEdges
+	DepartmentPB            = types.Department
+	Departments             = []*ent.Department
+	DepartmentsPB           = []*types.Department
+	Permission              = ent.Permission
+	PermissionEdges         = ent.PermissionEdges
+	PermissionPB            = types.Permission
+	PermissionResource      = ent.PermissionResource
+	PermissionResourceEdges = ent.PermissionResourceEdges
+	PermissionResourcePB    = types.PermissionResource
+	PermissionResources     = []*ent.PermissionResource
+	Permissions             = []*ent.Permission
+	PermissionsPB           = []*types.Permission
+	Position                = ent.Position
+	PositionEdges           = ent.PositionEdges
+	PositionEdgesPB         = types.PositionEdges
+	PositionPB              = types.Position
+	PositionPermission      = ent.PositionPermission
+	PositionPermissionEdges = ent.PositionPermissionEdges
+	PositionPermissionPB    = types.PositionPermission
+	PositionPermissions     = []*ent.PositionPermission
+	PositionPermissionsPB   = []*types.PositionPermission
+	Positions               = []*ent.Position
+	Resource                = ent.Resource
+	ResourceEdges           = ent.ResourceEdges
+	ResourcePB              = types.Resource
+	Resources               = []*ent.Resource
+	ResourcesPB             = []*types.Resource
+	Role                    = ent.Role
+	RoleEdges               = ent.RoleEdges
+	RolePB                  = types.Role
+	RolePermission          = ent.RolePermission
+	RolePermissionEdges     = ent.RolePermissionEdges
+	RolePermissionPB        = types.RolePermission
+	RolePermissions         = []*ent.RolePermission
+	Roles                   = []*ent.Role
+	RolesPB                 = []*types.Role
+	User                    = ent.User
+	UserDepartment          = ent.UserDepartment
+	UserDepartmentEdges     = ent.UserDepartmentEdges
+	UserDepartmentPB        = types.UserDepartment
+	UserDepartments         = []*ent.UserDepartment
+	UserEdges               = ent.UserEdges
+	UserPB                  = types.User
+	UserPosition            = ent.UserPosition
+	UserPositionEdges       = ent.UserPositionEdges
+	UserPositionPB          = types.UserPosition
+	UserPositions           = []*ent.UserPosition
+	UserPositionsPB         = []*types.UserPosition
+	UserRole                = ent.UserRole
+	UserRoleEdges           = ent.UserRoleEdges
+	UserRolePB              = types.UserRole
+	UserRoles               = []*ent.UserRole
+	Users                   = []*ent.User
+	UsersPB                 = []*types.User
+	View                    = ent.View
+	ViewEdges               = ent.ViewEdges
+	ViewPB                  = types.View
+	ViewPermission          = ent.ViewPermission
+	ViewPermissionEdges     = ent.ViewPermissionEdges
+	ViewPermissions         = []*ent.ViewPermission
+	ViewResource            = ent.ViewResource
+	ViewResourceEdges       = ent.ViewResourceEdges
+	ViewResources           = []*ent.ViewResource
+	Views                   = []*ent.View
+	ViewsPB                 = []*types.View
 )
-
-// ConvertDepartmentEdgesPBToDepartmentEdges converts DepartmentEdgesPB to DepartmentEdges.
-func ConvertDepartmentEdgesPBToDepartmentEdges(from *DepartmentEdgesPB) *DepartmentEdges {
-	if from == nil {
-		return nil
-	}
-
-	to := &DepartmentEdges{
-		Users:           ConvertUsersPBToUsers(from.Users),
-		Positions:       ConvertPositionsPBToPositions(from.Positions),
-		Parent:          ConvertDepartmentPBToDepartment(from.Parent),
-		Children:        ConvertDepartmentsPBToDepartments(from.Children),
-		UserDepartments: ConvertUserDepartmentsPBToUserDepartments(from.UserDepartments),
-	}
-	return to
-}
-
-// ConvertDepartmentEdgesToDepartmentEdgesPB converts DepartmentEdges to DepartmentEdgesPB.
-func ConvertDepartmentEdgesToDepartmentEdgesPB(from *DepartmentEdges) *DepartmentEdgesPB {
-	if from == nil {
-		return nil
-	}
-
-	to := &DepartmentEdgesPB{
-		Users:           ConvertUsersToUsersPB(from.Users),
-		Positions:       ConvertPositionsToPositionsPB(from.Positions),
-		Children:        ConvertDepartmentsToDepartmentsPB(from.Children),
-		Parent:          ConvertDepartmentToDepartmentPB(from.Parent),
-		UserDepartments: ConvertUserDepartmentsToUserDepartmentsPB(from.UserDepartments),
-	}
-	return to
-}
 
 // ConvertDepartmentPBToDepartment converts DepartmentPB to Department.
 func ConvertDepartmentPBToDepartment(from *DepartmentPB) *Department {
@@ -183,18 +132,6 @@ func ConvertDepartmentToDepartmentPB(from *Department) *DepartmentPB {
 	return to
 }
 
-// ConvertDepartmentsPBToDepartments converts a slice of *DepartmentPB to a slice of *Department.
-func ConvertDepartmentsPBToDepartments(froms DepartmentsPB) Departments {
-	if froms == nil {
-		return nil
-	}
-	tos := make(Departments, len(froms))
-	for i, f := range froms {
-		tos[i] = ConvertDepartmentPBToDepartment(f)
-	}
-	return tos
-}
-
 // ConvertDepartmentsToDepartmentsPB converts a slice of *Department to a slice of *DepartmentPB.
 func ConvertDepartmentsToDepartmentsPB(froms Departments) DepartmentsPB {
 	if froms == nil {
@@ -205,40 +142,6 @@ func ConvertDepartmentsToDepartmentsPB(froms Departments) DepartmentsPB {
 		tos[i] = ConvertDepartmentToDepartmentPB(f)
 	}
 	return tos
-}
-
-// ConvertPermissionEdgesPBToPermissionEdges converts PermissionEdgesPB to PermissionEdges.
-func ConvertPermissionEdgesPBToPermissionEdges(from *PermissionEdgesPB) *PermissionEdges {
-	if from == nil {
-		return nil
-	}
-
-	to := &PermissionEdges{
-		Roles:               ConvertRolesPBToRoles(from.Roles),
-		Positions:           ConvertPositionsPBToPositions(from.Positions),
-		Resources:           ConvertResourcesPBToResources(from.Resources),
-		RolePermissions:     ConvertRolePermissionsPBToRolePermissions(from.RolePermissions),
-		PositionPermissions: ConvertPositionPermissionsPBToPositionPermissions(from.PositionPermissions),
-		PermissionResources: ConvertPermissionResourcesPBToPermissionResources(from.PermissionResources),
-	}
-	return to
-}
-
-// ConvertPermissionEdgesToPermissionEdgesPB converts PermissionEdges to PermissionEdgesPB.
-func ConvertPermissionEdgesToPermissionEdgesPB(from *PermissionEdges) *PermissionEdgesPB {
-	if from == nil {
-		return nil
-	}
-
-	to := &PermissionEdgesPB{
-		Roles:               ConvertRolesToRolesPB(from.Roles),
-		Resources:           ConvertResourcesToResourcesPB(from.Resources),
-		Positions:           ConvertPositionsToPositionsPB(from.Positions),
-		RolePermissions:     ConvertRolePermissionsToRolePermissionsPB(from.RolePermissions),
-		PermissionResources: ConvertPermissionResourcesToPermissionResourcesPB(from.PermissionResources),
-		PositionPermissions: ConvertPositionPermissionsToPositionPermissionsPB(from.PositionPermissions),
-	}
-	return to
 }
 
 // ConvertPermissionPBToPermission converts PermissionPB to Permission.
@@ -256,32 +159,7 @@ func ConvertPermissionPBToPermission(from *PermissionPB) *Permission {
 		Description: from.Description,
 		DataScope:   from.DataScope,
 		DataRules:   from.DataRules,
-	}
-	return to
-}
-
-// ConvertPermissionResourceEdgesPBToPermissionResourceEdges converts PermissionResourceEdgesPB to PermissionResourceEdges.
-func ConvertPermissionResourceEdgesPBToPermissionResourceEdges(from *PermissionResourceEdgesPB) *PermissionResourceEdges {
-	if from == nil {
-		return nil
-	}
-
-	to := &PermissionResourceEdges{
-		Permission: ConvertPermissionPBToPermission(from.Permission),
-		Resource:   ConvertResourcePBToResource(from.Resource),
-	}
-	return to
-}
-
-// ConvertPermissionResourceEdgesToPermissionResourceEdgesPB converts PermissionResourceEdges to PermissionResourceEdgesPB.
-func ConvertPermissionResourceEdgesToPermissionResourceEdgesPB(from *PermissionResourceEdges) *PermissionResourceEdgesPB {
-	if from == nil {
-		return nil
-	}
-
-	to := &PermissionResourceEdgesPB{
-		Permission: ConvertPermissionToPermissionPB(from.Permission),
-		Resource:   ConvertResourceToResourcePB(from.Resource),
+		Status:      enums.Status(from.Status),
 	}
 	return to
 }
@@ -314,30 +192,6 @@ func ConvertPermissionResourceToPermissionResourcePB(from *PermissionResource) *
 	return to
 }
 
-// ConvertPermissionResourcesPBToPermissionResources converts a slice of *PermissionResourcePB to a slice of *PermissionResource.
-func ConvertPermissionResourcesPBToPermissionResources(froms PermissionResourcesPB) PermissionResources {
-	if froms == nil {
-		return nil
-	}
-	tos := make(PermissionResources, len(froms))
-	for i, f := range froms {
-		tos[i] = ConvertPermissionResourcePBToPermissionResource(f)
-	}
-	return tos
-}
-
-// ConvertPermissionResourcesToPermissionResourcesPB converts a slice of *PermissionResource to a slice of *PermissionResourcePB.
-func ConvertPermissionResourcesToPermissionResourcesPB(froms PermissionResources) PermissionResourcesPB {
-	if froms == nil {
-		return nil
-	}
-	tos := make(PermissionResourcesPB, len(froms))
-	for i, f := range froms {
-		tos[i] = ConvertPermissionResourceToPermissionResourcePB(f)
-	}
-	return tos
-}
-
 // ConvertPermissionToPermissionPB converts Permission to PermissionPB.
 func ConvertPermissionToPermissionPB(from *Permission) *PermissionPB {
 	if from == nil {
@@ -350,10 +204,12 @@ func ConvertPermissionToPermissionPB(from *Permission) *PermissionPB {
 		UpdateTime:  ConvertTimeToTimestamp(from.UpdateTime),
 		Name:        from.Name,
 		Keyword:     from.Keyword,
+		Status:      int32(from.Status),
 		Description: from.Description,
 		DataScope:   from.DataScope,
 		DataRules:   from.DataRules,
 		Resources:   ConvertResourcesToResourcesPB(from.Edges.Resources),
+		Views:       ConvertViewsToViewsPB(from.Edges.Views),
 	}
 	return to
 }
@@ -432,32 +288,6 @@ func ConvertPositionPBToPosition(from *PositionPB) *Position {
 	return to
 }
 
-// ConvertPositionPermissionEdgesPBToPositionPermissionEdges converts PositionPermissionEdgesPB to PositionPermissionEdges.
-func ConvertPositionPermissionEdgesPBToPositionPermissionEdges(from *PositionPermissionEdgesPB) *PositionPermissionEdges {
-	if from == nil {
-		return nil
-	}
-
-	to := &PositionPermissionEdges{
-		Position:   ConvertPositionPBToPosition(from.Position),
-		Permission: ConvertPermissionPBToPermission(from.Permission),
-	}
-	return to
-}
-
-// ConvertPositionPermissionEdgesToPositionPermissionEdgesPB converts PositionPermissionEdges to PositionPermissionEdgesPB.
-func ConvertPositionPermissionEdgesToPositionPermissionEdgesPB(from *PositionPermissionEdges) *PositionPermissionEdgesPB {
-	if from == nil {
-		return nil
-	}
-
-	to := &PositionPermissionEdgesPB{
-		Position:   ConvertPositionToPositionPB(from.Position),
-		Permission: ConvertPermissionToPermissionPB(from.Permission),
-	}
-	return to
-}
-
 // ConvertPositionPermissionPBToPositionPermission converts PositionPermissionPB to PositionPermission.
 func ConvertPositionPermissionPBToPositionPermission(from *PositionPermissionPB) *PositionPermission {
 	if from == nil {
@@ -528,50 +358,6 @@ func ConvertPositionToPositionPB(from *Position) *PositionPB {
 	return to
 }
 
-// ConvertPositionsPBToPositions converts a slice of *PositionPB to a slice of *Position.
-func ConvertPositionsPBToPositions(froms PositionsPB) Positions {
-	if froms == nil {
-		return nil
-	}
-	tos := make(Positions, len(froms))
-	for i, f := range froms {
-		tos[i] = ConvertPositionPBToPosition(f)
-	}
-	return tos
-}
-
-// ConvertPositionsToPositionsPB converts a slice of *Position to a slice of *PositionPB.
-func ConvertPositionsToPositionsPB(froms Positions) PositionsPB {
-	if froms == nil {
-		return nil
-	}
-	tos := make(PositionsPB, len(froms))
-	for i, f := range froms {
-		tos[i] = ConvertPositionToPositionPB(f)
-	}
-	return tos
-}
-
-// ConvertResourceEdgesPBToResourceEdges converts ResourceEdgesPB to ResourceEdges.
-func ConvertResourceEdgesPBToResourceEdges(from *ResourceEdgesPB) *ResourceEdges {
-	if from == nil {
-		return nil
-	}
-
-	to := &ResourceEdges{}
-	return to
-}
-
-// ConvertResourceEdgesToResourceEdgesPB converts ResourceEdges to ResourceEdgesPB.
-func ConvertResourceEdgesToResourceEdgesPB(from *ResourceEdges) *ResourceEdgesPB {
-	if from == nil {
-		return nil
-	}
-
-	to := &ResourceEdgesPB{}
-	return to
-}
-
 // ConvertResourcePBToResource converts ResourcePB to Resource.
 func ConvertResourcePBToResource(from *ResourcePB) *Resource {
 	if from == nil {
@@ -579,14 +365,25 @@ func ConvertResourcePBToResource(from *ResourcePB) *Resource {
 	}
 
 	to := &Resource{
-		ID:         from.Id,
-		CreateTime: ConvertTimestampToTime(from.CreateTime),
-		UpdateTime: ConvertTimestampToTime(from.UpdateTime),
-		Keyword:    from.Keyword,
-		Path:       from.Path,
-		Method:     from.Method,
-		Operation:  from.Operation,
-		Status:     ConvertInt32ToStatus(from.Status),
+		ID:          from.Id,
+		CreateTime:  ConvertTimestampToTime(from.CreateTime),
+		UpdateTime:  ConvertTimestampToTime(from.UpdateTime),
+		Keyword:     from.Keyword,
+		Name:        from.Name,
+		I18n:        from.I18N,
+		Type:        from.Type,
+		Status:      enums.Status(from.Status),
+		Sequence:    int(from.Sequence),
+		Method:      from.Method,
+		Path:        from.Path,
+		Operation:   from.Operation,
+		ServiceName: from.ServiceName,
+		Policy:      from.Policy,
+		SyncStatus:  from.SyncStatus,
+		TreePath:    from.TreePath,
+		ParentID:    from.ParentId,
+		Properties:  ConvertStringToStringMapToString(from.Properties),
+		Description: from.Description,
 	}
 	return to
 }
@@ -601,26 +398,27 @@ func ConvertResourceToResourcePB(from *Resource) *ResourcePB {
 		Id:          from.ID,
 		CreateTime:  ConvertTimeToTimestamp(from.CreateTime),
 		UpdateTime:  ConvertTimeToTimestamp(from.UpdateTime),
+		Name:        from.Name,
 		Keyword:     from.Keyword,
-		Status:      ConvertStatusToInt32(from.Status),
+		I18N:        from.I18n,
+		Type:        from.Type,
+		Status:      int32(from.Status),
 		Path:        from.Path,
 		Operation:   from.Operation,
 		Method:      from.Method,
+		Sequence:    int32(from.Sequence),
+		TreePath:    from.TreePath,
+		Properties:  ConvertStringToStringToStringMap(from.Properties),
+		Description: from.Description,
+		ParentId:    from.ParentID,
+		SyncStatus:  from.SyncStatus,
+		ServiceName: from.ServiceName,
+		Policy:      from.Policy,
+		Children:    ConvertResourcesToResourcesPB(from.Edges.Children),
+		Parent:      ConvertResourceToResourcePB(from.Edges.Parent),
 		Permissions: ConvertPermissionsToPermissionsPB(from.Edges.Permissions),
 	}
 	return to
-}
-
-// ConvertResourcesPBToResources converts a slice of *ResourcePB to a slice of *Resource.
-func ConvertResourcesPBToResources(froms ResourcesPB) Resources {
-	if froms == nil {
-		return nil
-	}
-	tos := make(Resources, len(froms))
-	for i, f := range froms {
-		tos[i] = ConvertResourcePBToResource(f)
-	}
-	return tos
 }
 
 // ConvertResourcesToResourcesPB converts a slice of *Resource to a slice of *ResourcePB.
@@ -633,32 +431,6 @@ func ConvertResourcesToResourcesPB(froms Resources) ResourcesPB {
 		tos[i] = ConvertResourceToResourcePB(f)
 	}
 	return tos
-}
-
-// ConvertRoleEdgesPBToRoleEdges converts RoleEdgesPB to RoleEdges.
-func ConvertRoleEdgesPBToRoleEdges(from *RoleEdgesPB) *RoleEdges {
-	if from == nil {
-		return nil
-	}
-
-	to := &RoleEdges{
-		Users:     ConvertUsersPBToUsers(from.Users),
-		UserRoles: ConvertUserRolesPBToUserRoles(from.UserRoles),
-	}
-	return to
-}
-
-// ConvertRoleEdgesToRoleEdgesPB converts RoleEdges to RoleEdgesPB.
-func ConvertRoleEdgesToRoleEdgesPB(from *RoleEdges) *RoleEdgesPB {
-	if from == nil {
-		return nil
-	}
-
-	to := &RoleEdgesPB{
-		Users:     ConvertUsersToUsersPB(from.Users),
-		UserRoles: ConvertUserRolesToUserRolesPB(from.UserRoles),
-	}
-	return to
 }
 
 // ConvertRolePBToRole converts RolePB to Role.
@@ -677,32 +449,6 @@ func ConvertRolePBToRole(from *RolePB) *Role {
 		Type:        enums.RoleType(from.Type),
 		Sequence:    int(from.Sequence),
 		Status:      enums.Status(from.Status),
-	}
-	return to
-}
-
-// ConvertRolePermissionEdgesPBToRolePermissionEdges converts RolePermissionEdgesPB to RolePermissionEdges.
-func ConvertRolePermissionEdgesPBToRolePermissionEdges(from *RolePermissionEdgesPB) *RolePermissionEdges {
-	if from == nil {
-		return nil
-	}
-
-	to := &RolePermissionEdges{
-		Role:       ConvertRolePBToRole(from.Role),
-		Permission: ConvertPermissionPBToPermission(from.Permission),
-	}
-	return to
-}
-
-// ConvertRolePermissionEdgesToRolePermissionEdgesPB converts RolePermissionEdges to RolePermissionEdgesPB.
-func ConvertRolePermissionEdgesToRolePermissionEdgesPB(from *RolePermissionEdges) *RolePermissionEdgesPB {
-	if from == nil {
-		return nil
-	}
-
-	to := &RolePermissionEdgesPB{
-		Role:       ConvertRoleToRolePB(from.Role),
-		Permission: ConvertPermissionToPermissionPB(from.Permission),
 	}
 	return to
 }
@@ -735,30 +481,6 @@ func ConvertRolePermissionToRolePermissionPB(from *RolePermission) *RolePermissi
 	return to
 }
 
-// ConvertRolePermissionsPBToRolePermissions converts a slice of *RolePermissionPB to a slice of *RolePermission.
-func ConvertRolePermissionsPBToRolePermissions(froms RolePermissionsPB) RolePermissions {
-	if froms == nil {
-		return nil
-	}
-	tos := make(RolePermissions, len(froms))
-	for i, f := range froms {
-		tos[i] = ConvertRolePermissionPBToRolePermission(f)
-	}
-	return tos
-}
-
-// ConvertRolePermissionsToRolePermissionsPB converts a slice of *RolePermission to a slice of *RolePermissionPB.
-func ConvertRolePermissionsToRolePermissionsPB(froms RolePermissions) RolePermissionsPB {
-	if froms == nil {
-		return nil
-	}
-	tos := make(RolePermissionsPB, len(froms))
-	for i, f := range froms {
-		tos[i] = ConvertRolePermissionToRolePermissionPB(f)
-	}
-	return tos
-}
-
 // ConvertRoleToRolePB converts Role to RolePB.
 func ConvertRoleToRolePB(from *Role) *RolePB {
 	if from == nil {
@@ -781,18 +503,6 @@ func ConvertRoleToRolePB(from *Role) *RolePB {
 	return to
 }
 
-// ConvertRolesPBToRoles converts a slice of *RolePB to a slice of *Role.
-func ConvertRolesPBToRoles(froms RolesPB) Roles {
-	if froms == nil {
-		return nil
-	}
-	tos := make(Roles, len(froms))
-	for i, f := range froms {
-		tos[i] = ConvertRolePBToRole(f)
-	}
-	return tos
-}
-
 // ConvertRolesToRolesPB converts a slice of *Role to a slice of *RolePB.
 func ConvertRolesToRolesPB(froms Roles) RolesPB {
 	if froms == nil {
@@ -805,32 +515,6 @@ func ConvertRolesToRolesPB(froms Roles) RolesPB {
 	return tos
 }
 
-// ConvertUserDepartmentEdgesPBToUserDepartmentEdges converts UserDepartmentEdgesPB to UserDepartmentEdges.
-func ConvertUserDepartmentEdgesPBToUserDepartmentEdges(from *UserDepartmentEdgesPB) *UserDepartmentEdges {
-	if from == nil {
-		return nil
-	}
-
-	to := &UserDepartmentEdges{
-		User:       ConvertUserPBToUser(from.User),
-		Department: ConvertDepartmentPBToDepartment(from.Department),
-	}
-	return to
-}
-
-// ConvertUserDepartmentEdgesToUserDepartmentEdgesPB converts UserDepartmentEdges to UserDepartmentEdgesPB.
-func ConvertUserDepartmentEdgesToUserDepartmentEdgesPB(from *UserDepartmentEdges) *UserDepartmentEdgesPB {
-	if from == nil {
-		return nil
-	}
-
-	to := &UserDepartmentEdgesPB{
-		User:       ConvertUserToUserPB(from.User),
-		Department: ConvertDepartmentToDepartmentPB(from.Department),
-	}
-	return to
-}
-
 // ConvertUserDepartmentPBToUserDepartment converts UserDepartmentPB to UserDepartment.
 func ConvertUserDepartmentPBToUserDepartment(from *UserDepartmentPB) *UserDepartment {
 	if from == nil {
@@ -841,7 +525,6 @@ func ConvertUserDepartmentPBToUserDepartment(from *UserDepartmentPB) *UserDepart
 		ID:           int(from.Id),
 		UserID:       from.UserId,
 		DepartmentID: from.DepartmentId,
-		Edges:        *ConvertUserDepartmentEdgesPBToUserDepartmentEdges(from.Edges),
 	}
 	return to
 }
@@ -856,57 +539,6 @@ func ConvertUserDepartmentToUserDepartmentPB(from *UserDepartment) *UserDepartme
 		Id:           int64(from.ID),
 		UserId:       from.UserID,
 		DepartmentId: from.DepartmentID,
-		Edges:        ConvertUserDepartmentEdgesToUserDepartmentEdgesPB(&from.Edges),
-	}
-	return to
-}
-
-// ConvertUserDepartmentsPBToUserDepartments converts a slice of *UserDepartmentPB to a slice of *UserDepartment.
-func ConvertUserDepartmentsPBToUserDepartments(froms UserDepartmentsPB) UserDepartments {
-	if froms == nil {
-		return nil
-	}
-	tos := make(UserDepartments, len(froms))
-	for i, f := range froms {
-		tos[i] = ConvertUserDepartmentPBToUserDepartment(f)
-	}
-	return tos
-}
-
-// ConvertUserDepartmentsToUserDepartmentsPB converts a slice of *UserDepartment to a slice of *UserDepartmentPB.
-func ConvertUserDepartmentsToUserDepartmentsPB(froms UserDepartments) UserDepartmentsPB {
-	if froms == nil {
-		return nil
-	}
-	tos := make(UserDepartmentsPB, len(froms))
-	for i, f := range froms {
-		tos[i] = ConvertUserDepartmentToUserDepartmentPB(f)
-	}
-	return tos
-}
-
-// ConvertUserEdgesPBToUserEdges converts UserEdgesPB to UserEdges.
-func ConvertUserEdgesPBToUserEdges(from *UserEdgesPB) *UserEdges {
-	if from == nil {
-		return nil
-	}
-
-	to := &UserEdges{
-		Roles:     ConvertRolesPBToRoles(from.Roles),
-		UserRoles: ConvertUserRolesPBToUserRoles(from.UserRoles),
-	}
-	return to
-}
-
-// ConvertUserEdgesToUserEdgesPB converts UserEdges to UserEdgesPB.
-func ConvertUserEdgesToUserEdgesPB(from *UserEdges) *UserEdgesPB {
-	if from == nil {
-		return nil
-	}
-
-	to := &UserEdgesPB{
-		Roles:     ConvertRolesToRolesPB(from.Roles),
-		UserRoles: ConvertUserRolesToUserRolesPB(from.UserRoles),
 	}
 	return to
 }
@@ -932,40 +564,15 @@ func ConvertUserPBToUser(from *UserPB) *User {
 		Gender:        ConvertStringToGender(from.Gender),
 		Phone:         from.Phone,
 		Email:         from.Email,
+		Department:    from.Department,
 		Remark:        from.Remark,
 		Token:         from.Token,
 		Status:        enums.Status(from.Status),
 		LastLoginIP:   from.LastLoginIp,
+		LoginIP:       from.LoginIp,
 		LastLoginTime: ConvertTimestampToTime(from.LastLoginTime),
+		LoginTime:     ConvertTimestampToTime(from.LoginTime),
 		SanctionDate:  ConvertTimestampToTime(from.SanctionDate),
-		ManagerID:     from.ManagerId,
-		Manager:       from.Manager,
-	}
-	return to
-}
-
-// ConvertUserPositionEdgesPBToUserPositionEdges converts UserPositionEdgesPB to UserPositionEdges.
-func ConvertUserPositionEdgesPBToUserPositionEdges(from *UserPositionEdgesPB) *UserPositionEdges {
-	if from == nil {
-		return nil
-	}
-
-	to := &UserPositionEdges{
-		User:     ConvertUserPBToUser(from.User),
-		Position: ConvertPositionPBToPosition(from.Position),
-	}
-	return to
-}
-
-// ConvertUserPositionEdgesToUserPositionEdgesPB converts UserPositionEdges to UserPositionEdgesPB.
-func ConvertUserPositionEdgesToUserPositionEdgesPB(from *UserPositionEdges) *UserPositionEdgesPB {
-	if from == nil {
-		return nil
-	}
-
-	to := &UserPositionEdgesPB{
-		User:     ConvertUserToUserPB(from.User),
-		Position: ConvertPositionToPositionPB(from.Position),
 	}
 	return to
 }
@@ -1022,32 +629,6 @@ func ConvertUserPositionsToUserPositionsPB(froms UserPositions) UserPositionsPB 
 	return tos
 }
 
-// ConvertUserRoleEdgesPBToUserRoleEdges converts UserRoleEdgesPB to UserRoleEdges.
-func ConvertUserRoleEdgesPBToUserRoleEdges(from *UserRoleEdgesPB) *UserRoleEdges {
-	if from == nil {
-		return nil
-	}
-
-	to := &UserRoleEdges{
-		User: ConvertUserPBToUser(from.User),
-		Role: ConvertRolePBToRole(from.Role),
-	}
-	return to
-}
-
-// ConvertUserRoleEdgesToUserRoleEdgesPB converts UserRoleEdges to UserRoleEdgesPB.
-func ConvertUserRoleEdgesToUserRoleEdgesPB(from *UserRoleEdges) *UserRoleEdgesPB {
-	if from == nil {
-		return nil
-	}
-
-	to := &UserRoleEdgesPB{
-		User: ConvertUserToUserPB(from.User),
-		Role: ConvertRoleToRolePB(from.Role),
-	}
-	return to
-}
-
 // ConvertUserRolePBToUserRole converts UserRolePB to UserRole.
 func ConvertUserRolePBToUserRole(from *UserRolePB) *UserRole {
 	if from == nil {
@@ -1078,30 +659,6 @@ func ConvertUserRoleToUserRolePB(from *UserRole) *UserRolePB {
 	return to
 }
 
-// ConvertUserRolesPBToUserRoles converts a slice of *UserRolePB to a slice of *UserRole.
-func ConvertUserRolesPBToUserRoles(froms UserRolesPB) UserRoles {
-	if froms == nil {
-		return nil
-	}
-	tos := make(UserRoles, len(froms))
-	for i, f := range froms {
-		tos[i] = ConvertUserRolePBToUserRole(f)
-	}
-	return tos
-}
-
-// ConvertUserRolesToUserRolesPB converts a slice of *UserRole to a slice of *UserRolePB.
-func ConvertUserRolesToUserRolesPB(froms UserRoles) UserRolesPB {
-	if froms == nil {
-		return nil
-	}
-	tos := make(UserRolesPB, len(froms))
-	for i, f := range froms {
-		tos[i] = ConvertUserRoleToUserRolePB(f)
-	}
-	return tos
-}
-
 // ConvertUserToUserPB converts User to UserPB.
 func ConvertUserToUserPB(from *User) *UserPB {
 	if from == nil {
@@ -1127,10 +684,11 @@ func ConvertUserToUserPB(from *User) *UserPB {
 		Token:         from.Token,
 		Status:        int32(from.Status),
 		LastLoginIp:   from.LastLoginIP,
+		LoginIp:       from.LoginIP,
 		LastLoginTime: ConvertTimeToTimestamp(from.LastLoginTime),
+		LoginTime:     ConvertTimeToTimestamp(from.LoginTime),
 		SanctionDate:  ConvertTimeToTimestamp(from.SanctionDate),
-		ManagerId:     from.ManagerID,
-		Manager:       from.Manager,
+		Department:    from.Department,
 		Roles:         ConvertRolesToRolesPB(from.Edges.Roles),
 	}
 	return to
@@ -1160,34 +718,6 @@ func ConvertUsersToUsersPB(froms Users) UsersPB {
 	return tos
 }
 
-// ConvertViewEdgesPBToViewEdges converts ViewEdgesPB to ViewEdges.
-func ConvertViewEdgesPBToViewEdges(from *ViewEdgesPB) *ViewEdges {
-	if from == nil {
-		return nil
-	}
-
-	to := &ViewEdges{
-		Parent:    ConvertViewPBToView(from.Parent),
-		Children:  ConvertViewsPBToViews(from.Children),
-		Resources: ConvertResourcesPBToResources(from.Resources),
-	}
-	return to
-}
-
-// ConvertViewEdgesToViewEdgesPB converts ViewEdges to ViewEdgesPB.
-func ConvertViewEdgesToViewEdgesPB(from *ViewEdges) *ViewEdgesPB {
-	if from == nil {
-		return nil
-	}
-
-	to := &ViewEdgesPB{
-		Children:  ConvertViewsToViewsPB(from.Children),
-		Parent:    ConvertViewToViewPB(from.Parent),
-		Resources: ConvertResourcesToResourcesPB(from.Resources),
-	}
-	return to
-}
-
 // ConvertViewPBToView converts ViewPB to View.
 func ConvertViewPBToView(from *ViewPB) *View {
 	if from == nil {
@@ -1195,19 +725,23 @@ func ConvertViewPBToView(from *ViewPB) *View {
 	}
 
 	to := &View{
-		ID:         from.Id,
-		CreateTime: ConvertTimestampToTime(from.CreateTime),
-		UpdateTime: ConvertTimestampToTime(from.UpdateTime),
-		ParentID:   from.ParentId,
-		Keyword:    from.Keyword,
-		Scope:      from.Scope,
-		Name:       from.Name,
-		Type:       ConvertStringToType(from.Type),
-		Path:       from.Path,
-		Icon:       from.Icon,
-		Visible:    from.Visible,
-		Sequence:   int(from.Sequence),
-		TreePath:   from.TreePath,
+		ID:          from.Id,
+		CreateTime:  ConvertTimestampToTime(from.CreateTime),
+		UpdateTime:  ConvertTimestampToTime(from.UpdateTime),
+		ParentID:    from.ParentId,
+		Keyword:     from.Keyword,
+		Scope:       from.Scope,
+		Name:        from.Name,
+		I18n:        from.I18N,
+		Type:        ConvertStringToType(from.Type),
+		Component:   from.Component,
+		Path:        from.Path,
+		Icon:        from.Icon,
+		Sequence:    int(from.Sequence),
+		TreePath:    from.TreePath,
+		Description: from.Description,
+		Properties:  from.Properties,
+		Status:      enums.Status(from.Status),
 	}
 	return to
 }
@@ -1219,36 +753,28 @@ func ConvertViewToViewPB(from *View) *ViewPB {
 	}
 
 	to := &ViewPB{
-		Id:         from.ID,
-		CreateTime: ConvertTimeToTimestamp(from.CreateTime),
-		UpdateTime: ConvertTimeToTimestamp(from.UpdateTime),
-		Keyword:    from.Keyword,
-		Name:       from.Name,
-		Scope:      from.Scope,
-		Sequence:   int32(from.Sequence),
-		Type:       ConvertTypeToString(from.Type),
-		Icon:       from.Icon,
-		Visible:    from.Visible,
-		Path:       from.Path,
-		TreePath:   from.TreePath,
-		ParentId:   from.ParentID,
-		Children:   ConvertViewsToViewsPB(from.Edges.Children),
-		Parent:     ConvertViewToViewPB(from.Edges.Parent),
-		Resources:  ConvertResourcesToResourcesPB(from.Edges.Resources),
+		Id:          from.ID,
+		CreateTime:  ConvertTimeToTimestamp(from.CreateTime),
+		UpdateTime:  ConvertTimeToTimestamp(from.UpdateTime),
+		Keyword:     from.Keyword,
+		Name:        from.Name,
+		Scope:       from.Scope,
+		I18N:        from.I18n,
+		Description: from.Description,
+		Sequence:    int32(from.Sequence),
+		Type:        ConvertTypeToString(from.Type),
+		Icon:        from.Icon,
+		Path:        from.Path,
+		TreePath:    from.TreePath,
+		Properties:  from.Properties,
+		Status:      int32(from.Status),
+		ParentId:    from.ParentID,
+		Component:   from.Component,
+		Children:    ConvertViewsToViewsPB(from.Edges.Children),
+		Parent:      ConvertViewToViewPB(from.Edges.Parent),
+		Resources:   ConvertResourcesToResourcesPB(from.Edges.Resources),
 	}
 	return to
-}
-
-// ConvertViewsPBToViews converts a slice of *ViewPB to a slice of *View.
-func ConvertViewsPBToViews(froms ViewsPB) Views {
-	if froms == nil {
-		return nil
-	}
-	tos := make(Views, len(froms))
-	for i, f := range froms {
-		tos[i] = ConvertViewPBToView(f)
-	}
-	return tos
 }
 
 // ConvertViewsToViewsPB converts a slice of *View to a slice of *ViewPB.
