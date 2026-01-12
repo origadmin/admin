@@ -38,7 +38,9 @@ func processMask(mask *fieldmaskpb.FieldMask, validator ColumnValidator, message
 // SelectFields parses a ReadMask and returns a slice of column names for selection.
 // CRITICAL: It automatically adds the primary key (idField) to the selection if other fields are selected,
 // which is essential for ent to hydrate the model correctly.
-func SelectFields(mask *fieldmaskpb.FieldMask, validator ColumnValidator, idField string, messageType proto.Message) []string {
+func SelectFields[Q Selector[S], S any](s Q, mask *fieldmaskpb.FieldMask, validator ColumnValidator,
+	idField string,
+	messageType proto.Message) S {
 	selectCols := processMask(mask, validator, messageType)
 
 	// If any columns are selected, always ensure the ID field is also selected.
@@ -54,8 +56,10 @@ func SelectFields(mask *fieldmaskpb.FieldMask, validator ColumnValidator, idFiel
 			selectCols = append(selectCols, idField)
 		}
 	}
-
-	return selectCols
+	if len(selectCols) > 0 {
+		return s.Select(selectCols...)
+	}
+	return s.Select()
 }
 
 // UpdateFields parses an UpdateMask and returns a slice of column names for a partial update.

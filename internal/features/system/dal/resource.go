@@ -39,10 +39,8 @@ func (r *resourceRepo) Get(ctx context.Context, id int64, opts ...*dto.ResourceQ
 	}
 
 	if opt.ReadMask != nil {
-		selectCols := db.SelectFields(opt.ReadMask, resource.ValidColumn, resource.FieldID, new(types.Resource))
-		if len(selectCols) > 0 {
-			query.Select(selectCols...)
-		}
+		s := db.SelectFields(query, opt.ReadMask, resource.ValidColumn, resource.FieldID, new(types.Resource))
+		query = s.ResourceQuery
 	}
 
 	result, err := query.Only(ctx)
@@ -157,10 +155,8 @@ func (r *resourceRepo) List(ctx context.Context, opts ...*dto.ResourceQueryOptio
 	}
 
 	if opt.ReadMask != nil {
-		selectCols := db.SelectFields(opt.ReadMask, resource.ValidColumn, resource.FieldID, new(types.Resource))
-		if len(selectCols) > 0 {
-			query.Select(selectCols...)
-		}
+		s := db.SelectFields(query, opt.ReadMask, resource.ValidColumn, resource.FieldID, new(types.Resource))
+		query = s.ResourceQuery
 	}
 
 	// Sorting logic: only apply sorting from request if it's not already handled by a page token.

@@ -36,10 +36,9 @@ func (r *viewRepo) Get(ctx context.Context, id int64, opts ...*dto.ViewQueryOpti
 	query := r.db.View(ctx).Query().Where(view.ID(id))
 
 	if opt.ReadMask != nil {
-		selectCols := db.SelectFields(opt.ReadMask, view.ValidColumn, view.FieldID, new(types.View))
-		if len(selectCols) > 0 {
-			query.Select(selectCols...)
-		}
+		s := db.SelectFields(query, opt.ReadMask, view.ValidColumn, view.FieldID,
+			new(types.View))
+		query = s.ViewQuery
 	}
 
 	result, err := query.Only(ctx)
@@ -66,20 +65,9 @@ func (r *viewRepo) List(ctx context.Context, opts ...*dto.ViewQueryOption) ([]*t
 	}
 
 	if opt.ReadMask != nil {
-		selectCols := db.SelectFields(opt.ReadMask, view.ValidColumn, view.FieldID, new(types.View))
-		if len(selectCols) > 0 {
-			query.Select(selectCols...)
-		}
-	}
-
-	// Sorting logic: only apply sorting from request if it's not already handled by a page token.
-	if !opt.SortFromToken {
-		if len(opt.OrderBy) > 0 {
-			orders := db.OrderBy[view.OrderOption](opt.OrderBy)
-			if len(orders) > 0 {
-				query.Order(orders...)
-			}
-		}
+		s := db.SelectFields(query, opt.ReadMask, view.ValidColumn, view.FieldID,
+			new(types.View))
+		query = s.ViewQuery
 	}
 
 	result, count, err := db.Find(ctx, query, &opt.QueryOption)

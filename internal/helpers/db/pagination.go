@@ -111,7 +111,11 @@ type Pageable[T any, W any, O any, R any] interface {
 	Offset(int) T
 }
 
-type Selector interface {
+type Selector[S any] interface {
+	Select(fields ...string) S
+}
+
+type SourceSelector interface {
 	~func(*sql.Selector)
 }
 
@@ -188,7 +192,7 @@ func applyPageSize(opt *repo.QueryOption) int {
 type cursorCallback[T any] func(cursor Cursor) T
 
 // Paginate is the single, unified function for applying pagination logic.
-func Paginate[R any, W any, O Selector, P Pageable[P, W, O, R]](query P, opt *repo.QueryOption,
+func Paginate[R any, W any, O SourceSelector, P Pageable[P, W, O, R]](query P, opt *repo.QueryOption,
 	callbacks ...cursorCallback[W]) P {
 	if opt == nil {
 		return query.Limit(repo.DefaultPageSize)
@@ -235,7 +239,7 @@ func CountTotal[Q Counter[Q]](ctx context.Context, query Q) (int32, error) {
 }
 
 // Find executes the query with pagination options and returns the results and total count.
-func Find[R any, W any, O Selector, P Pageable[P, W, O, R]](ctx context.Context, query P,
+func Find[R any, W any, O SourceSelector, P Pageable[P, W, O, R]](ctx context.Context, query P,
 	o *repo.QueryOption, callbacks ...cursorCallback[W]) ([]R, int32, error) {
 
 	o = normalizeQueryOption(o)
@@ -258,13 +262,22 @@ func Find[R any, W any, O Selector, P Pageable[P, W, O, R]](ctx context.Context,
 		}
 
 		if count == 0 {
-			return nil, 0, nil
+			return []R{}, 0, nil
 		}
 
 		if o.PageSize > 0 && o.PagingMode == PagingModeOffset {
 			totalPages := (int(count) + o.PageSize - 1) / o.PageSize
 			if o.Page > totalPages {
 				return nil, count, nil
+			}
+		}
+	}
+
+	if !o.SortFromToken {
+		if len(o.OrderBy) > 0 {
+			orders := OrderBy[O](o.OrderBy)
+			if len(orders) > 0 {
+				query.Order(orders...)
 			}
 		}
 	}

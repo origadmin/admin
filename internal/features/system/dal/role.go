@@ -37,10 +37,9 @@ func (r *roleRepo) Get(ctx context.Context, id int64, opts ...*dto.RoleQueryOpti
 	}
 
 	if opt.ReadMask != nil {
-		selectCols := db.SelectFields(opt.ReadMask, role.ValidColumn, role.FieldID, new(types.Role))
-		if len(selectCols) > 0 {
-			query.Select(selectCols...)
-		}
+		s := db.SelectFields(query, opt.ReadMask, role.ValidColumn, role.FieldID,
+			new(types.Role))
+		query = s.RoleQuery
 	}
 
 	result, err := query.Only(ctx)
@@ -111,20 +110,9 @@ func (r *roleRepo) List(ctx context.Context, opts ...*dto.RoleQueryOption) ([]*t
 	}
 
 	if opt.ReadMask != nil {
-		selectCols := db.SelectFields(opt.ReadMask, role.ValidColumn, role.FieldID, new(types.Role))
-		if len(selectCols) > 0 {
-			query.Select(selectCols...)
-		}
-	}
-
-	// Sorting logic: only apply sorting from request if it's not already handled by a page token.
-	if !opt.SortFromToken {
-		if len(opt.OrderBy) > 0 {
-			orders := db.OrderBy[role.OrderOption](opt.OrderBy)
-			if len(orders) > 0 {
-				query.Order(orders...)
-			}
-		}
+		s := db.SelectFields(query, opt.ReadMask, role.ValidColumn, role.FieldID,
+			new(types.Role))
+		query = s.RoleQuery
 	}
 
 	result, count, err := db.Find(ctx, query, &opt.QueryOption)
