@@ -7,6 +7,7 @@ import (
 	"origadmin/application/admin/api/v1/services/system"
 	"origadmin/application/admin/internal/data/entity/ent"
 	"origadmin/application/admin/internal/features/system/biz"
+	"origadmin/application/admin/internal/helpers/db"
 )
 
 type ViewService struct {
@@ -24,12 +25,24 @@ func (s *ViewService) ListViews(ctx context.Context, req *system.ListViewsReques
 	if err != nil {
 		return nil, err
 	}
-	return &system.ListViewsResponse{
+
+	resp := &system.ListViewsResponse{
 		Views:    views,
 		Total:    total,
-		Page:     req.GetPage(),
 		PageSize: req.GetPageSize(),
-	}, nil
+	}
+
+	if req.GetPagingMode() == db.PagingModeCursor {
+		nextToken, err := db.GenerateNextPageToken(views, req)
+		if err != nil {
+			return nil, errors.InternalServer("TOKEN_GENERATION_FAILED", err.Error())
+		}
+		resp.NextPageToken = nextToken
+	} else {
+		resp.Page = req.GetPage()
+	}
+
+	return resp, nil
 }
 
 // GetView handles the RPC for getting a single view.

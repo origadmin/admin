@@ -162,7 +162,7 @@ func _PositionService_CreatePosition0_Bridge_Handler(srv PositionServiceHookedBr
 func _PositionService_UpdatePosition0_Bridge_Handler(srv PositionServiceHookedBridger) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
 		var in UpdatePositionRequest
-		if err := ctx.Bind(&in.Position); err != nil {
+		if err := ctx.Bind(&in); err != nil {
 			return err
 		}
 		if err := ctx.BindQuery(&in); err != nil {

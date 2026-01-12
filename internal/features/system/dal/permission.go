@@ -107,10 +107,13 @@ func (r *permissionRepo) List(ctx context.Context, opts ...*dto.PermissionQueryO
 		}
 	}
 
-	if opt.OrderBy != nil {
-		orders := db.OrderBy[permission.OrderOption](opt.OrderBy)
-		if len(orders) > 0 {
-			query.Order(orders...)
+	// Sorting logic: only apply sorting from request if it's not already handled by a page token.
+	if !opt.SortFromToken {
+		if len(opt.OrderBy) > 0 {
+			orders := db.OrderBy[permission.OrderOption](opt.OrderBy)
+			if len(orders) > 0 {
+				query.Order(orders...)
+			}
 		}
 	}
 

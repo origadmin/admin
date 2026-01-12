@@ -31,9 +31,9 @@ type TokenPaginatingRequest interface {
 	GetPageToken() string
 }
 
-// NoPagingRequest defines the contract for any request that can disable pagination.
-type NoPagingRequest interface {
-	GetNoPaging() bool
+// PagingModeRequest defines the contract for any request that can specify a pagination mode.
+type PagingModeRequest interface {
+	GetPagingMode() string
 }
 
 // CountingRequest defines the contract for any request that supports "count-only" mode.
@@ -54,14 +54,15 @@ type SortingRequest interface {
 // QueryOption holds common query options like pagination and ordering.
 // It is intended to be embedded in more specific query option structs.
 type QueryOption struct {
-	Page      int
-	PageSize  int
-	PageToken string
-	NoPaging  bool
-	OnlyCount bool
-	Keyword   string
-	OrderBy   []string
-	ReadMask  *fieldmaskpb.FieldMask // Use FieldMask for field selection
+	Page          int
+	PageSize      int
+	PageToken     string
+	PagingMode    string
+	OnlyCount     bool
+	Keyword       string
+	OrderBy       []string
+	ReadMask      *fieldmaskpb.FieldMask // Use FieldMask for field selection
+	SortFromToken bool
 }
 
 // QueryOptionFromRequest creates a QueryOption with common details
@@ -78,8 +79,8 @@ func QueryOptionFromRequest(req interface{}) QueryOption {
 		opt.PageToken = r.GetPageToken()
 	}
 
-	if r, ok := req.(NoPagingRequest); ok {
-		opt.NoPaging = r.GetNoPaging()
+	if r, ok := req.(PagingModeRequest); ok {
+		opt.PagingMode = r.GetPagingMode()
 	}
 
 	if r, ok := req.(CountingRequest); ok {

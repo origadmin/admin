@@ -11,6 +11,7 @@ import (
 	"origadmin/application/admin/api/v1/services/system"
 	"origadmin/application/admin/internal/data/entity/ent"
 	"origadmin/application/admin/internal/features/system/biz"
+	"origadmin/application/admin/internal/helpers/db"
 )
 
 type RoleService struct {
@@ -28,12 +29,23 @@ func (s *RoleService) ListRoles(ctx context.Context, req *system.ListRolesReques
 		return nil, err
 	}
 
-	return &system.ListRolesResponse{
+	resp := &system.ListRolesResponse{
 		Roles:    roles,
 		Total:    total,
-		Page:     req.GetPage(),
 		PageSize: req.GetPageSize(),
-	}, nil
+	}
+
+	if req.GetPagingMode() == db.PagingModeCursor {
+		nextToken, err := db.GenerateNextPageToken(roles, req)
+		if err != nil {
+			return nil, errors.InternalServer("TOKEN_GENERATION_FAILED", err.Error())
+		}
+		resp.NextPageToken = nextToken
+	} else {
+		resp.Page = req.GetPage()
+	}
+
+	return resp, nil
 }
 func (s *RoleService) GetRole(ctx context.Context, req *system.GetRoleRequest) (*system.GetRoleResponse, error) {
 	role, err := s.uc.GetRole(ctx, req.GetId())

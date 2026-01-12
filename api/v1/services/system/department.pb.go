@@ -657,7 +657,7 @@ const file_system_department_proto_rawDesc = "" +
 	"\x17DeleteDepartmentRequest\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\x03R\x02id\"H\n" +
 	"\x18DeleteDepartmentResponse\x12,\n" +
-	"\x05empty\x18\x01 \x01(\v2\x16.google.protobuf.EmptyR\x05empty2\xd0\x06\n" +
+	"\x05empty\x18\x01 \x01(\v2\x16.google.protobuf.EmptyR\x05empty2\xc7\x06\n" +
 	"\x11DepartmentService\x12\x9a\x01\n" +
 	"\x0fListDepartments\x12..api.v1.services.system.ListDepartmentsRequest\x1a/.api.v1.services.system.ListDepartmentsResponse\"&\xea\xea\x1b\n" +
 	"\n" +
@@ -667,11 +667,10 @@ const file_system_department_proto_rawDesc = "" +
 	"\bjwt-auth\x82\xd3\xe4\x93\x02\x17\x12\x15/sys/departments/{id}\x12\xa0\x01\n" +
 	"\x10CreateDepartment\x12/.api.v1.services.system.CreateDepartmentRequest\x1a0.api.v1.services.system.CreateDepartmentResponse\")\xea\xea\x1b\n" +
 	"\n" +
-	"\bjwt-auth\x82\xd3\xe4\x93\x02\x15:\x01*\"\x10/sys/departments\x12\xb9\x01\n" +
-	"\x10UpdateDepartment\x12/.api.v1.services.system.UpdateDepartmentRequest\x1a0.api.v1.services.system.UpdateDepartmentResponse\"B\xea\xea\x1b\n" +
+	"\bjwt-auth\x82\xd3\xe4\x93\x02\x15:\x01*\"\x10/sys/departments\x12\xb0\x01\n" +
+	"\x10UpdateDepartment\x12/.api.v1.services.system.UpdateDepartmentRequest\x1a0.api.v1.services.system.UpdateDepartmentResponse\"9\xea\xea\x1b\n" +
 	"\n" +
-	"\bjwt-auth\x82\xd3\xe4\x93\x02.:\n" +
-	"department\x1a /sys/departments/{department.id}\x12\xa2\x01\n" +
+	"\bjwt-auth\x82\xd3\xe4\x93\x02%:\x01*\x1a /sys/departments/{department.id}\x12\xa2\x01\n" +
 	"\x10DeleteDepartment\x12/.api.v1.services.system.DeleteDepartmentRequest\x1a0.api.v1.services.system.DeleteDepartmentResponse\"+\xea\xea\x1b\n" +
 	"\n" +
 	"\bjwt-auth\x82\xd3\xe4\x93\x02\x17*\x15/sys/departments/{id}B\xe4\x01\n" +

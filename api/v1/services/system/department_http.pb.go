@@ -108,7 +108,7 @@ func _DepartmentService_CreateDepartment0_HTTP_Handler(srv DepartmentServiceHTTP
 func _DepartmentService_UpdateDepartment0_HTTP_Handler(srv DepartmentServiceHTTPServer) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
 		var in UpdateDepartmentRequest
-		if err := ctx.Bind(&in.Department); err != nil {
+		if err := ctx.Bind(&in); err != nil {
 			return err
 		}
 		if err := ctx.BindQuery(&in); err != nil {
@@ -226,7 +226,7 @@ func (c *DepartmentServiceHTTPClientImpl) UpdateDepartment(ctx context.Context, 
 	path := binding.EncodeURL(pattern, in, false)
 	opts = append(opts, http.Operation(OperationDepartmentServiceUpdateDepartment))
 	opts = append(opts, http.PathTemplate(pattern))
-	err := c.cc.Invoke(ctx, "PUT", path, in.Department, &out, opts...)
+	err := c.cc.Invoke(ctx, "PUT", path, in, &out, opts...)
 	if err != nil {
 		return nil, err
 	}

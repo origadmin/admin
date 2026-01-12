@@ -117,10 +117,13 @@ func (r *userRepo) List(ctx context.Context, opts ...*dto.UserQueryOption) ([]*t
 		}
 	}
 
-	if opt.OrderBy != nil {
-		orders := db.OrderBy[user.OrderOption](opt.OrderBy)
-		if len(orders) > 0 {
-			query.Order(orders...)
+	// Sorting logic: only apply sorting from request if it's not already handled by a page token.
+	if !opt.SortFromToken {
+		if len(opt.OrderBy) > 0 {
+			orders := db.OrderBy[user.OrderOption](opt.OrderBy)
+			if len(orders) > 0 {
+				query.Order(orders...)
+			}
 		}
 	}
 

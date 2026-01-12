@@ -34,7 +34,7 @@ service PositionService {
   rpc UpdatePosition(UpdatePositionRequest) returns (UpdatePositionResponse) {
     option (google.api.http) = {
       put: "/sys/positions/{position.id}"
-      body: "position"
+      body: "*"
     };
     option (contrib.api.policy.v1.policy) = {name: "jwt-auth"};
   }

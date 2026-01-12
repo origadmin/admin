@@ -790,16 +790,11 @@ paths:
                   required: true
                   schema:
                     type: string
-                - name: id
-                  in: query
-                  description: The department id to use for this department.
-                  schema:
-                    type: string
             requestBody:
                 content:
                     application/json:
                         schema:
-                            $ref: '#/components/schemas/api.v1.services.types.Department'
+                            $ref: '#/components/schemas/api.v1.services.system.UpdateDepartmentRequest'
                 required: true
             responses:
                 "200":
@@ -1179,16 +1174,11 @@ paths:
                   required: true
                   schema:
                     type: string
-                - name: id
-                  in: query
-                  description: The id of the position resource to update.
-                  schema:
-                    type: string
             requestBody:
                 content:
                     application/json:
                         schema:
-                            $ref: '#/components/schemas/api.v1.services.types.Position'
+                            $ref: '#/components/schemas/api.v1.services.system.UpdatePositionRequest'
                 required: true
             responses:
                 "200":
@@ -2923,6 +2913,16 @@ components:
         api.v1.services.system.ResetUserPasswordResponse:
             type: object
             properties: {}
+        api.v1.services.system.UpdateDepartmentRequest:
+            type: object
+            properties:
+                id:
+                    type: string
+                    description: The department id to use for this department.
+                department:
+                    allOf:
+                        - $ref: '#/components/schemas/api.v1.services.types.Department'
+                    description: The department resource which replaces the resource on the server.
         api.v1.services.system.UpdateDepartmentResponse:
             type: object
             properties:
@@ -2943,6 +2943,16 @@ components:
             properties:
                 permission:
                     $ref: '#/components/schemas/api.v1.services.types.Permission'
+        api.v1.services.system.UpdatePositionRequest:
+            type: object
+            properties:
+                id:
+                    type: string
+                    description: The id of the position resource to update.
+                position:
+                    allOf:
+                        - $ref: '#/components/schemas/api.v1.services.types.Position'
+                    description: The position resource which replaces the resource on the server.
         api.v1.services.system.UpdatePositionResponse:
             type: object
             properties:

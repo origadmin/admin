@@ -34,7 +34,7 @@ service DepartmentService {
   rpc UpdateDepartment(UpdateDepartmentRequest) returns (UpdateDepartmentResponse) {
     option (google.api.http) = {
       put: "/sys/departments/{department.id}"
-      body: "department"
+      body: "*"
     };
     option (contrib.api.policy.v1.policy) = {name: "jwt-auth"};
   }

@@ -13,11 +13,65 @@ import (
 	"encoding/base64"
 	"encoding/gob"
 	"fmt"
+	"strings"
 
 	"entgo.io/ent/dialect/sql"
 
 	"origadmin/application/admin/internal/helpers/repo"
 )
+
+const (
+	// PagingModeCursor indicates cursor-based pagination (for infinite scrolling).
+	PagingModeCursor = "cursor"
+	// PagingModeOffset indicates traditional offset-based pagination.
+	PagingModeOffset = "offset"
+	// PagingModeNone indicates no pagination, returning all available records up to a hard limit.
+	PagingModeNone = "none"
+)
+
+// Identifiable defines the contract for any entity that has a retrievable ID.
+type Identifiable interface {
+	GetId() int64
+}
+
+// GenerateNextPageToken creates a pagination token for cursor-based pagination.
+// It accepts the raw request interface and extracts necessary options internally.
+func GenerateNextPageToken[T Identifiable](results []T, req interface{}) (string, error) {
+	opt := repo.QueryOptionFromRequest(req)
+
+	pagingMode := opt.PagingMode
+	if pagingMode == "" {
+		pagingMode = PagingModeOffset // Default to offset for backward compatibility
+	}
+
+	if pagingMode != PagingModeCursor {
+		return "", nil
+	}
+
+	if len(results) > 0 && len(results) == opt.PageSize {
+		last := results[len(results)-1]
+
+		// Default sort order if not provided
+		sortField := "id"
+		sortDesc := true
+		if len(opt.OrderBy) > 0 {
+			parts := strings.Fields(opt.OrderBy[0])
+			sortField = parts[0]
+			if len(parts) > 1 && strings.ToLower(parts[1]) == "asc" {
+				sortDesc = false
+			}
+		}
+
+		cursor := Cursor{ID: last.GetId(), Field: sortField, Desc: sortDesc}
+		token, err := EncodeCursor(cursor)
+		if err != nil {
+			return "", fmt.Errorf("failed to encode next page token: %w", err)
+		}
+		return token, nil
+	}
+
+	return "", nil
+}
 
 type Cursor struct {
 	ID    int64  `json:"id"`
@@ -47,7 +101,6 @@ func DecodeCursor(token string) (Cursor, error) {
 }
 
 // Pageable defines the interface for queries that can be paginated.
-// It aggregates capabilities for counting, cloning, filtering, ordering, and fetching results.
 type Pageable[T any, W any, O any, R any] interface {
 	Counter[T]
 	Cloner[T]
@@ -104,7 +157,7 @@ func normalizeQueryOption(opt *repo.QueryOption) *repo.QueryOption {
 	}
 
 	// Normalize page size
-	if opt.NoPaging {
+	if opt.PagingMode == PagingModeNone {
 		if opt.PageSize <= 0 || opt.PageSize > repo.HardLimit {
 			opt.PageSize = repo.HardLimit
 		}
@@ -121,12 +174,11 @@ func normalizeQueryOption(opt *repo.QueryOption) *repo.QueryOption {
 }
 
 func applyPageSize(opt *repo.QueryOption) int {
-	// Note: This function now only handles page size, page validation is handled in normalizeQueryOption
 	if opt == nil {
 		return repo.DefaultPageSize
 	}
 
-	if opt.NoPaging {
+	if opt.PagingMode == PagingModeNone {
 		return repo.HardLimit
 	}
 
@@ -136,47 +188,44 @@ func applyPageSize(opt *repo.QueryOption) int {
 type cursorCallback[T any] func(cursor Cursor) T
 
 // Paginate is the single, unified function for applying pagination logic.
-// It ONLY handles Limit and Offset based on the provided options.
-// All WHERE and ORDER clauses are the responsibility of the caller in the DAL layer.
-// Note: Page boundary validation is handled in the Find function.
 func Paginate[R any, W any, O Selector, P Pageable[P, W, O, R]](query P, opt *repo.QueryOption,
 	callbacks ...cursorCallback[W]) P {
 	if opt == nil {
 		return query.Limit(repo.DefaultPageSize)
 	}
 
-	// 1. Handle NoPaging case with a hard security limit.
-	// 2. Determine the final page size for standard pagination.
 	pageSize := applyPageSize(opt)
 	query = query.Limit(pageSize)
 
-	if opt.NoPaging {
-		return query
+	pagingMode := opt.PagingMode
+	if pagingMode == "" {
+		pagingMode = PagingModeOffset
 	}
 
-	// 3. Apply offset only if it's not a token-based pagination request.
-	if opt.PageToken == "" {
-		query = query.Offset((opt.Page - 1) * pageSize)
-	}
-
-	// 4. Apply cursor-based pagination if a token is provided.
-	if opt.PageToken != "" {
-		cursor, err := DecodeCursor(opt.PageToken)
-		if err != nil {
-			query = query.Limit(0)
-		} else {
-			query.Order(OrderByField[O](cursor.Field, cursor.Desc))
-			for _, cb := range callbacks {
-				query = query.Where(cb(cursor))
+	switch pagingMode {
+	case PagingModeCursor:
+		if opt.PageToken != "" {
+			cursor, err := DecodeCursor(opt.PageToken)
+			if err != nil {
+				query = query.Limit(0)
+			} else {
+				opt.SortFromToken = true // Mark that sorting is now dictated by the token
+				query = query.Order(OrderByField[O](cursor.Field, cursor.Desc))
+				for _, cb := range callbacks {
+					query = query.Where(cb(cursor))
+				}
 			}
 		}
+	case PagingModeOffset:
+		query = query.Offset((opt.Page - 1) * pageSize)
+	case PagingModeNone:
+		// NoPaging is handled by applyPageSize, so nothing more to do here.
 	}
 
 	return query
 }
 
 // CountTotal executes the count query and returns the total number of records.
-// It clones the query to avoid side effects on the original query builder.
 func CountTotal[Q Counter[Q]](ctx context.Context, query Q) (int32, error) {
 	count, err := query.Clone().Count(ctx)
 	if err != nil {
@@ -186,16 +235,11 @@ func CountTotal[Q Counter[Q]](ctx context.Context, query Q) (int32, error) {
 }
 
 // Find executes the query with pagination options and returns the results and total count.
-// It handles both offset-based and cursor-based pagination.
-// For offset-based pagination, it performs an optimization to skip the data query
-// if the total count is 0 or the requested page is out of range.
 func Find[R any, W any, O Selector, P Pageable[P, W, O, R]](ctx context.Context, query P,
 	o *repo.QueryOption, callbacks ...cursorCallback[W]) ([]R, int32, error) {
 
-	// Unified initialization and validation of options
 	o = normalizeQueryOption(o)
 
-	// Optimization: If only count is needed, execute count query directly
 	if o.OnlyCount {
 		count, err := CountTotal(ctx, query)
 		if err != nil {
@@ -207,34 +251,26 @@ func Find[R any, W any, O Selector, P Pageable[P, W, O, R]](ctx context.Context,
 	var count int32
 	var err error
 
-	// Execute count query only for non-cursor pagination (Offset-based)
-	if o.PageToken == "" {
+	if o.PagingMode != PagingModeCursor {
 		count, err = CountTotal(ctx, query)
 		if err != nil {
 			return nil, 0, fmt.Errorf("count query failed: %w", err)
 		}
 
-		// Optimization: Early exit if no data found
 		if count == 0 {
-			return []R{}, 0, nil
+			return nil, 0, nil
 		}
 
-		// Optimization: Early exit if requested page exceeds total pages
-		// Note: o.PageSize is guaranteed to be > 0 by normalizeQueryOption (unless NoPaging is true, where Page is 1)
-		if o.PageSize > 0 {
-			// Calculate total pages: ceil(count / pageSize)
+		if o.PageSize > 0 && o.PagingMode == PagingModeOffset {
 			totalPages := (int(count) + o.PageSize - 1) / o.PageSize
 			if o.Page > totalPages {
-				// Page number out of range, return empty result
-				return []R{}, count, nil
+				return nil, count, nil
 			}
 		}
 	}
 
-	// Apply pagination logic (Limit, Offset, Cursor) to the query
 	query = Paginate(query, o, callbacks...)
 
-	// Execute the data query
 	result, err := query.All(ctx)
 	if err != nil {
 		return nil, 0, fmt.Errorf("data query failed: %w", err)
