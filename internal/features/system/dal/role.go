@@ -51,6 +51,7 @@ func (r *roleRepo) Get(ctx context.Context, id int64, opts ...*dto.RoleQueryOpti
 }
 
 func (r *roleRepo) Create(ctx context.Context, rl *types.Role, opts ...*dto.RoleCreateOption) (*types.Role, error) {
+	opt := repo.GetFirstOption(opts...)
 	if rl.Keyword == "" {
 		randString, err := r.gen.String(12)
 		if err != nil {
@@ -66,6 +67,16 @@ func (r *roleRepo) Create(ctx context.Context, rl *types.Role, opts ...*dto.Role
 	entRole := dto.ConvertRolePBToRole(rl)
 	create := r.db.Role(ctx).Create().SetRoleSkipZero(entRole)
 
+	if opt.WithPermissionIDs != nil {
+		create.AddPermissionIDs(opt.WithPermissionIDs...)
+	}
+	if opt.WithResourceIDs != nil {
+		create.AddResourceIDs(opt.WithResourceIDs...)
+	}
+	if opt.WithViewIDs != nil {
+		create.AddViewIDs(opt.WithViewIDs...)
+	}
+
 	saved, err := create.Save(ctx)
 	if err != nil {
 		return nil, err
@@ -78,7 +89,25 @@ func (r *roleRepo) Delete(ctx context.Context, id int64) error {
 }
 
 func (r *roleRepo) Update(ctx context.Context, rl *types.Role, opts ...*dto.RoleUpdateOption) (*types.Role, error) {
-	opt := repo.GetFirstOption(opts...)
+	opt := &dto.RoleUpdateOption{}
+	// Merge options
+	for _, o := range opts {
+		if o != nil {
+			if o.UpdateMask != nil {
+				opt.UpdateMask = o.UpdateMask
+			}
+			if o.WithPermissionIDs != nil {
+				opt.WithPermissionIDs = o.WithPermissionIDs
+			}
+			if o.WithResourceIDs != nil {
+				opt.WithResourceIDs = o.WithResourceIDs
+			}
+			if o.WithViewIDs != nil {
+				opt.WithViewIDs = o.WithViewIDs
+			}
+		}
+	}
+
 	entRole := dto.ConvertRolePBToRole(rl)
 	update := r.db.Role(ctx).UpdateOneID(rl.Id)
 
@@ -89,6 +118,16 @@ func (r *roleRepo) Update(ctx context.Context, rl *types.Role, opts ...*dto.Role
 	} else {
 		// If no field mask, skip zero values to prevent accidental clearing of fields.
 		update.SetRoleSkipZero(entRole)
+	}
+
+	if opt.WithPermissionIDs != nil {
+		update.ClearPermissions().AddPermissionIDs(opt.WithPermissionIDs...)
+	}
+	if opt.WithResourceIDs != nil {
+		update.ClearResources().AddResourceIDs(opt.WithResourceIDs...)
+	}
+	if opt.WithViewIDs != nil {
+		update.ClearViews().AddViewIDs(opt.WithViewIDs...)
 	}
 
 	saved, err := update.Save(ctx)

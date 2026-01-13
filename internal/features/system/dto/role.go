@@ -34,14 +34,20 @@ type RoleQueryOption struct {
 
 // RoleCreateOption specifies options for creating a role.
 type RoleCreateOption struct {
+	WithPermissionIDs []int64
+	WithResourceIDs   []int64
+	WithViewIDs       []int64
 }
 
 // RoleUpdateOption specifies options for updating a role.
 type RoleUpdateOption struct {
 	repo.UpdateOption
+	WithPermissionIDs []int64
+	WithResourceIDs   []int64
+	WithViewIDs       []int64
 }
 
-// ListRolesRequestToQueryOption converts an API request to a query option object.
+// ListRolesRequestToQueryOption converts a ListRolesRequest to a query option object.
 func ListRolesRequestToQueryOption(req *system.ListRolesRequest) *RoleQueryOption {
 	if req == nil {
 		return &RoleQueryOption{}
@@ -51,12 +57,31 @@ func ListRolesRequestToQueryOption(req *system.ListRolesRequest) *RoleQueryOptio
 	}
 }
 
-// UpdateRoleRequestToUpdateOption converts an API request to an update option object.
-func UpdateRoleRequestToUpdateOption(req *system.UpdateRoleRequest) *RoleUpdateOption {
+// CreateRoleOptionsFromRequest converts a CreateRoleRequest to a create option object.
+// It intelligently extracts all association IDs from the request.
+func CreateRoleOptionsFromRequest(req *system.CreateRoleRequest) *RoleCreateOption {
+	if req == nil {
+		return &RoleCreateOption{}
+	}
+	opts := &RoleCreateOption{
+		WithPermissionIDs: req.GetPermissionIds(),
+		WithResourceIDs:   req.GetResourceIds(),
+		WithViewIDs:       req.GetViewIds(),
+	}
+	return opts
+}
+
+// UpdateRoleOptionsFromRequest converts an UpdateRoleRequest to an update option object.
+// It intelligently extracts all association IDs from the request.
+func UpdateRoleOptionsFromRequest(req *system.UpdateRoleRequest) *RoleUpdateOption {
 	if req == nil {
 		return &RoleUpdateOption{}
 	}
-	return &RoleUpdateOption{
+	opts := &RoleUpdateOption{
 		UpdateOption: repo.UpdateOptionFromRequest(req),
+		WithPermissionIDs: req.GetPermissionIds(),
+		WithResourceIDs:   req.GetResourceIds(),
+		WithViewIDs:       req.GetViewIds(),
 	}
+	return opts
 }

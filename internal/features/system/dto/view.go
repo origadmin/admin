@@ -30,11 +30,16 @@ type ViewQueryOption struct {
 }
 
 // ViewCreateOption specifies options for creating a view.
-type ViewCreateOption struct{}
+type ViewCreateOption struct {
+	WithResourceIDs []int64
+	WithRoleIDs     []int64
+}
 
 // ViewUpdateOption specifies options for updating a view.
 type ViewUpdateOption struct {
 	repo.UpdateOption
+	WithResourceIDs []int64
+	WithRoleIDs     []int64
 }
 
 // ListViewsRequestToQueryOption converts an API request to a query option object.
@@ -49,12 +54,27 @@ func ListViewsRequestToQueryOption(req *system.ListViewsRequest) *ViewQueryOptio
 	}
 }
 
-// UpdateViewRequestToUpdateOption converts an API request to an update option object.
-func UpdateViewRequestToUpdateOption(req *system.UpdateViewRequest) *ViewUpdateOption {
+// CreateViewOptionsFromRequest converts a CreateViewRequest to a create option object.
+func CreateViewOptionsFromRequest(req *system.CreateViewRequest) *ViewCreateOption {
+	if req == nil {
+		return &ViewCreateOption{}
+	}
+	opts := &ViewCreateOption{
+		WithResourceIDs: req.GetResourceIds(),
+		WithRoleIDs:     req.GetRoleIds(),
+	}
+	return opts
+}
+
+// UpdateViewOptionsFromRequest converts an UpdateViewRequest to an update option object.
+func UpdateViewOptionsFromRequest(req *system.UpdateViewRequest) *ViewUpdateOption {
 	if req == nil {
 		return &ViewUpdateOption{}
 	}
-	return &ViewUpdateOption{
+	opts := &ViewUpdateOption{
 		UpdateOption: repo.UpdateOptionFromRequest(req),
+		WithResourceIDs: req.GetResourceIds(),
+		WithRoleIDs:     req.GetRoleIds(),
 	}
+	return opts
 }

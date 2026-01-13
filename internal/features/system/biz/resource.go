@@ -8,7 +8,6 @@ package biz
 import (
 	"context"
 
-	"origadmin/application/admin/api/v1/services/system"
 	"origadmin/application/admin/api/v1/services/types"
 	"origadmin/application/admin/internal/data/enums"
 	"origadmin/application/admin/internal/features/system/dto"
@@ -24,9 +23,8 @@ func NewResourceUseCase(repo dto.ResourceRepo) *ResourceUseCase {
 	return &ResourceUseCase{repo: repo}
 }
 
-func (uc *ResourceUseCase) ListResources(ctx context.Context, in *system.ListResourcesRequest) ([]*types.Resource, int32, error) {
-	queryOpt := dto.ListResourcesRequestToQueryOption(in)
-	return uc.repo.List(ctx, queryOpt)
+func (uc *ResourceUseCase) ListResources(ctx context.Context, opts ...*dto.ResourceQueryOption) ([]*types.Resource, int32, error) {
+	return uc.repo.List(ctx, opts...)
 }
 
 func (uc *ResourceUseCase) GetResource(ctx context.Context, id int64) (*types.Resource, error) {
@@ -35,13 +33,13 @@ func (uc *ResourceUseCase) GetResource(ctx context.Context, id int64) (*types.Re
 
 // CreateResource creates a new resource, intended for use by external APIs (e.g., frontend).
 // It handles manual creation logic.
-func (uc *ResourceUseCase) CreateResource(ctx context.Context, in *types.Resource) (*types.Resource, error) {
+func (uc *ResourceUseCase) CreateResource(ctx context.Context, in *types.Resource, opts ...*dto.ResourceCreateOption) (*types.Resource, error) {
 	// The backend must always enforce data integrity.
 	if in.Status == 0 {
 		in.Status = int32(enums.StatusEnabled)
 	}
 
-	return uc.repo.Create(ctx, in)
+	return uc.repo.Create(ctx, in, opts...)
 }
 
 // CreateResourceFromPolicy creates a new resource based on a security policy definition.
@@ -50,8 +48,8 @@ func (uc *ResourceUseCase) CreateResourceFromPolicy(ctx context.Context, input *
 	return uc.repo.CreateFromPolicy(ctx, input)
 }
 
-func (uc *ResourceUseCase) UpdateResource(ctx context.Context, in *types.Resource) (*types.Resource, error) {
-	return uc.repo.Update(ctx, in)
+func (uc *ResourceUseCase) UpdateResource(ctx context.Context, in *types.Resource, opts ...*dto.ResourceUpdateOption) (*types.Resource, error) {
+	return uc.repo.Update(ctx, in, opts...)
 }
 
 func (uc *ResourceUseCase) DeleteResource(ctx context.Context, id int64) error {

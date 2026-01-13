@@ -43,11 +43,13 @@ type ResourceQueryOption struct {
 
 // ResourceCreateOption specifies options for creating a resource.
 type ResourceCreateOption struct {
+	WithPermissionIDs []int64
 }
 
 // ResourceUpdateOption specifies options for updating a resource.
 type ResourceUpdateOption struct {
 	repo.UpdateOption
+	WithPermissionIDs []int64
 }
 
 // ListResourcesRequestToQueryOption converts an API request to a query option object.
@@ -62,12 +64,25 @@ func ListResourcesRequestToQueryOption(req *system.ListResourcesRequest) *Resour
 	}
 }
 
-// UpdateResourceRequestToUpdateOption converts an API request to an update option object.
-func UpdateResourceRequestToUpdateOption(req *system.UpdateResourceRequest) *ResourceUpdateOption {
+// CreateResourceOptionsFromRequest converts a CreateResourceRequest to a create option object.
+func CreateResourceOptionsFromRequest(req *system.CreateResourceRequest) *ResourceCreateOption {
+	if req == nil {
+		return &ResourceCreateOption{}
+	}
+	opts := &ResourceCreateOption{
+		WithPermissionIDs: req.GetPermissionIds(),
+	}
+	return opts
+}
+
+// UpdateResourceOptionsFromRequest converts an UpdateResourceRequest to an update option object.
+func UpdateResourceOptionsFromRequest(req *system.UpdateResourceRequest) *ResourceUpdateOption {
 	if req == nil {
 		return &ResourceUpdateOption{}
 	}
-	return &ResourceUpdateOption{
+	opts := &ResourceUpdateOption{
 		UpdateOption: repo.UpdateOptionFromRequest(req),
+		WithPermissionIDs: req.GetPermissionIds(),
 	}
+	return opts
 }

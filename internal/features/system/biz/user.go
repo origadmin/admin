@@ -44,9 +44,8 @@ func (uc *UserUseCase) ResetUserPassword(ctx context.Context, id int64, password
 	return nil
 }
 
-func (uc *UserUseCase) ListUsers(ctx context.Context, in *system.ListUsersRequest) ([]*types.User, int32, error) {
-	queryOpt := dto.ListUsersRequestToQueryOption(in)
-	return uc.repo.List(ctx, queryOpt)
+func (uc *UserUseCase) ListUsers(ctx context.Context, opts ...*dto.UserQueryOption) ([]*types.User, int32, error) {
+	return uc.repo.List(ctx, opts...)
 }
 
 func (uc *UserUseCase) GetUser(ctx context.Context, id int64) (*types.User, error) {
@@ -54,7 +53,7 @@ func (uc *UserUseCase) GetUser(ctx context.Context, id int64) (*types.User, erro
 }
 
 // CreateUser creates a new user, ensuring essential fields have valid default values.
-func (uc *UserUseCase) CreateUser(ctx context.Context, in *types.User, password string) (*types.User, error) {
+func (uc *UserUseCase) CreateUser(ctx context.Context, in *types.User, password string, opts ...*dto.UserCreateOption) (*types.User, error) {
 	// The backend must always enforce data integrity, regardless of frontend behavior.
 	if in.Status == 0 {
 		in.Status = int32(enums.StatusEnabled)
@@ -66,11 +65,11 @@ func (uc *UserUseCase) CreateUser(ctx context.Context, in *types.User, password 
 	}
 	fmt.Println("Create new user username:", in.Username, "password:", password)
 
-	return uc.repo.Create(ctx, in, hashedPassword)
+	return uc.repo.Create(ctx, in, hashedPassword, opts...)
 }
 
-func (uc *UserUseCase) UpdateUser(ctx context.Context, in *types.User) (*types.User, error) {
-	return uc.repo.Update(ctx, in)
+func (uc *UserUseCase) UpdateUser(ctx context.Context, in *types.User, opts ...*dto.UserUpdateOption) (*types.User, error) {
+	return uc.repo.Update(ctx, in, opts...)
 }
 
 func (uc *UserUseCase) DeleteUser(ctx context.Context, id int64) error {

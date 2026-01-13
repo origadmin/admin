@@ -11,6 +11,7 @@ import (
 	"origadmin/application/admin/api/v1/services/system"
 	"origadmin/application/admin/internal/data/entity/ent"
 	"origadmin/application/admin/internal/features/system/biz"
+	"origadmin/application/admin/internal/features/system/dto"
 	"origadmin/application/admin/internal/helpers/db"
 )
 
@@ -24,7 +25,8 @@ func NewPermissionService(uc *biz.PermissionUseCase) *PermissionService {
 }
 
 func (s *PermissionService) ListPermissions(ctx context.Context, req *system.ListPermissionsRequest) (*system.ListPermissionsResponse, error) {
-	permissions, total, err := s.uc.ListPermissions(ctx, req)
+	queryOpt := dto.ListPermissionsRequestToQueryOption(req)
+	permissions, total, err := s.uc.ListPermissions(ctx, queryOpt)
 	if err != nil {
 		return nil, err
 	}
@@ -65,7 +67,8 @@ func (s *PermissionService) GetPermission(ctx context.Context, req *system.GetPe
 }
 
 func (s *PermissionService) CreatePermission(ctx context.Context, req *system.CreatePermissionRequest) (*system.CreatePermissionResponse, error) {
-	permission, err := s.uc.CreatePermission(ctx, req.GetPermission())
+	opts := dto.CreatePermissionOptionsFromRequest(req)
+	permission, err := s.uc.CreatePermission(ctx, req.GetPermission(), opts)
 	if err != nil {
 		return nil, err
 	}
@@ -73,7 +76,8 @@ func (s *PermissionService) CreatePermission(ctx context.Context, req *system.Cr
 }
 
 func (s *PermissionService) UpdatePermission(ctx context.Context, req *system.UpdatePermissionRequest) (*system.UpdatePermissionResponse, error) {
-	permission, err := s.uc.UpdatePermission(ctx, req.GetPermission())
+	opts := dto.UpdatePermissionOptionsFromRequest(req)
+	permission, err := s.uc.UpdatePermission(ctx, req.GetPermission(), opts)
 	if err != nil {
 		if ent.IsNotFound(err) {
 			return nil, errors.NotFound("PERMISSION_NOT_FOUND", "Permission not found")

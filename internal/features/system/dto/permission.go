@@ -7,7 +7,6 @@ package dto
 
 import (
 	"context"
-	"time"
 
 	"origadmin/application/admin/api/v1/services/system"
 	"origadmin/application/admin/api/v1/services/types"
@@ -33,27 +32,16 @@ type PermissionQueryOption struct {
 }
 
 // PermissionCreateOption specifies options for creating a permission.
-type PermissionCreateOption struct{}
+type PermissionCreateOption struct {
+	WithResourceIDs []int64
+	WithViewIDs     []int64
+}
 
 // PermissionUpdateOption specifies options for updating a permission.
 type PermissionUpdateOption struct {
 	repo.UpdateOption
-}
-
-// PermissionCondition represents a single condition for a permission.
-type PermissionCondition struct {
-	Field    string `json:"field"`
-	Operator string `json:"operator"`
-	Value    string `json:"value"`
-}
-
-// PermissionAccessControl defines the access control rules for a permission.
-type PermissionAccessControl struct {
-	Actions    []string          `json:"actions"`
-	Conditions map[string]string `json:"conditions"`
-	ValidFrom  *time.Time        `json:"valid_from"`
-	ValidUntil *time.Time        `json:"valid_until"`
-	Attributes map[string]any    `json:"attributes"`
+	WithResourceIDs []int64
+	WithViewIDs     []int64
 }
 
 // ListPermissionsRequestToQueryOption converts an API request to a query option object.
@@ -70,12 +58,27 @@ func ListPermissionsRequestToQueryOption(req *system.ListPermissionsRequest) *Pe
 	}
 }
 
-// UpdatePermissionRequestToUpdateOption converts an API request to an update option object.
-func UpdatePermissionRequestToUpdateOption(req *system.UpdatePermissionRequest) *PermissionUpdateOption {
+// CreatePermissionOptionsFromRequest converts a CreatePermissionRequest to a create option object.
+func CreatePermissionOptionsFromRequest(req *system.CreatePermissionRequest) *PermissionCreateOption {
+	if req == nil {
+		return &PermissionCreateOption{}
+	}
+	opts := &PermissionCreateOption{
+		WithResourceIDs: req.GetResourceIds(),
+		WithViewIDs:     req.GetViewIds(),
+	}
+	return opts
+}
+
+// UpdatePermissionOptionsFromRequest converts an UpdatePermissionRequest to an update option object.
+func UpdatePermissionOptionsFromRequest(req *system.UpdatePermissionRequest) *PermissionUpdateOption {
 	if req == nil {
 		return &PermissionUpdateOption{}
 	}
-	return &PermissionUpdateOption{
+	opts := &PermissionUpdateOption{
 		UpdateOption: repo.UpdateOptionFromRequest(req),
+		WithResourceIDs: req.GetResourceIds(),
+		WithViewIDs:     req.GetViewIds(),
 	}
+	return opts
 }

@@ -11,6 +11,7 @@ import (
 	"origadmin/application/admin/api/v1/services/system"
 	"origadmin/application/admin/internal/data/entity/ent"
 	"origadmin/application/admin/internal/features/system/biz"
+	"origadmin/application/admin/internal/features/system/dto"
 	"origadmin/application/admin/internal/helpers/db"
 )
 
@@ -24,7 +25,8 @@ func NewViewService(uc *biz.ViewUseCase) *ViewService {
 }
 
 func (s *ViewService) ListViews(ctx context.Context, req *system.ListViewsRequest) (*system.ListViewsResponse, error) {
-	views, total, err := s.uc.ListViews(ctx, req)
+	queryOpt := dto.ListViewsRequestToQueryOption(req)
+	views, total, err := s.uc.ListViews(ctx, queryOpt)
 	if err != nil {
 		return nil, err
 	}
@@ -65,7 +67,8 @@ func (s *ViewService) GetView(ctx context.Context, req *system.GetViewRequest) (
 }
 
 func (s *ViewService) CreateView(ctx context.Context, req *system.CreateViewRequest) (*system.CreateViewResponse, error) {
-	view, err := s.uc.CreateView(ctx, req.GetView())
+	opts := dto.CreateViewOptionsFromRequest(req)
+	view, err := s.uc.CreateView(ctx, req.GetView(), opts)
 	if err != nil {
 		return nil, err
 	}
@@ -73,7 +76,8 @@ func (s *ViewService) CreateView(ctx context.Context, req *system.CreateViewRequ
 }
 
 func (s *ViewService) UpdateView(ctx context.Context, req *system.UpdateViewRequest) (*system.UpdateViewResponse, error) {
-	view, err := s.uc.UpdateView(ctx, req.GetView())
+	opts := dto.UpdateViewOptionsFromRequest(req)
+	view, err := s.uc.UpdateView(ctx, req.GetView(), opts)
 	if err != nil {
 		if ent.IsNotFound(err) {
 			return nil, errors.NotFound("VIEW_NOT_FOUND", "View not found")

@@ -11,6 +11,7 @@ import (
 	"origadmin/application/admin/api/v1/services/system"
 	"origadmin/application/admin/internal/data/entity/ent"
 	"origadmin/application/admin/internal/features/system/biz"
+	"origadmin/application/admin/internal/features/system/dto"
 	"origadmin/application/admin/internal/helpers/db"
 )
 
@@ -24,7 +25,8 @@ func NewRoleService(uc *biz.RoleUseCase) *RoleService {
 }
 
 func (s *RoleService) ListRoles(ctx context.Context, req *system.ListRolesRequest) (*system.ListRolesResponse, error) {
-	roles, total, err := s.uc.ListRoles(ctx, req)
+	queryOpt := dto.ListRolesRequestToQueryOption(req)
+	roles, total, err := s.uc.ListRoles(ctx, queryOpt)
 	if err != nil {
 		return nil, err
 	}
@@ -63,14 +65,16 @@ func (s *RoleService) GetRole(ctx context.Context, req *system.GetRoleRequest) (
 	return &system.GetRoleResponse{Role: role}, nil
 }
 func (s *RoleService) CreateRole(ctx context.Context, req *system.CreateRoleRequest) (*system.CreateRoleResponse, error) {
-	role, err := s.uc.CreateRole(ctx, req.GetRole())
+	opts := dto.CreateRoleOptionsFromRequest(req)
+	role, err := s.uc.CreateRole(ctx, req.GetRole(), opts)
 	if err != nil {
 		return nil, err
 	}
 	return &system.CreateRoleResponse{Role: role}, nil
 }
 func (s *RoleService) UpdateRole(ctx context.Context, req *system.UpdateRoleRequest) (*system.UpdateRoleResponse, error) {
-	role, err := s.uc.UpdateRole(ctx, req.GetRole())
+	opts := dto.UpdateRoleOptionsFromRequest(req)
+	role, err := s.uc.UpdateRole(ctx, req.GetRole(), opts)
 	if err != nil {
 		if ent.IsNotFound(err) {
 			return nil, errors.NotFound("ROLE_NOT_FOUND", "Role not found")

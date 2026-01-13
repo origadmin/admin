@@ -37,13 +37,13 @@ type UserQueryOption struct {
 
 // UserCreateOption specifies options for creating a user.
 type UserCreateOption struct {
-	// Example: Immediately load roles after creation
-	LoadRoles bool
+	WithRoleIDs []int64
 }
 
 // UserUpdateOption specifies options for updating a user.
 type UserUpdateOption struct {
 	repo.UpdateOption
+	WithRoleIDs []int64
 }
 
 // ListUsersRequestToQueryOption converts an API request to a query option object.
@@ -56,12 +56,25 @@ func ListUsersRequestToQueryOption(req *system.ListUsersRequest) *UserQueryOptio
 	}
 }
 
-// UpdateUserRequestToUpdateOption converts an API request to an update option object.
-func UpdateUserRequestToUpdateOption(req *system.UpdateUserRequest) *UserUpdateOption {
+// CreateUserOptionsFromRequest converts a CreateUserRequest to a create option object.
+func CreateUserOptionsFromRequest(req *system.CreateUserRequest) *UserCreateOption {
+	if req == nil {
+		return &UserCreateOption{}
+	}
+	opts := &UserCreateOption{
+		WithRoleIDs: req.GetRoleIds(),
+	}
+	return opts
+}
+
+// UpdateUserOptionsFromRequest converts an UpdateUserRequest to an update option object.
+func UpdateUserOptionsFromRequest(req *system.UpdateUserRequest) *UserUpdateOption {
 	if req == nil {
 		return &UserUpdateOption{}
 	}
-	return &UserUpdateOption{
+	opts := &UserUpdateOption{
 		UpdateOption: repo.UpdateOptionFromRequest(req),
+		WithRoleIDs:  req.GetRoleIds(),
 	}
+	return opts
 }

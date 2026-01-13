@@ -11,6 +11,7 @@ import (
 	"origadmin/application/admin/api/v1/services/system"
 	"origadmin/application/admin/internal/data/entity/ent"
 	"origadmin/application/admin/internal/features/system/biz"
+	"origadmin/application/admin/internal/features/system/dto"
 	"origadmin/application/admin/internal/helpers/db"
 )
 
@@ -24,7 +25,8 @@ func NewResourceService(uc *biz.ResourceUseCase) *ResourceService {
 }
 
 func (s *ResourceService) ListResources(ctx context.Context, req *system.ListResourcesRequest) (*system.ListResourcesResponse, error) {
-	resources, total, err := s.uc.ListResources(ctx, req)
+	queryOpt := dto.ListResourcesRequestToQueryOption(req)
+	resources, total, err := s.uc.ListResources(ctx, queryOpt)
 	if err != nil {
 		return nil, err
 	}
@@ -65,7 +67,8 @@ func (s *ResourceService) GetResource(ctx context.Context, req *system.GetResour
 }
 
 func (s *ResourceService) CreateResource(ctx context.Context, req *system.CreateResourceRequest) (*system.CreateResourceResponse, error) {
-	resource, err := s.uc.CreateResource(ctx, req.GetResource())
+	opts := dto.CreateResourceOptionsFromRequest(req)
+	resource, err := s.uc.CreateResource(ctx, req.GetResource(), opts)
 	if err != nil {
 		return nil, err
 	}
@@ -73,7 +76,8 @@ func (s *ResourceService) CreateResource(ctx context.Context, req *system.Create
 }
 
 func (s *ResourceService) UpdateResource(ctx context.Context, req *system.UpdateResourceRequest) (*system.UpdateResourceResponse, error) {
-	resource, err := s.uc.UpdateResource(ctx, req.GetResource())
+	opts := dto.UpdateResourceOptionsFromRequest(req)
+	resource, err := s.uc.UpdateResource(ctx, req.GetResource(), opts)
 	if err != nil {
 		if ent.IsNotFound(err) {
 			return nil, errors.NotFound("RESOURCE_NOT_FOUND", "Resource not found")

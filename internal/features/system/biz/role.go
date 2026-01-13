@@ -8,7 +8,6 @@ package biz
 import (
 	"context"
 
-	"origadmin/application/admin/api/v1/services/system"
 	"origadmin/application/admin/api/v1/services/types"
 	"origadmin/application/admin/internal/data/enums"
 	"origadmin/application/admin/internal/features/system/dto"
@@ -24,9 +23,8 @@ func NewRoleUseCase(repo dto.RoleRepo) *RoleUseCase {
 	return &RoleUseCase{repo: repo}
 }
 
-func (uc *RoleUseCase) ListRoles(ctx context.Context, in *system.ListRolesRequest) ([]*types.Role, int32, error) {
-	queryOpt := dto.ListRolesRequestToQueryOption(in)
-	return uc.repo.List(ctx, queryOpt)
+func (uc *RoleUseCase) ListRoles(ctx context.Context, opts ...*dto.RoleQueryOption) ([]*types.Role, int32, error) {
+	return uc.repo.List(ctx, opts...)
 }
 
 func (uc *RoleUseCase) GetRole(ctx context.Context, id int64) (*types.Role, error) {
@@ -34,17 +32,17 @@ func (uc *RoleUseCase) GetRole(ctx context.Context, id int64) (*types.Role, erro
 }
 
 // CreateRole creates a new role, ensuring essential fields have valid default values.
-func (uc *RoleUseCase) CreateRole(ctx context.Context, in *types.Role) (*types.Role, error) {
+func (uc *RoleUseCase) CreateRole(ctx context.Context, in *types.Role, opts ...*dto.RoleCreateOption) (*types.Role, error) {
 	// The backend must always enforce data integrity, regardless of frontend behavior.
 	if in.Status == 0 {
 		in.Status = int32(enums.StatusEnabled)
 	}
 
-	return uc.repo.Create(ctx, in)
+	return uc.repo.Create(ctx, in, opts...)
 }
 
-func (uc *RoleUseCase) UpdateRole(ctx context.Context, in *types.Role) (*types.Role, error) {
-	return uc.repo.Update(ctx, in)
+func (uc *RoleUseCase) UpdateRole(ctx context.Context, in *types.Role, opts ...*dto.RoleUpdateOption) (*types.Role, error) {
+	return uc.repo.Update(ctx, in, opts...)
 }
 
 func (uc *RoleUseCase) DeleteRole(ctx context.Context, id int64) error {

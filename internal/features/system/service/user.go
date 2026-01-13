@@ -11,6 +11,7 @@ import (
 	"origadmin/application/admin/api/v1/services/system"
 	"origadmin/application/admin/internal/data/entity/ent"
 	"origadmin/application/admin/internal/features/system/biz"
+	"origadmin/application/admin/internal/features/system/dto"
 	"origadmin/application/admin/internal/helpers/db"
 )
 
@@ -70,7 +71,8 @@ func (s *UserService) ResetUserPassword(ctx context.Context, req *system.ResetUs
 }
 
 func (s *UserService) ListUsers(ctx context.Context, req *system.ListUsersRequest) (*system.ListUsersResponse, error) {
-	users, total, err := s.uc.ListUsers(ctx, req)
+	queryOpt := dto.ListUsersRequestToQueryOption(req)
+	users, total, err := s.uc.ListUsers(ctx, queryOpt)
 	if err != nil {
 		return nil, err
 	}
@@ -111,7 +113,8 @@ func (s *UserService) GetUser(ctx context.Context, req *system.GetUserRequest) (
 }
 
 func (s *UserService) CreateUser(ctx context.Context, req *system.CreateUserRequest) (*system.CreateUserResponse, error) {
-	user, err := s.uc.CreateUser(ctx, req.GetUser(), req.GetPassword())
+	opts := dto.CreateUserOptionsFromRequest(req)
+	user, err := s.uc.CreateUser(ctx, req.GetUser(), req.GetPassword(), opts)
 	if err != nil {
 		return nil, err
 	}
@@ -119,7 +122,8 @@ func (s *UserService) CreateUser(ctx context.Context, req *system.CreateUserRequ
 }
 
 func (s *UserService) UpdateUser(ctx context.Context, req *system.UpdateUserRequest) (*system.UpdateUserResponse, error) {
-	user, err := s.uc.UpdateUser(ctx, req.GetUser())
+	opts := dto.UpdateUserOptionsFromRequest(req)
+	user, err := s.uc.UpdateUser(ctx, req.GetUser(), opts)
 	if err != nil {
 		if ent.IsNotFound(err) {
 			return nil, errors.NotFound("USER_NOT_FOUND", "User not found")
