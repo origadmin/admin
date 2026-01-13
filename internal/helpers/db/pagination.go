@@ -15,6 +15,7 @@ import (
 	"google.golang.org/protobuf/proto"
 	"google.golang.org/protobuf/types/known/timestamppb"
 
+	"github.com/origadmin/runtime/errors"
 	"origadmin/application/admin/api/v1/services/types"
 	"origadmin/application/admin/internal/helpers/repo"
 )
@@ -48,9 +49,34 @@ func GetPageSize(req interface{}) int {
 	return normalizedOpt.PageSize
 }
 
-// GenerateNextPageToken creates a compact, Protobuf-based pagination token.
+// CalculatePagination computes all pagination-related values for a list response.
+// It returns all necessary fields (page, pageSize, token) in a single call,
+// allowing the service layer to construct the final response without redundant logic.
+func CalculatePagination[T any](results []T, queryOpt *repo.QueryOption) (page int32, pageSize int32, token string, err error) {
+	normalizedOpt := normalizeQueryOption(queryOpt)
+	pageSize = int32(normalizedOpt.PageSize)
+	token = ""
+	page = 0
+
+	if queryOpt.PagingMode == PagingModeCursor {
+		// Only generate a next page token if the number of results equals the page size,
+		// which implies there might be more data.
+		if len(results) > 0 && len(results) == int(pageSize) {
+			nextToken, err := generateNextPageToken(results, queryOpt)
+			if err != nil {
+				return 0, 0, "", errors.InternalServer("TOKEN_GENERATION_FAILED", err.Error())
+			}
+			token = nextToken
+		}
+	} else {
+		page = int32(normalizedOpt.Page)
+	}
+	return page, pageSize, token, nil
+}
+
+// generateNextPageToken creates a compact, Protobuf-based pagination token.
 // It uses type assertions on interfaces to extract field values, avoiding reflection.
-func GenerateNextPageToken[T any](results []T, opt *repo.QueryOption) (string, error) {
+func generateNextPageToken[T any](results []T, opt *repo.QueryOption) (string, error) {
 	if len(results) == 0 {
 		return "", nil // No results, no next page token
 	}

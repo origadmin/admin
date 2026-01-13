@@ -29,7 +29,7 @@ func NewUserRepo(database *ent.Database) dto.UserRepo {
 }
 
 func (r *userRepo) Get(ctx context.Context, id int64, opts ...*dto.UserQueryOption) (*types.User, error) {
-	opt := repo.GetFirstOption(opts...)
+	opt := repo.FirstOrDefault(opts...)
 	query := r.db.User(ctx).Query().Where(user.ID(id))
 
 	if opt.WithRoles {
@@ -77,28 +77,33 @@ func (r *userRepo) Delete(ctx context.Context, id int64) error {
 }
 
 func (r *userRepo) Update(ctx context.Context, u *types.User, opts ...*dto.UserUpdateOption) (*types.User, error) {
-	opt := repo.GetFirstOption(opts...)
-	entUser := dto.ConvertUserPBToUser(u)
-	update := r.db.User(ctx).UpdateOneID(u.Id)
+	var updatedUser *ent.User
+	err := r.db.Tx(ctx, func(tx context.Context) error {
+		opt := repo.FirstOrDefault(opts...)
+		entUser := dto.ConvertUserPBToUser(u)
+		update := r.db.User(tx).UpdateOneID(u.Id)
 
-	updateCols := db.UpdateFields(opt.UpdateMask, user.ValidColumn, u)
-	if len(updateCols) > 0 {
-		// If a field mask is present, update only the specified fields, including zero values.
-		update.SetUser(entUser, updateCols...)
-	} else {
-		// If no field mask, skip zero values to prevent accidental clearing of fields.
-		update.SetUserSkipZero(entUser)
-	}
+		updateCols := db.UpdateFields(opt.UpdateMask, user.ValidColumn, u)
+		if len(updateCols) > 0 {
+			// If a field mask is present, update only the specified fields, including zero values.
+			update.SetUser(entUser, updateCols...)
+		} else {
+			// If no field mask, skip zero values to prevent accidental clearing of fields.
+			update.SetUserSkipZero(entUser)
+		}
 
-	saved, err := update.Save(ctx)
+		var err error
+		updatedUser, err = update.Save(ctx)
+		return err
+	})
 	if err != nil {
 		return nil, err
 	}
-	return dto.ConvertUserToUserPB(saved), nil
+	return dto.ConvertUserToUserPB(updatedUser), nil
 }
 
 func (r *userRepo) List(ctx context.Context, opts ...*dto.UserQueryOption) ([]*types.User, int32, error) {
-	opt := repo.GetFirstOption(opts...)
+	opt := repo.FirstOrDefault(opts...)
 	query := r.db.User(ctx).Query()
 
 	if opt.Keyword != "" {

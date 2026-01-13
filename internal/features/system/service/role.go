@@ -31,28 +31,18 @@ func (s *RoleService) ListRoles(ctx context.Context, req *system.ListRolesReques
 		return nil, err
 	}
 
-	pageSize := db.GetPageSize(req)
-	resp := &system.ListRolesResponse{
-		Roles:    roles,
-		Total:    total,
-		PageSize: int32(pageSize),
+	page, pageSize, token, err := db.CalculatePagination(roles, &queryOpt.QueryOption)
+	if err != nil {
+		return nil, err
 	}
 
-	if req.GetPagingMode() == db.PagingModeCursor {
-		// Only generate a next page token if the number of results equals the page size,
-		// which implies there might be more data.
-		if len(roles) > 0 && len(roles) == pageSize {
-			nextToken, err := db.GenerateNextPageToken(roles, &queryOpt.QueryOption)
-			if err != nil {
-				return nil, errors.InternalServer("TOKEN_GENERATION_FAILED", err.Error())
-			}
-			resp.NextPageToken = nextToken
-		}
-	} else {
-		resp.Page = req.GetPage()
-	}
-
-	return resp, nil
+	return &system.ListRolesResponse{
+		Roles:         roles,
+		Total:         total,
+		PageSize:      pageSize,
+		NextPageToken: token,
+		Page:          page,
+	}, nil
 }
 func (s *RoleService) GetRole(ctx context.Context, req *system.GetRoleRequest) (*system.GetRoleResponse, error) {
 	role, err := s.uc.GetRole(ctx, req.GetId())

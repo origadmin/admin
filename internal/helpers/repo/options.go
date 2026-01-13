@@ -114,11 +114,14 @@ func UpdateOptionFromRequest(req interface{}) UpdateOption {
 	return opt
 }
 
-// GetFirstOption safely retrieves the first option from a slice of option pointers.
-// If the slice is empty or the first element is nil, it returns a new, non-nil instance of the option type.
-func GetFirstOption[T any](opts ...*T) *T {
-	if len(opts) > 0 && opts[0] != nil {
-		return opts[0]
+// FirstOrDefault safely retrieves the first non-nil option from a slice of option pointers.
+// If the slice is empty or all its elements are nil, it returns a new, non-nil, zero-value instance of the option type.
+// This prevents panics from nil pointer dereferences.
+func FirstOrDefault[T any](opts ...*T) *T {
+	for _, opt := range opts {
+		if opt != nil {
+			return opt
+		}
 	}
 	return new(T)
 }

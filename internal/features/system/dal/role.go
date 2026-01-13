@@ -29,7 +29,7 @@ func NewRoleRepo(database *ent.Database) dto.RoleRepo {
 }
 
 func (r *roleRepo) Get(ctx context.Context, id int64, opts ...*dto.RoleQueryOption) (*types.Role, error) {
-	opt := repo.GetFirstOption(opts...)
+	opt := repo.FirstOrDefault(opts...)
 	query := r.db.Role(ctx).Query().Where(role.ID(id))
 
 	if opt.WithPermissions {
@@ -50,7 +50,7 @@ func (r *roleRepo) Get(ctx context.Context, id int64, opts ...*dto.RoleQueryOpti
 }
 
 func (r *roleRepo) Create(ctx context.Context, rl *types.Role, opts ...*dto.RoleCreateOption) (*types.Role, error) {
-	opt := repo.GetFirstOption(opts...)
+	opt := repo.FirstOrDefault(opts...)
 	if rl.Keyword == "" {
 		randString, err := r.gen.String(12)
 		if err != nil {
@@ -69,12 +69,6 @@ func (r *roleRepo) Create(ctx context.Context, rl *types.Role, opts ...*dto.Role
 	if opt.WithPermissionIDs != nil {
 		create.AddPermissionIDs(opt.WithPermissionIDs...)
 	}
-	if opt.WithResourceIDs != nil {
-		create.AddResourceIDs(opt.WithResourceIDs...)
-	}
-	if opt.WithViewIDs != nil {
-		create.AddViewIDs(opt.WithViewIDs...)
-	}
 
 	saved, err := create.Save(ctx)
 	if err != nil {
@@ -88,54 +82,36 @@ func (r *roleRepo) Delete(ctx context.Context, id int64) error {
 }
 
 func (r *roleRepo) Update(ctx context.Context, rl *types.Role, opts ...*dto.RoleUpdateOption) (*types.Role, error) {
-	opt := &dto.RoleUpdateOption{}
-	// Merge options
-	for _, o := range opts {
-		if o != nil {
-			if o.UpdateMask != nil {
-				opt.UpdateMask = o.UpdateMask
-			}
-			if o.WithPermissionIDs != nil {
-				opt.WithPermissionIDs = o.WithPermissionIDs
-			}
-			if o.WithResourceIDs != nil {
-				opt.WithResourceIDs = o.WithResourceIDs
-			}
-			if o.WithViewIDs != nil {
-				opt.WithViewIDs = o.WithViewIDs
-			}
+	var updatedRole *ent.Role
+	err := r.db.Tx(ctx, func(tx context.Context) error {
+		opt := repo.FirstOrDefault(opts...)
+
+		entRole := dto.ConvertRolePBToRole(rl)
+		update := r.db.Role(tx).UpdateOneID(rl.Id)
+
+		updateCols := db.UpdateFields(opt.UpdateMask, role.ValidColumn, rl)
+		if len(updateCols) > 0 {
+			update.SetRole(entRole, updateCols...)
+		} else {
+			update.SetRoleSkipZero(entRole)
 		}
-	}
 
-	entRole := dto.ConvertRolePBToRole(rl)
-	update := r.db.Role(ctx).UpdateOneID(rl.Id)
+		if opt.WithPermissionIDs != nil {
+			update.ClearPermissions().AddPermissionIDs(opt.WithPermissionIDs...)
+		}
 
-	updateCols := db.UpdateFields(opt.UpdateMask, role.ValidColumn, rl)
-	if len(updateCols) > 0 {
-		update.SetRole(entRole, updateCols...)
-	} else {
-		update.SetRoleSkipZero(entRole)
-	}
-
-	if opt.WithPermissionIDs != nil {
-		update.ClearPermissions().AddPermissionIDs(opt.WithPermissionIDs...)
-	}
-	if opt.WithResourceIDs != nil {
-		update.ClearResources().AddResourceIDs(opt.WithResourceIDs...)
-	}
-	if opt.WithViewIDs != nil {
-		update.ClearViews().AddViewIDs(opt.WithViewIDs...)
-	}
-
-	saved, err := update.Save(ctx)
+		var err error
+		updatedRole, err = update.Save(ctx)
+		return err
+	})
 	if err != nil {
 		return nil, err
 	}
-	return dto.ConvertRoleToRolePB(saved), nil
+	return dto.ConvertRoleToRolePB(updatedRole), nil
 }
 
 func (r *roleRepo) List(ctx context.Context, opts ...*dto.RoleQueryOption) ([]*types.Role, int32, error) {
-	opt := repo.GetFirstOption(opts...)
+	opt := repo.FirstOrDefault(opts...)
 	query := r.db.Role(ctx).Query()
 
 	if opt.Keyword != "" {

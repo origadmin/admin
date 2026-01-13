@@ -32,7 +32,7 @@ func NewViewRepo(database *ent.Database) dto.ViewRepo {
 
 // Get retrieves a single view by its ID.
 func (r *viewRepo) Get(ctx context.Context, id int64, opts ...*dto.ViewQueryOption) (*types.View, error) {
-	opt := repo.GetFirstOption(opts...)
+	opt := repo.FirstOrDefault(opts...)
 	query := r.db.View(ctx).Query().Where(view.ID(id))
 
 	if opt.ReadMask != nil {
@@ -50,7 +50,7 @@ func (r *viewRepo) Get(ctx context.Context, id int64, opts ...*dto.ViewQueryOpti
 
 // List retrieves a list of views based on query options.
 func (r *viewRepo) List(ctx context.Context, opts ...*dto.ViewQueryOption) ([]*types.View, int32, error) {
-	opt := repo.GetFirstOption(opts...)
+	opt := repo.FirstOrDefault(opts...)
 	query := r.db.View(ctx).Query()
 
 	// Apply filters
@@ -83,7 +83,7 @@ func (r *viewRepo) Create(ctx context.Context, in *types.View, opts ...*dto.View
 	if in == nil {
 		return nil, errors.New("input view data cannot be nil")
 	}
-
+	opt := repo.FirstOrDefault(opts...)
 	var createdView *ent.View
 	err := r.db.Tx(ctx, func(tx context.Context) error {
 		var err error
@@ -100,8 +100,8 @@ func (r *viewRepo) Create(ctx context.Context, in *types.View, opts ...*dto.View
 		create := r.db.View(tx).Create().SetViewSkipZero(entView)
 
 		// Add resource associations if they exist
-		if len(in.GetResourceIds()) > 0 {
-			create.AddResourceIDs(in.GetResourceIds()...)
+		if opt.WithResourceIDs != nil {
+			create.AddResourceIDs(opt.WithResourceIDs...)
 		}
 
 		saved, err := create.Save(ctx)
@@ -130,31 +130,31 @@ func (r *viewRepo) Update(ctx context.Context, in *types.View, opts ...*dto.View
 	var updatedView *ent.View
 	err := r.db.Tx(ctx, func(tx context.Context) error {
 		var err error
-		opt := repo.GetFirstOption(opts...)
+		opt := repo.FirstOrDefault(opts...)
 		entView := dto.ConvertViewPBToView(in)
 
-		// Step 1: Update scalar fields first.
-		scalarUpdate := r.db.View(tx).UpdateOneID(in.Id)
+		// 1. Start a single update builder using the transaction client
+		updateBuilder := r.db.View(tx).UpdateOneID(in.Id)
+
+		// 2. Chain scalar field updates
 		updateCols := db.UpdateFields(opt.UpdateMask, view.ValidColumn, in)
 		if len(updateCols) > 0 {
-			scalarUpdate.SetView(entView, updateCols...)
+			updateBuilder.SetView(entView, updateCols...)
 		} else {
-			scalarUpdate.SetViewSkipZero(entView)
+			updateBuilder.SetViewSkipZero(entView)
 		}
-		if err = scalarUpdate.Exec(ctx); err != nil {
+
+		// 3. Chain relationship updates
+		if opt.WithResourceIDs != nil {
+			updateBuilder.ClearResources().AddResourceIDs(opt.WithResourceIDs...)
+		}
+
+		// 4. Execute a single Save operation
+		if _, err = updateBuilder.Save(ctx); err != nil {
 			return err
 		}
 
-		// Step 2: Separately update the M2M relation.
-		err = r.db.View(tx).UpdateOneID(in.Id).
-			ClearResources().
-			AddResourceIDs(in.GetResourceIds()...).
-			Exec(ctx)
-		if err != nil {
-			return err
-		}
-
-		// Step 3: Eager load the complete, updated entity.
+		// 5. Eager load the complete, updated entity for the return value
 		updatedView, err = r.db.View(tx).Query().Where(view.ID(in.Id)).WithResources().Only(ctx)
 		return err
 	})

@@ -31,7 +31,7 @@ func NewResourceRepo(database *ent.Database) dto.ResourceRepo {
 }
 
 func (r *resourceRepo) Get(ctx context.Context, id int64, opts ...*dto.ResourceQueryOption) (*types.Resource, error) {
-	opt := repo.GetFirstOption(opts...)
+	opt := repo.FirstOrDefault(opts...)
 	query := r.db.Resource(ctx).Query().Where(resource.ID(id))
 
 	if opt.WithPermissions {
@@ -118,28 +118,33 @@ func (r *resourceRepo) Delete(ctx context.Context, id int64) error {
 }
 
 func (r *resourceRepo) Update(ctx context.Context, res *types.Resource, opts ...*dto.ResourceUpdateOption) (*types.Resource, error) {
-	opt := repo.GetFirstOption(opts...)
-	entResource := dto.ConvertResourcePBToResource(res)
-	update := r.db.Resource(ctx).UpdateOneID(res.Id)
+	var updatedResource *ent.Resource
+	err := r.db.Tx(ctx, func(tx context.Context) error {
+		opt := repo.FirstOrDefault(opts...)
+		entResource := dto.ConvertResourcePBToResource(res)
+		update := r.db.Resource(tx).UpdateOneID(res.Id)
 
-	updateCols := db.UpdateFields(opt.UpdateMask, resource.ValidColumn, res)
-	if len(updateCols) > 0 {
-		// If a field mask is present, update only the specified fields, including zero values.
-		update.SetResource(entResource, updateCols...)
-	} else {
-		// If no field mask, skip zero values to prevent accidental clearing of fields.
-		update.SetResourceSkipZero(entResource)
-	}
+		updateCols := db.UpdateFields(opt.UpdateMask, resource.ValidColumn, res)
+		if len(updateCols) > 0 {
+			// If a field mask is present, update only the specified fields, including zero values.
+			update.SetResource(entResource, updateCols...)
+		} else {
+			// If no field mask, skip zero values to prevent accidental clearing of fields.
+			update.SetResourceSkipZero(entResource)
+		}
 
-	saved, err := update.Save(ctx)
+		var err error
+		updatedResource, err = update.Save(ctx)
+		return err
+	})
 	if err != nil {
 		return nil, err
 	}
-	return dto.ConvertResourceToResourcePB(saved), nil
+	return dto.ConvertResourceToResourcePB(updatedResource), nil
 }
 
 func (r *resourceRepo) List(ctx context.Context, opts ...*dto.ResourceQueryOption) ([]*types.Resource, int32, error) {
-	opt := repo.GetFirstOption(opts...)
+	opt := repo.FirstOrDefault(opts...)
 	query := r.db.Resource(ctx).Query()
 
 	if opt.WithPermissions {
