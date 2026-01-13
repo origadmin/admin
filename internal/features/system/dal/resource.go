@@ -11,7 +11,6 @@ import (
 	"origadmin/application/admin/api/v1/services/types"
 	"origadmin/application/admin/internal/conf"
 	"origadmin/application/admin/internal/data/entity/ent"
-	"origadmin/application/admin/internal/data/entity/ent/predicate"
 	"origadmin/application/admin/internal/data/entity/ent/resource"
 	"origadmin/application/admin/internal/features/system/dto"
 	"origadmin/application/admin/internal/helpers/db"
@@ -170,14 +169,7 @@ func (r *resourceRepo) List(ctx context.Context, opts ...*dto.ResourceQueryOptio
 		}
 	}
 
-	cursorCallback := func(cursor db.Cursor) predicate.Resource {
-		if cursor.Desc {
-			return resource.IDLT(cursor.ID)
-		}
-		return resource.IDGT(cursor.ID)
-	}
-
-	result, count, err := db.Find(ctx, query, &opt.QueryOption, cursorCallback)
+	result, count, err := db.Find(ctx, query, &opt.QueryOption)
 	if err != nil {
 		return nil, 0, err
 	}

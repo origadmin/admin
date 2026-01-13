@@ -11,7 +11,6 @@ import (
 
 	"origadmin/application/admin/api/v1/services/types"
 	"origadmin/application/admin/internal/data/entity/ent"
-	"origadmin/application/admin/internal/data/entity/ent/predicate"
 	"origadmin/application/admin/internal/data/entity/ent/view"
 	"origadmin/application/admin/internal/features/system/dto"
 	"origadmin/application/admin/internal/helpers/db"
@@ -71,14 +70,7 @@ func (r *viewRepo) List(ctx context.Context, opts ...*dto.ViewQueryOption) ([]*t
 		query = s.ViewQuery
 	}
 
-	cursorCallback := func(cursor db.Cursor) predicate.View {
-		if cursor.Desc {
-			return view.IDLT(cursor.ID)
-		}
-		return view.IDGT(cursor.ID)
-	}
-
-	result, count, err := db.Find(ctx, query, &opt.QueryOption, cursorCallback)
+	result, count, err := db.Find(ctx, query, &opt.QueryOption)
 	if err != nil {
 		return nil, 0, err
 	}

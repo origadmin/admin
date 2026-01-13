@@ -11,7 +11,6 @@ import (
 	"github.com/origadmin/toolkits/crypto/rand"
 	"origadmin/application/admin/api/v1/services/types"
 	"origadmin/application/admin/internal/data/entity/ent"
-	"origadmin/application/admin/internal/data/entity/ent/predicate"
 	"origadmin/application/admin/internal/data/entity/ent/role"
 	"origadmin/application/admin/internal/features/system/dto"
 	"origadmin/application/admin/internal/helpers/db"
@@ -113,10 +112,8 @@ func (r *roleRepo) Update(ctx context.Context, rl *types.Role, opts ...*dto.Role
 
 	updateCols := db.UpdateFields(opt.UpdateMask, role.ValidColumn, rl)
 	if len(updateCols) > 0 {
-		// If a field mask is present, update only the specified fields, including zero values.
 		update.SetRole(entRole, updateCols...)
 	} else {
-		// If no field mask, skip zero values to prevent accidental clearing of fields.
 		update.SetRoleSkipZero(entRole)
 	}
 
@@ -155,14 +152,7 @@ func (r *roleRepo) List(ctx context.Context, opts ...*dto.RoleQueryOption) ([]*t
 		query = s.RoleQuery
 	}
 
-	cursorCallback := func(cursor db.Cursor) predicate.Role {
-		if cursor.Desc {
-			return role.IDLT(cursor.ID)
-		}
-		return role.IDGT(cursor.ID)
-	}
-
-	result, count, err := db.Find(ctx, query, &opt.QueryOption, cursorCallback)
+	result, count, err := db.Find(ctx, query, &opt.QueryOption)
 	if err != nil {
 		return nil, 0, err
 	}

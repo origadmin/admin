@@ -42,7 +42,7 @@ func (s *RoleService) ListRoles(ctx context.Context, req *system.ListRolesReques
 		// Only generate a next page token if the number of results equals the page size,
 		// which implies there might be more data.
 		if len(roles) > 0 && len(roles) == pageSize {
-			nextToken, err := db.GenerateNextPageToken(roles, req)
+			nextToken, err := db.GenerateNextPageToken(roles, &queryOpt.QueryOption)
 			if err != nil {
 				return nil, errors.InternalServer("TOKEN_GENERATION_FAILED", err.Error())
 			}

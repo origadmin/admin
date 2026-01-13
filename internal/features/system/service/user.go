@@ -88,7 +88,7 @@ func (s *UserService) ListUsers(ctx context.Context, req *system.ListUsersReques
 		// Only generate a next page token if the number of results equals the page size,
 		// which implies there might be more data.
 		if len(users) > 0 && len(users) == pageSize {
-			nextToken, err := db.GenerateNextPageToken(users, req)
+			nextToken, err := db.GenerateNextPageToken(users, &queryOpt.QueryOption)
 			if err != nil {
 				return nil, errors.InternalServer("TOKEN_GENERATION_FAILED", err.Error())
 			}

@@ -42,7 +42,7 @@ func (s *ViewService) ListViews(ctx context.Context, req *system.ListViewsReques
 		// Only generate a next page token if the number of results equals the page size,
 		// which implies there might be more data.
 		if len(views) > 0 && len(views) == pageSize {
-			nextToken, err := db.GenerateNextPageToken(views, req)
+			nextToken, err := db.GenerateNextPageToken(views, &queryOpt.QueryOption)
 			if err != nil {
 				return nil, errors.InternalServer("TOKEN_GENERATION_FAILED", err.Error())
 			}

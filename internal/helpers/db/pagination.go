@@ -3,30 +3,26 @@
  */
 
 // Package db provides common, generic helpers for database operations.
-// Its scope is strictly limited to functionalities that are truly generic
-// and do not depend on schema-specific types like predicates.
 package db
 
 import (
-	"bytes"
 	"context"
 	"encoding/base64"
-	"encoding/gob"
 	"fmt"
 	"strings"
 
 	"entgo.io/ent/dialect/sql"
+	"google.golang.org/protobuf/proto"
+	"google.golang.org/protobuf/types/known/timestamppb"
 
+	"origadmin/application/admin/api/v1/services/types"
 	"origadmin/application/admin/internal/helpers/repo"
 )
 
 const (
-	// PagingModeCursor indicates cursor-based pagination (for infinite scrolling).
 	PagingModeCursor = "cursor"
-	// PagingModeOffset indicates traditional offset-based pagination.
 	PagingModeOffset = "offset"
-	// PagingModeNone indicates no pagination, returning all available records up to a hard limit.
-	PagingModeNone = "none"
+	PagingModeNone   = "none"
 )
 
 // Identifiable defines the contract for any entity that has a retrievable ID.
@@ -34,70 +30,193 @@ type Identifiable interface {
 	GetId() int64
 }
 
-// GetPageSize returns the normalized page size that will be used for a query.
+// TimeTracker defines any type that has GetCreateTime and GetUpdateTime methods.
+type TimeTracker interface {
+	GetCreateTime() *timestamppb.Timestamp
+	GetUpdateTime() *timestamppb.Timestamp
+}
+
+// Sequencer defines any type that has a GetSequence method.
+type Sequencer interface {
+	GetSequence() int32
+}
+
+// GetPageSize returns the normalized page size for a query.
 func GetPageSize(req interface{}) int {
 	opt := repo.QueryOptionFromRequest(req)
-	normalizedOpt := normalizeQueryOption(&opt) // Pass a pointer to opt
+	normalizedOpt := normalizeQueryOption(&opt)
 	return normalizedOpt.PageSize
 }
 
-// GenerateNextPageToken creates a pagination token from the last item in a result set.
-// It no longer contains logic to decide *if* a token should be generated.
-func GenerateNextPageToken[T Identifiable](results []T, req interface{}) (string, error) {
+// GenerateNextPageToken creates a compact, Protobuf-based pagination token.
+// It uses type assertions on interfaces to extract field values, avoiding reflection.
+func GenerateNextPageToken[T any](results []T, opt *repo.QueryOption) (string, error) {
 	if len(results) == 0 {
-		return "", fmt.Errorf("cannot generate token from empty results")
+		return "", nil // No results, no next page token
 	}
 
-	opt := repo.QueryOptionFromRequest(req)
-	last := results[len(results)-1]
+	lastItem := any(results[len(results)-1]) // Convert to any for type assertion
+	var sortValues []*types.SortValue
 
-	// Default sort order if not provided
-	sortField := "id"
-	sortDesc := true
-	if len(opt.OrderBy) > 0 {
-		parts := strings.Fields(opt.OrderBy[0])
-		sortField = parts[0]
-		if len(parts) > 1 && strings.ToLower(parts[1]) == "asc" {
-			sortDesc = false
+	orderByClauses := opt.OrderBy
+	if len(orderByClauses) == 0 {
+		orderByClauses = []string{"id,desc"} // Default stable order
+	}
+
+	for _, orderByClause := range orderByClauses {
+		field, isDesc := parseOrderByClause(orderByClause)
+		fieldEnum := MapFieldToEnum(field)
+		var valueStr string
+		var err error
+
+		switch fieldEnum {
+		case types.SortField_ID:
+			if item, ok := lastItem.(Identifiable); ok {
+				valueStr = fmt.Sprintf("%d", item.GetId())
+			} else {
+				err = fmt.Errorf("sort field 'id' used on a type that does not implement db.Identifiable")
+			}
+		case types.SortField_CREATE_TIME:
+			if item, ok := lastItem.(TimeTracker); ok {
+				if t := item.GetCreateTime(); t != nil {
+					valueStr = fmt.Sprintf("%d", t.AsTime().UnixNano())
+				} else {
+					valueStr = "0"
+				}
+			} else {
+				err = fmt.Errorf("sort field 'create_time' used on a type that does not implement db.TimeTracker")
+			}
+		case types.SortField_UPDATE_TIME:
+			if item, ok := lastItem.(TimeTracker); ok {
+				if t := item.GetUpdateTime(); t != nil {
+					valueStr = fmt.Sprintf("%d", t.AsTime().UnixNano())
+				} else {
+					valueStr = "0"
+				}
+			} else {
+				err = fmt.Errorf("sort field 'update_time' used on a type that does not implement db.TimeTracker")
+			}
+		case types.SortField_SEQUENCE:
+			if item, ok := lastItem.(Sequencer); ok {
+				valueStr = fmt.Sprintf("%d", item.GetSequence())
+			} else {
+				err = fmt.Errorf("sort field 'sequence' used on a type that does not implement db.Sequencer")
+			}
+		default:
+			err = fmt.Errorf("unsupported sort field enum: %v", fieldEnum)
 		}
+
+		if err != nil {
+			return "", err
+		}
+		sortValues = append(sortValues, &types.SortValue{
+			Value:  valueStr,
+			Field:  fieldEnum,
+			IsDesc: isDesc,
+		})
 	}
 
-	cursor := Cursor{ID: last.GetId(), Field: sortField, Desc: sortDesc}
-	token, err := EncodeCursor(cursor)
+	cursor := &types.PageCursor{SortValues: sortValues}
+	return EncodeCursor(cursor)
+}
+
+// EncodeCursor uses proto.Marshal for compact encoding.
+func EncodeCursor(c *types.PageCursor) (string, error) {
+	data, err := proto.Marshal(c)
 	if err != nil {
-		return "", fmt.Errorf("failed to encode next page token: %w", err)
+		return "", fmt.Errorf("proto marshal cursor: %w", err)
 	}
-	return token, nil
+	return base64.URLEncoding.WithPadding(base64.NoPadding).EncodeToString(data), nil
 }
 
-type Cursor struct {
-	ID    int64  `json:"id"`
-	Field string `json:"field"`
-	Desc  bool   `json:"desc"`
-}
-
-func EncodeCursor(c Cursor) (string, error) {
-	var buf bytes.Buffer
-	if err := gob.NewEncoder(&buf).Encode(c); err != nil {
-		return "", fmt.Errorf("gob encode cursor: %w", err)
-	}
-	return base64.URLEncoding.WithPadding(base64.NoPadding).EncodeToString(buf.Bytes()), nil
-}
-
-func DecodeCursor(token string) (Cursor, error) {
-	var c Cursor
+// DecodeCursor uses proto.Unmarshal.
+func DecodeCursor(token string) (*types.PageCursor, error) {
+	var c types.PageCursor
 	data, err := base64.URLEncoding.WithPadding(base64.NoPadding).DecodeString(token)
 	if err != nil {
-		return c, fmt.Errorf("base64 decode token: %w", err)
+		return nil, fmt.Errorf("base64 decode token: %w", err)
 	}
-
-	if err := gob.NewDecoder(bytes.NewReader(data)).Decode(&c); err != nil {
-		return c, fmt.Errorf("gob decode cursor: %w", err)
+	if err := proto.Unmarshal(data, &c); err != nil {
+		return nil, fmt.Errorf("proto unmarshal cursor: %w", err)
 	}
-	return c, nil
+	return &c, nil
 }
 
-// Pageable defines the interface for queries that can be paginated.
+// parseOrderByClause parses a string like "field,desc" into field name and isDesc.
+func parseOrderByClause(orderByClause string) (field string, isDesc bool) {
+	parts := strings.Split(orderByClause, ",")
+	field = parts[0]
+	isDesc = true // Default to DESC
+	if len(parts) > 1 && strings.EqualFold(parts[1], "asc") {
+		isDesc = false
+	}
+	return
+}
+
+// MapFieldToEnum converts a field name string to its SortField enum.
+func MapFieldToEnum(field string) types.SortField {
+	switch strings.ToLower(field) {
+	case "id":
+		return types.SortField_ID
+	case "create_time":
+		return types.SortField_CREATE_TIME
+	case "update_time":
+		return types.SortField_UPDATE_TIME
+	case "sequence":
+		return types.SortField_SEQUENCE
+	default:
+		return types.SortField_DEFAULT_UNSPECIFIED
+	}
+}
+
+// MapEnumToField converts a SortField enum to its corresponding database column name.
+func MapEnumToField(fieldEnum types.SortField) string {
+	switch fieldEnum {
+	case types.SortField_ID:
+		return "id"
+	case types.SortField_CREATE_TIME:
+		return "create_time"
+	case types.SortField_UPDATE_TIME:
+		return "update_time"
+	case types.SortField_SEQUENCE:
+		return "sequence"
+	default:
+		return "id" // Safe fallback
+	}
+}
+
+// BuildCursorWhere is a generic predicate builder for cursor-based pagination.
+func BuildCursorWhere[P ~func(*sql.Selector)](cursor *Cursor) P {
+	return func(s *sql.Selector) {
+		sortValues := cursor.GetSortValues()
+		if len(sortValues) == 0 {
+			return
+		}
+
+		var orPredicates []*sql.Predicate
+		for i := 0; i < len(sortValues); i++ {
+			var andPredicates []*sql.Predicate
+			for j := 0; j < i; j++ {
+				sv := sortValues[j]
+				andPredicates = append(andPredicates, sql.EQ(MapEnumToField(sv.Field), sv.Value))
+			}
+			sv := sortValues[i]
+			var inequality *sql.Predicate
+			if sv.IsDesc {
+				inequality = sql.LT(MapEnumToField(sv.Field), sv.Value)
+			} else {
+				inequality = sql.GT(MapEnumToField(sv.Field), sv.Value)
+			}
+			andPredicates = append(andPredicates, inequality)
+			orPredicates = append(orPredicates, sql.And(andPredicates...))
+		}
+		if len(orPredicates) > 0 {
+			s.Where(sql.Or(orPredicates...))
+		}
+	}
+}
+
+// Pageable, Selector, etc. interfaces remain the same.
 type Pageable[T any, W any, O any, R any] interface {
 	Counter[T]
 	Cloner[T]
@@ -107,57 +226,27 @@ type Pageable[T any, W any, O any, R any] interface {
 	Limit(int) T
 	Offset(int) T
 }
-
-type Selector[S any] interface {
-	Select(fields ...string) S
-}
-
-type SourceSelector interface {
-	~func(*sql.Selector)
-}
-
-// Orderer defines the interface for queries that can be ordered.
-type Orderer[T any, O any] interface {
-	Order(...O) T
-}
-
-// Filterer defines the interface for queries that can be filtered.
-type Filterer[T any, W any] interface {
-	Where(...W) T
-}
-
-// Cloner defines the interface for objects that can clone themselves.
-type Cloner[T any] interface {
-	Clone() T
-}
-
-// Counter defines the interface for queries that can count their results.
+type Selector[S any] interface{ Select(fields ...string) S }
+type SourceSelector interface{ ~func(*sql.Selector) }
+type Orderer[T any, O any] interface{ Order(...O) T }
+type Filterer[T any, W any] interface{ Where(...W) T }
+type Cloner[T any] interface{ Clone() T }
 type Counter[T any] interface {
 	Cloner[T]
 	Count(ctx context.Context) (int, error)
 }
-
-// Fetcher defines the interface for queries that can execute and fetch results.
 type Fetcher[T any] interface {
 	All(ctx context.Context) ([]T, error)
 	Only(ctx context.Context) (T, error)
 }
 
-// normalizeQueryOption handles unified initialization and validation of QueryOption
 func normalizeQueryOption(opt *repo.QueryOption) *repo.QueryOption {
 	if opt == nil {
-		return &repo.QueryOption{
-			Page:     1,
-			PageSize: repo.DefaultPageSize,
-		}
+		return &repo.QueryOption{Page: 1, PageSize: repo.DefaultPageSize}
 	}
-
-	// Normalize page number
 	if opt.Page <= 0 {
 		opt.Page = 1
 	}
-
-	// Normalize page size
 	if opt.PagingMode == PagingModeNone {
 		if opt.PageSize <= 0 || opt.PageSize > repo.HardLimit {
 			opt.PageSize = repo.HardLimit
@@ -170,20 +259,18 @@ func normalizeQueryOption(opt *repo.QueryOption) *repo.QueryOption {
 			opt.PageSize = repo.MaxPageSize
 		}
 	}
-
 	return opt
 }
 
-type cursorCallback[T any] func(cursor Cursor) T
+// Cursor is an alias for the Protobuf-defined PageCursor.
+type Cursor = types.PageCursor
 
-// Paginate is the single, unified function for applying pagination and sorting logic.
-func Paginate[R any, W any, O SourceSelector, P Pageable[P, W, O, R]](query P, opt *repo.QueryOption,
-	callbacks ...cursorCallback[W]) P {
+// Paginate applies pagination and sorting logic to a query.
+func Paginate[R any, W ~func(*sql.Selector), O SourceSelector, P Pageable[P, W, O, R]](query P, opt *repo.QueryOption) P {
 	if opt == nil {
-		opt = &repo.QueryOption{} // Ensure opt is not nil
+		opt = &repo.QueryOption{}
 	}
 	opt = normalizeQueryOption(opt)
-
 	query = query.Limit(opt.PageSize)
 
 	pagingMode := opt.PagingMode
@@ -195,47 +282,40 @@ func Paginate[R any, W any, O SourceSelector, P Pageable[P, W, O, R]](query P, o
 	case PagingModeCursor:
 		if opt.PageToken != "" {
 			cursor, err := DecodeCursor(opt.PageToken)
-			if err != nil {
-				return query.Limit(0)
+			if err != nil || len(cursor.GetSortValues()) == 0 {
+				return query.Limit(0) // Invalid token
 			}
-			// Token dictates sorting. Ignore any user-provided sort.
-			query = query.Order(OrderByField[O](cursor.Field, cursor.Desc))
-			for _, cb := range callbacks {
-				query = query.Where(cb(cursor))
+
+			var orders []O
+			for _, sv := range cursor.GetSortValues() {
+				orders = append(orders, OrderByField[O](MapEnumToField(sv.Field), sv.IsDesc))
 			}
+			query = query.Order(orders...)
+
+			whereClause := BuildCursorWhere[W](cursor)
+			query = query.Where(whereClause)
+
 		} else {
-			// First page of cursor pagination. Use user sort, or default.
-			if len(opt.OrderBy) > 0 {
-				orders := OrderBy[O](opt.OrderBy)
-				if len(orders) > 0 {
-					query = query.Order(orders...)
-				}
-			} else {
-				// A stable default order is required for cursor pagination.
-				query = query.Order(OrderByField[O]("id", true))
+			orderBy := opt.OrderBy
+			if len(orderBy) == 0 {
+				orderBy = []string{"id,desc"}
 			}
+			query = query.Order(OrderBy[O](orderBy)...)
 		}
 	case PagingModeOffset:
 		if len(opt.OrderBy) > 0 {
-			orders := OrderBy[O](opt.OrderBy)
-			if len(orders) > 0 {
-				query = query.Order(orders...)
-			}
+			query = query.Order(OrderBy[O](opt.OrderBy)...)
 		}
 		query = query.Offset((opt.Page - 1) * opt.PageSize)
 	case PagingModeNone:
 		if len(opt.OrderBy) > 0 {
-			orders := OrderBy[O](opt.OrderBy)
-			if len(orders) > 0 {
-				query = query.Order(orders...)
-			}
+			query = query.Order(OrderBy[O](opt.OrderBy)...)
 		}
 	}
-
 	return query
 }
 
-// CountTotal executes the count query and returns the total number of records.
+// CountTotal remains the same.
 func CountTotal[Q Counter[Q]](ctx context.Context, query Q) (int32, error) {
 	count, err := query.Clone().Count(ctx)
 	if err != nil {
@@ -244,11 +324,8 @@ func CountTotal[Q Counter[Q]](ctx context.Context, query Q) (int32, error) {
 	return int32(count), nil
 }
 
-// Find executes the query with pagination options and returns the results and total count.
-func Find[R any, W any, O SourceSelector, P Pageable[P, W, O, R]](ctx context.Context, query P,
-	o *repo.QueryOption, callbacks ...cursorCallback[W]) ([]R, int32, error) {
-
-	// Count logic remains the same
+// Find executes the query with pagination and returns results.
+func Find[R any, W, O SourceSelector, P Pageable[P, W, O, R]](ctx context.Context, query P, o *repo.QueryOption) ([]R, int32, error) {
 	var count int32
 	var err error
 	if o.PagingMode != PagingModeCursor {
@@ -260,16 +337,18 @@ func Find[R any, W any, O SourceSelector, P Pageable[P, W, O, R]](ctx context.Co
 			return []R{}, 0, nil
 		}
 	}
-
-	// All sorting and pagination logic is now encapsulated in Paginate.
-	query = Paginate(query, o, callbacks...)
-
+	if !o.SortFromToken {
+		if len(o.OrderBy) > 0 {
+			orders := OrderBy[O](o.OrderBy)
+			if len(orders) > 0 {
+				query.Order(orders...)
+			}
+		}
+	}
+	query = Paginate[R, W, O, P](query, o)
 	result, err := query.All(ctx)
 	if err != nil {
 		return nil, 0, fmt.Errorf("data query failed: %w", err)
 	}
-
-	// For cursor pagination, total count is not typically returned, but we can return it if needed.
-	// For now, we return the count we have.
 	return result, count, nil
 }

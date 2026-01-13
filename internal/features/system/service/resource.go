@@ -42,7 +42,7 @@ func (s *ResourceService) ListResources(ctx context.Context, req *system.ListRes
 		// Only generate a next page token if the number of results equals the page size,
 		// which implies there might be more data.
 		if len(resources) > 0 && len(resources) == pageSize {
-			nextToken, err := db.GenerateNextPageToken(resources, req)
+			nextToken, err := db.GenerateNextPageToken(resources, &queryOpt.QueryOption)
 			if err != nil {
 				return nil, errors.InternalServer("TOKEN_GENERATION_FAILED", err.Error())
 			}

@@ -1,0 +1,41 @@
+syntax = "proto3";
+
+package api.v1.services.types;
+
+option go_package = "origadmin/application/admin/api/v1/services/types;types";
+
+// PageCursor represents the information needed for cursor-based pagination.
+// It's designed to be compact for use in page tokens.
+message PageCursor {
+  // A list of sort key values from the last item of the previous page.
+  // The order of values MUST match the order of the ORDER BY clause.
+  repeated SortValue sort_values = 1;
+}
+
+// SortValue represents a single value in a multi-column sort key.
+message SortValue {
+  // The actual value of the field, encoded as a string.
+  // The backend is responsible for converting it to the correct type (int, string, timestamp).
+  string value = 1;
+
+  // An enum representing the field being sorted.
+  SortField field = 2;
+
+  // Indicates if this field is sorted in descending order.
+  bool is_desc = 3;
+}
+
+// SortField defines the possible fields to sort by.
+// This avoids storing bulky strings in the token.
+enum SortField {
+  // Default value, should be treated as an error or fallback to ID.
+  DEFAULT_UNSPECIFIED = 0;
+  // Primary Key ID
+  ID = 1;
+  // Creation timestamp
+  CREATE_TIME = 2;
+  // Update timestamp
+  UPDATE_TIME = 3;
+  // Custom sequence/order number
+  SEQUENCE = 4;
+}
