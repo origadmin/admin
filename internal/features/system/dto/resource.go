@@ -58,9 +58,9 @@ func ListResourcesRequestToQueryOption(req *system.ListResourcesRequest) *Resour
 		return &ResourceQueryOption{}
 	}
 	return &ResourceQueryOption{
-		QueryOption: repo.QueryOptionFromRequest(req),
-		//WithPermissions: req.WithPermissions,
-		Operation: req.Operation,
+		QueryOption:     repo.QueryOptionFromRequest(req),
+		WithPermissions: req.GetWithPermissions(),
+		Operation:       req.GetOperation(),
 	}
 }
 
@@ -81,7 +81,7 @@ func UpdateResourceOptionsFromRequest(req *system.UpdateResourceRequest) *Resour
 		return &ResourceUpdateOption{}
 	}
 	opts := &ResourceUpdateOption{
-		UpdateOption: repo.UpdateOptionFromRequest(req),
+		UpdateOption:      repo.UpdateOptionFromRequest(req),
 		WithPermissionIDs: req.GetPermissionIds(),
 	}
 	return opts

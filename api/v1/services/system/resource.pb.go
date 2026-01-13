@@ -48,9 +48,11 @@ type ListResourcesRequest struct {
 	// The operation of the resources.
 	Operation string `protobuf:"bytes,9,opt,name=operation,proto3" json:"operation,omitempty"`
 	// The sorting criteria for the results.
-	Sorting       []string `protobuf:"bytes,10,rep,name=sorting,proto3" json:"sorting,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
+	Sorting []string `protobuf:"bytes,10,rep,name=sorting,proto3" json:"sorting,omitempty"`
+	// Whether to include permissions in the response.
+	WithPermissions bool `protobuf:"varint,11,opt,name=with_permissions,proto3" json:"with_permissions,omitempty"`
+	unknownFields   protoimpl.UnknownFields
+	sizeCache       protoimpl.SizeCache
 }
 
 func (x *ListResourcesRequest) Reset() {
@@ -153,6 +155,13 @@ func (x *ListResourcesRequest) GetSorting() []string {
 	return nil
 }
 
+func (x *ListResourcesRequest) GetWithPermissions() bool {
+	if x != nil {
+		return x.WithPermissions
+	}
+	return false
+}
+
 // Response message for ResourceService.ListResources.
 type ListResourcesResponse struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
@@ -248,9 +257,11 @@ func (x *ListResourcesResponse) GetExtra() *anypb.Any {
 type GetResourceRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// The unique identifier of the resource.
-	Id            int64 `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
+	Id int64 `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
+	// Whether to include permissions in the response.
+	WithPermissions bool `protobuf:"varint,2,opt,name=with_permissions,proto3" json:"with_permissions,omitempty"`
+	unknownFields   protoimpl.UnknownFields
+	sizeCache       protoimpl.SizeCache
 }
 
 func (x *GetResourceRequest) Reset() {
@@ -288,6 +299,13 @@ func (x *GetResourceRequest) GetId() int64 {
 		return x.Id
 	}
 	return 0
+}
+
+func (x *GetResourceRequest) GetWithPermissions() bool {
+	if x != nil {
+		return x.WithPermissions
+	}
+	return false
 }
 
 // Response message for ResourceService.GetResource.
@@ -634,7 +652,7 @@ var File_system_resource_proto protoreflect.FileDescriptor
 
 const file_system_resource_proto_rawDesc = "" +
 	"\n" +
-	"\x15system/resource.proto\x12\x16api.v1.services.system\x1a\x1cgoogle/api/annotations.proto\x1a\x19google/protobuf/any.proto\x1a\x1bgoogle/protobuf/empty.proto\x1a\x16policy/v1/policy.proto\x1a\x12types/system.proto\"\xd7\x02\n" +
+	"\x15system/resource.proto\x12\x16api.v1.services.system\x1a\x1cgoogle/api/annotations.proto\x1a\x19google/protobuf/any.proto\x1a\x1bgoogle/protobuf/empty.proto\x1a\x16policy/v1/policy.proto\x1a\x12types/system.proto\"\x83\x03\n" +
 	"\x14ListResourcesRequest\x12\x12\n" +
 	"\x04page\x18\x01 \x01(\x05R\x04page\x12\x1c\n" +
 	"\tpage_size\x18\x02 \x01(\x05R\tpage_size\x12\x1e\n" +
@@ -650,7 +668,8 @@ const file_system_resource_proto_rawDesc = "" +
 	"\vsync_status\x18\b \x01(\tR\vsync_status\x12\x1c\n" +
 	"\toperation\x18\t \x01(\tR\toperation\x12\x18\n" +
 	"\asorting\x18\n" +
-	" \x03(\tR\asortingB\x0e\n" +
+	" \x03(\tR\asorting\x12*\n" +
+	"\x10with_permissions\x18\v \x01(\bR\x10with_permissionsB\x0e\n" +
 	"\f_paging_mode\"\x83\x02\n" +
 	"\x15ListResourcesResponse\x12\x14\n" +
 	"\x05total\x18\x01 \x01(\x05R\x05total\x12=\n" +
@@ -659,9 +678,10 @@ const file_system_resource_proto_rawDesc = "" +
 	"\tpage_size\x18\x04 \x01(\x05R\tpage_size\x12(\n" +
 	"\x0fnext_page_token\x18\x05 \x01(\tR\x0fnext_page_token\x12/\n" +
 	"\x05extra\x18\x06 \x01(\v2\x14.google.protobuf.AnyH\x00R\x05extra\x88\x01\x01B\b\n" +
-	"\x06_extra\"$\n" +
+	"\x06_extra\"P\n" +
 	"\x12GetResourceRequest\x12\x0e\n" +
-	"\x02id\x18\x01 \x01(\x03R\x02id\"R\n" +
+	"\x02id\x18\x01 \x01(\x03R\x02id\x12*\n" +
+	"\x10with_permissions\x18\x02 \x01(\bR\x10with_permissions\"R\n" +
 	"\x13GetResourceResponse\x12;\n" +
 	"\bresource\x18\x01 \x01(\v2\x1f.api.v1.services.types.ResourceR\bresource\"|\n" +
 	"\x15CreateResourceRequest\x12;\n" +

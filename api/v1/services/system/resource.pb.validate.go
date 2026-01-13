@@ -73,6 +73,8 @@ func (m *ListResourcesRequest) validate(all bool) error {
 
 	// no validation rules for Operation
 
+	// no validation rules for WithPermissions
+
 	if m.PagingMode != nil {
 		// no validation rules for PagingMode
 	}
@@ -357,6 +359,8 @@ func (m *GetResourceRequest) validate(all bool) error {
 	var errors []error
 
 	// no validation rules for Id
+
+	// no validation rules for WithPermissions
 
 	if len(errors) > 0 {
 		return GetResourceRequestMultiError(errors)

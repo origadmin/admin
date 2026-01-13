@@ -725,6 +725,8 @@ func (m *ListUsersRequest) validate(all bool) error {
 
 	// no validation rules for Keyword
 
+	// no validation rules for WithRoles
+
 	if m.PagingMode != nil {
 		// no validation rules for PagingMode
 	}
@@ -1007,6 +1009,8 @@ func (m *GetUserRequest) validate(all bool) error {
 	var errors []error
 
 	// no validation rules for Id
+
+	// no validation rules for WithRoles
 
 	if len(errors) > 0 {
 		return GetUserRequestMultiError(errors)

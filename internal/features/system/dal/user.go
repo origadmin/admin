@@ -50,6 +50,7 @@ func (r *userRepo) Get(ctx context.Context, id int64, opts ...*dto.UserQueryOpti
 }
 
 func (r *userRepo) Create(ctx context.Context, u *types.User, password string, opts ...*dto.UserCreateOption) (*types.User, error) {
+	opt := repo.FirstOrDefault(opts...)
 	exist, err := r.db.User(ctx).Query().Where(user.UsernameEQ(u.Username)).Exist(ctx)
 	if err != nil || exist {
 		return nil, errors.New("user already exists")
@@ -65,6 +66,11 @@ func (r *userRepo) Create(ctx context.Context, u *types.User, password string, o
 		entUser.EncryptedPassword = password
 	}
 	create := r.db.User(ctx).Create().SetUserSkipZero(entUser)
+
+	if opt.WithRoleIDs != nil {
+		create.AddRoleIDs(opt.WithRoleIDs...)
+	}
+
 	saved, err := create.Save(ctx)
 	if err != nil {
 		return nil, err
@@ -90,6 +96,10 @@ func (r *userRepo) Update(ctx context.Context, u *types.User, opts ...*dto.UserU
 		} else {
 			// If no field mask, skip zero values to prevent accidental clearing of fields.
 			update.SetUserSkipZero(entUser)
+		}
+
+		if opt.WithRoleIDs != nil {
+			update.ClearRoles().AddRoleIDs(opt.WithRoleIDs...)
 		}
 
 		var err error

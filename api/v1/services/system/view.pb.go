@@ -42,7 +42,9 @@ type ListViewsRequest struct {
 	// The keyword for searching views.
 	Keyword string `protobuf:"bytes,6,opt,name=keyword,proto3" json:"keyword,omitempty"`
 	// The scope of the views to list.
-	Scope         string `protobuf:"bytes,7,opt,name=scope,proto3" json:"scope,omitempty"`
+	Scope string `protobuf:"bytes,7,opt,name=scope,proto3" json:"scope,omitempty"`
+	// Whether to include resources in the response.
+	WithResources bool `protobuf:"varint,8,opt,name=with_resources,proto3" json:"with_resources,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -124,6 +126,13 @@ func (x *ListViewsRequest) GetScope() string {
 		return x.Scope
 	}
 	return ""
+}
+
+func (x *ListViewsRequest) GetWithResources() bool {
+	if x != nil {
+		return x.WithResources
+	}
+	return false
 }
 
 // Response message for ViewService.ListViews.
@@ -221,7 +230,9 @@ func (x *ListViewsResponse) GetExtra() *anypb.Any {
 type GetViewRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// The unique identifier of the view.
-	Id            int64 `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
+	Id int64 `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
+	// Whether to include resources in the response.
+	WithResources bool `protobuf:"varint,2,opt,name=with_resources,proto3" json:"with_resources,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -261,6 +272,13 @@ func (x *GetViewRequest) GetId() int64 {
 		return x.Id
 	}
 	return 0
+}
+
+func (x *GetViewRequest) GetWithResources() bool {
+	if x != nil {
+		return x.WithResources
+	}
+	return false
 }
 
 // Response message for ViewService.GetView.
@@ -625,7 +643,7 @@ var File_system_view_proto protoreflect.FileDescriptor
 
 const file_system_view_proto_rawDesc = "" +
 	"\n" +
-	"\x11system/view.proto\x12\x16api.v1.services.system\x1a\x1cgoogle/api/annotations.proto\x1a\x19google/protobuf/any.proto\x1a\x1bgoogle/protobuf/empty.proto\x1a\x12types/system.proto\x1a\x16policy/v1/policy.proto\"\xeb\x01\n" +
+	"\x11system/view.proto\x12\x16api.v1.services.system\x1a\x1cgoogle/api/annotations.proto\x1a\x19google/protobuf/any.proto\x1a\x1bgoogle/protobuf/empty.proto\x1a\x12types/system.proto\x1a\x16policy/v1/policy.proto\"\x93\x02\n" +
 	"\x10ListViewsRequest\x12\x12\n" +
 	"\x04page\x18\x01 \x01(\x05R\x04page\x12\x1c\n" +
 	"\tpage_size\x18\x02 \x01(\x05R\tpage_size\x12\x1e\n" +
@@ -637,7 +655,8 @@ const file_system_view_proto_rawDesc = "" +
 	"only_count\x18\x05 \x01(\bR\n" +
 	"only_count\x12\x18\n" +
 	"\akeyword\x18\x06 \x01(\tR\akeyword\x12\x14\n" +
-	"\x05scope\x18\a \x01(\tR\x05scopeB\x0e\n" +
+	"\x05scope\x18\a \x01(\tR\x05scope\x12&\n" +
+	"\x0ewith_resources\x18\b \x01(\bR\x0ewith_resourcesB\x0e\n" +
 	"\f_paging_mode\"\xf3\x01\n" +
 	"\x11ListViewsResponse\x12\x14\n" +
 	"\x05total\x18\x01 \x01(\x05R\x05total\x121\n" +
@@ -646,9 +665,10 @@ const file_system_view_proto_rawDesc = "" +
 	"\tpage_size\x18\x04 \x01(\x05R\tpage_size\x12(\n" +
 	"\x0fnext_page_token\x18\x05 \x01(\tR\x0fnext_page_token\x12/\n" +
 	"\x05extra\x18\x06 \x01(\v2\x14.google.protobuf.AnyH\x00R\x05extra\x88\x01\x01B\b\n" +
-	"\x06_extra\" \n" +
+	"\x06_extra\"H\n" +
 	"\x0eGetViewRequest\x12\x0e\n" +
-	"\x02id\x18\x01 \x01(\x03R\x02id\"B\n" +
+	"\x02id\x18\x01 \x01(\x03R\x02id\x12&\n" +
+	"\x0ewith_resources\x18\x02 \x01(\bR\x0ewith_resources\"B\n" +
 	"\x0fGetViewResponse\x12/\n" +
 	"\x04view\x18\x01 \x01(\v2\x1b.api.v1.services.types.ViewR\x04view\"\x84\x01\n" +
 	"\x11CreateViewRequest\x12/\n" +

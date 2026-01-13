@@ -35,6 +35,10 @@ func (r *viewRepo) Get(ctx context.Context, id int64, opts ...*dto.ViewQueryOpti
 	opt := repo.FirstOrDefault(opts...)
 	query := r.db.View(ctx).Query().Where(view.ID(id))
 
+	if opt.WithResources {
+		query.WithResources()
+	}
+
 	if opt.ReadMask != nil {
 		s := db.SelectFields(query, opt.ReadMask, view.ValidColumn, view.FieldID,
 			new(types.View))
@@ -62,6 +66,10 @@ func (r *viewRepo) List(ctx context.Context, opts ...*dto.ViewQueryOption) ([]*t
 	}
 	if opt.Scope != "" {
 		query.Where(view.ScopeEQ(opt.Scope))
+	}
+
+	if opt.WithResources {
+		query.WithResources()
 	}
 
 	if opt.ReadMask != nil {
@@ -144,9 +152,10 @@ func (r *viewRepo) Update(ctx context.Context, in *types.View, opts ...*dto.View
 			updateBuilder.SetViewSkipZero(entView)
 		}
 
-		// 3. Chain relationship updates
-		if opt.WithResourceIDs != nil {
-			updateBuilder.ClearResources().AddResourceIDs(opt.WithResourceIDs...)
+		// 3. Unconditionally replace resource associations
+		updateBuilder.ClearResources()
+		if len(opt.WithResourceIDs) > 0 {
+			updateBuilder.AddResourceIDs(opt.WithResourceIDs...)
 		}
 
 		// 4. Execute a single Save operation

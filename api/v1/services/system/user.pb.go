@@ -319,7 +319,9 @@ type ListUsersRequest struct {
 	// The only_count is the query parameter for set only to query the total number
 	OnlyCount bool `protobuf:"varint,5,opt,name=only_count,proto3" json:"only_count,omitempty"`
 	// The title query parameter for set only to query the title
-	Keyword       string `protobuf:"bytes,6,opt,name=keyword,proto3" json:"keyword,omitempty"`
+	Keyword string `protobuf:"bytes,6,opt,name=keyword,proto3" json:"keyword,omitempty"`
+	// Whether to include roles in the response.
+	WithRoles     bool `protobuf:"varint,7,opt,name=with_roles,proto3" json:"with_roles,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -394,6 +396,13 @@ func (x *ListUsersRequest) GetKeyword() string {
 		return x.Keyword
 	}
 	return ""
+}
+
+func (x *ListUsersRequest) GetWithRoles() bool {
+	if x != nil {
+		return x.WithRoles
+	}
+	return false
 }
 
 type ListUsersResponse struct {
@@ -491,7 +500,9 @@ func (x *ListUsersResponse) GetExtra() *anypb.Any {
 type GetUserRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// The field will contain id of the resource requested.
-	Id            int64 `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
+	Id int64 `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
+	// Whether to include roles in the response.
+	WithRoles     bool `protobuf:"varint,2,opt,name=with_roles,proto3" json:"with_roles,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -531,6 +542,13 @@ func (x *GetUserRequest) GetId() int64 {
 		return x.Id
 	}
 	return 0
+}
+
+func (x *GetUserRequest) GetWithRoles() bool {
+	if x != nil {
+		return x.WithRoles
+	}
+	return false
 }
 
 type GetUserResponse struct {
@@ -1001,7 +1019,7 @@ const file_system_user_proto_rawDesc = "" +
 	"\x18ResetUserPasswordRequest\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\x03R\x02id\x12\x1a\n" +
 	"\bpassword\x18\x02 \x01(\tR\bpassword\"\x1b\n" +
-	"\x19ResetUserPasswordResponse\"\xd5\x01\n" +
+	"\x19ResetUserPasswordResponse\"\xf5\x01\n" +
 	"\x10ListUsersRequest\x12\x12\n" +
 	"\x04page\x18\x01 \x01(\x05R\x04page\x12\x1c\n" +
 	"\tpage_size\x18\x02 \x01(\x05R\tpage_size\x12\x1e\n" +
@@ -1012,7 +1030,10 @@ const file_system_user_proto_rawDesc = "" +
 	"\n" +
 	"only_count\x18\x05 \x01(\bR\n" +
 	"only_count\x12\x18\n" +
-	"\akeyword\x18\x06 \x01(\tR\akeywordB\x0e\n" +
+	"\akeyword\x18\x06 \x01(\tR\akeyword\x12\x1e\n" +
+	"\n" +
+	"with_roles\x18\a \x01(\bR\n" +
+	"with_rolesB\x0e\n" +
 	"\f_paging_mode\"\xf3\x01\n" +
 	"\x11ListUsersResponse\x12\x14\n" +
 	"\x05total\x18\x01 \x01(\x05R\x05total\x121\n" +
@@ -1021,9 +1042,12 @@ const file_system_user_proto_rawDesc = "" +
 	"\tpage_size\x18\x04 \x01(\x05R\tpage_size\x12(\n" +
 	"\x0fnext_page_token\x18\x05 \x01(\tR\x0fnext_page_token\x12/\n" +
 	"\x05extra\x18\x06 \x01(\v2\x14.google.protobuf.AnyH\x00R\x05extra\x88\x01\x01B\b\n" +
-	"\x06_extra\" \n" +
+	"\x06_extra\"@\n" +
 	"\x0eGetUserRequest\x12\x0e\n" +
-	"\x02id\x18\x01 \x01(\x03R\x02id\"B\n" +
+	"\x02id\x18\x01 \x01(\x03R\x02id\x12\x1e\n" +
+	"\n" +
+	"with_roles\x18\x02 \x01(\bR\n" +
+	"with_roles\"B\n" +
 	"\x0fGetUserResponse\x12/\n" +
 	"\x04user\x18\x01 \x01(\v2\x1b.api.v1.services.types.UserR\x04user\"|\n" +
 	"\x11CreateUserRequest\x12/\n" +

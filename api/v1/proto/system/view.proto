@@ -66,6 +66,8 @@ message ListViewsRequest {
   string keyword = 6 [json_name = "keyword"];
   // The scope of the views to list.
   string scope = 7 [json_name = "scope"];
+  // Whether to include resources in the response.
+  bool with_resources = 8 [json_name = "with_resources"];
 }
 
 // Response message for ViewService.ListViews.
@@ -88,6 +90,8 @@ message ListViewsResponse {
 message GetViewRequest {
   // The unique identifier of the view.
   int64 id = 1;
+  // Whether to include resources in the response.
+  bool with_resources = 2 [json_name = "with_resources"];
 }
 
 // Response message for ViewService.GetView.

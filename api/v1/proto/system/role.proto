@@ -57,6 +57,8 @@ message ListRolesRequest {
   bool only_count = 5 [json_name = "only_count"];
   // The keyword is the query parameter for set only to query the role by keyword
   string keyword = 6 [json_name = "keyword"];
+  // Whether to include permissions in the response.
+  bool with_permissions = 7 [json_name = "with_permissions"];
 }
 
 message ListRolesResponse {
@@ -79,6 +81,8 @@ message ListRolesResponse {
 message GetRoleRequest {
   // The field will contain id of the resource requested.
   int64 id = 1 [json_name = "id"];
+  // Whether to include permissions in the response.
+  bool with_permissions = 2 [json_name = "with_permissions"];
 }
 
 message GetRoleResponse {

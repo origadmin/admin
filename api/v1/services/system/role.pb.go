@@ -39,9 +39,11 @@ type ListRolesRequest struct {
 	// The only_count is the query parameter for set only to query the total number
 	OnlyCount bool `protobuf:"varint,5,opt,name=only_count,proto3" json:"only_count,omitempty"`
 	// The keyword is the query parameter for set only to query the role by keyword
-	Keyword       string `protobuf:"bytes,6,opt,name=keyword,proto3" json:"keyword,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
+	Keyword string `protobuf:"bytes,6,opt,name=keyword,proto3" json:"keyword,omitempty"`
+	// Whether to include permissions in the response.
+	WithPermissions bool `protobuf:"varint,7,opt,name=with_permissions,proto3" json:"with_permissions,omitempty"`
+	unknownFields   protoimpl.UnknownFields
+	sizeCache       protoimpl.SizeCache
 }
 
 func (x *ListRolesRequest) Reset() {
@@ -114,6 +116,13 @@ func (x *ListRolesRequest) GetKeyword() string {
 		return x.Keyword
 	}
 	return ""
+}
+
+func (x *ListRolesRequest) GetWithPermissions() bool {
+	if x != nil {
+		return x.WithPermissions
+	}
+	return false
 }
 
 type ListRolesResponse struct {
@@ -211,9 +220,11 @@ func (x *ListRolesResponse) GetExtra() *anypb.Any {
 type GetRoleRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// The field will contain id of the resource requested.
-	Id            int64 `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
+	Id int64 `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
+	// Whether to include permissions in the response.
+	WithPermissions bool `protobuf:"varint,2,opt,name=with_permissions,proto3" json:"with_permissions,omitempty"`
+	unknownFields   protoimpl.UnknownFields
+	sizeCache       protoimpl.SizeCache
 }
 
 func (x *GetRoleRequest) Reset() {
@@ -251,6 +262,13 @@ func (x *GetRoleRequest) GetId() int64 {
 		return x.Id
 	}
 	return 0
+}
+
+func (x *GetRoleRequest) GetWithPermissions() bool {
+	if x != nil {
+		return x.WithPermissions
+	}
+	return false
 }
 
 type GetRoleResponse struct {
@@ -629,7 +647,7 @@ var File_system_role_proto protoreflect.FileDescriptor
 
 const file_system_role_proto_rawDesc = "" +
 	"\n" +
-	"\x11system/role.proto\x12\x16api.v1.services.system\x1a\x1cgoogle/api/annotations.proto\x1a\x19google/protobuf/any.proto\x1a\x1bgoogle/protobuf/empty.proto\x1a\x12types/system.proto\x1a\x16policy/v1/policy.proto\"\xd5\x01\n" +
+	"\x11system/role.proto\x12\x16api.v1.services.system\x1a\x1cgoogle/api/annotations.proto\x1a\x19google/protobuf/any.proto\x1a\x1bgoogle/protobuf/empty.proto\x1a\x12types/system.proto\x1a\x16policy/v1/policy.proto\"\x81\x02\n" +
 	"\x10ListRolesRequest\x12\x12\n" +
 	"\x04page\x18\x01 \x01(\x05R\x04page\x12\x1c\n" +
 	"\tpage_size\x18\x02 \x01(\x05R\tpage_size\x12\x1e\n" +
@@ -640,7 +658,8 @@ const file_system_role_proto_rawDesc = "" +
 	"\n" +
 	"only_count\x18\x05 \x01(\bR\n" +
 	"only_count\x12\x18\n" +
-	"\akeyword\x18\x06 \x01(\tR\akeywordB\x0e\n" +
+	"\akeyword\x18\x06 \x01(\tR\akeyword\x12*\n" +
+	"\x10with_permissions\x18\a \x01(\bR\x10with_permissionsB\x0e\n" +
 	"\f_paging_mode\"\xf3\x01\n" +
 	"\x11ListRolesResponse\x12\x14\n" +
 	"\x05total\x18\x01 \x01(\x05R\x05total\x121\n" +
@@ -649,9 +668,10 @@ const file_system_role_proto_rawDesc = "" +
 	"\tpage_size\x18\x04 \x01(\x05R\tpage_size\x12(\n" +
 	"\x0fnext_page_token\x18\x05 \x01(\tR\x0fnext_page_token\x12/\n" +
 	"\x05extra\x18\x06 \x01(\v2\x14.google.protobuf.AnyH\x00R\x05extra\x88\x01\x01B\b\n" +
-	"\x06_extra\" \n" +
+	"\x06_extra\"L\n" +
 	"\x0eGetRoleRequest\x12\x0e\n" +
-	"\x02id\x18\x01 \x01(\x03R\x02id\"B\n" +
+	"\x02id\x18\x01 \x01(\x03R\x02id\x12*\n" +
+	"\x10with_permissions\x18\x02 \x01(\bR\x10with_permissions\"B\n" +
 	"\x0fGetRoleResponse\x12/\n" +
 	"\x04role\x18\x01 \x01(\v2\x1b.api.v1.services.types.RoleR\x04role\"\xac\x01\n" +
 	"\x11CreateRoleRequest\x12/\n" +

@@ -1267,6 +1267,11 @@ paths:
                     type: array
                     items:
                         type: string
+                - name: with_permissions
+                  in: query
+                  description: Whether to include permissions in the response.
+                  schema:
+                    type: boolean
             responses:
                 "200":
                     description: OK
@@ -1317,6 +1322,11 @@ paths:
                   required: true
                   schema:
                     type: string
+                - name: with_permissions
+                  in: query
+                  description: Whether to include permissions in the response.
+                  schema:
+                    type: boolean
             responses:
                 "200":
                     description: OK
@@ -1424,6 +1434,11 @@ paths:
                   description: The keyword is the query parameter for set only to query the role by keyword
                   schema:
                     type: string
+                - name: with_permissions
+                  in: query
+                  description: Whether to include permissions in the response.
+                  schema:
+                    type: boolean
             responses:
                 "200":
                     description: OK
@@ -1472,6 +1487,11 @@ paths:
                   required: true
                   schema:
                     type: string
+                - name: with_permissions
+                  in: query
+                  description: Whether to include permissions in the response.
+                  schema:
+                    type: boolean
             responses:
                 "200":
                     description: OK
@@ -1577,6 +1597,11 @@ paths:
                   description: The title query parameter for set only to query the title
                   schema:
                     type: string
+                - name: with_roles
+                  in: query
+                  description: Whether to include roles in the response.
+                  schema:
+                    type: boolean
             responses:
                 "200":
                     description: OK
@@ -1625,6 +1650,11 @@ paths:
                   required: true
                   schema:
                     type: string
+                - name: with_roles
+                  in: query
+                  description: Whether to include roles in the response.
+                  schema:
+                    type: boolean
             responses:
                 "200":
                     description: OK
@@ -1857,6 +1887,11 @@ paths:
                   description: The scope of the views to list.
                   schema:
                     type: string
+                - name: with_resources
+                  in: query
+                  description: Whether to include resources in the response.
+                  schema:
+                    type: boolean
             responses:
                 "200":
                     description: OK
@@ -1907,6 +1942,11 @@ paths:
                   required: true
                   schema:
                     type: string
+                - name: with_resources
+                  in: query
+                  description: Whether to include resources in the response.
+                  schema:
+                    type: boolean
             responses:
                 "200":
                     description: OK

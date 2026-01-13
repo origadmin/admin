@@ -53,6 +53,7 @@ func ListUsersRequestToQueryOption(req *system.ListUsersRequest) *UserQueryOptio
 	}
 	return &UserQueryOption{
 		QueryOption: repo.QueryOptionFromRequest(req),
+		WithRoles:   req.GetWithRoles(),
 	}
 }
 

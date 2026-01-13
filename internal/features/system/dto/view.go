@@ -25,8 +25,8 @@ type ViewRepo interface {
 // ViewQueryOption specifies options for querying views.
 type ViewQueryOption struct {
 	repo.QueryOption
-	Scope   string
-	Keyword string
+	Scope         string
+	WithResources bool
 }
 
 // ViewCreateOption specifies options for creating a view.
@@ -48,9 +48,9 @@ func ListViewsRequestToQueryOption(req *system.ListViewsRequest) *ViewQueryOptio
 		return &ViewQueryOption{}
 	}
 	return &ViewQueryOption{
-		QueryOption: repo.QueryOptionFromRequest(req),
-		Scope:       req.GetScope(),
-		Keyword:     req.GetKeyword(),
+		QueryOption:   repo.QueryOptionFromRequest(req),
+		Scope:         req.GetScope(),
+		WithResources: req.GetWithResources(),
 	}
 }
 
@@ -72,7 +72,7 @@ func UpdateViewOptionsFromRequest(req *system.UpdateViewRequest) *ViewUpdateOpti
 		return &ViewUpdateOption{}
 	}
 	opts := &ViewUpdateOption{
-		UpdateOption: repo.UpdateOptionFromRequest(req),
+		UpdateOption:    repo.UpdateOptionFromRequest(req),
 		WithResourceIDs: req.GetResourceIds(),
 		WithRoleIDs:     req.GetRoleIds(),
 	}

@@ -20,12 +20,12 @@ import (
 	"github.com/google/wire"
 
 	"github.com/origadmin/contrib/security"
-	"origadmin/application/admin/api/v1/services/system"
 	"origadmin/application/admin/api/v1/services/types"
 	"origadmin/application/admin/internal/conf"
 	"origadmin/application/admin/internal/conf/pb"
 	"origadmin/application/admin/internal/features/system/biz"
 	"origadmin/application/admin/internal/features/system/dto"
+	"origadmin/application/admin/internal/helpers/repo"
 )
 
 // ProviderSet is for wire injection.
@@ -82,11 +82,13 @@ func (s *Seeder) createRootUser() error {
 	username := s.rootUserCfg.GetUsername()
 
 	// 1. Check if the user already exists by trying to list them.
-	listReq := &system.ListUsersRequest{
-		Keyword:  username,
-		PageSize: 1,
+	qo := &dto.UserQueryOption{
+		QueryOption: repo.QueryOption{
+			Keyword:  username,
+			PageSize: 1,
+		},
 	}
-	existingUsers, total, err := s.userUseCase.ListUsers(ctx, listReq)
+	existingUsers, total, err := s.userUseCase.ListUsers(ctx, qo)
 	if err != nil {
 		s.log.Errorf("Failed to check for root user: %v", err)
 		return err
@@ -188,9 +190,11 @@ func (s *Seeder) createInitialResources() error {
 
 		// Check if resource already exists
 		_, count, err := s.resourceUseCase.ListResources(ctx,
-			&system.ListResourcesRequest{
+			&dto.ResourceQueryOption{
+				QueryOption: repo.QueryOption{
+					OnlyCount: true,
+				},
 				Operation: policy.ServiceMethod,
-				OnlyCount: true,
 			})
 		if err == nil && count > 0 {
 			s.log.Infof("Resource '%s' already exists, skipping.", keyword)
@@ -235,7 +239,12 @@ func (s *Seeder) createInitialViews() error {
 func (s *Seeder) createViewsRecursive(ctx context.Context, views []*types.View, parentID *int64) error {
 	for _, view := range views {
 		// Check if view already exists
-		existing, total, err := s.viewUseCase.ListViews(ctx, &system.ListViewsRequest{Keyword: view.Keyword, PageSize: 1})
+		existing, total, err := s.viewUseCase.ListViews(ctx, &dto.ViewQueryOption{
+			QueryOption: repo.QueryOption{
+				Keyword:  view.Keyword,
+				PageSize: 1,
+			},
+		})
 		if err != nil {
 			s.log.Warnf("failed to check for existing view '%s': %v", view.Keyword, err)
 		}

@@ -121,6 +121,8 @@ message ListUsersRequest {
   bool only_count = 5 [json_name = "only_count"];
   // The title query parameter for set only to query the title
   string keyword = 6 [json_name = "keyword"];
+  // Whether to include roles in the response.
+  bool with_roles = 7 [json_name = "with_roles"];
 }
 
 message ListUsersResponse {
@@ -143,6 +145,8 @@ message ListUsersResponse {
 message GetUserRequest {
   // The field will contain id of the resource requested.
   int64 id = 1;
+  // Whether to include roles in the response.
+  bool with_roles = 2 [json_name = "with_roles"];
 }
 
 message GetUserResponse {

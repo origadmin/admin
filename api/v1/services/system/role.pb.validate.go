@@ -67,6 +67,8 @@ func (m *ListRolesRequest) validate(all bool) error {
 
 	// no validation rules for Keyword
 
+	// no validation rules for WithPermissions
+
 	if m.PagingMode != nil {
 		// no validation rules for PagingMode
 	}
@@ -349,6 +351,8 @@ func (m *GetRoleRequest) validate(all bool) error {
 	var errors []error
 
 	// no validation rules for Id
+
+	// no validation rules for WithPermissions
 
 	if len(errors) > 0 {
 		return GetRoleRequestMultiError(errors)

@@ -51,6 +51,7 @@ func (r *resourceRepo) Get(ctx context.Context, id int64, opts ...*dto.ResourceQ
 }
 
 func (r *resourceRepo) Create(ctx context.Context, res *types.Resource, opts ...*dto.ResourceCreateOption) (*types.Resource, error) {
+	opt := repo.FirstOrDefault(opts...)
 	entResource := dto.ConvertResourcePBToResource(res)
 	create := r.db.Resource(ctx).Create().
 		SetResourceSkipZero(entResource).
@@ -58,6 +59,10 @@ func (r *resourceRepo) Create(ctx context.Context, res *types.Resource, opts ...
 		SetSyncStatus("Modified").
 		SetVersionID("").
 		SetLastSyncVersionID("")
+
+	if opt.WithPermissionIDs != nil {
+		create.AddPermissionIDs(opt.WithPermissionIDs...)
+	}
 
 	saved, err := create.Save(ctx)
 	if err != nil {
@@ -131,6 +136,10 @@ func (r *resourceRepo) Update(ctx context.Context, res *types.Resource, opts ...
 		} else {
 			// If no field mask, skip zero values to prevent accidental clearing of fields.
 			update.SetResourceSkipZero(entResource)
+		}
+
+		if opt.WithPermissionIDs != nil {
+			update.ClearPermissions().AddPermissionIDs(opt.WithPermissionIDs...)
 		}
 
 		var err error

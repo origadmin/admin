@@ -75,6 +75,8 @@ message ListResourcesRequest {
   string operation = 9 [json_name = "operation"];
   // The sorting criteria for the results.
   repeated string sorting = 10 [json_name = "sorting"];
+  // Whether to include permissions in the response.
+  bool with_permissions = 11 [json_name = "with_permissions"];
 }
 
 // Response message for ResourceService.ListResources.
@@ -97,6 +99,8 @@ message ListResourcesResponse {
 message GetResourceRequest {
   // The unique identifier of the resource.
   int64 id = 1;
+  // Whether to include permissions in the response.
+  bool with_permissions = 2 [json_name = "with_permissions"];
 }
 
 // Response message for ResourceService.GetResource.

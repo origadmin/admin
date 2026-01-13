@@ -53,7 +53,8 @@ func ListRolesRequestToQueryOption(req *system.ListRolesRequest) *RoleQueryOptio
 		return &RoleQueryOption{}
 	}
 	return &RoleQueryOption{
-		QueryOption: repo.QueryOptionFromRequest(req),
+		QueryOption:     repo.QueryOptionFromRequest(req),
+		WithPermissions: req.GetWithPermissions(),
 	}
 }
 
@@ -78,7 +79,7 @@ func UpdateRoleOptionsFromRequest(req *system.UpdateRoleRequest) *RoleUpdateOpti
 		return &RoleUpdateOption{}
 	}
 	opts := &RoleUpdateOption{
-		UpdateOption: repo.UpdateOptionFromRequest(req),
+		UpdateOption:      repo.UpdateOptionFromRequest(req),
 		WithPermissionIDs: req.GetPermissionIds(),
 		WithResourceIDs:   req.GetResourceIds(),
 		WithViewIDs:       req.GetViewIds(),

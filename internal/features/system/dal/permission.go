@@ -51,8 +51,16 @@ func (r *permissionRepo) Get(ctx context.Context, id int64, opts ...*dto.Permiss
 }
 
 func (r *permissionRepo) Create(ctx context.Context, p *types.Permission, opts ...*dto.PermissionCreateOption) (*types.Permission, error) {
+	opt := repo.FirstOrDefault(opts...)
 	entPermission := dto.ConvertPermissionPBToPermission(p)
 	create := r.db.Permission(ctx).Create().SetPermissionSkipZero(entPermission)
+
+	if opt.WithResourceIDs != nil {
+		create.AddResourceIDs(opt.WithResourceIDs...)
+	}
+	if opt.WithViewIDs != nil {
+		create.AddViewIDs(opt.WithViewIDs...)
+	}
 
 	saved, err := create.Save(ctx)
 	if err != nil {
@@ -79,6 +87,13 @@ func (r *permissionRepo) Update(ctx context.Context, p *types.Permission, opts .
 		} else {
 			// If no field mask, skip zero values to prevent accidental clearing of fields.
 			update.SetPermissionSkipZero(entPermission)
+		}
+
+		if opt.WithResourceIDs != nil {
+			update.ClearResources().AddResourceIDs(opt.WithResourceIDs...)
+		}
+		if opt.WithViewIDs != nil {
+			update.ClearViews().AddViewIDs(opt.WithViewIDs...)
 		}
 
 		var err error
