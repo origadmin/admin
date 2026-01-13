@@ -52,22 +52,20 @@ service ViewService {
 
 // Request message for ViewService.ListViews.
 message ListViewsRequest {
-  // The unique identifier of the view.
-  int64 id = 1 [json_name = "id"];
   // The page number.
-  int32 page = 2 [json_name = "page"];
+  int32 page = 1 [json_name = "page"];
   // The maximum number of items to return per page.
-  int32 page_size = 3 [json_name = "page_size"];
+  int32 page_size = 2 [json_name = "page_size"];
   // The token for retrieving the next page of results.
-  string page_token = 4 [json_name = "page_token"];
+  string page_token = 3 [json_name = "page_token"];
   // The paging_mode is used to specify the pagination mode.
-  optional string paging_mode = 5 [json_name = "paging_mode"];
+  optional string paging_mode = 4 [json_name = "paging_mode"];
   // Whether to return only the count of items.
-  bool only_count = 6 [json_name = "only_count"];
+  bool only_count = 5 [json_name = "only_count"];
   // The keyword for searching views.
-  string keyword = 7 [json_name = "keyword"];
+  string keyword = 6 [json_name = "keyword"];
   // The scope of the views to list.
-  string scope = 8 [json_name = "scope"];
+  string scope = 7 [json_name = "scope"];
 }
 
 // Response message for ViewService.ListViews.
@@ -100,12 +98,12 @@ message GetViewResponse {
 
 // Request message for ViewService.CreateView.
 message CreateViewRequest {
-  // The parent resource id where the view is to be created.
-  string parent = 1;
-  // The view id to use for this view.
-  string view_id = 2;
   // The view resource to create.
-  api.v1.services.types.View view = 3;
+  api.v1.services.types.View view = 1;
+  // For requests: Use this field to set the resources for the view.
+  repeated int64 resource_ids = 2 [json_name = "resource_ids"];
+  // For requests: Use this field to set the roles for the view.
+  repeated int64 role_ids = 3 [json_name = "role_ids"];
 }
 
 // Response message for ViewService.CreateView.
@@ -118,6 +116,10 @@ message CreateViewResponse {
 message UpdateViewRequest {
   // The view resource to update.
   api.v1.services.types.View view = 1;
+  // For requests: Use this field to set or replace the list of resources for the view.
+  repeated int64 resource_ids = 2 [json_name = "resource_ids"];
+  // For requests: Use this field to set or replace the list of roles for the view.
+  repeated int64 role_ids = 3 [json_name = "role_ids"];
 }
 
 // Response message for ViewService.UpdateView.

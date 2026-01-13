@@ -50,14 +50,10 @@ message View {
   repeated View children = 100 [json_name = "children"];
   // Parent holds the value of the parent edge.
   View parent = 101 [json_name = "parent"];
-  // Resources holds the value of the resources edge.
+  // For responses: This field is populated with full resource details.
   repeated Resource resources = 102 [json_name = "resources"];
-  // Resource ids
-  repeated int64 resource_ids = 103 [json_name = "resource_ids"];
-  // Roles holds the value of the roles edge.
+  // For responses: This field is populated with full role details.
   repeated Role roles = 104 [json_name = "roles"];
-  // Role ids
-  repeated int64 role_ids = 105 [json_name = "role_ids"];
 }
 
 // Role is the model entity for the Role schema.
@@ -81,18 +77,14 @@ message Role {
   int32 sequence = 8 [json_name = "sequence"];
   // role.field.status
   int32 status = 9 [json_name = "status"];
-  // Views holds the value of the views edge.
+  // For responses: This field is populated with full view details.
   repeated View views = 100 [json_name = "views"];
-  // Users holds the value of the users edge.
+  // For responses: This field is populated with full user details.
   repeated User users = 101 [json_name = "users"];
-  // Resources holds the value of the resources edge.
+  // For responses: This field is populated with full resource details.
   repeated Resource resources = 102 [json_name = "resources"];
-  // Resource Ids holds the value of the resource_ids edge.
-  repeated int64 resource_ids = 103 [json_name = "resource_ids"];
-  // Permissions holds the value of the permissions edge.
+  // For responses: This field is populated with full permission details.
   repeated Permission permissions = 104 [json_name = "permissions"];
-  // Permission Ids holds the value of the permission_ids edge.
-  repeated int64 permission_ids = 105 [json_name = "permission_ids"];
 }
 
 // User is the model entity for the User schema.
@@ -144,10 +136,8 @@ message User {
   optional google.protobuf.Timestamp sanction_date = 22 [json_name = "sanction_date"];
   // user.field.department
   string department = 23 [json_name = "department"];
-  // Roles holds the value of the roles edge.
+  // For responses: This field is populated with full role details.
   repeated Role roles = 100 [json_name = "roles"];
-  // Role Ids holds the value of the role_ids
-  repeated int64 role_ids = 101 [json_name = "role_ids"];
 }
 
 // UserRole is the model entity for the UserRole schema.
@@ -233,9 +223,7 @@ message Resource {
   repeated Resource children = 100 [json_name = "children"];
   // Parent holds the value of the parent edge.
   Resource parent = 101 [json_name = "parent"];
-  // Permission Ids holds the value of the permission_ids edge.
-  repeated int64 permission_ids = 102 [json_name = "permission_ids"];
-  // Permissions holds the value of the permissions edge.
+  // For responses: This field is populated with full permission details.
   repeated Permission permissions = 103 [json_name = "permissions"];
 }
 
@@ -335,13 +323,9 @@ message Permission {
   string data_scope = 8 [json_name = "data_scope"];
   // permission.field.data_rules
   map<string, string> data_rules = 9 [json_name = "data_rules"];
-  // permission.field.resource_ids
-  repeated int64 resource_ids = 10 [json_name = "resource_ids"];
-  // permission.field.view_ids
-  repeated int64 view_ids = 12 [json_name = "view_ids"];
-  // permission.field.resources
+  // For responses: This field is populated with full resource details.
   repeated Resource resources = 100 [json_name = "resources"];
-  // permission.field.views
+  // For responses: This field is populated with full view details.
   repeated View views = 101 [json_name = "views"];
 }
 

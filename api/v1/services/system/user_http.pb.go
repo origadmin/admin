@@ -38,7 +38,8 @@ type UserServiceHTTPServer interface {
 	// ResetUserPassword ResetUserPassword reset the user s password
 	ResetUserPassword(context.Context, *ResetUserPasswordRequest) (*ResetUserPasswordResponse, error)
 	UpdateUser(context.Context, *UpdateUserRequest) (*UpdateUserResponse, error)
-	// UpdateUserRoles UpdateUserRoles update the user roles
+	// UpdateUserRoles Deprecated: Use UpdateUser with role_ids instead.
+	// Deprecated: Do not use.
 	UpdateUserRoles(context.Context, *UpdateUserRolesRequest) (*UpdateUserRolesResponse, error)
 	// UpdateUserStatus UpdateUserStatus Update the status of the user information
 	UpdateUserStatus(context.Context, *UpdateUserStatusRequest) (*UpdateUserStatusResponse, error)
@@ -273,7 +274,8 @@ type UserServiceHTTPClient interface {
 	// ResetUserPassword ResetUserPassword reset the user s password
 	ResetUserPassword(ctx context.Context, req *ResetUserPasswordRequest, opts ...http.CallOption) (rsp *ResetUserPasswordResponse, err error)
 	UpdateUser(ctx context.Context, req *UpdateUserRequest, opts ...http.CallOption) (rsp *UpdateUserResponse, err error)
-	// UpdateUserRoles UpdateUserRoles update the user roles
+	// UpdateUserRoles Deprecated: Use UpdateUser with role_ids instead.
+	// Deprecated: Do not use.
 	UpdateUserRoles(ctx context.Context, req *UpdateUserRolesRequest, opts ...http.CallOption) (rsp *UpdateUserRolesResponse, err error)
 	// UpdateUserStatus UpdateUserStatus Update the status of the user information
 	UpdateUserStatus(ctx context.Context, req *UpdateUserStatusRequest, opts ...http.CallOption) (rsp *UpdateUserStatusResponse, err error)
@@ -379,7 +381,8 @@ func (c *UserServiceHTTPClientImpl) UpdateUser(ctx context.Context, in *UpdateUs
 	return &out, nil
 }
 
-// UpdateUserRoles UpdateUserRoles update the user roles
+// UpdateUserRoles Deprecated: Use UpdateUser with role_ids instead.
+// Deprecated: Do not use.
 func (c *UserServiceHTTPClientImpl) UpdateUserRoles(ctx context.Context, in *UpdateUserRolesRequest, opts ...http.CallOption) (*UpdateUserRolesResponse, error) {
 	var out UpdateUserRolesResponse
 	pattern := "/sys/users/{id}/roles"

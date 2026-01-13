@@ -57,8 +57,6 @@ func (m *ListDepartmentsRequest) validate(all bool) error {
 
 	var errors []error
 
-	// no validation rules for Id
-
 	// no validation rules for Page
 
 	// no validation rules for PageSize
@@ -587,10 +585,6 @@ func (m *CreateDepartmentRequest) validate(all bool) error {
 
 	var errors []error
 
-	// no validation rules for Parent
-
-	// no validation rules for DepartmentId
-
 	if all {
 		switch v := interface{}(m.GetDepartment()).(type) {
 		case interface{ ValidateAll() error }:
@@ -852,8 +846,6 @@ func (m *UpdateDepartmentRequest) validate(all bool) error {
 	}
 
 	var errors []error
-
-	// no validation rules for Id
 
 	if all {
 		switch v := interface{}(m.GetDepartment()).(type) {

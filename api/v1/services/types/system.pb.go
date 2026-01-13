@@ -63,14 +63,10 @@ type View struct {
 	Children []*View `protobuf:"bytes,100,rep,name=children,proto3" json:"children,omitempty"`
 	// Parent holds the value of the parent edge.
 	Parent *View `protobuf:"bytes,101,opt,name=parent,proto3" json:"parent,omitempty"`
-	// Resources holds the value of the resources edge.
+	// For responses: This field is populated with full resource details.
 	Resources []*Resource `protobuf:"bytes,102,rep,name=resources,proto3" json:"resources,omitempty"`
-	// Resource ids
-	ResourceIds []int64 `protobuf:"varint,103,rep,packed,name=resource_ids,proto3" json:"resource_ids,omitempty"`
-	// Roles holds the value of the roles edge.
-	Roles []*Role `protobuf:"bytes,104,rep,name=roles,proto3" json:"roles,omitempty"`
-	// Role ids
-	RoleIds       []int64 `protobuf:"varint,105,rep,packed,name=role_ids,proto3" json:"role_ids,omitempty"`
+	// For responses: This field is populated with full role details.
+	Roles         []*Role `protobuf:"bytes,104,rep,name=roles,proto3" json:"roles,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -245,23 +241,9 @@ func (x *View) GetResources() []*Resource {
 	return nil
 }
 
-func (x *View) GetResourceIds() []int64 {
-	if x != nil {
-		return x.ResourceIds
-	}
-	return nil
-}
-
 func (x *View) GetRoles() []*Role {
 	if x != nil {
 		return x.Roles
-	}
-	return nil
-}
-
-func (x *View) GetRoleIds() []int64 {
-	if x != nil {
-		return x.RoleIds
 	}
 	return nil
 }
@@ -288,18 +270,14 @@ type Role struct {
 	Sequence int32 `protobuf:"varint,8,opt,name=sequence,proto3" json:"sequence,omitempty"`
 	// role.field.status
 	Status int32 `protobuf:"varint,9,opt,name=status,proto3" json:"status,omitempty"`
-	// Views holds the value of the views edge.
+	// For responses: This field is populated with full view details.
 	Views []*View `protobuf:"bytes,100,rep,name=views,proto3" json:"views,omitempty"`
-	// Users holds the value of the users edge.
+	// For responses: This field is populated with full user details.
 	Users []*User `protobuf:"bytes,101,rep,name=users,proto3" json:"users,omitempty"`
-	// Resources holds the value of the resources edge.
+	// For responses: This field is populated with full resource details.
 	Resources []*Resource `protobuf:"bytes,102,rep,name=resources,proto3" json:"resources,omitempty"`
-	// Resource Ids holds the value of the resource_ids edge.
-	ResourceIds []int64 `protobuf:"varint,103,rep,packed,name=resource_ids,proto3" json:"resource_ids,omitempty"`
-	// Permissions holds the value of the permissions edge.
-	Permissions []*Permission `protobuf:"bytes,104,rep,name=permissions,proto3" json:"permissions,omitempty"`
-	// Permission Ids holds the value of the permission_ids edge.
-	PermissionIds []int64 `protobuf:"varint,105,rep,packed,name=permission_ids,proto3" json:"permission_ids,omitempty"`
+	// For responses: This field is populated with full permission details.
+	Permissions   []*Permission `protobuf:"bytes,104,rep,name=permissions,proto3" json:"permissions,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -418,23 +396,9 @@ func (x *Role) GetResources() []*Resource {
 	return nil
 }
 
-func (x *Role) GetResourceIds() []int64 {
-	if x != nil {
-		return x.ResourceIds
-	}
-	return nil
-}
-
 func (x *Role) GetPermissions() []*Permission {
 	if x != nil {
 		return x.Permissions
-	}
-	return nil
-}
-
-func (x *Role) GetPermissionIds() []int64 {
-	if x != nil {
-		return x.PermissionIds
 	}
 	return nil
 }
@@ -489,10 +453,8 @@ type User struct {
 	SanctionDate *timestamppb.Timestamp `protobuf:"bytes,22,opt,name=sanction_date,proto3,oneof" json:"sanction_date,omitempty"`
 	// user.field.department
 	Department string `protobuf:"bytes,23,opt,name=department,proto3" json:"department,omitempty"`
-	// Roles holds the value of the roles edge.
-	Roles []*Role `protobuf:"bytes,100,rep,name=roles,proto3" json:"roles,omitempty"`
-	// Role Ids holds the value of the role_ids
-	RoleIds       []int64 `protobuf:"varint,101,rep,packed,name=role_ids,proto3" json:"role_ids,omitempty"`
+	// For responses: This field is populated with full role details.
+	Roles         []*Role `protobuf:"bytes,100,rep,name=roles,proto3" json:"roles,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -691,13 +653,6 @@ func (x *User) GetDepartment() string {
 func (x *User) GetRoles() []*Role {
 	if x != nil {
 		return x.Roles
-	}
-	return nil
-}
-
-func (x *User) GetRoleIds() []int64 {
-	if x != nil {
-		return x.RoleIds
 	}
 	return nil
 }
@@ -957,9 +912,7 @@ type Resource struct {
 	Children []*Resource `protobuf:"bytes,100,rep,name=children,proto3" json:"children,omitempty"`
 	// Parent holds the value of the parent edge.
 	Parent *Resource `protobuf:"bytes,101,opt,name=parent,proto3" json:"parent,omitempty"`
-	// Permission Ids holds the value of the permission_ids edge.
-	PermissionIds []int64 `protobuf:"varint,102,rep,packed,name=permission_ids,proto3" json:"permission_ids,omitempty"`
-	// Permissions holds the value of the permissions edge.
+	// For responses: This field is populated with full permission details.
 	Permissions   []*Permission `protobuf:"bytes,103,rep,name=permissions,proto3" json:"permissions,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
@@ -1138,13 +1091,6 @@ func (x *Resource) GetChildren() []*Resource {
 func (x *Resource) GetParent() *Resource {
 	if x != nil {
 		return x.Parent
-	}
-	return nil
-}
-
-func (x *Resource) GetPermissionIds() []int64 {
-	if x != nil {
-		return x.PermissionIds
 	}
 	return nil
 }
@@ -1581,13 +1527,9 @@ type Permission struct {
 	DataScope string `protobuf:"bytes,8,opt,name=data_scope,proto3" json:"data_scope,omitempty"`
 	// permission.field.data_rules
 	DataRules map[string]string `protobuf:"bytes,9,rep,name=data_rules,proto3" json:"data_rules,omitempty" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`
-	// permission.field.resource_ids
-	ResourceIds []int64 `protobuf:"varint,10,rep,packed,name=resource_ids,proto3" json:"resource_ids,omitempty"`
-	// permission.field.view_ids
-	ViewIds []int64 `protobuf:"varint,12,rep,packed,name=view_ids,proto3" json:"view_ids,omitempty"`
-	// permission.field.resources
+	// For responses: This field is populated with full resource details.
 	Resources []*Resource `protobuf:"bytes,100,rep,name=resources,proto3" json:"resources,omitempty"`
-	// permission.field.views
+	// For responses: This field is populated with full view details.
 	Views         []*View `protobuf:"bytes,101,rep,name=views,proto3" json:"views,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
@@ -1682,20 +1624,6 @@ func (x *Permission) GetDataScope() string {
 func (x *Permission) GetDataRules() map[string]string {
 	if x != nil {
 		return x.DataRules
-	}
-	return nil
-}
-
-func (x *Permission) GetResourceIds() []int64 {
-	if x != nil {
-		return x.ResourceIds
-	}
-	return nil
-}
-
-func (x *Permission) GetViewIds() []int64 {
-	if x != nil {
-		return x.ViewIds
 	}
 	return nil
 }
@@ -1987,7 +1915,7 @@ var File_types_system_proto protoreflect.FileDescriptor
 
 const file_types_system_proto_rawDesc = "" +
 	"\n" +
-	"\x12types/system.proto\x12\x15api.v1.services.types\x1a\x1fgoogle/protobuf/timestamp.proto\"\x96\x06\n" +
+	"\x12types/system.proto\x12\x15api.v1.services.types\x1a\x1fgoogle/protobuf/timestamp.proto\"\xd6\x05\n" +
 	"\x04View\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\x03R\x02id\x12<\n" +
 	"\vcreate_time\x18\x02 \x01(\v2\x1a.google.protobuf.TimestampR\vcreate_time\x12<\n" +
@@ -2011,10 +1939,8 @@ const file_types_system_proto_rawDesc = "" +
 	"\tcomponent\x18\x14 \x01(\tR\tcomponent\x127\n" +
 	"\bchildren\x18d \x03(\v2\x1b.api.v1.services.types.ViewR\bchildren\x123\n" +
 	"\x06parent\x18e \x01(\v2\x1b.api.v1.services.types.ViewR\x06parent\x12=\n" +
-	"\tresources\x18f \x03(\v2\x1f.api.v1.services.types.ResourceR\tresources\x12\"\n" +
-	"\fresource_ids\x18g \x03(\x03R\fresource_ids\x121\n" +
-	"\x05roles\x18h \x03(\v2\x1b.api.v1.services.types.RoleR\x05roles\x12\x1a\n" +
-	"\brole_ids\x18i \x03(\x03R\brole_ids\"\xe0\x04\n" +
+	"\tresources\x18f \x03(\v2\x1f.api.v1.services.types.ResourceR\tresources\x121\n" +
+	"\x05roles\x18h \x03(\v2\x1b.api.v1.services.types.RoleR\x05roles\"\x94\x04\n" +
 	"\x04Role\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\x03R\x02id\x12<\n" +
 	"\vcreate_time\x18\x02 \x01(\v2\x1a.google.protobuf.TimestampR\vcreate_time\x12<\n" +
@@ -2027,10 +1953,8 @@ const file_types_system_proto_rawDesc = "" +
 	"\x06status\x18\t \x01(\x05R\x06status\x121\n" +
 	"\x05views\x18d \x03(\v2\x1b.api.v1.services.types.ViewR\x05views\x121\n" +
 	"\x05users\x18e \x03(\v2\x1b.api.v1.services.types.UserR\x05users\x12=\n" +
-	"\tresources\x18f \x03(\v2\x1f.api.v1.services.types.ResourceR\tresources\x12\"\n" +
-	"\fresource_ids\x18g \x03(\x03R\fresource_ids\x12C\n" +
-	"\vpermissions\x18h \x03(\v2!.api.v1.services.types.PermissionR\vpermissions\x12&\n" +
-	"\x0epermission_ids\x18i \x03(\x03R\x0epermission_ids\"\x8c\a\n" +
+	"\tresources\x18f \x03(\v2\x1f.api.v1.services.types.ResourceR\tresources\x12C\n" +
+	"\vpermissions\x18h \x03(\v2!.api.v1.services.types.PermissionR\vpermissions\"\xf0\x06\n" +
 	"\x04User\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\x03R\x02id\x12$\n" +
 	"\rcreate_author\x18\x02 \x01(\x03R\rcreate_author\x12$\n" +
@@ -2062,8 +1986,7 @@ const file_types_system_proto_rawDesc = "" +
 	"\n" +
 	"department\x18\x17 \x01(\tR\n" +
 	"department\x121\n" +
-	"\x05roles\x18d \x03(\v2\x1b.api.v1.services.types.RoleR\x05roles\x12\x1a\n" +
-	"\brole_ids\x18e \x03(\x03R\brole_idsB\x10\n" +
+	"\x05roles\x18d \x03(\v2\x1b.api.v1.services.types.RoleR\x05rolesB\x10\n" +
 	"\x0e_sanction_date\"\xca\x02\n" +
 	"\bUserRole\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\x03R\x02id\x12<\n" +
@@ -2081,7 +2004,7 @@ const file_types_system_proto_rawDesc = "" +
 	"\arole_id\x18\x04 \x01(\x03R\arole_id\x12\x18\n" +
 	"\aview_id\x18\x05 \x01(\x03R\aview_id\x12/\n" +
 	"\x04role\x18d \x01(\v2\x1b.api.v1.services.types.RoleR\x04role\x12/\n" +
-	"\x04view\x18e \x01(\v2\x1b.api.v1.services.types.ViewR\x04view\"\x99\a\n" +
+	"\x04view\x18e \x01(\v2\x1b.api.v1.services.types.ViewR\x04view\"\xf1\x06\n" +
 	"\bResource\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\x03R\x02id\x12<\n" +
 	"\vcreate_time\x18\x02 \x01(\v2\x1a.google.protobuf.TimestampR\vcreate_time\x12<\n" +
@@ -2106,8 +2029,7 @@ const file_types_system_proto_rawDesc = "" +
 	"\fservice_name\x18\x15 \x01(\tR\fservice_name\x12\x16\n" +
 	"\x06policy\x18\x16 \x01(\tR\x06policy\x12;\n" +
 	"\bchildren\x18d \x03(\v2\x1f.api.v1.services.types.ResourceR\bchildren\x127\n" +
-	"\x06parent\x18e \x01(\v2\x1f.api.v1.services.types.ResourceR\x06parent\x12&\n" +
-	"\x0epermission_ids\x18f \x03(\x03R\x0epermission_ids\x12C\n" +
+	"\x06parent\x18e \x01(\v2\x1f.api.v1.services.types.ResourceR\x06parent\x12C\n" +
 	"\vpermissions\x18g \x03(\v2!.api.v1.services.types.PermissionR\vpermissions\x1a=\n" +
 	"\x0fPropertiesEntry\x12\x10\n" +
 	"\x03key\x18\x01 \x01(\tR\x03key\x12\x14\n" +
@@ -2147,7 +2069,7 @@ const file_types_system_proto_rawDesc = "" +
 	"\x05users\x18\x02 \x03(\v2\x1b.api.v1.services.types.UserR\x05users\x12C\n" +
 	"\vpermissions\x18\x03 \x03(\v2!.api.v1.services.types.PermissionR\vpermissions\x12K\n" +
 	"\x0euser_positions\x18\x04 \x03(\v2#.api.v1.services.types.UserPositionR\x0euser_positions\x12]\n" +
-	"\x14position_permissions\x18\x05 \x03(\v2).api.v1.services.types.PositionPermissionR\x14position_permissions\"\xe2\x04\n" +
+	"\x14position_permissions\x18\x05 \x03(\v2).api.v1.services.types.PositionPermissionR\x14position_permissions\"\xa2\x04\n" +
 	"\n" +
 	"Permission\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\x03R\x02id\x12<\n" +
@@ -2162,10 +2084,7 @@ const file_types_system_proto_rawDesc = "" +
 	"data_scope\x12P\n" +
 	"\n" +
 	"data_rules\x18\t \x03(\v20.api.v1.services.types.Permission.DataRulesEntryR\n" +
-	"data_rules\x12\"\n" +
-	"\fresource_ids\x18\n" +
-	" \x03(\x03R\fresource_ids\x12\x1a\n" +
-	"\bview_ids\x18\f \x03(\x03R\bview_ids\x12=\n" +
+	"data_rules\x12=\n" +
 	"\tresources\x18d \x03(\v2\x1f.api.v1.services.types.ResourceR\tresources\x121\n" +
 	"\x05views\x18e \x03(\v2\x1b.api.v1.services.types.ViewR\x05views\x1a<\n" +
 	"\x0eDataRulesEntry\x12\x10\n" +

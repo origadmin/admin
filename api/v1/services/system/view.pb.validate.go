@@ -57,8 +57,6 @@ func (m *ListViewsRequest) validate(all bool) error {
 
 	var errors []error
 
-	// no validation rules for Id
-
 	// no validation rules for Page
 
 	// no validation rules for PageSize
@@ -582,10 +580,6 @@ func (m *CreateViewRequest) validate(all bool) error {
 	}
 
 	var errors []error
-
-	// no validation rules for Parent
-
-	// no validation rules for ViewId
 
 	if all {
 		switch v := interface{}(m.GetView()).(type) {

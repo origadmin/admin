@@ -715,8 +715,6 @@ func (m *ListUsersRequest) validate(all bool) error {
 
 	var errors []error
 
-	// no validation rules for Id
-
 	// no validation rules for Page
 
 	// no validation rules for PageSize
@@ -1238,8 +1236,6 @@ func (m *CreateUserRequest) validate(all bool) error {
 	}
 
 	var errors []error
-
-	// no validation rules for Parent
 
 	if all {
 		switch v := interface{}(m.GetUser()).(type) {

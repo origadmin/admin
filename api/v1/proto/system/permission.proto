@@ -45,25 +45,25 @@ service PermissionService {
 }
 
 message ListPermissionsRequest {
-  // The parent resource id, for example, "shelves/shelf1".
-  int64 id = 1 [json_name = "id"];
   // The page number.
-  int32 page = 2 [json_name = "page"];
+  int32 page = 1 [json_name = "page"];
   // The maximum number of items to return.
-  int32 page_size = 3 [json_name = "page_size"];
+  int32 page_size = 2 [json_name = "page_size"];
   // The next_page_token value returned from a previous List request, if any.
-  string page_token = 4 [json_name = "page_token"];
+  string page_token = 3 [json_name = "page_token"];
   // The paging_mode is used to specify the pagination mode.
-  optional string paging_mode = 5 [json_name = "paging_mode"];
+  optional string paging_mode = 4 [json_name = "paging_mode"];
   // The only_count is the query parameter for set only to query the total number
-  bool only_count = 6 [json_name = "only_count"];
+  bool only_count = 5 [json_name = "only_count"];
   // The data_scopes is used to query the permission by data scopes.
-  repeated string data_scopes = 7 [json_name = "data_scopes"];
+  repeated string data_scopes = 6 [json_name = "data_scopes"];
   // The keyword is the query parameter for set only to query the permission by keyword
-  string keyword = 8 [json_name = "keyword"];
-
+  string keyword = 7 [json_name = "keyword"];
+  // The with_resources is the query parameter for set only to query the permission with resources.
   bool with_resources = 10 [json_name = "with_resources"];
+  // The with_roles is the query parameter for set only to query the permission with roles.
   bool with_roles = 11 [json_name = "with_roles"];
+  // The with_views is the query parameter for set only to query the permission with views.
   bool with_views = 12 [json_name = "with_views"];
 }
 
@@ -85,48 +85,49 @@ message ListPermissionsResponse {
 }
 
 message GetPermissionRequest {
-  // The field will contain id of the resource requested, for example:
-  // "shelves/shelf1/permissions/permission2"
+  // The field will contain id of the resource requested.
   int64 id = 1 [json_name = "id"];
 }
 
 message GetPermissionResponse {
+  // The permission resource for get.
   api.v1.services.types.Permission permission = 1 [json_name = "permission"];
 }
 
 message CreatePermissionRequest {
-  // The parent resource id where the permission is to be created.
-  string parent = 1 [json_name = "parent"];
-
-  // The permission id to use for this permission.
-  string permission_id = 3 [json_name = "permission_id"];
-
   // The permission resource to create.
-  // The field id should match the Noun in the method id.
-  api.v1.services.types.Permission permission = 2 [json_name = "permission"];
+  api.v1.services.types.Permission permission = 1 [json_name = "permission"];
+  // For requests: Use this field to set the resources for the permission.
+  repeated int64 resource_ids = 2 [json_name = "resource_ids"];
+  // For requests: Use this field to set the views for the permission.
+  repeated int64 view_ids = 3 [json_name = "view_ids"];
 }
 
 message CreatePermissionResponse {
+  // The permission resource for create.
   api.v1.services.types.Permission permission = 1 [json_name = "permission"];
 }
 
 message UpdatePermissionRequest {
-  // The resource name of the permission to update.
-  int64 id = 1 [json_name = "id"];
   // The permission resource which replaces the resource on the server.
-  api.v1.services.types.Permission permission = 2 [json_name = "permission"];
+  api.v1.services.types.Permission permission = 1 [json_name = "permission"];
+  // For requests: Use this field to set or replace the list of resources for the permission.
+  repeated int64 resource_ids = 2 [json_name = "resource_ids"];
+  // For requests: Use this field to set or replace the list of views for the permission.
+  repeated int64 view_ids = 3 [json_name = "view_ids"];
 }
 
 message UpdatePermissionResponse {
+  // The permission resource for update.
   api.v1.services.types.Permission permission = 1 [json_name = "permission"];
 }
 
 message DeletePermissionRequest {
-  // The resource id of the permission to be deleted, for example:
-  // "shelves/shelf1/permissions/permission2"
+  // The resource id of the permission to be deleted.
   int64 id = 1 [json_name = "id"];
 }
 
 message DeletePermissionResponse {
+  // The permission resource for delete.
   google.protobuf.Empty empty = 1;
 }

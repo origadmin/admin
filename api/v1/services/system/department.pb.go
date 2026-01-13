@@ -28,20 +28,18 @@ const (
 
 type ListDepartmentsRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// The parent resource id, for example, "shelves/shelf1".
-	Id int64 `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
 	// The page number.
-	Page int32 `protobuf:"varint,2,opt,name=page,proto3" json:"page,omitempty"`
+	Page int32 `protobuf:"varint,1,opt,name=page,proto3" json:"page,omitempty"`
 	// The maximum number of items to return.
-	PageSize int32 `protobuf:"varint,3,opt,name=page_size,proto3" json:"page_size,omitempty"`
+	PageSize int32 `protobuf:"varint,2,opt,name=page_size,proto3" json:"page_size,omitempty"`
 	// The next_page_token value returned from a previous List request, if any.
-	PageToken string `protobuf:"bytes,4,opt,name=page_token,proto3" json:"page_token,omitempty"`
+	PageToken string `protobuf:"bytes,3,opt,name=page_token,proto3" json:"page_token,omitempty"`
 	// The paging_mode is used to specify the pagination mode.
-	PagingMode *string `protobuf:"bytes,5,opt,name=paging_mode,proto3,oneof" json:"paging_mode,omitempty"`
+	PagingMode *string `protobuf:"bytes,4,opt,name=paging_mode,proto3,oneof" json:"paging_mode,omitempty"`
 	// The only_count is the query parameter for set only to query the total number
-	OnlyCount bool `protobuf:"varint,6,opt,name=only_count,proto3" json:"only_count,omitempty"`
+	OnlyCount bool `protobuf:"varint,5,opt,name=only_count,proto3" json:"only_count,omitempty"`
 	// The keyword is the query parameter for set only to query the department by keyword
-	Keyword       string `protobuf:"bytes,7,opt,name=keyword,proto3" json:"keyword,omitempty"`
+	Keyword       string `protobuf:"bytes,6,opt,name=keyword,proto3" json:"keyword,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -74,13 +72,6 @@ func (x *ListDepartmentsRequest) ProtoReflect() protoreflect.Message {
 // Deprecated: Use ListDepartmentsRequest.ProtoReflect.Descriptor instead.
 func (*ListDepartmentsRequest) Descriptor() ([]byte, []int) {
 	return file_system_department_proto_rawDescGZIP(), []int{0}
-}
-
-func (x *ListDepartmentsRequest) GetId() int64 {
-	if x != nil {
-		return x.Id
-	}
-	return 0
 }
 
 func (x *ListDepartmentsRequest) GetPage() int32 {
@@ -219,8 +210,7 @@ func (x *ListDepartmentsResponse) GetExtra() *anypb.Any {
 
 type GetDepartmentRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// The field will contain id of the resource requested, for example:
-	// "shelves/shelf1/departments/department2"
+	// The field will contain id of the resource requested.
 	Id            int64 `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
@@ -309,13 +299,8 @@ func (x *GetDepartmentResponse) GetDepartment() *types.Department {
 
 type CreateDepartmentRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// The parent resource id where the department is to be created.
-	Parent string `protobuf:"bytes,1,opt,name=parent,proto3" json:"parent,omitempty"`
-	// The department id to use for this department.
-	DepartmentId string `protobuf:"bytes,3,opt,name=department_id,proto3" json:"department_id,omitempty"`
 	// The department resource to create.
-	// The field id should match the Noun in the method id.
-	Department    *types.Department `protobuf:"bytes,2,opt,name=department,proto3" json:"department,omitempty"`
+	Department    *types.Department `protobuf:"bytes,1,opt,name=department,proto3" json:"department,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -348,20 +333,6 @@ func (x *CreateDepartmentRequest) ProtoReflect() protoreflect.Message {
 // Deprecated: Use CreateDepartmentRequest.ProtoReflect.Descriptor instead.
 func (*CreateDepartmentRequest) Descriptor() ([]byte, []int) {
 	return file_system_department_proto_rawDescGZIP(), []int{4}
-}
-
-func (x *CreateDepartmentRequest) GetParent() string {
-	if x != nil {
-		return x.Parent
-	}
-	return ""
-}
-
-func (x *CreateDepartmentRequest) GetDepartmentId() string {
-	if x != nil {
-		return x.DepartmentId
-	}
-	return ""
 }
 
 func (x *CreateDepartmentRequest) GetDepartment() *types.Department {
@@ -417,10 +388,8 @@ func (x *CreateDepartmentResponse) GetDepartment() *types.Department {
 
 type UpdateDepartmentRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// The department id to use for this department.
-	Id int64 `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
 	// The department resource which replaces the resource on the server.
-	Department    *types.Department `protobuf:"bytes,2,opt,name=department,proto3" json:"department,omitempty"`
+	Department    *types.Department `protobuf:"bytes,1,opt,name=department,proto3" json:"department,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -453,13 +422,6 @@ func (x *UpdateDepartmentRequest) ProtoReflect() protoreflect.Message {
 // Deprecated: Use UpdateDepartmentRequest.ProtoReflect.Descriptor instead.
 func (*UpdateDepartmentRequest) Descriptor() ([]byte, []int) {
 	return file_system_department_proto_rawDescGZIP(), []int{6}
-}
-
-func (x *UpdateDepartmentRequest) GetId() int64 {
-	if x != nil {
-		return x.Id
-	}
-	return 0
 }
 
 func (x *UpdateDepartmentRequest) GetDepartment() *types.Department {
@@ -515,8 +477,7 @@ func (x *UpdateDepartmentResponse) GetDepartment() *types.Department {
 
 type DeleteDepartmentRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// The resource id of the department to be deleted, for example:
-	// "shelves/shelf1/departments/department2"
+	// The resource id of the department to be deleted.
 	Id            int64 `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
@@ -607,19 +568,18 @@ var File_system_department_proto protoreflect.FileDescriptor
 
 const file_system_department_proto_rawDesc = "" +
 	"\n" +
-	"\x17system/department.proto\x12\x16api.v1.services.system\x1a\x1cgoogle/api/annotations.proto\x1a\x19google/protobuf/any.proto\x1a\x1bgoogle/protobuf/empty.proto\x1a\x12types/system.proto\x1a\x16policy/v1/policy.proto\"\xeb\x01\n" +
-	"\x16ListDepartmentsRequest\x12\x0e\n" +
-	"\x02id\x18\x01 \x01(\x03R\x02id\x12\x12\n" +
-	"\x04page\x18\x02 \x01(\x05R\x04page\x12\x1c\n" +
-	"\tpage_size\x18\x03 \x01(\x05R\tpage_size\x12\x1e\n" +
+	"\x17system/department.proto\x12\x16api.v1.services.system\x1a\x1cgoogle/api/annotations.proto\x1a\x19google/protobuf/any.proto\x1a\x1bgoogle/protobuf/empty.proto\x1a\x12types/system.proto\x1a\x16policy/v1/policy.proto\"\xdb\x01\n" +
+	"\x16ListDepartmentsRequest\x12\x12\n" +
+	"\x04page\x18\x01 \x01(\x05R\x04page\x12\x1c\n" +
+	"\tpage_size\x18\x02 \x01(\x05R\tpage_size\x12\x1e\n" +
 	"\n" +
-	"page_token\x18\x04 \x01(\tR\n" +
+	"page_token\x18\x03 \x01(\tR\n" +
 	"page_token\x12%\n" +
-	"\vpaging_mode\x18\x05 \x01(\tH\x00R\vpaging_mode\x88\x01\x01\x12\x1e\n" +
+	"\vpaging_mode\x18\x04 \x01(\tH\x00R\vpaging_mode\x88\x01\x01\x12\x1e\n" +
 	"\n" +
-	"only_count\x18\x06 \x01(\bR\n" +
+	"only_count\x18\x05 \x01(\bR\n" +
 	"only_count\x12\x18\n" +
-	"\akeyword\x18\a \x01(\tR\akeywordB\x0e\n" +
+	"\akeyword\x18\x06 \x01(\tR\akeywordB\x0e\n" +
 	"\f_paging_mode\"\x8b\x02\n" +
 	"\x17ListDepartmentsResponse\x12\x14\n" +
 	"\x05total\x18\x01 \x01(\x05R\x05total\x12C\n" +
@@ -634,21 +594,18 @@ const file_system_department_proto_rawDesc = "" +
 	"\x15GetDepartmentResponse\x12A\n" +
 	"\n" +
 	"department\x18\x01 \x01(\v2!.api.v1.services.types.DepartmentR\n" +
-	"department\"\x9a\x01\n" +
-	"\x17CreateDepartmentRequest\x12\x16\n" +
-	"\x06parent\x18\x01 \x01(\tR\x06parent\x12$\n" +
-	"\rdepartment_id\x18\x03 \x01(\tR\rdepartment_id\x12A\n" +
+	"department\"\\\n" +
+	"\x17CreateDepartmentRequest\x12A\n" +
 	"\n" +
-	"department\x18\x02 \x01(\v2!.api.v1.services.types.DepartmentR\n" +
+	"department\x18\x01 \x01(\v2!.api.v1.services.types.DepartmentR\n" +
 	"department\"]\n" +
 	"\x18CreateDepartmentResponse\x12A\n" +
 	"\n" +
 	"department\x18\x01 \x01(\v2!.api.v1.services.types.DepartmentR\n" +
-	"department\"l\n" +
-	"\x17UpdateDepartmentRequest\x12\x0e\n" +
-	"\x02id\x18\x01 \x01(\x03R\x02id\x12A\n" +
+	"department\"\\\n" +
+	"\x17UpdateDepartmentRequest\x12A\n" +
 	"\n" +
-	"department\x18\x02 \x01(\v2!.api.v1.services.types.DepartmentR\n" +
+	"department\x18\x01 \x01(\v2!.api.v1.services.types.DepartmentR\n" +
 	"department\"]\n" +
 	"\x18UpdateDepartmentResponse\x12A\n" +
 	"\n" +

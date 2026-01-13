@@ -47,7 +47,7 @@ type UserServiceBridgeServer interface {
 	DeleteUser(context.Context, *DeleteUserRequest) (*DeleteUserResponse, error)
 	// UpdateUserStatus Update the status of the user information
 	UpdateUserStatus(context.Context, *UpdateUserStatusRequest) (*UpdateUserStatusResponse, error)
-	// UpdateUserRoles update the user roles
+	// Deprecated: Use UpdateUser with role_ids instead.
 	UpdateUserRoles(context.Context, *UpdateUserRolesRequest) (*UpdateUserRolesResponse, error)
 	// ResetUserPassword reset the user s password
 	ResetUserPassword(context.Context, *ResetUserPasswordRequest) (*ResetUserPasswordResponse, error)

@@ -55,28 +55,26 @@ service ResourceService {
 
 // Request message for ResourceService.ListResources.
 message ListResourcesRequest {
-  // The unique identifier of the resource.
-  int64 id = 1 [json_name = "id"];
   // The page number.
-  int32 page = 2 [json_name = "page"];
+  int32 page = 1 [json_name = "page"];
   // The maximum number of items to return per page.
-  int32 page_size = 3 [json_name = "page_size"];
+  int32 page_size = 2 [json_name = "page_size"];
   // The token for retrieving the next page of results.
-  string page_token = 4 [json_name = "page_token"];
+  string page_token = 3 [json_name = "page_token"];
   // The paging_mode is used to specify the pagination mode.
-  optional string paging_mode = 5 [json_name = "paging_mode"];
+  optional string paging_mode = 4 [json_name = "paging_mode"];
   // Whether to return only the count of items.
-  bool only_count = 6 [json_name = "only_count"];
+  bool only_count = 5 [json_name = "only_count"];
   // The keyword for searching resources.
-  string keyword = 7 [json_name = "keyword"];
+  string keyword = 6 [json_name = "keyword"];
   // The service name of the resources.
-  string service_name = 8 [json_name = "service_name"];
+  string service_name = 7 [json_name = "service_name"];
   // The synchronization status of the resources.
-  string sync_status = 9 [json_name = "sync_status"];
+  string sync_status = 8 [json_name = "sync_status"];
   // The operation of the resources.
-  string operation = 10 [json_name = "operation"];
+  string operation = 9 [json_name = "operation"];
   // The sorting criteria for the results.
-  repeated string sorting = 11 [json_name = "sorting"];
+  repeated string sorting = 10 [json_name = "sorting"];
 }
 
 // Response message for ResourceService.ListResources.
@@ -109,12 +107,10 @@ message GetResourceResponse {
 
 // Request message for ResourceService.CreateResource.
 message CreateResourceRequest {
-  // The parent resource id where the resource is to be created.
-  string parent = 1;
-  // The resource id to use for this resource.
-  string resource_id = 2;
   // The resource resource to create.
-  api.v1.services.types.Resource resource = 3;
+  api.v1.services.types.Resource resource = 1;
+  // For requests: Use this field to set the permissions for the resource.
+  repeated int64 permission_ids = 2 [json_name = "permission_ids"];
 }
 
 // Response message for ResourceService.CreateResource.
@@ -127,6 +123,8 @@ message CreateResourceResponse {
 message UpdateResourceRequest {
   // The resource resource to update.
   api.v1.services.types.Resource resource = 1;
+  // For requests: Use this field to set or replace the list of permissions for the resource.
+  repeated int64 permission_ids = 2 [json_name = "permission_ids"];
 }
 
 // Response message for ResourceService.UpdateResource.

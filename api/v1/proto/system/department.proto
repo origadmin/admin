@@ -45,20 +45,18 @@ service DepartmentService {
 }
 
 message ListDepartmentsRequest {
-  // The parent resource id, for example, "shelves/shelf1".
-  int64 id = 1 [json_name = "id"];
   // The page number.
-  int32 page = 2 [json_name = "page"];
+  int32 page = 1 [json_name = "page"];
   // The maximum number of items to return.
-  int32 page_size = 3 [json_name = "page_size"];
+  int32 page_size = 2 [json_name = "page_size"];
   // The next_page_token value returned from a previous List request, if any.
-  string page_token = 4 [json_name = "page_token"];
+  string page_token = 3 [json_name = "page_token"];
   // The paging_mode is used to specify the pagination mode.
-  optional string paging_mode = 5 [json_name = "paging_mode"];
+  optional string paging_mode = 4 [json_name = "paging_mode"];
   // The only_count is the query parameter for set only to query the total number
-  bool only_count = 6 [json_name = "only_count"];
+  bool only_count = 5 [json_name = "only_count"];
   // The keyword is the query parameter for set only to query the department by keyword
-  string keyword = 7 [json_name = "keyword"];
+  string keyword = 6 [json_name = "keyword"];
 }
 
 message ListDepartmentsResponse {
@@ -79,8 +77,7 @@ message ListDepartmentsResponse {
 }
 
 message GetDepartmentRequest {
-  // The field will contain id of the resource requested, for example:
-  // "shelves/shelf1/departments/department2"
+  // The field will contain id of the resource requested.
   int64 id = 1 [json_name = "id"];
 }
 
@@ -89,15 +86,8 @@ message GetDepartmentResponse {
 }
 
 message CreateDepartmentRequest {
-  // The parent resource id where the department is to be created.
-  string parent = 1 [json_name = "parent"];
-
-  // The department id to use for this department.
-  string department_id = 3 [json_name = "department_id"];
-
   // The department resource to create.
-  // The field id should match the Noun in the method id.
-  api.v1.services.types.Department department = 2 [json_name = "department"];
+  api.v1.services.types.Department department = 1 [json_name = "department"];
 }
 
 message CreateDepartmentResponse {
@@ -105,10 +95,8 @@ message CreateDepartmentResponse {
 }
 
 message UpdateDepartmentRequest {
-  // The department id to use for this department.
-  int64 id = 1 [json_name = "id"];
   // The department resource which replaces the resource on the server.
-  api.v1.services.types.Department department = 2 [json_name = "department"];
+  api.v1.services.types.Department department = 1 [json_name = "department"];
 }
 
 message UpdateDepartmentResponse {
@@ -116,8 +104,7 @@ message UpdateDepartmentResponse {
 }
 
 message DeleteDepartmentRequest {
-  // The resource id of the department to be deleted, for example:
-  // "shelves/shelf1/departments/department2"
+  // The resource id of the department to be deleted.
   int64 id = 1 [json_name = "id"];
 }
 

@@ -29,22 +29,20 @@ const (
 // Request message for ViewService.ListViews.
 type ListViewsRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// The unique identifier of the view.
-	Id int64 `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
 	// The page number.
-	Page int32 `protobuf:"varint,2,opt,name=page,proto3" json:"page,omitempty"`
+	Page int32 `protobuf:"varint,1,opt,name=page,proto3" json:"page,omitempty"`
 	// The maximum number of items to return per page.
-	PageSize int32 `protobuf:"varint,3,opt,name=page_size,proto3" json:"page_size,omitempty"`
+	PageSize int32 `protobuf:"varint,2,opt,name=page_size,proto3" json:"page_size,omitempty"`
 	// The token for retrieving the next page of results.
-	PageToken string `protobuf:"bytes,4,opt,name=page_token,proto3" json:"page_token,omitempty"`
+	PageToken string `protobuf:"bytes,3,opt,name=page_token,proto3" json:"page_token,omitempty"`
 	// The paging_mode is used to specify the pagination mode.
-	PagingMode *string `protobuf:"bytes,5,opt,name=paging_mode,proto3,oneof" json:"paging_mode,omitempty"`
+	PagingMode *string `protobuf:"bytes,4,opt,name=paging_mode,proto3,oneof" json:"paging_mode,omitempty"`
 	// Whether to return only the count of items.
-	OnlyCount bool `protobuf:"varint,6,opt,name=only_count,proto3" json:"only_count,omitempty"`
+	OnlyCount bool `protobuf:"varint,5,opt,name=only_count,proto3" json:"only_count,omitempty"`
 	// The keyword for searching views.
-	Keyword string `protobuf:"bytes,7,opt,name=keyword,proto3" json:"keyword,omitempty"`
+	Keyword string `protobuf:"bytes,6,opt,name=keyword,proto3" json:"keyword,omitempty"`
 	// The scope of the views to list.
-	Scope         string `protobuf:"bytes,8,opt,name=scope,proto3" json:"scope,omitempty"`
+	Scope         string `protobuf:"bytes,7,opt,name=scope,proto3" json:"scope,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -77,13 +75,6 @@ func (x *ListViewsRequest) ProtoReflect() protoreflect.Message {
 // Deprecated: Use ListViewsRequest.ProtoReflect.Descriptor instead.
 func (*ListViewsRequest) Descriptor() ([]byte, []int) {
 	return file_system_view_proto_rawDescGZIP(), []int{0}
-}
-
-func (x *ListViewsRequest) GetId() int64 {
-	if x != nil {
-		return x.Id
-	}
-	return 0
 }
 
 func (x *ListViewsRequest) GetPage() int32 {
@@ -321,12 +312,12 @@ func (x *GetViewResponse) GetView() *types.View {
 // Request message for ViewService.CreateView.
 type CreateViewRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// The parent resource id where the view is to be created.
-	Parent string `protobuf:"bytes,1,opt,name=parent,proto3" json:"parent,omitempty"`
-	// The view id to use for this view.
-	ViewId string `protobuf:"bytes,2,opt,name=view_id,json=viewId,proto3" json:"view_id,omitempty"`
 	// The view resource to create.
-	View          *types.View `protobuf:"bytes,3,opt,name=view,proto3" json:"view,omitempty"`
+	View *types.View `protobuf:"bytes,1,opt,name=view,proto3" json:"view,omitempty"`
+	// For requests: Use this field to set the resources for the view.
+	ResourceIds []int64 `protobuf:"varint,2,rep,packed,name=resource_ids,proto3" json:"resource_ids,omitempty"`
+	// For requests: Use this field to set the roles for the view.
+	RoleIds       []int64 `protobuf:"varint,3,rep,packed,name=role_ids,proto3" json:"role_ids,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -361,23 +352,23 @@ func (*CreateViewRequest) Descriptor() ([]byte, []int) {
 	return file_system_view_proto_rawDescGZIP(), []int{4}
 }
 
-func (x *CreateViewRequest) GetParent() string {
-	if x != nil {
-		return x.Parent
-	}
-	return ""
-}
-
-func (x *CreateViewRequest) GetViewId() string {
-	if x != nil {
-		return x.ViewId
-	}
-	return ""
-}
-
 func (x *CreateViewRequest) GetView() *types.View {
 	if x != nil {
 		return x.View
+	}
+	return nil
+}
+
+func (x *CreateViewRequest) GetResourceIds() []int64 {
+	if x != nil {
+		return x.ResourceIds
+	}
+	return nil
+}
+
+func (x *CreateViewRequest) GetRoleIds() []int64 {
+	if x != nil {
+		return x.RoleIds
 	}
 	return nil
 }
@@ -432,7 +423,11 @@ func (x *CreateViewResponse) GetView() *types.View {
 type UpdateViewRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// The view resource to update.
-	View          *types.View `protobuf:"bytes,1,opt,name=view,proto3" json:"view,omitempty"`
+	View *types.View `protobuf:"bytes,1,opt,name=view,proto3" json:"view,omitempty"`
+	// For requests: Use this field to set or replace the list of resources for the view.
+	ResourceIds []int64 `protobuf:"varint,2,rep,packed,name=resource_ids,proto3" json:"resource_ids,omitempty"`
+	// For requests: Use this field to set or replace the list of roles for the view.
+	RoleIds       []int64 `protobuf:"varint,3,rep,packed,name=role_ids,proto3" json:"role_ids,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -470,6 +465,20 @@ func (*UpdateViewRequest) Descriptor() ([]byte, []int) {
 func (x *UpdateViewRequest) GetView() *types.View {
 	if x != nil {
 		return x.View
+	}
+	return nil
+}
+
+func (x *UpdateViewRequest) GetResourceIds() []int64 {
+	if x != nil {
+		return x.ResourceIds
+	}
+	return nil
+}
+
+func (x *UpdateViewRequest) GetRoleIds() []int64 {
+	if x != nil {
+		return x.RoleIds
 	}
 	return nil
 }
@@ -616,20 +625,19 @@ var File_system_view_proto protoreflect.FileDescriptor
 
 const file_system_view_proto_rawDesc = "" +
 	"\n" +
-	"\x11system/view.proto\x12\x16api.v1.services.system\x1a\x1cgoogle/api/annotations.proto\x1a\x19google/protobuf/any.proto\x1a\x1bgoogle/protobuf/empty.proto\x1a\x12types/system.proto\x1a\x16policy/v1/policy.proto\"\xfb\x01\n" +
-	"\x10ListViewsRequest\x12\x0e\n" +
-	"\x02id\x18\x01 \x01(\x03R\x02id\x12\x12\n" +
-	"\x04page\x18\x02 \x01(\x05R\x04page\x12\x1c\n" +
-	"\tpage_size\x18\x03 \x01(\x05R\tpage_size\x12\x1e\n" +
+	"\x11system/view.proto\x12\x16api.v1.services.system\x1a\x1cgoogle/api/annotations.proto\x1a\x19google/protobuf/any.proto\x1a\x1bgoogle/protobuf/empty.proto\x1a\x12types/system.proto\x1a\x16policy/v1/policy.proto\"\xeb\x01\n" +
+	"\x10ListViewsRequest\x12\x12\n" +
+	"\x04page\x18\x01 \x01(\x05R\x04page\x12\x1c\n" +
+	"\tpage_size\x18\x02 \x01(\x05R\tpage_size\x12\x1e\n" +
 	"\n" +
-	"page_token\x18\x04 \x01(\tR\n" +
+	"page_token\x18\x03 \x01(\tR\n" +
 	"page_token\x12%\n" +
-	"\vpaging_mode\x18\x05 \x01(\tH\x00R\vpaging_mode\x88\x01\x01\x12\x1e\n" +
+	"\vpaging_mode\x18\x04 \x01(\tH\x00R\vpaging_mode\x88\x01\x01\x12\x1e\n" +
 	"\n" +
-	"only_count\x18\x06 \x01(\bR\n" +
+	"only_count\x18\x05 \x01(\bR\n" +
 	"only_count\x12\x18\n" +
-	"\akeyword\x18\a \x01(\tR\akeyword\x12\x14\n" +
-	"\x05scope\x18\b \x01(\tR\x05scopeB\x0e\n" +
+	"\akeyword\x18\x06 \x01(\tR\akeyword\x12\x14\n" +
+	"\x05scope\x18\a \x01(\tR\x05scopeB\x0e\n" +
 	"\f_paging_mode\"\xf3\x01\n" +
 	"\x11ListViewsResponse\x12\x14\n" +
 	"\x05total\x18\x01 \x01(\x05R\x05total\x121\n" +
@@ -642,15 +650,17 @@ const file_system_view_proto_rawDesc = "" +
 	"\x0eGetViewRequest\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\x03R\x02id\"B\n" +
 	"\x0fGetViewResponse\x12/\n" +
-	"\x04view\x18\x01 \x01(\v2\x1b.api.v1.services.types.ViewR\x04view\"u\n" +
-	"\x11CreateViewRequest\x12\x16\n" +
-	"\x06parent\x18\x01 \x01(\tR\x06parent\x12\x17\n" +
-	"\aview_id\x18\x02 \x01(\tR\x06viewId\x12/\n" +
-	"\x04view\x18\x03 \x01(\v2\x1b.api.v1.services.types.ViewR\x04view\"E\n" +
+	"\x04view\x18\x01 \x01(\v2\x1b.api.v1.services.types.ViewR\x04view\"\x84\x01\n" +
+	"\x11CreateViewRequest\x12/\n" +
+	"\x04view\x18\x01 \x01(\v2\x1b.api.v1.services.types.ViewR\x04view\x12\"\n" +
+	"\fresource_ids\x18\x02 \x03(\x03R\fresource_ids\x12\x1a\n" +
+	"\brole_ids\x18\x03 \x03(\x03R\brole_ids\"E\n" +
 	"\x12CreateViewResponse\x12/\n" +
-	"\x04view\x18\x01 \x01(\v2\x1b.api.v1.services.types.ViewR\x04view\"D\n" +
+	"\x04view\x18\x01 \x01(\v2\x1b.api.v1.services.types.ViewR\x04view\"\x84\x01\n" +
 	"\x11UpdateViewRequest\x12/\n" +
-	"\x04view\x18\x01 \x01(\v2\x1b.api.v1.services.types.ViewR\x04view\"E\n" +
+	"\x04view\x18\x01 \x01(\v2\x1b.api.v1.services.types.ViewR\x04view\x12\"\n" +
+	"\fresource_ids\x18\x02 \x03(\x03R\fresource_ids\x12\x1a\n" +
+	"\brole_ids\x18\x03 \x03(\x03R\brole_ids\"E\n" +
 	"\x12UpdateViewResponse\x12/\n" +
 	"\x04view\x18\x01 \x01(\v2\x1b.api.v1.services.types.ViewR\x04view\"#\n" +
 	"\x11DeleteViewRequest\x12\x0e\n" +

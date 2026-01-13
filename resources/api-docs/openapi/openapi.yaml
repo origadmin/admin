@@ -731,11 +731,6 @@ paths:
                 - DepartmentService
             operationId: DepartmentService_ListDepartments
             parameters:
-                - name: id
-                  in: query
-                  description: The parent resource id, for example, "shelves/shelf1".
-                  schema:
-                    type: string
                 - name: page
                   in: query
                   description: The page number.
@@ -842,9 +837,7 @@ paths:
             parameters:
                 - name: id
                   in: path
-                  description: |-
-                    The field will contain id of the resource requested, for example:
-                     "shelves/shelf1/departments/department2"
+                  description: The field will contain id of the resource requested.
                   required: true
                   schema:
                     type: string
@@ -868,9 +861,7 @@ paths:
             parameters:
                 - name: id
                   in: path
-                  description: |-
-                    The resource id of the department to be deleted, for example:
-                     "shelves/shelf1/departments/department2"
+                  description: The resource id of the department to be deleted.
                   required: true
                   schema:
                     type: string
@@ -893,11 +884,6 @@ paths:
                 - PermissionService
             operationId: PermissionService_ListPermissions
             parameters:
-                - name: id
-                  in: query
-                  description: The parent resource id, for example, "shelves/shelf1".
-                  schema:
-                    type: string
                 - name: page
                   in: query
                   description: The page number.
@@ -939,14 +925,17 @@ paths:
                     type: string
                 - name: with_resources
                   in: query
+                  description: The with_resources is the query parameter for set only to query the permission with resources.
                   schema:
                     type: boolean
                 - name: with_roles
                   in: query
+                  description: The with_roles is the query parameter for set only to query the permission with roles.
                   schema:
                     type: boolean
                 - name: with_views
                   in: query
+                  description: The with_views is the query parameter for set only to query the permission with views.
                   schema:
                     type: boolean
             responses:
@@ -993,9 +982,7 @@ paths:
             parameters:
                 - name: id
                   in: path
-                  description: |-
-                    The field will contain id of the resource requested, for example:
-                     "shelves/shelf1/permissions/permission2"
+                  description: The field will contain id of the resource requested.
                   required: true
                   schema:
                     type: string
@@ -1019,9 +1006,7 @@ paths:
             parameters:
                 - name: id
                   in: path
-                  description: |-
-                    The resource id of the permission to be deleted, for example:
-                     "shelves/shelf1/permissions/permission2"
+                  description: The resource id of the permission to be deleted.
                   required: true
                   schema:
                     type: string
@@ -1074,11 +1059,6 @@ paths:
                 - PositionService
             operationId: PositionService_ListPositions
             parameters:
-                - name: id
-                  in: query
-                  description: The parent resource id, for example, "shelves/shelf1".
-                  schema:
-                    type: string
                 - name: page
                   in: query
                   description: The page number.
@@ -1155,9 +1135,7 @@ paths:
             parameters:
                 - name: id
                   in: path
-                  description: |-
-                    The field will contain id of the resource requested, for example:
-                     "shelves/shelf1/positions/position2"
+                  description: The field will contain id of the resource requested.
                   required: true
                   schema:
                     type: string
@@ -1181,9 +1159,7 @@ paths:
             parameters:
                 - name: id
                   in: path
-                  description: |-
-                    The resource id of the position to be deleted, for example:
-                     "shelves/shelf1/positions/position2"
+                  description: The resource id of the position to be deleted.
                   required: true
                   schema:
                     type: string
@@ -1237,11 +1213,6 @@ paths:
             description: Lists all backend resources.
             operationId: ResourceService_ListResources
             parameters:
-                - name: id
-                  in: query
-                  description: The unique identifier of the resource.
-                  schema:
-                    type: string
                 - name: page
                   in: query
                   description: The page number.
@@ -1421,11 +1392,6 @@ paths:
                 - RoleService
             operationId: RoleService_ListRoles
             parameters:
-                - name: id
-                  in: query
-                  description: The parent resource id, for example, "shelves/shelf1".
-                  schema:
-                    type: string
                 - name: page
                   in: query
                   description: The page number.
@@ -1502,9 +1468,7 @@ paths:
             parameters:
                 - name: id
                   in: path
-                  description: |-
-                    The field will contain id of the resource requested, for example:
-                     "shelves/shelf1/roles/role2"
+                  description: The field will contain id of the resource requested.
                   required: true
                   schema:
                     type: string
@@ -1528,9 +1492,7 @@ paths:
             parameters:
                 - name: id
                   in: path
-                  description: |-
-                    The resource id of the role to be deleted, for example:
-                     "shelves/shelf1/roles/role2"
+                  description: The resource id of the role to be deleted.
                   required: true
                   schema:
                     type: string
@@ -1583,11 +1545,6 @@ paths:
                 - UserService
             operationId: UserService_ListUsers
             parameters:
-                - name: id
-                  in: query
-                  description: The parent resource id, for example, "shelves/shelf1".
-                  schema:
-                    type: string
                 - name: page
                   in: query
                   description: The page number.
@@ -1664,9 +1621,7 @@ paths:
             parameters:
                 - name: id
                   in: path
-                  description: |-
-                    The field will contain id of the resource requested, for example:
-                     "shelves/shelf1/users/user2"
+                  description: The field will contain id of the resource requested.
                   required: true
                   schema:
                     type: string
@@ -1716,6 +1671,7 @@ paths:
             parameters:
                 - name: id
                   in: path
+                  description: The field will contain id of the resource requested.
                   required: true
                   schema:
                     type: string
@@ -1746,6 +1702,7 @@ paths:
             parameters:
                 - name: id
                   in: path
+                  description: The field will contain id of the resource requested.
                   required: true
                   schema:
                     type: string
@@ -1766,11 +1723,12 @@ paths:
         put:
             tags:
                 - UserService
-            description: UpdateUserRoles update the user roles
+            description: 'Deprecated: Use UpdateUser with role_ids instead.'
             operationId: UserService_UpdateUserRoles
             parameters:
                 - name: id
                   in: path
+                  description: The field will contain id of the resource requested.
                   required: true
                   schema:
                     type: string
@@ -1802,6 +1760,7 @@ paths:
             parameters:
                 - name: id
                   in: path
+                  description: The field will contain id of the resource requested.
                   required: true
                   schema:
                     type: string
@@ -1861,11 +1820,6 @@ paths:
             description: Lists all view elements.
             operationId: ViewService_ListViews
             parameters:
-                - name: id
-                  in: query
-                  description: The unique identifier of the view.
-                  schema:
-                    type: string
                 - name: page
                   in: query
                   description: The page number.
@@ -2525,18 +2479,10 @@ components:
         api.v1.services.system.CreateDepartmentRequest:
             type: object
             properties:
-                parent:
-                    type: string
-                    description: The parent resource id where the department is to be created.
-                department_id:
-                    type: string
-                    description: The department id to use for this department.
                 department:
                     allOf:
                         - $ref: '#/components/schemas/api.v1.services.types.Department'
-                    description: |-
-                        The department resource to create.
-                         The field id should match the Noun in the method id.
+                    description: The department resource to create.
         api.v1.services.system.CreateDepartmentResponse:
             type: object
             properties:
@@ -2545,32 +2491,30 @@ components:
         api.v1.services.system.CreatePermissionRequest:
             type: object
             properties:
-                parent:
-                    type: string
-                    description: The parent resource id where the permission is to be created.
-                permission_id:
-                    type: string
-                    description: The permission id to use for this permission.
                 permission:
                     allOf:
                         - $ref: '#/components/schemas/api.v1.services.types.Permission'
-                    description: |-
-                        The permission resource to create.
-                         The field id should match the Noun in the method id.
+                    description: The permission resource to create.
+                resource_ids:
+                    type: array
+                    items:
+                        type: string
+                    description: 'For requests: Use this field to set the resources for the permission.'
+                view_ids:
+                    type: array
+                    items:
+                        type: string
+                    description: 'For requests: Use this field to set the views for the permission.'
         api.v1.services.system.CreatePermissionResponse:
             type: object
             properties:
                 permission:
-                    $ref: '#/components/schemas/api.v1.services.types.Permission'
+                    allOf:
+                        - $ref: '#/components/schemas/api.v1.services.types.Permission'
+                    description: The permission resource for create.
         api.v1.services.system.CreatePositionRequest:
             type: object
             properties:
-                parent:
-                    type: string
-                    description: The parent resource id where the position is to be created.
-                position_id:
-                    type: string
-                    description: The position id to use for this position.
                 position:
                     allOf:
                         - $ref: '#/components/schemas/api.v1.services.types.Position'
@@ -2583,16 +2527,15 @@ components:
         api.v1.services.system.CreateResourceRequest:
             type: object
             properties:
-                parent:
-                    type: string
-                    description: The parent resource id where the resource is to be created.
-                resource_id:
-                    type: string
-                    description: The resource id to use for this resource.
                 resource:
                     allOf:
                         - $ref: '#/components/schemas/api.v1.services.types.Resource'
                     description: The resource resource to create.
+                permission_ids:
+                    type: array
+                    items:
+                        type: string
+                    description: 'For requests: Use this field to set the permissions for the resource.'
             description: Request message for ResourceService.CreateResource.
         api.v1.services.system.CreateResourceResponse:
             type: object
@@ -2605,29 +2548,35 @@ components:
         api.v1.services.system.CreateRoleRequest:
             type: object
             properties:
-                parent:
-                    type: string
-                    description: The parent resource id where the role is to be created.
-                role_id:
-                    type: string
-                    description: The role id to use for this role.
                 role:
                     allOf:
                         - $ref: '#/components/schemas/api.v1.services.types.Role'
-                    description: |-
-                        The role resource to create.
-                         The field id should match the Noun in the method id.
+                    description: The role resource to create.
+                permission_ids:
+                    type: array
+                    items:
+                        type: string
+                    description: 'For requests: Use this field to set the permissions for the role.'
+                resource_ids:
+                    type: array
+                    items:
+                        type: string
+                    description: 'For requests: Use this field to set the resources for the role.'
+                view_ids:
+                    type: array
+                    items:
+                        type: string
+                    description: 'For requests: Use this field to set the views for the role.'
         api.v1.services.system.CreateRoleResponse:
             type: object
             properties:
                 role:
-                    $ref: '#/components/schemas/api.v1.services.types.Role'
+                    allOf:
+                        - $ref: '#/components/schemas/api.v1.services.types.Role'
+                    description: The role resource for create.
         api.v1.services.system.CreateUserRequest:
             type: object
             properties:
-                parent:
-                    type: string
-                    description: The parent resource id where the user is to be created.
                 user:
                     allOf:
                         - $ref: '#/components/schemas/api.v1.services.types.User'
@@ -2637,24 +2586,35 @@ components:
                     description: |-
                         The password to use for this user.
                          If this field is left empty, a random password will be generated by the server.
+                role_ids:
+                    type: array
+                    items:
+                        type: string
+                    description: 'For requests: Use this field to set the roles for the user.'
         api.v1.services.system.CreateUserResponse:
             type: object
             properties:
                 user:
-                    $ref: '#/components/schemas/api.v1.services.types.User'
+                    allOf:
+                        - $ref: '#/components/schemas/api.v1.services.types.User'
+                    description: The user resource for create.
         api.v1.services.system.CreateViewRequest:
             type: object
             properties:
-                parent:
-                    type: string
-                    description: The parent resource id where the view is to be created.
-                view_id:
-                    type: string
-                    description: The view id to use for this view.
                 view:
                     allOf:
                         - $ref: '#/components/schemas/api.v1.services.types.View'
                     description: The view resource to create.
+                resource_ids:
+                    type: array
+                    items:
+                        type: string
+                    description: 'For requests: Use this field to set the resources for the view.'
+                role_ids:
+                    type: array
+                    items:
+                        type: string
+                    description: 'For requests: Use this field to set the roles for the view.'
             description: Request message for ViewService.CreateView.
         api.v1.services.system.CreateViewResponse:
             type: object
@@ -2696,12 +2656,16 @@ components:
             type: object
             properties:
                 permission:
-                    $ref: '#/components/schemas/api.v1.services.types.Permission'
+                    allOf:
+                        - $ref: '#/components/schemas/api.v1.services.types.Permission'
+                    description: The permission resource for get.
         api.v1.services.system.GetPositionResponse:
             type: object
             properties:
                 position:
-                    $ref: '#/components/schemas/api.v1.services.types.Position'
+                    allOf:
+                        - $ref: '#/components/schemas/api.v1.services.types.Position'
+                    description: The position resource for get.
         api.v1.services.system.GetResourceResponse:
             type: object
             properties:
@@ -2714,12 +2678,16 @@ components:
             type: object
             properties:
                 role:
-                    $ref: '#/components/schemas/api.v1.services.types.Role'
+                    allOf:
+                        - $ref: '#/components/schemas/api.v1.services.types.Role'
+                    description: The role resource for get.
         api.v1.services.system.GetUserResponse:
             type: object
             properties:
                 user:
-                    $ref: '#/components/schemas/api.v1.services.types.User'
+                    allOf:
+                        - $ref: '#/components/schemas/api.v1.services.types.User'
+                    description: The user resource for get.
         api.v1.services.system.GetViewResponse:
             type: object
             properties:
@@ -2885,11 +2853,13 @@ components:
             properties:
                 total:
                     type: integer
+                    description: The total number of items in the list.
                     format: int32
                 resources:
                     type: array
                     items:
                         $ref: '#/components/schemas/api.v1.services.types.Resource'
+                    description: The paging resources
         api.v1.services.system.ListUsersResponse:
             type: object
             properties:
@@ -2954,17 +2924,16 @@ components:
             properties:
                 id:
                     type: string
+                    description: The field will contain id of the resource requested.
                 password:
                     type: string
+                    description: The password to use for this user.
         api.v1.services.system.ResetUserPasswordResponse:
             type: object
             properties: {}
         api.v1.services.system.UpdateDepartmentRequest:
             type: object
             properties:
-                id:
-                    type: string
-                    description: The department id to use for this department.
                 department:
                     allOf:
                         - $ref: '#/components/schemas/api.v1.services.types.Department'
@@ -2977,24 +2946,30 @@ components:
         api.v1.services.system.UpdatePermissionRequest:
             type: object
             properties:
-                id:
-                    type: string
-                    description: The resource name of the permission to update.
                 permission:
                     allOf:
                         - $ref: '#/components/schemas/api.v1.services.types.Permission'
                     description: The permission resource which replaces the resource on the server.
+                resource_ids:
+                    type: array
+                    items:
+                        type: string
+                    description: 'For requests: Use this field to set or replace the list of resources for the permission.'
+                view_ids:
+                    type: array
+                    items:
+                        type: string
+                    description: 'For requests: Use this field to set or replace the list of views for the permission.'
         api.v1.services.system.UpdatePermissionResponse:
             type: object
             properties:
                 permission:
-                    $ref: '#/components/schemas/api.v1.services.types.Permission'
+                    allOf:
+                        - $ref: '#/components/schemas/api.v1.services.types.Permission'
+                    description: The permission resource for update.
         api.v1.services.system.UpdatePositionRequest:
             type: object
             properties:
-                id:
-                    type: string
-                    description: The id of the position resource to update.
                 position:
                     allOf:
                         - $ref: '#/components/schemas/api.v1.services.types.Position'
@@ -3003,7 +2978,9 @@ components:
             type: object
             properties:
                 position:
-                    $ref: '#/components/schemas/api.v1.services.types.Position'
+                    allOf:
+                        - $ref: '#/components/schemas/api.v1.services.types.Position'
+                    description: The position resource for update.
         api.v1.services.system.UpdateResourceRequest:
             type: object
             properties:
@@ -3011,6 +2988,11 @@ components:
                     allOf:
                         - $ref: '#/components/schemas/api.v1.services.types.Resource'
                     description: The resource resource to update.
+                permission_ids:
+                    type: array
+                    items:
+                        type: string
+                    description: 'For requests: Use this field to set or replace the list of permissions for the resource.'
             description: Request message for ResourceService.UpdateResource.
         api.v1.services.system.UpdateResourceResponse:
             type: object
@@ -3023,18 +3005,38 @@ components:
         api.v1.services.system.UpdateRoleRequest:
             type: object
             properties:
-                id:
-                    type: string
-                    description: The id of the role resource to update.
                 role:
                     allOf:
                         - $ref: '#/components/schemas/api.v1.services.types.Role'
-                    description: The role resource which replaces the resource on the server.
+                    description: |-
+                        The role resource which replaces the resource on the server.
+                         The 'id' from this object will be used to identify the role to update.
+                permission_ids:
+                    type: array
+                    items:
+                        type: string
+                    description: |-
+                        For requests: Use this field to set or replace the list of permissions for the role.
+                         - To update permissions, provide a list of IDs: [1, 2, 3]
+                         - To clear all permissions, provide an empty list: []
+                         - To leave permissions unchanged, do not provide this field at all (leave it as nil).
+                resource_ids:
+                    type: array
+                    items:
+                        type: string
+                    description: 'For requests: Use this field to set or replace the list of resources for the role.'
+                view_ids:
+                    type: array
+                    items:
+                        type: string
+                    description: 'For requests: Use this field to set or replace the list of views for the role.'
         api.v1.services.system.UpdateRoleResponse:
             type: object
             properties:
                 role:
-                    $ref: '#/components/schemas/api.v1.services.types.Role'
+                    allOf:
+                        - $ref: '#/components/schemas/api.v1.services.types.Role'
+                    description: The role resource for update.
         api.v1.services.system.UpdateUserRequest:
             type: object
             properties:
@@ -3048,20 +3050,29 @@ components:
                         The update mask applies to the resource. For the `FieldMask` definition,
                          see https://developers.google.com/protocol-buffers/docs/reference/google.protobuf#fieldmask
                     format: field-mask
+                role_ids:
+                    type: array
+                    items:
+                        type: string
+                    description: 'For requests: Use this field to set or replace the list of roles for the user.'
         api.v1.services.system.UpdateUserResponse:
             type: object
             properties:
                 user:
-                    $ref: '#/components/schemas/api.v1.services.types.User'
+                    allOf:
+                        - $ref: '#/components/schemas/api.v1.services.types.User'
+                    description: The user resource for update.
         api.v1.services.system.UpdateUserRolesRequest:
             type: object
             properties:
                 id:
                     type: string
+                    description: The field will contain id of the resource requested.
                 role_ids:
                     type: array
                     items:
                         type: string
+                    description: 'For requests: Use this field to set or replace the list of roles for the user.'
         api.v1.services.system.UpdateUserRolesResponse:
             type: object
             properties:
@@ -3072,8 +3083,10 @@ components:
             properties:
                 id:
                     type: string
+                    description: The field will contain id of the resource requested.
                 status:
                     type: integer
+                    description: The status of the user.
                     format: int32
         api.v1.services.system.UpdateUserStatusResponse:
             type: object
@@ -3085,6 +3098,16 @@ components:
                     allOf:
                         - $ref: '#/components/schemas/api.v1.services.types.View'
                     description: The view resource to update.
+                resource_ids:
+                    type: array
+                    items:
+                        type: string
+                    description: 'For requests: Use this field to set or replace the list of resources for the view.'
+                role_ids:
+                    type: array
+                    items:
+                        type: string
+                    description: 'For requests: Use this field to set or replace the list of roles for the view.'
             description: Request message for ViewService.UpdateView.
         api.v1.services.system.UpdateViewResponse:
             type: object
@@ -3218,26 +3241,16 @@ components:
                     additionalProperties:
                         type: string
                     description: permission.field.data_rules
-                resource_ids:
-                    type: array
-                    items:
-                        type: string
-                    description: permission.field.resource_ids
-                view_ids:
-                    type: array
-                    items:
-                        type: string
-                    description: permission.field.view_ids
                 resources:
                     type: array
                     items:
                         $ref: '#/components/schemas/api.v1.services.types.Resource'
-                    description: permission.field.resources
+                    description: 'For responses: This field is populated with full resource details.'
                 views:
                     type: array
                     items:
                         $ref: '#/components/schemas/api.v1.services.types.View'
-                    description: permission.field.views
+                    description: 'For responses: This field is populated with full view details.'
             description: permission.table.comment
         api.v1.services.types.Position:
             type: object
@@ -3345,16 +3358,11 @@ components:
                     allOf:
                         - $ref: '#/components/schemas/api.v1.services.types.Resource'
                     description: Parent holds the value of the parent edge.
-                permission_ids:
-                    type: array
-                    items:
-                        type: string
-                    description: Permission Ids holds the value of the permission_ids edge.
                 permissions:
                     type: array
                     items:
                         $ref: '#/components/schemas/api.v1.services.types.Permission'
-                    description: Permissions holds the value of the permissions edge.
+                    description: 'For responses: This field is populated with full permission details.'
             description: Resource is the model entity for the Resource schema.
         api.v1.services.types.Role:
             type: object
@@ -3397,32 +3405,22 @@ components:
                     type: array
                     items:
                         $ref: '#/components/schemas/api.v1.services.types.View'
-                    description: Views holds the value of the views edge.
+                    description: 'For responses: This field is populated with full view details.'
                 users:
                     type: array
                     items:
                         $ref: '#/components/schemas/api.v1.services.types.User'
-                    description: Users holds the value of the users edge.
+                    description: 'For responses: This field is populated with full user details.'
                 resources:
                     type: array
                     items:
                         $ref: '#/components/schemas/api.v1.services.types.Resource'
-                    description: Resources holds the value of the resources edge.
-                resource_ids:
-                    type: array
-                    items:
-                        type: string
-                    description: Resource Ids holds the value of the resource_ids edge.
+                    description: 'For responses: This field is populated with full resource details.'
                 permissions:
                     type: array
                     items:
                         $ref: '#/components/schemas/api.v1.services.types.Permission'
-                    description: Permissions holds the value of the permissions edge.
-                permission_ids:
-                    type: array
-                    items:
-                        type: string
-                    description: Permission Ids holds the value of the permission_ids edge.
+                    description: 'For responses: This field is populated with full permission details.'
             description: Role is the model entity for the Role schema.
         api.v1.services.types.User:
             type: object
@@ -3508,12 +3506,7 @@ components:
                     type: array
                     items:
                         $ref: '#/components/schemas/api.v1.services.types.Role'
-                    description: Roles holds the value of the roles edge.
-                role_ids:
-                    type: array
-                    items:
-                        type: string
-                    description: Role Ids holds the value of the role_ids
+                    description: 'For responses: This field is populated with full role details.'
             description: User is the model entity for the User schema.
         api.v1.services.types.View:
             type: object
@@ -3586,22 +3579,12 @@ components:
                     type: array
                     items:
                         $ref: '#/components/schemas/api.v1.services.types.Resource'
-                    description: Resources holds the value of the resources edge.
-                resource_ids:
-                    type: array
-                    items:
-                        type: string
-                    description: Resource ids
+                    description: 'For responses: This field is populated with full resource details.'
                 roles:
                     type: array
                     items:
                         $ref: '#/components/schemas/api.v1.services.types.Role'
-                    description: Roles holds the value of the roles edge.
-                role_ids:
-                    type: array
-                    items:
-                        type: string
-                    description: Role ids
+                    description: 'For responses: This field is populated with full role details.'
             description: View is the model entity for the View schema.
         google.protobuf.Any:
             type: object

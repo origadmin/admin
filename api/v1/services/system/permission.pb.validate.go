@@ -57,8 +57,6 @@ func (m *ListPermissionsRequest) validate(all bool) error {
 
 	var errors []error
 
-	// no validation rules for Id
-
 	// no validation rules for Page
 
 	// no validation rules for PageSize
@@ -593,10 +591,6 @@ func (m *CreatePermissionRequest) validate(all bool) error {
 
 	var errors []error
 
-	// no validation rules for Parent
-
-	// no validation rules for PermissionId
-
 	if all {
 		switch v := interface{}(m.GetPermission()).(type) {
 		case interface{ ValidateAll() error }:
@@ -858,8 +852,6 @@ func (m *UpdatePermissionRequest) validate(all bool) error {
 	}
 
 	var errors []error
-
-	// no validation rules for Id
 
 	if all {
 		switch v := interface{}(m.GetPermission()).(type) {

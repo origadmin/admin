@@ -28,8 +28,9 @@ const (
 )
 
 type ListUserResourcesRequest struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Id            int64                  `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// The field will contain id of the resource requested.
+	Id            int64 `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -72,9 +73,11 @@ func (x *ListUserResourcesRequest) GetId() int64 {
 }
 
 type ListUserResourcesResponse struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Total         int32                  `protobuf:"varint,1,opt,name=total,proto3" json:"total,omitempty"`
-	Resources     []*types.Resource      `protobuf:"bytes,2,rep,name=resources,proto3" json:"resources,omitempty"`
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// The total number of items in the list.
+	Total int32 `protobuf:"varint,1,opt,name=total,proto3" json:"total,omitempty"`
+	// The paging resources
+	Resources     []*types.Resource `protobuf:"bytes,2,rep,name=resources,proto3" json:"resources,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -124,9 +127,11 @@ func (x *ListUserResourcesResponse) GetResources() []*types.Resource {
 }
 
 type UpdateUserStatusRequest struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Id            int64                  `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
-	Status        int32                  `protobuf:"varint,2,opt,name=status,proto3" json:"status,omitempty"`
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// The field will contain id of the resource requested.
+	Id int64 `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
+	// The status of the user.
+	Status        int32 `protobuf:"varint,2,opt,name=status,proto3" json:"status,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -212,9 +217,11 @@ func (*UpdateUserStatusResponse) Descriptor() ([]byte, []int) {
 }
 
 type ResetUserPasswordRequest struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Id            int64                  `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
-	Password      string                 `protobuf:"bytes,2,opt,name=password,proto3" json:"password,omitempty"`
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// The field will contain id of the resource requested.
+	Id int64 `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
+	// The password to use for this user.
+	Password      string `protobuf:"bytes,2,opt,name=password,proto3" json:"password,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -301,20 +308,18 @@ func (*ResetUserPasswordResponse) Descriptor() ([]byte, []int) {
 
 type ListUsersRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// The parent resource id, for example, "shelves/shelf1".
-	Id int64 `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
 	// The page number.
-	Page int32 `protobuf:"varint,2,opt,name=page,proto3" json:"page,omitempty"`
+	Page int32 `protobuf:"varint,1,opt,name=page,proto3" json:"page,omitempty"`
 	// The maximum number of items to return.
-	PageSize int32 `protobuf:"varint,3,opt,name=page_size,proto3" json:"page_size,omitempty"`
+	PageSize int32 `protobuf:"varint,2,opt,name=page_size,proto3" json:"page_size,omitempty"`
 	// The next_page_token value returned from a previous List request, if any.
-	PageToken string `protobuf:"bytes,4,opt,name=page_token,proto3" json:"page_token,omitempty"`
+	PageToken string `protobuf:"bytes,3,opt,name=page_token,proto3" json:"page_token,omitempty"`
 	// The paging_mode is used to specify the pagination mode.
-	PagingMode *string `protobuf:"bytes,5,opt,name=paging_mode,proto3,oneof" json:"paging_mode,omitempty"`
+	PagingMode *string `protobuf:"bytes,4,opt,name=paging_mode,proto3,oneof" json:"paging_mode,omitempty"`
 	// The only_count is the query parameter for set only to query the total number
-	OnlyCount bool `protobuf:"varint,6,opt,name=only_count,proto3" json:"only_count,omitempty"`
+	OnlyCount bool `protobuf:"varint,5,opt,name=only_count,proto3" json:"only_count,omitempty"`
 	// The title query parameter for set only to query the title
-	Keyword       string `protobuf:"bytes,7,opt,name=keyword,proto3" json:"keyword,omitempty"`
+	Keyword       string `protobuf:"bytes,6,opt,name=keyword,proto3" json:"keyword,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -347,13 +352,6 @@ func (x *ListUsersRequest) ProtoReflect() protoreflect.Message {
 // Deprecated: Use ListUsersRequest.ProtoReflect.Descriptor instead.
 func (*ListUsersRequest) Descriptor() ([]byte, []int) {
 	return file_system_user_proto_rawDescGZIP(), []int{6}
-}
-
-func (x *ListUsersRequest) GetId() int64 {
-	if x != nil {
-		return x.Id
-	}
-	return 0
 }
 
 func (x *ListUsersRequest) GetPage() int32 {
@@ -492,8 +490,7 @@ func (x *ListUsersResponse) GetExtra() *anypb.Any {
 
 type GetUserRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// The field will contain id of the resource requested, for example:
-	// "shelves/shelf1/users/user2"
+	// The field will contain id of the resource requested.
 	Id            int64 `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
@@ -537,8 +534,9 @@ func (x *GetUserRequest) GetId() int64 {
 }
 
 type GetUserResponse struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	User          *types.User            `protobuf:"bytes,1,opt,name=user,proto3" json:"user,omitempty"`
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// The user resource for get.
+	User          *types.User `protobuf:"bytes,1,opt,name=user,proto3" json:"user,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -582,13 +580,13 @@ func (x *GetUserResponse) GetUser() *types.User {
 
 type CreateUserRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// The parent resource id where the user is to be created.
-	Parent string `protobuf:"bytes,1,opt,name=parent,proto3" json:"parent,omitempty"`
 	// The user resource to be created.
-	User *types.User `protobuf:"bytes,2,opt,name=user,proto3" json:"user,omitempty"`
+	User *types.User `protobuf:"bytes,1,opt,name=user,proto3" json:"user,omitempty"`
 	// The password to use for this user.
 	// If this field is left empty, a random password will be generated by the server.
-	Password      string `protobuf:"bytes,3,opt,name=password,proto3" json:"password,omitempty"`
+	Password string `protobuf:"bytes,2,opt,name=password,proto3" json:"password,omitempty"`
+	// For requests: Use this field to set the roles for the user.
+	RoleIds       []int64 `protobuf:"varint,3,rep,packed,name=role_ids,proto3" json:"role_ids,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -623,13 +621,6 @@ func (*CreateUserRequest) Descriptor() ([]byte, []int) {
 	return file_system_user_proto_rawDescGZIP(), []int{10}
 }
 
-func (x *CreateUserRequest) GetParent() string {
-	if x != nil {
-		return x.Parent
-	}
-	return ""
-}
-
 func (x *CreateUserRequest) GetUser() *types.User {
 	if x != nil {
 		return x.User
@@ -644,9 +635,17 @@ func (x *CreateUserRequest) GetPassword() string {
 	return ""
 }
 
+func (x *CreateUserRequest) GetRoleIds() []int64 {
+	if x != nil {
+		return x.RoleIds
+	}
+	return nil
+}
+
 type CreateUserResponse struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	User          *types.User            `protobuf:"bytes,1,opt,name=user,proto3" json:"user,omitempty"`
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// The user resource for create.
+	User          *types.User `protobuf:"bytes,1,opt,name=user,proto3" json:"user,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -694,7 +693,9 @@ type UpdateUserRequest struct {
 	User *types.User `protobuf:"bytes,1,opt,name=user,proto3" json:"user,omitempty"`
 	// The update mask applies to the resource. For the `FieldMask` definition,
 	// see https://developers.google.com/protocol-buffers/docs/reference/google.protobuf#fieldmask
-	UpdateMask    *fieldmaskpb.FieldMask `protobuf:"bytes,2,opt,name=update_mask,json=updateMask,proto3" json:"update_mask,omitempty"`
+	UpdateMask *fieldmaskpb.FieldMask `protobuf:"bytes,2,opt,name=update_mask,proto3" json:"update_mask,omitempty"`
+	// For requests: Use this field to set or replace the list of roles for the user.
+	RoleIds       []int64 `protobuf:"varint,3,rep,packed,name=role_ids,proto3" json:"role_ids,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -743,9 +744,17 @@ func (x *UpdateUserRequest) GetUpdateMask() *fieldmaskpb.FieldMask {
 	return nil
 }
 
+func (x *UpdateUserRequest) GetRoleIds() []int64 {
+	if x != nil {
+		return x.RoleIds
+	}
+	return nil
+}
+
 type UpdateUserResponse struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	User          *types.User            `protobuf:"bytes,1,opt,name=user,proto3" json:"user,omitempty"`
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// The user resource for update.
+	User          *types.User `protobuf:"bytes,1,opt,name=user,proto3" json:"user,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -833,8 +842,9 @@ func (x *DeleteUserRequest) GetId() int64 {
 }
 
 type DeleteUserResponse struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Empty         *emptypb.Empty         `protobuf:"bytes,1,opt,name=empty,proto3" json:"empty,omitempty"`
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// The empty response body.
+	Empty         *emptypb.Empty `protobuf:"bytes,1,opt,name=empty,proto3" json:"empty,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -877,9 +887,11 @@ func (x *DeleteUserResponse) GetEmpty() *emptypb.Empty {
 }
 
 type UpdateUserRolesRequest struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Id            int64                  `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
-	RoleIds       []int64                `protobuf:"varint,2,rep,packed,name=role_ids,proto3" json:"role_ids,omitempty"`
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// The field will contain id of the resource requested.
+	Id int64 `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
+	// For requests: Use this field to set or replace the list of roles for the user.
+	RoleIds       []int64 `protobuf:"varint,2,rep,packed,name=role_ids,proto3" json:"role_ids,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -976,7 +988,7 @@ var File_system_user_proto protoreflect.FileDescriptor
 
 const file_system_user_proto_rawDesc = "" +
 	"\n" +
-	"\x11system/user.proto\x12\x16api.v1.services.system\x1a\x1cgoogle/api/annotations.proto\x1a\x19google/protobuf/any.proto\x1a\x1bgoogle/protobuf/empty.proto\x1a google/protobuf/field_mask.proto\x1a\x12types/system.proto\x1a\x16policy/v1/policy.proto\"*\n" +
+	"\x11system/user.proto\x12\x16api.v1.services.system\x1a\x1cgoogle/api/annotations.proto\x1a\x19google/protobuf/any.proto\x1a\x1bgoogle/protobuf/empty.proto\x1a google/protobuf/field_mask.proto\x1a\x16policy/v1/policy.proto\x1a\x12types/system.proto\"*\n" +
 	"\x18ListUserResourcesRequest\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\x03R\x02id\"p\n" +
 	"\x19ListUserResourcesResponse\x12\x14\n" +
@@ -989,19 +1001,18 @@ const file_system_user_proto_rawDesc = "" +
 	"\x18ResetUserPasswordRequest\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\x03R\x02id\x12\x1a\n" +
 	"\bpassword\x18\x02 \x01(\tR\bpassword\"\x1b\n" +
-	"\x19ResetUserPasswordResponse\"\xe5\x01\n" +
-	"\x10ListUsersRequest\x12\x0e\n" +
-	"\x02id\x18\x01 \x01(\x03R\x02id\x12\x12\n" +
-	"\x04page\x18\x02 \x01(\x05R\x04page\x12\x1c\n" +
-	"\tpage_size\x18\x03 \x01(\x05R\tpage_size\x12\x1e\n" +
+	"\x19ResetUserPasswordResponse\"\xd5\x01\n" +
+	"\x10ListUsersRequest\x12\x12\n" +
+	"\x04page\x18\x01 \x01(\x05R\x04page\x12\x1c\n" +
+	"\tpage_size\x18\x02 \x01(\x05R\tpage_size\x12\x1e\n" +
 	"\n" +
-	"page_token\x18\x04 \x01(\tR\n" +
+	"page_token\x18\x03 \x01(\tR\n" +
 	"page_token\x12%\n" +
-	"\vpaging_mode\x18\x05 \x01(\tH\x00R\vpaging_mode\x88\x01\x01\x12\x1e\n" +
+	"\vpaging_mode\x18\x04 \x01(\tH\x00R\vpaging_mode\x88\x01\x01\x12\x1e\n" +
 	"\n" +
-	"only_count\x18\x06 \x01(\bR\n" +
+	"only_count\x18\x05 \x01(\bR\n" +
 	"only_count\x12\x18\n" +
-	"\akeyword\x18\a \x01(\tR\akeywordB\x0e\n" +
+	"\akeyword\x18\x06 \x01(\tR\akeywordB\x0e\n" +
 	"\f_paging_mode\"\xf3\x01\n" +
 	"\x11ListUsersResponse\x12\x14\n" +
 	"\x05total\x18\x01 \x01(\x05R\x05total\x121\n" +
@@ -1014,17 +1025,17 @@ const file_system_user_proto_rawDesc = "" +
 	"\x0eGetUserRequest\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\x03R\x02id\"B\n" +
 	"\x0fGetUserResponse\x12/\n" +
-	"\x04user\x18\x01 \x01(\v2\x1b.api.v1.services.types.UserR\x04user\"x\n" +
-	"\x11CreateUserRequest\x12\x16\n" +
-	"\x06parent\x18\x01 \x01(\tR\x06parent\x12/\n" +
-	"\x04user\x18\x02 \x01(\v2\x1b.api.v1.services.types.UserR\x04user\x12\x1a\n" +
-	"\bpassword\x18\x03 \x01(\tR\bpassword\"E\n" +
+	"\x04user\x18\x01 \x01(\v2\x1b.api.v1.services.types.UserR\x04user\"|\n" +
+	"\x11CreateUserRequest\x12/\n" +
+	"\x04user\x18\x01 \x01(\v2\x1b.api.v1.services.types.UserR\x04user\x12\x1a\n" +
+	"\bpassword\x18\x02 \x01(\tR\bpassword\x12\x1a\n" +
+	"\brole_ids\x18\x03 \x03(\x03R\brole_ids\"E\n" +
 	"\x12CreateUserResponse\x12/\n" +
-	"\x04user\x18\x01 \x01(\v2\x1b.api.v1.services.types.UserR\x04user\"\x81\x01\n" +
+	"\x04user\x18\x01 \x01(\v2\x1b.api.v1.services.types.UserR\x04user\"\x9e\x01\n" +
 	"\x11UpdateUserRequest\x12/\n" +
-	"\x04user\x18\x01 \x01(\v2\x1b.api.v1.services.types.UserR\x04user\x12;\n" +
-	"\vupdate_mask\x18\x02 \x01(\v2\x1a.google.protobuf.FieldMaskR\n" +
-	"updateMask\"E\n" +
+	"\x04user\x18\x01 \x01(\v2\x1b.api.v1.services.types.UserR\x04user\x12<\n" +
+	"\vupdate_mask\x18\x02 \x01(\v2\x1a.google.protobuf.FieldMaskR\vupdate_mask\x12\x1a\n" +
+	"\brole_ids\x18\x03 \x03(\x03R\brole_ids\"E\n" +
 	"\x12UpdateUserResponse\x12/\n" +
 	"\x04user\x18\x01 \x01(\v2\x1b.api.v1.services.types.UserR\x04user\"#\n" +
 	"\x11DeleteUserRequest\x12\x0e\n" +
@@ -1035,7 +1046,7 @@ const file_system_user_proto_rawDesc = "" +
 	"\x02id\x18\x01 \x01(\x03R\x02id\x12\x1a\n" +
 	"\brole_ids\x18\x02 \x03(\x03R\brole_ids\"J\n" +
 	"\x17UpdateUserRolesResponse\x12/\n" +
-	"\x04user\x18\x01 \x01(\v2\x1b.api.v1.services.types.UserR\x04user2\xf1\n" +
+	"\x04user\x18\x01 \x01(\v2\x1b.api.v1.services.types.UserR\x04user2\xf4\n" +
 	"\n" +
 	"\vUserService\x12\x82\x01\n" +
 	"\tListUsers\x12(.api.v1.services.system.ListUsersRequest\x1a).api.v1.services.system.ListUsersResponse\" \xea\xea\x1b\n" +
@@ -1063,10 +1074,10 @@ const file_system_user_proto_rawDesc = "" +
 	"\bjwt-auth\x82\xd3\xe4\x93\x02\x11*\x0f/sys/users/{id}\x12\xa6\x01\n" +
 	"\x10UpdateUserStatus\x12/.api.v1.services.system.UpdateUserStatusRequest\x1a0.api.v1.services.system.UpdateUserStatusResponse\"/\xea\xea\x1b\n" +
 	"\n" +
-	"\bjwt-auth\x82\xd3\xe4\x93\x02\x1b:\x01*\x1a\x16/sys/users/{id}/status\x12\xa2\x01\n" +
-	"\x0fUpdateUserRoles\x12..api.v1.services.system.UpdateUserRolesRequest\x1a/.api.v1.services.system.UpdateUserRolesResponse\".\xea\xea\x1b\n" +
+	"\bjwt-auth\x82\xd3\xe4\x93\x02\x1b:\x01*\x1a\x16/sys/users/{id}/status\x12\xa5\x01\n" +
+	"\x0fUpdateUserRoles\x12..api.v1.services.system.UpdateUserRolesRequest\x1a/.api.v1.services.system.UpdateUserRolesResponse\"1\xea\xea\x1b\n" +
 	"\n" +
-	"\bjwt-auth\x82\xd3\xe4\x93\x02\x1a:\x01*\x1a\x15/sys/users/{id}/roles\x12\xb1\x01\n" +
+	"\bjwt-auth\x82\xd3\xe4\x93\x02\x1a:\x01*\x1a\x15/sys/users/{id}/roles\x88\x02\x01\x12\xb1\x01\n" +
 	"\x11ResetUserPassword\x120.api.v1.services.system.ResetUserPasswordRequest\x1a1.api.v1.services.system.ResetUserPasswordResponse\"7\xea\xea\x1b\n" +
 	"\n" +
 	"\bjwt-auth\x82\xd3\xe4\x93\x02#:\x01*\"\x1e/sys/users/{id}/password/resetB\xde\x01\n" +

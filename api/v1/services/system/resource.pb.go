@@ -29,28 +29,26 @@ const (
 // Request message for ResourceService.ListResources.
 type ListResourcesRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// The unique identifier of the resource.
-	Id int64 `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
 	// The page number.
-	Page int32 `protobuf:"varint,2,opt,name=page,proto3" json:"page,omitempty"`
+	Page int32 `protobuf:"varint,1,opt,name=page,proto3" json:"page,omitempty"`
 	// The maximum number of items to return per page.
-	PageSize int32 `protobuf:"varint,3,opt,name=page_size,proto3" json:"page_size,omitempty"`
+	PageSize int32 `protobuf:"varint,2,opt,name=page_size,proto3" json:"page_size,omitempty"`
 	// The token for retrieving the next page of results.
-	PageToken string `protobuf:"bytes,4,opt,name=page_token,proto3" json:"page_token,omitempty"`
+	PageToken string `protobuf:"bytes,3,opt,name=page_token,proto3" json:"page_token,omitempty"`
 	// The paging_mode is used to specify the pagination mode.
-	PagingMode *string `protobuf:"bytes,5,opt,name=paging_mode,proto3,oneof" json:"paging_mode,omitempty"`
+	PagingMode *string `protobuf:"bytes,4,opt,name=paging_mode,proto3,oneof" json:"paging_mode,omitempty"`
 	// Whether to return only the count of items.
-	OnlyCount bool `protobuf:"varint,6,opt,name=only_count,proto3" json:"only_count,omitempty"`
+	OnlyCount bool `protobuf:"varint,5,opt,name=only_count,proto3" json:"only_count,omitempty"`
 	// The keyword for searching resources.
-	Keyword string `protobuf:"bytes,7,opt,name=keyword,proto3" json:"keyword,omitempty"`
+	Keyword string `protobuf:"bytes,6,opt,name=keyword,proto3" json:"keyword,omitempty"`
 	// The service name of the resources.
-	ServiceName string `protobuf:"bytes,8,opt,name=service_name,proto3" json:"service_name,omitempty"`
+	ServiceName string `protobuf:"bytes,7,opt,name=service_name,proto3" json:"service_name,omitempty"`
 	// The synchronization status of the resources.
-	SyncStatus string `protobuf:"bytes,9,opt,name=sync_status,proto3" json:"sync_status,omitempty"`
+	SyncStatus string `protobuf:"bytes,8,opt,name=sync_status,proto3" json:"sync_status,omitempty"`
 	// The operation of the resources.
-	Operation string `protobuf:"bytes,10,opt,name=operation,proto3" json:"operation,omitempty"`
+	Operation string `protobuf:"bytes,9,opt,name=operation,proto3" json:"operation,omitempty"`
 	// The sorting criteria for the results.
-	Sorting       []string `protobuf:"bytes,11,rep,name=sorting,proto3" json:"sorting,omitempty"`
+	Sorting       []string `protobuf:"bytes,10,rep,name=sorting,proto3" json:"sorting,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -83,13 +81,6 @@ func (x *ListResourcesRequest) ProtoReflect() protoreflect.Message {
 // Deprecated: Use ListResourcesRequest.ProtoReflect.Descriptor instead.
 func (*ListResourcesRequest) Descriptor() ([]byte, []int) {
 	return file_system_resource_proto_rawDescGZIP(), []int{0}
-}
-
-func (x *ListResourcesRequest) GetId() int64 {
-	if x != nil {
-		return x.Id
-	}
-	return 0
 }
 
 func (x *ListResourcesRequest) GetPage() int32 {
@@ -348,12 +339,10 @@ func (x *GetResourceResponse) GetResource() *types.Resource {
 // Request message for ResourceService.CreateResource.
 type CreateResourceRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// The parent resource id where the resource is to be created.
-	Parent string `protobuf:"bytes,1,opt,name=parent,proto3" json:"parent,omitempty"`
-	// The resource id to use for this resource.
-	ResourceId string `protobuf:"bytes,2,opt,name=resource_id,json=resourceId,proto3" json:"resource_id,omitempty"`
 	// The resource resource to create.
-	Resource      *types.Resource `protobuf:"bytes,3,opt,name=resource,proto3" json:"resource,omitempty"`
+	Resource *types.Resource `protobuf:"bytes,1,opt,name=resource,proto3" json:"resource,omitempty"`
+	// For requests: Use this field to set the permissions for the resource.
+	PermissionIds []int64 `protobuf:"varint,2,rep,packed,name=permission_ids,proto3" json:"permission_ids,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -388,23 +377,16 @@ func (*CreateResourceRequest) Descriptor() ([]byte, []int) {
 	return file_system_resource_proto_rawDescGZIP(), []int{4}
 }
 
-func (x *CreateResourceRequest) GetParent() string {
-	if x != nil {
-		return x.Parent
-	}
-	return ""
-}
-
-func (x *CreateResourceRequest) GetResourceId() string {
-	if x != nil {
-		return x.ResourceId
-	}
-	return ""
-}
-
 func (x *CreateResourceRequest) GetResource() *types.Resource {
 	if x != nil {
 		return x.Resource
+	}
+	return nil
+}
+
+func (x *CreateResourceRequest) GetPermissionIds() []int64 {
+	if x != nil {
+		return x.PermissionIds
 	}
 	return nil
 }
@@ -459,7 +441,9 @@ func (x *CreateResourceResponse) GetResource() *types.Resource {
 type UpdateResourceRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// The resource resource to update.
-	Resource      *types.Resource `protobuf:"bytes,1,opt,name=resource,proto3" json:"resource,omitempty"`
+	Resource *types.Resource `protobuf:"bytes,1,opt,name=resource,proto3" json:"resource,omitempty"`
+	// For requests: Use this field to set or replace the list of permissions for the resource.
+	PermissionIds []int64 `protobuf:"varint,2,rep,packed,name=permission_ids,proto3" json:"permission_ids,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -497,6 +481,13 @@ func (*UpdateResourceRequest) Descriptor() ([]byte, []int) {
 func (x *UpdateResourceRequest) GetResource() *types.Resource {
 	if x != nil {
 		return x.Resource
+	}
+	return nil
+}
+
+func (x *UpdateResourceRequest) GetPermissionIds() []int64 {
+	if x != nil {
+		return x.PermissionIds
 	}
 	return nil
 }
@@ -643,24 +634,23 @@ var File_system_resource_proto protoreflect.FileDescriptor
 
 const file_system_resource_proto_rawDesc = "" +
 	"\n" +
-	"\x15system/resource.proto\x12\x16api.v1.services.system\x1a\x1cgoogle/api/annotations.proto\x1a\x19google/protobuf/any.proto\x1a\x1bgoogle/protobuf/empty.proto\x1a\x16policy/v1/policy.proto\x1a\x12types/system.proto\"\xe7\x02\n" +
-	"\x14ListResourcesRequest\x12\x0e\n" +
-	"\x02id\x18\x01 \x01(\x03R\x02id\x12\x12\n" +
-	"\x04page\x18\x02 \x01(\x05R\x04page\x12\x1c\n" +
-	"\tpage_size\x18\x03 \x01(\x05R\tpage_size\x12\x1e\n" +
+	"\x15system/resource.proto\x12\x16api.v1.services.system\x1a\x1cgoogle/api/annotations.proto\x1a\x19google/protobuf/any.proto\x1a\x1bgoogle/protobuf/empty.proto\x1a\x16policy/v1/policy.proto\x1a\x12types/system.proto\"\xd7\x02\n" +
+	"\x14ListResourcesRequest\x12\x12\n" +
+	"\x04page\x18\x01 \x01(\x05R\x04page\x12\x1c\n" +
+	"\tpage_size\x18\x02 \x01(\x05R\tpage_size\x12\x1e\n" +
 	"\n" +
-	"page_token\x18\x04 \x01(\tR\n" +
+	"page_token\x18\x03 \x01(\tR\n" +
 	"page_token\x12%\n" +
-	"\vpaging_mode\x18\x05 \x01(\tH\x00R\vpaging_mode\x88\x01\x01\x12\x1e\n" +
+	"\vpaging_mode\x18\x04 \x01(\tH\x00R\vpaging_mode\x88\x01\x01\x12\x1e\n" +
 	"\n" +
-	"only_count\x18\x06 \x01(\bR\n" +
+	"only_count\x18\x05 \x01(\bR\n" +
 	"only_count\x12\x18\n" +
-	"\akeyword\x18\a \x01(\tR\akeyword\x12\"\n" +
-	"\fservice_name\x18\b \x01(\tR\fservice_name\x12 \n" +
-	"\vsync_status\x18\t \x01(\tR\vsync_status\x12\x1c\n" +
-	"\toperation\x18\n" +
-	" \x01(\tR\toperation\x12\x18\n" +
-	"\asorting\x18\v \x03(\tR\asortingB\x0e\n" +
+	"\akeyword\x18\x06 \x01(\tR\akeyword\x12\"\n" +
+	"\fservice_name\x18\a \x01(\tR\fservice_name\x12 \n" +
+	"\vsync_status\x18\b \x01(\tR\vsync_status\x12\x1c\n" +
+	"\toperation\x18\t \x01(\tR\toperation\x12\x18\n" +
+	"\asorting\x18\n" +
+	" \x03(\tR\asortingB\x0e\n" +
 	"\f_paging_mode\"\x83\x02\n" +
 	"\x15ListResourcesResponse\x12\x14\n" +
 	"\x05total\x18\x01 \x01(\x05R\x05total\x12=\n" +
@@ -673,16 +663,15 @@ const file_system_resource_proto_rawDesc = "" +
 	"\x12GetResourceRequest\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\x03R\x02id\"R\n" +
 	"\x13GetResourceResponse\x12;\n" +
-	"\bresource\x18\x01 \x01(\v2\x1f.api.v1.services.types.ResourceR\bresource\"\x8d\x01\n" +
-	"\x15CreateResourceRequest\x12\x16\n" +
-	"\x06parent\x18\x01 \x01(\tR\x06parent\x12\x1f\n" +
-	"\vresource_id\x18\x02 \x01(\tR\n" +
-	"resourceId\x12;\n" +
-	"\bresource\x18\x03 \x01(\v2\x1f.api.v1.services.types.ResourceR\bresource\"U\n" +
+	"\bresource\x18\x01 \x01(\v2\x1f.api.v1.services.types.ResourceR\bresource\"|\n" +
+	"\x15CreateResourceRequest\x12;\n" +
+	"\bresource\x18\x01 \x01(\v2\x1f.api.v1.services.types.ResourceR\bresource\x12&\n" +
+	"\x0epermission_ids\x18\x02 \x03(\x03R\x0epermission_ids\"U\n" +
 	"\x16CreateResourceResponse\x12;\n" +
-	"\bresource\x18\x01 \x01(\v2\x1f.api.v1.services.types.ResourceR\bresource\"T\n" +
+	"\bresource\x18\x01 \x01(\v2\x1f.api.v1.services.types.ResourceR\bresource\"|\n" +
 	"\x15UpdateResourceRequest\x12;\n" +
-	"\bresource\x18\x01 \x01(\v2\x1f.api.v1.services.types.ResourceR\bresource\"U\n" +
+	"\bresource\x18\x01 \x01(\v2\x1f.api.v1.services.types.ResourceR\bresource\x12&\n" +
+	"\x0epermission_ids\x18\x02 \x03(\x03R\x0epermission_ids\"U\n" +
 	"\x16UpdateResourceResponse\x12;\n" +
 	"\bresource\x18\x01 \x01(\v2\x1f.api.v1.services.types.ResourceR\bresource\"'\n" +
 	"\x15DeleteResourceRequest\x12\x0e\n" +

@@ -45,20 +45,18 @@ service RoleService {
 }
 
 message ListRolesRequest {
-  // The parent resource id, for example, "shelves/shelf1".
-  int64 id = 1 [json_name = "id"];
   // The page number.
-  int32 page = 2 [json_name = "page"];
+  int32 page = 1 [json_name = "page"];
   // The maximum number of items to return.
-  int32 page_size = 3 [json_name = "page_size"];
+  int32 page_size = 2 [json_name = "page_size"];
   // The next_page_token value returned from a previous List request, if any.
-  string page_token = 4 [json_name = "page_token"];
+  string page_token = 3 [json_name = "page_token"];
   // The paging_mode is used to specify the pagination mode.
-  optional string paging_mode = 5 [json_name = "paging_mode"];
+  optional string paging_mode = 4 [json_name = "paging_mode"];
   // The only_count is the query parameter for set only to query the total number
-  bool only_count = 6 [json_name = "only_count"];
+  bool only_count = 5 [json_name = "only_count"];
   // The keyword is the query parameter for set only to query the role by keyword
-  string keyword = 7 [json_name = "keyword"];
+  string keyword = 6 [json_name = "keyword"];
 }
 
 message ListRolesResponse {
@@ -79,45 +77,54 @@ message ListRolesResponse {
 }
 
 message GetRoleRequest {
-  // The field will contain id of the resource requested, for example:
-  // "shelves/shelf1/roles/role2"
+  // The field will contain id of the resource requested.
   int64 id = 1 [json_name = "id"];
 }
 
 message GetRoleResponse {
+  // The role resource for get.
   api.v1.services.types.Role role = 1 [json_name = "role"];
 }
 
 message CreateRoleRequest {
-  // The parent resource id where the role is to be created.
-  string parent = 1 [json_name = "parent"];
-
-  // The role id to use for this role.
-  string role_id = 3 [json_name = "role_id"];
-
   // The role resource to create.
-  // The field id should match the Noun in the method id.
-  api.v1.services.types.Role role = 2 [json_name = "role"];
+  api.v1.services.types.Role role = 1 [json_name = "role"];
+  // For requests: Use this field to set the permissions for the role.
+  repeated int64 permission_ids = 2 [json_name = "permission_ids"];
+  // For requests: Use this field to set the resources for the role.
+  repeated int64 resource_ids = 3 [json_name = "resource_ids"];
+  // For requests: Use this field to set the views for the role.
+  repeated int64 view_ids = 4 [json_name = "view_ids"];
 }
 
 message CreateRoleResponse {
+  // The role resource for create.
   api.v1.services.types.Role role = 1 [json_name = "role"];
 }
 
 message UpdateRoleRequest {
-  // The id of the role resource to update.
-  int64 id = 1 [json_name = "id"];
   // The role resource which replaces the resource on the server.
-  api.v1.services.types.Role role = 2 [json_name = "role"];
+  // The 'id' from this object will be used to identify the role to update.
+  api.v1.services.types.Role role = 1 [json_name = "role"];
+
+  // For requests: Use this field to set or replace the list of permissions for the role.
+  // - To update permissions, provide a list of IDs: [1, 2, 3]
+  // - To clear all permissions, provide an empty list: []
+  // - To leave permissions unchanged, do not provide this field at all (leave it as nil).
+  repeated int64 permission_ids = 2 [json_name = "permission_ids"];
+  // For requests: Use this field to set or replace the list of resources for the role.
+  repeated int64 resource_ids = 3 [json_name = "resource_ids"];
+  // For requests: Use this field to set or replace the list of views for the role.
+  repeated int64 view_ids = 4 [json_name = "view_ids"];
 }
 
 message UpdateRoleResponse {
+  // The role resource for update.
   api.v1.services.types.Role role = 1 [json_name = "role"];
 }
 
 message DeleteRoleRequest {
-  // The resource id of the role to be deleted, for example:
-  // "shelves/shelf1/roles/role2"
+  // The resource id of the role to be deleted.
   int64 id = 1 [json_name = "id"];
 }
 

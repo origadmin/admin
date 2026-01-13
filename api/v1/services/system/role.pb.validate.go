@@ -57,8 +57,6 @@ func (m *ListRolesRequest) validate(all bool) error {
 
 	var errors []error
 
-	// no validation rules for Id
-
 	// no validation rules for Page
 
 	// no validation rules for PageSize
@@ -581,10 +579,6 @@ func (m *CreateRoleRequest) validate(all bool) error {
 
 	var errors []error
 
-	// no validation rules for Parent
-
-	// no validation rules for RoleId
-
 	if all {
 		switch v := interface{}(m.GetRole()).(type) {
 		case interface{ ValidateAll() error }:
@@ -846,8 +840,6 @@ func (m *UpdateRoleRequest) validate(all bool) error {
 	}
 
 	var errors []error
-
-	// no validation rules for Id
 
 	if all {
 		switch v := interface{}(m.GetRole()).(type) {

@@ -57,8 +57,6 @@ func (m *ListPositionsRequest) validate(all bool) error {
 
 	var errors []error
 
-	// no validation rules for Id
-
 	// no validation rules for Page
 
 	// no validation rules for PageSize
@@ -587,10 +585,6 @@ func (m *CreatePositionRequest) validate(all bool) error {
 
 	var errors []error
 
-	// no validation rules for Parent
-
-	// no validation rules for PositionId
-
 	if all {
 		switch v := interface{}(m.GetPosition()).(type) {
 		case interface{ ValidateAll() error }:
@@ -852,8 +846,6 @@ func (m *UpdatePositionRequest) validate(all bool) error {
 	}
 
 	var errors []error
-
-	// no validation rules for Id
 
 	if all {
 		switch v := interface{}(m.GetPosition()).(type) {

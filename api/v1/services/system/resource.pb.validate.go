@@ -57,8 +57,6 @@ func (m *ListResourcesRequest) validate(all bool) error {
 
 	var errors []error
 
-	// no validation rules for Id
-
 	// no validation rules for Page
 
 	// no validation rules for PageSize
@@ -592,10 +590,6 @@ func (m *CreateResourceRequest) validate(all bool) error {
 	}
 
 	var errors []error
-
-	// no validation rules for Parent
-
-	// no validation rules for ResourceId
 
 	if all {
 		switch v := interface{}(m.GetResource()).(type) {

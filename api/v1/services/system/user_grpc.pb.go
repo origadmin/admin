@@ -44,7 +44,8 @@ type UserServiceClient interface {
 	DeleteUser(ctx context.Context, in *DeleteUserRequest, opts ...grpc.CallOption) (*DeleteUserResponse, error)
 	// UpdateUserStatus Update the status of the user information
 	UpdateUserStatus(ctx context.Context, in *UpdateUserStatusRequest, opts ...grpc.CallOption) (*UpdateUserStatusResponse, error)
-	// UpdateUserRoles update the user roles
+	// Deprecated: Do not use.
+	// Deprecated: Use UpdateUser with role_ids instead.
 	UpdateUserRoles(ctx context.Context, in *UpdateUserRolesRequest, opts ...grpc.CallOption) (*UpdateUserRolesResponse, error)
 	// ResetUserPassword reset the user s password
 	ResetUserPassword(ctx context.Context, in *ResetUserPasswordRequest, opts ...grpc.CallOption) (*ResetUserPasswordResponse, error)
@@ -128,6 +129,7 @@ func (c *userServiceClient) UpdateUserStatus(ctx context.Context, in *UpdateUser
 	return out, nil
 }
 
+// Deprecated: Do not use.
 func (c *userServiceClient) UpdateUserRoles(ctx context.Context, in *UpdateUserRolesRequest, opts ...grpc.CallOption) (*UpdateUserRolesResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(UpdateUserRolesResponse)
@@ -162,7 +164,8 @@ type UserServiceServer interface {
 	DeleteUser(context.Context, *DeleteUserRequest) (*DeleteUserResponse, error)
 	// UpdateUserStatus Update the status of the user information
 	UpdateUserStatus(context.Context, *UpdateUserStatusRequest) (*UpdateUserStatusResponse, error)
-	// UpdateUserRoles update the user roles
+	// Deprecated: Do not use.
+	// Deprecated: Use UpdateUser with role_ids instead.
 	UpdateUserRoles(context.Context, *UpdateUserRolesRequest) (*UpdateUserRolesResponse, error)
 	// ResetUserPassword reset the user s password
 	ResetUserPassword(context.Context, *ResetUserPasswordRequest) (*ResetUserPasswordResponse, error)

@@ -28,20 +28,18 @@ const (
 
 type ListRolesRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// The parent resource id, for example, "shelves/shelf1".
-	Id int64 `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
 	// The page number.
-	Page int32 `protobuf:"varint,2,opt,name=page,proto3" json:"page,omitempty"`
+	Page int32 `protobuf:"varint,1,opt,name=page,proto3" json:"page,omitempty"`
 	// The maximum number of items to return.
-	PageSize int32 `protobuf:"varint,3,opt,name=page_size,proto3" json:"page_size,omitempty"`
+	PageSize int32 `protobuf:"varint,2,opt,name=page_size,proto3" json:"page_size,omitempty"`
 	// The next_page_token value returned from a previous List request, if any.
-	PageToken string `protobuf:"bytes,4,opt,name=page_token,proto3" json:"page_token,omitempty"`
+	PageToken string `protobuf:"bytes,3,opt,name=page_token,proto3" json:"page_token,omitempty"`
 	// The paging_mode is used to specify the pagination mode.
-	PagingMode *string `protobuf:"bytes,5,opt,name=paging_mode,proto3,oneof" json:"paging_mode,omitempty"`
+	PagingMode *string `protobuf:"bytes,4,opt,name=paging_mode,proto3,oneof" json:"paging_mode,omitempty"`
 	// The only_count is the query parameter for set only to query the total number
-	OnlyCount bool `protobuf:"varint,6,opt,name=only_count,proto3" json:"only_count,omitempty"`
+	OnlyCount bool `protobuf:"varint,5,opt,name=only_count,proto3" json:"only_count,omitempty"`
 	// The keyword is the query parameter for set only to query the role by keyword
-	Keyword       string `protobuf:"bytes,7,opt,name=keyword,proto3" json:"keyword,omitempty"`
+	Keyword       string `protobuf:"bytes,6,opt,name=keyword,proto3" json:"keyword,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -74,13 +72,6 @@ func (x *ListRolesRequest) ProtoReflect() protoreflect.Message {
 // Deprecated: Use ListRolesRequest.ProtoReflect.Descriptor instead.
 func (*ListRolesRequest) Descriptor() ([]byte, []int) {
 	return file_system_role_proto_rawDescGZIP(), []int{0}
-}
-
-func (x *ListRolesRequest) GetId() int64 {
-	if x != nil {
-		return x.Id
-	}
-	return 0
 }
 
 func (x *ListRolesRequest) GetPage() int32 {
@@ -219,8 +210,7 @@ func (x *ListRolesResponse) GetExtra() *anypb.Any {
 
 type GetRoleRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// The field will contain id of the resource requested, for example:
-	// "shelves/shelf1/roles/role2"
+	// The field will contain id of the resource requested.
 	Id            int64 `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
@@ -264,8 +254,9 @@ func (x *GetRoleRequest) GetId() int64 {
 }
 
 type GetRoleResponse struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Role          *types.Role            `protobuf:"bytes,1,opt,name=role,proto3" json:"role,omitempty"`
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// The role resource for get.
+	Role          *types.Role `protobuf:"bytes,1,opt,name=role,proto3" json:"role,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -309,13 +300,14 @@ func (x *GetRoleResponse) GetRole() *types.Role {
 
 type CreateRoleRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// The parent resource id where the role is to be created.
-	Parent string `protobuf:"bytes,1,opt,name=parent,proto3" json:"parent,omitempty"`
-	// The role id to use for this role.
-	RoleId string `protobuf:"bytes,3,opt,name=role_id,proto3" json:"role_id,omitempty"`
 	// The role resource to create.
-	// The field id should match the Noun in the method id.
-	Role          *types.Role `protobuf:"bytes,2,opt,name=role,proto3" json:"role,omitempty"`
+	Role *types.Role `protobuf:"bytes,1,opt,name=role,proto3" json:"role,omitempty"`
+	// For requests: Use this field to set the permissions for the role.
+	PermissionIds []int64 `protobuf:"varint,2,rep,packed,name=permission_ids,proto3" json:"permission_ids,omitempty"`
+	// For requests: Use this field to set the resources for the role.
+	ResourceIds []int64 `protobuf:"varint,3,rep,packed,name=resource_ids,proto3" json:"resource_ids,omitempty"`
+	// For requests: Use this field to set the views for the role.
+	ViewIds       []int64 `protobuf:"varint,4,rep,packed,name=view_ids,proto3" json:"view_ids,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -350,20 +342,6 @@ func (*CreateRoleRequest) Descriptor() ([]byte, []int) {
 	return file_system_role_proto_rawDescGZIP(), []int{4}
 }
 
-func (x *CreateRoleRequest) GetParent() string {
-	if x != nil {
-		return x.Parent
-	}
-	return ""
-}
-
-func (x *CreateRoleRequest) GetRoleId() string {
-	if x != nil {
-		return x.RoleId
-	}
-	return ""
-}
-
 func (x *CreateRoleRequest) GetRole() *types.Role {
 	if x != nil {
 		return x.Role
@@ -371,9 +349,31 @@ func (x *CreateRoleRequest) GetRole() *types.Role {
 	return nil
 }
 
+func (x *CreateRoleRequest) GetPermissionIds() []int64 {
+	if x != nil {
+		return x.PermissionIds
+	}
+	return nil
+}
+
+func (x *CreateRoleRequest) GetResourceIds() []int64 {
+	if x != nil {
+		return x.ResourceIds
+	}
+	return nil
+}
+
+func (x *CreateRoleRequest) GetViewIds() []int64 {
+	if x != nil {
+		return x.ViewIds
+	}
+	return nil
+}
+
 type CreateRoleResponse struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Role          *types.Role            `protobuf:"bytes,1,opt,name=role,proto3" json:"role,omitempty"`
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// The role resource for create.
+	Role          *types.Role `protobuf:"bytes,1,opt,name=role,proto3" json:"role,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -417,10 +417,18 @@ func (x *CreateRoleResponse) GetRole() *types.Role {
 
 type UpdateRoleRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// The id of the role resource to update.
-	Id int64 `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
 	// The role resource which replaces the resource on the server.
-	Role          *types.Role `protobuf:"bytes,2,opt,name=role,proto3" json:"role,omitempty"`
+	// The 'id' from this object will be used to identify the role to update.
+	Role *types.Role `protobuf:"bytes,1,opt,name=role,proto3" json:"role,omitempty"`
+	// For requests: Use this field to set or replace the list of permissions for the role.
+	// - To update permissions, provide a list of IDs: [1, 2, 3]
+	// - To clear all permissions, provide an empty list: []
+	// - To leave permissions unchanged, do not provide this field at all (leave it as nil).
+	PermissionIds []int64 `protobuf:"varint,2,rep,packed,name=permission_ids,proto3" json:"permission_ids,omitempty"`
+	// For requests: Use this field to set or replace the list of resources for the role.
+	ResourceIds []int64 `protobuf:"varint,3,rep,packed,name=resource_ids,proto3" json:"resource_ids,omitempty"`
+	// For requests: Use this field to set or replace the list of views for the role.
+	ViewIds       []int64 `protobuf:"varint,4,rep,packed,name=view_ids,proto3" json:"view_ids,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -455,13 +463,6 @@ func (*UpdateRoleRequest) Descriptor() ([]byte, []int) {
 	return file_system_role_proto_rawDescGZIP(), []int{6}
 }
 
-func (x *UpdateRoleRequest) GetId() int64 {
-	if x != nil {
-		return x.Id
-	}
-	return 0
-}
-
 func (x *UpdateRoleRequest) GetRole() *types.Role {
 	if x != nil {
 		return x.Role
@@ -469,9 +470,31 @@ func (x *UpdateRoleRequest) GetRole() *types.Role {
 	return nil
 }
 
+func (x *UpdateRoleRequest) GetPermissionIds() []int64 {
+	if x != nil {
+		return x.PermissionIds
+	}
+	return nil
+}
+
+func (x *UpdateRoleRequest) GetResourceIds() []int64 {
+	if x != nil {
+		return x.ResourceIds
+	}
+	return nil
+}
+
+func (x *UpdateRoleRequest) GetViewIds() []int64 {
+	if x != nil {
+		return x.ViewIds
+	}
+	return nil
+}
+
 type UpdateRoleResponse struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Role          *types.Role            `protobuf:"bytes,1,opt,name=role,proto3" json:"role,omitempty"`
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// The role resource for update.
+	Role          *types.Role `protobuf:"bytes,1,opt,name=role,proto3" json:"role,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -515,8 +538,7 @@ func (x *UpdateRoleResponse) GetRole() *types.Role {
 
 type DeleteRoleRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// The resource id of the role to be deleted, for example:
-	// "shelves/shelf1/roles/role2"
+	// The resource id of the role to be deleted.
 	Id            int64 `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
@@ -607,19 +629,18 @@ var File_system_role_proto protoreflect.FileDescriptor
 
 const file_system_role_proto_rawDesc = "" +
 	"\n" +
-	"\x11system/role.proto\x12\x16api.v1.services.system\x1a\x1cgoogle/api/annotations.proto\x1a\x19google/protobuf/any.proto\x1a\x1bgoogle/protobuf/empty.proto\x1a\x12types/system.proto\x1a\x16policy/v1/policy.proto\"\xe5\x01\n" +
-	"\x10ListRolesRequest\x12\x0e\n" +
-	"\x02id\x18\x01 \x01(\x03R\x02id\x12\x12\n" +
-	"\x04page\x18\x02 \x01(\x05R\x04page\x12\x1c\n" +
-	"\tpage_size\x18\x03 \x01(\x05R\tpage_size\x12\x1e\n" +
+	"\x11system/role.proto\x12\x16api.v1.services.system\x1a\x1cgoogle/api/annotations.proto\x1a\x19google/protobuf/any.proto\x1a\x1bgoogle/protobuf/empty.proto\x1a\x12types/system.proto\x1a\x16policy/v1/policy.proto\"\xd5\x01\n" +
+	"\x10ListRolesRequest\x12\x12\n" +
+	"\x04page\x18\x01 \x01(\x05R\x04page\x12\x1c\n" +
+	"\tpage_size\x18\x02 \x01(\x05R\tpage_size\x12\x1e\n" +
 	"\n" +
-	"page_token\x18\x04 \x01(\tR\n" +
+	"page_token\x18\x03 \x01(\tR\n" +
 	"page_token\x12%\n" +
-	"\vpaging_mode\x18\x05 \x01(\tH\x00R\vpaging_mode\x88\x01\x01\x12\x1e\n" +
+	"\vpaging_mode\x18\x04 \x01(\tH\x00R\vpaging_mode\x88\x01\x01\x12\x1e\n" +
 	"\n" +
-	"only_count\x18\x06 \x01(\bR\n" +
+	"only_count\x18\x05 \x01(\bR\n" +
 	"only_count\x12\x18\n" +
-	"\akeyword\x18\a \x01(\tR\akeywordB\x0e\n" +
+	"\akeyword\x18\x06 \x01(\tR\akeywordB\x0e\n" +
 	"\f_paging_mode\"\xf3\x01\n" +
 	"\x11ListRolesResponse\x12\x14\n" +
 	"\x05total\x18\x01 \x01(\x05R\x05total\x121\n" +
@@ -632,16 +653,19 @@ const file_system_role_proto_rawDesc = "" +
 	"\x0eGetRoleRequest\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\x03R\x02id\"B\n" +
 	"\x0fGetRoleResponse\x12/\n" +
-	"\x04role\x18\x01 \x01(\v2\x1b.api.v1.services.types.RoleR\x04role\"v\n" +
-	"\x11CreateRoleRequest\x12\x16\n" +
-	"\x06parent\x18\x01 \x01(\tR\x06parent\x12\x18\n" +
-	"\arole_id\x18\x03 \x01(\tR\arole_id\x12/\n" +
-	"\x04role\x18\x02 \x01(\v2\x1b.api.v1.services.types.RoleR\x04role\"E\n" +
+	"\x04role\x18\x01 \x01(\v2\x1b.api.v1.services.types.RoleR\x04role\"\xac\x01\n" +
+	"\x11CreateRoleRequest\x12/\n" +
+	"\x04role\x18\x01 \x01(\v2\x1b.api.v1.services.types.RoleR\x04role\x12&\n" +
+	"\x0epermission_ids\x18\x02 \x03(\x03R\x0epermission_ids\x12\"\n" +
+	"\fresource_ids\x18\x03 \x03(\x03R\fresource_ids\x12\x1a\n" +
+	"\bview_ids\x18\x04 \x03(\x03R\bview_ids\"E\n" +
 	"\x12CreateRoleResponse\x12/\n" +
-	"\x04role\x18\x01 \x01(\v2\x1b.api.v1.services.types.RoleR\x04role\"T\n" +
-	"\x11UpdateRoleRequest\x12\x0e\n" +
-	"\x02id\x18\x01 \x01(\x03R\x02id\x12/\n" +
-	"\x04role\x18\x02 \x01(\v2\x1b.api.v1.services.types.RoleR\x04role\"E\n" +
+	"\x04role\x18\x01 \x01(\v2\x1b.api.v1.services.types.RoleR\x04role\"\xac\x01\n" +
+	"\x11UpdateRoleRequest\x12/\n" +
+	"\x04role\x18\x01 \x01(\v2\x1b.api.v1.services.types.RoleR\x04role\x12&\n" +
+	"\x0epermission_ids\x18\x02 \x03(\x03R\x0epermission_ids\x12\"\n" +
+	"\fresource_ids\x18\x03 \x03(\x03R\fresource_ids\x12\x1a\n" +
+	"\bview_ids\x18\x04 \x03(\x03R\bview_ids\"E\n" +
 	"\x12UpdateRoleResponse\x12/\n" +
 	"\x04role\x18\x01 \x01(\v2\x1b.api.v1.services.types.RoleR\x04role\"#\n" +
 	"\x11DeleteRoleRequest\x12\x0e\n" +
