@@ -3215,7 +3215,7 @@ func (c *ViewPermissionClient) UpdateOne(_m *ViewPermission) *ViewPermissionUpda
 }
 
 // UpdateOneID returns an update builder for the given id.
-func (c *ViewPermissionClient) UpdateOneID(id int64) *ViewPermissionUpdateOne {
+func (c *ViewPermissionClient) UpdateOneID(id int) *ViewPermissionUpdateOne {
 	mutation := newViewPermissionMutation(c.config, OpUpdateOne, withViewPermissionID(id))
 	return &ViewPermissionUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
 }
@@ -3232,7 +3232,7 @@ func (c *ViewPermissionClient) DeleteOne(_m *ViewPermission) *ViewPermissionDele
 }
 
 // DeleteOneID returns a builder for deleting the given entity by its id.
-func (c *ViewPermissionClient) DeleteOneID(id int64) *ViewPermissionDeleteOne {
+func (c *ViewPermissionClient) DeleteOneID(id int) *ViewPermissionDeleteOne {
 	builder := c.Delete().Where(viewpermission.ID(id))
 	builder.mutation.id = &id
 	builder.mutation.op = OpDeleteOne
@@ -3249,12 +3249,12 @@ func (c *ViewPermissionClient) Query() *ViewPermissionQuery {
 }
 
 // Get returns a ViewPermission entity by its id.
-func (c *ViewPermissionClient) Get(ctx context.Context, id int64) (*ViewPermission, error) {
+func (c *ViewPermissionClient) Get(ctx context.Context, id int) (*ViewPermission, error) {
 	return c.Query().Where(viewpermission.ID(id)).Only(ctx)
 }
 
 // GetX is like Get, but panics if an error occurs.
-func (c *ViewPermissionClient) GetX(ctx context.Context, id int64) *ViewPermission {
+func (c *ViewPermissionClient) GetX(ctx context.Context, id int) *ViewPermission {
 	obj, err := c.Get(ctx, id)
 	if err != nil {
 		panic(err)
@@ -3296,8 +3296,7 @@ func (c *ViewPermissionClient) QueryPermission(_m *ViewPermission) *PermissionQu
 
 // Hooks returns the client hooks.
 func (c *ViewPermissionClient) Hooks() []Hook {
-	hooks := c.hooks.ViewPermission
-	return append(hooks[:len(hooks):len(hooks)], viewpermission.Hooks[:]...)
+	return c.hooks.ViewPermission
 }
 
 // Interceptors returns the client interceptors.
@@ -3381,7 +3380,7 @@ func (c *ViewResourceClient) UpdateOne(_m *ViewResource) *ViewResourceUpdateOne 
 }
 
 // UpdateOneID returns an update builder for the given id.
-func (c *ViewResourceClient) UpdateOneID(id int64) *ViewResourceUpdateOne {
+func (c *ViewResourceClient) UpdateOneID(id int) *ViewResourceUpdateOne {
 	mutation := newViewResourceMutation(c.config, OpUpdateOne, withViewResourceID(id))
 	return &ViewResourceUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
 }
@@ -3398,7 +3397,7 @@ func (c *ViewResourceClient) DeleteOne(_m *ViewResource) *ViewResourceDeleteOne 
 }
 
 // DeleteOneID returns a builder for deleting the given entity by its id.
-func (c *ViewResourceClient) DeleteOneID(id int64) *ViewResourceDeleteOne {
+func (c *ViewResourceClient) DeleteOneID(id int) *ViewResourceDeleteOne {
 	builder := c.Delete().Where(viewresource.ID(id))
 	builder.mutation.id = &id
 	builder.mutation.op = OpDeleteOne
@@ -3415,12 +3414,12 @@ func (c *ViewResourceClient) Query() *ViewResourceQuery {
 }
 
 // Get returns a ViewResource entity by its id.
-func (c *ViewResourceClient) Get(ctx context.Context, id int64) (*ViewResource, error) {
+func (c *ViewResourceClient) Get(ctx context.Context, id int) (*ViewResource, error) {
 	return c.Query().Where(viewresource.ID(id)).Only(ctx)
 }
 
 // GetX is like Get, but panics if an error occurs.
-func (c *ViewResourceClient) GetX(ctx context.Context, id int64) *ViewResource {
+func (c *ViewResourceClient) GetX(ctx context.Context, id int) *ViewResource {
 	obj, err := c.Get(ctx, id)
 	if err != nil {
 		panic(err)
@@ -3462,8 +3461,7 @@ func (c *ViewResourceClient) QueryResource(_m *ViewResource) *ResourceQuery {
 
 // Hooks returns the client hooks.
 func (c *ViewResourceClient) Hooks() []Hook {
-	hooks := c.hooks.ViewResource
-	return append(hooks[:len(hooks):len(hooks)], viewresource.Hooks[:]...)
+	return c.hooks.ViewResource
 }
 
 // Interceptors returns the client interceptors.

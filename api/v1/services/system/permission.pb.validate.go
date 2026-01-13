@@ -69,6 +69,12 @@ func (m *ListPermissionsRequest) validate(all bool) error {
 
 	// no validation rules for Keyword
 
+	// no validation rules for WithResources
+
+	// no validation rules for WithRoles
+
+	// no validation rules for WithViews
+
 	if m.PagingMode != nil {
 		// no validation rules for PagingMode
 	}

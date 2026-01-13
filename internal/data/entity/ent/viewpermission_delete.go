@@ -40,7 +40,7 @@ func (_d *ViewPermissionDelete) ExecX(ctx context.Context) int {
 }
 
 func (_d *ViewPermissionDelete) sqlExec(ctx context.Context) (int, error) {
-	_spec := sqlgraph.NewDeleteSpec(viewpermission.Table, sqlgraph.NewFieldSpec(viewpermission.FieldID, field.TypeInt64))
+	_spec := sqlgraph.NewDeleteSpec(viewpermission.Table, sqlgraph.NewFieldSpec(viewpermission.FieldID, field.TypeInt))
 	if ps := _d.mutation.predicates; len(ps) > 0 {
 		_spec.Predicate = func(selector *sql.Selector) {
 			for i := range ps {

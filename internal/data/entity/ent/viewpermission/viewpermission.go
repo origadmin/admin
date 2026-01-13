@@ -3,9 +3,6 @@
 package viewpermission
 
 import (
-	"time"
-
-	"entgo.io/ent"
 	"entgo.io/ent/dialect/sql"
 	"entgo.io/ent/dialect/sql/sqlgraph"
 )
@@ -15,14 +12,6 @@ const (
 	Label = "view_permission"
 	// FieldID holds the string denoting the id field in the database.
 	FieldID = "id"
-	// FieldCreateAuthor holds the string denoting the create_author field in the database.
-	FieldCreateAuthor = "create_author"
-	// FieldUpdateAuthor holds the string denoting the update_author field in the database.
-	FieldUpdateAuthor = "update_author"
-	// FieldCreateTime holds the string denoting the create_time field in the database.
-	FieldCreateTime = "create_time"
-	// FieldUpdateTime holds the string denoting the update_time field in the database.
-	FieldUpdateTime = "update_time"
 	// FieldViewID holds the string denoting the view_id field in the database.
 	FieldViewID = "view_id"
 	// FieldPermissionID holds the string denoting the permission_id field in the database.
@@ -52,10 +41,6 @@ const (
 // Columns holds all SQL columns for viewpermission fields.
 var Columns = []string{
 	FieldID,
-	FieldCreateAuthor,
-	FieldUpdateAuthor,
-	FieldCreateTime,
-	FieldUpdateTime,
 	FieldViewID,
 	FieldPermissionID,
 }
@@ -70,31 +55,11 @@ func ValidColumn(column string) bool {
 	return false
 }
 
-// Note that the variables below are initialized by the runtime
-// package on the initialization of the application. Therefore,
-// it should be imported in the main as follows:
-//
-//	import _ "origadmin/application/admin/internal/data/entity/ent/runtime"
 var (
-	Hooks [1]ent.Hook
-	// DefaultCreateAuthor holds the default value on creation for the "create_author" field.
-	DefaultCreateAuthor int64
-	// DefaultUpdateAuthor holds the default value on creation for the "update_author" field.
-	DefaultUpdateAuthor int64
-	// DefaultCreateTime holds the default value on creation for the "create_time" field.
-	DefaultCreateTime func() time.Time
-	// DefaultUpdateTime holds the default value on creation for the "update_time" field.
-	DefaultUpdateTime func() time.Time
-	// UpdateDefaultUpdateTime holds the default value on update for the "update_time" field.
-	UpdateDefaultUpdateTime func() time.Time
 	// ViewIDValidator is a validator for the "view_id" field. It is called by the builders before save.
 	ViewIDValidator func(int64) error
 	// PermissionIDValidator is a validator for the "permission_id" field. It is called by the builders before save.
 	PermissionIDValidator func(int64) error
-	// DefaultID holds the default value on creation for the "id" field.
-	DefaultID func() int64
-	// IDValidator is a validator for the "id" field. It is called by the builders before save.
-	IDValidator func(int64) error
 )
 
 // OrderOption defines the ordering options for the ViewPermission queries.
@@ -103,26 +68,6 @@ type OrderOption func(*sql.Selector)
 // ByID orders the results by the id field.
 func ByID(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldID, opts...).ToFunc()
-}
-
-// ByCreateAuthor orders the results by the create_author field.
-func ByCreateAuthor(opts ...sql.OrderTermOption) OrderOption {
-	return sql.OrderByField(FieldCreateAuthor, opts...).ToFunc()
-}
-
-// ByUpdateAuthor orders the results by the update_author field.
-func ByUpdateAuthor(opts ...sql.OrderTermOption) OrderOption {
-	return sql.OrderByField(FieldUpdateAuthor, opts...).ToFunc()
-}
-
-// ByCreateTime orders the results by the create_time field.
-func ByCreateTime(opts ...sql.OrderTermOption) OrderOption {
-	return sql.OrderByField(FieldCreateTime, opts...).ToFunc()
-}
-
-// ByUpdateTime orders the results by the update_time field.
-func ByUpdateTime(opts ...sql.OrderTermOption) OrderOption {
-	return sql.OrderByField(FieldUpdateTime, opts...).ToFunc()
 }
 
 // ByViewID orders the results by the view_id field.

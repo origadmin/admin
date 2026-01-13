@@ -259,14 +259,14 @@ func (_c *PermissionCreate) AddPermissionResources(v ...*PermissionResource) *Pe
 }
 
 // AddViewPermissionIDs adds the "view_permissions" edge to the ViewPermission entity by IDs.
-func (_c *PermissionCreate) AddViewPermissionIDs(ids ...int64) *PermissionCreate {
+func (_c *PermissionCreate) AddViewPermissionIDs(ids ...int) *PermissionCreate {
 	_c.mutation.AddViewPermissionIDs(ids...)
 	return _c
 }
 
 // AddViewPermissions adds the "view_permissions" edges to the ViewPermission entity.
 func (_c *PermissionCreate) AddViewPermissions(v ...*ViewPermission) *PermissionCreate {
-	ids := make([]int64, len(v))
+	ids := make([]int, len(v))
 	for i := range v {
 		ids[i] = v[i].ID
 	}
@@ -523,13 +523,6 @@ func (_c *PermissionCreate) createSpec() (*Permission, *sqlgraph.CreateSpec) {
 		for _, k := range nodes {
 			edge.Target.Nodes = append(edge.Target.Nodes, k)
 		}
-		createE := &ViewPermissionCreate{config: _c.config, mutation: newViewPermissionMutation(_c.config, OpCreate)}
-		_ = createE.defaults()
-		_, specE := createE.createSpec()
-		edge.Target.Fields = specE.Fields
-		if specE.ID.Value != nil {
-			edge.Target.Fields = append(edge.Target.Fields, specE.ID)
-		}
 		_spec.Edges = append(_spec.Edges, edge)
 	}
 	if nodes := _c.mutation.RolePermissionsIDs(); len(nodes) > 0 {
@@ -588,7 +581,7 @@ func (_c *PermissionCreate) createSpec() (*Permission, *sqlgraph.CreateSpec) {
 			Columns: []string{permission.ViewPermissionsColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(viewpermission.FieldID, field.TypeInt64),
+				IDSpec: sqlgraph.NewFieldSpec(viewpermission.FieldID, field.TypeInt),
 			},
 		}
 		for _, k := range nodes {

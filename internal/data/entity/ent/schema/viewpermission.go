@@ -6,6 +6,7 @@ import (
 	"entgo.io/ent/schema"
 	"entgo.io/ent/schema/edge"
 	"entgo.io/ent/schema/index"
+
 	"origadmin/application/admin/internal/helpers/ent/mixin"
 	"origadmin/application/admin/internal/helpers/i18n"
 )
@@ -21,20 +22,6 @@ func (ViewPermission) Fields() []ent.Field {
 	return []ent.Field{
 		mixin.FK("view_id", i18n.Text("view_permission.view_id.comment")),
 		mixin.FK("permission_id", i18n.Text("view_permission.permission_id.comment")),
-	}
-}
-
-// Edges of the ViewPermission.
-func (ViewPermission) Edges() []ent.Edge {
-	return []ent.Edge{
-		edge.To("view", View.Type).
-			Field("view_id").
-			Unique().
-			Required(),
-		edge.To("permission", Permission.Type).
-			Field("permission_id").
-			Unique().
-			Required(),
 	}
 }
 
@@ -55,7 +42,16 @@ func (ViewPermission) Annotations() []schema.Annotation {
 	}
 }
 
-// Mixin of the ViewPermission.
-func (ViewPermission) Mixin() []ent.Mixin {
-	return mixin.AuditModelMixin
+// Edges of the ViewPermission.
+func (ViewPermission) Edges() []ent.Edge {
+	return []ent.Edge{
+		edge.To("view", View.Type).
+			Field("view_id").
+			Unique().
+			Required(),
+		edge.To("permission", Permission.Type).
+			Field("permission_id").
+			Unique().
+			Required(),
+	}
 }

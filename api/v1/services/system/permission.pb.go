@@ -44,6 +44,9 @@ type ListPermissionsRequest struct {
 	DataScopes []string `protobuf:"bytes,7,rep,name=data_scopes,proto3" json:"data_scopes,omitempty"`
 	// The keyword is the query parameter for set only to query the permission by keyword
 	Keyword       string `protobuf:"bytes,8,opt,name=keyword,proto3" json:"keyword,omitempty"`
+	WithResources bool   `protobuf:"varint,10,opt,name=with_resources,proto3" json:"with_resources,omitempty"`
+	WithRoles     bool   `protobuf:"varint,11,opt,name=with_roles,proto3" json:"with_roles,omitempty"`
+	WithViews     bool   `protobuf:"varint,12,opt,name=with_views,proto3" json:"with_views,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -132,6 +135,27 @@ func (x *ListPermissionsRequest) GetKeyword() string {
 		return x.Keyword
 	}
 	return ""
+}
+
+func (x *ListPermissionsRequest) GetWithResources() bool {
+	if x != nil {
+		return x.WithResources
+	}
+	return false
+}
+
+func (x *ListPermissionsRequest) GetWithRoles() bool {
+	if x != nil {
+		return x.WithRoles
+	}
+	return false
+}
+
+func (x *ListPermissionsRequest) GetWithViews() bool {
+	if x != nil {
+		return x.WithViews
+	}
+	return false
 }
 
 type ListPermissionsResponse struct {
@@ -616,7 +640,7 @@ var File_system_permission_proto protoreflect.FileDescriptor
 
 const file_system_permission_proto_rawDesc = "" +
 	"\n" +
-	"\x17system/permission.proto\x12\x16api.v1.services.system\x1a\x1cgoogle/api/annotations.proto\x1a\x19google/protobuf/any.proto\x1a\x1bgoogle/protobuf/empty.proto\x1a\x12types/system.proto\x1a\x16policy/v1/policy.proto\"\x8d\x02\n" +
+	"\x17system/permission.proto\x12\x16api.v1.services.system\x1a\x1cgoogle/api/annotations.proto\x1a\x19google/protobuf/any.proto\x1a\x1bgoogle/protobuf/empty.proto\x1a\x16policy/v1/policy.proto\x1a\x12types/system.proto\"\xf5\x02\n" +
 	"\x16ListPermissionsRequest\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\x03R\x02id\x12\x12\n" +
 	"\x04page\x18\x02 \x01(\x05R\x04page\x12\x1c\n" +
@@ -629,7 +653,15 @@ const file_system_permission_proto_rawDesc = "" +
 	"only_count\x18\x06 \x01(\bR\n" +
 	"only_count\x12 \n" +
 	"\vdata_scopes\x18\a \x03(\tR\vdata_scopes\x12\x18\n" +
-	"\akeyword\x18\b \x01(\tR\akeywordB\x0e\n" +
+	"\akeyword\x18\b \x01(\tR\akeyword\x12&\n" +
+	"\x0ewith_resources\x18\n" +
+	" \x01(\bR\x0ewith_resources\x12\x1e\n" +
+	"\n" +
+	"with_roles\x18\v \x01(\bR\n" +
+	"with_roles\x12\x1e\n" +
+	"\n" +
+	"with_views\x18\f \x01(\bR\n" +
+	"with_viewsB\x0e\n" +
 	"\f_paging_mode\"\x8b\x02\n" +
 	"\x17ListPermissionsResponse\x12\x14\n" +
 	"\x05total\x18\x01 \x01(\x05R\x05total\x12C\n" +

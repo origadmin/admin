@@ -253,14 +253,14 @@ func (_u *PermissionUpdate) AddPermissionResources(v ...*PermissionResource) *Pe
 }
 
 // AddViewPermissionIDs adds the "view_permissions" edge to the ViewPermission entity by IDs.
-func (_u *PermissionUpdate) AddViewPermissionIDs(ids ...int64) *PermissionUpdate {
+func (_u *PermissionUpdate) AddViewPermissionIDs(ids ...int) *PermissionUpdate {
 	_u.mutation.AddViewPermissionIDs(ids...)
 	return _u
 }
 
 // AddViewPermissions adds the "view_permissions" edges to the ViewPermission entity.
 func (_u *PermissionUpdate) AddViewPermissions(v ...*ViewPermission) *PermissionUpdate {
-	ids := make([]int64, len(v))
+	ids := make([]int, len(v))
 	for i := range v {
 		ids[i] = v[i].ID
 	}
@@ -426,14 +426,14 @@ func (_u *PermissionUpdate) ClearViewPermissions() *PermissionUpdate {
 }
 
 // RemoveViewPermissionIDs removes the "view_permissions" edge to ViewPermission entities by IDs.
-func (_u *PermissionUpdate) RemoveViewPermissionIDs(ids ...int64) *PermissionUpdate {
+func (_u *PermissionUpdate) RemoveViewPermissionIDs(ids ...int) *PermissionUpdate {
 	_u.mutation.RemoveViewPermissionIDs(ids...)
 	return _u
 }
 
 // RemoveViewPermissions removes "view_permissions" edges to ViewPermission entities.
 func (_u *PermissionUpdate) RemoveViewPermissions(v ...*ViewPermission) *PermissionUpdate {
-	ids := make([]int64, len(v))
+	ids := make([]int, len(v))
 	for i := range v {
 		ids[i] = v[i].ID
 	}
@@ -695,13 +695,6 @@ func (_u *PermissionUpdate) sqlSave(ctx context.Context) (_node int, err error) 
 				IDSpec: sqlgraph.NewFieldSpec(view.FieldID, field.TypeInt64),
 			},
 		}
-		createE := &ViewPermissionCreate{config: _u.config, mutation: newViewPermissionMutation(_u.config, OpCreate)}
-		_ = createE.defaults()
-		_, specE := createE.createSpec()
-		edge.Target.Fields = specE.Fields
-		if specE.ID.Value != nil {
-			edge.Target.Fields = append(edge.Target.Fields, specE.ID)
-		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
 	}
 	if nodes := _u.mutation.RemovedViewsIDs(); len(nodes) > 0 && !_u.mutation.ViewsCleared() {
@@ -718,13 +711,6 @@ func (_u *PermissionUpdate) sqlSave(ctx context.Context) (_node int, err error) 
 		for _, k := range nodes {
 			edge.Target.Nodes = append(edge.Target.Nodes, k)
 		}
-		createE := &ViewPermissionCreate{config: _u.config, mutation: newViewPermissionMutation(_u.config, OpCreate)}
-		_ = createE.defaults()
-		_, specE := createE.createSpec()
-		edge.Target.Fields = specE.Fields
-		if specE.ID.Value != nil {
-			edge.Target.Fields = append(edge.Target.Fields, specE.ID)
-		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
 	}
 	if nodes := _u.mutation.ViewsIDs(); len(nodes) > 0 {
@@ -740,13 +726,6 @@ func (_u *PermissionUpdate) sqlSave(ctx context.Context) (_node int, err error) 
 		}
 		for _, k := range nodes {
 			edge.Target.Nodes = append(edge.Target.Nodes, k)
-		}
-		createE := &ViewPermissionCreate{config: _u.config, mutation: newViewPermissionMutation(_u.config, OpCreate)}
-		_ = createE.defaults()
-		_, specE := createE.createSpec()
-		edge.Target.Fields = specE.Fields
-		if specE.ID.Value != nil {
-			edge.Target.Fields = append(edge.Target.Fields, specE.ID)
 		}
 		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
@@ -893,7 +872,7 @@ func (_u *PermissionUpdate) sqlSave(ctx context.Context) (_node int, err error) 
 			Columns: []string{permission.ViewPermissionsColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(viewpermission.FieldID, field.TypeInt64),
+				IDSpec: sqlgraph.NewFieldSpec(viewpermission.FieldID, field.TypeInt),
 			},
 		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
@@ -906,7 +885,7 @@ func (_u *PermissionUpdate) sqlSave(ctx context.Context) (_node int, err error) 
 			Columns: []string{permission.ViewPermissionsColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(viewpermission.FieldID, field.TypeInt64),
+				IDSpec: sqlgraph.NewFieldSpec(viewpermission.FieldID, field.TypeInt),
 			},
 		}
 		for _, k := range nodes {
@@ -922,7 +901,7 @@ func (_u *PermissionUpdate) sqlSave(ctx context.Context) (_node int, err error) 
 			Columns: []string{permission.ViewPermissionsColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(viewpermission.FieldID, field.TypeInt64),
+				IDSpec: sqlgraph.NewFieldSpec(viewpermission.FieldID, field.TypeInt),
 			},
 		}
 		for _, k := range nodes {
@@ -1167,14 +1146,14 @@ func (_u *PermissionUpdateOne) AddPermissionResources(v ...*PermissionResource) 
 }
 
 // AddViewPermissionIDs adds the "view_permissions" edge to the ViewPermission entity by IDs.
-func (_u *PermissionUpdateOne) AddViewPermissionIDs(ids ...int64) *PermissionUpdateOne {
+func (_u *PermissionUpdateOne) AddViewPermissionIDs(ids ...int) *PermissionUpdateOne {
 	_u.mutation.AddViewPermissionIDs(ids...)
 	return _u
 }
 
 // AddViewPermissions adds the "view_permissions" edges to the ViewPermission entity.
 func (_u *PermissionUpdateOne) AddViewPermissions(v ...*ViewPermission) *PermissionUpdateOne {
-	ids := make([]int64, len(v))
+	ids := make([]int, len(v))
 	for i := range v {
 		ids[i] = v[i].ID
 	}
@@ -1340,14 +1319,14 @@ func (_u *PermissionUpdateOne) ClearViewPermissions() *PermissionUpdateOne {
 }
 
 // RemoveViewPermissionIDs removes the "view_permissions" edge to ViewPermission entities by IDs.
-func (_u *PermissionUpdateOne) RemoveViewPermissionIDs(ids ...int64) *PermissionUpdateOne {
+func (_u *PermissionUpdateOne) RemoveViewPermissionIDs(ids ...int) *PermissionUpdateOne {
 	_u.mutation.RemoveViewPermissionIDs(ids...)
 	return _u
 }
 
 // RemoveViewPermissions removes "view_permissions" edges to ViewPermission entities.
 func (_u *PermissionUpdateOne) RemoveViewPermissions(v ...*ViewPermission) *PermissionUpdateOne {
-	ids := make([]int64, len(v))
+	ids := make([]int, len(v))
 	for i := range v {
 		ids[i] = v[i].ID
 	}
@@ -1639,13 +1618,6 @@ func (_u *PermissionUpdateOne) sqlSave(ctx context.Context) (_node *Permission, 
 				IDSpec: sqlgraph.NewFieldSpec(view.FieldID, field.TypeInt64),
 			},
 		}
-		createE := &ViewPermissionCreate{config: _u.config, mutation: newViewPermissionMutation(_u.config, OpCreate)}
-		_ = createE.defaults()
-		_, specE := createE.createSpec()
-		edge.Target.Fields = specE.Fields
-		if specE.ID.Value != nil {
-			edge.Target.Fields = append(edge.Target.Fields, specE.ID)
-		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
 	}
 	if nodes := _u.mutation.RemovedViewsIDs(); len(nodes) > 0 && !_u.mutation.ViewsCleared() {
@@ -1662,13 +1634,6 @@ func (_u *PermissionUpdateOne) sqlSave(ctx context.Context) (_node *Permission, 
 		for _, k := range nodes {
 			edge.Target.Nodes = append(edge.Target.Nodes, k)
 		}
-		createE := &ViewPermissionCreate{config: _u.config, mutation: newViewPermissionMutation(_u.config, OpCreate)}
-		_ = createE.defaults()
-		_, specE := createE.createSpec()
-		edge.Target.Fields = specE.Fields
-		if specE.ID.Value != nil {
-			edge.Target.Fields = append(edge.Target.Fields, specE.ID)
-		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
 	}
 	if nodes := _u.mutation.ViewsIDs(); len(nodes) > 0 {
@@ -1684,13 +1649,6 @@ func (_u *PermissionUpdateOne) sqlSave(ctx context.Context) (_node *Permission, 
 		}
 		for _, k := range nodes {
 			edge.Target.Nodes = append(edge.Target.Nodes, k)
-		}
-		createE := &ViewPermissionCreate{config: _u.config, mutation: newViewPermissionMutation(_u.config, OpCreate)}
-		_ = createE.defaults()
-		_, specE := createE.createSpec()
-		edge.Target.Fields = specE.Fields
-		if specE.ID.Value != nil {
-			edge.Target.Fields = append(edge.Target.Fields, specE.ID)
 		}
 		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
@@ -1837,7 +1795,7 @@ func (_u *PermissionUpdateOne) sqlSave(ctx context.Context) (_node *Permission, 
 			Columns: []string{permission.ViewPermissionsColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(viewpermission.FieldID, field.TypeInt64),
+				IDSpec: sqlgraph.NewFieldSpec(viewpermission.FieldID, field.TypeInt),
 			},
 		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
@@ -1850,7 +1808,7 @@ func (_u *PermissionUpdateOne) sqlSave(ctx context.Context) (_node *Permission, 
 			Columns: []string{permission.ViewPermissionsColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(viewpermission.FieldID, field.TypeInt64),
+				IDSpec: sqlgraph.NewFieldSpec(viewpermission.FieldID, field.TypeInt),
 			},
 		}
 		for _, k := range nodes {
@@ -1866,7 +1824,7 @@ func (_u *PermissionUpdateOne) sqlSave(ctx context.Context) (_node *Permission, 
 			Columns: []string{permission.ViewPermissionsColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(viewpermission.FieldID, field.TypeInt64),
+				IDSpec: sqlgraph.NewFieldSpec(viewpermission.FieldID, field.TypeInt),
 			},
 		}
 		for _, k := range nodes {

@@ -361,14 +361,14 @@ func (_c *ResourceCreate) AddPermissions(v ...*Permission) *ResourceCreate {
 }
 
 // AddViewResourceIDs adds the "view_resources" edge to the ViewResource entity by IDs.
-func (_c *ResourceCreate) AddViewResourceIDs(ids ...int64) *ResourceCreate {
+func (_c *ResourceCreate) AddViewResourceIDs(ids ...int) *ResourceCreate {
 	_c.mutation.AddViewResourceIDs(ids...)
 	return _c
 }
 
 // AddViewResources adds the "view_resources" edges to the ViewResource entity.
 func (_c *ResourceCreate) AddViewResources(v ...*ViewResource) *ResourceCreate {
-	ids := make([]int64, len(v))
+	ids := make([]int, len(v))
 	for i := range v {
 		ids[i] = v[i].ID
 	}
@@ -712,13 +712,6 @@ func (_c *ResourceCreate) createSpec() (*Resource, *sqlgraph.CreateSpec) {
 		for _, k := range nodes {
 			edge.Target.Nodes = append(edge.Target.Nodes, k)
 		}
-		createE := &ViewResourceCreate{config: _c.config, mutation: newViewResourceMutation(_c.config, OpCreate)}
-		_ = createE.defaults()
-		_, specE := createE.createSpec()
-		edge.Target.Fields = specE.Fields
-		if specE.ID.Value != nil {
-			edge.Target.Fields = append(edge.Target.Fields, specE.ID)
-		}
 		_spec.Edges = append(_spec.Edges, edge)
 	}
 	if nodes := _c.mutation.PermissionsIDs(); len(nodes) > 0 {
@@ -745,7 +738,7 @@ func (_c *ResourceCreate) createSpec() (*Resource, *sqlgraph.CreateSpec) {
 			Columns: []string{resource.ViewResourcesColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(viewresource.FieldID, field.TypeInt64),
+				IDSpec: sqlgraph.NewFieldSpec(viewresource.FieldID, field.TypeInt),
 			},
 		}
 		for _, k := range nodes {

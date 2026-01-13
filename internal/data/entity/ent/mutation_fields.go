@@ -1316,20 +1316,10 @@ func (m *ViewMutation) SetFieldsSkipZero(input *View, fields ...string) error {
 func (m *ViewPermissionMutation) SetFields(input *ViewPermission, fields ...string) error {
 	for i := range fields {
 		switch fields[i] {
-		case viewpermission.FieldCreateAuthor:
-			m.SetCreateAuthor(input.CreateAuthor)
-		case viewpermission.FieldUpdateAuthor:
-			m.SetUpdateAuthor(input.UpdateAuthor)
-		case viewpermission.FieldCreateTime:
-			m.SetCreateTime(input.CreateTime)
-		case viewpermission.FieldUpdateTime:
-			m.SetUpdateTime(input.UpdateTime)
 		case viewpermission.FieldViewID:
 			m.SetViewID(input.ViewID)
 		case viewpermission.FieldPermissionID:
 			m.SetPermissionID(input.PermissionID)
-		case viewpermission.FieldID:
-			m.SetID(input.ID)
 		default:
 			return fmt.Errorf("unknown ViewPermission field %s", fields[i])
 		}
@@ -1343,24 +1333,6 @@ func (m *ViewPermissionMutation) SetFields(input *ViewPermission, fields ...stri
 func (m *ViewPermissionMutation) SetFieldsSkipZero(input *ViewPermission, fields ...string) error {
 	for i := range fields {
 		switch fields[i] {
-		case viewpermission.FieldCreateAuthor:
-			// check int64 with sql.NullInt64 if it is zero
-			if input.CreateAuthor != 0 {
-				m.SetCreateAuthor(input.CreateAuthor)
-			}
-		case viewpermission.FieldUpdateAuthor:
-			// check int64 with sql.NullInt64 if it is zero
-			if input.UpdateAuthor != 0 {
-				m.SetUpdateAuthor(input.UpdateAuthor)
-			}
-		case viewpermission.FieldCreateTime:
-			if input.CreateTime.Unix() != 0 {
-				m.SetCreateTime(input.CreateTime)
-			}
-		case viewpermission.FieldUpdateTime:
-			if input.UpdateTime.Unix() != 0 {
-				m.SetUpdateTime(input.UpdateTime)
-			}
 		case viewpermission.FieldViewID:
 			// check int64 with sql.NullInt64 if it is zero
 			if input.ViewID != 0 {
@@ -1370,11 +1342,6 @@ func (m *ViewPermissionMutation) SetFieldsSkipZero(input *ViewPermission, fields
 			// check int64 with sql.NullInt64 if it is zero
 			if input.PermissionID != 0 {
 				m.SetPermissionID(input.PermissionID)
-			}
-		case viewpermission.FieldID:
-			// check int64 with sql.NullInt64 if it is zero
-			if input.ID != 0 {
-				m.SetID(input.ID)
 			}
 		default:
 			return fmt.Errorf("unknown ViewPermission field %s", fields[i])
@@ -1389,20 +1356,10 @@ func (m *ViewPermissionMutation) SetFieldsSkipZero(input *ViewPermission, fields
 func (m *ViewResourceMutation) SetFields(input *ViewResource, fields ...string) error {
 	for i := range fields {
 		switch fields[i] {
-		case viewresource.FieldCreateAuthor:
-			m.SetCreateAuthor(input.CreateAuthor)
-		case viewresource.FieldUpdateAuthor:
-			m.SetUpdateAuthor(input.UpdateAuthor)
-		case viewresource.FieldCreateTime:
-			m.SetCreateTime(input.CreateTime)
-		case viewresource.FieldUpdateTime:
-			m.SetUpdateTime(input.UpdateTime)
 		case viewresource.FieldViewID:
 			m.SetViewID(input.ViewID)
 		case viewresource.FieldResourceID:
 			m.SetResourceID(input.ResourceID)
-		case viewresource.FieldID:
-			m.SetID(input.ID)
 		default:
 			return fmt.Errorf("unknown ViewResource field %s", fields[i])
 		}
@@ -1416,24 +1373,6 @@ func (m *ViewResourceMutation) SetFields(input *ViewResource, fields ...string) 
 func (m *ViewResourceMutation) SetFieldsSkipZero(input *ViewResource, fields ...string) error {
 	for i := range fields {
 		switch fields[i] {
-		case viewresource.FieldCreateAuthor:
-			// check int64 with sql.NullInt64 if it is zero
-			if input.CreateAuthor != 0 {
-				m.SetCreateAuthor(input.CreateAuthor)
-			}
-		case viewresource.FieldUpdateAuthor:
-			// check int64 with sql.NullInt64 if it is zero
-			if input.UpdateAuthor != 0 {
-				m.SetUpdateAuthor(input.UpdateAuthor)
-			}
-		case viewresource.FieldCreateTime:
-			if input.CreateTime.Unix() != 0 {
-				m.SetCreateTime(input.CreateTime)
-			}
-		case viewresource.FieldUpdateTime:
-			if input.UpdateTime.Unix() != 0 {
-				m.SetUpdateTime(input.UpdateTime)
-			}
 		case viewresource.FieldViewID:
 			// check int64 with sql.NullInt64 if it is zero
 			if input.ViewID != 0 {
@@ -1443,11 +1382,6 @@ func (m *ViewResourceMutation) SetFieldsSkipZero(input *ViewResource, fields ...
 			// check int64 with sql.NullInt64 if it is zero
 			if input.ResourceID != 0 {
 				m.SetResourceID(input.ResourceID)
-			}
-		case viewresource.FieldID:
-			// check int64 with sql.NullInt64 if it is zero
-			if input.ID != 0 {
-				m.SetID(input.ID)
 			}
 		default:
 			return fmt.Errorf("unknown ViewResource field %s", fields[i])

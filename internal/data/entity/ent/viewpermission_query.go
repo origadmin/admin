@@ -132,8 +132,8 @@ func (_q *ViewPermissionQuery) FirstX(ctx context.Context) *ViewPermission {
 
 // FirstID returns the first ViewPermission ID from the query.
 // Returns a *NotFoundError when no ViewPermission ID was found.
-func (_q *ViewPermissionQuery) FirstID(ctx context.Context) (id int64, err error) {
-	var ids []int64
+func (_q *ViewPermissionQuery) FirstID(ctx context.Context) (id int, err error) {
+	var ids []int
 	if ids, err = _q.Limit(1).IDs(setContextOp(ctx, _q.ctx, ent.OpQueryFirstID)); err != nil {
 		return
 	}
@@ -145,7 +145,7 @@ func (_q *ViewPermissionQuery) FirstID(ctx context.Context) (id int64, err error
 }
 
 // FirstIDX is like FirstID, but panics if an error occurs.
-func (_q *ViewPermissionQuery) FirstIDX(ctx context.Context) int64 {
+func (_q *ViewPermissionQuery) FirstIDX(ctx context.Context) int {
 	id, err := _q.FirstID(ctx)
 	if err != nil && !IsNotFound(err) {
 		panic(err)
@@ -183,8 +183,8 @@ func (_q *ViewPermissionQuery) OnlyX(ctx context.Context) *ViewPermission {
 // OnlyID is like Only, but returns the only ViewPermission ID in the query.
 // Returns a *NotSingularError when more than one ViewPermission ID is found.
 // Returns a *NotFoundError when no entities are found.
-func (_q *ViewPermissionQuery) OnlyID(ctx context.Context) (id int64, err error) {
-	var ids []int64
+func (_q *ViewPermissionQuery) OnlyID(ctx context.Context) (id int, err error) {
+	var ids []int
 	if ids, err = _q.Limit(2).IDs(setContextOp(ctx, _q.ctx, ent.OpQueryOnlyID)); err != nil {
 		return
 	}
@@ -200,7 +200,7 @@ func (_q *ViewPermissionQuery) OnlyID(ctx context.Context) (id int64, err error)
 }
 
 // OnlyIDX is like OnlyID, but panics if an error occurs.
-func (_q *ViewPermissionQuery) OnlyIDX(ctx context.Context) int64 {
+func (_q *ViewPermissionQuery) OnlyIDX(ctx context.Context) int {
 	id, err := _q.OnlyID(ctx)
 	if err != nil {
 		panic(err)
@@ -228,7 +228,7 @@ func (_q *ViewPermissionQuery) AllX(ctx context.Context) []*ViewPermission {
 }
 
 // IDs executes the query and returns a list of ViewPermission IDs.
-func (_q *ViewPermissionQuery) IDs(ctx context.Context) (ids []int64, err error) {
+func (_q *ViewPermissionQuery) IDs(ctx context.Context) (ids []int, err error) {
 	if _q.ctx.Unique == nil && _q.path != nil {
 		_q.Unique(true)
 	}
@@ -240,7 +240,7 @@ func (_q *ViewPermissionQuery) IDs(ctx context.Context) (ids []int64, err error)
 }
 
 // IDsX is like IDs, but panics if an error occurs.
-func (_q *ViewPermissionQuery) IDsX(ctx context.Context) []int64 {
+func (_q *ViewPermissionQuery) IDsX(ctx context.Context) []int {
 	ids, err := _q.IDs(ctx)
 	if err != nil {
 		panic(err)
@@ -337,12 +337,12 @@ func (_q *ViewPermissionQuery) WithPermission(opts ...func(*PermissionQuery)) *V
 // Example:
 //
 //	var v []struct {
-//		CreateAuthor int64 `json:"create_author,omitempty"`
+//		ViewID int64 `json:"view_id,omitempty"`
 //		Count int `json:"count,omitempty"`
 //	}
 //
 //	client.ViewPermission.Query().
-//		GroupBy(viewpermission.FieldCreateAuthor).
+//		GroupBy(viewpermission.FieldViewID).
 //		Aggregate(ent.Count()).
 //		Scan(ctx, &v)
 func (_q *ViewPermissionQuery) GroupBy(field string, fields ...string) *ViewPermissionGroupBy {
@@ -360,11 +360,11 @@ func (_q *ViewPermissionQuery) GroupBy(field string, fields ...string) *ViewPerm
 // Example:
 //
 //	var v []struct {
-//		CreateAuthor int64 `json:"create_author,omitempty"`
+//		ViewID int64 `json:"view_id,omitempty"`
 //	}
 //
 //	client.ViewPermission.Query().
-//		Select(viewpermission.FieldCreateAuthor).
+//		Select(viewpermission.FieldViewID).
 //		Scan(ctx, &v)
 func (_q *ViewPermissionQuery) Select(fields ...string) *ViewPermissionSelect {
 	_q.ctx.Fields = append(_q.ctx.Fields, fields...)
@@ -522,7 +522,7 @@ func (_q *ViewPermissionQuery) sqlCount(ctx context.Context) (int, error) {
 }
 
 func (_q *ViewPermissionQuery) querySpec() *sqlgraph.QuerySpec {
-	_spec := sqlgraph.NewQuerySpec(viewpermission.Table, viewpermission.Columns, sqlgraph.NewFieldSpec(viewpermission.FieldID, field.TypeInt64))
+	_spec := sqlgraph.NewQuerySpec(viewpermission.Table, viewpermission.Columns, sqlgraph.NewFieldSpec(viewpermission.FieldID, field.TypeInt))
 	_spec.From = _q.sql
 	if unique := _q.ctx.Unique; unique != nil {
 		_spec.Unique = *unique
@@ -639,20 +639,12 @@ func (_q *ViewPermissionQuery) Modify(modifiers ...func(s *sql.Selector)) *ViewP
 // Example:
 //
 //	var v []struct {
-//	  CreateAuthor int64 `json:"create_author,omitempty"`
-//	  UpdateAuthor int64 `json:"update_author,omitempty"`
-//	  CreateTime time.Time `json:"create_time,omitempty"`
-//	  UpdateTime time.Time `json:"update_time,omitempty"`
 //	  ViewID int64 `json:"view_id,omitempty"`
 //	  PermissionID int64 `json:"permission_id,omitempty"`
 //	}
 //
 //	client.ViewPermission.Query().
 //	  Omit(
-//	  viewpermission.FieldCreateAuthor,
-//	  viewpermission.FieldUpdateAuthor,
-//	  viewpermission.FieldCreateTime,
-//	  viewpermission.FieldUpdateTime,
 //	  viewpermission.FieldViewID,
 //	  viewpermission.FieldPermissionID,
 //	  ).

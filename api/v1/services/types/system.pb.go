@@ -65,8 +65,12 @@ type View struct {
 	Parent *View `protobuf:"bytes,101,opt,name=parent,proto3" json:"parent,omitempty"`
 	// Resources holds the value of the resources edge.
 	Resources []*Resource `protobuf:"bytes,102,rep,name=resources,proto3" json:"resources,omitempty"`
+	// Resource ids
+	ResourceIds []int64 `protobuf:"varint,103,rep,packed,name=resource_ids,proto3" json:"resource_ids,omitempty"`
 	// Roles holds the value of the roles edge.
-	Roles         []*Role `protobuf:"bytes,103,rep,name=roles,proto3" json:"roles,omitempty"`
+	Roles []*Role `protobuf:"bytes,104,rep,name=roles,proto3" json:"roles,omitempty"`
+	// Role ids
+	RoleIds       []int64 `protobuf:"varint,105,rep,packed,name=role_ids,proto3" json:"role_ids,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -241,9 +245,23 @@ func (x *View) GetResources() []*Resource {
 	return nil
 }
 
+func (x *View) GetResourceIds() []int64 {
+	if x != nil {
+		return x.ResourceIds
+	}
+	return nil
+}
+
 func (x *View) GetRoles() []*Role {
 	if x != nil {
 		return x.Roles
+	}
+	return nil
+}
+
+func (x *View) GetRoleIds() []int64 {
+	if x != nil {
+		return x.RoleIds
 	}
 	return nil
 }
@@ -1969,7 +1987,7 @@ var File_types_system_proto protoreflect.FileDescriptor
 
 const file_types_system_proto_rawDesc = "" +
 	"\n" +
-	"\x12types/system.proto\x12\x15api.v1.services.types\x1a\x1fgoogle/protobuf/timestamp.proto\"\xd6\x05\n" +
+	"\x12types/system.proto\x12\x15api.v1.services.types\x1a\x1fgoogle/protobuf/timestamp.proto\"\x96\x06\n" +
 	"\x04View\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\x03R\x02id\x12<\n" +
 	"\vcreate_time\x18\x02 \x01(\v2\x1a.google.protobuf.TimestampR\vcreate_time\x12<\n" +
@@ -1993,8 +2011,10 @@ const file_types_system_proto_rawDesc = "" +
 	"\tcomponent\x18\x14 \x01(\tR\tcomponent\x127\n" +
 	"\bchildren\x18d \x03(\v2\x1b.api.v1.services.types.ViewR\bchildren\x123\n" +
 	"\x06parent\x18e \x01(\v2\x1b.api.v1.services.types.ViewR\x06parent\x12=\n" +
-	"\tresources\x18f \x03(\v2\x1f.api.v1.services.types.ResourceR\tresources\x121\n" +
-	"\x05roles\x18g \x03(\v2\x1b.api.v1.services.types.RoleR\x05roles\"\xe0\x04\n" +
+	"\tresources\x18f \x03(\v2\x1f.api.v1.services.types.ResourceR\tresources\x12\"\n" +
+	"\fresource_ids\x18g \x03(\x03R\fresource_ids\x121\n" +
+	"\x05roles\x18h \x03(\v2\x1b.api.v1.services.types.RoleR\x05roles\x12\x1a\n" +
+	"\brole_ids\x18i \x03(\x03R\brole_ids\"\xe0\x04\n" +
 	"\x04Role\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\x03R\x02id\x12<\n" +
 	"\vcreate_time\x18\x02 \x01(\v2\x1a.google.protobuf.TimestampR\vcreate_time\x12<\n" +

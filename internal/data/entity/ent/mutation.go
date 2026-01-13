@@ -2966,8 +2966,8 @@ type PermissionMutation struct {
 	permission_resources        map[int]struct{}
 	removedpermission_resources map[int]struct{}
 	clearedpermission_resources bool
-	view_permissions            map[int64]struct{}
-	removedview_permissions     map[int64]struct{}
+	view_permissions            map[int]struct{}
+	removedview_permissions     map[int]struct{}
 	clearedview_permissions     bool
 	done                        bool
 	oldValue                    func(context.Context) (*Permission, error)
@@ -3814,9 +3814,9 @@ func (m *PermissionMutation) ResetPermissionResources() {
 }
 
 // AddViewPermissionIDs adds the "view_permissions" edge to the ViewPermission entity by ids.
-func (m *PermissionMutation) AddViewPermissionIDs(ids ...int64) {
+func (m *PermissionMutation) AddViewPermissionIDs(ids ...int) {
 	if m.view_permissions == nil {
-		m.view_permissions = make(map[int64]struct{})
+		m.view_permissions = make(map[int]struct{})
 	}
 	for i := range ids {
 		m.view_permissions[ids[i]] = struct{}{}
@@ -3834,9 +3834,9 @@ func (m *PermissionMutation) ViewPermissionsCleared() bool {
 }
 
 // RemoveViewPermissionIDs removes the "view_permissions" edge to the ViewPermission entity by IDs.
-func (m *PermissionMutation) RemoveViewPermissionIDs(ids ...int64) {
+func (m *PermissionMutation) RemoveViewPermissionIDs(ids ...int) {
 	if m.removedview_permissions == nil {
-		m.removedview_permissions = make(map[int64]struct{})
+		m.removedview_permissions = make(map[int]struct{})
 	}
 	for i := range ids {
 		delete(m.view_permissions, ids[i])
@@ -3845,7 +3845,7 @@ func (m *PermissionMutation) RemoveViewPermissionIDs(ids ...int64) {
 }
 
 // RemovedViewPermissions returns the removed IDs of the "view_permissions" edge to the ViewPermission entity.
-func (m *PermissionMutation) RemovedViewPermissionsIDs() (ids []int64) {
+func (m *PermissionMutation) RemovedViewPermissionsIDs() (ids []int) {
 	for id := range m.removedview_permissions {
 		ids = append(ids, id)
 	}
@@ -3853,7 +3853,7 @@ func (m *PermissionMutation) RemovedViewPermissionsIDs() (ids []int64) {
 }
 
 // ViewPermissionsIDs returns the "view_permissions" edge IDs in the mutation.
-func (m *PermissionMutation) ViewPermissionsIDs() (ids []int64) {
+func (m *PermissionMutation) ViewPermissionsIDs() (ids []int) {
 	for id := range m.view_permissions {
 		ids = append(ids, id)
 	}
@@ -6422,8 +6422,8 @@ type ResourceMutation struct {
 	permissions           map[int64]struct{}
 	removedpermissions    map[int64]struct{}
 	clearedpermissions    bool
-	view_resources        map[int64]struct{}
-	removedview_resources map[int64]struct{}
+	view_resources        map[int]struct{}
+	removedview_resources map[int]struct{}
 	clearedview_resources bool
 	done                  bool
 	oldValue              func(context.Context) (*Resource, error)
@@ -7497,9 +7497,9 @@ func (m *ResourceMutation) ResetPermissions() {
 }
 
 // AddViewResourceIDs adds the "view_resources" edge to the ViewResource entity by ids.
-func (m *ResourceMutation) AddViewResourceIDs(ids ...int64) {
+func (m *ResourceMutation) AddViewResourceIDs(ids ...int) {
 	if m.view_resources == nil {
-		m.view_resources = make(map[int64]struct{})
+		m.view_resources = make(map[int]struct{})
 	}
 	for i := range ids {
 		m.view_resources[ids[i]] = struct{}{}
@@ -7517,9 +7517,9 @@ func (m *ResourceMutation) ViewResourcesCleared() bool {
 }
 
 // RemoveViewResourceIDs removes the "view_resources" edge to the ViewResource entity by IDs.
-func (m *ResourceMutation) RemoveViewResourceIDs(ids ...int64) {
+func (m *ResourceMutation) RemoveViewResourceIDs(ids ...int) {
 	if m.removedview_resources == nil {
-		m.removedview_resources = make(map[int64]struct{})
+		m.removedview_resources = make(map[int]struct{})
 	}
 	for i := range ids {
 		delete(m.view_resources, ids[i])
@@ -7528,7 +7528,7 @@ func (m *ResourceMutation) RemoveViewResourceIDs(ids ...int64) {
 }
 
 // RemovedViewResources returns the removed IDs of the "view_resources" edge to the ViewResource entity.
-func (m *ResourceMutation) RemovedViewResourcesIDs() (ids []int64) {
+func (m *ResourceMutation) RemovedViewResourcesIDs() (ids []int) {
 	for id := range m.removedview_resources {
 		ids = append(ids, id)
 	}
@@ -7536,7 +7536,7 @@ func (m *ResourceMutation) RemovedViewResourcesIDs() (ids []int64) {
 }
 
 // ViewResourcesIDs returns the "view_resources" edge IDs in the mutation.
-func (m *ResourceMutation) ViewResourcesIDs() (ids []int64) {
+func (m *ResourceMutation) ViewResourcesIDs() (ids []int) {
 	for id := range m.view_resources {
 		ids = append(ids, id)
 	}
@@ -13714,11 +13714,11 @@ type ViewMutation struct {
 	permissions             map[int64]struct{}
 	removedpermissions      map[int64]struct{}
 	clearedpermissions      bool
-	view_resources          map[int64]struct{}
-	removedview_resources   map[int64]struct{}
+	view_resources          map[int]struct{}
+	removedview_resources   map[int]struct{}
 	clearedview_resources   bool
-	view_permissions        map[int64]struct{}
-	removedview_permissions map[int64]struct{}
+	view_permissions        map[int]struct{}
+	removedview_permissions map[int]struct{}
 	clearedview_permissions bool
 	done                    bool
 	oldValue                func(context.Context) (*View, error)
@@ -14648,9 +14648,9 @@ func (m *ViewMutation) ResetPermissions() {
 }
 
 // AddViewResourceIDs adds the "view_resources" edge to the ViewResource entity by ids.
-func (m *ViewMutation) AddViewResourceIDs(ids ...int64) {
+func (m *ViewMutation) AddViewResourceIDs(ids ...int) {
 	if m.view_resources == nil {
-		m.view_resources = make(map[int64]struct{})
+		m.view_resources = make(map[int]struct{})
 	}
 	for i := range ids {
 		m.view_resources[ids[i]] = struct{}{}
@@ -14668,9 +14668,9 @@ func (m *ViewMutation) ViewResourcesCleared() bool {
 }
 
 // RemoveViewResourceIDs removes the "view_resources" edge to the ViewResource entity by IDs.
-func (m *ViewMutation) RemoveViewResourceIDs(ids ...int64) {
+func (m *ViewMutation) RemoveViewResourceIDs(ids ...int) {
 	if m.removedview_resources == nil {
-		m.removedview_resources = make(map[int64]struct{})
+		m.removedview_resources = make(map[int]struct{})
 	}
 	for i := range ids {
 		delete(m.view_resources, ids[i])
@@ -14679,7 +14679,7 @@ func (m *ViewMutation) RemoveViewResourceIDs(ids ...int64) {
 }
 
 // RemovedViewResources returns the removed IDs of the "view_resources" edge to the ViewResource entity.
-func (m *ViewMutation) RemovedViewResourcesIDs() (ids []int64) {
+func (m *ViewMutation) RemovedViewResourcesIDs() (ids []int) {
 	for id := range m.removedview_resources {
 		ids = append(ids, id)
 	}
@@ -14687,7 +14687,7 @@ func (m *ViewMutation) RemovedViewResourcesIDs() (ids []int64) {
 }
 
 // ViewResourcesIDs returns the "view_resources" edge IDs in the mutation.
-func (m *ViewMutation) ViewResourcesIDs() (ids []int64) {
+func (m *ViewMutation) ViewResourcesIDs() (ids []int) {
 	for id := range m.view_resources {
 		ids = append(ids, id)
 	}
@@ -14702,9 +14702,9 @@ func (m *ViewMutation) ResetViewResources() {
 }
 
 // AddViewPermissionIDs adds the "view_permissions" edge to the ViewPermission entity by ids.
-func (m *ViewMutation) AddViewPermissionIDs(ids ...int64) {
+func (m *ViewMutation) AddViewPermissionIDs(ids ...int) {
 	if m.view_permissions == nil {
-		m.view_permissions = make(map[int64]struct{})
+		m.view_permissions = make(map[int]struct{})
 	}
 	for i := range ids {
 		m.view_permissions[ids[i]] = struct{}{}
@@ -14722,9 +14722,9 @@ func (m *ViewMutation) ViewPermissionsCleared() bool {
 }
 
 // RemoveViewPermissionIDs removes the "view_permissions" edge to the ViewPermission entity by IDs.
-func (m *ViewMutation) RemoveViewPermissionIDs(ids ...int64) {
+func (m *ViewMutation) RemoveViewPermissionIDs(ids ...int) {
 	if m.removedview_permissions == nil {
-		m.removedview_permissions = make(map[int64]struct{})
+		m.removedview_permissions = make(map[int]struct{})
 	}
 	for i := range ids {
 		delete(m.view_permissions, ids[i])
@@ -14733,7 +14733,7 @@ func (m *ViewMutation) RemoveViewPermissionIDs(ids ...int64) {
 }
 
 // RemovedViewPermissions returns the removed IDs of the "view_permissions" edge to the ViewPermission entity.
-func (m *ViewMutation) RemovedViewPermissionsIDs() (ids []int64) {
+func (m *ViewMutation) RemovedViewPermissionsIDs() (ids []int) {
 	for id := range m.removedview_permissions {
 		ids = append(ids, id)
 	}
@@ -14741,7 +14741,7 @@ func (m *ViewMutation) RemovedViewPermissionsIDs() (ids []int64) {
 }
 
 // ViewPermissionsIDs returns the "view_permissions" edge IDs in the mutation.
-func (m *ViewMutation) ViewPermissionsIDs() (ids []int64) {
+func (m *ViewMutation) ViewPermissionsIDs() (ids []int) {
 	for id := range m.view_permissions {
 		ids = append(ids, id)
 	}
@@ -15388,13 +15388,7 @@ type ViewPermissionMutation struct {
 	config
 	op                Op
 	typ               string
-	id                *int64
-	create_author     *int64
-	addcreate_author  *int64
-	update_author     *int64
-	addupdate_author  *int64
-	create_time       *time.Time
-	update_time       *time.Time
+	id                *int
 	clearedFields     map[string]struct{}
 	view              *int64
 	clearedview       bool
@@ -15425,7 +15419,7 @@ func newViewPermissionMutation(c config, op Op, opts ...viewpermissionOption) *V
 }
 
 // withViewPermissionID sets the ID field of the mutation.
-func withViewPermissionID(id int64) viewpermissionOption {
+func withViewPermissionID(id int) viewpermissionOption {
 	return func(m *ViewPermissionMutation) {
 		var (
 			err   error
@@ -15475,15 +15469,9 @@ func (m ViewPermissionMutation) Tx() (*Tx, error) {
 	return tx, nil
 }
 
-// SetID sets the value of the id field. Note that this
-// operation is only accepted on creation of ViewPermission entities.
-func (m *ViewPermissionMutation) SetID(id int64) {
-	m.id = &id
-}
-
 // ID returns the ID value in the mutation. Note that the ID is only available
 // if it was provided to the builder or after it was returned from the database.
-func (m *ViewPermissionMutation) ID() (id int64, exists bool) {
+func (m *ViewPermissionMutation) ID() (id int, exists bool) {
 	if m.id == nil {
 		return
 	}
@@ -15494,12 +15482,12 @@ func (m *ViewPermissionMutation) ID() (id int64, exists bool) {
 // That means, if the mutation is applied within a transaction with an isolation level such
 // as sql.LevelSerializable, the returned ids match the ids of the rows that will be updated
 // or updated by the mutation.
-func (m *ViewPermissionMutation) IDs(ctx context.Context) ([]int64, error) {
+func (m *ViewPermissionMutation) IDs(ctx context.Context) ([]int, error) {
 	switch {
 	case m.op.Is(OpUpdateOne | OpDeleteOne):
 		id, exists := m.ID()
 		if exists {
-			return []int64{id}, nil
+			return []int{id}, nil
 		}
 		fallthrough
 	case m.op.Is(OpUpdate | OpDelete):
@@ -15507,218 +15495,6 @@ func (m *ViewPermissionMutation) IDs(ctx context.Context) ([]int64, error) {
 	default:
 		return nil, fmt.Errorf("IDs is not allowed on %s operations", m.op)
 	}
-}
-
-// SetCreateAuthor sets the "create_author" field.
-func (m *ViewPermissionMutation) SetCreateAuthor(i int64) {
-	m.create_author = &i
-	m.addcreate_author = nil
-}
-
-// CreateAuthor returns the value of the "create_author" field in the mutation.
-func (m *ViewPermissionMutation) CreateAuthor() (r int64, exists bool) {
-	v := m.create_author
-	if v == nil {
-		return
-	}
-	return *v, true
-}
-
-// OldCreateAuthor returns the old "create_author" field's value of the ViewPermission entity.
-// If the ViewPermission object wasn't provided to the builder, the object is fetched from the database.
-// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *ViewPermissionMutation) OldCreateAuthor(ctx context.Context) (v int64, err error) {
-	if !m.op.Is(OpUpdateOne) {
-		return v, errors.New("OldCreateAuthor is only allowed on UpdateOne operations")
-	}
-	if m.id == nil || m.oldValue == nil {
-		return v, errors.New("OldCreateAuthor requires an ID field in the mutation")
-	}
-	oldValue, err := m.oldValue(ctx)
-	if err != nil {
-		return v, fmt.Errorf("querying old value for OldCreateAuthor: %w", err)
-	}
-	return oldValue.CreateAuthor, nil
-}
-
-// AddCreateAuthor adds i to the "create_author" field.
-func (m *ViewPermissionMutation) AddCreateAuthor(i int64) {
-	if m.addcreate_author != nil {
-		*m.addcreate_author += i
-	} else {
-		m.addcreate_author = &i
-	}
-}
-
-// AddedCreateAuthor returns the value that was added to the "create_author" field in this mutation.
-func (m *ViewPermissionMutation) AddedCreateAuthor() (r int64, exists bool) {
-	v := m.addcreate_author
-	if v == nil {
-		return
-	}
-	return *v, true
-}
-
-// ClearCreateAuthor clears the value of the "create_author" field.
-func (m *ViewPermissionMutation) ClearCreateAuthor() {
-	m.create_author = nil
-	m.addcreate_author = nil
-	m.clearedFields[viewpermission.FieldCreateAuthor] = struct{}{}
-}
-
-// CreateAuthorCleared returns if the "create_author" field was cleared in this mutation.
-func (m *ViewPermissionMutation) CreateAuthorCleared() bool {
-	_, ok := m.clearedFields[viewpermission.FieldCreateAuthor]
-	return ok
-}
-
-// ResetCreateAuthor resets all changes to the "create_author" field.
-func (m *ViewPermissionMutation) ResetCreateAuthor() {
-	m.create_author = nil
-	m.addcreate_author = nil
-	delete(m.clearedFields, viewpermission.FieldCreateAuthor)
-}
-
-// SetUpdateAuthor sets the "update_author" field.
-func (m *ViewPermissionMutation) SetUpdateAuthor(i int64) {
-	m.update_author = &i
-	m.addupdate_author = nil
-}
-
-// UpdateAuthor returns the value of the "update_author" field in the mutation.
-func (m *ViewPermissionMutation) UpdateAuthor() (r int64, exists bool) {
-	v := m.update_author
-	if v == nil {
-		return
-	}
-	return *v, true
-}
-
-// OldUpdateAuthor returns the old "update_author" field's value of the ViewPermission entity.
-// If the ViewPermission object wasn't provided to the builder, the object is fetched from the database.
-// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *ViewPermissionMutation) OldUpdateAuthor(ctx context.Context) (v int64, err error) {
-	if !m.op.Is(OpUpdateOne) {
-		return v, errors.New("OldUpdateAuthor is only allowed on UpdateOne operations")
-	}
-	if m.id == nil || m.oldValue == nil {
-		return v, errors.New("OldUpdateAuthor requires an ID field in the mutation")
-	}
-	oldValue, err := m.oldValue(ctx)
-	if err != nil {
-		return v, fmt.Errorf("querying old value for OldUpdateAuthor: %w", err)
-	}
-	return oldValue.UpdateAuthor, nil
-}
-
-// AddUpdateAuthor adds i to the "update_author" field.
-func (m *ViewPermissionMutation) AddUpdateAuthor(i int64) {
-	if m.addupdate_author != nil {
-		*m.addupdate_author += i
-	} else {
-		m.addupdate_author = &i
-	}
-}
-
-// AddedUpdateAuthor returns the value that was added to the "update_author" field in this mutation.
-func (m *ViewPermissionMutation) AddedUpdateAuthor() (r int64, exists bool) {
-	v := m.addupdate_author
-	if v == nil {
-		return
-	}
-	return *v, true
-}
-
-// ClearUpdateAuthor clears the value of the "update_author" field.
-func (m *ViewPermissionMutation) ClearUpdateAuthor() {
-	m.update_author = nil
-	m.addupdate_author = nil
-	m.clearedFields[viewpermission.FieldUpdateAuthor] = struct{}{}
-}
-
-// UpdateAuthorCleared returns if the "update_author" field was cleared in this mutation.
-func (m *ViewPermissionMutation) UpdateAuthorCleared() bool {
-	_, ok := m.clearedFields[viewpermission.FieldUpdateAuthor]
-	return ok
-}
-
-// ResetUpdateAuthor resets all changes to the "update_author" field.
-func (m *ViewPermissionMutation) ResetUpdateAuthor() {
-	m.update_author = nil
-	m.addupdate_author = nil
-	delete(m.clearedFields, viewpermission.FieldUpdateAuthor)
-}
-
-// SetCreateTime sets the "create_time" field.
-func (m *ViewPermissionMutation) SetCreateTime(t time.Time) {
-	m.create_time = &t
-}
-
-// CreateTime returns the value of the "create_time" field in the mutation.
-func (m *ViewPermissionMutation) CreateTime() (r time.Time, exists bool) {
-	v := m.create_time
-	if v == nil {
-		return
-	}
-	return *v, true
-}
-
-// OldCreateTime returns the old "create_time" field's value of the ViewPermission entity.
-// If the ViewPermission object wasn't provided to the builder, the object is fetched from the database.
-// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *ViewPermissionMutation) OldCreateTime(ctx context.Context) (v time.Time, err error) {
-	if !m.op.Is(OpUpdateOne) {
-		return v, errors.New("OldCreateTime is only allowed on UpdateOne operations")
-	}
-	if m.id == nil || m.oldValue == nil {
-		return v, errors.New("OldCreateTime requires an ID field in the mutation")
-	}
-	oldValue, err := m.oldValue(ctx)
-	if err != nil {
-		return v, fmt.Errorf("querying old value for OldCreateTime: %w", err)
-	}
-	return oldValue.CreateTime, nil
-}
-
-// ResetCreateTime resets all changes to the "create_time" field.
-func (m *ViewPermissionMutation) ResetCreateTime() {
-	m.create_time = nil
-}
-
-// SetUpdateTime sets the "update_time" field.
-func (m *ViewPermissionMutation) SetUpdateTime(t time.Time) {
-	m.update_time = &t
-}
-
-// UpdateTime returns the value of the "update_time" field in the mutation.
-func (m *ViewPermissionMutation) UpdateTime() (r time.Time, exists bool) {
-	v := m.update_time
-	if v == nil {
-		return
-	}
-	return *v, true
-}
-
-// OldUpdateTime returns the old "update_time" field's value of the ViewPermission entity.
-// If the ViewPermission object wasn't provided to the builder, the object is fetched from the database.
-// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *ViewPermissionMutation) OldUpdateTime(ctx context.Context) (v time.Time, err error) {
-	if !m.op.Is(OpUpdateOne) {
-		return v, errors.New("OldUpdateTime is only allowed on UpdateOne operations")
-	}
-	if m.id == nil || m.oldValue == nil {
-		return v, errors.New("OldUpdateTime requires an ID field in the mutation")
-	}
-	oldValue, err := m.oldValue(ctx)
-	if err != nil {
-		return v, fmt.Errorf("querying old value for OldUpdateTime: %w", err)
-	}
-	return oldValue.UpdateTime, nil
-}
-
-// ResetUpdateTime resets all changes to the "update_time" field.
-func (m *ViewPermissionMutation) ResetUpdateTime() {
-	m.update_time = nil
 }
 
 // SetViewID sets the "view_id" field.
@@ -15881,19 +15657,7 @@ func (m *ViewPermissionMutation) Type() string {
 // order to get all numeric fields that were incremented/decremented, call
 // AddedFields().
 func (m *ViewPermissionMutation) Fields() []string {
-	fields := make([]string, 0, 6)
-	if m.create_author != nil {
-		fields = append(fields, viewpermission.FieldCreateAuthor)
-	}
-	if m.update_author != nil {
-		fields = append(fields, viewpermission.FieldUpdateAuthor)
-	}
-	if m.create_time != nil {
-		fields = append(fields, viewpermission.FieldCreateTime)
-	}
-	if m.update_time != nil {
-		fields = append(fields, viewpermission.FieldUpdateTime)
-	}
+	fields := make([]string, 0, 2)
 	if m.view != nil {
 		fields = append(fields, viewpermission.FieldViewID)
 	}
@@ -15908,14 +15672,6 @@ func (m *ViewPermissionMutation) Fields() []string {
 // schema.
 func (m *ViewPermissionMutation) Field(name string) (ent.Value, bool) {
 	switch name {
-	case viewpermission.FieldCreateAuthor:
-		return m.CreateAuthor()
-	case viewpermission.FieldUpdateAuthor:
-		return m.UpdateAuthor()
-	case viewpermission.FieldCreateTime:
-		return m.CreateTime()
-	case viewpermission.FieldUpdateTime:
-		return m.UpdateTime()
 	case viewpermission.FieldViewID:
 		return m.ViewID()
 	case viewpermission.FieldPermissionID:
@@ -15929,14 +15685,6 @@ func (m *ViewPermissionMutation) Field(name string) (ent.Value, bool) {
 // database failed.
 func (m *ViewPermissionMutation) OldField(ctx context.Context, name string) (ent.Value, error) {
 	switch name {
-	case viewpermission.FieldCreateAuthor:
-		return m.OldCreateAuthor(ctx)
-	case viewpermission.FieldUpdateAuthor:
-		return m.OldUpdateAuthor(ctx)
-	case viewpermission.FieldCreateTime:
-		return m.OldCreateTime(ctx)
-	case viewpermission.FieldUpdateTime:
-		return m.OldUpdateTime(ctx)
 	case viewpermission.FieldViewID:
 		return m.OldViewID(ctx)
 	case viewpermission.FieldPermissionID:
@@ -15950,34 +15698,6 @@ func (m *ViewPermissionMutation) OldField(ctx context.Context, name string) (ent
 // type.
 func (m *ViewPermissionMutation) SetField(name string, value ent.Value) error {
 	switch name {
-	case viewpermission.FieldCreateAuthor:
-		v, ok := value.(int64)
-		if !ok {
-			return fmt.Errorf("unexpected type %T for field %s", value, name)
-		}
-		m.SetCreateAuthor(v)
-		return nil
-	case viewpermission.FieldUpdateAuthor:
-		v, ok := value.(int64)
-		if !ok {
-			return fmt.Errorf("unexpected type %T for field %s", value, name)
-		}
-		m.SetUpdateAuthor(v)
-		return nil
-	case viewpermission.FieldCreateTime:
-		v, ok := value.(time.Time)
-		if !ok {
-			return fmt.Errorf("unexpected type %T for field %s", value, name)
-		}
-		m.SetCreateTime(v)
-		return nil
-	case viewpermission.FieldUpdateTime:
-		v, ok := value.(time.Time)
-		if !ok {
-			return fmt.Errorf("unexpected type %T for field %s", value, name)
-		}
-		m.SetUpdateTime(v)
-		return nil
 	case viewpermission.FieldViewID:
 		v, ok := value.(int64)
 		if !ok {
@@ -16000,12 +15720,6 @@ func (m *ViewPermissionMutation) SetField(name string, value ent.Value) error {
 // this mutation.
 func (m *ViewPermissionMutation) AddedFields() []string {
 	var fields []string
-	if m.addcreate_author != nil {
-		fields = append(fields, viewpermission.FieldCreateAuthor)
-	}
-	if m.addupdate_author != nil {
-		fields = append(fields, viewpermission.FieldUpdateAuthor)
-	}
 	return fields
 }
 
@@ -16014,10 +15728,6 @@ func (m *ViewPermissionMutation) AddedFields() []string {
 // was not set, or was not defined in the schema.
 func (m *ViewPermissionMutation) AddedField(name string) (ent.Value, bool) {
 	switch name {
-	case viewpermission.FieldCreateAuthor:
-		return m.AddedCreateAuthor()
-	case viewpermission.FieldUpdateAuthor:
-		return m.AddedUpdateAuthor()
 	}
 	return nil, false
 }
@@ -16027,20 +15737,6 @@ func (m *ViewPermissionMutation) AddedField(name string) (ent.Value, bool) {
 // type.
 func (m *ViewPermissionMutation) AddField(name string, value ent.Value) error {
 	switch name {
-	case viewpermission.FieldCreateAuthor:
-		v, ok := value.(int64)
-		if !ok {
-			return fmt.Errorf("unexpected type %T for field %s", value, name)
-		}
-		m.AddCreateAuthor(v)
-		return nil
-	case viewpermission.FieldUpdateAuthor:
-		v, ok := value.(int64)
-		if !ok {
-			return fmt.Errorf("unexpected type %T for field %s", value, name)
-		}
-		m.AddUpdateAuthor(v)
-		return nil
 	}
 	return fmt.Errorf("unknown ViewPermission numeric field %s", name)
 }
@@ -16048,14 +15744,7 @@ func (m *ViewPermissionMutation) AddField(name string, value ent.Value) error {
 // ClearedFields returns all nullable fields that were cleared during this
 // mutation.
 func (m *ViewPermissionMutation) ClearedFields() []string {
-	var fields []string
-	if m.FieldCleared(viewpermission.FieldCreateAuthor) {
-		fields = append(fields, viewpermission.FieldCreateAuthor)
-	}
-	if m.FieldCleared(viewpermission.FieldUpdateAuthor) {
-		fields = append(fields, viewpermission.FieldUpdateAuthor)
-	}
-	return fields
+	return nil
 }
 
 // FieldCleared returns a boolean indicating if a field with the given name was
@@ -16068,14 +15757,6 @@ func (m *ViewPermissionMutation) FieldCleared(name string) bool {
 // ClearField clears the value of the field with the given name. It returns an
 // error if the field is not defined in the schema.
 func (m *ViewPermissionMutation) ClearField(name string) error {
-	switch name {
-	case viewpermission.FieldCreateAuthor:
-		m.ClearCreateAuthor()
-		return nil
-	case viewpermission.FieldUpdateAuthor:
-		m.ClearUpdateAuthor()
-		return nil
-	}
 	return fmt.Errorf("unknown ViewPermission nullable field %s", name)
 }
 
@@ -16083,18 +15764,6 @@ func (m *ViewPermissionMutation) ClearField(name string) error {
 // It returns an error if the field is not defined in the schema.
 func (m *ViewPermissionMutation) ResetField(name string) error {
 	switch name {
-	case viewpermission.FieldCreateAuthor:
-		m.ResetCreateAuthor()
-		return nil
-	case viewpermission.FieldUpdateAuthor:
-		m.ResetUpdateAuthor()
-		return nil
-	case viewpermission.FieldCreateTime:
-		m.ResetCreateTime()
-		return nil
-	case viewpermission.FieldUpdateTime:
-		m.ResetUpdateTime()
-		return nil
 	case viewpermission.FieldViewID:
 		m.ResetViewID()
 		return nil
@@ -16200,23 +15869,17 @@ func (m *ViewPermissionMutation) ResetEdge(name string) error {
 // ViewResourceMutation represents an operation that mutates the ViewResource nodes in the graph.
 type ViewResourceMutation struct {
 	config
-	op               Op
-	typ              string
-	id               *int64
-	create_author    *int64
-	addcreate_author *int64
-	update_author    *int64
-	addupdate_author *int64
-	create_time      *time.Time
-	update_time      *time.Time
-	clearedFields    map[string]struct{}
-	view             *int64
-	clearedview      bool
-	resource         *int64
-	clearedresource  bool
-	done             bool
-	oldValue         func(context.Context) (*ViewResource, error)
-	predicates       []predicate.ViewResource
+	op              Op
+	typ             string
+	id              *int
+	clearedFields   map[string]struct{}
+	view            *int64
+	clearedview     bool
+	resource        *int64
+	clearedresource bool
+	done            bool
+	oldValue        func(context.Context) (*ViewResource, error)
+	predicates      []predicate.ViewResource
 }
 
 var _ ent.Mutation = (*ViewResourceMutation)(nil)
@@ -16239,7 +15902,7 @@ func newViewResourceMutation(c config, op Op, opts ...viewresourceOption) *ViewR
 }
 
 // withViewResourceID sets the ID field of the mutation.
-func withViewResourceID(id int64) viewresourceOption {
+func withViewResourceID(id int) viewresourceOption {
 	return func(m *ViewResourceMutation) {
 		var (
 			err   error
@@ -16289,15 +15952,9 @@ func (m ViewResourceMutation) Tx() (*Tx, error) {
 	return tx, nil
 }
 
-// SetID sets the value of the id field. Note that this
-// operation is only accepted on creation of ViewResource entities.
-func (m *ViewResourceMutation) SetID(id int64) {
-	m.id = &id
-}
-
 // ID returns the ID value in the mutation. Note that the ID is only available
 // if it was provided to the builder or after it was returned from the database.
-func (m *ViewResourceMutation) ID() (id int64, exists bool) {
+func (m *ViewResourceMutation) ID() (id int, exists bool) {
 	if m.id == nil {
 		return
 	}
@@ -16308,12 +15965,12 @@ func (m *ViewResourceMutation) ID() (id int64, exists bool) {
 // That means, if the mutation is applied within a transaction with an isolation level such
 // as sql.LevelSerializable, the returned ids match the ids of the rows that will be updated
 // or updated by the mutation.
-func (m *ViewResourceMutation) IDs(ctx context.Context) ([]int64, error) {
+func (m *ViewResourceMutation) IDs(ctx context.Context) ([]int, error) {
 	switch {
 	case m.op.Is(OpUpdateOne | OpDeleteOne):
 		id, exists := m.ID()
 		if exists {
-			return []int64{id}, nil
+			return []int{id}, nil
 		}
 		fallthrough
 	case m.op.Is(OpUpdate | OpDelete):
@@ -16321,218 +15978,6 @@ func (m *ViewResourceMutation) IDs(ctx context.Context) ([]int64, error) {
 	default:
 		return nil, fmt.Errorf("IDs is not allowed on %s operations", m.op)
 	}
-}
-
-// SetCreateAuthor sets the "create_author" field.
-func (m *ViewResourceMutation) SetCreateAuthor(i int64) {
-	m.create_author = &i
-	m.addcreate_author = nil
-}
-
-// CreateAuthor returns the value of the "create_author" field in the mutation.
-func (m *ViewResourceMutation) CreateAuthor() (r int64, exists bool) {
-	v := m.create_author
-	if v == nil {
-		return
-	}
-	return *v, true
-}
-
-// OldCreateAuthor returns the old "create_author" field's value of the ViewResource entity.
-// If the ViewResource object wasn't provided to the builder, the object is fetched from the database.
-// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *ViewResourceMutation) OldCreateAuthor(ctx context.Context) (v int64, err error) {
-	if !m.op.Is(OpUpdateOne) {
-		return v, errors.New("OldCreateAuthor is only allowed on UpdateOne operations")
-	}
-	if m.id == nil || m.oldValue == nil {
-		return v, errors.New("OldCreateAuthor requires an ID field in the mutation")
-	}
-	oldValue, err := m.oldValue(ctx)
-	if err != nil {
-		return v, fmt.Errorf("querying old value for OldCreateAuthor: %w", err)
-	}
-	return oldValue.CreateAuthor, nil
-}
-
-// AddCreateAuthor adds i to the "create_author" field.
-func (m *ViewResourceMutation) AddCreateAuthor(i int64) {
-	if m.addcreate_author != nil {
-		*m.addcreate_author += i
-	} else {
-		m.addcreate_author = &i
-	}
-}
-
-// AddedCreateAuthor returns the value that was added to the "create_author" field in this mutation.
-func (m *ViewResourceMutation) AddedCreateAuthor() (r int64, exists bool) {
-	v := m.addcreate_author
-	if v == nil {
-		return
-	}
-	return *v, true
-}
-
-// ClearCreateAuthor clears the value of the "create_author" field.
-func (m *ViewResourceMutation) ClearCreateAuthor() {
-	m.create_author = nil
-	m.addcreate_author = nil
-	m.clearedFields[viewresource.FieldCreateAuthor] = struct{}{}
-}
-
-// CreateAuthorCleared returns if the "create_author" field was cleared in this mutation.
-func (m *ViewResourceMutation) CreateAuthorCleared() bool {
-	_, ok := m.clearedFields[viewresource.FieldCreateAuthor]
-	return ok
-}
-
-// ResetCreateAuthor resets all changes to the "create_author" field.
-func (m *ViewResourceMutation) ResetCreateAuthor() {
-	m.create_author = nil
-	m.addcreate_author = nil
-	delete(m.clearedFields, viewresource.FieldCreateAuthor)
-}
-
-// SetUpdateAuthor sets the "update_author" field.
-func (m *ViewResourceMutation) SetUpdateAuthor(i int64) {
-	m.update_author = &i
-	m.addupdate_author = nil
-}
-
-// UpdateAuthor returns the value of the "update_author" field in the mutation.
-func (m *ViewResourceMutation) UpdateAuthor() (r int64, exists bool) {
-	v := m.update_author
-	if v == nil {
-		return
-	}
-	return *v, true
-}
-
-// OldUpdateAuthor returns the old "update_author" field's value of the ViewResource entity.
-// If the ViewResource object wasn't provided to the builder, the object is fetched from the database.
-// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *ViewResourceMutation) OldUpdateAuthor(ctx context.Context) (v int64, err error) {
-	if !m.op.Is(OpUpdateOne) {
-		return v, errors.New("OldUpdateAuthor is only allowed on UpdateOne operations")
-	}
-	if m.id == nil || m.oldValue == nil {
-		return v, errors.New("OldUpdateAuthor requires an ID field in the mutation")
-	}
-	oldValue, err := m.oldValue(ctx)
-	if err != nil {
-		return v, fmt.Errorf("querying old value for OldUpdateAuthor: %w", err)
-	}
-	return oldValue.UpdateAuthor, nil
-}
-
-// AddUpdateAuthor adds i to the "update_author" field.
-func (m *ViewResourceMutation) AddUpdateAuthor(i int64) {
-	if m.addupdate_author != nil {
-		*m.addupdate_author += i
-	} else {
-		m.addupdate_author = &i
-	}
-}
-
-// AddedUpdateAuthor returns the value that was added to the "update_author" field in this mutation.
-func (m *ViewResourceMutation) AddedUpdateAuthor() (r int64, exists bool) {
-	v := m.addupdate_author
-	if v == nil {
-		return
-	}
-	return *v, true
-}
-
-// ClearUpdateAuthor clears the value of the "update_author" field.
-func (m *ViewResourceMutation) ClearUpdateAuthor() {
-	m.update_author = nil
-	m.addupdate_author = nil
-	m.clearedFields[viewresource.FieldUpdateAuthor] = struct{}{}
-}
-
-// UpdateAuthorCleared returns if the "update_author" field was cleared in this mutation.
-func (m *ViewResourceMutation) UpdateAuthorCleared() bool {
-	_, ok := m.clearedFields[viewresource.FieldUpdateAuthor]
-	return ok
-}
-
-// ResetUpdateAuthor resets all changes to the "update_author" field.
-func (m *ViewResourceMutation) ResetUpdateAuthor() {
-	m.update_author = nil
-	m.addupdate_author = nil
-	delete(m.clearedFields, viewresource.FieldUpdateAuthor)
-}
-
-// SetCreateTime sets the "create_time" field.
-func (m *ViewResourceMutation) SetCreateTime(t time.Time) {
-	m.create_time = &t
-}
-
-// CreateTime returns the value of the "create_time" field in the mutation.
-func (m *ViewResourceMutation) CreateTime() (r time.Time, exists bool) {
-	v := m.create_time
-	if v == nil {
-		return
-	}
-	return *v, true
-}
-
-// OldCreateTime returns the old "create_time" field's value of the ViewResource entity.
-// If the ViewResource object wasn't provided to the builder, the object is fetched from the database.
-// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *ViewResourceMutation) OldCreateTime(ctx context.Context) (v time.Time, err error) {
-	if !m.op.Is(OpUpdateOne) {
-		return v, errors.New("OldCreateTime is only allowed on UpdateOne operations")
-	}
-	if m.id == nil || m.oldValue == nil {
-		return v, errors.New("OldCreateTime requires an ID field in the mutation")
-	}
-	oldValue, err := m.oldValue(ctx)
-	if err != nil {
-		return v, fmt.Errorf("querying old value for OldCreateTime: %w", err)
-	}
-	return oldValue.CreateTime, nil
-}
-
-// ResetCreateTime resets all changes to the "create_time" field.
-func (m *ViewResourceMutation) ResetCreateTime() {
-	m.create_time = nil
-}
-
-// SetUpdateTime sets the "update_time" field.
-func (m *ViewResourceMutation) SetUpdateTime(t time.Time) {
-	m.update_time = &t
-}
-
-// UpdateTime returns the value of the "update_time" field in the mutation.
-func (m *ViewResourceMutation) UpdateTime() (r time.Time, exists bool) {
-	v := m.update_time
-	if v == nil {
-		return
-	}
-	return *v, true
-}
-
-// OldUpdateTime returns the old "update_time" field's value of the ViewResource entity.
-// If the ViewResource object wasn't provided to the builder, the object is fetched from the database.
-// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *ViewResourceMutation) OldUpdateTime(ctx context.Context) (v time.Time, err error) {
-	if !m.op.Is(OpUpdateOne) {
-		return v, errors.New("OldUpdateTime is only allowed on UpdateOne operations")
-	}
-	if m.id == nil || m.oldValue == nil {
-		return v, errors.New("OldUpdateTime requires an ID field in the mutation")
-	}
-	oldValue, err := m.oldValue(ctx)
-	if err != nil {
-		return v, fmt.Errorf("querying old value for OldUpdateTime: %w", err)
-	}
-	return oldValue.UpdateTime, nil
-}
-
-// ResetUpdateTime resets all changes to the "update_time" field.
-func (m *ViewResourceMutation) ResetUpdateTime() {
-	m.update_time = nil
 }
 
 // SetViewID sets the "view_id" field.
@@ -16695,19 +16140,7 @@ func (m *ViewResourceMutation) Type() string {
 // order to get all numeric fields that were incremented/decremented, call
 // AddedFields().
 func (m *ViewResourceMutation) Fields() []string {
-	fields := make([]string, 0, 6)
-	if m.create_author != nil {
-		fields = append(fields, viewresource.FieldCreateAuthor)
-	}
-	if m.update_author != nil {
-		fields = append(fields, viewresource.FieldUpdateAuthor)
-	}
-	if m.create_time != nil {
-		fields = append(fields, viewresource.FieldCreateTime)
-	}
-	if m.update_time != nil {
-		fields = append(fields, viewresource.FieldUpdateTime)
-	}
+	fields := make([]string, 0, 2)
 	if m.view != nil {
 		fields = append(fields, viewresource.FieldViewID)
 	}
@@ -16722,14 +16155,6 @@ func (m *ViewResourceMutation) Fields() []string {
 // schema.
 func (m *ViewResourceMutation) Field(name string) (ent.Value, bool) {
 	switch name {
-	case viewresource.FieldCreateAuthor:
-		return m.CreateAuthor()
-	case viewresource.FieldUpdateAuthor:
-		return m.UpdateAuthor()
-	case viewresource.FieldCreateTime:
-		return m.CreateTime()
-	case viewresource.FieldUpdateTime:
-		return m.UpdateTime()
 	case viewresource.FieldViewID:
 		return m.ViewID()
 	case viewresource.FieldResourceID:
@@ -16743,14 +16168,6 @@ func (m *ViewResourceMutation) Field(name string) (ent.Value, bool) {
 // database failed.
 func (m *ViewResourceMutation) OldField(ctx context.Context, name string) (ent.Value, error) {
 	switch name {
-	case viewresource.FieldCreateAuthor:
-		return m.OldCreateAuthor(ctx)
-	case viewresource.FieldUpdateAuthor:
-		return m.OldUpdateAuthor(ctx)
-	case viewresource.FieldCreateTime:
-		return m.OldCreateTime(ctx)
-	case viewresource.FieldUpdateTime:
-		return m.OldUpdateTime(ctx)
 	case viewresource.FieldViewID:
 		return m.OldViewID(ctx)
 	case viewresource.FieldResourceID:
@@ -16764,34 +16181,6 @@ func (m *ViewResourceMutation) OldField(ctx context.Context, name string) (ent.V
 // type.
 func (m *ViewResourceMutation) SetField(name string, value ent.Value) error {
 	switch name {
-	case viewresource.FieldCreateAuthor:
-		v, ok := value.(int64)
-		if !ok {
-			return fmt.Errorf("unexpected type %T for field %s", value, name)
-		}
-		m.SetCreateAuthor(v)
-		return nil
-	case viewresource.FieldUpdateAuthor:
-		v, ok := value.(int64)
-		if !ok {
-			return fmt.Errorf("unexpected type %T for field %s", value, name)
-		}
-		m.SetUpdateAuthor(v)
-		return nil
-	case viewresource.FieldCreateTime:
-		v, ok := value.(time.Time)
-		if !ok {
-			return fmt.Errorf("unexpected type %T for field %s", value, name)
-		}
-		m.SetCreateTime(v)
-		return nil
-	case viewresource.FieldUpdateTime:
-		v, ok := value.(time.Time)
-		if !ok {
-			return fmt.Errorf("unexpected type %T for field %s", value, name)
-		}
-		m.SetUpdateTime(v)
-		return nil
 	case viewresource.FieldViewID:
 		v, ok := value.(int64)
 		if !ok {
@@ -16814,12 +16203,6 @@ func (m *ViewResourceMutation) SetField(name string, value ent.Value) error {
 // this mutation.
 func (m *ViewResourceMutation) AddedFields() []string {
 	var fields []string
-	if m.addcreate_author != nil {
-		fields = append(fields, viewresource.FieldCreateAuthor)
-	}
-	if m.addupdate_author != nil {
-		fields = append(fields, viewresource.FieldUpdateAuthor)
-	}
 	return fields
 }
 
@@ -16828,10 +16211,6 @@ func (m *ViewResourceMutation) AddedFields() []string {
 // was not set, or was not defined in the schema.
 func (m *ViewResourceMutation) AddedField(name string) (ent.Value, bool) {
 	switch name {
-	case viewresource.FieldCreateAuthor:
-		return m.AddedCreateAuthor()
-	case viewresource.FieldUpdateAuthor:
-		return m.AddedUpdateAuthor()
 	}
 	return nil, false
 }
@@ -16841,20 +16220,6 @@ func (m *ViewResourceMutation) AddedField(name string) (ent.Value, bool) {
 // type.
 func (m *ViewResourceMutation) AddField(name string, value ent.Value) error {
 	switch name {
-	case viewresource.FieldCreateAuthor:
-		v, ok := value.(int64)
-		if !ok {
-			return fmt.Errorf("unexpected type %T for field %s", value, name)
-		}
-		m.AddCreateAuthor(v)
-		return nil
-	case viewresource.FieldUpdateAuthor:
-		v, ok := value.(int64)
-		if !ok {
-			return fmt.Errorf("unexpected type %T for field %s", value, name)
-		}
-		m.AddUpdateAuthor(v)
-		return nil
 	}
 	return fmt.Errorf("unknown ViewResource numeric field %s", name)
 }
@@ -16862,14 +16227,7 @@ func (m *ViewResourceMutation) AddField(name string, value ent.Value) error {
 // ClearedFields returns all nullable fields that were cleared during this
 // mutation.
 func (m *ViewResourceMutation) ClearedFields() []string {
-	var fields []string
-	if m.FieldCleared(viewresource.FieldCreateAuthor) {
-		fields = append(fields, viewresource.FieldCreateAuthor)
-	}
-	if m.FieldCleared(viewresource.FieldUpdateAuthor) {
-		fields = append(fields, viewresource.FieldUpdateAuthor)
-	}
-	return fields
+	return nil
 }
 
 // FieldCleared returns a boolean indicating if a field with the given name was
@@ -16882,14 +16240,6 @@ func (m *ViewResourceMutation) FieldCleared(name string) bool {
 // ClearField clears the value of the field with the given name. It returns an
 // error if the field is not defined in the schema.
 func (m *ViewResourceMutation) ClearField(name string) error {
-	switch name {
-	case viewresource.FieldCreateAuthor:
-		m.ClearCreateAuthor()
-		return nil
-	case viewresource.FieldUpdateAuthor:
-		m.ClearUpdateAuthor()
-		return nil
-	}
 	return fmt.Errorf("unknown ViewResource nullable field %s", name)
 }
 
@@ -16897,18 +16247,6 @@ func (m *ViewResourceMutation) ClearField(name string) error {
 // It returns an error if the field is not defined in the schema.
 func (m *ViewResourceMutation) ResetField(name string) error {
 	switch name {
-	case viewresource.FieldCreateAuthor:
-		m.ResetCreateAuthor()
-		return nil
-	case viewresource.FieldUpdateAuthor:
-		m.ResetUpdateAuthor()
-		return nil
-	case viewresource.FieldCreateTime:
-		m.ResetCreateTime()
-		return nil
-	case viewresource.FieldUpdateTime:
-		m.ResetUpdateTime()
-		return nil
 	case viewresource.FieldViewID:
 		m.ResetViewID()
 		return nil

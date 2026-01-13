@@ -29,6 +29,7 @@ type PermissionQueryOption struct {
 	DataScopes    []string
 	WithResources bool
 	WithRoles     bool
+	WithViews     bool
 }
 
 // PermissionCreateOption specifies options for creating a permission.
@@ -61,8 +62,11 @@ func ListPermissionsRequestToQueryOption(req *system.ListPermissionsRequest) *Pe
 		return &PermissionQueryOption{}
 	}
 	return &PermissionQueryOption{
-		QueryOption: repo.QueryOptionFromRequest(req),
-		DataScopes:  req.GetDataScopes(),
+		QueryOption:   repo.QueryOptionFromRequest(req),
+		DataScopes:    req.GetDataScopes(),
+		WithResources: req.GetWithResources(),
+		WithRoles:     req.GetWithRoles(),
+		WithViews:     req.GetWithViews(),
 	}
 }
 

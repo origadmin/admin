@@ -937,6 +937,18 @@ paths:
                   description: The keyword is the query parameter for set only to query the permission by keyword
                   schema:
                     type: string
+                - name: with_resources
+                  in: query
+                  schema:
+                    type: boolean
+                - name: with_roles
+                  in: query
+                  schema:
+                    type: boolean
+                - name: with_views
+                  in: query
+                  schema:
+                    type: boolean
             responses:
                 "200":
                     description: OK
@@ -3575,11 +3587,21 @@ components:
                     items:
                         $ref: '#/components/schemas/api.v1.services.types.Resource'
                     description: Resources holds the value of the resources edge.
+                resource_ids:
+                    type: array
+                    items:
+                        type: string
+                    description: Resource ids
                 roles:
                     type: array
                     items:
                         $ref: '#/components/schemas/api.v1.services.types.Role'
                     description: Roles holds the value of the roles edge.
+                role_ids:
+                    type: array
+                    items:
+                        type: string
+                    description: Role ids
             description: View is the model entity for the View schema.
         google.protobuf.Any:
             type: object

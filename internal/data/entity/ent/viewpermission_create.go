@@ -9,7 +9,6 @@ import (
 	"origadmin/application/admin/internal/data/entity/ent/permission"
 	"origadmin/application/admin/internal/data/entity/ent/view"
 	"origadmin/application/admin/internal/data/entity/ent/viewpermission"
-	"time"
 
 	"entgo.io/ent/dialect/sql/sqlgraph"
 	"entgo.io/ent/schema/field"
@@ -22,62 +21,6 @@ type ViewPermissionCreate struct {
 	hooks    []Hook
 }
 
-// SetCreateAuthor sets the "create_author" field.
-func (_c *ViewPermissionCreate) SetCreateAuthor(v int64) *ViewPermissionCreate {
-	_c.mutation.SetCreateAuthor(v)
-	return _c
-}
-
-// SetNillableCreateAuthor sets the "create_author" field if the given value is not nil.
-func (_c *ViewPermissionCreate) SetNillableCreateAuthor(v *int64) *ViewPermissionCreate {
-	if v != nil {
-		_c.SetCreateAuthor(*v)
-	}
-	return _c
-}
-
-// SetUpdateAuthor sets the "update_author" field.
-func (_c *ViewPermissionCreate) SetUpdateAuthor(v int64) *ViewPermissionCreate {
-	_c.mutation.SetUpdateAuthor(v)
-	return _c
-}
-
-// SetNillableUpdateAuthor sets the "update_author" field if the given value is not nil.
-func (_c *ViewPermissionCreate) SetNillableUpdateAuthor(v *int64) *ViewPermissionCreate {
-	if v != nil {
-		_c.SetUpdateAuthor(*v)
-	}
-	return _c
-}
-
-// SetCreateTime sets the "create_time" field.
-func (_c *ViewPermissionCreate) SetCreateTime(v time.Time) *ViewPermissionCreate {
-	_c.mutation.SetCreateTime(v)
-	return _c
-}
-
-// SetNillableCreateTime sets the "create_time" field if the given value is not nil.
-func (_c *ViewPermissionCreate) SetNillableCreateTime(v *time.Time) *ViewPermissionCreate {
-	if v != nil {
-		_c.SetCreateTime(*v)
-	}
-	return _c
-}
-
-// SetUpdateTime sets the "update_time" field.
-func (_c *ViewPermissionCreate) SetUpdateTime(v time.Time) *ViewPermissionCreate {
-	_c.mutation.SetUpdateTime(v)
-	return _c
-}
-
-// SetNillableUpdateTime sets the "update_time" field if the given value is not nil.
-func (_c *ViewPermissionCreate) SetNillableUpdateTime(v *time.Time) *ViewPermissionCreate {
-	if v != nil {
-		_c.SetUpdateTime(*v)
-	}
-	return _c
-}
-
 // SetViewID sets the "view_id" field.
 func (_c *ViewPermissionCreate) SetViewID(v int64) *ViewPermissionCreate {
 	_c.mutation.SetViewID(v)
@@ -87,20 +30,6 @@ func (_c *ViewPermissionCreate) SetViewID(v int64) *ViewPermissionCreate {
 // SetPermissionID sets the "permission_id" field.
 func (_c *ViewPermissionCreate) SetPermissionID(v int64) *ViewPermissionCreate {
 	_c.mutation.SetPermissionID(v)
-	return _c
-}
-
-// SetID sets the "id" field.
-func (_c *ViewPermissionCreate) SetID(v int64) *ViewPermissionCreate {
-	_c.mutation.SetID(v)
-	return _c
-}
-
-// SetNillableID sets the "id" field if the given value is not nil.
-func (_c *ViewPermissionCreate) SetNillableID(v *int64) *ViewPermissionCreate {
-	if v != nil {
-		_c.SetID(*v)
-	}
 	return _c
 }
 
@@ -121,9 +50,6 @@ func (_c *ViewPermissionCreate) Mutation() *ViewPermissionMutation {
 
 // Save creates the ViewPermission in the database.
 func (_c *ViewPermissionCreate) Save(ctx context.Context) (*ViewPermission, error) {
-	if err := _c.defaults(); err != nil {
-		return nil, err
-	}
 	return withHooks(ctx, _c.sqlSave, _c.mutation, _c.hooks)
 }
 
@@ -149,48 +75,8 @@ func (_c *ViewPermissionCreate) ExecX(ctx context.Context) {
 	}
 }
 
-// defaults sets the default values of the builder before save.
-func (_c *ViewPermissionCreate) defaults() error {
-	if _, ok := _c.mutation.CreateAuthor(); !ok {
-		v := viewpermission.DefaultCreateAuthor
-		_c.mutation.SetCreateAuthor(v)
-	}
-	if _, ok := _c.mutation.UpdateAuthor(); !ok {
-		v := viewpermission.DefaultUpdateAuthor
-		_c.mutation.SetUpdateAuthor(v)
-	}
-	if _, ok := _c.mutation.CreateTime(); !ok {
-		if viewpermission.DefaultCreateTime == nil {
-			return fmt.Errorf("ent: uninitialized viewpermission.DefaultCreateTime (forgotten import ent/runtime?)")
-		}
-		v := viewpermission.DefaultCreateTime()
-		_c.mutation.SetCreateTime(v)
-	}
-	if _, ok := _c.mutation.UpdateTime(); !ok {
-		if viewpermission.DefaultUpdateTime == nil {
-			return fmt.Errorf("ent: uninitialized viewpermission.DefaultUpdateTime (forgotten import ent/runtime?)")
-		}
-		v := viewpermission.DefaultUpdateTime()
-		_c.mutation.SetUpdateTime(v)
-	}
-	if _, ok := _c.mutation.ID(); !ok {
-		if viewpermission.DefaultID == nil {
-			return fmt.Errorf("ent: uninitialized viewpermission.DefaultID (forgotten import ent/runtime?)")
-		}
-		v := viewpermission.DefaultID()
-		_c.mutation.SetID(v)
-	}
-	return nil
-}
-
 // check runs all checks and user-defined validators on the builder.
 func (_c *ViewPermissionCreate) check() error {
-	if _, ok := _c.mutation.CreateTime(); !ok {
-		return &ValidationError{Name: "create_time", err: errors.New(`ent: missing required field "ViewPermission.create_time"`)}
-	}
-	if _, ok := _c.mutation.UpdateTime(); !ok {
-		return &ValidationError{Name: "update_time", err: errors.New(`ent: missing required field "ViewPermission.update_time"`)}
-	}
 	if _, ok := _c.mutation.ViewID(); !ok {
 		return &ValidationError{Name: "view_id", err: errors.New(`ent: missing required field "ViewPermission.view_id"`)}
 	}
@@ -205,11 +91,6 @@ func (_c *ViewPermissionCreate) check() error {
 	if v, ok := _c.mutation.PermissionID(); ok {
 		if err := viewpermission.PermissionIDValidator(v); err != nil {
 			return &ValidationError{Name: "permission_id", err: fmt.Errorf(`ent: validator failed for field "ViewPermission.permission_id": %w`, err)}
-		}
-	}
-	if v, ok := _c.mutation.ID(); ok {
-		if err := viewpermission.IDValidator(v); err != nil {
-			return &ValidationError{Name: "id", err: fmt.Errorf(`ent: validator failed for field "ViewPermission.id": %w`, err)}
 		}
 	}
 	if len(_c.mutation.ViewIDs()) == 0 {
@@ -232,10 +113,8 @@ func (_c *ViewPermissionCreate) sqlSave(ctx context.Context) (*ViewPermission, e
 		}
 		return nil, err
 	}
-	if _spec.ID.Value != _node.ID {
-		id := _spec.ID.Value.(int64)
-		_node.ID = int64(id)
-	}
+	id := _spec.ID.Value.(int64)
+	_node.ID = int(id)
 	_c.mutation.id = &_node.ID
 	_c.mutation.done = true
 	return _node, nil
@@ -244,28 +123,8 @@ func (_c *ViewPermissionCreate) sqlSave(ctx context.Context) (*ViewPermission, e
 func (_c *ViewPermissionCreate) createSpec() (*ViewPermission, *sqlgraph.CreateSpec) {
 	var (
 		_node = &ViewPermission{config: _c.config}
-		_spec = sqlgraph.NewCreateSpec(viewpermission.Table, sqlgraph.NewFieldSpec(viewpermission.FieldID, field.TypeInt64))
+		_spec = sqlgraph.NewCreateSpec(viewpermission.Table, sqlgraph.NewFieldSpec(viewpermission.FieldID, field.TypeInt))
 	)
-	if id, ok := _c.mutation.ID(); ok {
-		_node.ID = id
-		_spec.ID.Value = id
-	}
-	if value, ok := _c.mutation.CreateAuthor(); ok {
-		_spec.SetField(viewpermission.FieldCreateAuthor, field.TypeInt64, value)
-		_node.CreateAuthor = value
-	}
-	if value, ok := _c.mutation.UpdateAuthor(); ok {
-		_spec.SetField(viewpermission.FieldUpdateAuthor, field.TypeInt64, value)
-		_node.UpdateAuthor = value
-	}
-	if value, ok := _c.mutation.CreateTime(); ok {
-		_spec.SetField(viewpermission.FieldCreateTime, field.TypeTime, value)
-		_node.CreateTime = value
-	}
-	if value, ok := _c.mutation.UpdateTime(); ok {
-		_spec.SetField(viewpermission.FieldUpdateTime, field.TypeTime, value)
-		_node.UpdateTime = value
-	}
 	if nodes := _c.mutation.ViewIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2O,
@@ -341,7 +200,6 @@ func (_c *ViewPermissionCreateBulk) Save(ctx context.Context) ([]*ViewPermission
 	for i := range _c.builders {
 		func(i int, root context.Context) {
 			builder := _c.builders[i]
-			builder.defaults()
 			var mut Mutator = MutateFunc(func(ctx context.Context, m Mutation) (Value, error) {
 				mutation, ok := m.(*ViewPermissionMutation)
 				if !ok {
@@ -368,9 +226,9 @@ func (_c *ViewPermissionCreateBulk) Save(ctx context.Context) ([]*ViewPermission
 					return nil, err
 				}
 				mutation.id = &nodes[i].ID
-				if specs[i].ID.Value != nil && nodes[i].ID == 0 {
+				if specs[i].ID.Value != nil {
 					id := specs[i].ID.Value.(int64)
-					nodes[i].ID = int64(id)
+					nodes[i].ID = int(id)
 				}
 				mutation.done = true
 				return nodes[i], nil

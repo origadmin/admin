@@ -362,14 +362,14 @@ func (_u *ResourceUpdate) AddPermissions(v ...*Permission) *ResourceUpdate {
 }
 
 // AddViewResourceIDs adds the "view_resources" edge to the ViewResource entity by IDs.
-func (_u *ResourceUpdate) AddViewResourceIDs(ids ...int64) *ResourceUpdate {
+func (_u *ResourceUpdate) AddViewResourceIDs(ids ...int) *ResourceUpdate {
 	_u.mutation.AddViewResourceIDs(ids...)
 	return _u
 }
 
 // AddViewResources adds the "view_resources" edges to the ViewResource entity.
 func (_u *ResourceUpdate) AddViewResources(v ...*ViewResource) *ResourceUpdate {
-	ids := make([]int64, len(v))
+	ids := make([]int, len(v))
 	for i := range v {
 		ids[i] = v[i].ID
 	}
@@ -457,14 +457,14 @@ func (_u *ResourceUpdate) ClearViewResources() *ResourceUpdate {
 }
 
 // RemoveViewResourceIDs removes the "view_resources" edge to ViewResource entities by IDs.
-func (_u *ResourceUpdate) RemoveViewResourceIDs(ids ...int64) *ResourceUpdate {
+func (_u *ResourceUpdate) RemoveViewResourceIDs(ids ...int) *ResourceUpdate {
 	_u.mutation.RemoveViewResourceIDs(ids...)
 	return _u
 }
 
 // RemoveViewResources removes "view_resources" edges to ViewResource entities.
 func (_u *ResourceUpdate) RemoveViewResources(v ...*ViewResource) *ResourceUpdate {
-	ids := make([]int64, len(v))
+	ids := make([]int, len(v))
 	for i := range v {
 		ids[i] = v[i].ID
 	}
@@ -680,13 +680,6 @@ func (_u *ResourceUpdate) sqlSave(ctx context.Context) (_node int, err error) {
 				IDSpec: sqlgraph.NewFieldSpec(view.FieldID, field.TypeInt64),
 			},
 		}
-		createE := &ViewResourceCreate{config: _u.config, mutation: newViewResourceMutation(_u.config, OpCreate)}
-		_ = createE.defaults()
-		_, specE := createE.createSpec()
-		edge.Target.Fields = specE.Fields
-		if specE.ID.Value != nil {
-			edge.Target.Fields = append(edge.Target.Fields, specE.ID)
-		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
 	}
 	if nodes := _u.mutation.RemovedViewsIDs(); len(nodes) > 0 && !_u.mutation.ViewsCleared() {
@@ -703,13 +696,6 @@ func (_u *ResourceUpdate) sqlSave(ctx context.Context) (_node int, err error) {
 		for _, k := range nodes {
 			edge.Target.Nodes = append(edge.Target.Nodes, k)
 		}
-		createE := &ViewResourceCreate{config: _u.config, mutation: newViewResourceMutation(_u.config, OpCreate)}
-		_ = createE.defaults()
-		_, specE := createE.createSpec()
-		edge.Target.Fields = specE.Fields
-		if specE.ID.Value != nil {
-			edge.Target.Fields = append(edge.Target.Fields, specE.ID)
-		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
 	}
 	if nodes := _u.mutation.ViewsIDs(); len(nodes) > 0 {
@@ -725,13 +711,6 @@ func (_u *ResourceUpdate) sqlSave(ctx context.Context) (_node int, err error) {
 		}
 		for _, k := range nodes {
 			edge.Target.Nodes = append(edge.Target.Nodes, k)
-		}
-		createE := &ViewResourceCreate{config: _u.config, mutation: newViewResourceMutation(_u.config, OpCreate)}
-		_ = createE.defaults()
-		_, specE := createE.createSpec()
-		edge.Target.Fields = specE.Fields
-		if specE.ID.Value != nil {
-			edge.Target.Fields = append(edge.Target.Fields, specE.ID)
 		}
 		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
@@ -788,7 +767,7 @@ func (_u *ResourceUpdate) sqlSave(ctx context.Context) (_node int, err error) {
 			Columns: []string{resource.ViewResourcesColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(viewresource.FieldID, field.TypeInt64),
+				IDSpec: sqlgraph.NewFieldSpec(viewresource.FieldID, field.TypeInt),
 			},
 		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
@@ -801,7 +780,7 @@ func (_u *ResourceUpdate) sqlSave(ctx context.Context) (_node int, err error) {
 			Columns: []string{resource.ViewResourcesColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(viewresource.FieldID, field.TypeInt64),
+				IDSpec: sqlgraph.NewFieldSpec(viewresource.FieldID, field.TypeInt),
 			},
 		}
 		for _, k := range nodes {
@@ -817,7 +796,7 @@ func (_u *ResourceUpdate) sqlSave(ctx context.Context) (_node int, err error) {
 			Columns: []string{resource.ViewResourcesColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(viewresource.FieldID, field.TypeInt64),
+				IDSpec: sqlgraph.NewFieldSpec(viewresource.FieldID, field.TypeInt),
 			},
 		}
 		for _, k := range nodes {
@@ -1176,14 +1155,14 @@ func (_u *ResourceUpdateOne) AddPermissions(v ...*Permission) *ResourceUpdateOne
 }
 
 // AddViewResourceIDs adds the "view_resources" edge to the ViewResource entity by IDs.
-func (_u *ResourceUpdateOne) AddViewResourceIDs(ids ...int64) *ResourceUpdateOne {
+func (_u *ResourceUpdateOne) AddViewResourceIDs(ids ...int) *ResourceUpdateOne {
 	_u.mutation.AddViewResourceIDs(ids...)
 	return _u
 }
 
 // AddViewResources adds the "view_resources" edges to the ViewResource entity.
 func (_u *ResourceUpdateOne) AddViewResources(v ...*ViewResource) *ResourceUpdateOne {
-	ids := make([]int64, len(v))
+	ids := make([]int, len(v))
 	for i := range v {
 		ids[i] = v[i].ID
 	}
@@ -1271,14 +1250,14 @@ func (_u *ResourceUpdateOne) ClearViewResources() *ResourceUpdateOne {
 }
 
 // RemoveViewResourceIDs removes the "view_resources" edge to ViewResource entities by IDs.
-func (_u *ResourceUpdateOne) RemoveViewResourceIDs(ids ...int64) *ResourceUpdateOne {
+func (_u *ResourceUpdateOne) RemoveViewResourceIDs(ids ...int) *ResourceUpdateOne {
 	_u.mutation.RemoveViewResourceIDs(ids...)
 	return _u
 }
 
 // RemoveViewResources removes "view_resources" edges to ViewResource entities.
 func (_u *ResourceUpdateOne) RemoveViewResources(v ...*ViewResource) *ResourceUpdateOne {
-	ids := make([]int64, len(v))
+	ids := make([]int, len(v))
 	for i := range v {
 		ids[i] = v[i].ID
 	}
@@ -1524,13 +1503,6 @@ func (_u *ResourceUpdateOne) sqlSave(ctx context.Context) (_node *Resource, err 
 				IDSpec: sqlgraph.NewFieldSpec(view.FieldID, field.TypeInt64),
 			},
 		}
-		createE := &ViewResourceCreate{config: _u.config, mutation: newViewResourceMutation(_u.config, OpCreate)}
-		_ = createE.defaults()
-		_, specE := createE.createSpec()
-		edge.Target.Fields = specE.Fields
-		if specE.ID.Value != nil {
-			edge.Target.Fields = append(edge.Target.Fields, specE.ID)
-		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
 	}
 	if nodes := _u.mutation.RemovedViewsIDs(); len(nodes) > 0 && !_u.mutation.ViewsCleared() {
@@ -1547,13 +1519,6 @@ func (_u *ResourceUpdateOne) sqlSave(ctx context.Context) (_node *Resource, err 
 		for _, k := range nodes {
 			edge.Target.Nodes = append(edge.Target.Nodes, k)
 		}
-		createE := &ViewResourceCreate{config: _u.config, mutation: newViewResourceMutation(_u.config, OpCreate)}
-		_ = createE.defaults()
-		_, specE := createE.createSpec()
-		edge.Target.Fields = specE.Fields
-		if specE.ID.Value != nil {
-			edge.Target.Fields = append(edge.Target.Fields, specE.ID)
-		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
 	}
 	if nodes := _u.mutation.ViewsIDs(); len(nodes) > 0 {
@@ -1569,13 +1534,6 @@ func (_u *ResourceUpdateOne) sqlSave(ctx context.Context) (_node *Resource, err 
 		}
 		for _, k := range nodes {
 			edge.Target.Nodes = append(edge.Target.Nodes, k)
-		}
-		createE := &ViewResourceCreate{config: _u.config, mutation: newViewResourceMutation(_u.config, OpCreate)}
-		_ = createE.defaults()
-		_, specE := createE.createSpec()
-		edge.Target.Fields = specE.Fields
-		if specE.ID.Value != nil {
-			edge.Target.Fields = append(edge.Target.Fields, specE.ID)
 		}
 		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
@@ -1632,7 +1590,7 @@ func (_u *ResourceUpdateOne) sqlSave(ctx context.Context) (_node *Resource, err 
 			Columns: []string{resource.ViewResourcesColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(viewresource.FieldID, field.TypeInt64),
+				IDSpec: sqlgraph.NewFieldSpec(viewresource.FieldID, field.TypeInt),
 			},
 		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
@@ -1645,7 +1603,7 @@ func (_u *ResourceUpdateOne) sqlSave(ctx context.Context) (_node *Resource, err 
 			Columns: []string{resource.ViewResourcesColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(viewresource.FieldID, field.TypeInt64),
+				IDSpec: sqlgraph.NewFieldSpec(viewresource.FieldID, field.TypeInt),
 			},
 		}
 		for _, k := range nodes {
@@ -1661,7 +1619,7 @@ func (_u *ResourceUpdateOne) sqlSave(ctx context.Context) (_node *Resource, err 
 			Columns: []string{resource.ViewResourcesColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(viewresource.FieldID, field.TypeInt64),
+				IDSpec: sqlgraph.NewFieldSpec(viewresource.FieldID, field.TypeInt),
 			},
 		}
 		for _, k := range nodes {

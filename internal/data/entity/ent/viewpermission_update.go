@@ -10,7 +10,6 @@ import (
 	"origadmin/application/admin/internal/data/entity/ent/predicate"
 	"origadmin/application/admin/internal/data/entity/ent/view"
 	"origadmin/application/admin/internal/data/entity/ent/viewpermission"
-	"time"
 
 	"entgo.io/ent/dialect/sql"
 	"entgo.io/ent/dialect/sql/sqlgraph"
@@ -28,66 +27,6 @@ type ViewPermissionUpdate struct {
 // Where appends a list predicates to the ViewPermissionUpdate builder.
 func (_u *ViewPermissionUpdate) Where(ps ...predicate.ViewPermission) *ViewPermissionUpdate {
 	_u.mutation.Where(ps...)
-	return _u
-}
-
-// SetCreateAuthor sets the "create_author" field.
-func (_u *ViewPermissionUpdate) SetCreateAuthor(v int64) *ViewPermissionUpdate {
-	_u.mutation.ResetCreateAuthor()
-	_u.mutation.SetCreateAuthor(v)
-	return _u
-}
-
-// SetNillableCreateAuthor sets the "create_author" field if the given value is not nil.
-func (_u *ViewPermissionUpdate) SetNillableCreateAuthor(v *int64) *ViewPermissionUpdate {
-	if v != nil {
-		_u.SetCreateAuthor(*v)
-	}
-	return _u
-}
-
-// AddCreateAuthor adds value to the "create_author" field.
-func (_u *ViewPermissionUpdate) AddCreateAuthor(v int64) *ViewPermissionUpdate {
-	_u.mutation.AddCreateAuthor(v)
-	return _u
-}
-
-// ClearCreateAuthor clears the value of the "create_author" field.
-func (_u *ViewPermissionUpdate) ClearCreateAuthor() *ViewPermissionUpdate {
-	_u.mutation.ClearCreateAuthor()
-	return _u
-}
-
-// SetUpdateAuthor sets the "update_author" field.
-func (_u *ViewPermissionUpdate) SetUpdateAuthor(v int64) *ViewPermissionUpdate {
-	_u.mutation.ResetUpdateAuthor()
-	_u.mutation.SetUpdateAuthor(v)
-	return _u
-}
-
-// SetNillableUpdateAuthor sets the "update_author" field if the given value is not nil.
-func (_u *ViewPermissionUpdate) SetNillableUpdateAuthor(v *int64) *ViewPermissionUpdate {
-	if v != nil {
-		_u.SetUpdateAuthor(*v)
-	}
-	return _u
-}
-
-// AddUpdateAuthor adds value to the "update_author" field.
-func (_u *ViewPermissionUpdate) AddUpdateAuthor(v int64) *ViewPermissionUpdate {
-	_u.mutation.AddUpdateAuthor(v)
-	return _u
-}
-
-// ClearUpdateAuthor clears the value of the "update_author" field.
-func (_u *ViewPermissionUpdate) ClearUpdateAuthor() *ViewPermissionUpdate {
-	_u.mutation.ClearUpdateAuthor()
-	return _u
-}
-
-// SetUpdateTime sets the "update_time" field.
-func (_u *ViewPermissionUpdate) SetUpdateTime(v time.Time) *ViewPermissionUpdate {
-	_u.mutation.SetUpdateTime(v)
 	return _u
 }
 
@@ -148,9 +87,6 @@ func (_u *ViewPermissionUpdate) ClearPermission() *ViewPermissionUpdate {
 
 // Save executes the query and returns the number of nodes affected by the update operation.
 func (_u *ViewPermissionUpdate) Save(ctx context.Context) (int, error) {
-	if err := _u.defaults(); err != nil {
-		return 0, err
-	}
 	return withHooks(ctx, _u.sqlSave, _u.mutation, _u.hooks)
 }
 
@@ -174,18 +110,6 @@ func (_u *ViewPermissionUpdate) ExecX(ctx context.Context) {
 	if err := _u.Exec(ctx); err != nil {
 		panic(err)
 	}
-}
-
-// defaults sets the default values of the builder before save.
-func (_u *ViewPermissionUpdate) defaults() error {
-	if _, ok := _u.mutation.UpdateTime(); !ok {
-		if viewpermission.UpdateDefaultUpdateTime == nil {
-			return fmt.Errorf("ent: uninitialized viewpermission.UpdateDefaultUpdateTime (forgotten import ent/runtime?)")
-		}
-		v := viewpermission.UpdateDefaultUpdateTime()
-		_u.mutation.SetUpdateTime(v)
-	}
-	return nil
 }
 
 // check runs all checks and user-defined validators on the builder.
@@ -219,34 +143,13 @@ func (_u *ViewPermissionUpdate) sqlSave(ctx context.Context) (_node int, err err
 	if err := _u.check(); err != nil {
 		return _node, err
 	}
-	_spec := sqlgraph.NewUpdateSpec(viewpermission.Table, viewpermission.Columns, sqlgraph.NewFieldSpec(viewpermission.FieldID, field.TypeInt64))
+	_spec := sqlgraph.NewUpdateSpec(viewpermission.Table, viewpermission.Columns, sqlgraph.NewFieldSpec(viewpermission.FieldID, field.TypeInt))
 	if ps := _u.mutation.predicates; len(ps) > 0 {
 		_spec.Predicate = func(selector *sql.Selector) {
 			for i := range ps {
 				ps[i](selector)
 			}
 		}
-	}
-	if value, ok := _u.mutation.CreateAuthor(); ok {
-		_spec.SetField(viewpermission.FieldCreateAuthor, field.TypeInt64, value)
-	}
-	if value, ok := _u.mutation.AddedCreateAuthor(); ok {
-		_spec.AddField(viewpermission.FieldCreateAuthor, field.TypeInt64, value)
-	}
-	if _u.mutation.CreateAuthorCleared() {
-		_spec.ClearField(viewpermission.FieldCreateAuthor, field.TypeInt64)
-	}
-	if value, ok := _u.mutation.UpdateAuthor(); ok {
-		_spec.SetField(viewpermission.FieldUpdateAuthor, field.TypeInt64, value)
-	}
-	if value, ok := _u.mutation.AddedUpdateAuthor(); ok {
-		_spec.AddField(viewpermission.FieldUpdateAuthor, field.TypeInt64, value)
-	}
-	if _u.mutation.UpdateAuthorCleared() {
-		_spec.ClearField(viewpermission.FieldUpdateAuthor, field.TypeInt64)
-	}
-	if value, ok := _u.mutation.UpdateTime(); ok {
-		_spec.SetField(viewpermission.FieldUpdateTime, field.TypeTime, value)
 	}
 	if _u.mutation.ViewCleared() {
 		edge := &sqlgraph.EdgeSpec{
@@ -328,66 +231,6 @@ type ViewPermissionUpdateOne struct {
 	modifiers []func(*sql.UpdateBuilder)
 }
 
-// SetCreateAuthor sets the "create_author" field.
-func (_u *ViewPermissionUpdateOne) SetCreateAuthor(v int64) *ViewPermissionUpdateOne {
-	_u.mutation.ResetCreateAuthor()
-	_u.mutation.SetCreateAuthor(v)
-	return _u
-}
-
-// SetNillableCreateAuthor sets the "create_author" field if the given value is not nil.
-func (_u *ViewPermissionUpdateOne) SetNillableCreateAuthor(v *int64) *ViewPermissionUpdateOne {
-	if v != nil {
-		_u.SetCreateAuthor(*v)
-	}
-	return _u
-}
-
-// AddCreateAuthor adds value to the "create_author" field.
-func (_u *ViewPermissionUpdateOne) AddCreateAuthor(v int64) *ViewPermissionUpdateOne {
-	_u.mutation.AddCreateAuthor(v)
-	return _u
-}
-
-// ClearCreateAuthor clears the value of the "create_author" field.
-func (_u *ViewPermissionUpdateOne) ClearCreateAuthor() *ViewPermissionUpdateOne {
-	_u.mutation.ClearCreateAuthor()
-	return _u
-}
-
-// SetUpdateAuthor sets the "update_author" field.
-func (_u *ViewPermissionUpdateOne) SetUpdateAuthor(v int64) *ViewPermissionUpdateOne {
-	_u.mutation.ResetUpdateAuthor()
-	_u.mutation.SetUpdateAuthor(v)
-	return _u
-}
-
-// SetNillableUpdateAuthor sets the "update_author" field if the given value is not nil.
-func (_u *ViewPermissionUpdateOne) SetNillableUpdateAuthor(v *int64) *ViewPermissionUpdateOne {
-	if v != nil {
-		_u.SetUpdateAuthor(*v)
-	}
-	return _u
-}
-
-// AddUpdateAuthor adds value to the "update_author" field.
-func (_u *ViewPermissionUpdateOne) AddUpdateAuthor(v int64) *ViewPermissionUpdateOne {
-	_u.mutation.AddUpdateAuthor(v)
-	return _u
-}
-
-// ClearUpdateAuthor clears the value of the "update_author" field.
-func (_u *ViewPermissionUpdateOne) ClearUpdateAuthor() *ViewPermissionUpdateOne {
-	_u.mutation.ClearUpdateAuthor()
-	return _u
-}
-
-// SetUpdateTime sets the "update_time" field.
-func (_u *ViewPermissionUpdateOne) SetUpdateTime(v time.Time) *ViewPermissionUpdateOne {
-	_u.mutation.SetUpdateTime(v)
-	return _u
-}
-
 // SetViewID sets the "view_id" field.
 func (_u *ViewPermissionUpdateOne) SetViewID(v int64) *ViewPermissionUpdateOne {
 	_u.mutation.SetViewID(v)
@@ -458,9 +301,6 @@ func (_u *ViewPermissionUpdateOne) Select(field string, fields ...string) *ViewP
 
 // Save executes the query and returns the updated ViewPermission entity.
 func (_u *ViewPermissionUpdateOne) Save(ctx context.Context) (*ViewPermission, error) {
-	if err := _u.defaults(); err != nil {
-		return nil, err
-	}
 	return withHooks(ctx, _u.sqlSave, _u.mutation, _u.hooks)
 }
 
@@ -484,18 +324,6 @@ func (_u *ViewPermissionUpdateOne) ExecX(ctx context.Context) {
 	if err := _u.Exec(ctx); err != nil {
 		panic(err)
 	}
-}
-
-// defaults sets the default values of the builder before save.
-func (_u *ViewPermissionUpdateOne) defaults() error {
-	if _, ok := _u.mutation.UpdateTime(); !ok {
-		if viewpermission.UpdateDefaultUpdateTime == nil {
-			return fmt.Errorf("ent: uninitialized viewpermission.UpdateDefaultUpdateTime (forgotten import ent/runtime?)")
-		}
-		v := viewpermission.UpdateDefaultUpdateTime()
-		_u.mutation.SetUpdateTime(v)
-	}
-	return nil
 }
 
 // check runs all checks and user-defined validators on the builder.
@@ -529,7 +357,7 @@ func (_u *ViewPermissionUpdateOne) sqlSave(ctx context.Context) (_node *ViewPerm
 	if err := _u.check(); err != nil {
 		return _node, err
 	}
-	_spec := sqlgraph.NewUpdateSpec(viewpermission.Table, viewpermission.Columns, sqlgraph.NewFieldSpec(viewpermission.FieldID, field.TypeInt64))
+	_spec := sqlgraph.NewUpdateSpec(viewpermission.Table, viewpermission.Columns, sqlgraph.NewFieldSpec(viewpermission.FieldID, field.TypeInt))
 	id, ok := _u.mutation.ID()
 	if !ok {
 		return nil, &ValidationError{Name: "id", err: errors.New(`ent: missing "ViewPermission.id" for update`)}
@@ -553,27 +381,6 @@ func (_u *ViewPermissionUpdateOne) sqlSave(ctx context.Context) (_node *ViewPerm
 				ps[i](selector)
 			}
 		}
-	}
-	if value, ok := _u.mutation.CreateAuthor(); ok {
-		_spec.SetField(viewpermission.FieldCreateAuthor, field.TypeInt64, value)
-	}
-	if value, ok := _u.mutation.AddedCreateAuthor(); ok {
-		_spec.AddField(viewpermission.FieldCreateAuthor, field.TypeInt64, value)
-	}
-	if _u.mutation.CreateAuthorCleared() {
-		_spec.ClearField(viewpermission.FieldCreateAuthor, field.TypeInt64)
-	}
-	if value, ok := _u.mutation.UpdateAuthor(); ok {
-		_spec.SetField(viewpermission.FieldUpdateAuthor, field.TypeInt64, value)
-	}
-	if value, ok := _u.mutation.AddedUpdateAuthor(); ok {
-		_spec.AddField(viewpermission.FieldUpdateAuthor, field.TypeInt64, value)
-	}
-	if _u.mutation.UpdateAuthorCleared() {
-		_spec.ClearField(viewpermission.FieldUpdateAuthor, field.TypeInt64)
-	}
-	if value, ok := _u.mutation.UpdateTime(); ok {
-		_spec.SetField(viewpermission.FieldUpdateTime, field.TypeTime, value)
 	}
 	if _u.mutation.ViewCleared() {
 		edge := &sqlgraph.EdgeSpec{

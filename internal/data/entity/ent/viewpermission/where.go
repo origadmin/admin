@@ -4,75 +4,54 @@ package viewpermission
 
 import (
 	"origadmin/application/admin/internal/data/entity/ent/predicate"
-	"time"
 
 	"entgo.io/ent/dialect/sql"
 	"entgo.io/ent/dialect/sql/sqlgraph"
 )
 
 // ID filters vertices based on their ID field.
-func ID(id int64) predicate.ViewPermission {
+func ID(id int) predicate.ViewPermission {
 	return predicate.ViewPermission(sql.FieldEQ(FieldID, id))
 }
 
 // IDEQ applies the EQ predicate on the ID field.
-func IDEQ(id int64) predicate.ViewPermission {
+func IDEQ(id int) predicate.ViewPermission {
 	return predicate.ViewPermission(sql.FieldEQ(FieldID, id))
 }
 
 // IDNEQ applies the NEQ predicate on the ID field.
-func IDNEQ(id int64) predicate.ViewPermission {
+func IDNEQ(id int) predicate.ViewPermission {
 	return predicate.ViewPermission(sql.FieldNEQ(FieldID, id))
 }
 
 // IDIn applies the In predicate on the ID field.
-func IDIn(ids ...int64) predicate.ViewPermission {
+func IDIn(ids ...int) predicate.ViewPermission {
 	return predicate.ViewPermission(sql.FieldIn(FieldID, ids...))
 }
 
 // IDNotIn applies the NotIn predicate on the ID field.
-func IDNotIn(ids ...int64) predicate.ViewPermission {
+func IDNotIn(ids ...int) predicate.ViewPermission {
 	return predicate.ViewPermission(sql.FieldNotIn(FieldID, ids...))
 }
 
 // IDGT applies the GT predicate on the ID field.
-func IDGT(id int64) predicate.ViewPermission {
+func IDGT(id int) predicate.ViewPermission {
 	return predicate.ViewPermission(sql.FieldGT(FieldID, id))
 }
 
 // IDGTE applies the GTE predicate on the ID field.
-func IDGTE(id int64) predicate.ViewPermission {
+func IDGTE(id int) predicate.ViewPermission {
 	return predicate.ViewPermission(sql.FieldGTE(FieldID, id))
 }
 
 // IDLT applies the LT predicate on the ID field.
-func IDLT(id int64) predicate.ViewPermission {
+func IDLT(id int) predicate.ViewPermission {
 	return predicate.ViewPermission(sql.FieldLT(FieldID, id))
 }
 
 // IDLTE applies the LTE predicate on the ID field.
-func IDLTE(id int64) predicate.ViewPermission {
+func IDLTE(id int) predicate.ViewPermission {
 	return predicate.ViewPermission(sql.FieldLTE(FieldID, id))
-}
-
-// CreateAuthor applies equality check predicate on the "create_author" field. It's identical to CreateAuthorEQ.
-func CreateAuthor(v int64) predicate.ViewPermission {
-	return predicate.ViewPermission(sql.FieldEQ(FieldCreateAuthor, v))
-}
-
-// UpdateAuthor applies equality check predicate on the "update_author" field. It's identical to UpdateAuthorEQ.
-func UpdateAuthor(v int64) predicate.ViewPermission {
-	return predicate.ViewPermission(sql.FieldEQ(FieldUpdateAuthor, v))
-}
-
-// CreateTime applies equality check predicate on the "create_time" field. It's identical to CreateTimeEQ.
-func CreateTime(v time.Time) predicate.ViewPermission {
-	return predicate.ViewPermission(sql.FieldEQ(FieldCreateTime, v))
-}
-
-// UpdateTime applies equality check predicate on the "update_time" field. It's identical to UpdateTimeEQ.
-func UpdateTime(v time.Time) predicate.ViewPermission {
-	return predicate.ViewPermission(sql.FieldEQ(FieldUpdateTime, v))
 }
 
 // ViewID applies equality check predicate on the "view_id" field. It's identical to ViewIDEQ.
@@ -83,186 +62,6 @@ func ViewID(v int64) predicate.ViewPermission {
 // PermissionID applies equality check predicate on the "permission_id" field. It's identical to PermissionIDEQ.
 func PermissionID(v int64) predicate.ViewPermission {
 	return predicate.ViewPermission(sql.FieldEQ(FieldPermissionID, v))
-}
-
-// CreateAuthorEQ applies the EQ predicate on the "create_author" field.
-func CreateAuthorEQ(v int64) predicate.ViewPermission {
-	return predicate.ViewPermission(sql.FieldEQ(FieldCreateAuthor, v))
-}
-
-// CreateAuthorNEQ applies the NEQ predicate on the "create_author" field.
-func CreateAuthorNEQ(v int64) predicate.ViewPermission {
-	return predicate.ViewPermission(sql.FieldNEQ(FieldCreateAuthor, v))
-}
-
-// CreateAuthorIn applies the In predicate on the "create_author" field.
-func CreateAuthorIn(vs ...int64) predicate.ViewPermission {
-	return predicate.ViewPermission(sql.FieldIn(FieldCreateAuthor, vs...))
-}
-
-// CreateAuthorNotIn applies the NotIn predicate on the "create_author" field.
-func CreateAuthorNotIn(vs ...int64) predicate.ViewPermission {
-	return predicate.ViewPermission(sql.FieldNotIn(FieldCreateAuthor, vs...))
-}
-
-// CreateAuthorGT applies the GT predicate on the "create_author" field.
-func CreateAuthorGT(v int64) predicate.ViewPermission {
-	return predicate.ViewPermission(sql.FieldGT(FieldCreateAuthor, v))
-}
-
-// CreateAuthorGTE applies the GTE predicate on the "create_author" field.
-func CreateAuthorGTE(v int64) predicate.ViewPermission {
-	return predicate.ViewPermission(sql.FieldGTE(FieldCreateAuthor, v))
-}
-
-// CreateAuthorLT applies the LT predicate on the "create_author" field.
-func CreateAuthorLT(v int64) predicate.ViewPermission {
-	return predicate.ViewPermission(sql.FieldLT(FieldCreateAuthor, v))
-}
-
-// CreateAuthorLTE applies the LTE predicate on the "create_author" field.
-func CreateAuthorLTE(v int64) predicate.ViewPermission {
-	return predicate.ViewPermission(sql.FieldLTE(FieldCreateAuthor, v))
-}
-
-// CreateAuthorIsNil applies the IsNil predicate on the "create_author" field.
-func CreateAuthorIsNil() predicate.ViewPermission {
-	return predicate.ViewPermission(sql.FieldIsNull(FieldCreateAuthor))
-}
-
-// CreateAuthorNotNil applies the NotNil predicate on the "create_author" field.
-func CreateAuthorNotNil() predicate.ViewPermission {
-	return predicate.ViewPermission(sql.FieldNotNull(FieldCreateAuthor))
-}
-
-// UpdateAuthorEQ applies the EQ predicate on the "update_author" field.
-func UpdateAuthorEQ(v int64) predicate.ViewPermission {
-	return predicate.ViewPermission(sql.FieldEQ(FieldUpdateAuthor, v))
-}
-
-// UpdateAuthorNEQ applies the NEQ predicate on the "update_author" field.
-func UpdateAuthorNEQ(v int64) predicate.ViewPermission {
-	return predicate.ViewPermission(sql.FieldNEQ(FieldUpdateAuthor, v))
-}
-
-// UpdateAuthorIn applies the In predicate on the "update_author" field.
-func UpdateAuthorIn(vs ...int64) predicate.ViewPermission {
-	return predicate.ViewPermission(sql.FieldIn(FieldUpdateAuthor, vs...))
-}
-
-// UpdateAuthorNotIn applies the NotIn predicate on the "update_author" field.
-func UpdateAuthorNotIn(vs ...int64) predicate.ViewPermission {
-	return predicate.ViewPermission(sql.FieldNotIn(FieldUpdateAuthor, vs...))
-}
-
-// UpdateAuthorGT applies the GT predicate on the "update_author" field.
-func UpdateAuthorGT(v int64) predicate.ViewPermission {
-	return predicate.ViewPermission(sql.FieldGT(FieldUpdateAuthor, v))
-}
-
-// UpdateAuthorGTE applies the GTE predicate on the "update_author" field.
-func UpdateAuthorGTE(v int64) predicate.ViewPermission {
-	return predicate.ViewPermission(sql.FieldGTE(FieldUpdateAuthor, v))
-}
-
-// UpdateAuthorLT applies the LT predicate on the "update_author" field.
-func UpdateAuthorLT(v int64) predicate.ViewPermission {
-	return predicate.ViewPermission(sql.FieldLT(FieldUpdateAuthor, v))
-}
-
-// UpdateAuthorLTE applies the LTE predicate on the "update_author" field.
-func UpdateAuthorLTE(v int64) predicate.ViewPermission {
-	return predicate.ViewPermission(sql.FieldLTE(FieldUpdateAuthor, v))
-}
-
-// UpdateAuthorIsNil applies the IsNil predicate on the "update_author" field.
-func UpdateAuthorIsNil() predicate.ViewPermission {
-	return predicate.ViewPermission(sql.FieldIsNull(FieldUpdateAuthor))
-}
-
-// UpdateAuthorNotNil applies the NotNil predicate on the "update_author" field.
-func UpdateAuthorNotNil() predicate.ViewPermission {
-	return predicate.ViewPermission(sql.FieldNotNull(FieldUpdateAuthor))
-}
-
-// CreateTimeEQ applies the EQ predicate on the "create_time" field.
-func CreateTimeEQ(v time.Time) predicate.ViewPermission {
-	return predicate.ViewPermission(sql.FieldEQ(FieldCreateTime, v))
-}
-
-// CreateTimeNEQ applies the NEQ predicate on the "create_time" field.
-func CreateTimeNEQ(v time.Time) predicate.ViewPermission {
-	return predicate.ViewPermission(sql.FieldNEQ(FieldCreateTime, v))
-}
-
-// CreateTimeIn applies the In predicate on the "create_time" field.
-func CreateTimeIn(vs ...time.Time) predicate.ViewPermission {
-	return predicate.ViewPermission(sql.FieldIn(FieldCreateTime, vs...))
-}
-
-// CreateTimeNotIn applies the NotIn predicate on the "create_time" field.
-func CreateTimeNotIn(vs ...time.Time) predicate.ViewPermission {
-	return predicate.ViewPermission(sql.FieldNotIn(FieldCreateTime, vs...))
-}
-
-// CreateTimeGT applies the GT predicate on the "create_time" field.
-func CreateTimeGT(v time.Time) predicate.ViewPermission {
-	return predicate.ViewPermission(sql.FieldGT(FieldCreateTime, v))
-}
-
-// CreateTimeGTE applies the GTE predicate on the "create_time" field.
-func CreateTimeGTE(v time.Time) predicate.ViewPermission {
-	return predicate.ViewPermission(sql.FieldGTE(FieldCreateTime, v))
-}
-
-// CreateTimeLT applies the LT predicate on the "create_time" field.
-func CreateTimeLT(v time.Time) predicate.ViewPermission {
-	return predicate.ViewPermission(sql.FieldLT(FieldCreateTime, v))
-}
-
-// CreateTimeLTE applies the LTE predicate on the "create_time" field.
-func CreateTimeLTE(v time.Time) predicate.ViewPermission {
-	return predicate.ViewPermission(sql.FieldLTE(FieldCreateTime, v))
-}
-
-// UpdateTimeEQ applies the EQ predicate on the "update_time" field.
-func UpdateTimeEQ(v time.Time) predicate.ViewPermission {
-	return predicate.ViewPermission(sql.FieldEQ(FieldUpdateTime, v))
-}
-
-// UpdateTimeNEQ applies the NEQ predicate on the "update_time" field.
-func UpdateTimeNEQ(v time.Time) predicate.ViewPermission {
-	return predicate.ViewPermission(sql.FieldNEQ(FieldUpdateTime, v))
-}
-
-// UpdateTimeIn applies the In predicate on the "update_time" field.
-func UpdateTimeIn(vs ...time.Time) predicate.ViewPermission {
-	return predicate.ViewPermission(sql.FieldIn(FieldUpdateTime, vs...))
-}
-
-// UpdateTimeNotIn applies the NotIn predicate on the "update_time" field.
-func UpdateTimeNotIn(vs ...time.Time) predicate.ViewPermission {
-	return predicate.ViewPermission(sql.FieldNotIn(FieldUpdateTime, vs...))
-}
-
-// UpdateTimeGT applies the GT predicate on the "update_time" field.
-func UpdateTimeGT(v time.Time) predicate.ViewPermission {
-	return predicate.ViewPermission(sql.FieldGT(FieldUpdateTime, v))
-}
-
-// UpdateTimeGTE applies the GTE predicate on the "update_time" field.
-func UpdateTimeGTE(v time.Time) predicate.ViewPermission {
-	return predicate.ViewPermission(sql.FieldGTE(FieldUpdateTime, v))
-}
-
-// UpdateTimeLT applies the LT predicate on the "update_time" field.
-func UpdateTimeLT(v time.Time) predicate.ViewPermission {
-	return predicate.ViewPermission(sql.FieldLT(FieldUpdateTime, v))
-}
-
-// UpdateTimeLTE applies the LTE predicate on the "update_time" field.
-func UpdateTimeLTE(v time.Time) predicate.ViewPermission {
-	return predicate.ViewPermission(sql.FieldLTE(FieldUpdateTime, v))
 }
 
 // ViewIDEQ applies the EQ predicate on the "view_id" field.

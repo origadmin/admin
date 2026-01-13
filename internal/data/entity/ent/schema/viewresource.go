@@ -6,6 +6,7 @@ import (
 	"entgo.io/ent/schema"
 	"entgo.io/ent/schema/edge"
 	"entgo.io/ent/schema/index"
+
 	"origadmin/application/admin/internal/helpers/ent/mixin"
 	"origadmin/application/admin/internal/helpers/i18n"
 )
@@ -21,20 +22,6 @@ func (ViewResource) Fields() []ent.Field {
 	return []ent.Field{
 		mixin.FK("view_id", i18n.Text("view_resource.view_id.comment")),
 		mixin.FK("resource_id", i18n.Text("view_resource.resource_id.comment")),
-	}
-}
-
-// Edges of the ViewResource.
-func (ViewResource) Edges() []ent.Edge {
-	return []ent.Edge{
-		edge.To("view", View.Type).
-			Field("view_id").
-			Unique().
-			Required(),
-		edge.To("resource", Resource.Type).
-			Field("resource_id").
-			Unique().
-			Required(),
 	}
 }
 
@@ -55,8 +42,16 @@ func (ViewResource) Annotations() []schema.Annotation {
 	}
 }
 
-// Mixin of the ViewResource.
-func (ViewResource) Mixin() []ent.Mixin {
-	// Using AuditModelMixin to automatically get id, create/update times, and created_by/updated_by fields.
-	return mixin.AuditModelMixin
+// Edges of the ViewResource.
+func (ViewResource) Edges() []ent.Edge {
+	return []ent.Edge{
+		edge.To("view", View.Type).
+			Field("view_id").
+			Unique().
+			Required(),
+		edge.To("resource", Resource.Type).
+			Field("resource_id").
+			Unique().
+			Required(),
+	}
 }

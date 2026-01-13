@@ -8,7 +8,6 @@ import (
 	"origadmin/application/admin/internal/data/entity/ent/view"
 	"origadmin/application/admin/internal/data/entity/ent/viewpermission"
 	"strings"
-	"time"
 
 	"entgo.io/ent"
 	"entgo.io/ent/dialect/sql"
@@ -18,16 +17,7 @@ import (
 type ViewPermission struct {
 	config `json:"-"`
 	// ID of the ent.
-	// field.primary_key.comment
-	ID int64 `json:"id,omitempty"`
-	// create_author.field.comment
-	CreateAuthor int64 `json:"create_author,omitempty"`
-	// update_author.field.comment
-	UpdateAuthor int64 `json:"update_author,omitempty"`
-	// create_time.field.comment
-	CreateTime time.Time `json:"create_time,omitempty"`
-	// update_time.field.comment
-	UpdateTime time.Time `json:"update_time,omitempty"`
+	ID int `json:"id,omitempty"`
 	// view_permission.view_id.comment
 	ViewID int64 `json:"view_id,omitempty"`
 	// view_permission.permission_id.comment
@@ -76,10 +66,8 @@ func (*ViewPermission) scanValues(columns []string) ([]any, error) {
 	values := make([]any, len(columns))
 	for i := range columns {
 		switch columns[i] {
-		case viewpermission.FieldID, viewpermission.FieldCreateAuthor, viewpermission.FieldUpdateAuthor, viewpermission.FieldViewID, viewpermission.FieldPermissionID:
+		case viewpermission.FieldID, viewpermission.FieldViewID, viewpermission.FieldPermissionID:
 			values[i] = new(sql.NullInt64)
-		case viewpermission.FieldCreateTime, viewpermission.FieldUpdateTime:
-			values[i] = new(sql.NullTime)
 		default:
 			values[i] = new(sql.UnknownType)
 		}
@@ -100,31 +88,7 @@ func (_m *ViewPermission) assignValues(columns []string, values []any) error {
 			if !ok {
 				return fmt.Errorf("unexpected type %T for field id", value)
 			}
-			_m.ID = int64(value.Int64)
-		case viewpermission.FieldCreateAuthor:
-			if value, ok := values[i].(*sql.NullInt64); !ok {
-				return fmt.Errorf("unexpected type %T for field create_author", values[i])
-			} else if value.Valid {
-				_m.CreateAuthor = value.Int64
-			}
-		case viewpermission.FieldUpdateAuthor:
-			if value, ok := values[i].(*sql.NullInt64); !ok {
-				return fmt.Errorf("unexpected type %T for field update_author", values[i])
-			} else if value.Valid {
-				_m.UpdateAuthor = value.Int64
-			}
-		case viewpermission.FieldCreateTime:
-			if value, ok := values[i].(*sql.NullTime); !ok {
-				return fmt.Errorf("unexpected type %T for field create_time", values[i])
-			} else if value.Valid {
-				_m.CreateTime = value.Time
-			}
-		case viewpermission.FieldUpdateTime:
-			if value, ok := values[i].(*sql.NullTime); !ok {
-				return fmt.Errorf("unexpected type %T for field update_time", values[i])
-			} else if value.Valid {
-				_m.UpdateTime = value.Time
-			}
+			_m.ID = int(value.Int64)
 		case viewpermission.FieldViewID:
 			if value, ok := values[i].(*sql.NullInt64); !ok {
 				return fmt.Errorf("unexpected type %T for field view_id", values[i])
@@ -183,18 +147,6 @@ func (_m *ViewPermission) String() string {
 	var builder strings.Builder
 	builder.WriteString("ViewPermission(")
 	builder.WriteString(fmt.Sprintf("id=%v, ", _m.ID))
-	builder.WriteString("create_author=")
-	builder.WriteString(fmt.Sprintf("%v", _m.CreateAuthor))
-	builder.WriteString(", ")
-	builder.WriteString("update_author=")
-	builder.WriteString(fmt.Sprintf("%v", _m.UpdateAuthor))
-	builder.WriteString(", ")
-	builder.WriteString("create_time=")
-	builder.WriteString(_m.CreateTime.Format(time.ANSIC))
-	builder.WriteString(", ")
-	builder.WriteString("update_time=")
-	builder.WriteString(_m.UpdateTime.Format(time.ANSIC))
-	builder.WriteString(", ")
 	builder.WriteString("view_id=")
 	builder.WriteString(fmt.Sprintf("%v", _m.ViewID))
 	builder.WriteString(", ")

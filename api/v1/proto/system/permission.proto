@@ -5,8 +5,8 @@ package api.v1.services.system;
 import "google/api/annotations.proto";
 import "google/protobuf/any.proto";
 import "google/protobuf/empty.proto";
-import "types/system.proto";
 import "policy/v1/policy.proto";
+import "types/system.proto";
 
 option go_package = "origadmin/application/admin/api/v1/services/system;system";
 option java_multiple_files = true;
@@ -61,6 +61,10 @@ message ListPermissionsRequest {
   repeated string data_scopes = 7 [json_name = "data_scopes"];
   // The keyword is the query parameter for set only to query the permission by keyword
   string keyword = 8 [json_name = "keyword"];
+
+  bool with_resources = 10 [json_name = "with_resources"];
+  bool with_roles = 11 [json_name = "with_roles"];
+  bool with_views = 12 [json_name = "with_views"];
 }
 
 message ListPermissionsResponse {

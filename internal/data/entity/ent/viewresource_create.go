@@ -9,7 +9,6 @@ import (
 	"origadmin/application/admin/internal/data/entity/ent/resource"
 	"origadmin/application/admin/internal/data/entity/ent/view"
 	"origadmin/application/admin/internal/data/entity/ent/viewresource"
-	"time"
 
 	"entgo.io/ent/dialect/sql/sqlgraph"
 	"entgo.io/ent/schema/field"
@@ -22,62 +21,6 @@ type ViewResourceCreate struct {
 	hooks    []Hook
 }
 
-// SetCreateAuthor sets the "create_author" field.
-func (_c *ViewResourceCreate) SetCreateAuthor(v int64) *ViewResourceCreate {
-	_c.mutation.SetCreateAuthor(v)
-	return _c
-}
-
-// SetNillableCreateAuthor sets the "create_author" field if the given value is not nil.
-func (_c *ViewResourceCreate) SetNillableCreateAuthor(v *int64) *ViewResourceCreate {
-	if v != nil {
-		_c.SetCreateAuthor(*v)
-	}
-	return _c
-}
-
-// SetUpdateAuthor sets the "update_author" field.
-func (_c *ViewResourceCreate) SetUpdateAuthor(v int64) *ViewResourceCreate {
-	_c.mutation.SetUpdateAuthor(v)
-	return _c
-}
-
-// SetNillableUpdateAuthor sets the "update_author" field if the given value is not nil.
-func (_c *ViewResourceCreate) SetNillableUpdateAuthor(v *int64) *ViewResourceCreate {
-	if v != nil {
-		_c.SetUpdateAuthor(*v)
-	}
-	return _c
-}
-
-// SetCreateTime sets the "create_time" field.
-func (_c *ViewResourceCreate) SetCreateTime(v time.Time) *ViewResourceCreate {
-	_c.mutation.SetCreateTime(v)
-	return _c
-}
-
-// SetNillableCreateTime sets the "create_time" field if the given value is not nil.
-func (_c *ViewResourceCreate) SetNillableCreateTime(v *time.Time) *ViewResourceCreate {
-	if v != nil {
-		_c.SetCreateTime(*v)
-	}
-	return _c
-}
-
-// SetUpdateTime sets the "update_time" field.
-func (_c *ViewResourceCreate) SetUpdateTime(v time.Time) *ViewResourceCreate {
-	_c.mutation.SetUpdateTime(v)
-	return _c
-}
-
-// SetNillableUpdateTime sets the "update_time" field if the given value is not nil.
-func (_c *ViewResourceCreate) SetNillableUpdateTime(v *time.Time) *ViewResourceCreate {
-	if v != nil {
-		_c.SetUpdateTime(*v)
-	}
-	return _c
-}
-
 // SetViewID sets the "view_id" field.
 func (_c *ViewResourceCreate) SetViewID(v int64) *ViewResourceCreate {
 	_c.mutation.SetViewID(v)
@@ -87,20 +30,6 @@ func (_c *ViewResourceCreate) SetViewID(v int64) *ViewResourceCreate {
 // SetResourceID sets the "resource_id" field.
 func (_c *ViewResourceCreate) SetResourceID(v int64) *ViewResourceCreate {
 	_c.mutation.SetResourceID(v)
-	return _c
-}
-
-// SetID sets the "id" field.
-func (_c *ViewResourceCreate) SetID(v int64) *ViewResourceCreate {
-	_c.mutation.SetID(v)
-	return _c
-}
-
-// SetNillableID sets the "id" field if the given value is not nil.
-func (_c *ViewResourceCreate) SetNillableID(v *int64) *ViewResourceCreate {
-	if v != nil {
-		_c.SetID(*v)
-	}
 	return _c
 }
 
@@ -121,9 +50,6 @@ func (_c *ViewResourceCreate) Mutation() *ViewResourceMutation {
 
 // Save creates the ViewResource in the database.
 func (_c *ViewResourceCreate) Save(ctx context.Context) (*ViewResource, error) {
-	if err := _c.defaults(); err != nil {
-		return nil, err
-	}
 	return withHooks(ctx, _c.sqlSave, _c.mutation, _c.hooks)
 }
 
@@ -149,48 +75,8 @@ func (_c *ViewResourceCreate) ExecX(ctx context.Context) {
 	}
 }
 
-// defaults sets the default values of the builder before save.
-func (_c *ViewResourceCreate) defaults() error {
-	if _, ok := _c.mutation.CreateAuthor(); !ok {
-		v := viewresource.DefaultCreateAuthor
-		_c.mutation.SetCreateAuthor(v)
-	}
-	if _, ok := _c.mutation.UpdateAuthor(); !ok {
-		v := viewresource.DefaultUpdateAuthor
-		_c.mutation.SetUpdateAuthor(v)
-	}
-	if _, ok := _c.mutation.CreateTime(); !ok {
-		if viewresource.DefaultCreateTime == nil {
-			return fmt.Errorf("ent: uninitialized viewresource.DefaultCreateTime (forgotten import ent/runtime?)")
-		}
-		v := viewresource.DefaultCreateTime()
-		_c.mutation.SetCreateTime(v)
-	}
-	if _, ok := _c.mutation.UpdateTime(); !ok {
-		if viewresource.DefaultUpdateTime == nil {
-			return fmt.Errorf("ent: uninitialized viewresource.DefaultUpdateTime (forgotten import ent/runtime?)")
-		}
-		v := viewresource.DefaultUpdateTime()
-		_c.mutation.SetUpdateTime(v)
-	}
-	if _, ok := _c.mutation.ID(); !ok {
-		if viewresource.DefaultID == nil {
-			return fmt.Errorf("ent: uninitialized viewresource.DefaultID (forgotten import ent/runtime?)")
-		}
-		v := viewresource.DefaultID()
-		_c.mutation.SetID(v)
-	}
-	return nil
-}
-
 // check runs all checks and user-defined validators on the builder.
 func (_c *ViewResourceCreate) check() error {
-	if _, ok := _c.mutation.CreateTime(); !ok {
-		return &ValidationError{Name: "create_time", err: errors.New(`ent: missing required field "ViewResource.create_time"`)}
-	}
-	if _, ok := _c.mutation.UpdateTime(); !ok {
-		return &ValidationError{Name: "update_time", err: errors.New(`ent: missing required field "ViewResource.update_time"`)}
-	}
 	if _, ok := _c.mutation.ViewID(); !ok {
 		return &ValidationError{Name: "view_id", err: errors.New(`ent: missing required field "ViewResource.view_id"`)}
 	}
@@ -205,11 +91,6 @@ func (_c *ViewResourceCreate) check() error {
 	if v, ok := _c.mutation.ResourceID(); ok {
 		if err := viewresource.ResourceIDValidator(v); err != nil {
 			return &ValidationError{Name: "resource_id", err: fmt.Errorf(`ent: validator failed for field "ViewResource.resource_id": %w`, err)}
-		}
-	}
-	if v, ok := _c.mutation.ID(); ok {
-		if err := viewresource.IDValidator(v); err != nil {
-			return &ValidationError{Name: "id", err: fmt.Errorf(`ent: validator failed for field "ViewResource.id": %w`, err)}
 		}
 	}
 	if len(_c.mutation.ViewIDs()) == 0 {
@@ -232,10 +113,8 @@ func (_c *ViewResourceCreate) sqlSave(ctx context.Context) (*ViewResource, error
 		}
 		return nil, err
 	}
-	if _spec.ID.Value != _node.ID {
-		id := _spec.ID.Value.(int64)
-		_node.ID = int64(id)
-	}
+	id := _spec.ID.Value.(int64)
+	_node.ID = int(id)
 	_c.mutation.id = &_node.ID
 	_c.mutation.done = true
 	return _node, nil
@@ -244,28 +123,8 @@ func (_c *ViewResourceCreate) sqlSave(ctx context.Context) (*ViewResource, error
 func (_c *ViewResourceCreate) createSpec() (*ViewResource, *sqlgraph.CreateSpec) {
 	var (
 		_node = &ViewResource{config: _c.config}
-		_spec = sqlgraph.NewCreateSpec(viewresource.Table, sqlgraph.NewFieldSpec(viewresource.FieldID, field.TypeInt64))
+		_spec = sqlgraph.NewCreateSpec(viewresource.Table, sqlgraph.NewFieldSpec(viewresource.FieldID, field.TypeInt))
 	)
-	if id, ok := _c.mutation.ID(); ok {
-		_node.ID = id
-		_spec.ID.Value = id
-	}
-	if value, ok := _c.mutation.CreateAuthor(); ok {
-		_spec.SetField(viewresource.FieldCreateAuthor, field.TypeInt64, value)
-		_node.CreateAuthor = value
-	}
-	if value, ok := _c.mutation.UpdateAuthor(); ok {
-		_spec.SetField(viewresource.FieldUpdateAuthor, field.TypeInt64, value)
-		_node.UpdateAuthor = value
-	}
-	if value, ok := _c.mutation.CreateTime(); ok {
-		_spec.SetField(viewresource.FieldCreateTime, field.TypeTime, value)
-		_node.CreateTime = value
-	}
-	if value, ok := _c.mutation.UpdateTime(); ok {
-		_spec.SetField(viewresource.FieldUpdateTime, field.TypeTime, value)
-		_node.UpdateTime = value
-	}
 	if nodes := _c.mutation.ViewIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2O,
@@ -341,7 +200,6 @@ func (_c *ViewResourceCreateBulk) Save(ctx context.Context) ([]*ViewResource, er
 	for i := range _c.builders {
 		func(i int, root context.Context) {
 			builder := _c.builders[i]
-			builder.defaults()
 			var mut Mutator = MutateFunc(func(ctx context.Context, m Mutation) (Value, error) {
 				mutation, ok := m.(*ViewResourceMutation)
 				if !ok {
@@ -368,9 +226,9 @@ func (_c *ViewResourceCreateBulk) Save(ctx context.Context) ([]*ViewResource, er
 					return nil, err
 				}
 				mutation.id = &nodes[i].ID
-				if specs[i].ID.Value != nil && nodes[i].ID == 0 {
+				if specs[i].ID.Value != nil {
 					id := specs[i].ID.Value.(int64)
-					nodes[i].ID = int64(id)
+					nodes[i].ID = int(id)
 				}
 				mutation.done = true
 				return nodes[i], nil

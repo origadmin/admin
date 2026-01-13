@@ -35,6 +35,9 @@ func (r *permissionRepo) Get(ctx context.Context, id int64, opts ...*dto.Permiss
 	if opt.WithRoles {
 		query.WithRoles()
 	}
+	if opt.WithViews {
+		query.WithViews()
+	}
 
 	if opt.ReadMask != nil {
 		s := db.SelectFields(query, opt.ReadMask, permission.ValidColumn, permission.FieldID, new(types.Permission))
@@ -97,6 +100,9 @@ func (r *permissionRepo) List(ctx context.Context, opts ...*dto.PermissionQueryO
 	}
 	if opt.WithRoles {
 		query.WithRoles()
+	}
+	if opt.WithViews {
+		query.WithViews()
 	}
 
 	if opt.ReadMask != nil {

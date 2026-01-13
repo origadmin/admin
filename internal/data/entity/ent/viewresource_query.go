@@ -132,8 +132,8 @@ func (_q *ViewResourceQuery) FirstX(ctx context.Context) *ViewResource {
 
 // FirstID returns the first ViewResource ID from the query.
 // Returns a *NotFoundError when no ViewResource ID was found.
-func (_q *ViewResourceQuery) FirstID(ctx context.Context) (id int64, err error) {
-	var ids []int64
+func (_q *ViewResourceQuery) FirstID(ctx context.Context) (id int, err error) {
+	var ids []int
 	if ids, err = _q.Limit(1).IDs(setContextOp(ctx, _q.ctx, ent.OpQueryFirstID)); err != nil {
 		return
 	}
@@ -145,7 +145,7 @@ func (_q *ViewResourceQuery) FirstID(ctx context.Context) (id int64, err error) 
 }
 
 // FirstIDX is like FirstID, but panics if an error occurs.
-func (_q *ViewResourceQuery) FirstIDX(ctx context.Context) int64 {
+func (_q *ViewResourceQuery) FirstIDX(ctx context.Context) int {
 	id, err := _q.FirstID(ctx)
 	if err != nil && !IsNotFound(err) {
 		panic(err)
@@ -183,8 +183,8 @@ func (_q *ViewResourceQuery) OnlyX(ctx context.Context) *ViewResource {
 // OnlyID is like Only, but returns the only ViewResource ID in the query.
 // Returns a *NotSingularError when more than one ViewResource ID is found.
 // Returns a *NotFoundError when no entities are found.
-func (_q *ViewResourceQuery) OnlyID(ctx context.Context) (id int64, err error) {
-	var ids []int64
+func (_q *ViewResourceQuery) OnlyID(ctx context.Context) (id int, err error) {
+	var ids []int
 	if ids, err = _q.Limit(2).IDs(setContextOp(ctx, _q.ctx, ent.OpQueryOnlyID)); err != nil {
 		return
 	}
@@ -200,7 +200,7 @@ func (_q *ViewResourceQuery) OnlyID(ctx context.Context) (id int64, err error) {
 }
 
 // OnlyIDX is like OnlyID, but panics if an error occurs.
-func (_q *ViewResourceQuery) OnlyIDX(ctx context.Context) int64 {
+func (_q *ViewResourceQuery) OnlyIDX(ctx context.Context) int {
 	id, err := _q.OnlyID(ctx)
 	if err != nil {
 		panic(err)
@@ -228,7 +228,7 @@ func (_q *ViewResourceQuery) AllX(ctx context.Context) []*ViewResource {
 }
 
 // IDs executes the query and returns a list of ViewResource IDs.
-func (_q *ViewResourceQuery) IDs(ctx context.Context) (ids []int64, err error) {
+func (_q *ViewResourceQuery) IDs(ctx context.Context) (ids []int, err error) {
 	if _q.ctx.Unique == nil && _q.path != nil {
 		_q.Unique(true)
 	}
@@ -240,7 +240,7 @@ func (_q *ViewResourceQuery) IDs(ctx context.Context) (ids []int64, err error) {
 }
 
 // IDsX is like IDs, but panics if an error occurs.
-func (_q *ViewResourceQuery) IDsX(ctx context.Context) []int64 {
+func (_q *ViewResourceQuery) IDsX(ctx context.Context) []int {
 	ids, err := _q.IDs(ctx)
 	if err != nil {
 		panic(err)
@@ -337,12 +337,12 @@ func (_q *ViewResourceQuery) WithResource(opts ...func(*ResourceQuery)) *ViewRes
 // Example:
 //
 //	var v []struct {
-//		CreateAuthor int64 `json:"create_author,omitempty"`
+//		ViewID int64 `json:"view_id,omitempty"`
 //		Count int `json:"count,omitempty"`
 //	}
 //
 //	client.ViewResource.Query().
-//		GroupBy(viewresource.FieldCreateAuthor).
+//		GroupBy(viewresource.FieldViewID).
 //		Aggregate(ent.Count()).
 //		Scan(ctx, &v)
 func (_q *ViewResourceQuery) GroupBy(field string, fields ...string) *ViewResourceGroupBy {
@@ -360,11 +360,11 @@ func (_q *ViewResourceQuery) GroupBy(field string, fields ...string) *ViewResour
 // Example:
 //
 //	var v []struct {
-//		CreateAuthor int64 `json:"create_author,omitempty"`
+//		ViewID int64 `json:"view_id,omitempty"`
 //	}
 //
 //	client.ViewResource.Query().
-//		Select(viewresource.FieldCreateAuthor).
+//		Select(viewresource.FieldViewID).
 //		Scan(ctx, &v)
 func (_q *ViewResourceQuery) Select(fields ...string) *ViewResourceSelect {
 	_q.ctx.Fields = append(_q.ctx.Fields, fields...)
@@ -522,7 +522,7 @@ func (_q *ViewResourceQuery) sqlCount(ctx context.Context) (int, error) {
 }
 
 func (_q *ViewResourceQuery) querySpec() *sqlgraph.QuerySpec {
-	_spec := sqlgraph.NewQuerySpec(viewresource.Table, viewresource.Columns, sqlgraph.NewFieldSpec(viewresource.FieldID, field.TypeInt64))
+	_spec := sqlgraph.NewQuerySpec(viewresource.Table, viewresource.Columns, sqlgraph.NewFieldSpec(viewresource.FieldID, field.TypeInt))
 	_spec.From = _q.sql
 	if unique := _q.ctx.Unique; unique != nil {
 		_spec.Unique = *unique
@@ -639,20 +639,12 @@ func (_q *ViewResourceQuery) Modify(modifiers ...func(s *sql.Selector)) *ViewRes
 // Example:
 //
 //	var v []struct {
-//	  CreateAuthor int64 `json:"create_author,omitempty"`
-//	  UpdateAuthor int64 `json:"update_author,omitempty"`
-//	  CreateTime time.Time `json:"create_time,omitempty"`
-//	  UpdateTime time.Time `json:"update_time,omitempty"`
 //	  ViewID int64 `json:"view_id,omitempty"`
 //	  ResourceID int64 `json:"resource_id,omitempty"`
 //	}
 //
 //	client.ViewResource.Query().
 //	  Omit(
-//	  viewresource.FieldCreateAuthor,
-//	  viewresource.FieldUpdateAuthor,
-//	  viewresource.FieldCreateTime,
-//	  viewresource.FieldUpdateTime,
 //	  viewresource.FieldViewID,
 //	  viewresource.FieldResourceID,
 //	  ).
