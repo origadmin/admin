@@ -35,6 +35,246 @@ var (
 	_ = sort.Sort
 )
 
+// Validate checks the field values on ListMyViewsRequest with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the first error encountered is returned, or nil if there are no violations.
+func (m *ListMyViewsRequest) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on ListMyViewsRequest with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the result is a list of violation errors wrapped in
+// ListMyViewsRequestMultiError, or nil if none found.
+func (m *ListMyViewsRequest) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *ListMyViewsRequest) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	// no validation rules for Scope
+
+	if len(errors) > 0 {
+		return ListMyViewsRequestMultiError(errors)
+	}
+
+	return nil
+}
+
+// ListMyViewsRequestMultiError is an error wrapping multiple validation errors
+// returned by ListMyViewsRequest.ValidateAll() if the designated constraints
+// aren't met.
+type ListMyViewsRequestMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m ListMyViewsRequestMultiError) Error() string {
+	msgs := make([]string, 0, len(m))
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m ListMyViewsRequestMultiError) AllErrors() []error { return m }
+
+// ListMyViewsRequestValidationError is the validation error returned by
+// ListMyViewsRequest.Validate if the designated constraints aren't met.
+type ListMyViewsRequestValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e ListMyViewsRequestValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e ListMyViewsRequestValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e ListMyViewsRequestValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e ListMyViewsRequestValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e ListMyViewsRequestValidationError) ErrorName() string {
+	return "ListMyViewsRequestValidationError"
+}
+
+// Error satisfies the builtin error interface
+func (e ListMyViewsRequestValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sListMyViewsRequest.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = ListMyViewsRequestValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = ListMyViewsRequestValidationError{}
+
+// Validate checks the field values on ListMyViewsResponse with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the first error encountered is returned, or nil if there are no violations.
+func (m *ListMyViewsResponse) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on ListMyViewsResponse with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the result is a list of violation errors wrapped in
+// ListMyViewsResponseMultiError, or nil if none found.
+func (m *ListMyViewsResponse) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *ListMyViewsResponse) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	for idx, item := range m.GetViews() {
+		_, _ = idx, item
+
+		if all {
+			switch v := interface{}(item).(type) {
+			case interface{ ValidateAll() error }:
+				if err := v.ValidateAll(); err != nil {
+					errors = append(errors, ListMyViewsResponseValidationError{
+						field:  fmt.Sprintf("Views[%v]", idx),
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			case interface{ Validate() error }:
+				if err := v.Validate(); err != nil {
+					errors = append(errors, ListMyViewsResponseValidationError{
+						field:  fmt.Sprintf("Views[%v]", idx),
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			}
+		} else if v, ok := interface{}(item).(interface{ Validate() error }); ok {
+			if err := v.Validate(); err != nil {
+				return ListMyViewsResponseValidationError{
+					field:  fmt.Sprintf("Views[%v]", idx),
+					reason: "embedded message failed validation",
+					cause:  err,
+				}
+			}
+		}
+
+	}
+
+	if len(errors) > 0 {
+		return ListMyViewsResponseMultiError(errors)
+	}
+
+	return nil
+}
+
+// ListMyViewsResponseMultiError is an error wrapping multiple validation
+// errors returned by ListMyViewsResponse.ValidateAll() if the designated
+// constraints aren't met.
+type ListMyViewsResponseMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m ListMyViewsResponseMultiError) Error() string {
+	msgs := make([]string, 0, len(m))
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m ListMyViewsResponseMultiError) AllErrors() []error { return m }
+
+// ListMyViewsResponseValidationError is the validation error returned by
+// ListMyViewsResponse.Validate if the designated constraints aren't met.
+type ListMyViewsResponseValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e ListMyViewsResponseValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e ListMyViewsResponseValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e ListMyViewsResponseValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e ListMyViewsResponseValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e ListMyViewsResponseValidationError) ErrorName() string {
+	return "ListMyViewsResponseValidationError"
+}
+
+// Error satisfies the builtin error interface
+func (e ListMyViewsResponseValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sListMyViewsResponse.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = ListMyViewsResponseValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = ListMyViewsResponseValidationError{}
+
 // Validate checks the field values on GetProfileRequest with the rules defined
 // in the proto definition for this message. If any rules are violated, the
 // first error encountered is returned, or nil if there are no violations.

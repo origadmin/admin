@@ -20,7 +20,6 @@ var _ = binding.EncodeURL
 const _ = http.SupportPackageIsVersion1
 
 const OperationAuthServiceGetCaptcha = "/api.v1.services.auth.AuthService/GetCaptcha"
-const OperationAuthServiceListMyViews = "/api.v1.services.auth.AuthService/ListMyViews"
 const OperationAuthServiceLogin = "/api.v1.services.auth.AuthService/Login"
 const OperationAuthServiceLogout = "/api.v1.services.auth.AuthService/Logout"
 const OperationAuthServiceRefreshToken = "/api.v1.services.auth.AuthService/RefreshToken"
@@ -29,9 +28,6 @@ const OperationAuthServiceRegister = "/api.v1.services.auth.AuthService/Register
 type AuthServiceHTTPServer interface {
 	// GetCaptcha GetCaptcha generates a new captcha.
 	GetCaptcha(context.Context, *GetCaptchaRequest) (*GetCaptchaResponse, error)
-	// ListMyViews ListMyViews retrieves the view tree for the currently authenticated user,
-	// filtered by their permissions.
-	ListMyViews(context.Context, *ListMyViewsRequest) (*ListMyViewsResponse, error)
 	// Login Login authenticates a user and returns a token pair.
 	Login(context.Context, *LoginRequest) (*LoginResponse, error)
 	// Logout Logout invalidates the user's session.
@@ -48,7 +44,6 @@ func RegisterAuthServiceHTTPServer(s *http.Server, srv AuthServiceHTTPServer) {
 	r.POST("/auth/register", _AuthService_Register0_HTTP_Handler(srv))
 	r.POST("/auth/logout", _AuthService_Logout0_HTTP_Handler(srv))
 	r.POST("/auth/refresh", _AuthService_RefreshToken0_HTTP_Handler(srv))
-	r.GET("/me/views", _AuthService_ListMyViews0_HTTP_Handler(srv))
 	r.GET("/auth/captcha", _AuthService_GetCaptcha0_HTTP_Handler(srv))
 }
 
@@ -140,25 +135,6 @@ func _AuthService_RefreshToken0_HTTP_Handler(srv AuthServiceHTTPServer) func(ctx
 	}
 }
 
-func _AuthService_ListMyViews0_HTTP_Handler(srv AuthServiceHTTPServer) func(ctx http.Context) error {
-	return func(ctx http.Context) error {
-		var in ListMyViewsRequest
-		if err := ctx.BindQuery(&in); err != nil {
-			return err
-		}
-		http.SetOperation(ctx, OperationAuthServiceListMyViews)
-		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
-			return srv.ListMyViews(ctx, req.(*ListMyViewsRequest))
-		})
-		out, err := h(ctx, &in)
-		if err != nil {
-			return err
-		}
-		reply := out.(*ListMyViewsResponse)
-		return ctx.Result(200, reply)
-	}
-}
-
 func _AuthService_GetCaptcha0_HTTP_Handler(srv AuthServiceHTTPServer) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
 		var in GetCaptchaRequest
@@ -181,9 +157,6 @@ func _AuthService_GetCaptcha0_HTTP_Handler(srv AuthServiceHTTPServer) func(ctx h
 type AuthServiceHTTPClient interface {
 	// GetCaptcha GetCaptcha generates a new captcha.
 	GetCaptcha(ctx context.Context, req *GetCaptchaRequest, opts ...http.CallOption) (rsp *GetCaptchaResponse, err error)
-	// ListMyViews ListMyViews retrieves the view tree for the currently authenticated user,
-	// filtered by their permissions.
-	ListMyViews(ctx context.Context, req *ListMyViewsRequest, opts ...http.CallOption) (rsp *ListMyViewsResponse, err error)
 	// Login Login authenticates a user and returns a token pair.
 	Login(ctx context.Context, req *LoginRequest, opts ...http.CallOption) (rsp *LoginResponse, err error)
 	// Logout Logout invalidates the user's session.
@@ -208,21 +181,6 @@ func (c *AuthServiceHTTPClientImpl) GetCaptcha(ctx context.Context, in *GetCaptc
 	pattern := "/auth/captcha"
 	path := binding.EncodeURL(pattern, in, true)
 	opts = append(opts, http.Operation(OperationAuthServiceGetCaptcha))
-	opts = append(opts, http.PathTemplate(pattern))
-	err := c.cc.Invoke(ctx, "GET", path, nil, &out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return &out, nil
-}
-
-// ListMyViews ListMyViews retrieves the view tree for the currently authenticated user,
-// filtered by their permissions.
-func (c *AuthServiceHTTPClientImpl) ListMyViews(ctx context.Context, in *ListMyViewsRequest, opts ...http.CallOption) (*ListMyViewsResponse, error) {
-	var out ListMyViewsResponse
-	pattern := "/me/views"
-	path := binding.EncodeURL(pattern, in, true)
-	opts = append(opts, http.Operation(OperationAuthServiceListMyViews))
 	opts = append(opts, http.PathTemplate(pattern))
 	err := c.cc.Invoke(ctx, "GET", path, nil, &out, opts...)
 	if err != nil {

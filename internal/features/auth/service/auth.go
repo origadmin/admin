@@ -4,18 +4,18 @@ import (
 	"context"
 	"fmt"
 
+	v1 "origadmin/application/admin/api/v1/services/auth"
+	"origadmin/application/admin/api/v1/services/types"
+	"origadmin/application/admin/internal/features/auth/biz"
+	"origadmin/application/admin/internal/helpers/captcha"
+
 	"github.com/go-kratos/kratos/v2/errors"
 	"github.com/go-kratos/kratos/v2/log"
 	"github.com/go-kratos/kratos/v2/transport"
 
 	securityv1 "github.com/origadmin/contrib/api/gen/go/security/v1"
-	"github.com/origadmin/contrib/security"
 	"github.com/origadmin/contrib/security/credential"
 	securityPrincipal "github.com/origadmin/contrib/security/principal"
-	v1 "origadmin/application/admin/api/v1/services/auth"
-	"origadmin/application/admin/api/v1/services/types"
-	"origadmin/application/admin/internal/features/auth/biz"
-	"origadmin/application/admin/internal/helpers/captcha"
 )
 
 // AuthService is a service for authentication.
@@ -30,21 +30,6 @@ type AuthService struct {
 // NewAuthService creates a new authentication service.
 func NewAuthService(uc *biz.AuthUseCase, cuc *biz.CaptchaUseCase, creator credential.Creator, logger log.Logger) *AuthService {
 	return &AuthService{uc: uc, captchaUC: cuc, creator: creator, log: log.NewHelper(logger)}
-}
-
-// ListMyViews retrieves the menu tree for the currently authenticated user.
-func (s *AuthService) ListMyViews(ctx context.Context, req *v1.ListMyViewsRequest) (*v1.ListMyViewsResponse, error) {
-	p, ok := security.FromContext(ctx)
-	if !ok {
-		return nil, errors.Unauthorized("UNAUTHORIZED", "missing principal")
-	}
-
-	views, err := s.uc.ListMyViews(ctx, p, req.GetScope())
-	if err != nil {
-		return nil, err
-	}
-
-	return &v1.ListMyViewsResponse{Views: views}, nil
 }
 
 // Login authenticates a user and returns a token pair.

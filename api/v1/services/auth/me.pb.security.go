@@ -10,6 +10,12 @@ import (
 func init() {
 	policies := []security.Policy{
 		{
+			ServiceMethod: "/api.v1.services.auth.MeService/ListMyViews",
+			GatewayPath:   "GET:/me/views",
+			Name:          "jwt-auth",
+			VersionID:     "135fcb079c810ab649a9b7f90b2f8d5c51c0165a24ab61f98bd536b9bc7c8366",
+		},
+		{
 			ServiceMethod: "/api.v1.services.auth.MeService/GetProfile",
 			GatewayPath:   "GET:/me/profile",
 			Name:          "jwt-auth",

@@ -19,6 +19,7 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
+	MeService_ListMyViews_FullMethodName      = "/api.v1.services.auth.MeService/ListMyViews"
 	MeService_GetProfile_FullMethodName       = "/api.v1.services.auth.MeService/GetProfile"
 	MeService_UpdateProfile_FullMethodName    = "/api.v1.services.auth.MeService/UpdateProfile"
 	MeService_UpdatePassword_FullMethodName   = "/api.v1.services.auth.MeService/UpdatePassword"
@@ -32,6 +33,8 @@ const (
 //
 // Service MeService provides APIs for the currently authenticated user to manage their own profile and data.
 type MeServiceClient interface {
+	// ListMyViews retrieves the menu/view tree for the currently authenticated user.
+	ListMyViews(ctx context.Context, in *ListMyViewsRequest, opts ...grpc.CallOption) (*ListMyViewsResponse, error)
 	// GetProfile retrieves the profile of the currently authenticated user.
 	GetProfile(ctx context.Context, in *GetProfileRequest, opts ...grpc.CallOption) (*GetProfileResponse, error)
 	// UpdateProfile updates the profile of the currently authenticated user.
@@ -50,6 +53,16 @@ type meServiceClient struct {
 
 func NewMeServiceClient(cc grpc.ClientConnInterface) MeServiceClient {
 	return &meServiceClient{cc}
+}
+
+func (c *meServiceClient) ListMyViews(ctx context.Context, in *ListMyViewsRequest, opts ...grpc.CallOption) (*ListMyViewsResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(ListMyViewsResponse)
+	err := c.cc.Invoke(ctx, MeService_ListMyViews_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
 }
 
 func (c *meServiceClient) GetProfile(ctx context.Context, in *GetProfileRequest, opts ...grpc.CallOption) (*GetProfileResponse, error) {
@@ -108,6 +121,8 @@ func (c *meServiceClient) GetUserRoles(ctx context.Context, in *GetUserRolesRequ
 //
 // Service MeService provides APIs for the currently authenticated user to manage their own profile and data.
 type MeServiceServer interface {
+	// ListMyViews retrieves the menu/view tree for the currently authenticated user.
+	ListMyViews(context.Context, *ListMyViewsRequest) (*ListMyViewsResponse, error)
 	// GetProfile retrieves the profile of the currently authenticated user.
 	GetProfile(context.Context, *GetProfileRequest) (*GetProfileResponse, error)
 	// UpdateProfile updates the profile of the currently authenticated user.
@@ -128,6 +143,9 @@ type MeServiceServer interface {
 // pointer dereference when methods are called.
 type UnimplementedMeServiceServer struct{}
 
+func (UnimplementedMeServiceServer) ListMyViews(context.Context, *ListMyViewsRequest) (*ListMyViewsResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ListMyViews not implemented")
+}
 func (UnimplementedMeServiceServer) GetProfile(context.Context, *GetProfileRequest) (*GetProfileResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetProfile not implemented")
 }
@@ -162,6 +180,24 @@ func RegisterMeServiceServer(s grpc.ServiceRegistrar, srv MeServiceServer) {
 		t.testEmbeddedByValue()
 	}
 	s.RegisterService(&MeService_ServiceDesc, srv)
+}
+
+func _MeService_ListMyViews_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListMyViewsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MeServiceServer).ListMyViews(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: MeService_ListMyViews_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MeServiceServer).ListMyViews(ctx, req.(*ListMyViewsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
 }
 
 func _MeService_GetProfile_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
@@ -261,6 +297,10 @@ var MeService_ServiceDesc = grpc.ServiceDesc{
 	ServiceName: "api.v1.services.auth.MeService",
 	HandlerType: (*MeServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
+		{
+			MethodName: "ListMyViews",
+			Handler:    _MeService_ListMyViews_Handler,
+		},
 		{
 			MethodName: "GetProfile",
 			Handler:    _MeService_GetProfile_Handler,

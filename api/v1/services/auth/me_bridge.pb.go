@@ -28,6 +28,7 @@ var (
 	_ = codes.Unimplemented
 )
 
+const MeServiceListMyViewsBridgeOperation = "/api.v1.services.auth.MeService/ListMyViews"
 const MeServiceGetProfileBridgeOperation = "/api.v1.services.auth.MeService/GetProfile"
 const MeServiceUpdateProfileBridgeOperation = "/api.v1.services.auth.MeService/UpdateProfile"
 const MeServiceUpdatePasswordBridgeOperation = "/api.v1.services.auth.MeService/UpdatePassword"
@@ -35,6 +36,8 @@ const MeServiceGetUserResourcesBridgeOperation = "/api.v1.services.auth.MeServic
 const MeServiceGetUserRolesBridgeOperation = "/api.v1.services.auth.MeService/GetUserRoles"
 
 type MeServiceBridgeServer interface {
+	// ListMyViews retrieves the menu/view tree for the currently authenticated user.
+	ListMyViews(context.Context, *ListMyViewsRequest) (*ListMyViewsResponse, error)
 	// GetProfile retrieves the profile of the currently authenticated user.
 	GetProfile(context.Context, *GetProfileRequest) (*GetProfileResponse, error)
 	// UpdateProfile updates the profile of the currently authenticated user.
@@ -48,6 +51,7 @@ type MeServiceBridgeServer interface {
 }
 
 type MeServiceHooker interface {
+	MeServiceListMyViewsHooker
 	MeServiceGetProfileHooker
 	MeServiceUpdateProfileHooker
 	MeServiceUpdatePasswordHooker
@@ -58,6 +62,10 @@ type MeServiceHooker interface {
 type MeServiceHookedBridger interface {
 	MeServiceHooker
 	MeServiceBridgeServer
+}
+type MeServiceListMyViewsHooker interface {
+	PrepareListMyViews(http.Context, *ListMyViewsRequest) (context.Context, error)
+	CompleteListMyViews(http.Context, *ListMyViewsRequest, *ListMyViewsResponse) error
 }
 type MeServiceGetProfileHooker interface {
 	PrepareGetProfile(http.Context, *GetProfileRequest) (context.Context, error)
@@ -82,11 +90,35 @@ type MeServiceGetUserRolesHooker interface {
 
 func RegisterMeServiceBridgeServer(s *http.Server, srv MeServiceHookedBridger) {
 	r := s.Route("/")
+	r.GET("/me/views", _MeService_ListMyViews0_Bridge_Handler(srv))
 	r.GET("/me/profile", _MeService_GetProfile0_Bridge_Handler(srv))
 	r.PUT("/me/profile", _MeService_UpdateProfile0_Bridge_Handler(srv))
 	r.PUT("/me/password", _MeService_UpdatePassword0_Bridge_Handler(srv))
 	r.GET("/me/resources", _MeService_GetUserResources0_Bridge_Handler(srv))
 	r.GET("/me/roles", _MeService_GetUserRoles0_Bridge_Handler(srv))
+}
+
+func _MeService_ListMyViews0_Bridge_Handler(srv MeServiceHookedBridger) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in ListMyViewsRequest
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationMeServiceListMyViews)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.ListMyViews(ctx, req.(*ListMyViewsRequest))
+		})
+
+		newctx, err := srv.PrepareListMyViews(ctx, &in)
+		if err != nil {
+			return err
+		}
+		out, err := h(newctx, &in)
+		if err != nil {
+			return err
+		}
+		return srv.CompleteListMyViews(ctx, &in, out.(*ListMyViewsResponse))
+	}
 }
 
 func _MeService_GetProfile0_Bridge_Handler(srv MeServiceHookedBridger) func(ctx http.Context) error {
@@ -217,6 +249,14 @@ func _MeService_GetUserRoles0_Bridge_Handler(srv MeServiceHookedBridger) func(ct
 // pointer dereference when methods are called.
 type UnimplementedMeServiceHooked struct{}
 
+func (UnimplementedMeServiceHooked) PrepareListMyViews(ctx http.Context, in *ListMyViewsRequest) (context.Context, error) {
+	return ctx, nil
+}
+
+func (UnimplementedMeServiceHooked) CompleteListMyViews(ctx http.Context, in *ListMyViewsRequest, out *ListMyViewsResponse) error {
+	return ctx.Result(200, out)
+}
+
 func (UnimplementedMeServiceHooked) PrepareGetProfile(ctx http.Context, in *GetProfileRequest) (context.Context, error) {
 	return ctx, nil
 }
@@ -279,6 +319,10 @@ func NewMeServiceHTTPBridge(client *http.Client) MeServiceHTTPServer {
 	return &MeServiceHTTPBridgeImpl{client: NewMeServiceHTTPClient(client)}
 }
 
+func (c *MeServiceHTTPBridgeImpl) ListMyViews(ctx context.Context, in *ListMyViewsRequest) (*ListMyViewsResponse, error) {
+	return c.client.ListMyViews(ctx, in)
+}
+
 func (c *MeServiceHTTPBridgeImpl) GetProfile(ctx context.Context, in *GetProfileRequest) (*GetProfileResponse, error) {
 	return c.client.GetProfile(ctx, in)
 }
@@ -305,6 +349,10 @@ type MeServiceBridgeImpl struct {
 
 func NewMeServiceBridge(client grpc.ClientConnInterface) MeServiceServer {
 	return &MeServiceBridgeImpl{client: NewMeServiceClient(client)}
+}
+
+func (c *MeServiceBridgeImpl) ListMyViews(ctx context.Context, in *ListMyViewsRequest) (*ListMyViewsResponse, error) {
+	return c.client.ListMyViews(ctx, in)
 }
 
 func (c *MeServiceBridgeImpl) GetProfile(ctx context.Context, in *GetProfileRequest) (*GetProfileResponse, error) {
@@ -337,6 +385,10 @@ func NewMeServiceGRPC2HTTP(client grpc.ClientConnInterface) MeServiceHTTPServer 
 	return &MeServiceGRPC2HTTPBridgeImpl{client: NewMeServiceClient(client)}
 }
 
+func (c *MeServiceGRPC2HTTPBridgeImpl) ListMyViews(ctx context.Context, in *ListMyViewsRequest) (*ListMyViewsResponse, error) {
+	return c.client.ListMyViews(ctx, in)
+}
+
 func (c *MeServiceGRPC2HTTPBridgeImpl) GetProfile(ctx context.Context, in *GetProfileRequest) (*GetProfileResponse, error) {
 	return c.client.GetProfile(ctx, in)
 }
@@ -363,6 +415,10 @@ type MeServiceHTTP2GRPCBridgeImpl struct {
 
 func NewMeServiceHTTP2GRPC(client *http.Client) MeServiceServer {
 	return &MeServiceHTTP2GRPCBridgeImpl{client: NewMeServiceHTTPClient(client)}
+}
+
+func (c *MeServiceHTTP2GRPCBridgeImpl) ListMyViews(ctx context.Context, in *ListMyViewsRequest) (*ListMyViewsResponse, error) {
+	return c.client.ListMyViews(ctx, in)
 }
 
 func (c *MeServiceHTTP2GRPCBridgeImpl) GetProfile(ctx context.Context, in *GetProfileRequest) (*GetProfileResponse, error) {

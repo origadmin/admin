@@ -82,6 +82,17 @@ func (r *userRepo) Delete(ctx context.Context, id int64) error {
 	return r.db.User(ctx).DeleteOneID(id).Exec(ctx)
 }
 
+func (r *userRepo) Restore(ctx context.Context, id int64) error {
+	// We must use `Update` which bypasses the soft-delete interceptor
+	// to restore a soft-deleted record.
+	_, err := r.db.User(ctx).
+		Update().
+		Where(user.ID(id)).
+		ClearDeleteTime().
+		Save(ctx)
+	return err
+}
+
 func (r *userRepo) Update(ctx context.Context, u *types.User, opts ...*dto.UserUpdateOption) (*types.User, error) {
 	var updatedUser *ent.User
 	err := r.db.Tx(ctx, func(tx context.Context) error {

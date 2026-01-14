@@ -489,13 +489,13 @@ paths:
     /me/views:
         get:
             tags:
-                - AuthService
-            description: "ListMyViews retrieves the view tree for the currently authenticated user,\r\n filtered by their permissions."
-            operationId: AuthService_ListMyViews
+                - MeService
+            description: ListMyViews retrieves the menu/view tree for the currently authenticated user.
+            operationId: MeService_ListMyViews
             parameters:
                 - name: scope
                   in: query
-                  description: The scope of the views to retrieve (e.g., "sidebar", "header").
+                  description: The scope of the views to retrieve (e.g., "backend", "frontend").
                   schema:
                     type: string
             responses:
@@ -2250,7 +2250,6 @@ components:
                     type: array
                     items:
                         $ref: '#/components/schemas/api.v1.services.types.View'
-                    description: The filtered view tree.
             description: The response message for the ListMyViews RPC.
         api.v1.services.auth.ListPoliciesResponse:
             type: object

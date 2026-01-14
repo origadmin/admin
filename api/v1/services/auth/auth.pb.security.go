@@ -34,12 +34,6 @@ func init() {
 			VersionID:     "570c41f64c1e11446c73d2bc95b714c2cb88807d7210e3829149fb0f5d57b853",
 		},
 		{
-			ServiceMethod: "/api.v1.services.auth.AuthService/ListMyViews",
-			GatewayPath:   "GET:/me/views",
-			Name:          "jwt-auth",
-			VersionID:     "509d0d9cc3b96a02a22f613aba24b5d6351fc00c8e8ccef15e1aa8149115faa0",
-		},
-		{
 			ServiceMethod: "/api.v1.services.auth.AuthService/GetCaptcha",
 			GatewayPath:   "GET:/auth/captcha",
 			Name:          "public",

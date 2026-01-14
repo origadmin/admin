@@ -22,6 +22,7 @@ const _ = http.SupportPackageIsVersion1
 const OperationMeServiceGetProfile = "/api.v1.services.auth.MeService/GetProfile"
 const OperationMeServiceGetUserResources = "/api.v1.services.auth.MeService/GetUserResources"
 const OperationMeServiceGetUserRoles = "/api.v1.services.auth.MeService/GetUserRoles"
+const OperationMeServiceListMyViews = "/api.v1.services.auth.MeService/ListMyViews"
 const OperationMeServiceUpdatePassword = "/api.v1.services.auth.MeService/UpdatePassword"
 const OperationMeServiceUpdateProfile = "/api.v1.services.auth.MeService/UpdateProfile"
 
@@ -32,6 +33,8 @@ type MeServiceHTTPServer interface {
 	GetUserResources(context.Context, *GetUserResourcesRequest) (*GetUserResourcesResponse, error)
 	// GetUserRoles GetUserRoles retrieves the role list for the current user.
 	GetUserRoles(context.Context, *GetUserRolesRequest) (*GetUserRolesResponse, error)
+	// ListMyViews ListMyViews retrieves the menu/view tree for the currently authenticated user.
+	ListMyViews(context.Context, *ListMyViewsRequest) (*ListMyViewsResponse, error)
 	// UpdatePassword UpdatePassword changes the password for the currently authenticated user.
 	UpdatePassword(context.Context, *UpdatePasswordRequest) (*UpdatePasswordResponse, error)
 	// UpdateProfile UpdateProfile updates the profile of the currently authenticated user.
@@ -40,11 +43,31 @@ type MeServiceHTTPServer interface {
 
 func RegisterMeServiceHTTPServer(s *http.Server, srv MeServiceHTTPServer) {
 	r := s.Route("/")
+	r.GET("/me/views", _MeService_ListMyViews0_HTTP_Handler(srv))
 	r.GET("/me/profile", _MeService_GetProfile0_HTTP_Handler(srv))
 	r.PUT("/me/profile", _MeService_UpdateProfile0_HTTP_Handler(srv))
 	r.PUT("/me/password", _MeService_UpdatePassword0_HTTP_Handler(srv))
 	r.GET("/me/resources", _MeService_GetUserResources0_HTTP_Handler(srv))
 	r.GET("/me/roles", _MeService_GetUserRoles0_HTTP_Handler(srv))
+}
+
+func _MeService_ListMyViews0_HTTP_Handler(srv MeServiceHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in ListMyViewsRequest
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationMeServiceListMyViews)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.ListMyViews(ctx, req.(*ListMyViewsRequest))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*ListMyViewsResponse)
+		return ctx.Result(200, reply)
+	}
 }
 
 func _MeService_GetProfile0_HTTP_Handler(srv MeServiceHTTPServer) func(ctx http.Context) error {
@@ -155,6 +178,8 @@ type MeServiceHTTPClient interface {
 	GetUserResources(ctx context.Context, req *GetUserResourcesRequest, opts ...http.CallOption) (rsp *GetUserResourcesResponse, err error)
 	// GetUserRoles GetUserRoles retrieves the role list for the current user.
 	GetUserRoles(ctx context.Context, req *GetUserRolesRequest, opts ...http.CallOption) (rsp *GetUserRolesResponse, err error)
+	// ListMyViews ListMyViews retrieves the menu/view tree for the currently authenticated user.
+	ListMyViews(ctx context.Context, req *ListMyViewsRequest, opts ...http.CallOption) (rsp *ListMyViewsResponse, err error)
 	// UpdatePassword UpdatePassword changes the password for the currently authenticated user.
 	UpdatePassword(ctx context.Context, req *UpdatePasswordRequest, opts ...http.CallOption) (rsp *UpdatePasswordResponse, err error)
 	// UpdateProfile UpdateProfile updates the profile of the currently authenticated user.
@@ -203,6 +228,20 @@ func (c *MeServiceHTTPClientImpl) GetUserRoles(ctx context.Context, in *GetUserR
 	pattern := "/me/roles"
 	path := binding.EncodeURL(pattern, in, true)
 	opts = append(opts, http.Operation(OperationMeServiceGetUserRoles))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "GET", path, nil, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, nil
+}
+
+// ListMyViews ListMyViews retrieves the menu/view tree for the currently authenticated user.
+func (c *MeServiceHTTPClientImpl) ListMyViews(ctx context.Context, in *ListMyViewsRequest, opts ...http.CallOption) (*ListMyViewsResponse, error) {
+	var out ListMyViewsResponse
+	pattern := "/me/views"
+	path := binding.EncodeURL(pattern, in, true)
+	opts = append(opts, http.Operation(OperationMeServiceListMyViews))
 	opts = append(opts, http.PathTemplate(pattern))
 	err := c.cc.Invoke(ctx, "GET", path, nil, &out, opts...)
 	if err != nil {

@@ -20,6 +20,7 @@ type UserRepo interface {
 	Create(context.Context, *types.User, string, ...*UserCreateOption) (*types.User, error)
 	Update(context.Context, *types.User, ...*UserUpdateOption) (*types.User, error)
 	Delete(context.Context, int64) error
+	Restore(context.Context, int64) error
 
 	// Business-specific methods
 	AddRoleIDs(context.Context, int64, []int64) error

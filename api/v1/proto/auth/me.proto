@@ -13,6 +13,14 @@ option java_outer_classname = "APIServiceMeProto";
 
 // Service MeService provides APIs for the currently authenticated user to manage their own profile and data.
 service MeService {
+  // ListMyViews retrieves the menu/view tree for the currently authenticated user.
+  rpc ListMyViews(ListMyViewsRequest) returns (ListMyViewsResponse) {
+    option (google.api.http) = {
+      get: "/me/views"
+    };
+    option (contrib.api.policy.v1.policy) = {name: "jwt-auth"};
+  }
+
   // GetProfile retrieves the profile of the currently authenticated user.
   rpc GetProfile(GetProfileRequest) returns (GetProfileResponse) {
     option (google.api.http) = {
@@ -54,6 +62,17 @@ service MeService {
     };
     option (contrib.api.policy.v1.policy) = {name: "jwt-auth"};
   }
+}
+
+// The request message for the ListMyViews RPC.
+message ListMyViewsRequest {
+  // The scope of the views to retrieve (e.g., "backend", "frontend").
+  string scope = 1;
+}
+
+// The response message for the ListMyViews RPC.
+message ListMyViewsResponse {
+  repeated api.v1.services.types.View views = 1;
 }
 
 // The request message for the GetProfile RPC.

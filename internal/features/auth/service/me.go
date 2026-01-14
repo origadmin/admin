@@ -23,6 +23,21 @@ func NewMeService(uc *biz.MeUseCase) *MeService {
 	return &MeService{uc: uc}
 }
 
+// ListMyViews retrieves the menu tree for the currently authenticated user.
+func (s *MeService) ListMyViews(ctx context.Context, req *v1.ListMyViewsRequest) (*v1.ListMyViewsResponse, error) {
+	p, ok := security.FromContext(ctx)
+	if !ok {
+		return nil, errors.Unauthorized("UNAUTHORIZED", "missing principal")
+	}
+
+	views, err := s.uc.ListMyViews(ctx, p, req.GetScope())
+	if err != nil {
+		return nil, err
+	}
+
+	return &v1.ListMyViewsResponse{Views: views}, nil
+}
+
 // GetProfile retrieves the profile of the currently authenticated user.
 func (s *MeService) GetProfile(ctx context.Context, req *v1.GetProfileRequest) (*v1.GetProfileResponse, error) {
 	// Get the principal from the context, which is populated by the auth middleware.
