@@ -80,7 +80,7 @@
 							m.{{ $setter }}(input.{{ $f.StructField }})
 							}
             {{- else if  $f.IsTime}}
-							if input.{{ $f.StructField }}.Unix() != 0 {
+							if !input.{{ $f.StructField }}.IsZero() {
 							m.{{ $setter }}(input.{{ $f.StructField }})
 							}
             {{- else if $f.IsJSON}}

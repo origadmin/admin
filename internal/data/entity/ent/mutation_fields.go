@@ -140,11 +140,11 @@ func (m *DepartmentMutation) SetFieldsSkipZero(input *Department, fields ...stri
 	for i := range fields {
 		switch fields[i] {
 		case department.FieldCreateTime:
-			if input.CreateTime.Unix() != 0 {
+			if !input.CreateTime.IsZero() {
 				m.SetCreateTime(input.CreateTime)
 			}
 		case department.FieldUpdateTime:
-			if input.UpdateTime.Unix() != 0 {
+			if !input.UpdateTime.IsZero() {
 				m.SetUpdateTime(input.UpdateTime)
 			}
 		case department.FieldKeyword:
@@ -247,11 +247,11 @@ func (m *NotificationMutation) SetFieldsSkipZero(input *Notification, fields ...
 				m.SetUpdateAuthor(input.UpdateAuthor)
 			}
 		case notification.FieldCreateTime:
-			if input.CreateTime.Unix() != 0 {
+			if !input.CreateTime.IsZero() {
 				m.SetCreateTime(input.CreateTime)
 			}
 		case notification.FieldUpdateTime:
-			if input.UpdateTime.Unix() != 0 {
+			if !input.UpdateTime.IsZero() {
 				m.SetUpdateTime(input.UpdateTime)
 			}
 		case notification.FieldSubject:
@@ -326,11 +326,11 @@ func (m *PermissionMutation) SetFieldsSkipZero(input *Permission, fields ...stri
 	for i := range fields {
 		switch fields[i] {
 		case permission.FieldCreateTime:
-			if input.CreateTime.Unix() != 0 {
+			if !input.CreateTime.IsZero() {
 				m.SetCreateTime(input.CreateTime)
 			}
 		case permission.FieldUpdateTime:
-			if input.UpdateTime.Unix() != 0 {
+			if !input.UpdateTime.IsZero() {
 				m.SetUpdateTime(input.UpdateTime)
 			}
 		case permission.FieldName:
@@ -454,11 +454,11 @@ func (m *PositionMutation) SetFieldsSkipZero(input *Position, fields ...string) 
 	for i := range fields {
 		switch fields[i] {
 		case position.FieldCreateTime:
-			if input.CreateTime.Unix() != 0 {
+			if !input.CreateTime.IsZero() {
 				m.SetCreateTime(input.CreateTime)
 			}
 		case position.FieldUpdateTime:
-			if input.UpdateTime.Unix() != 0 {
+			if !input.UpdateTime.IsZero() {
 				m.SetUpdateTime(input.UpdateTime)
 			}
 		case position.FieldName:
@@ -595,11 +595,11 @@ func (m *ResourceMutation) SetFieldsSkipZero(input *Resource, fields ...string) 
 	for i := range fields {
 		switch fields[i] {
 		case resource.FieldCreateTime:
-			if input.CreateTime.Unix() != 0 {
+			if !input.CreateTime.IsZero() {
 				m.SetCreateTime(input.CreateTime)
 			}
 		case resource.FieldUpdateTime:
-			if input.UpdateTime.Unix() != 0 {
+			if !input.UpdateTime.IsZero() {
 				m.SetUpdateTime(input.UpdateTime)
 			}
 		case resource.FieldKeyword:
@@ -742,11 +742,11 @@ func (m *RoleMutation) SetFieldsSkipZero(input *Role, fields ...string) error {
 	for i := range fields {
 		switch fields[i] {
 		case role.FieldCreateTime:
-			if input.CreateTime.Unix() != 0 {
+			if !input.CreateTime.IsZero() {
 				m.SetCreateTime(input.CreateTime)
 			}
 		case role.FieldUpdateTime:
-			if input.UpdateTime.Unix() != 0 {
+			if !input.UpdateTime.IsZero() {
 				m.SetUpdateTime(input.UpdateTime)
 			}
 		case role.FieldKeyword:
@@ -919,11 +919,11 @@ func (m *UserMutation) SetFieldsSkipZero(input *User, fields ...string) error {
 				m.SetUpdateAuthor(input.UpdateAuthor)
 			}
 		case user.FieldCreateTime:
-			if input.CreateTime.Unix() != 0 {
+			if !input.CreateTime.IsZero() {
 				m.SetCreateTime(input.CreateTime)
 			}
 		case user.FieldUpdateTime:
-			if input.UpdateTime.Unix() != 0 {
+			if !input.UpdateTime.IsZero() {
 				m.SetUpdateTime(input.UpdateTime)
 			}
 		case user.FieldDeleteTime:
@@ -1023,15 +1023,15 @@ func (m *UserMutation) SetFieldsSkipZero(input *User, fields ...string) error {
 				m.SetLoginIP(input.LoginIP)
 			}
 		case user.FieldLastLoginTime:
-			if input.LastLoginTime.Unix() != 0 {
+			if !input.LastLoginTime.IsZero() {
 				m.SetLastLoginTime(input.LastLoginTime)
 			}
 		case user.FieldLoginTime:
-			if input.LoginTime.Unix() != 0 {
+			if !input.LoginTime.IsZero() {
 				m.SetLoginTime(input.LoginTime)
 			}
 		case user.FieldSanctionDate:
-			if input.SanctionDate.Unix() != 0 {
+			if !input.SanctionDate.IsZero() {
 				m.SetSanctionDate(input.SanctionDate)
 			}
 		case user.FieldID:
@@ -1220,11 +1220,11 @@ func (m *ViewMutation) SetFieldsSkipZero(input *View, fields ...string) error {
 	for i := range fields {
 		switch fields[i] {
 		case view.FieldCreateTime:
-			if input.CreateTime.Unix() != 0 {
+			if !input.CreateTime.IsZero() {
 				m.SetCreateTime(input.CreateTime)
 			}
 		case view.FieldUpdateTime:
-			if input.UpdateTime.Unix() != 0 {
+			if !input.UpdateTime.IsZero() {
 				m.SetUpdateTime(input.UpdateTime)
 			}
 		case view.FieldParentID:

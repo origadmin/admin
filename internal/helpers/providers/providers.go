@@ -242,7 +242,7 @@ func ProvideGatewaySkipChecker(app *runtime.App, _ *conf.Config) security.Skippe
 			return false
 		}
 		if _, ok := skips[req.GetOperation()]; ok {
-			helper.Infof("skip checker: %s", req.GetOperation())
+			helper.Infof("skip gateway checker: %s", req.GetOperation())
 			return true
 		}
 		helper.Infof("unskipped request: %s", req.GetOperation())
@@ -259,7 +259,7 @@ func ProvideSkipChecker(app *runtime.App, _ *conf.Config) security.Skipper {
 		helper := log.NewHelper(log.With(app.Logger()))
 		pid := principal.GetID()
 		if pid == strconv.Itoa(int(data.SystemUserID)) {
-			helper.Infof("skip checker with admin: %s", pid)
+			helper.Infof("skip admin checker: %s", pid)
 			return true
 		}
 		return false
