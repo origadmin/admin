@@ -3,6 +3,7 @@ package biz
 import (
 	"context"
 	"errors"
+	"strconv"
 
 	"github.com/go-kratos/kratos/v2/log"
 
@@ -10,6 +11,7 @@ import (
 	"github.com/origadmin/toolkits/crypto/hash"
 
 	"origadmin/application/admin/api/v1/services/types"
+	"origadmin/application/admin/internal/data"
 	"origadmin/application/admin/internal/features/auth/dto"
 )
 
@@ -35,6 +37,15 @@ func (uc *AuthUseCase) ListMyViews(ctx context.Context, p security.Principal, sc
 	allViews, err := uc.repo.GetAllViewsByScope(ctx, scope)
 	if err != nil {
 		return nil, err
+	}
+
+	// If the user is the system user, return all views without filtering.
+	// Ensure SystemUserID is not 0 to prevent accidental privilege escalation for user ID 0.
+	if data.SystemUserID != 0 {
+		currentUserID, _ := strconv.ParseInt(p.GetID(), 10, 64)
+		if currentUserID == data.SystemUserID {
+			return allViews, nil
+		}
 	}
 
 	// 2. Get all permission keywords for the current user.

@@ -17,10 +17,14 @@ import (
 	"github.com/origadmin/runtime/data/storage"
 	"github.com/origadmin/runtime/log"
 	"origadmin/application/admin/internal/data/entity/ent"
+	"origadmin/application/admin/internal/data/entity/ent/user"
 )
 
 // ProviderSet is data providers.
 var ProviderSet = wire.NewSet(NewData, ProvideDatabase, NewStorageProvider, NewAdapter)
+
+// SystemUserID holds the ID of the system user. It is 0 if no system user is found.
+var SystemUserID int64
 
 // Data encapsulates the core data access components.
 type Data struct {
@@ -41,17 +45,33 @@ func ProvideDatabase(pv storage.Provider, logger log.Logger) (*ent.Database, fun
 		ent.Driver(activeDB),
 		ent.Debug(),
 	)
+	ctx := context.Background()
 	// === The migration logic is moved here ===
-	if err := database.Migration(context.Background(),
+	if err := database.Migration(ctx,
 		schema.WithDropIndex(true),
 		schema.WithDropColumn(true),
 		schema.WithForeignKeys(false),
 	); err != nil {
 		return nil, nil, fmt.Errorf("failed creating schema resources: %w", err)
 	}
+
+	// Fetch and cache the system user ID on startup.
+	systemUser, err := database.User(ctx).Query().Where(user.IsSystem(true)).Only(ctx)
+	if err != nil {
+		if ent.IsNotFound(err) {
+			logHelper.Info("System user not found, this is expected on initial startup.")
+		} else {
+			return nil, nil, fmt.Errorf("failed to query system user: %w", err)
+		}
+	}
+	if systemUser != nil {
+		SystemUserID = systemUser.ID
+		logHelper.Infof("System user ID cached: %d", SystemUserID)
+	}
+
 	return database, func() {
 		if database != nil {
-			if err := database.Client(context.Background()).Close(); err != nil {
+			if err := database.Client(ctx).Close(); err != nil {
 				logHelper.Errorf("failed to close ent client: %v", err)
 			}
 		}

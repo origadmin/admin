@@ -22,4 +22,6 @@ type AuthRepo interface {
 	GetAllViewsByScope(ctx context.Context, scope string) ([]*types.View, error)
 	// GetPermissionKeywordsByUserID retrieves all permission keywords associated with a user.
 	GetPermissionKeywordsByUserID(ctx context.Context, userID string) ([]string, error)
+	//// GetSystemUserID retrieves the ID of the system user.
+	//GetSystemUserID(ctx context.Context) (int64, error)
 }

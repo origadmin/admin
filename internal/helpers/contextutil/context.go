@@ -7,7 +7,7 @@ import (
 	"fmt"
 	"strconv"
 
-	"github.com/origadmin/contrib/security/principal"
+	"github.com/origadmin/contrib/security"
 	"github.com/origadmin/runtime/log"
 )
 
@@ -19,7 +19,7 @@ var ErrNoPrincipalInContext = errors.New("contextutil: no principal found in con
 // to be stored as a principal.Principal. This decouples consumers from the
 // specific implementation of the principal package.
 func GetUserID(ctx context.Context) (int64, error) {
-	p, ok := principal.FromContext(ctx)
+	p, ok := security.FromContext(ctx)
 	if !ok {
 		return 0, ErrNoPrincipalInContext
 	}
@@ -29,6 +29,19 @@ func GetUserID(ctx context.Context) (int64, error) {
 		return 0, fmt.Errorf("contextutil: failed to parse principal ID '%s': %w", p.GetID(), err)
 	}
 	return userID, nil
+}
+
+type adminCtx struct{}
+
+func IsAdmin(ctx context.Context, id string) bool {
+	if value, ok := ctx.Value(adminCtx{}).(string); ok {
+		return value == id
+	}
+	return false
+}
+
+func NewAdmin(ctx context.Context, id string) context.Context {
+	return context.WithValue(ctx, adminCtx{}, id)
 }
 
 type logKey struct{}

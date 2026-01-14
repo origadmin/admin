@@ -3,9 +3,8 @@ package providers
 import (
 	"context"
 	"errors"
+	"strconv"
 
-	"github.com/go-kratos/kratos/v2/transport"
-	"github.com/go-kratos/kratos/v2/transport/http"
 	"github.com/google/wire"
 
 	authnv1 "github.com/origadmin/contrib/api/gen/go/security/authn/v1"
@@ -17,6 +16,8 @@ import (
 	"github.com/origadmin/contrib/security/authz/casbin"
 	"github.com/origadmin/contrib/security/credential"
 	secmiddleware "github.com/origadmin/contrib/security/middleware"
+	"github.com/origadmin/contrib/security/request"
+	"github.com/origadmin/contrib/security/skip"
 	"github.com/origadmin/runtime"
 	"github.com/origadmin/runtime/container"
 	"github.com/origadmin/runtime/log"
@@ -217,16 +218,31 @@ func ProvideClientMiddlewares(app *runtime.App) (container.ClientMiddlewareProvi
 	return provider, nil
 }
 
-func ProvideGatewaySkipChecker(app *runtime.App, _ *conf.Config) security.SkipChecker {
-	return func(ctx context.Context, req security.Request) bool {
-		helper := log.NewHelper(log.With(app.Logger(), "kind", req.Kind(), "operation", req.GetOperation()))
-		if tr, ok := transport.FromServerContext(ctx); ok {
-			if t, ok := tr.(*http.Transport); ok {
-				helper.Infof("method: %s, path: %s", t.Request().Method, t.Request().URL.Path)
-			}
+func ProvideGatewaySkipChecker(app *runtime.App, _ *conf.Config) security.Skipper {
+	skips := make(map[string]struct{})
+	for _, v := range policies {
+		if v.Name == "public" {
+			skips[v.ServiceMethod] = struct{}{}
 		}
-		if v, ok := policies[req.GetOperation()]; ok && (v.Name == "public") {
-			helper.Infof("skip checker: %s", v.Name)
+	}
+
+	return func(ctx context.Context, req security.Request) bool {
+		helper := log.NewHelper(log.With(app.Logger(),
+			"kind", req.Kind(),
+			"operation", req.GetOperation(),
+			"path", req.GetRouteTemplate(),
+		))
+		if req, err := request.NewFromServerContext(ctx); err == nil {
+			helper.Infof("method: %s, path: %s, operation: %s",
+				req.GetMethod(),
+				req.GetRouteTemplate(),
+				req.GetOperation(),
+			)
+		} else {
+			return false
+		}
+		if _, ok := skips[req.GetOperation()]; ok {
+			helper.Infof("skip checker: %s", req.GetOperation())
 			return true
 		}
 		helper.Infof("unskipped request: %s", req.GetOperation())
@@ -234,16 +250,41 @@ func ProvideGatewaySkipChecker(app *runtime.App, _ *conf.Config) security.SkipCh
 	}
 }
 
-func ProvideSkipChecker(app *runtime.App, _ *conf.Config) security.SkipChecker {
-	//helper := log.NewHelper(log.With(app.Logger(), "module", "security.skip"))
-	return func(ctx context.Context, req security.Request) bool {
-		helper := log.NewHelper(log.With(app.Logger(), "kind", req.Kind(), "operation", req.GetOperation(), "method", req.GetMethod(), "path",
-			req.GetRouteTemplate()))
-		if v, ok := policies[req.GetOperation()]; ok && (v.Name == "jwt-auth" || v.Name == "public") {
-			helper.Infof("skip checker: %s", v.Name)
+func ProvideSkipChecker(app *runtime.App, _ *conf.Config) security.Skipper {
+	//id, err := database.User(app.Context()).Query().Where(user.IsSystem(true)).OnlyID(app.Context())
+	//adminSkipper := skip.Noop()
+
+	//if err == nil {
+	adminSkipper := skip.Principal(func(principal security.Principal) bool {
+		helper := log.NewHelper(log.With(app.Logger()))
+		pid := principal.GetID()
+		if pid == strconv.Itoa(int(data.SystemUserID)) {
+			helper.Infof("skip checker with admin: %s", pid)
 			return true
 		}
 		return false
+	})
+	skips := make(map[string]struct{})
+	for _, v := range policies {
+		if v.Name == "public" {
+			skips[v.ServiceMethod] = struct{}{}
+		}
+		if v.Name == "jwt-auth" {
+			skips[v.ServiceMethod] = struct{}{}
+		}
+	}
+	pathSkipper := func(ctx context.Context, req security.Request) bool {
+		helper := log.NewHelper(log.With(app.Logger(), "kind", req.Kind(), "operation", req.GetOperation(), "method", req.GetMethod(), "path",
+			req.GetRouteTemplate()))
+		if _, ok := skips[req.GetOperation()]; ok {
+			helper.Infof("skip checker: %s", req.GetOperation())
+			return true
+		}
+		return false
+	}
+	skippers := skip.Composite(adminSkipper, pathSkipper)
+	return func(ctx context.Context, req security.Request) bool {
+		return skippers(ctx, req)
 	}
 }
 

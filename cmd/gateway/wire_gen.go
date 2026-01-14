@@ -49,16 +49,16 @@ func wireApp(app *runtime.App, bootstrap *conf.Config) (*kratos.App, func(), err
 	if err != nil {
 		return nil, nil, err
 	}
-	skipChecker := providers.ProvideGatewaySkipChecker(app, bootstrap)
-	serverMiddlewareProvider, err := providers.ProvideGatewayMiddlewares(app, authenticator, skipChecker)
+	v := providers.ProvideGatewaySkipChecker(app, bootstrap)
+	serverMiddlewareProvider, err := providers.ProvideGatewayMiddlewares(app, authenticator, v)
 	if err != nil {
 		return nil, nil, err
 	}
-	v, err := server.NewServers(app, servers, gatewayService, serverMiddlewareProvider)
+	v2, err := server.NewServers(app, servers, gatewayService, serverMiddlewareProvider)
 	if err != nil {
 		return nil, nil, err
 	}
-	kratosApp := NewApp(app, v)
+	kratosApp := NewApp(app, v2)
 	return kratosApp, func() {
 	}, nil
 }

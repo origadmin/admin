@@ -9,6 +9,7 @@ import (
 	"github.com/go-kratos/kratos/v2/transport"
 
 	securityv1 "github.com/origadmin/contrib/api/gen/go/security/v1"
+	"github.com/origadmin/contrib/security"
 	"github.com/origadmin/contrib/security/credential"
 	securityPrincipal "github.com/origadmin/contrib/security/principal"
 	v1 "origadmin/application/admin/api/v1/services/auth"
@@ -33,7 +34,7 @@ func NewAuthService(uc *biz.AuthUseCase, cuc *biz.CaptchaUseCase, creator creden
 
 // ListMyViews retrieves the menu tree for the currently authenticated user.
 func (s *AuthService) ListMyViews(ctx context.Context, req *v1.ListMyViewsRequest) (*v1.ListMyViewsResponse, error) {
-	p, ok := securityPrincipal.FromContext(ctx)
+	p, ok := security.FromContext(ctx)
 	if !ok {
 		return nil, errors.Unauthorized("UNAUTHORIZED", "missing principal")
 	}
