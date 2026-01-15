@@ -42,6 +42,18 @@ type ViewUpdateOption struct {
 	WithRoleIDs     []int64
 }
 
+// GetViewRequestToQueryOption converts a GetViewRequest to a query option object,
+// always enabling the loading of associated resources for detail views.
+func GetViewRequestToQueryOption(req *system.GetViewRequest) *ViewQueryOption {
+	if req == nil {
+		return &ViewQueryOption{WithResources: true}
+	}
+	return &ViewQueryOption{
+		QueryOption:   repo.QueryOptionFromRequest(req),
+		WithResources: true, // Always load resources for a single view
+	}
+}
+
 // ListViewsRequestToQueryOption converts an API request to a query option object.
 func ListViewsRequestToQueryOption(req *system.ListViewsRequest) *ViewQueryOption {
 	if req == nil {

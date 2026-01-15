@@ -27,8 +27,8 @@ func (uc *RoleUseCase) ListRoles(ctx context.Context, opts ...*dto.RoleQueryOpti
 	return uc.repo.List(ctx, opts...)
 }
 
-func (uc *RoleUseCase) GetRole(ctx context.Context, id int64) (*types.Role, error) {
-	return uc.repo.Get(ctx, id)
+func (uc *RoleUseCase) GetRole(ctx context.Context, id int64, opts ...*dto.RoleQueryOption) (*types.Role, error) {
+	return uc.repo.Get(ctx, id, opts...)
 }
 
 // CreateRole creates a new role, ensuring essential fields have valid default values.

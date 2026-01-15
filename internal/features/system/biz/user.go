@@ -47,8 +47,8 @@ func (uc *UserUseCase) ListUsers(ctx context.Context, opts ...*dto.UserQueryOpti
 	return uc.repo.List(ctx, opts...)
 }
 
-func (uc *UserUseCase) GetUser(ctx context.Context, id int64) (*types.User, error) {
-	return uc.repo.Get(ctx, id)
+func (uc *UserUseCase) GetUser(ctx context.Context, id int64, opts ...*dto.UserQueryOption) (*types.User, error) {
+	return uc.repo.Get(ctx, id, opts...)
 }
 
 // CreateUser creates a new user, ensuring essential fields have valid default values.

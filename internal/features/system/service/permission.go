@@ -46,7 +46,8 @@ func (s *PermissionService) ListPermissions(ctx context.Context, req *system.Lis
 }
 
 func (s *PermissionService) GetPermission(ctx context.Context, req *system.GetPermissionRequest) (*system.GetPermissionResponse, error) {
-	permission, err := s.uc.GetPermission(ctx, req.GetId())
+	queryOpt := dto.GetPermissionRequestToQueryOption(req)
+	permission, err := s.uc.GetPermission(ctx, req.GetId(), queryOpt)
 	if err != nil {
 		if ent.IsNotFound(err) {
 			return nil, errors.NotFound("PERMISSION_NOT_FOUND", "Permission not found")

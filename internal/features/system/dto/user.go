@@ -47,6 +47,18 @@ type UserUpdateOption struct {
 	WithRoleIDs []int64
 }
 
+// GetUserRequestToQueryOption converts a GetUserRequest to a query option object,
+// always enabling the loading of associated roles for detail views.
+func GetUserRequestToQueryOption(req *system.GetUserRequest) *UserQueryOption {
+	if req == nil {
+		return &UserQueryOption{WithRoles: true}
+	}
+	return &UserQueryOption{
+		QueryOption: repo.QueryOptionFromRequest(req),
+		WithRoles:   true, // Always load roles for a single user
+	}
+}
+
 // ListUsersRequestToQueryOption converts an API request to a query option object.
 func ListUsersRequestToQueryOption(req *system.ListUsersRequest) *UserQueryOption {
 	if req == nil {

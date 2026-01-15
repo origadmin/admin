@@ -47,6 +47,18 @@ type RoleUpdateOption struct {
 	WithViewIDs       []int64
 }
 
+// GetRoleRequestToQueryOption converts a GetRoleRequest to a query option object,
+// always enabling the loading of associated permissions for detail views.
+func GetRoleRequestToQueryOption(req *system.GetRoleRequest) *RoleQueryOption {
+	if req == nil {
+		return &RoleQueryOption{WithPermissions: true}
+	}
+	return &RoleQueryOption{
+		QueryOption:     repo.QueryOptionFromRequest(req),
+		WithPermissions: true, // Always load permissions for a single role
+	}
+}
+
 // ListRolesRequestToQueryOption converts a ListRolesRequest to a query option object.
 func ListRolesRequestToQueryOption(req *system.ListRolesRequest) *RoleQueryOption {
 	if req == nil {

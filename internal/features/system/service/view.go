@@ -46,7 +46,8 @@ func (s *ViewService) ListViews(ctx context.Context, req *system.ListViewsReques
 }
 
 func (s *ViewService) GetView(ctx context.Context, req *system.GetViewRequest) (*system.GetViewResponse, error) {
-	view, err := s.uc.GetView(ctx, req.GetId())
+	queryOpt := dto.GetViewRequestToQueryOption(req)
+	view, err := s.uc.GetView(ctx, req.GetId(), queryOpt)
 	if err != nil {
 		if ent.IsNotFound(err) {
 			return nil, errors.NotFound("VIEW_NOT_FOUND", "View not found")

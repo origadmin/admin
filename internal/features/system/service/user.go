@@ -92,7 +92,8 @@ func (s *UserService) ListUsers(ctx context.Context, req *system.ListUsersReques
 }
 
 func (s *UserService) GetUser(ctx context.Context, req *system.GetUserRequest) (*system.GetUserResponse, error) {
-	user, err := s.uc.GetUser(ctx, req.GetId())
+	queryOpt := dto.GetUserRequestToQueryOption(req)
+	user, err := s.uc.GetUser(ctx, req.GetId(), queryOpt)
 	if err != nil {
 		if ent.IsNotFound(err) {
 			return nil, errors.NotFound("USER_NOT_FOUND", "User not found")

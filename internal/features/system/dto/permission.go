@@ -44,6 +44,20 @@ type PermissionUpdateOption struct {
 	WithViewIDs     []int64
 }
 
+// GetPermissionRequestToQueryOption converts a GetPermissionRequest to a query option object,
+// always enabling the loading of associated resources, roles, and views for detail views.
+func GetPermissionRequestToQueryOption(req *system.GetPermissionRequest) *PermissionQueryOption {
+	if req == nil {
+		return &PermissionQueryOption{WithResources: true, WithRoles: true, WithViews: true}
+	}
+	return &PermissionQueryOption{
+		QueryOption:   repo.QueryOptionFromRequest(req),
+		WithResources: true, // Always load resources for a single permission
+		WithRoles:     true, // Always load roles for a single permission
+		WithViews:     true, // Always load views for a single permission
+	}
+}
+
 // ListPermissionsRequestToQueryOption converts an API request to a query option object.
 func ListPermissionsRequestToQueryOption(req *system.ListPermissionsRequest) *PermissionQueryOption {
 	if req == nil {

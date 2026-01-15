@@ -30,7 +30,7 @@ func (s *MeService) ListMyViews(ctx context.Context, req *v1.ListMyViewsRequest)
 		return nil, errors.Unauthorized("UNAUTHORIZED", "missing principal")
 	}
 
-	views, err := s.uc.ListMyViews(ctx, p, req.GetScope())
+	views, err := s.uc.ListMyViews(ctx, p)
 	if err != nil {
 		return nil, err
 	}

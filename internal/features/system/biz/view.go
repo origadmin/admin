@@ -24,18 +24,18 @@ func (uc *ViewUseCase) ListViews(ctx context.Context, opts ...*dto.ViewQueryOpti
 }
 
 // GetView retrieves a single view by its ID.
-func (uc *ViewUseCase) GetView(ctx context.Context, id int64) (*types.View, error) {
-	return uc.repo.Get(ctx, id)
+func (uc *ViewUseCase) GetView(ctx context.Context, id int64, opts ...*dto.ViewQueryOption) (*types.View, error) {
+	return uc.repo.Get(ctx, id, opts...)
 }
 
 // CreateView creates a new view, ensuring essential fields have valid default values.
 func (uc *ViewUseCase) CreateView(ctx context.Context, in *types.View, opts ...*dto.ViewCreateOption) (*types.View, error) {
 	// The backend must always enforce data integrity, regardless of frontend behavior.
-	if in.Type == "" || in.Type == dto.ViewTypeUnknown.String() {
-		in.Type = dto.ViewTypePage.String()
+	if in.Type == "" {
+		in.Type = string(enums.ViewTypePage)
 	}
 	if in.Status == 0 {
-		in.Status = int32(enums.StatusEnabled)
+		in.Status = int32(enums.StatusActive)
 	}
 
 	return uc.repo.Create(ctx, in, opts...)

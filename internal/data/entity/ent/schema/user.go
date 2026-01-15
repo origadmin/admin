@@ -97,7 +97,7 @@ func (User) Fields() []ent.Field {
 			Comment(i18n.Text("entity.user.field.status")),
 		field.Bool("is_system").
 			Default(false).
-			Comment("entity.user.field.is_system"), // Whether the system is built-in (the built-in user cannot be deleted, but can be disabled)
+			Comment(i18n.Text("entity.user.field.is_system")), // Whether the system is built-in (the built-in user cannot be deleted, but can be disabled)
 		field.String("last_login_ip").
 			MaxLen(32).
 			Default("").

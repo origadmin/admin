@@ -26,8 +26,8 @@ func (uc *PermissionUseCase) ListPermissions(ctx context.Context, opts ...*dto.P
 	return uc.repo.List(ctx, opts...)
 }
 
-func (uc *PermissionUseCase) GetPermission(ctx context.Context, id int64) (*types.Permission, error) {
-	return uc.repo.Get(ctx, id)
+func (uc *PermissionUseCase) GetPermission(ctx context.Context, id int64, opts ...*dto.PermissionQueryOption) (*types.Permission, error) {
+	return uc.repo.Get(ctx, id, opts...)
 }
 
 func (uc *PermissionUseCase) CreatePermission(ctx context.Context, in *types.Permission, opts ...*dto.PermissionCreateOption) (*types.Permission, error) {

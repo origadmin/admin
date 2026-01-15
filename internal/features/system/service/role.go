@@ -45,7 +45,8 @@ func (s *RoleService) ListRoles(ctx context.Context, req *system.ListRolesReques
 	}, nil
 }
 func (s *RoleService) GetRole(ctx context.Context, req *system.GetRoleRequest) (*system.GetRoleResponse, error) {
-	role, err := s.uc.GetRole(ctx, req.GetId())
+	queryOpt := dto.GetRoleRequestToQueryOption(req)
+	role, err := s.uc.GetRole(ctx, req.GetId(), queryOpt)
 	if err != nil {
 		if ent.IsNotFound(err) {
 			return nil, errors.NotFound("ROLE_NOT_FOUND", "Role not found")

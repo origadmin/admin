@@ -13,7 +13,7 @@ option java_outer_classname = "APIServiceMeProto";
 
 // Service MeService provides APIs for the currently authenticated user to manage their own profile and data.
 service MeService {
-  // ListMyViews retrieves the menu/view tree for the currently authenticated user.
+  // ListMyViews retrieves the entire view tree available to the currently authenticated user.
   rpc ListMyViews(ListMyViewsRequest) returns (ListMyViewsResponse) {
     option (google.api.http) = {
       get: "/me/views"
@@ -64,11 +64,8 @@ service MeService {
   }
 }
 
-// The request message for the ListMyViews RPC.
-message ListMyViewsRequest {
-  // The scope of the views to retrieve (e.g., "backend", "frontend").
-  string scope = 1;
-}
+// The request message for the ListMyViews RPC. It is empty as we fetch all views.
+message ListMyViewsRequest {}
 
 // The response message for the ListMyViews RPC.
 message ListMyViewsResponse {
