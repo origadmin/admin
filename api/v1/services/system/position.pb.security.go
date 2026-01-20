@@ -12,32 +12,32 @@ func init() {
 		{
 			ServiceMethod: "/api.v1.services.system.PositionService/ListPositions",
 			GatewayPath:   "GET:/sys/positions",
-			Name:          "jwt-auth",
-			VersionID:     "6bf7a7477afcced6886e75decd95c3b399e9bacb1c2dff5362514e31bfa4f51d",
+			Name:          "authz",
+			VersionID:     "041b9f9d7d51b96625967af814f6208155d09467fe8a5a87692cf7a71da13cd6",
 		},
 		{
 			ServiceMethod: "/api.v1.services.system.PositionService/GetPosition",
 			GatewayPath:   "GET:/sys/positions/{id}",
-			Name:          "jwt-auth",
-			VersionID:     "1cebb8b8b0ed6df56b0b468ab0d096a977210d3ccc6410cee801927d408d18a4",
+			Name:          "authz",
+			VersionID:     "e502bf97357e78b0314979b682e1a200713fa1a2ffbbf0a7258aaf23054b0227",
 		},
 		{
 			ServiceMethod: "/api.v1.services.system.PositionService/CreatePosition",
 			GatewayPath:   "POST:/sys/positions",
-			Name:          "jwt-auth",
-			VersionID:     "6dc561ae7080ba5a1e0fd8d149a2e329dfabca22846fc14c21a778a149b93ca6",
+			Name:          "authz",
+			VersionID:     "d4898dd9f22cffacec274356e8ce5a9b4566dcbdd27f76912beec9aa2d401ea9",
 		},
 		{
 			ServiceMethod: "/api.v1.services.system.PositionService/UpdatePosition",
 			GatewayPath:   "PUT:/sys/positions/{position.id}",
-			Name:          "jwt-auth",
-			VersionID:     "4bc4e32a8bee29ae8ecc88f1869c28bce0f2244f184886896e4376e24bee4901",
+			Name:          "authz",
+			VersionID:     "60bb597fd1ed7d4bdc68eaa5aeeb99139f05c0d0939df6a59e14de10351447ed",
 		},
 		{
 			ServiceMethod: "/api.v1.services.system.PositionService/DeletePosition",
 			GatewayPath:   "DELETE:/sys/positions/{id}",
-			Name:          "jwt-auth",
-			VersionID:     "d18e93827f6e8dbea7ad7ae93d7799b15e9056e49f876d727d377f11c8eceba6",
+			Name:          "authz",
+			VersionID:     "5940ff91de3e884a247d73c38be5fc37fe1da6dc69ca7985f83ed5060dddeff6",
 		},
 	}
 

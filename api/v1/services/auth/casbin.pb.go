@@ -537,20 +537,16 @@ const file_auth_casbin_proto_rawDesc = "" +
 	"\x12WatchUpdateRequest\x12$\n" +
 	"\rlast_modified\x18\x01 \x01(\x03R\rlast_modified\";\n" +
 	"\x13WatchUpdateResponse\x12$\n" +
-	"\rmodified_date\x18\x01 \x01(\x03R\rmodified_date2\xbc\x04\n" +
-	"\rCasbinService\x12\x90\x01\n" +
-	"\fListPolicies\x12).api.v1.services.auth.ListPoliciesRequest\x1a*.api.v1.services.auth.ListPoliciesResponse\")\xea\xea\x1b\n" +
-	"\n" +
-	"\bjwt-auth\x82\xd3\xe4\x93\x02\x15b\x01*\x12\x10/casbin/policies\x12\x94\x01\n" +
-	"\rListGroupings\x12*.api.v1.services.auth.ListGroupingsRequest\x1a+.api.v1.services.auth.ListGroupingsResponse\"*\xea\xea\x1b\n" +
-	"\n" +
-	"\bjwt-auth\x82\xd3\xe4\x93\x02\x16b\x01*\x12\x11/casbin/groupings\x12\x8a\x01\n" +
-	"\vWatchUpdate\x12(.api.v1.services.auth.WatchUpdateRequest\x1a).api.v1.services.auth.WatchUpdateResponse\"&\xea\xea\x1b\n" +
-	"\n" +
-	"\bjwt-auth\x82\xd3\xe4\x93\x02\x12b\x01*\x12\r/casbin/watch\x12t\n" +
-	"\vStreamRules\x12(.api.v1.services.auth.StreamRulesRequest\x1a).api.v1.services.auth.StreamRulesResponse\"\x0e\xea\xea\x1b\n" +
-	"\n" +
-	"\bjwt-auth0\x01B\xd2\x01\n" +
+	"\rmodified_date\x18\x01 \x01(\x03R\rmodified_date2\xb0\x04\n" +
+	"\rCasbinService\x12\x8d\x01\n" +
+	"\fListPolicies\x12).api.v1.services.auth.ListPoliciesRequest\x1a*.api.v1.services.auth.ListPoliciesResponse\"&\xea\xea\x1b\a\n" +
+	"\x05authn\x82\xd3\xe4\x93\x02\x15b\x01*\x12\x10/casbin/policies\x12\x91\x01\n" +
+	"\rListGroupings\x12*.api.v1.services.auth.ListGroupingsRequest\x1a+.api.v1.services.auth.ListGroupingsResponse\"'\xea\xea\x1b\a\n" +
+	"\x05authn\x82\xd3\xe4\x93\x02\x16b\x01*\x12\x11/casbin/groupings\x12\x87\x01\n" +
+	"\vWatchUpdate\x12(.api.v1.services.auth.WatchUpdateRequest\x1a).api.v1.services.auth.WatchUpdateResponse\"#\xea\xea\x1b\a\n" +
+	"\x05authn\x82\xd3\xe4\x93\x02\x12b\x01*\x12\r/casbin/watch\x12q\n" +
+	"\vStreamRules\x12(.api.v1.services.auth.StreamRulesRequest\x1a).api.v1.services.auth.StreamRulesResponse\"\v\xea\xea\x1b\a\n" +
+	"\x05authn0\x01B\xd2\x01\n" +
 	"\x18com.api.v1.services.authB\vCasbinProtoP\x01Z5origadmin/application/admin/api/v1/services/auth;auth\xa2\x02\x04AVSA\xaa\x02\x14Api.V1.Services.Auth\xca\x02\x14Api\\V1\\Services\\Auth\xe2\x02 Api\\V1\\Services\\Auth\\GPBMetadata\xea\x02\x17Api::V1::Services::Authb\x06proto3"
 
 var (

@@ -53,6 +53,7 @@ type Captcha struct {
 	store    Store
 	captchas map[string]*base64Captcha.Captcha
 	drivers  map[string]base64Captcha.Driver
+	config   *confpb.Captcha
 }
 
 // Config holds the configuration for the captcha service.
@@ -88,7 +89,7 @@ func NewCaptcha(config *Config) *Captcha {
 			Height:   int(config.Captcha.GetHeight()),
 			Width:    int(config.Captcha.GetWidth()),
 			Length:   int(config.Captcha.GetLength()),
-			MaxSkew:  float64(config.Captcha.GetMaxskew()),
+			MaxSkew:  float64(config.Captcha.GetMaxSkew()),
 			DotCount: int(config.Captcha.GetDotCount()),
 		}
 	}
@@ -146,6 +147,7 @@ func NewCaptcha(config *Config) *Captcha {
 		store:    config.Store,
 		captchas: captchas,
 		drivers:  drivers,
+		config:   config.Captcha,
 	}
 }
 
@@ -187,5 +189,9 @@ func (c *Captcha) GetAudioForID(id string) (b64s string, err error) {
 // Verify checks if the provided answer for a given captcha ID is correct.
 // The `clear` parameter determines whether to remove the captcha from the store after verification.
 func (c *Captcha) Verify(id, answer string, clear bool) bool {
+	// If captcha is not enabled in the config, always return true.
+	if !c.config.GetEnabled() {
+		return true
+	}
 	return c.store.Verify(id, answer, clear)
 }

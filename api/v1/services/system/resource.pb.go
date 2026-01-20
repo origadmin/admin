@@ -697,23 +697,18 @@ const file_system_resource_proto_rawDesc = "" +
 	"\x15DeleteResourceRequest\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\x03R\x02id\"F\n" +
 	"\x16DeleteResourceResponse\x12,\n" +
-	"\x05empty\x18\x01 \x01(\v2\x16.google.protobuf.EmptyR\x05empty2\x9b\x06\n" +
-	"\x0fResourceService\x12\x92\x01\n" +
-	"\rListResources\x12,.api.v1.services.system.ListResourcesRequest\x1a-.api.v1.services.system.ListResourcesResponse\"$\xea\xea\x1b\n" +
-	"\n" +
-	"\bjwt-auth\x82\xd3\xe4\x93\x02\x10\x12\x0e/sys/resources\x12\x91\x01\n" +
-	"\vGetResource\x12*.api.v1.services.system.GetResourceRequest\x1a+.api.v1.services.system.GetResourceResponse\")\xea\xea\x1b\n" +
-	"\n" +
-	"\bjwt-auth\x82\xd3\xe4\x93\x02\x15\x12\x13/sys/resources/{id}\x12\x98\x01\n" +
-	"\x0eCreateResource\x12-.api.v1.services.system.CreateResourceRequest\x1a..api.v1.services.system.CreateResourceResponse\"'\xea\xea\x1b\n" +
-	"\n" +
-	"\bjwt-auth\x82\xd3\xe4\x93\x02\x13:\x01*\"\x0e/sys/resources\x12\xa6\x01\n" +
-	"\x0eUpdateResource\x12-.api.v1.services.system.UpdateResourceRequest\x1a..api.v1.services.system.UpdateResourceResponse\"5\xea\xea\x1b\n" +
-	"\n" +
-	"\bjwt-auth\x82\xd3\xe4\x93\x02!:\x01*\x1a\x1c/sys/resources/{resource.id}\x12\x9a\x01\n" +
-	"\x0eDeleteResource\x12-.api.v1.services.system.DeleteResourceRequest\x1a..api.v1.services.system.DeleteResourceResponse\")\xea\xea\x1b\n" +
-	"\n" +
-	"\bjwt-auth\x82\xd3\xe4\x93\x02\x15*\x13/sys/resources/{id}B\xe2\x01\n" +
+	"\x05empty\x18\x01 \x01(\v2\x16.google.protobuf.EmptyR\x05empty2\x8c\x06\n" +
+	"\x0fResourceService\x12\x8f\x01\n" +
+	"\rListResources\x12,.api.v1.services.system.ListResourcesRequest\x1a-.api.v1.services.system.ListResourcesResponse\"!\xea\xea\x1b\a\n" +
+	"\x05authz\x82\xd3\xe4\x93\x02\x10\x12\x0e/sys/resources\x12\x8e\x01\n" +
+	"\vGetResource\x12*.api.v1.services.system.GetResourceRequest\x1a+.api.v1.services.system.GetResourceResponse\"&\xea\xea\x1b\a\n" +
+	"\x05authz\x82\xd3\xe4\x93\x02\x15\x12\x13/sys/resources/{id}\x12\x95\x01\n" +
+	"\x0eCreateResource\x12-.api.v1.services.system.CreateResourceRequest\x1a..api.v1.services.system.CreateResourceResponse\"$\xea\xea\x1b\a\n" +
+	"\x05authz\x82\xd3\xe4\x93\x02\x13:\x01*\"\x0e/sys/resources\x12\xa3\x01\n" +
+	"\x0eUpdateResource\x12-.api.v1.services.system.UpdateResourceRequest\x1a..api.v1.services.system.UpdateResourceResponse\"2\xea\xea\x1b\a\n" +
+	"\x05authz\x82\xd3\xe4\x93\x02!:\x01*\x1a\x1c/sys/resources/{resource.id}\x12\x97\x01\n" +
+	"\x0eDeleteResource\x12-.api.v1.services.system.DeleteResourceRequest\x1a..api.v1.services.system.DeleteResourceResponse\"&\xea\xea\x1b\a\n" +
+	"\x05authz\x82\xd3\xe4\x93\x02\x15*\x13/sys/resources/{id}B\xe2\x01\n" +
 	"\x1acom.api.v1.services.systemB\rResourceProtoP\x01Z9origadmin/application/admin/api/v1/services/system;system\xa2\x02\x04AVSS\xaa\x02\x16Api.V1.Services.System\xca\x02\x16Api\\V1\\Services\\System\xe2\x02\"Api\\V1\\Services\\System\\GPBMetadata\xea\x02\x19Api::V1::Services::Systemb\x06proto3"
 
 var (

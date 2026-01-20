@@ -18,29 +18,29 @@ option objc_class_prefix = "APIServiceSystemPermission";
 service PermissionService {
   rpc ListPermissions(ListPermissionsRequest) returns (ListPermissionsResponse) {
     option (google.api.http) = {get: "/sys/permissions"};
-    option (contrib.api.policy.v1.policy) = {name: "jwt-auth"};
+    option (contrib.api.policy.v1.policy) = {name: "authz"};
   }
   rpc GetPermission(GetPermissionRequest) returns (GetPermissionResponse) {
     option (google.api.http) = {get: "/sys/permissions/{id}"};
-    option (contrib.api.policy.v1.policy) = {name: "jwt-auth"};
+    option (contrib.api.policy.v1.policy) = {name: "authz"};
   }
   rpc CreatePermission(CreatePermissionRequest) returns (CreatePermissionResponse) {
     option (google.api.http) = {
       post: "/sys/permissions"
       body: "*"
     };
-    option (contrib.api.policy.v1.policy) = {name: "jwt-auth"};
+    option (contrib.api.policy.v1.policy) = {name: "authz"};
   }
   rpc UpdatePermission(UpdatePermissionRequest) returns (UpdatePermissionResponse) {
     option (google.api.http) = {
       put: "/sys/permissions/{permission.id}"
       body: "*"
     };
-    option (contrib.api.policy.v1.policy) = {name: "jwt-auth"};
+    option (contrib.api.policy.v1.policy) = {name: "authz"};
   }
   rpc DeletePermission(DeletePermissionRequest) returns (DeletePermissionResponse) {
     option (google.api.http) = {delete: "/sys/permissions/{id}"};
-    option (contrib.api.policy.v1.policy) = {name: "jwt-auth"};
+    option (contrib.api.policy.v1.policy) = {name: "authz"};
   }
 }
 

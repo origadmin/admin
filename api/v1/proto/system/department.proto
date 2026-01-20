@@ -18,29 +18,29 @@ option objc_class_prefix = "APIServiceSystemDepartment";
 service DepartmentService {
   rpc ListDepartments(ListDepartmentsRequest) returns (ListDepartmentsResponse) {
     option (google.api.http) = {get: "/sys/departments"};
-    option (contrib.api.policy.v1.policy) = {name: "jwt-auth"};
+    option (contrib.api.policy.v1.policy) = {name: "authz"};
   }
   rpc GetDepartment(GetDepartmentRequest) returns (GetDepartmentResponse) {
     option (google.api.http) = {get: "/sys/departments/{id}"};
-    option (contrib.api.policy.v1.policy) = {name: "jwt-auth"};
+    option (contrib.api.policy.v1.policy) = {name: "authz"};
   }
   rpc CreateDepartment(CreateDepartmentRequest) returns (CreateDepartmentResponse) {
     option (google.api.http) = {
       post: "/sys/departments"
       body: "*"
     };
-    option (contrib.api.policy.v1.policy) = {name: "jwt-auth"};
+    option (contrib.api.policy.v1.policy) = {name: "authz"};
   }
   rpc UpdateDepartment(UpdateDepartmentRequest) returns (UpdateDepartmentResponse) {
     option (google.api.http) = {
       put: "/sys/departments/{department.id}"
       body: "*"
     };
-    option (contrib.api.policy.v1.policy) = {name: "jwt-auth"};
+    option (contrib.api.policy.v1.policy) = {name: "authz"};
   }
   rpc DeleteDepartment(DeleteDepartmentRequest) returns (DeleteDepartmentResponse) {
     option (google.api.http) = {delete: "/sys/departments/{id}"};
-    option (contrib.api.policy.v1.policy) = {name: "jwt-auth"};
+    option (contrib.api.policy.v1.policy) = {name: "authz"};
   }
 }
 

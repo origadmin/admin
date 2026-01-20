@@ -22,7 +22,6 @@ type UserRepo interface {
 	Delete(context.Context, int64) error
 	Restore(context.Context, int64) error
 
-	// Business-specific methods
 	AddRoleIDs(context.Context, int64, []int64) error
 	GetByUsername(context.Context, string) (*types.User, error)
 	GetRoleIDs(context.Context, int64) ([]int64, error)

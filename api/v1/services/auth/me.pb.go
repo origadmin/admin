@@ -24,11 +24,9 @@ const (
 	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
 )
 
-// The request message for the ListMyViews RPC.
+// The request message for the ListMyViews RPC. It is empty as we fetch all views.
 type ListMyViewsRequest struct {
-	state protoimpl.MessageState `protogen:"open.v1"`
-	// The scope of the views to retrieve (e.g., "backend", "frontend").
-	Scope         string `protobuf:"bytes,1,opt,name=scope,proto3" json:"scope,omitempty"`
+	state         protoimpl.MessageState `protogen:"open.v1"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -61,13 +59,6 @@ func (x *ListMyViewsRequest) ProtoReflect() protoreflect.Message {
 // Deprecated: Use ListMyViewsRequest.ProtoReflect.Descriptor instead.
 func (*ListMyViewsRequest) Descriptor() ([]byte, []int) {
 	return file_auth_me_proto_rawDescGZIP(), []int{0}
-}
-
-func (x *ListMyViewsRequest) GetScope() string {
-	if x != nil {
-		return x.Scope
-	}
-	return ""
 }
 
 // The response message for the ListMyViews RPC.
@@ -538,9 +529,8 @@ var File_auth_me_proto protoreflect.FileDescriptor
 
 const file_auth_me_proto_rawDesc = "" +
 	"\n" +
-	"\rauth/me.proto\x12\x14api.v1.services.auth\x1a\x1cgoogle/api/annotations.proto\x1a\x12types/system.proto\x1a\x16policy/v1/policy.proto\"*\n" +
-	"\x12ListMyViewsRequest\x12\x14\n" +
-	"\x05scope\x18\x01 \x01(\tR\x05scope\"H\n" +
+	"\rauth/me.proto\x12\x14api.v1.services.auth\x1a\x1cgoogle/api/annotations.proto\x1a\x12types/system.proto\x1a\x16policy/v1/policy.proto\"\x14\n" +
+	"\x12ListMyViewsRequest\"H\n" +
 	"\x13ListMyViewsResponse\x121\n" +
 	"\x05views\x18\x01 \x03(\v2\x1b.api.v1.services.types.ViewR\x05views\"\x13\n" +
 	"\x11GetProfileRequest\"E\n" +
@@ -558,27 +548,21 @@ const file_auth_me_proto_rawDesc = "" +
 	"\tresources\x18\x01 \x03(\v2\x1f.api.v1.services.types.ResourceR\tresources\"\x15\n" +
 	"\x13GetUserRolesRequest\"I\n" +
 	"\x14GetUserRolesResponse\x121\n" +
-	"\x05roles\x18\x01 \x03(\v2\x1b.api.v1.services.types.RoleR\x05roles2\xde\x06\n" +
-	"\tMeService\x12\x83\x01\n" +
-	"\vListMyViews\x12(.api.v1.services.auth.ListMyViewsRequest\x1a).api.v1.services.auth.ListMyViewsResponse\"\x1f\xea\xea\x1b\n" +
+	"\x05roles\x18\x01 \x03(\v2\x1b.api.v1.services.types.RoleR\x05roles2\xcb\x06\n" +
+	"\tMeService\x12\x80\x01\n" +
+	"\vListMyViews\x12(.api.v1.services.auth.ListMyViewsRequest\x1a).api.v1.services.auth.ListMyViewsResponse\"\x1c\xea\xea\x1b\a\n" +
+	"\x05authn\x82\xd3\xe4\x93\x02\v\x12\t/me/views\x12\x7f\n" +
 	"\n" +
-	"\bjwt-auth\x82\xd3\xe4\x93\x02\v\x12\t/me/views\x12\x82\x01\n" +
-	"\n" +
-	"GetProfile\x12'.api.v1.services.auth.GetProfileRequest\x1a(.api.v1.services.auth.GetProfileResponse\"!\xea\xea\x1b\n" +
-	"\n" +
-	"\bjwt-auth\x82\xd3\xe4\x93\x02\r\x12\v/me/profile\x12\x8e\x01\n" +
-	"\rUpdateProfile\x12*.api.v1.services.auth.UpdateProfileRequest\x1a+.api.v1.services.auth.UpdateProfileResponse\"$\xea\xea\x1b\n" +
-	"\n" +
-	"\bjwt-auth\x82\xd3\xe4\x93\x02\x10:\x01*\x1a\v/me/profile\x12\x92\x01\n" +
-	"\x0eUpdatePassword\x12+.api.v1.services.auth.UpdatePasswordRequest\x1a,.api.v1.services.auth.UpdatePasswordResponse\"%\xea\xea\x1b\n" +
-	"\n" +
-	"\bjwt-auth\x82\xd3\xe4\x93\x02\x11:\x01*\x1a\f/me/password\x12\x96\x01\n" +
-	"\x10GetUserResources\x12-.api.v1.services.auth.GetUserResourcesRequest\x1a..api.v1.services.auth.GetUserResourcesResponse\"#\xea\xea\x1b\n" +
-	"\n" +
-	"\bjwt-auth\x82\xd3\xe4\x93\x02\x0f\x12\r/me/resources\x12\x86\x01\n" +
-	"\fGetUserRoles\x12).api.v1.services.auth.GetUserRolesRequest\x1a*.api.v1.services.auth.GetUserRolesResponse\"\x1f\xea\xea\x1b\n" +
-	"\n" +
-	"\bjwt-auth\x82\xd3\xe4\x93\x02\v\x12\t/me/rolesB\xce\x01\n" +
+	"GetProfile\x12'.api.v1.services.auth.GetProfileRequest\x1a(.api.v1.services.auth.GetProfileResponse\"\x1e\xea\xea\x1b\a\n" +
+	"\x05authn\x82\xd3\xe4\x93\x02\r\x12\v/me/profile\x12\x8b\x01\n" +
+	"\rUpdateProfile\x12*.api.v1.services.auth.UpdateProfileRequest\x1a+.api.v1.services.auth.UpdateProfileResponse\"!\xea\xea\x1b\a\n" +
+	"\x05authn\x82\xd3\xe4\x93\x02\x10:\x01*\x1a\v/me/profile\x12\x8f\x01\n" +
+	"\x0eUpdatePassword\x12+.api.v1.services.auth.UpdatePasswordRequest\x1a,.api.v1.services.auth.UpdatePasswordResponse\"\"\xea\xea\x1b\a\n" +
+	"\x05authn\x82\xd3\xe4\x93\x02\x11:\x01*\x1a\f/me/password\x12\x93\x01\n" +
+	"\x10GetUserResources\x12-.api.v1.services.auth.GetUserResourcesRequest\x1a..api.v1.services.auth.GetUserResourcesResponse\" \xea\xea\x1b\a\n" +
+	"\x05authn\x82\xd3\xe4\x93\x02\x0f\x12\r/me/resources\x12\x83\x01\n" +
+	"\fGetUserRoles\x12).api.v1.services.auth.GetUserRolesRequest\x1a*.api.v1.services.auth.GetUserRolesResponse\"\x1c\xea\xea\x1b\a\n" +
+	"\x05authn\x82\xd3\xe4\x93\x02\v\x12\t/me/rolesB\xce\x01\n" +
 	"\x18com.api.v1.services.authB\aMeProtoP\x01Z5origadmin/application/admin/api/v1/services/auth;auth\xa2\x02\x04AVSA\xaa\x02\x14Api.V1.Services.Auth\xca\x02\x14Api\\V1\\Services\\Auth\xe2\x02 Api\\V1\\Services\\Auth\\GPBMetadata\xea\x02\x17Api::V1::Services::Authb\x06proto3"
 
 var (

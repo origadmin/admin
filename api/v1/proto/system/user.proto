@@ -19,35 +19,35 @@ option objc_class_prefix = "APIServiceSystemUser";
 service UserService {
   rpc ListUsers(ListUsersRequest) returns (ListUsersResponse) {
     option (google.api.http) = {get: "/sys/users"};
-    option (contrib.api.policy.v1.policy) = {name: "jwt-auth"};
+    option (contrib.api.policy.v1.policy) = {name: "authz"};
   }
 
   rpc ListUserResources(ListUserResourcesRequest) returns (ListUserResourcesResponse) {
     option (google.api.http) = {get: "/sys/users/{id}/resources"};
-    option (contrib.api.policy.v1.policy) = {name: "jwt-auth"};
+    option (contrib.api.policy.v1.policy) = {name: "authz"};
   }
 
   rpc GetUser(GetUserRequest) returns (GetUserResponse) {
     option (google.api.http) = {get: "/sys/users/{id}"};
-    option (contrib.api.policy.v1.policy) = {name: "jwt-auth"};
+    option (contrib.api.policy.v1.policy) = {name: "authz"};
   }
   rpc CreateUser(CreateUserRequest) returns (CreateUserResponse) {
     option (google.api.http) = {
       post: "/sys/users"
       body: "*"
     };
-    option (contrib.api.policy.v1.policy) = {name: "jwt-auth"};
+    option (contrib.api.policy.v1.policy) = {name: "authz"};
   }
   rpc UpdateUser(UpdateUserRequest) returns (UpdateUserResponse) {
     option (google.api.http) = {
       put: "/sys/users/{user.id}"
       body: "*"
     };
-    option (contrib.api.policy.v1.policy) = {name: "jwt-auth"};
+    option (contrib.api.policy.v1.policy) = {name: "authz"};
   }
   rpc DeleteUser(DeleteUserRequest) returns (DeleteUserResponse) {
     option (google.api.http) = {delete: "/sys/users/{id}"};
-    option (contrib.api.policy.v1.policy) = {name: "jwt-auth"};
+    option (contrib.api.policy.v1.policy) = {name: "authz"};
   }
   // UpdateUserStatus Update the status of the user information
   rpc UpdateUserStatus(UpdateUserStatusRequest) returns (UpdateUserStatusResponse) {
@@ -55,7 +55,7 @@ service UserService {
       put: "/sys/users/{id}/status"
       body: "*"
     };
-    option (contrib.api.policy.v1.policy) = {name: "jwt-auth"};
+    option (contrib.api.policy.v1.policy) = {name: "authz"};
   }
 
   // Deprecated: Use UpdateUser with role_ids instead.
@@ -65,7 +65,7 @@ service UserService {
       put: "/sys/users/{id}/roles"
       body: "*"
     };
-    option (contrib.api.policy.v1.policy) = {name: "jwt-auth"};
+    option (contrib.api.policy.v1.policy) = {name: "authz"};
   }
 
   // ResetUserPassword reset the user s password
@@ -74,7 +74,16 @@ service UserService {
       post: "/sys/users/{id}/password/reset"
       body: "*"
     };
-    option (contrib.api.policy.v1.policy) = {name: "jwt-auth"};
+    option (contrib.api.policy.v1.policy) = {name: "authz"};
+  }
+
+  // InviteUser invite a new user
+  rpc InviteUser(InviteUserRequest) returns (InviteUserResponse) {
+    option (google.api.http) = {
+      post: "/sys/users/invite"
+      body: "*"
+    };
+    option (contrib.api.policy.v1.policy) = {name: "authz"};
   }
 }
 
@@ -203,4 +212,16 @@ message UpdateUserRolesRequest {
 
 message UpdateUserRolesResponse {
   api.v1.services.types.User user = 1 [json_name = "user"];
+}
+
+message InviteUserRequest {
+  // The email of the user to invite.
+  string email = 1 [json_name = "email"];
+  // The roles to assign to the invited user.
+  repeated int64 role_ids = 2 [json_name = "role_ids"];
+}
+
+message InviteUserResponse {
+  // The empty response body.
+  google.protobuf.Empty empty = 1 [json_name = "empty"];
 }

@@ -12,32 +12,32 @@ func init() {
 		{
 			ServiceMethod: "/api.v1.services.system.PermissionService/ListPermissions",
 			GatewayPath:   "GET:/sys/permissions",
-			Name:          "jwt-auth",
-			VersionID:     "747ca3e97c4da01880928edded91956b432c5998d094e72eb24049843708f8b2",
+			Name:          "authz",
+			VersionID:     "fcdb3b22e64a89f902a2450ffc8a2929a1ae9b7ae5eeb6424a98f3ee582f5ef8",
 		},
 		{
 			ServiceMethod: "/api.v1.services.system.PermissionService/GetPermission",
 			GatewayPath:   "GET:/sys/permissions/{id}",
-			Name:          "jwt-auth",
-			VersionID:     "e9e5ef228b3f5bd2ed85525ff5feab76b7024c7926b0f20bffcd57140d4dd819",
+			Name:          "authz",
+			VersionID:     "50d7beb035471c06efddbe0eb4258470d48254a86f5ad00e03615f0f771f5e04",
 		},
 		{
 			ServiceMethod: "/api.v1.services.system.PermissionService/CreatePermission",
 			GatewayPath:   "POST:/sys/permissions",
-			Name:          "jwt-auth",
-			VersionID:     "468e4a0da8ac26691071d6f6b9625a6e8e44406d15cd6ae8a7b890601f64e039",
+			Name:          "authz",
+			VersionID:     "19c1c6e8b3fa80014e079059978eb9bc50853dfa029096284378a184a32ed3c2",
 		},
 		{
 			ServiceMethod: "/api.v1.services.system.PermissionService/UpdatePermission",
 			GatewayPath:   "PUT:/sys/permissions/{permission.id}",
-			Name:          "jwt-auth",
-			VersionID:     "eec3e1eeb9af9c9aa68077fcdb249478624469780e64f7d608d5361a18b27a6f",
+			Name:          "authz",
+			VersionID:     "e0c0c83be52f7795d7531fe92a0b5d19014ee4017bd5644e26dccec062f488ba",
 		},
 		{
 			ServiceMethod: "/api.v1.services.system.PermissionService/DeletePermission",
 			GatewayPath:   "DELETE:/sys/permissions/{id}",
-			Name:          "jwt-auth",
-			VersionID:     "b7140fde854958f886c7a644c8563ede7b0828335f1054ed4b512faf198cb846",
+			Name:          "authz",
+			VersionID:     "cf2d8a269c6fc095f798ddbf442669f994a06f127c3e04af95af14a6147fbfa6",
 		},
 	}
 

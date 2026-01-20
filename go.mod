@@ -26,7 +26,6 @@ require (
 	github.com/origadmin/toolkits/codec v1.3.1
 	github.com/origadmin/toolkits/crypto v1.3.0
 	github.com/origadmin/toolkits/errors v1.3.1
-	github.com/sony/sonyflake v1.3.0
 	github.com/sqlite3ent/sqlite3 v1.40.0
 	golang.org/x/net v0.49.0 // indirect
 	google.golang.org/genproto/googleapis/api v0.0.0-20260112192933-99fd39fd28a9
@@ -37,6 +36,7 @@ require (
 require (
 	github.com/air-verse/air v1.64.0
 	github.com/bufbuild/buf v1.62.1
+	github.com/casbin/redis-watcher/v2 v2.8.0
 	github.com/go-kratos/kratos/cmd/kratos/v2 v2.0.0-20260105075216-c7a58ff59f80
 	github.com/go-kratos/kratos/cmd/protoc-gen-go-http/v2 v2.0.0-20260105075216-c7a58ff59f80
 	github.com/grpc-ecosystem/grpc-gateway/v2 v2.27.4
@@ -84,6 +84,8 @@ require (
 	github.com/bmatcuk/doublestar/v4 v4.9.1 // indirect
 	github.com/bufbuild/protocompile v0.14.2-0.20251223142729-db46c1b9d34e // indirect
 	github.com/bufbuild/protoplugin v0.0.0-20250218205857-750e09ce93e1 // indirect
+	github.com/bwmarrin/snowflake v0.3.0 // indirect
+	github.com/casbin/casbin/v3 v3.9.0 // indirect
 	github.com/casbin/govaluate v1.10.0 // indirect
 	github.com/catppuccin/go v0.3.0 // indirect
 	github.com/cespare/xxhash/v2 v2.3.0 // indirect
@@ -106,6 +108,7 @@ require (
 	github.com/cpuguy83/go-md2man/v2 v2.0.7 // indirect
 	github.com/davecgh/go-spew v1.1.2-0.20180830191138-d8f796af33cc // indirect
 	github.com/dchest/uniuri v1.2.0 // indirect
+	github.com/dgryski/go-rendezvous v0.0.0-20200823014737-9f7001d12a5f // indirect
 	github.com/distribution/reference v0.6.0 // indirect
 	github.com/docker/cli v29.1.3+incompatible // indirect
 	github.com/docker/distribution v2.8.3+incompatible // indirect
@@ -183,6 +186,7 @@ require (
 	github.com/olekukonko/tablewriter v1.1.2 // indirect
 	github.com/opencontainers/go-digest v1.0.0 // indirect
 	github.com/opencontainers/image-spec v1.1.1 // indirect
+	github.com/origadmin/toolkits/identifier/snowflake v1.3.1 // indirect
 	github.com/origadmin/toolkits/slogx v1.3.0 // indirect
 	github.com/patrickmn/go-cache v2.1.0+incompatible // indirect
 	github.com/pelletier/go-toml v1.9.5 // indirect
@@ -193,6 +197,7 @@ require (
 	github.com/power-devops/perfstat v0.0.0-20240221224432-82ca36839d55 // indirect
 	github.com/quic-go/qpack v0.6.0 // indirect
 	github.com/quic-go/quic-go v0.58.0 // indirect
+	github.com/redis/go-redis/v9 v9.0.3 // indirect
 	github.com/remyoudompheng/bigfft v0.0.0-20230129092748-24d4a6f8daec // indirect
 	github.com/rivo/uniseg v0.4.7 // indirect
 	github.com/rs/cors v1.11.1 // indirect

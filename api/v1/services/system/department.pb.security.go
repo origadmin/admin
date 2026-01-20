@@ -12,32 +12,32 @@ func init() {
 		{
 			ServiceMethod: "/api.v1.services.system.DepartmentService/ListDepartments",
 			GatewayPath:   "GET:/sys/departments",
-			Name:          "jwt-auth",
-			VersionID:     "24d3da2eb7b9118c4a034455dc49d3eab24a30e72aadb86740e411244f6fe3ff",
+			Name:          "authz",
+			VersionID:     "16eda2be6716e666be97ea1cb2bd2161f2d85eef39e5587c430a34087d6a6738",
 		},
 		{
 			ServiceMethod: "/api.v1.services.system.DepartmentService/GetDepartment",
 			GatewayPath:   "GET:/sys/departments/{id}",
-			Name:          "jwt-auth",
-			VersionID:     "b59f690402b9b5fce77774731c1b67e03f2843db393d1326dca80e4c6c60c4bd",
+			Name:          "authz",
+			VersionID:     "580f36dc1be1142e9570e49ee79e1d76cdffeb43651033579b9268dc2594b283",
 		},
 		{
 			ServiceMethod: "/api.v1.services.system.DepartmentService/CreateDepartment",
 			GatewayPath:   "POST:/sys/departments",
-			Name:          "jwt-auth",
-			VersionID:     "1b845cbc34961752487f3f8ffd09b52e5ab25c02400a921d45aebde69586aaae",
+			Name:          "authz",
+			VersionID:     "e4060d6a3587112c5745f38132f9ff29a1082e8926c5a73419fccee5fbd313ee",
 		},
 		{
 			ServiceMethod: "/api.v1.services.system.DepartmentService/UpdateDepartment",
 			GatewayPath:   "PUT:/sys/departments/{department.id}",
-			Name:          "jwt-auth",
-			VersionID:     "47d63e68261d9ce41603e02259d60c66f835cc8a25deceb4e5314bd443262e43",
+			Name:          "authz",
+			VersionID:     "c33f565d3a96a3c1f9741f61ae52751217bebae01fcbe85f79f5b3f7b937488a",
 		},
 		{
 			ServiceMethod: "/api.v1.services.system.DepartmentService/DeleteDepartment",
 			GatewayPath:   "DELETE:/sys/departments/{id}",
-			Name:          "jwt-auth",
-			VersionID:     "df57910ba6698301e581718a9f45a4f2c98d8ad5f28dcc78da5f530fc7e17f61",
+			Name:          "authz",
+			VersionID:     "c2bfab543ae10793f953654f089062626a545e750ab12ac4b1837466eda892d6",
 		},
 	}
 

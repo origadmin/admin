@@ -36,7 +36,7 @@ const MeServiceGetUserResourcesBridgeOperation = "/api.v1.services.auth.MeServic
 const MeServiceGetUserRolesBridgeOperation = "/api.v1.services.auth.MeService/GetUserRoles"
 
 type MeServiceBridgeServer interface {
-	// ListMyViews retrieves the menu/view tree for the currently authenticated user.
+	// ListMyViews retrieves the entire view tree available to the currently authenticated user.
 	ListMyViews(context.Context, *ListMyViewsRequest) (*ListMyViewsResponse, error)
 	// GetProfile retrieves the profile of the currently authenticated user.
 	GetProfile(context.Context, *GetProfileRequest) (*GetProfileResponse, error)

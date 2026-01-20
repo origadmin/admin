@@ -37,6 +37,7 @@ const UserServiceDeleteUserBridgeOperation = "/api.v1.services.system.UserServic
 const UserServiceUpdateUserStatusBridgeOperation = "/api.v1.services.system.UserService/UpdateUserStatus"
 const UserServiceUpdateUserRolesBridgeOperation = "/api.v1.services.system.UserService/UpdateUserRoles"
 const UserServiceResetUserPasswordBridgeOperation = "/api.v1.services.system.UserService/ResetUserPassword"
+const UserServiceInviteUserBridgeOperation = "/api.v1.services.system.UserService/InviteUser"
 
 type UserServiceBridgeServer interface {
 	ListUsers(context.Context, *ListUsersRequest) (*ListUsersResponse, error)
@@ -51,6 +52,8 @@ type UserServiceBridgeServer interface {
 	UpdateUserRoles(context.Context, *UpdateUserRolesRequest) (*UpdateUserRolesResponse, error)
 	// ResetUserPassword reset the user s password
 	ResetUserPassword(context.Context, *ResetUserPasswordRequest) (*ResetUserPasswordResponse, error)
+	// InviteUser invite a new user
+	InviteUser(context.Context, *InviteUserRequest) (*InviteUserResponse, error)
 }
 
 type UserServiceHooker interface {
@@ -63,6 +66,7 @@ type UserServiceHooker interface {
 	UserServiceUpdateUserStatusHooker
 	UserServiceUpdateUserRolesHooker
 	UserServiceResetUserPasswordHooker
+	UserServiceInviteUserHooker
 }
 
 type UserServiceHookedBridger interface {
@@ -105,6 +109,10 @@ type UserServiceResetUserPasswordHooker interface {
 	PrepareResetUserPassword(http.Context, *ResetUserPasswordRequest) (context.Context, error)
 	CompleteResetUserPassword(http.Context, *ResetUserPasswordRequest, *ResetUserPasswordResponse) error
 }
+type UserServiceInviteUserHooker interface {
+	PrepareInviteUser(http.Context, *InviteUserRequest) (context.Context, error)
+	CompleteInviteUser(http.Context, *InviteUserRequest, *InviteUserResponse) error
+}
 
 func RegisterUserServiceBridgeServer(s *http.Server, srv UserServiceHookedBridger) {
 	r := s.Route("/")
@@ -117,6 +125,7 @@ func RegisterUserServiceBridgeServer(s *http.Server, srv UserServiceHookedBridge
 	r.PUT("/sys/users/:id/status", _UserService_UpdateUserStatus0_Bridge_Handler(srv))
 	r.PUT("/sys/users/:id/roles", _UserService_UpdateUserRoles0_Bridge_Handler(srv))
 	r.POST("/sys/users/:id/password/reset", _UserService_ResetUserPassword0_Bridge_Handler(srv))
+	r.POST("/sys/users/invite", _UserService_InviteUser0_Bridge_Handler(srv))
 }
 
 func _UserService_ListUsers0_Bridge_Handler(srv UserServiceHookedBridger) func(ctx http.Context) error {
@@ -362,6 +371,32 @@ func _UserService_ResetUserPassword0_Bridge_Handler(srv UserServiceHookedBridger
 	}
 }
 
+func _UserService_InviteUser0_Bridge_Handler(srv UserServiceHookedBridger) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in InviteUserRequest
+		if err := ctx.Bind(&in); err != nil {
+			return err
+		}
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationUserServiceInviteUser)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.InviteUser(ctx, req.(*InviteUserRequest))
+		})
+
+		newctx, err := srv.PrepareInviteUser(ctx, &in)
+		if err != nil {
+			return err
+		}
+		out, err := h(newctx, &in)
+		if err != nil {
+			return err
+		}
+		return srv.CompleteInviteUser(ctx, &in, out.(*InviteUserResponse))
+	}
+}
+
 // UnimplementedUserServiceHooked must be embedded to have
 // forward compatible implementations.
 //
@@ -441,6 +476,14 @@ func (UnimplementedUserServiceHooked) CompleteResetUserPassword(ctx http.Context
 	return ctx.Result(200, out)
 }
 
+func (UnimplementedUserServiceHooked) PrepareInviteUser(ctx http.Context, in *InviteUserRequest) (context.Context, error) {
+	return ctx, nil
+}
+
+func (UnimplementedUserServiceHooked) CompleteInviteUser(ctx http.Context, in *InviteUserRequest, out *InviteUserResponse) error {
+	return ctx.Result(200, out)
+}
+
 func WithUserServiceHook(h UserServiceHooker) func(UserServiceBridgeServer) UserServiceHookedBridger {
 	return func(srv UserServiceBridgeServer) UserServiceHookedBridger {
 		return UserServiceHookedBridge{UserServiceBridgeServer: srv, UserServiceHooker: h}
@@ -499,6 +542,10 @@ func (c *UserServiceHTTPBridgeImpl) ResetUserPassword(ctx context.Context, in *R
 	return c.client.ResetUserPassword(ctx, in)
 }
 
+func (c *UserServiceHTTPBridgeImpl) InviteUser(ctx context.Context, in *InviteUserRequest) (*InviteUserResponse, error) {
+	return c.client.InviteUser(ctx, in)
+}
+
 type UserServiceBridgeImpl struct {
 	client UserServiceClient
 }
@@ -541,6 +588,10 @@ func (c *UserServiceBridgeImpl) UpdateUserRoles(ctx context.Context, in *UpdateU
 
 func (c *UserServiceBridgeImpl) ResetUserPassword(ctx context.Context, in *ResetUserPasswordRequest) (*ResetUserPasswordResponse, error) {
 	return c.client.ResetUserPassword(ctx, in)
+}
+
+func (c *UserServiceBridgeImpl) InviteUser(ctx context.Context, in *InviteUserRequest) (*InviteUserResponse, error) {
+	return c.client.InviteUser(ctx, in)
 }
 
 func (c *UserServiceBridgeImpl) mustEmbedUnimplementedUserServiceServer() {}
@@ -589,6 +640,10 @@ func (c *UserServiceGRPC2HTTPBridgeImpl) ResetUserPassword(ctx context.Context, 
 	return c.client.ResetUserPassword(ctx, in)
 }
 
+func (c *UserServiceGRPC2HTTPBridgeImpl) InviteUser(ctx context.Context, in *InviteUserRequest) (*InviteUserResponse, error) {
+	return c.client.InviteUser(ctx, in)
+}
+
 type UserServiceHTTP2GRPCBridgeImpl struct {
 	client UserServiceHTTPClient
 }
@@ -631,6 +686,10 @@ func (c *UserServiceHTTP2GRPCBridgeImpl) UpdateUserRoles(ctx context.Context, in
 
 func (c *UserServiceHTTP2GRPCBridgeImpl) ResetUserPassword(ctx context.Context, in *ResetUserPasswordRequest) (*ResetUserPasswordResponse, error) {
 	return c.client.ResetUserPassword(ctx, in)
+}
+
+func (c *UserServiceHTTP2GRPCBridgeImpl) InviteUser(ctx context.Context, in *InviteUserRequest) (*InviteUserResponse, error) {
+	return c.client.InviteUser(ctx, in)
 }
 
 func (c *UserServiceHTTP2GRPCBridgeImpl) mustEmbedUnimplementedUserServiceServer() {}

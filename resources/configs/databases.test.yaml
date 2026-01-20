@@ -1,0 +1,7 @@
+# databases.test.yaml
+data:
+  databases:
+    configs:
+      - dialect: sqlite3
+        name: default
+        source: file:./data_test.db?cache=shared&_fk=1

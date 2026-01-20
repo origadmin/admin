@@ -1002,6 +1002,105 @@ func (x *UpdateUserRolesResponse) GetUser() *types.User {
 	return nil
 }
 
+type InviteUserRequest struct {
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// The email of the user to invite.
+	Email string `protobuf:"bytes,1,opt,name=email,proto3" json:"email,omitempty"`
+	// The roles to assign to the invited user.
+	RoleIds       []int64 `protobuf:"varint,2,rep,packed,name=role_ids,proto3" json:"role_ids,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *InviteUserRequest) Reset() {
+	*x = InviteUserRequest{}
+	mi := &file_system_user_proto_msgTypes[18]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *InviteUserRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*InviteUserRequest) ProtoMessage() {}
+
+func (x *InviteUserRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_system_user_proto_msgTypes[18]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use InviteUserRequest.ProtoReflect.Descriptor instead.
+func (*InviteUserRequest) Descriptor() ([]byte, []int) {
+	return file_system_user_proto_rawDescGZIP(), []int{18}
+}
+
+func (x *InviteUserRequest) GetEmail() string {
+	if x != nil {
+		return x.Email
+	}
+	return ""
+}
+
+func (x *InviteUserRequest) GetRoleIds() []int64 {
+	if x != nil {
+		return x.RoleIds
+	}
+	return nil
+}
+
+type InviteUserResponse struct {
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// The empty response body.
+	Empty         *emptypb.Empty `protobuf:"bytes,1,opt,name=empty,proto3" json:"empty,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *InviteUserResponse) Reset() {
+	*x = InviteUserResponse{}
+	mi := &file_system_user_proto_msgTypes[19]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *InviteUserResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*InviteUserResponse) ProtoMessage() {}
+
+func (x *InviteUserResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_system_user_proto_msgTypes[19]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use InviteUserResponse.ProtoReflect.Descriptor instead.
+func (*InviteUserResponse) Descriptor() ([]byte, []int) {
+	return file_system_user_proto_rawDescGZIP(), []int{19}
+}
+
+func (x *InviteUserResponse) GetEmpty() *emptypb.Empty {
+	if x != nil {
+		return x.Empty
+	}
+	return nil
+}
+
 var File_system_user_proto protoreflect.FileDescriptor
 
 const file_system_user_proto_rawDesc = "" +
@@ -1070,41 +1169,39 @@ const file_system_user_proto_rawDesc = "" +
 	"\x02id\x18\x01 \x01(\x03R\x02id\x12\x1a\n" +
 	"\brole_ids\x18\x02 \x03(\x03R\brole_ids\"J\n" +
 	"\x17UpdateUserRolesResponse\x12/\n" +
-	"\x04user\x18\x01 \x01(\v2\x1b.api.v1.services.types.UserR\x04user2\xf4\n" +
+	"\x04user\x18\x01 \x01(\v2\x1b.api.v1.services.types.UserR\x04user\"E\n" +
+	"\x11InviteUserRequest\x12\x14\n" +
+	"\x05email\x18\x01 \x01(\tR\x05email\x12\x1a\n" +
+	"\brole_ids\x18\x02 \x03(\x03R\brole_ids\"B\n" +
+	"\x12InviteUserResponse\x12,\n" +
+	"\x05empty\x18\x01 \x01(\v2\x16.google.protobuf.EmptyR\x05empty2\xe6\v\n" +
+	"\vUserService\x12\x7f\n" +
+	"\tListUsers\x12(.api.v1.services.system.ListUsersRequest\x1a).api.v1.services.system.ListUsersResponse\"\x1d\xea\xea\x1b\a\n" +
+	"\x05authz\x82\xd3\xe4\x93\x02\f\x12\n" +
+	"/sys/users\x12\xa6\x01\n" +
+	"\x11ListUserResources\x120.api.v1.services.system.ListUserResourcesRequest\x1a1.api.v1.services.system.ListUserResourcesResponse\",\xea\xea\x1b\a\n" +
+	"\x05authz\x82\xd3\xe4\x93\x02\x1b\x12\x19/sys/users/{id}/resources\x12~\n" +
+	"\aGetUser\x12&.api.v1.services.system.GetUserRequest\x1a'.api.v1.services.system.GetUserResponse\"\"\xea\xea\x1b\a\n" +
+	"\x05authz\x82\xd3\xe4\x93\x02\x11\x12\x0f/sys/users/{id}\x12\x85\x01\n" +
 	"\n" +
-	"\vUserService\x12\x82\x01\n" +
-	"\tListUsers\x12(.api.v1.services.system.ListUsersRequest\x1a).api.v1.services.system.ListUsersResponse\" \xea\xea\x1b\n" +
+	"CreateUser\x12).api.v1.services.system.CreateUserRequest\x1a*.api.v1.services.system.CreateUserResponse\" \xea\xea\x1b\a\n" +
+	"\x05authz\x82\xd3\xe4\x93\x02\x0f:\x01*\"\n" +
+	"/sys/users\x12\x8f\x01\n" +
 	"\n" +
-	"\bjwt-auth\x82\xd3\xe4\x93\x02\f\x12\n" +
-	"/sys/users\x12\xa9\x01\n" +
-	"\x11ListUserResources\x120.api.v1.services.system.ListUserResourcesRequest\x1a1.api.v1.services.system.ListUserResourcesResponse\"/\xea\xea\x1b\n" +
+	"UpdateUser\x12).api.v1.services.system.UpdateUserRequest\x1a*.api.v1.services.system.UpdateUserResponse\"*\xea\xea\x1b\a\n" +
+	"\x05authz\x82\xd3\xe4\x93\x02\x19:\x01*\x1a\x14/sys/users/{user.id}\x12\x87\x01\n" +
 	"\n" +
-	"\bjwt-auth\x82\xd3\xe4\x93\x02\x1b\x12\x19/sys/users/{id}/resources\x12\x81\x01\n" +
-	"\aGetUser\x12&.api.v1.services.system.GetUserRequest\x1a'.api.v1.services.system.GetUserResponse\"%\xea\xea\x1b\n" +
+	"DeleteUser\x12).api.v1.services.system.DeleteUserRequest\x1a*.api.v1.services.system.DeleteUserResponse\"\"\xea\xea\x1b\a\n" +
+	"\x05authz\x82\xd3\xe4\x93\x02\x11*\x0f/sys/users/{id}\x12\xa3\x01\n" +
+	"\x10UpdateUserStatus\x12/.api.v1.services.system.UpdateUserStatusRequest\x1a0.api.v1.services.system.UpdateUserStatusResponse\",\xea\xea\x1b\a\n" +
+	"\x05authz\x82\xd3\xe4\x93\x02\x1b:\x01*\x1a\x16/sys/users/{id}/status\x12\xa2\x01\n" +
+	"\x0fUpdateUserRoles\x12..api.v1.services.system.UpdateUserRolesRequest\x1a/.api.v1.services.system.UpdateUserRolesResponse\".\xea\xea\x1b\a\n" +
+	"\x05authz\x82\xd3\xe4\x93\x02\x1a:\x01*\x1a\x15/sys/users/{id}/roles\x88\x02\x01\x12\xae\x01\n" +
+	"\x11ResetUserPassword\x120.api.v1.services.system.ResetUserPasswordRequest\x1a1.api.v1.services.system.ResetUserPasswordResponse\"4\xea\xea\x1b\a\n" +
+	"\x05authz\x82\xd3\xe4\x93\x02#:\x01*\"\x1e/sys/users/{id}/password/reset\x12\x8c\x01\n" +
 	"\n" +
-	"\bjwt-auth\x82\xd3\xe4\x93\x02\x11\x12\x0f/sys/users/{id}\x12\x88\x01\n" +
-	"\n" +
-	"CreateUser\x12).api.v1.services.system.CreateUserRequest\x1a*.api.v1.services.system.CreateUserResponse\"#\xea\xea\x1b\n" +
-	"\n" +
-	"\bjwt-auth\x82\xd3\xe4\x93\x02\x0f:\x01*\"\n" +
-	"/sys/users\x12\x92\x01\n" +
-	"\n" +
-	"UpdateUser\x12).api.v1.services.system.UpdateUserRequest\x1a*.api.v1.services.system.UpdateUserResponse\"-\xea\xea\x1b\n" +
-	"\n" +
-	"\bjwt-auth\x82\xd3\xe4\x93\x02\x19:\x01*\x1a\x14/sys/users/{user.id}\x12\x8a\x01\n" +
-	"\n" +
-	"DeleteUser\x12).api.v1.services.system.DeleteUserRequest\x1a*.api.v1.services.system.DeleteUserResponse\"%\xea\xea\x1b\n" +
-	"\n" +
-	"\bjwt-auth\x82\xd3\xe4\x93\x02\x11*\x0f/sys/users/{id}\x12\xa6\x01\n" +
-	"\x10UpdateUserStatus\x12/.api.v1.services.system.UpdateUserStatusRequest\x1a0.api.v1.services.system.UpdateUserStatusResponse\"/\xea\xea\x1b\n" +
-	"\n" +
-	"\bjwt-auth\x82\xd3\xe4\x93\x02\x1b:\x01*\x1a\x16/sys/users/{id}/status\x12\xa5\x01\n" +
-	"\x0fUpdateUserRoles\x12..api.v1.services.system.UpdateUserRolesRequest\x1a/.api.v1.services.system.UpdateUserRolesResponse\"1\xea\xea\x1b\n" +
-	"\n" +
-	"\bjwt-auth\x82\xd3\xe4\x93\x02\x1a:\x01*\x1a\x15/sys/users/{id}/roles\x88\x02\x01\x12\xb1\x01\n" +
-	"\x11ResetUserPassword\x120.api.v1.services.system.ResetUserPasswordRequest\x1a1.api.v1.services.system.ResetUserPasswordResponse\"7\xea\xea\x1b\n" +
-	"\n" +
-	"\bjwt-auth\x82\xd3\xe4\x93\x02#:\x01*\"\x1e/sys/users/{id}/password/resetB\xde\x01\n" +
+	"InviteUser\x12).api.v1.services.system.InviteUserRequest\x1a*.api.v1.services.system.InviteUserResponse\"'\xea\xea\x1b\a\n" +
+	"\x05authz\x82\xd3\xe4\x93\x02\x16:\x01*\"\x11/sys/users/inviteB\xde\x01\n" +
 	"\x1acom.api.v1.services.systemB\tUserProtoP\x01Z9origadmin/application/admin/api/v1/services/system;system\xa2\x02\x04AVSS\xaa\x02\x16Api.V1.Services.System\xca\x02\x16Api\\V1\\Services\\System\xe2\x02\"Api\\V1\\Services\\System\\GPBMetadata\xea\x02\x19Api::V1::Services::Systemb\x06proto3"
 
 var (
@@ -1119,7 +1216,7 @@ func file_system_user_proto_rawDescGZIP() []byte {
 	return file_system_user_proto_rawDescData
 }
 
-var file_system_user_proto_msgTypes = make([]protoimpl.MessageInfo, 18)
+var file_system_user_proto_msgTypes = make([]protoimpl.MessageInfo, 20)
 var file_system_user_proto_goTypes = []any{
 	(*ListUserResourcesRequest)(nil),  // 0: api.v1.services.system.ListUserResourcesRequest
 	(*ListUserResourcesResponse)(nil), // 1: api.v1.services.system.ListUserResourcesResponse
@@ -1139,47 +1236,52 @@ var file_system_user_proto_goTypes = []any{
 	(*DeleteUserResponse)(nil),        // 15: api.v1.services.system.DeleteUserResponse
 	(*UpdateUserRolesRequest)(nil),    // 16: api.v1.services.system.UpdateUserRolesRequest
 	(*UpdateUserRolesResponse)(nil),   // 17: api.v1.services.system.UpdateUserRolesResponse
-	(*types.Resource)(nil),            // 18: api.v1.services.types.Resource
-	(*types.User)(nil),                // 19: api.v1.services.types.User
-	(*anypb.Any)(nil),                 // 20: google.protobuf.Any
-	(*fieldmaskpb.FieldMask)(nil),     // 21: google.protobuf.FieldMask
-	(*emptypb.Empty)(nil),             // 22: google.protobuf.Empty
+	(*InviteUserRequest)(nil),         // 18: api.v1.services.system.InviteUserRequest
+	(*InviteUserResponse)(nil),        // 19: api.v1.services.system.InviteUserResponse
+	(*types.Resource)(nil),            // 20: api.v1.services.types.Resource
+	(*types.User)(nil),                // 21: api.v1.services.types.User
+	(*anypb.Any)(nil),                 // 22: google.protobuf.Any
+	(*fieldmaskpb.FieldMask)(nil),     // 23: google.protobuf.FieldMask
+	(*emptypb.Empty)(nil),             // 24: google.protobuf.Empty
 }
 var file_system_user_proto_depIdxs = []int32{
-	18, // 0: api.v1.services.system.ListUserResourcesResponse.resources:type_name -> api.v1.services.types.Resource
-	19, // 1: api.v1.services.system.ListUsersResponse.users:type_name -> api.v1.services.types.User
-	20, // 2: api.v1.services.system.ListUsersResponse.extra:type_name -> google.protobuf.Any
-	19, // 3: api.v1.services.system.GetUserResponse.user:type_name -> api.v1.services.types.User
-	19, // 4: api.v1.services.system.CreateUserRequest.user:type_name -> api.v1.services.types.User
-	19, // 5: api.v1.services.system.CreateUserResponse.user:type_name -> api.v1.services.types.User
-	19, // 6: api.v1.services.system.UpdateUserRequest.user:type_name -> api.v1.services.types.User
-	21, // 7: api.v1.services.system.UpdateUserRequest.update_mask:type_name -> google.protobuf.FieldMask
-	19, // 8: api.v1.services.system.UpdateUserResponse.user:type_name -> api.v1.services.types.User
-	22, // 9: api.v1.services.system.DeleteUserResponse.empty:type_name -> google.protobuf.Empty
-	19, // 10: api.v1.services.system.UpdateUserRolesResponse.user:type_name -> api.v1.services.types.User
-	6,  // 11: api.v1.services.system.UserService.ListUsers:input_type -> api.v1.services.system.ListUsersRequest
-	0,  // 12: api.v1.services.system.UserService.ListUserResources:input_type -> api.v1.services.system.ListUserResourcesRequest
-	8,  // 13: api.v1.services.system.UserService.GetUser:input_type -> api.v1.services.system.GetUserRequest
-	10, // 14: api.v1.services.system.UserService.CreateUser:input_type -> api.v1.services.system.CreateUserRequest
-	12, // 15: api.v1.services.system.UserService.UpdateUser:input_type -> api.v1.services.system.UpdateUserRequest
-	14, // 16: api.v1.services.system.UserService.DeleteUser:input_type -> api.v1.services.system.DeleteUserRequest
-	2,  // 17: api.v1.services.system.UserService.UpdateUserStatus:input_type -> api.v1.services.system.UpdateUserStatusRequest
-	16, // 18: api.v1.services.system.UserService.UpdateUserRoles:input_type -> api.v1.services.system.UpdateUserRolesRequest
-	4,  // 19: api.v1.services.system.UserService.ResetUserPassword:input_type -> api.v1.services.system.ResetUserPasswordRequest
-	7,  // 20: api.v1.services.system.UserService.ListUsers:output_type -> api.v1.services.system.ListUsersResponse
-	1,  // 21: api.v1.services.system.UserService.ListUserResources:output_type -> api.v1.services.system.ListUserResourcesResponse
-	9,  // 22: api.v1.services.system.UserService.GetUser:output_type -> api.v1.services.system.GetUserResponse
-	11, // 23: api.v1.services.system.UserService.CreateUser:output_type -> api.v1.services.system.CreateUserResponse
-	13, // 24: api.v1.services.system.UserService.UpdateUser:output_type -> api.v1.services.system.UpdateUserResponse
-	15, // 25: api.v1.services.system.UserService.DeleteUser:output_type -> api.v1.services.system.DeleteUserResponse
-	3,  // 26: api.v1.services.system.UserService.UpdateUserStatus:output_type -> api.v1.services.system.UpdateUserStatusResponse
-	17, // 27: api.v1.services.system.UserService.UpdateUserRoles:output_type -> api.v1.services.system.UpdateUserRolesResponse
-	5,  // 28: api.v1.services.system.UserService.ResetUserPassword:output_type -> api.v1.services.system.ResetUserPasswordResponse
-	20, // [20:29] is the sub-list for method output_type
-	11, // [11:20] is the sub-list for method input_type
-	11, // [11:11] is the sub-list for extension type_name
-	11, // [11:11] is the sub-list for extension extendee
-	0,  // [0:11] is the sub-list for field type_name
+	20, // 0: api.v1.services.system.ListUserResourcesResponse.resources:type_name -> api.v1.services.types.Resource
+	21, // 1: api.v1.services.system.ListUsersResponse.users:type_name -> api.v1.services.types.User
+	22, // 2: api.v1.services.system.ListUsersResponse.extra:type_name -> google.protobuf.Any
+	21, // 3: api.v1.services.system.GetUserResponse.user:type_name -> api.v1.services.types.User
+	21, // 4: api.v1.services.system.CreateUserRequest.user:type_name -> api.v1.services.types.User
+	21, // 5: api.v1.services.system.CreateUserResponse.user:type_name -> api.v1.services.types.User
+	21, // 6: api.v1.services.system.UpdateUserRequest.user:type_name -> api.v1.services.types.User
+	23, // 7: api.v1.services.system.UpdateUserRequest.update_mask:type_name -> google.protobuf.FieldMask
+	21, // 8: api.v1.services.system.UpdateUserResponse.user:type_name -> api.v1.services.types.User
+	24, // 9: api.v1.services.system.DeleteUserResponse.empty:type_name -> google.protobuf.Empty
+	21, // 10: api.v1.services.system.UpdateUserRolesResponse.user:type_name -> api.v1.services.types.User
+	24, // 11: api.v1.services.system.InviteUserResponse.empty:type_name -> google.protobuf.Empty
+	6,  // 12: api.v1.services.system.UserService.ListUsers:input_type -> api.v1.services.system.ListUsersRequest
+	0,  // 13: api.v1.services.system.UserService.ListUserResources:input_type -> api.v1.services.system.ListUserResourcesRequest
+	8,  // 14: api.v1.services.system.UserService.GetUser:input_type -> api.v1.services.system.GetUserRequest
+	10, // 15: api.v1.services.system.UserService.CreateUser:input_type -> api.v1.services.system.CreateUserRequest
+	12, // 16: api.v1.services.system.UserService.UpdateUser:input_type -> api.v1.services.system.UpdateUserRequest
+	14, // 17: api.v1.services.system.UserService.DeleteUser:input_type -> api.v1.services.system.DeleteUserRequest
+	2,  // 18: api.v1.services.system.UserService.UpdateUserStatus:input_type -> api.v1.services.system.UpdateUserStatusRequest
+	16, // 19: api.v1.services.system.UserService.UpdateUserRoles:input_type -> api.v1.services.system.UpdateUserRolesRequest
+	4,  // 20: api.v1.services.system.UserService.ResetUserPassword:input_type -> api.v1.services.system.ResetUserPasswordRequest
+	18, // 21: api.v1.services.system.UserService.InviteUser:input_type -> api.v1.services.system.InviteUserRequest
+	7,  // 22: api.v1.services.system.UserService.ListUsers:output_type -> api.v1.services.system.ListUsersResponse
+	1,  // 23: api.v1.services.system.UserService.ListUserResources:output_type -> api.v1.services.system.ListUserResourcesResponse
+	9,  // 24: api.v1.services.system.UserService.GetUser:output_type -> api.v1.services.system.GetUserResponse
+	11, // 25: api.v1.services.system.UserService.CreateUser:output_type -> api.v1.services.system.CreateUserResponse
+	13, // 26: api.v1.services.system.UserService.UpdateUser:output_type -> api.v1.services.system.UpdateUserResponse
+	15, // 27: api.v1.services.system.UserService.DeleteUser:output_type -> api.v1.services.system.DeleteUserResponse
+	3,  // 28: api.v1.services.system.UserService.UpdateUserStatus:output_type -> api.v1.services.system.UpdateUserStatusResponse
+	17, // 29: api.v1.services.system.UserService.UpdateUserRoles:output_type -> api.v1.services.system.UpdateUserRolesResponse
+	5,  // 30: api.v1.services.system.UserService.ResetUserPassword:output_type -> api.v1.services.system.ResetUserPasswordResponse
+	19, // 31: api.v1.services.system.UserService.InviteUser:output_type -> api.v1.services.system.InviteUserResponse
+	22, // [22:32] is the sub-list for method output_type
+	12, // [12:22] is the sub-list for method input_type
+	12, // [12:12] is the sub-list for extension type_name
+	12, // [12:12] is the sub-list for extension extendee
+	0,  // [0:12] is the sub-list for field type_name
 }
 
 func init() { file_system_user_proto_init() }
@@ -1195,7 +1297,7 @@ func file_system_user_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_system_user_proto_rawDesc), len(file_system_user_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   18,
+			NumMessages:   20,
 			NumExtensions: 0,
 			NumServices:   1,
 		},

@@ -20,12 +20,12 @@ service ViewService {
   // Lists all view elements.
   rpc ListViews(ListViewsRequest) returns (ListViewsResponse) {
     option (google.api.http) = {get: "/sys/views"};
-    option (contrib.api.policy.v1.policy) = {name: "jwt-auth"};
+    option (contrib.api.policy.v1.policy) = {name: "authz"};
   }
   // Gets a single view element.
   rpc GetView(GetViewRequest) returns (GetViewResponse) {
     option (google.api.http) = {get: "/sys/views/{id}"};
-    option (contrib.api.policy.v1.policy) = {name: "jwt-auth"};
+    option (contrib.api.policy.v1.policy) = {name: "authz"};
   }
   // Creates a new view element.
   rpc CreateView(CreateViewRequest) returns (CreateViewResponse) {
@@ -33,7 +33,7 @@ service ViewService {
       post: "/sys/views"
       body: "*"
     };
-    option (contrib.api.policy.v1.policy) = {name: "jwt-auth"};
+    option (contrib.api.policy.v1.policy) = {name: "authz"};
   }
   // Updates a view element.
   rpc UpdateView(UpdateViewRequest) returns (UpdateViewResponse) {
@@ -41,12 +41,12 @@ service ViewService {
       put: "/sys/views/{view.id}"
       body: "*"
     };
-    option (contrib.api.policy.v1.policy) = {name: "jwt-auth"};
+    option (contrib.api.policy.v1.policy) = {name: "authz"};
   }
   // Deletes a view element.
   rpc DeleteView(DeleteViewRequest) returns (DeleteViewResponse) {
     option (google.api.http) = {delete: "/sys/views/{id}"};
-    option (contrib.api.policy.v1.policy) = {name: "jwt-auth"};
+    option (contrib.api.policy.v1.policy) = {name: "authz"};
   }
 }
 

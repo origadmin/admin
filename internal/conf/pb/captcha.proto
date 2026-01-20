@@ -5,13 +5,15 @@ package conf.pb;
 option go_package = "origadmin/application/admin/internal/conf/pb;confpb";
 
 message Captcha {
-  int32 length = 1 [json_name = "length"];
-  int32 width = 2 [json_name = "width"];
-  int32 height = 3 [json_name = "height"];
-  float maxskew = 4 [json_name = "maxskew"];
-  int32 dot_count = 5 [json_name = "dot_count"];
-  string cache_name = 6 [json_name = "cache_name"];
-  string language = 7 [json_name = "language"];
+  bool enabled = 1 [json_name = "enabled"];
+  int32 length = 2 [json_name = "length"];
+  int32 width = 3 [json_name = "width"];
+  int32 height = 4 [json_name = "height"];
+  float max_skew = 5 [json_name = "max_skew"];
+  int32 dot_count = 6 [json_name = "dot_count"];
+  string cache_name = 7 [json_name = "cache_name"];
+  string language = 8 [json_name = "language"];
+
 
   //  runtime.api.config.data.v1.Caches caches = 5 [json_name = "caches"];
   // 注释原有Redis配置（应由公共配置管理）

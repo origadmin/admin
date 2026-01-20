@@ -39,7 +39,7 @@ service AuthService {
       post: "/auth/logout"
       body: "*"
     };
-    option (contrib.api.policy.v1.policy) = {name: "jwt-auth"};
+    option (contrib.api.policy.v1.policy) = {name: "authn"};
   }
 
   // RefreshToken provides a new access token.

@@ -33,7 +33,7 @@ type MeServiceHTTPServer interface {
 	GetUserResources(context.Context, *GetUserResourcesRequest) (*GetUserResourcesResponse, error)
 	// GetUserRoles GetUserRoles retrieves the role list for the current user.
 	GetUserRoles(context.Context, *GetUserRolesRequest) (*GetUserRolesResponse, error)
-	// ListMyViews ListMyViews retrieves the menu/view tree for the currently authenticated user.
+	// ListMyViews ListMyViews retrieves the entire view tree available to the currently authenticated user.
 	ListMyViews(context.Context, *ListMyViewsRequest) (*ListMyViewsResponse, error)
 	// UpdatePassword UpdatePassword changes the password for the currently authenticated user.
 	UpdatePassword(context.Context, *UpdatePasswordRequest) (*UpdatePasswordResponse, error)
@@ -178,7 +178,7 @@ type MeServiceHTTPClient interface {
 	GetUserResources(ctx context.Context, req *GetUserResourcesRequest, opts ...http.CallOption) (rsp *GetUserResourcesResponse, err error)
 	// GetUserRoles GetUserRoles retrieves the role list for the current user.
 	GetUserRoles(ctx context.Context, req *GetUserRolesRequest, opts ...http.CallOption) (rsp *GetUserRolesResponse, err error)
-	// ListMyViews ListMyViews retrieves the menu/view tree for the currently authenticated user.
+	// ListMyViews ListMyViews retrieves the entire view tree available to the currently authenticated user.
 	ListMyViews(ctx context.Context, req *ListMyViewsRequest, opts ...http.CallOption) (rsp *ListMyViewsResponse, err error)
 	// UpdatePassword UpdatePassword changes the password for the currently authenticated user.
 	UpdatePassword(ctx context.Context, req *UpdatePasswordRequest, opts ...http.CallOption) (rsp *UpdatePasswordResponse, err error)
@@ -236,7 +236,7 @@ func (c *MeServiceHTTPClientImpl) GetUserRoles(ctx context.Context, in *GetUserR
 	return &out, nil
 }
 
-// ListMyViews ListMyViews retrieves the menu/view tree for the currently authenticated user.
+// ListMyViews ListMyViews retrieves the entire view tree available to the currently authenticated user.
 func (c *MeServiceHTTPClientImpl) ListMyViews(ctx context.Context, in *ListMyViewsRequest, opts ...http.CallOption) (*ListMyViewsResponse, error) {
 	var out ListMyViewsResponse
 	pattern := "/me/views"

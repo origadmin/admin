@@ -12,26 +12,26 @@ func init() {
 		{
 			ServiceMethod: "/api.v1.services.auth.CasbinService/ListPolicies",
 			GatewayPath:   "GET:/casbin/policies",
-			Name:          "jwt-auth",
-			VersionID:     "18622517adfd1c89ce1ada20b5f4af8f0bef9c7490deec6f364609cbaa9a6b8d",
+			Name:          "authn",
+			VersionID:     "d787e48cd4ffd46b1ebb3c55838826d1bea18b0c906c436be92b068c32c8d46d",
 		},
 		{
 			ServiceMethod: "/api.v1.services.auth.CasbinService/ListGroupings",
 			GatewayPath:   "GET:/casbin/groupings",
-			Name:          "jwt-auth",
-			VersionID:     "8bfaf806e938ac5a8c8ca5be8148ef3fcd7e202fc1659266fe40d6045df021e2",
+			Name:          "authn",
+			VersionID:     "1c37a7ee407b829f8eea12b803ff75bfc40230baf7e3378b95d9423241efcec2",
 		},
 		{
 			ServiceMethod: "/api.v1.services.auth.CasbinService/WatchUpdate",
 			GatewayPath:   "GET:/casbin/watch",
-			Name:          "jwt-auth",
-			VersionID:     "ae9423cf8facd7b38a0b27595e8fe15ce7666beca64e0db0831a8356baf0efba",
+			Name:          "authn",
+			VersionID:     "4b70c0aa465c8e817de0827ab388255198e10539a284d281bb45f919a6566497",
 		},
 		{
 			ServiceMethod: "/api.v1.services.auth.CasbinService/StreamRules",
 			GatewayPath:   "",
-			Name:          "jwt-auth",
-			VersionID:     "2204990505087177bba9898d6cb43b0f29fcc15723626cbaf0d9e243bb6c1696",
+			Name:          "authn",
+			VersionID:     "16bb04a87c5fe5a2e62038e24d5bc0ead3cbfd019e44f79d675a8a9df7faa070",
 		},
 	}
 

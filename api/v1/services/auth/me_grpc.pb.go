@@ -33,7 +33,7 @@ const (
 //
 // Service MeService provides APIs for the currently authenticated user to manage their own profile and data.
 type MeServiceClient interface {
-	// ListMyViews retrieves the menu/view tree for the currently authenticated user.
+	// ListMyViews retrieves the entire view tree available to the currently authenticated user.
 	ListMyViews(ctx context.Context, in *ListMyViewsRequest, opts ...grpc.CallOption) (*ListMyViewsResponse, error)
 	// GetProfile retrieves the profile of the currently authenticated user.
 	GetProfile(ctx context.Context, in *GetProfileRequest, opts ...grpc.CallOption) (*GetProfileResponse, error)
@@ -121,7 +121,7 @@ func (c *meServiceClient) GetUserRoles(ctx context.Context, in *GetUserRolesRequ
 //
 // Service MeService provides APIs for the currently authenticated user to manage their own profile and data.
 type MeServiceServer interface {
-	// ListMyViews retrieves the menu/view tree for the currently authenticated user.
+	// ListMyViews retrieves the entire view tree available to the currently authenticated user.
 	ListMyViews(context.Context, *ListMyViewsRequest) (*ListMyViewsResponse, error)
 	// GetProfile retrieves the profile of the currently authenticated user.
 	GetProfile(context.Context, *GetProfileRequest) (*GetProfileResponse, error)

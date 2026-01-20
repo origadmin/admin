@@ -606,23 +606,18 @@ const file_system_position_proto_rawDesc = "" +
 	"\x15DeletePositionRequest\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\x03R\x02id\"F\n" +
 	"\x16DeletePositionResponse\x12,\n" +
-	"\x05empty\x18\x01 \x01(\v2\x16.google.protobuf.EmptyR\x05empty2\x9b\x06\n" +
-	"\x0fPositionService\x12\x92\x01\n" +
-	"\rListPositions\x12,.api.v1.services.system.ListPositionsRequest\x1a-.api.v1.services.system.ListPositionsResponse\"$\xea\xea\x1b\n" +
-	"\n" +
-	"\bjwt-auth\x82\xd3\xe4\x93\x02\x10\x12\x0e/sys/positions\x12\x91\x01\n" +
-	"\vGetPosition\x12*.api.v1.services.system.GetPositionRequest\x1a+.api.v1.services.system.GetPositionResponse\")\xea\xea\x1b\n" +
-	"\n" +
-	"\bjwt-auth\x82\xd3\xe4\x93\x02\x15\x12\x13/sys/positions/{id}\x12\x98\x01\n" +
-	"\x0eCreatePosition\x12-.api.v1.services.system.CreatePositionRequest\x1a..api.v1.services.system.CreatePositionResponse\"'\xea\xea\x1b\n" +
-	"\n" +
-	"\bjwt-auth\x82\xd3\xe4\x93\x02\x13:\x01*\"\x0e/sys/positions\x12\xa6\x01\n" +
-	"\x0eUpdatePosition\x12-.api.v1.services.system.UpdatePositionRequest\x1a..api.v1.services.system.UpdatePositionResponse\"5\xea\xea\x1b\n" +
-	"\n" +
-	"\bjwt-auth\x82\xd3\xe4\x93\x02!:\x01*\x1a\x1c/sys/positions/{position.id}\x12\x9a\x01\n" +
-	"\x0eDeletePosition\x12-.api.v1.services.system.DeletePositionRequest\x1a..api.v1.services.system.DeletePositionResponse\")\xea\xea\x1b\n" +
-	"\n" +
-	"\bjwt-auth\x82\xd3\xe4\x93\x02\x15*\x13/sys/positions/{id}B\xe2\x01\n" +
+	"\x05empty\x18\x01 \x01(\v2\x16.google.protobuf.EmptyR\x05empty2\x8c\x06\n" +
+	"\x0fPositionService\x12\x8f\x01\n" +
+	"\rListPositions\x12,.api.v1.services.system.ListPositionsRequest\x1a-.api.v1.services.system.ListPositionsResponse\"!\xea\xea\x1b\a\n" +
+	"\x05authz\x82\xd3\xe4\x93\x02\x10\x12\x0e/sys/positions\x12\x8e\x01\n" +
+	"\vGetPosition\x12*.api.v1.services.system.GetPositionRequest\x1a+.api.v1.services.system.GetPositionResponse\"&\xea\xea\x1b\a\n" +
+	"\x05authz\x82\xd3\xe4\x93\x02\x15\x12\x13/sys/positions/{id}\x12\x95\x01\n" +
+	"\x0eCreatePosition\x12-.api.v1.services.system.CreatePositionRequest\x1a..api.v1.services.system.CreatePositionResponse\"$\xea\xea\x1b\a\n" +
+	"\x05authz\x82\xd3\xe4\x93\x02\x13:\x01*\"\x0e/sys/positions\x12\xa3\x01\n" +
+	"\x0eUpdatePosition\x12-.api.v1.services.system.UpdatePositionRequest\x1a..api.v1.services.system.UpdatePositionResponse\"2\xea\xea\x1b\a\n" +
+	"\x05authz\x82\xd3\xe4\x93\x02!:\x01*\x1a\x1c/sys/positions/{position.id}\x12\x97\x01\n" +
+	"\x0eDeletePosition\x12-.api.v1.services.system.DeletePositionRequest\x1a..api.v1.services.system.DeletePositionResponse\"&\xea\xea\x1b\a\n" +
+	"\x05authz\x82\xd3\xe4\x93\x02\x15*\x13/sys/positions/{id}B\xe2\x01\n" +
 	"\x1acom.api.v1.services.systemB\rPositionProtoP\x01Z9origadmin/application/admin/api/v1/services/system;system\xa2\x02\x04AVSS\xaa\x02\x16Api.V1.Services.System\xca\x02\x16Api\\V1\\Services\\System\xe2\x02\"Api\\V1\\Services\\System\\GPBMetadata\xea\x02\x19Api::V1::Services::Systemb\x06proto3"
 
 var (

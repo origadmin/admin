@@ -703,23 +703,18 @@ const file_system_permission_proto_rawDesc = "" +
 	"\x17DeletePermissionRequest\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\x03R\x02id\"H\n" +
 	"\x18DeletePermissionResponse\x12,\n" +
-	"\x05empty\x18\x01 \x01(\v2\x16.google.protobuf.EmptyR\x05empty2\xc7\x06\n" +
-	"\x11PermissionService\x12\x9a\x01\n" +
-	"\x0fListPermissions\x12..api.v1.services.system.ListPermissionsRequest\x1a/.api.v1.services.system.ListPermissionsResponse\"&\xea\xea\x1b\n" +
-	"\n" +
-	"\bjwt-auth\x82\xd3\xe4\x93\x02\x12\x12\x10/sys/permissions\x12\x99\x01\n" +
-	"\rGetPermission\x12,.api.v1.services.system.GetPermissionRequest\x1a-.api.v1.services.system.GetPermissionResponse\"+\xea\xea\x1b\n" +
-	"\n" +
-	"\bjwt-auth\x82\xd3\xe4\x93\x02\x17\x12\x15/sys/permissions/{id}\x12\xa0\x01\n" +
-	"\x10CreatePermission\x12/.api.v1.services.system.CreatePermissionRequest\x1a0.api.v1.services.system.CreatePermissionResponse\")\xea\xea\x1b\n" +
-	"\n" +
-	"\bjwt-auth\x82\xd3\xe4\x93\x02\x15:\x01*\"\x10/sys/permissions\x12\xb0\x01\n" +
-	"\x10UpdatePermission\x12/.api.v1.services.system.UpdatePermissionRequest\x1a0.api.v1.services.system.UpdatePermissionResponse\"9\xea\xea\x1b\n" +
-	"\n" +
-	"\bjwt-auth\x82\xd3\xe4\x93\x02%:\x01*\x1a /sys/permissions/{permission.id}\x12\xa2\x01\n" +
-	"\x10DeletePermission\x12/.api.v1.services.system.DeletePermissionRequest\x1a0.api.v1.services.system.DeletePermissionResponse\"+\xea\xea\x1b\n" +
-	"\n" +
-	"\bjwt-auth\x82\xd3\xe4\x93\x02\x17*\x15/sys/permissions/{id}B\xe4\x01\n" +
+	"\x05empty\x18\x01 \x01(\v2\x16.google.protobuf.EmptyR\x05empty2\xb8\x06\n" +
+	"\x11PermissionService\x12\x97\x01\n" +
+	"\x0fListPermissions\x12..api.v1.services.system.ListPermissionsRequest\x1a/.api.v1.services.system.ListPermissionsResponse\"#\xea\xea\x1b\a\n" +
+	"\x05authz\x82\xd3\xe4\x93\x02\x12\x12\x10/sys/permissions\x12\x96\x01\n" +
+	"\rGetPermission\x12,.api.v1.services.system.GetPermissionRequest\x1a-.api.v1.services.system.GetPermissionResponse\"(\xea\xea\x1b\a\n" +
+	"\x05authz\x82\xd3\xe4\x93\x02\x17\x12\x15/sys/permissions/{id}\x12\x9d\x01\n" +
+	"\x10CreatePermission\x12/.api.v1.services.system.CreatePermissionRequest\x1a0.api.v1.services.system.CreatePermissionResponse\"&\xea\xea\x1b\a\n" +
+	"\x05authz\x82\xd3\xe4\x93\x02\x15:\x01*\"\x10/sys/permissions\x12\xad\x01\n" +
+	"\x10UpdatePermission\x12/.api.v1.services.system.UpdatePermissionRequest\x1a0.api.v1.services.system.UpdatePermissionResponse\"6\xea\xea\x1b\a\n" +
+	"\x05authz\x82\xd3\xe4\x93\x02%:\x01*\x1a /sys/permissions/{permission.id}\x12\x9f\x01\n" +
+	"\x10DeletePermission\x12/.api.v1.services.system.DeletePermissionRequest\x1a0.api.v1.services.system.DeletePermissionResponse\"(\xea\xea\x1b\a\n" +
+	"\x05authz\x82\xd3\xe4\x93\x02\x17*\x15/sys/permissions/{id}B\xe4\x01\n" +
 	"\x1acom.api.v1.services.systemB\x0fPermissionProtoP\x01Z9origadmin/application/admin/api/v1/services/system;system\xa2\x02\x04AVSS\xaa\x02\x16Api.V1.Services.System\xca\x02\x16Api\\V1\\Services\\System\xe2\x02\"Api\\V1\\Services\\System\\GPBMetadata\xea\x02\x19Api::V1::Services::Systemb\x06proto3"
 
 var (

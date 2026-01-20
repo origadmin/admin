@@ -2,6 +2,7 @@
   <configuration default="false" name="go build origadmin/application/admin/cmd/gateway" type="GoApplicationRunConfiguration" factoryName="Go Application" nameIsGenerated="true">
     <module name="framework" />
     <working_directory value="$PROJECT_DIR$/projects/backend" />
+      <parameters value="-conf resources/configs/bootstrap.test.yaml"/>
     <kind value="PACKAGE" />
     <package value="origadmin/application/admin/cmd/gateway" />
     <directory value="$PROJECT_DIR$" />

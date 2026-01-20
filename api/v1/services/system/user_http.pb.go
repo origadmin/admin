@@ -22,6 +22,7 @@ const _ = http.SupportPackageIsVersion1
 const OperationUserServiceCreateUser = "/api.v1.services.system.UserService/CreateUser"
 const OperationUserServiceDeleteUser = "/api.v1.services.system.UserService/DeleteUser"
 const OperationUserServiceGetUser = "/api.v1.services.system.UserService/GetUser"
+const OperationUserServiceInviteUser = "/api.v1.services.system.UserService/InviteUser"
 const OperationUserServiceListUserResources = "/api.v1.services.system.UserService/ListUserResources"
 const OperationUserServiceListUsers = "/api.v1.services.system.UserService/ListUsers"
 const OperationUserServiceResetUserPassword = "/api.v1.services.system.UserService/ResetUserPassword"
@@ -33,6 +34,8 @@ type UserServiceHTTPServer interface {
 	CreateUser(context.Context, *CreateUserRequest) (*CreateUserResponse, error)
 	DeleteUser(context.Context, *DeleteUserRequest) (*DeleteUserResponse, error)
 	GetUser(context.Context, *GetUserRequest) (*GetUserResponse, error)
+	// InviteUser InviteUser invite a new user
+	InviteUser(context.Context, *InviteUserRequest) (*InviteUserResponse, error)
 	ListUserResources(context.Context, *ListUserResourcesRequest) (*ListUserResourcesResponse, error)
 	ListUsers(context.Context, *ListUsersRequest) (*ListUsersResponse, error)
 	// ResetUserPassword ResetUserPassword reset the user s password
@@ -56,6 +59,7 @@ func RegisterUserServiceHTTPServer(s *http.Server, srv UserServiceHTTPServer) {
 	r.PUT("/sys/users/{id}/status", _UserService_UpdateUserStatus0_HTTP_Handler(srv))
 	r.PUT("/sys/users/{id}/roles", _UserService_UpdateUserRoles0_HTTP_Handler(srv))
 	r.POST("/sys/users/{id}/password/reset", _UserService_ResetUserPassword0_HTTP_Handler(srv))
+	r.POST("/sys/users/invite", _UserService_InviteUser0_HTTP_Handler(srv))
 }
 
 func _UserService_ListUsers0_HTTP_Handler(srv UserServiceHTTPServer) func(ctx http.Context) error {
@@ -265,10 +269,34 @@ func _UserService_ResetUserPassword0_HTTP_Handler(srv UserServiceHTTPServer) fun
 	}
 }
 
+func _UserService_InviteUser0_HTTP_Handler(srv UserServiceHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in InviteUserRequest
+		if err := ctx.Bind(&in); err != nil {
+			return err
+		}
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationUserServiceInviteUser)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.InviteUser(ctx, req.(*InviteUserRequest))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*InviteUserResponse)
+		return ctx.Result(200, reply)
+	}
+}
+
 type UserServiceHTTPClient interface {
 	CreateUser(ctx context.Context, req *CreateUserRequest, opts ...http.CallOption) (rsp *CreateUserResponse, err error)
 	DeleteUser(ctx context.Context, req *DeleteUserRequest, opts ...http.CallOption) (rsp *DeleteUserResponse, err error)
 	GetUser(ctx context.Context, req *GetUserRequest, opts ...http.CallOption) (rsp *GetUserResponse, err error)
+	// InviteUser InviteUser invite a new user
+	InviteUser(ctx context.Context, req *InviteUserRequest, opts ...http.CallOption) (rsp *InviteUserResponse, err error)
 	ListUserResources(ctx context.Context, req *ListUserResourcesRequest, opts ...http.CallOption) (rsp *ListUserResourcesResponse, err error)
 	ListUsers(ctx context.Context, req *ListUsersRequest, opts ...http.CallOption) (rsp *ListUsersResponse, err error)
 	// ResetUserPassword ResetUserPassword reset the user s password
@@ -322,6 +350,20 @@ func (c *UserServiceHTTPClientImpl) GetUser(ctx context.Context, in *GetUserRequ
 	opts = append(opts, http.Operation(OperationUserServiceGetUser))
 	opts = append(opts, http.PathTemplate(pattern))
 	err := c.cc.Invoke(ctx, "GET", path, nil, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, nil
+}
+
+// InviteUser InviteUser invite a new user
+func (c *UserServiceHTTPClientImpl) InviteUser(ctx context.Context, in *InviteUserRequest, opts ...http.CallOption) (*InviteUserResponse, error) {
+	var out InviteUserResponse
+	pattern := "/sys/users/invite"
+	path := binding.EncodeURL(pattern, in, false)
+	opts = append(opts, http.Operation(OperationUserServiceInviteUser))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "POST", path, in, &out, opts...)
 	if err != nil {
 		return nil, err
 	}

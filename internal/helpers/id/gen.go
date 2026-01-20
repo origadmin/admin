@@ -6,26 +6,18 @@
 package id
 
 import (
-	"github.com/sony/sonyflake"
+	"github.com/origadmin/toolkits/identifier"
+	_ "github.com/origadmin/toolkits/identifier/snowflake"
 )
 
 var (
 	generator = New()
 )
 
-func New() *sonyflake.Sonyflake {
-	s := sonyflake.Settings{}
-	generator, err := sonyflake.New(s)
-	if err != nil {
-		panic(err)
-	}
-	return generator
+func New() identifier.Generator[int64] {
+	return identifier.Get[int64]("snowflake")
 }
 
 func Gen() int64 {
-	id, err := generator.NextID()
-	if err != nil {
-		return 0
-	}
-	return int64(id)
+	return generator.Generate()
 }

@@ -490,14 +490,8 @@ paths:
         get:
             tags:
                 - MeService
-            description: ListMyViews retrieves the menu/view tree for the currently authenticated user.
+            description: ListMyViews retrieves the entire view tree available to the currently authenticated user.
             operationId: MeService_ListMyViews
-            parameters:
-                - name: scope
-                  in: query
-                  description: The scope of the views to retrieve (e.g., "backend", "frontend").
-                  schema:
-                    type: string
             responses:
                 "200":
                     description: OK
@@ -1638,6 +1632,31 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/google.rpc.Status'
+    /sys/users/invite:
+        post:
+            tags:
+                - UserService
+            description: InviteUser invite a new user
+            operationId: UserService_InviteUser
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/api.v1.services.system.InviteUserRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.v1.services.system.InviteUserResponse'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/google.rpc.Status'
     /sys/users/{id}:
         get:
             tags:
@@ -2735,6 +2754,20 @@ components:
                         - $ref: '#/components/schemas/api.v1.services.types.View'
                     description: The view resource.
             description: Response message for ViewService.GetView.
+        api.v1.services.system.InviteUserRequest:
+            type: object
+            properties:
+                email:
+                    type: string
+                    description: The email of the user to invite.
+                role_ids:
+                    type: array
+                    items:
+                        type: string
+                    description: The roles to assign to the invited user.
+        api.v1.services.system.InviteUserResponse:
+            type: object
+            properties: { }
         api.v1.services.system.ListDepartmentsResponse:
             type: object
             properties:

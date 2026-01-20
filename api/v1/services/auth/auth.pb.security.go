@@ -24,8 +24,8 @@ func init() {
 		{
 			ServiceMethod: "/api.v1.services.auth.AuthService/Logout",
 			GatewayPath:   "POST:/auth/logout",
-			Name:          "jwt-auth",
-			VersionID:     "5316e0e2f4982e02f72aefca0823a9435816d1b5f96e6a7ee476886d60479a47",
+			Name:          "authn",
+			VersionID:     "6fc72547067d4e59f232fff7523783b44e76879aca1c049ad9a762f213b2cbfd",
 		},
 		{
 			ServiceMethod: "/api.v1.services.auth.AuthService/RefreshToken",

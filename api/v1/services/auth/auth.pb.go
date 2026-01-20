@@ -768,15 +768,14 @@ const file_auth_auth_proto_rawDesc = "" +
 	"\n" +
 	"authorized\x18\x01 \x01(\bR\n" +
 	"authorized\x12\x18\n" +
-	"\auser_id\x18\x02 \x01(\tR\auser_id2\xfc\x05\n" +
+	"\auser_id\x18\x02 \x01(\tR\auser_id2\xf9\x05\n" +
 	"\vAuthService\x12t\n" +
 	"\x05Login\x12\".api.v1.services.auth.LoginRequest\x1a#.api.v1.services.auth.LoginResponse\"\"\xea\xea\x1b\b\n" +
 	"\x06public\x82\xd3\xe4\x93\x02\x10:\x01*\"\v/auth/login\x12\x80\x01\n" +
 	"\bRegister\x12%.api.v1.services.auth.RegisterRequest\x1a&.api.v1.services.auth.RegisterResponse\"%\xea\xea\x1b\b\n" +
-	"\x06public\x82\xd3\xe4\x93\x02\x13:\x01*\"\x0e/auth/register\x12z\n" +
-	"\x06Logout\x12#.api.v1.services.auth.LogoutRequest\x1a$.api.v1.services.auth.LogoutResponse\"%\xea\xea\x1b\n" +
-	"\n" +
-	"\bjwt-auth\x82\xd3\xe4\x93\x02\x11:\x01*\"\f/auth/logout\x12\x8b\x01\n" +
+	"\x06public\x82\xd3\xe4\x93\x02\x13:\x01*\"\x0e/auth/register\x12w\n" +
+	"\x06Logout\x12#.api.v1.services.auth.LogoutRequest\x1a$.api.v1.services.auth.LogoutResponse\"\"\xea\xea\x1b\a\n" +
+	"\x05authn\x82\xd3\xe4\x93\x02\x11:\x01*\"\f/auth/logout\x12\x8b\x01\n" +
 	"\fRefreshToken\x12).api.v1.services.auth.RefreshTokenRequest\x1a*.api.v1.services.auth.RefreshTokenResponse\"$\xea\xea\x1b\b\n" +
 	"\x06public\x82\xd3\xe4\x93\x02\x12:\x01*\"\r/auth/refresh\x12\x82\x01\n" +
 	"\n" +

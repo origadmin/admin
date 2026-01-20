@@ -15,6 +15,7 @@ import (
 	"origadmin/application/admin/internal/data/entity/ent/user"
 	"origadmin/application/admin/internal/data/enums"
 	"origadmin/application/admin/internal/features/system/dto"
+	"origadmin/application/admin/internal/helpers/contextutil"
 	"origadmin/application/admin/internal/helpers/db"
 	"origadmin/application/admin/internal/helpers/repo"
 )
@@ -69,6 +70,10 @@ func (r *userRepo) Create(ctx context.Context, u *types.User, password string, o
 
 	if opt.WithRoleIDs != nil {
 		create.AddRoleIDs(opt.WithRoleIDs...)
+	}
+
+	if contextutil.IsSystemUser(ctx) {
+		create.SetIsSystem(true)
 	}
 
 	saved, err := create.Save(ctx)

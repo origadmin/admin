@@ -18,29 +18,29 @@ option objc_class_prefix = "APIServiceSystemPosition";
 service PositionService {
   rpc ListPositions(ListPositionsRequest) returns (ListPositionsResponse) {
     option (google.api.http) = {get: "/sys/positions"};
-    option (contrib.api.policy.v1.policy) = {name: "jwt-auth"};
+    option (contrib.api.policy.v1.policy) = {name: "authz"};
   }
   rpc GetPosition(GetPositionRequest) returns (GetPositionResponse) {
     option (google.api.http) = {get: "/sys/positions/{id}"};
-    option (contrib.api.policy.v1.policy) = {name: "jwt-auth"};
+    option (contrib.api.policy.v1.policy) = {name: "authz"};
   }
   rpc CreatePosition(CreatePositionRequest) returns (CreatePositionResponse) {
     option (google.api.http) = {
       post: "/sys/positions"
       body: "*"
     };
-    option (contrib.api.policy.v1.policy) = {name: "jwt-auth"};
+    option (contrib.api.policy.v1.policy) = {name: "authz"};
   }
   rpc UpdatePosition(UpdatePositionRequest) returns (UpdatePositionResponse) {
     option (google.api.http) = {
       put: "/sys/positions/{position.id}"
       body: "*"
     };
-    option (contrib.api.policy.v1.policy) = {name: "jwt-auth"};
+    option (contrib.api.policy.v1.policy) = {name: "authz"};
   }
   rpc DeletePosition(DeletePositionRequest) returns (DeletePositionResponse) {
     option (google.api.http) = {delete: "/sys/positions/{id}"};
-    option (contrib.api.policy.v1.policy) = {name: "jwt-auth"};
+    option (contrib.api.policy.v1.policy) = {name: "authz"};
   }
 }
 

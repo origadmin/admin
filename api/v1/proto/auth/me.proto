@@ -18,7 +18,7 @@ service MeService {
     option (google.api.http) = {
       get: "/me/views"
     };
-    option (contrib.api.policy.v1.policy) = {name: "jwt-auth"};
+    option (contrib.api.policy.v1.policy) = {name: "authn"};
   }
 
   // GetProfile retrieves the profile of the currently authenticated user.
@@ -26,7 +26,7 @@ service MeService {
     option (google.api.http) = {
       get: "/me/profile"
     };
-    option (contrib.api.policy.v1.policy) = {name: "jwt-auth"};
+    option (contrib.api.policy.v1.policy) = {name: "authn"};
   }
 
   // UpdateProfile updates the profile of the currently authenticated user.
@@ -35,7 +35,7 @@ service MeService {
       put: "/me/profile"
       body: "*"
     };
-    option (contrib.api.policy.v1.policy) = {name: "jwt-auth"};
+    option (contrib.api.policy.v1.policy) = {name: "authn"};
   }
 
   // UpdatePassword changes the password for the currently authenticated user.
@@ -44,7 +44,7 @@ service MeService {
       put: "/me/password"
       body: "*"
     };
-    option (contrib.api.policy.v1.policy) = {name: "jwt-auth"};
+    option (contrib.api.policy.v1.policy) = {name: "authn"};
   }
 
   // GetUserResources retrieves the menu/resource list for the current user.
@@ -52,7 +52,7 @@ service MeService {
     option (google.api.http) = {
       get: "/me/resources"
     };
-    option (contrib.api.policy.v1.policy) = {name: "jwt-auth"};
+    option (contrib.api.policy.v1.policy) = {name: "authn"};
   }
 
   // GetUserRoles retrieves the role list for the current user.
@@ -60,7 +60,7 @@ service MeService {
     option (google.api.http) = {
       get: "/me/roles"
     };
-    option (contrib.api.policy.v1.policy) = {name: "jwt-auth"};
+    option (contrib.api.policy.v1.policy) = {name: "authn"};
   }
 }
 

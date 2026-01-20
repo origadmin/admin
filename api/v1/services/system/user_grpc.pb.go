@@ -28,6 +28,7 @@ const (
 	UserService_UpdateUserStatus_FullMethodName  = "/api.v1.services.system.UserService/UpdateUserStatus"
 	UserService_UpdateUserRoles_FullMethodName   = "/api.v1.services.system.UserService/UpdateUserRoles"
 	UserService_ResetUserPassword_FullMethodName = "/api.v1.services.system.UserService/ResetUserPassword"
+	UserService_InviteUser_FullMethodName        = "/api.v1.services.system.UserService/InviteUser"
 )
 
 // UserServiceClient is the client API for UserService service.
@@ -49,6 +50,8 @@ type UserServiceClient interface {
 	UpdateUserRoles(ctx context.Context, in *UpdateUserRolesRequest, opts ...grpc.CallOption) (*UpdateUserRolesResponse, error)
 	// ResetUserPassword reset the user s password
 	ResetUserPassword(ctx context.Context, in *ResetUserPasswordRequest, opts ...grpc.CallOption) (*ResetUserPasswordResponse, error)
+	// InviteUser invite a new user
+	InviteUser(ctx context.Context, in *InviteUserRequest, opts ...grpc.CallOption) (*InviteUserResponse, error)
 }
 
 type userServiceClient struct {
@@ -150,6 +153,16 @@ func (c *userServiceClient) ResetUserPassword(ctx context.Context, in *ResetUser
 	return out, nil
 }
 
+func (c *userServiceClient) InviteUser(ctx context.Context, in *InviteUserRequest, opts ...grpc.CallOption) (*InviteUserResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(InviteUserResponse)
+	err := c.cc.Invoke(ctx, UserService_InviteUser_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // UserServiceServer is the server API for UserService service.
 // All implementations must embed UnimplementedUserServiceServer
 // for forward compatibility.
@@ -169,6 +182,8 @@ type UserServiceServer interface {
 	UpdateUserRoles(context.Context, *UpdateUserRolesRequest) (*UpdateUserRolesResponse, error)
 	// ResetUserPassword reset the user s password
 	ResetUserPassword(context.Context, *ResetUserPasswordRequest) (*ResetUserPasswordResponse, error)
+	// InviteUser invite a new user
+	InviteUser(context.Context, *InviteUserRequest) (*InviteUserResponse, error)
 	mustEmbedUnimplementedUserServiceServer()
 }
 
@@ -205,6 +220,9 @@ func (UnimplementedUserServiceServer) UpdateUserRoles(context.Context, *UpdateUs
 }
 func (UnimplementedUserServiceServer) ResetUserPassword(context.Context, *ResetUserPasswordRequest) (*ResetUserPasswordResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ResetUserPassword not implemented")
+}
+func (UnimplementedUserServiceServer) InviteUser(context.Context, *InviteUserRequest) (*InviteUserResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method InviteUser not implemented")
 }
 func (UnimplementedUserServiceServer) mustEmbedUnimplementedUserServiceServer() {}
 func (UnimplementedUserServiceServer) testEmbeddedByValue()                     {}
@@ -389,6 +407,24 @@ func _UserService_ResetUserPassword_Handler(srv interface{}, ctx context.Context
 	return interceptor(ctx, in, info, handler)
 }
 
+func _UserService_InviteUser_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(InviteUserRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServiceServer).InviteUser(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: UserService_InviteUser_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServiceServer).InviteUser(ctx, req.(*InviteUserRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // UserService_ServiceDesc is the grpc.ServiceDesc for UserService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -431,6 +467,10 @@ var UserService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "ResetUserPassword",
 			Handler:    _UserService_ResetUserPassword_Handler,
+		},
+		{
+			MethodName: "InviteUser",
+			Handler:    _UserService_InviteUser_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

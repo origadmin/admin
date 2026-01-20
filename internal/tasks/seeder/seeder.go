@@ -25,6 +25,7 @@ import (
 	"origadmin/application/admin/internal/conf/pb"
 	"origadmin/application/admin/internal/features/system/biz"
 	"origadmin/application/admin/internal/features/system/dto"
+	"origadmin/application/admin/internal/helpers/contextutil"
 	"origadmin/application/admin/internal/helpers/repo"
 )
 
@@ -124,7 +125,9 @@ func (s *Seeder) createRootUser() error {
 		Email:    s.rootUserCfg.GetEmail(),
 	}
 
-	createdUser, err := s.userUseCase.CreateUser(ctx, newUser, password)
+	// Use contextutil.NewSystemUser to mark this operation as creating a system user.
+	systemCtx := contextutil.NewSystemUser(ctx)
+	createdUser, err := s.userUseCase.CreateUser(systemCtx, newUser, password)
 	if err != nil {
 		s.log.Errorf("Failed to create root user '%s': %v", username, err)
 		return err

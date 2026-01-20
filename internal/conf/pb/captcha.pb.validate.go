@@ -56,13 +56,15 @@ func (m *Captcha) validate(all bool) error {
 
 	var errors []error
 
+	// no validation rules for Enabled
+
 	// no validation rules for Length
 
 	// no validation rules for Width
 
 	// no validation rules for Height
 
-	// no validation rules for Maxskew
+	// no validation rules for MaxSkew
 
 	// no validation rules for DotCount
 

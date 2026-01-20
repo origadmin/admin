@@ -12,32 +12,32 @@ func init() {
 		{
 			ServiceMethod: "/api.v1.services.system.ViewService/ListViews",
 			GatewayPath:   "GET:/sys/views",
-			Name:          "jwt-auth",
-			VersionID:     "cb5228a182b02217caefa9c4572e25ad9b2d3431fcb51d4047d85ee8a1db626d",
+			Name:          "authz",
+			VersionID:     "e4b8c44fd826aa1fbfa91f365037a329c3617a4389ab77c77f0169bbe3443121",
 		},
 		{
 			ServiceMethod: "/api.v1.services.system.ViewService/GetView",
 			GatewayPath:   "GET:/sys/views/{id}",
-			Name:          "jwt-auth",
-			VersionID:     "7be763290efdeec48dcf720d41317bbe8662eff4ba949b847e71a9858a29fe35",
+			Name:          "authz",
+			VersionID:     "81a80b79677c987ae8d8558f66535defbdbacb2586b10b76068cf30b866a6210",
 		},
 		{
 			ServiceMethod: "/api.v1.services.system.ViewService/CreateView",
 			GatewayPath:   "POST:/sys/views",
-			Name:          "jwt-auth",
-			VersionID:     "6a74b0bb52a02ebd0c706ac87916c3e1fd1d3285fd1e55646217ae74b852d9c2",
+			Name:          "authz",
+			VersionID:     "76f5db3ed4fbb3a367da3d6a1c9dfaa1f39a3096f0ec30a1880d3d945f814ab0",
 		},
 		{
 			ServiceMethod: "/api.v1.services.system.ViewService/UpdateView",
 			GatewayPath:   "PUT:/sys/views/{view.id}",
-			Name:          "jwt-auth",
-			VersionID:     "59aa07527952ca86a392ac92d860a0f2d0e3e89027827062f987710259dcadb3",
+			Name:          "authz",
+			VersionID:     "f69efa596b2ba2802cb2494f711cda59db5670bb4395c47706bdf06efce8d1e5",
 		},
 		{
 			ServiceMethod: "/api.v1.services.system.ViewService/DeleteView",
 			GatewayPath:   "DELETE:/sys/views/{id}",
-			Name:          "jwt-auth",
-			VersionID:     "9098bf1e5d12172b3e7fc2eaa8b1c893db2f7cb3f373b6fea737512dfb804fab",
+			Name:          "authz",
+			VersionID:     "c6936b0b0099191b82b9dcb5577c8013837264a72ec6610509111a62544131f6",
 		},
 	}
 

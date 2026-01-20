@@ -57,8 +57,6 @@ func (m *ListMyViewsRequest) validate(all bool) error {
 
 	var errors []error
 
-	// no validation rules for Scope
-
 	if len(errors) > 0 {
 		return ListMyViewsRequestMultiError(errors)
 	}

@@ -12,32 +12,32 @@ func init() {
 		{
 			ServiceMethod: "/api.v1.services.system.ResourceService/ListResources",
 			GatewayPath:   "GET:/sys/resources",
-			Name:          "jwt-auth",
-			VersionID:     "62e6cf359f3f4f68f734db7f0a36c9a2d6ce146cf4ab9d8e1edb99044738edd6",
+			Name:          "authz",
+			VersionID:     "eb330efa0578ccdf93942953a34f4e53dec346c2e8398630bfcced28904e14c1",
 		},
 		{
 			ServiceMethod: "/api.v1.services.system.ResourceService/GetResource",
 			GatewayPath:   "GET:/sys/resources/{id}",
-			Name:          "jwt-auth",
-			VersionID:     "17ee1cdd756d86df3727468e227aea81f5119c04a6873774a31a3a5502872637",
+			Name:          "authz",
+			VersionID:     "eaf714512bf447e4cbeb7d04db217ce7610786f03bb99cd6de55e47991f974bc",
 		},
 		{
 			ServiceMethod: "/api.v1.services.system.ResourceService/CreateResource",
 			GatewayPath:   "POST:/sys/resources",
-			Name:          "jwt-auth",
-			VersionID:     "db0dba76c69e0cdc54006974df2daba4e597fd201b33063f24ed011ef4af7e44",
+			Name:          "authz",
+			VersionID:     "0db5d2cc1b14d51439be7cc47e69f5468a2277d0ba90605c049ace9c51247c2e",
 		},
 		{
 			ServiceMethod: "/api.v1.services.system.ResourceService/UpdateResource",
 			GatewayPath:   "PUT:/sys/resources/{resource.id}",
-			Name:          "jwt-auth",
-			VersionID:     "82c33a0a40fc0f4cc76b276b50dfbfae135f0d1577d44ca8f6718ea5eab61b58",
+			Name:          "authz",
+			VersionID:     "160a304a85ae98fcd549d0e3e114ec671f3cdd5667d1d108ee2aff2708c709fe",
 		},
 		{
 			ServiceMethod: "/api.v1.services.system.ResourceService/DeleteResource",
 			GatewayPath:   "DELETE:/sys/resources/{id}",
-			Name:          "jwt-auth",
-			VersionID:     "76bd515d9cd6ade8dbdbaf90ba32033d6ed31cfecd1fcbbf3fcb8f6c498bf973",
+			Name:          "authz",
+			VersionID:     "1ecb9468519c1fb0863b5fe76636cbe8247eb95be2524d930b891d36f8e58331",
 		},
 	}
 

@@ -1,13 +1,10 @@
-# This is the main bootstrap file for the system service.
-# It defines a series of configuration sources to be loaded sequentially.
-# Paths inside are relative to this bootstrap.yaml file.
+# This is the bootstrap file for the TEST environment.
 sources:
-  # File sources are loaded first to provide default values.
   - file:
       path: server.yaml
     type: file
   - file:
-      path: databases.yaml
+      path: databases.test.yaml # Use test database config
     type: file
   - file:
       path: logger.yaml
@@ -31,7 +28,6 @@ sources:
       path: middlewares.yaml
     type: file
   - file:
-      path: captcha.yaml
+      path: captcha.test.yaml # Use test captcha config (disabled)
     type: file
-  # Environment variables are loaded last to override file settings.
   - type: env

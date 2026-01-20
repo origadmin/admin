@@ -23,13 +23,14 @@ const (
 
 type Captcha struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Length        int32                  `protobuf:"varint,1,opt,name=length,proto3" json:"length,omitempty"`
-	Width         int32                  `protobuf:"varint,2,opt,name=width,proto3" json:"width,omitempty"`
-	Height        int32                  `protobuf:"varint,3,opt,name=height,proto3" json:"height,omitempty"`
-	Maxskew       float32                `protobuf:"fixed32,4,opt,name=maxskew,proto3" json:"maxskew,omitempty"`
-	DotCount      int32                  `protobuf:"varint,5,opt,name=dot_count,proto3" json:"dot_count,omitempty"`
-	CacheName     string                 `protobuf:"bytes,6,opt,name=cache_name,proto3" json:"cache_name,omitempty"`
-	Language      string                 `protobuf:"bytes,7,opt,name=language,proto3" json:"language,omitempty"`
+	Enabled       bool                   `protobuf:"varint,1,opt,name=enabled,proto3" json:"enabled,omitempty"`
+	Length        int32                  `protobuf:"varint,2,opt,name=length,proto3" json:"length,omitempty"`
+	Width         int32                  `protobuf:"varint,3,opt,name=width,proto3" json:"width,omitempty"`
+	Height        int32                  `protobuf:"varint,4,opt,name=height,proto3" json:"height,omitempty"`
+	MaxSkew       float32                `protobuf:"fixed32,5,opt,name=max_skew,proto3" json:"max_skew,omitempty"`
+	DotCount      int32                  `protobuf:"varint,6,opt,name=dot_count,proto3" json:"dot_count,omitempty"`
+	CacheName     string                 `protobuf:"bytes,7,opt,name=cache_name,proto3" json:"cache_name,omitempty"`
+	Language      string                 `protobuf:"bytes,8,opt,name=language,proto3" json:"language,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -64,6 +65,13 @@ func (*Captcha) Descriptor() ([]byte, []int) {
 	return file_internal_conf_pb_captcha_proto_rawDescGZIP(), []int{0}
 }
 
+func (x *Captcha) GetEnabled() bool {
+	if x != nil {
+		return x.Enabled
+	}
+	return false
+}
+
 func (x *Captcha) GetLength() int32 {
 	if x != nil {
 		return x.Length
@@ -85,9 +93,9 @@ func (x *Captcha) GetHeight() int32 {
 	return 0
 }
 
-func (x *Captcha) GetMaxskew() float32 {
+func (x *Captcha) GetMaxSkew() float32 {
 	if x != nil {
-		return x.Maxskew
+		return x.MaxSkew
 	}
 	return 0
 }
@@ -117,17 +125,18 @@ var File_internal_conf_pb_captcha_proto protoreflect.FileDescriptor
 
 const file_internal_conf_pb_captcha_proto_rawDesc = "" +
 	"\n" +
-	"\x1einternal/conf/pb/captcha.proto\x12\aconf.pb\"\xc3\x01\n" +
-	"\aCaptcha\x12\x16\n" +
-	"\x06length\x18\x01 \x01(\x05R\x06length\x12\x14\n" +
-	"\x05width\x18\x02 \x01(\x05R\x05width\x12\x16\n" +
-	"\x06height\x18\x03 \x01(\x05R\x06height\x12\x18\n" +
-	"\amaxskew\x18\x04 \x01(\x02R\amaxskew\x12\x1c\n" +
-	"\tdot_count\x18\x05 \x01(\x05R\tdot_count\x12\x1e\n" +
+	"\x1einternal/conf/pb/captcha.proto\x12\aconf.pb\"\xdf\x01\n" +
+	"\aCaptcha\x12\x18\n" +
+	"\aenabled\x18\x01 \x01(\bR\aenabled\x12\x16\n" +
+	"\x06length\x18\x02 \x01(\x05R\x06length\x12\x14\n" +
+	"\x05width\x18\x03 \x01(\x05R\x05width\x12\x16\n" +
+	"\x06height\x18\x04 \x01(\x05R\x06height\x12\x1a\n" +
+	"\bmax_skew\x18\x05 \x01(\x02R\bmax_skew\x12\x1c\n" +
+	"\tdot_count\x18\x06 \x01(\x05R\tdot_count\x12\x1e\n" +
 	"\n" +
-	"cache_name\x18\x06 \x01(\tR\n" +
+	"cache_name\x18\a \x01(\tR\n" +
 	"cache_name\x12\x1a\n" +
-	"\blanguage\x18\a \x01(\tR\blanguageB5Z3origadmin/application/admin/internal/conf/pb;confpbb\x06proto3"
+	"\blanguage\x18\b \x01(\tR\blanguageB5Z3origadmin/application/admin/internal/conf/pb;confpbb\x06proto3"
 
 var (
 	file_internal_conf_pb_captcha_proto_rawDescOnce sync.Once

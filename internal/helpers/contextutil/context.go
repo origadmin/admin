@@ -57,3 +57,14 @@ func GetLogger(ctx context.Context) log.Logger {
 func SetLogger(ctx context.Context, logger log.Logger) context.Context {
 	return context.WithValue(ctx, logKey{}, logger)
 }
+
+type systemCtx struct{}
+
+func NewSystemUser(ctx context.Context) context.Context {
+	return context.WithValue(ctx, systemCtx{}, true)
+}
+
+func IsSystemUser(ctx context.Context) bool {
+	ok, _ := ctx.Value(systemCtx{}).(bool)
+	return ok
+}

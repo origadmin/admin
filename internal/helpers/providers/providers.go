@@ -3,8 +3,10 @@ package providers
 import (
 	"context"
 	"errors"
+	"os"
 	"strconv"
 
+	"github.com/casbin/nats-watcher"
 	"github.com/google/wire"
 
 	authnv1 "github.com/origadmin/contrib/api/gen/go/security/authn/v1"
@@ -104,7 +106,23 @@ func ProvideAuthorizer(app *runtime.App, c *conf.Config, database *ent.Database)
 		return nil, err
 	}
 
-	return casbin.NewAuthorizer(casbinConfig, log.WithLogger(app.Logger()), casbin.WithPolicyAdapter(adapter))
+	// Get NATS address from env or default
+	natsAddr := os.Getenv("NATS_ADDR")
+	if natsAddr == "" {
+		natsAddr = "nats://localhost:4222"
+	}
+
+	// Create a NATS watcher
+	w, err := nats.NewWatcher(natsAddr)
+	if err != nil {
+		// Log error but don't fail startup if watcher fails (optional)
+		// return nil, fmt.Errorf("failed to create nats watcher: %w", err)
+		// For now, let's just log it and proceed without watcher if it fails, or fail hard.
+		// Failing hard is safer for consistency.
+		return nil, err
+	}
+
+	return casbin.NewAuthorizer(casbinConfig, log.WithLogger(app.Logger()), casbin.WithPolicyAdapter(adapter), casbin.WithWatcher(w))
 }
 
 // ProvideAuthenticator creates the Casbin authorizer.
@@ -142,15 +160,27 @@ func ProvideCache(r *runtime.App) (container.CacheProvider, error) {
 
 func ProvideCaptcha(p container.CacheProvider, cfg *confpb.Captcha) (*captcha.Captcha, error) {
 	if cfg == nil {
-		cfg = &confpb.Captcha{
-			CacheName: "default",
-			Height:    80,
-			Width:     240,
-			Length:    6,
-			Maxskew:   0.7,
-			DotCount:  80,
-		}
+		cfg = &confpb.Captcha{}
 	}
+	if cfg.CacheName == "" {
+		cfg.CacheName = "default"
+	}
+	if cfg.Height == 0 {
+		cfg.Height = 80
+	}
+	if cfg.Width == 0 {
+		cfg.Width = 240
+	}
+	if cfg.Length == 0 {
+		cfg.Length = 6
+	}
+	if cfg.MaxSkew == 0 {
+		cfg.MaxSkew = 0.7
+	}
+	if cfg.DotCount == 0 {
+		cfg.DotCount = 80
+	}
+
 	cache, err := p.Cache(cfg.CacheName)
 	if err != nil {
 		return nil, err
@@ -172,7 +202,7 @@ func ProvideLogger(app *runtime.App) log.Logger {
 }
 
 func ProvideServiceMiddlewares(app *runtime.App, authorizer authz.Authorizer,
-	skip security.SkipChecker) (container.ServerMiddlewareProvider,
+	skip security.Skipper) (container.ServerMiddlewareProvider,
 	error) {
 	provider, err := app.MiddlewareProvider()
 	if err != nil {
@@ -188,7 +218,7 @@ func ProvideServiceMiddlewares(app *runtime.App, authorizer authz.Authorizer,
 }
 
 func ProvideGatewayMiddlewares(app *runtime.App, authenticator authn.Authenticator,
-	skip security.SkipChecker) (container.ServerMiddlewareProvider,
+	skip security.Skipper) (container.ServerMiddlewareProvider,
 	error) {
 	provider, err := app.MiddlewareProvider()
 	if err != nil {
@@ -251,10 +281,6 @@ func ProvideGatewaySkipChecker(app *runtime.App, _ *conf.Config) security.Skippe
 }
 
 func ProvideSkipChecker(app *runtime.App, _ *conf.Config) security.Skipper {
-	//id, err := database.User(app.Context()).Query().Where(user.IsSystem(true)).OnlyID(app.Context())
-	//adminSkipper := skip.Noop()
-
-	//if err == nil {
 	adminSkipper := skip.Principal(func(principal security.Principal) bool {
 		helper := log.NewHelper(log.With(app.Logger()))
 		pid := principal.GetID()
@@ -269,7 +295,7 @@ func ProvideSkipChecker(app *runtime.App, _ *conf.Config) security.Skipper {
 		if v.Name == "public" {
 			skips[v.ServiceMethod] = struct{}{}
 		}
-		if v.Name == "jwt-auth" {
+		if v.Name == "authn" {
 			skips[v.ServiceMethod] = struct{}{}
 		}
 	}

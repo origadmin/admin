@@ -8,7 +8,9 @@ package biz
 import (
 	"context"
 	"fmt"
+	"strconv"
 
+	"github.com/origadmin/contrib/security"
 	"github.com/origadmin/toolkits/crypto/hash"
 	"origadmin/application/admin/api/v1/services/types"
 	"origadmin/application/admin/internal/data/enums"
@@ -56,6 +58,14 @@ func (uc *UserUseCase) CreateUser(ctx context.Context, in *types.User, password 
 	// The backend must always enforce data integrity, regardless of frontend behavior.
 	if in.Status == 0 {
 		in.Status = int32(enums.StatusEnabled)
+	}
+
+	// Automatically set audit fields from the context
+	p, ok := security.FromContext(ctx)
+	if ok {
+		authorID, _ := strconv.ParseInt(p.GetID(), 10, 64)
+		in.CreateAuthor = authorID
+		in.UpdateAuthor = authorID
 	}
 
 	hashedPassword, err := uc.hasher.Hash(password)

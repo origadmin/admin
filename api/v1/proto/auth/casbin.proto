@@ -18,21 +18,21 @@ service CasbinService {
       get: "/casbin/policies"
       response_body: "*"
     };
-    option (contrib.api.policy.v1.policy) = {name: "jwt-auth"};
+    option (contrib.api.policy.v1.policy) = {name: "authn"};
   }
   rpc ListGroupings(ListGroupingsRequest) returns (ListGroupingsResponse) {
     option (google.api.http) = {
       get: "/casbin/groupings"
       response_body: "*"
     };
-    option (contrib.api.policy.v1.policy) = {name: "jwt-auth"};
+    option (contrib.api.policy.v1.policy) = {name: "authn"};
   }
   rpc WatchUpdate(WatchUpdateRequest) returns (WatchUpdateResponse) {
     option (google.api.http) = {
       get: "/casbin/watch"
       response_body: "*"
     };
-    option (contrib.api.policy.v1.policy) = {name: "jwt-auth"};
+    option (contrib.api.policy.v1.policy) = {name: "authn"};
   }
 
   rpc StreamRules(StreamRulesRequest) returns (stream StreamRulesResponse) {
@@ -41,7 +41,7 @@ service CasbinService {
 //      response_body: "*"
 //    };
 //    (google.api.method_signature) = "with_policies,with_groupings";
-    option (contrib.api.policy.v1.policy) = {name: "jwt-auth"};
+    option (contrib.api.policy.v1.policy) = {name: "authn"};
   }
 }
 

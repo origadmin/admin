@@ -12,32 +12,32 @@ func init() {
 		{
 			ServiceMethod: "/api.v1.services.system.RoleService/ListRoles",
 			GatewayPath:   "GET:/sys/roles",
-			Name:          "jwt-auth",
-			VersionID:     "228722f545152df1a8f7905556bcd31b981d5a410e0033dc288caf5506877850",
+			Name:          "authz",
+			VersionID:     "4a6ca02dae177cead7453fc2ec6790f29fb19a37fd6f9247adb255562ab7eb23",
 		},
 		{
 			ServiceMethod: "/api.v1.services.system.RoleService/GetRole",
 			GatewayPath:   "GET:/sys/roles/{id}",
-			Name:          "jwt-auth",
-			VersionID:     "21d6dc540298d65142addc20699e4f5db4984cdd1fdcdb967ddef5d741ee16b9",
+			Name:          "authz",
+			VersionID:     "84ea2b5ada346cbe2fdf7c9beb3d5fd6eff7e5cb0c6f00e3f8c98554e607dedd",
 		},
 		{
 			ServiceMethod: "/api.v1.services.system.RoleService/CreateRole",
 			GatewayPath:   "POST:/sys/roles",
-			Name:          "jwt-auth",
-			VersionID:     "fd37642c9c512fd181135d2c39fde7cd43ab7e19e8c8127bc523b50100a3826a",
+			Name:          "authz",
+			VersionID:     "76a14c3bf81e9ecc7f6540a8dcbcb9b4783cb84b1d1a9b02fbbe5284d8a016c7",
 		},
 		{
 			ServiceMethod: "/api.v1.services.system.RoleService/UpdateRole",
 			GatewayPath:   "PUT:/sys/roles/{role.id}",
-			Name:          "jwt-auth",
-			VersionID:     "a64f541e97fb9df4639ae1cb9e686db3f9f83fc863a139500f2e59adcc526482",
+			Name:          "authz",
+			VersionID:     "d48d60bd0a42ff8812e1249c00a88b6fce5ce1727ce8f6dbab263c613615d539",
 		},
 		{
 			ServiceMethod: "/api.v1.services.system.RoleService/DeleteRole",
 			GatewayPath:   "DELETE:/sys/roles/{id}",
-			Name:          "jwt-auth",
-			VersionID:     "0fb85f5063855de7a00a4fa97bde5cdaaa244fa3d2edee395a7e7f67e2f653f6",
+			Name:          "authz",
+			VersionID:     "63e024503cc99c29a62d22aa3ba1964b79895021aaa933a0c1cfee99757e5a9f",
 		},
 	}
 

@@ -686,28 +686,23 @@ const file_system_view_proto_rawDesc = "" +
 	"\x11DeleteViewRequest\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\x03R\x02id\"B\n" +
 	"\x12DeleteViewResponse\x12,\n" +
-	"\x05empty\x18\x01 \x01(\v2\x16.google.protobuf.EmptyR\x05empty2\xc3\x05\n" +
-	"\vViewService\x12\x82\x01\n" +
-	"\tListViews\x12(.api.v1.services.system.ListViewsRequest\x1a).api.v1.services.system.ListViewsResponse\" \xea\xea\x1b\n" +
+	"\x05empty\x18\x01 \x01(\v2\x16.google.protobuf.EmptyR\x05empty2\xb2\x05\n" +
+	"\vViewService\x12\x7f\n" +
+	"\tListViews\x12(.api.v1.services.system.ListViewsRequest\x1a).api.v1.services.system.ListViewsResponse\"\x1d\xea\xea\x1b\a\n" +
+	"\x05authz\x82\xd3\xe4\x93\x02\f\x12\n" +
+	"/sys/views\x12~\n" +
+	"\aGetView\x12&.api.v1.services.system.GetViewRequest\x1a'.api.v1.services.system.GetViewResponse\"\"\xea\xea\x1b\a\n" +
+	"\x05authz\x82\xd3\xe4\x93\x02\x11\x12\x0f/sys/views/{id}\x12\x85\x01\n" +
 	"\n" +
-	"\bjwt-auth\x82\xd3\xe4\x93\x02\f\x12\n" +
-	"/sys/views\x12\x81\x01\n" +
-	"\aGetView\x12&.api.v1.services.system.GetViewRequest\x1a'.api.v1.services.system.GetViewResponse\"%\xea\xea\x1b\n" +
+	"CreateView\x12).api.v1.services.system.CreateViewRequest\x1a*.api.v1.services.system.CreateViewResponse\" \xea\xea\x1b\a\n" +
+	"\x05authz\x82\xd3\xe4\x93\x02\x0f:\x01*\"\n" +
+	"/sys/views\x12\x8f\x01\n" +
 	"\n" +
-	"\bjwt-auth\x82\xd3\xe4\x93\x02\x11\x12\x0f/sys/views/{id}\x12\x88\x01\n" +
+	"UpdateView\x12).api.v1.services.system.UpdateViewRequest\x1a*.api.v1.services.system.UpdateViewResponse\"*\xea\xea\x1b\a\n" +
+	"\x05authz\x82\xd3\xe4\x93\x02\x19:\x01*\x1a\x14/sys/views/{view.id}\x12\x87\x01\n" +
 	"\n" +
-	"CreateView\x12).api.v1.services.system.CreateViewRequest\x1a*.api.v1.services.system.CreateViewResponse\"#\xea\xea\x1b\n" +
-	"\n" +
-	"\bjwt-auth\x82\xd3\xe4\x93\x02\x0f:\x01*\"\n" +
-	"/sys/views\x12\x92\x01\n" +
-	"\n" +
-	"UpdateView\x12).api.v1.services.system.UpdateViewRequest\x1a*.api.v1.services.system.UpdateViewResponse\"-\xea\xea\x1b\n" +
-	"\n" +
-	"\bjwt-auth\x82\xd3\xe4\x93\x02\x19:\x01*\x1a\x14/sys/views/{view.id}\x12\x8a\x01\n" +
-	"\n" +
-	"DeleteView\x12).api.v1.services.system.DeleteViewRequest\x1a*.api.v1.services.system.DeleteViewResponse\"%\xea\xea\x1b\n" +
-	"\n" +
-	"\bjwt-auth\x82\xd3\xe4\x93\x02\x11*\x0f/sys/views/{id}B\xde\x01\n" +
+	"DeleteView\x12).api.v1.services.system.DeleteViewRequest\x1a*.api.v1.services.system.DeleteViewResponse\"\"\xea\xea\x1b\a\n" +
+	"\x05authz\x82\xd3\xe4\x93\x02\x11*\x0f/sys/views/{id}B\xde\x01\n" +
 	"\x1acom.api.v1.services.systemB\tViewProtoP\x01Z9origadmin/application/admin/api/v1/services/system;system\xa2\x02\x04AVSS\xaa\x02\x16Api.V1.Services.System\xca\x02\x16Api\\V1\\Services\\System\xe2\x02\"Api\\V1\\Services\\System\\GPBMetadata\xea\x02\x19Api::V1::Services::Systemb\x06proto3"
 
 var (
