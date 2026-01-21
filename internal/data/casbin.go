@@ -6,9 +6,9 @@ package data
 
 import (
 	"fmt"
-
 	"github.com/casbin/casbin/v3/model"
 	"github.com/casbin/casbin/v3/persist"
+	"github.com/origadmin/casbin-watcher/v3"
 
 	"github.com/origadmin/runtime"
 	"github.com/origadmin/runtime/context"
@@ -18,14 +18,33 @@ import (
 )
 
 // CasbinAdapter implements the casbin persist.UpdatableAdapter for ent.
+// It now includes a watcher to send notifications upon policy changes.
 type CasbinAdapter struct {
-	ctx context.Context
-	db  *ent.Database
+	ctx     context.Context
+	db      *ent.Database
+	watcher *watcher.Watcher
 }
 
-// NewAdapter creates a new casbin adapter.
-func NewAdapter(rt *runtime.App, db *ent.Database) (*CasbinAdapter, error) {
-	return &CasbinAdapter{ctx: rt.Context(), db: db}, nil
+// NewAdapter creates a new casbin adapter with an integrated watcher.
+// The watcherURL is used to configure the message queue backend (e.g., "redis://localhost:6379/0").
+func NewAdapter(rt *runtime.App, db *ent.Database, watcherURL string) (*CasbinAdapter, error) {
+	w, err := watcher.NewWatcher(rt.Context(), watcherURL)
+	if err != nil {
+		return nil, fmt.Errorf("failed to create integrated watcher for adapter: %w", err)
+	}
+
+	return &CasbinAdapter{
+		ctx:     rt.Context(),
+		db:      db,
+		watcher: w,
+	}, nil
+}
+
+// Close closes the integrated watcher. This should be called on service shutdown.
+func (a *CasbinAdapter) Close() {
+	if a.watcher != nil {
+		a.watcher.Close()
+	}
 }
 
 // Context returns the context of the adapter.
@@ -46,9 +65,9 @@ func (a *CasbinAdapter) LoadPolicy(model model.Model) error {
 	return nil
 }
 
-// SavePolicy saves all policy rules to the storage.
+// SavePolicy saves all policy rules to the storage and sends a notification.
 func (a *CasbinAdapter) SavePolicy(model model.Model) error {
-	return a.db.Tx(a.Context(), func(ctx context.Context) error {
+	err := a.db.Tx(a.Context(), func(ctx context.Context) error {
 		cr := a.db.CasbinRule(ctx)
 		if _, err := cr.Delete().Exec(ctx); err != nil {
 			return err
@@ -67,20 +86,29 @@ func (a *CasbinAdapter) SavePolicy(model model.Model) error {
 		_, err := cr.CreateBulk(lines...).Save(ctx)
 		return err
 	})
+	if err != nil {
+		return err
+	}
+	// Notify after transaction is successful
+	return a.watcher.Update()
 }
 
-// AddPolicy adds a policy rule to the storage.
+// AddPolicy adds a policy rule to the storage and sends a notification.
 func (a *CasbinAdapter) AddPolicy(_ string, ptype string, rule []string) error {
-	return a.db.Tx(a.Context(), func(ctx context.Context) error {
+	err := a.db.Tx(a.Context(), func(ctx context.Context) error {
 		cr := a.db.CasbinRule(ctx)
 		_, err := savePolicyLine(cr, ptype, rule).Save(ctx)
 		return err
 	})
+	if err != nil {
+		return err
+	}
+	return a.watcher.Update()
 }
 
-// UpdatePolicy updates a policy rule from storage.
+// UpdatePolicy updates a policy rule from storage and sends a notification.
 func (a *CasbinAdapter) UpdatePolicy(_ string, ptype string, oldRule []string, newRule []string) error {
-	return a.db.Tx(a.Context(), func(ctx context.Context) error {
+	err := a.db.Tx(a.Context(), func(ctx context.Context) error {
 		cr := a.db.CasbinRule(ctx)
 		oldFilter := buildInstanceFilter(ptype, oldRule)
 		newValues := instanceLine(ptype, newRule)
@@ -102,25 +130,59 @@ func (a *CasbinAdapter) UpdatePolicy(_ string, ptype string, oldRule []string, n
 		}
 		return nil
 	})
+	if err != nil {
+		return err
+	}
+	return a.watcher.Update()
 }
 
-// UpdatePolicies updates multiple policy rules from storage.
+// UpdatePolicies updates multiple policy rules from storage and sends a notification.
 func (a *CasbinAdapter) UpdatePolicies(_ string, ptype string, oldRules [][]string, newRules [][]string) error {
-	return a.db.Tx(a.Context(), func(ctx context.Context) error {
+	err := a.db.Tx(a.Context(), func(ctx context.Context) error {
 		if len(oldRules) != len(newRules) {
 			return fmt.Errorf("old and new rules must have the same length")
 		}
 		for i, oldRule := range oldRules {
 			newRule := newRules[i]
-			if err := a.UpdatePolicy("", ptype, oldRule, newRule); err != nil {
-				return err
+			// We call the internal UpdatePolicy logic within the same transaction
+			err := a.updatePolicyInTx(ctx, ptype, oldRule, newRule)
+			if err != nil {
+				return err // This will cause a rollback
 			}
 		}
 		return nil
 	})
+	if err != nil {
+		return err
+	}
+	return a.watcher.Update()
 }
 
-// UpdateFilteredPolicies updates policy rules that match the filter from storage.
+// updatePolicyInTx is a helper for UpdatePolicies to run within a transaction.
+func (a *CasbinAdapter) updatePolicyInTx(ctx context.Context, ptype string, oldRule []string, newRule []string) error {
+	cr := a.db.CasbinRule(ctx)
+	oldFilter := buildInstanceFilter(ptype, oldRule)
+	newValues := instanceLine(ptype, newRule)
+
+	count, err := cr.Update().
+		Where(oldFilter...).
+		SetV0(newValues.V0).
+		SetV1(newValues.V1).
+		SetV2(newValues.V2).
+		SetV3(newValues.V3).
+		SetV4(newValues.V4).
+		SetV5(newValues.V5).
+		Save(ctx)
+	if err != nil {
+		return err
+	}
+	if count == 0 {
+		return fmt.Errorf("policy to update not found")
+	}
+	return nil
+}
+
+// UpdateFilteredPolicies updates policy rules that match the filter from storage and sends a notification.
 func (a *CasbinAdapter) UpdateFilteredPolicies(_ string, ptype string, newRules [][]string, fieldIndex int, fieldValues ...string) ([][]string, error) {
 	var oldPolicies [][]string
 	err := a.db.Tx(a.Context(), func(ctx context.Context) error {
@@ -130,7 +192,6 @@ func (a *CasbinAdapter) UpdateFilteredPolicies(_ string, ptype string, newRules 
 			return err
 		}
 
-		// Find the policies to be removed
 		policies, err := cr.Query().Where(filter...).All(ctx)
 		if err != nil {
 			return err
@@ -139,12 +200,10 @@ func (a *CasbinAdapter) UpdateFilteredPolicies(_ string, ptype string, newRules 
 			oldPolicies = append(oldPolicies, policyToRule(p))
 		}
 
-		// Remove the old policies
 		if _, err := cr.Delete().Where(filter...).Exec(ctx); err != nil {
 			return err
 		}
 
-		// Add the new policies
 		for _, newRule := range newRules {
 			if _, err := savePolicyLine(cr, ptype, newRule).Save(ctx); err != nil {
 				return err
@@ -152,22 +211,29 @@ func (a *CasbinAdapter) UpdateFilteredPolicies(_ string, ptype string, newRules 
 		}
 		return nil
 	})
-	return oldPolicies, err
+	if err != nil {
+		return nil, err
+	}
+	return oldPolicies, a.watcher.Update()
 }
 
-// RemovePolicy removes a policy rule from the storage.
+// RemovePolicy removes a policy rule from the storage and sends a notification.
 func (a *CasbinAdapter) RemovePolicy(_ string, ptype string, rule []string) error {
-	return a.db.Tx(a.Context(), func(ctx context.Context) error {
+	err := a.db.Tx(a.Context(), func(ctx context.Context) error {
 		cr := a.db.CasbinRule(ctx)
 		filter := buildInstanceFilter(ptype, rule)
 		_, err := cr.Delete().Where(filter...).Exec(ctx)
 		return err
 	})
+	if err != nil {
+		return err
+	}
+	return a.watcher.Update()
 }
 
-// RemoveFilteredPolicy removes policy rules that match the filter from the storage.
+// RemoveFilteredPolicy removes policy rules that match the filter from the storage and sends a notification.
 func (a *CasbinAdapter) RemoveFilteredPolicy(_ string, ptype string, fieldIndex int, fieldValues ...string) error {
-	return a.db.Tx(a.Context(), func(ctx context.Context) error {
+	err := a.db.Tx(a.Context(), func(ctx context.Context) error {
 		cr := a.db.CasbinRule(ctx)
 		cond, err := buildFilteredFilter(ptype, fieldIndex, fieldValues...)
 		if err != nil {
@@ -176,6 +242,10 @@ func (a *CasbinAdapter) RemoveFilteredPolicy(_ string, ptype string, fieldIndex 
 		_, err = cr.Delete().Where(cond...).Exec(ctx)
 		return err
 	})
+	if err != nil {
+		return err
+	}
+	return a.watcher.Update()
 }
 
 // --- Helper Functions ---
