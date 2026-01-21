@@ -58,13 +58,11 @@ func ProvideDatabase(pv storage.Provider, logger log.Logger) (*ent.Database, fun
 	// Fetch and cache the system user ID on startup.
 	systemUser, err := database.User(ctx).Query().Where(user.IsSystem(true)).Only(ctx)
 	if err != nil {
-		if ent.IsNotFound(err) {
-			logHelper.Info("System user not found, this is expected on initial startup.")
-		} else {
+		if !ent.IsNotFound(err) {
 			return nil, nil, fmt.Errorf("failed to query system user: %w", err)
 		}
-	}
-	if systemUser != nil {
+		logHelper.Info("System user not found, this is expected on initial startup.")
+	} else {
 		SystemUserID = systemUser.ID
 		logHelper.Infof("System user ID cached: %d", SystemUserID)
 	}
@@ -91,15 +89,6 @@ func NewStorageProvider(rt *runtime.App) (storage.Provider, error) {
 // NewData creates a new Data instance, which encapsulates the core database object.
 func NewData(database *ent.Database, logger log.Logger) (*Data, error) {
 	logHelper := log.NewHelper(logger)
-	// Run the auto migration tool.
-	if err := database.Migration(context.Background(),
-		schema.WithDropIndex(true),
-		schema.WithDropColumn(true),
-		schema.WithForeignKeys(false),
-	); err != nil {
-		return nil, fmt.Errorf("failed creating schema resources: %w", err)
-	}
-
 	d := &Data{
 		DB:  database,
 		log: logHelper,

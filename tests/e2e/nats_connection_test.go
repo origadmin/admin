@@ -10,7 +10,7 @@ import (
 
 func TestNATSConnection(t *testing.T) {
 	// NATS server URL, assuming it's running on localhost as per docker-compose.tools.yml
-	natsURL := "nats://localhost:14222"
+	natsURL := "nats://localhost:4222"
 
 	t.Logf("Attempting to connect to NATS at: %s", natsURL)
 

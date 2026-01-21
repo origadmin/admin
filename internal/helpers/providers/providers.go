@@ -3,7 +3,6 @@ package providers
 import (
 	"context"
 	"errors"
-	"os"
 	"strconv"
 
 	"github.com/google/wire"
@@ -99,20 +98,13 @@ func ProvideAuthorizer(app *runtime.App, c *conf.Config, database *ent.Database)
 	if casbinConfig == nil || casbinConfig.GetCasbin() == nil {
 		return nil, errors.New("casbin authorizer configuration not found")
 	}
-	adapter, err := data.NewAdapter(database)
+	adapter, err := data.NewAdapter(app, database)
 	if err != nil {
 		return nil, err
 	}
 
-	// Get NATS address from env or default
-	natsAddr := os.Getenv("NATS_SERVER_URL")
-	if natsAddr == "" {
-		natsAddr = "localhost:4333"
-	}
-
-	os.Setenv("NATS_SERVER_URL", natsAddr)
 	// Create a NATS watcher
-	w, err := watcher.New(app.Context(), "nats://casbin-policy-updates")
+	w, err := watcher.NewWatcher(app.Context(), "nats://localhost:4222/casbin-policy-updates?channel=my-channel&jetstream=true")
 	if err != nil {
 		return nil, err
 	}
