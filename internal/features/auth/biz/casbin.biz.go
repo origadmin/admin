@@ -57,7 +57,7 @@ func (c CasbinServiceBiz) ListGroupings(ctx context.Context, in *pb.ListGrouping
 }
 
 func (c CasbinServiceBiz) WatchUpdate(_ context.Context,
-	request *pb.WatchUpdateRequest) (*pb.WatchUpdateResponse, error) {
+	in *pb.WatchUpdateRequest) (*pb.WatchUpdateResponse, error) {
 	c.log.Debug("WatchUpdate")
 	return &pb.WatchUpdateResponse{ModifiedDate: c.lastModified.Load()}, nil
 }

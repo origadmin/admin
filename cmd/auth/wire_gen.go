@@ -79,7 +79,7 @@ func wireApp(app *runtime.App, bootstrap *conf.Config) (*kratos.App, func(), err
 		cleanup()
 		return nil, nil, err
 	}
-	skipper := providers.ProvideSkipChecker(app, bootstrap)
+	skipper := providers.ProvideSkipper(app, bootstrap)
 	serverMiddlewareProvider, err := providers.ProvideServiceMiddlewares(app, authorizer, skipper)
 	if err != nil {
 		cleanup()
