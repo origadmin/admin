@@ -3,6 +3,7 @@ package providers
 import (
 	"context"
 	"errors"
+	"fmt"
 	"strconv"
 
 	"github.com/google/wire"
@@ -20,6 +21,7 @@ import (
 	"github.com/origadmin/contrib/security/skip"
 	"github.com/origadmin/runtime"
 	"github.com/origadmin/runtime/container"
+	"github.com/origadmin/runtime/extensions/configutil"
 	"github.com/origadmin/runtime/log"
 	"github.com/origadmin/runtime/middleware"
 	"github.com/origadmin/toolkits/crypto/hash"
@@ -30,7 +32,6 @@ import (
 	"origadmin/application/admin/internal/conf"
 	confpb "origadmin/application/admin/internal/conf/pb"
 	"origadmin/application/admin/internal/data"
-	"origadmin/application/admin/internal/data/entity/ent"
 	"origadmin/application/admin/internal/helpers/captcha"
 )
 
@@ -56,17 +57,10 @@ func ProvideAuthenticatorOptions(c *conf.Config) (*jwt.Options, error) {
 	if authnConfig == nil {
 		return nil, errors.New("authn configuration not found in security config")
 	}
-	configs := authnConfig.GetConfigs()
-
-	var jwtConfig *authnv1.Authenticator
-	for _, mw := range configs {
-		if mw.GetType() == "jwt" {
-			jwtConfig = mw
-			break
-		}
-	}
-	if jwtConfig == nil || jwtConfig.GetJwt() == nil {
-		return nil, errors.New("JWT authenticator configuration not found in bootstrap config")
+	jwtConfig, _, err := configutil.Normalize(authnConfig.GetActive(), authnConfig.GetDefault(),
+		authnConfig.GetConfigs())
+	if err != nil {
+		return nil, fmt.Errorf("failed to normalize JWT authenticator configuration: %w", err)
 	}
 	return jwt.NewOptions(jwtConfig)
 }
@@ -78,7 +72,8 @@ func ProvideCredentialCreator(opts *jwt.Options, logger log.Logger) (credential.
 }
 
 // ProvideAuthorizer creates the Casbin authorizer.
-func ProvideAuthorizer(app *runtime.App, c *conf.Config, database *ent.Database) (*casbin.Authorizer, error) {
+func ProvideAuthorizer(app *runtime.App, c *conf.Config, adapter *data.CasbinAdapter,
+	w *watcher.Watcher) (*casbin.Authorizer, error) {
 	securityConfig := c.GetBootstrap().GetSecurity()
 	if securityConfig == nil {
 		return nil, errors.New("security configuration not found")
@@ -99,11 +94,15 @@ func ProvideAuthorizer(app *runtime.App, c *conf.Config, database *ent.Database)
 	if casbinConfig == nil || casbinConfig.GetCasbin() == nil {
 		return nil, errors.New("casbin authorizer configuration not found")
 	}
-	adapter, err := data.NewAdapter(app, database)
+	opts, err := casbin.NewOptions(casbinConfig, casbin.WithPolicyAdapter(adapter), casbin.WithWatcher(w))
 	if err != nil {
 		return nil, err
 	}
 
+	return casbin.New(opts, app.Logger())
+}
+
+func ProvideWatcher(app *runtime.App, c *conf.Config) (*watcher.Watcher, error) {
 	brokerConfig := c.GetBrokers()
 	if brokerConfig == nil {
 		return nil, errors.New("broker configuration not found")
@@ -119,13 +118,7 @@ func ProvideAuthorizer(app *runtime.App, c *conf.Config, database *ent.Database)
 	if err != nil {
 		return nil, err
 	}
-
-	opts, err := casbin.NewOptions(casbinConfig, casbin.WithPolicyAdapter(adapter), casbin.WithWatcher(w))
-	if err != nil {
-		return nil, err
-	}
-
-	return casbin.New(opts, app.Logger())
+	return w, nil
 }
 
 // ProvideAuthenticator creates the Casbin authorizer.
@@ -157,45 +150,47 @@ func ProvideAuthenticator(app *runtime.App, c *conf.Config) (*jwt.Authenticator,
 	return jwt.New(opts, app.Logger())
 }
 
-func ProvideCache(r *runtime.App) (container.CacheProvider, error) {
-	cacheProvider, err := r.CacheProvider()
+func ProvideCache(app *runtime.App) (container.CacheProvider, error) {
+	cacheProvider, err := app.CacheProvider()
 	if err != nil {
 		return nil, err
 	}
 	return cacheProvider, nil
 }
 
-func ProvideCaptcha(p container.CacheProvider, cfg *confpb.Captcha) (*captcha.Captcha, error) {
-	if cfg == nil {
-		cfg = &confpb.Captcha{}
+func ProvideCaptcha(app *runtime.App, p container.CacheProvider, cfg *confpb.Bootstrap) (*captcha.Captcha,
+	error) {
+	captchaConfig := cfg.GetCaptcha()
+	if captchaConfig == nil {
+		captchaConfig = &confpb.Captcha{}
 	}
-	if cfg.CacheName == "" {
-		cfg.CacheName = "default"
+	if captchaConfig.CacheName == "" {
+		captchaConfig.CacheName = "default"
 	}
-	if cfg.Height == 0 {
-		cfg.Height = 80
+	if captchaConfig.Height == 0 {
+		captchaConfig.Height = 80
 	}
-	if cfg.Width == 0 {
-		cfg.Width = 240
+	if captchaConfig.Width == 0 {
+		captchaConfig.Width = 240
 	}
-	if cfg.Length == 0 {
-		cfg.Length = 6
+	if captchaConfig.Length == 0 {
+		captchaConfig.Length = 6
 	}
-	if cfg.MaxSkew == 0 {
-		cfg.MaxSkew = 0.7
+	if captchaConfig.MaxSkew == 0 {
+		captchaConfig.MaxSkew = 0.7
 	}
-	if cfg.DotCount == 0 {
-		cfg.DotCount = 80
+	if captchaConfig.DotCount == 0 {
+		captchaConfig.DotCount = 80
 	}
 
-	cache, err := p.Cache(cfg.CacheName)
+	cache, err := p.Cache(captchaConfig.CacheName)
 	if err != nil {
 		return nil, err
 	}
 
 	c := &captcha.Config{
 		Store:   captcha.NewStore(cache),
-		Captcha: cfg,
+		Captcha: captchaConfig,
 	}
 	return captcha.NewCaptcha(c), nil
 }
@@ -290,7 +285,7 @@ func ProvideGatewaySkipper(app *runtime.App, _ *conf.Config) security.Skipper {
 func ProvideSkipper(app *runtime.App, _ *conf.Config) security.Skipper {
 	adminSkipper := skip.Principal(func(principal security.Principal) bool {
 		helper := log.NewHelper(log.With(app.Logger()))
-		pid := strconv.Itoa(int(data.SystemUserID)) // Convert int64 to string for comparison
+		pid := strconv.Itoa(int(data.SystemUserID)) // Conveapp int64 to string for comparison
 		if principal.GetID() == pid {
 			helper.Infof("skip admin checker: %s", pid)
 			return true
@@ -343,6 +338,7 @@ var ProviderSet = wire.NewSet(
 	ProvideCache,
 	ProvideAuthenticatorOptions,
 	ProvideCredentialCreator,
+	ProvideWatcher,
 	ProvideAuthenticator,
 	ProvideAuthorizer,
 	ProvideCaptcha,

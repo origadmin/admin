@@ -1,5 +1,4 @@
 discoveries:
-  default: default_consul
   active: default_consul
   configs:
     - name: default_consul

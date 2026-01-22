@@ -52,13 +52,12 @@ func wireApp(app *runtime.App, bootstrap *conf.Config) (*kratos.App, func(), err
 		cleanup()
 		return nil, nil, err
 	}
-	captcha := confpbBootstrap.Captcha
-	captchaCaptcha, err := providers.ProvideCaptcha(cacheProvider, captcha)
+	captcha, err := providers.ProvideCaptcha(app, cacheProvider, confpbBootstrap)
 	if err != nil {
 		cleanup()
 		return nil, nil, err
 	}
-	captchaUseCase := biz.NewCaptchaUseCase(captchaCaptcha, v)
+	captchaUseCase := biz.NewCaptchaUseCase(captcha, v)
 	options, err := providers.ProvideAuthenticatorOptions(bootstrap)
 	if err != nil {
 		cleanup()
@@ -74,7 +73,17 @@ func wireApp(app *runtime.App, bootstrap *conf.Config) (*kratos.App, func(), err
 	meUseCase := biz.NewMeUseCase(meRepo, v)
 	meService := service.NewMeService(meUseCase)
 	casbinService := service.NewCasbinService()
-	authorizer, err := providers.ProvideAuthorizer(app, bootstrap, database)
+	casbinAdapter, err := data.NewAdapter(app, database)
+	if err != nil {
+		cleanup()
+		return nil, nil, err
+	}
+	watcher, err := providers.ProvideWatcher(app, bootstrap)
+	if err != nil {
+		cleanup()
+		return nil, nil, err
+	}
+	authorizer, err := providers.ProvideAuthorizer(app, bootstrap, casbinAdapter, watcher)
 	if err != nil {
 		cleanup()
 		return nil, nil, err
