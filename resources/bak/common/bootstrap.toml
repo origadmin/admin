@@ -1,9 +1,0 @@
-Name = "origadmin.proxy.service.admin.v1"
-Version = "v1.0.0"
-CryptoType = "argon2"
-Mode = "singleton"
-EnableDynamicConfig = false
-Id = ""
-Environment = ""
-Services = []
-
