@@ -7,6 +7,7 @@ import "config/discovery/v1/discovery.proto";
 import "config/logger/v1/logger.proto";
 import "config/middleware/v1/middleware.proto";
 import "config/transport/v1/transport.proto";
+import "config/broker/v1/broker.proto";
 import "internal/conf/pb/captcha.proto";
 import "internal/conf/pb/root.proto";
 import "security/v1/security.proto";
@@ -36,11 +37,11 @@ message Bootstrap {
   // Middleware configuration for request processing.
   runtime.api.config.middleware.v1.Middlewares middlewares = 7;
 
-  // Security configuration for authentication and authorization.
-  contrib.api.security.v1.Security security = 8;
-
 //  // CORS configuration for cross-origin resource sharing.
-//  runtime.api.config.middleware.cors.v1.Cors cors = 9;
+  runtime.api.config.broker.v1.Brokers brokers = 8;
+
+  // Security configuration for authentication and authorization.
+  contrib.api.security.v1.Security security = 9;
 
   // Captcha feature specific configuration.
   conf.pb.Captcha captcha = 10;

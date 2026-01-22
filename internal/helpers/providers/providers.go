@@ -8,6 +8,7 @@ import (
 	"github.com/google/wire"
 
 	watcher "github.com/origadmin/casbin-watcher/v3"
+	_ "github.com/origadmin/casbin-watcher/v3/drivers/nats"
 	authnv1 "github.com/origadmin/contrib/api/gen/go/security/authn/v1"
 	authzv1 "github.com/origadmin/contrib/api/gen/go/security/authz/v1"
 	"github.com/origadmin/contrib/security"
@@ -103,8 +104,18 @@ func ProvideAuthorizer(app *runtime.App, c *conf.Config, database *ent.Database)
 		return nil, err
 	}
 
+	brokerConfig := c.GetBrokers()
+	if brokerConfig == nil {
+		return nil, errors.New("broker configuration not found")
+	}
+
+	brokerUrl := brokerConfig.GetDefault().GetUrl()
+	if brokerUrl == "" {
+		return nil, errors.New("broker url not found")
+	}
+
 	// Create a NATS watcher
-	w, err := watcher.NewWatcher(app.Context(), "nats://localhost:4222/casbin-policy-updates?channel=my-channel&jetstream=true")
+	w, err := watcher.NewWatcher(app.Context(), brokerUrl)
 	if err != nil {
 		return nil, err
 	}

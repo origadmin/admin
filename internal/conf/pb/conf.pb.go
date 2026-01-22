@@ -7,7 +7,8 @@
 package confpb
 
 import (
-	v15 "github.com/origadmin/contrib/api/gen/go/security/v1"
+	v16 "github.com/origadmin/contrib/api/gen/go/security/v1"
+	v15 "github.com/origadmin/runtime/api/gen/go/config/broker/v1"
 	v11 "github.com/origadmin/runtime/api/gen/go/config/data/v1"
 	v12 "github.com/origadmin/runtime/api/gen/go/config/discovery/v1"
 	v13 "github.com/origadmin/runtime/api/gen/go/config/logger/v1"
@@ -44,8 +45,10 @@ type Bootstrap struct {
 	Logger *v13.Logger `protobuf:"bytes,6,opt,name=logger,proto3" json:"logger,omitempty"`
 	// Middleware configuration for request processing.
 	Middlewares *v14.Middlewares `protobuf:"bytes,7,opt,name=middlewares,proto3" json:"middlewares,omitempty"`
+	// // CORS configuration for cross-origin resource sharing.
+	Brokers *v15.Brokers `protobuf:"bytes,8,opt,name=brokers,proto3" json:"brokers,omitempty"`
 	// Security configuration for authentication and authorization.
-	Security *v15.Security `protobuf:"bytes,8,opt,name=security,proto3" json:"security,omitempty"`
+	Security *v16.Security `protobuf:"bytes,9,opt,name=security,proto3" json:"security,omitempty"`
 	// Captcha feature specific configuration.
 	Captcha *Captcha `protobuf:"bytes,10,opt,name=captcha,proto3" json:"captcha,omitempty"`
 	// RootUser feature specific configuration for initial user setup.
@@ -135,7 +138,14 @@ func (x *Bootstrap) GetMiddlewares() *v14.Middlewares {
 	return nil
 }
 
-func (x *Bootstrap) GetSecurity() *v15.Security {
+func (x *Bootstrap) GetBrokers() *v15.Brokers {
+	if x != nil {
+		return x.Brokers
+	}
+	return nil
+}
+
+func (x *Bootstrap) GetSecurity() *v16.Security {
 	if x != nil {
 		return x.Security
 	}
@@ -213,7 +223,7 @@ var File_internal_conf_pb_conf_proto protoreflect.FileDescriptor
 
 const file_internal_conf_pb_conf_proto_rawDesc = "" +
 	"\n" +
-	"\x1binternal/conf/pb/conf.proto\x12\aconf.pb\x1a\x19config/data/v1/data.proto\x1a#config/discovery/v1/discovery.proto\x1a\x1dconfig/logger/v1/logger.proto\x1a%config/middleware/v1/middleware.proto\x1a#config/transport/v1/transport.proto\x1a\x1einternal/conf/pb/captcha.proto\x1a\x1binternal/conf/pb/root.proto\x1a\x1asecurity/v1/security.proto\"\xb2\x05\n" +
+	"\x1binternal/conf/pb/conf.proto\x12\aconf.pb\x1a\x19config/data/v1/data.proto\x1a#config/discovery/v1/discovery.proto\x1a\x1dconfig/logger/v1/logger.proto\x1a%config/middleware/v1/middleware.proto\x1a#config/transport/v1/transport.proto\x1a\x1dconfig/broker/v1/broker.proto\x1a\x1einternal/conf/pb/captcha.proto\x1a\x1binternal/conf/pb/root.proto\x1a\x1asecurity/v1/security.proto\"\xf3\x05\n" +
 	"\tBootstrap\x12B\n" +
 	"\aservers\x18\x01 \x01(\v2(.runtime.api.config.transport.v1.ServersR\aservers\x12B\n" +
 	"\aclients\x18\x02 \x01(\v2(.runtime.api.config.transport.v1.ClientsR\aclients\x12@\n" +
@@ -221,8 +231,9 @@ const file_internal_conf_pb_conf_proto_rawDesc = "" +
 	"\x04data\x18\x04 \x01(\v2 .runtime.api.config.data.v1.DataR\x04data\x12N\n" +
 	"\vdiscoveries\x18\x05 \x01(\v2,.runtime.api.config.discovery.v1.DiscoveriesR\vdiscoveries\x12<\n" +
 	"\x06logger\x18\x06 \x01(\v2$.runtime.api.config.logger.v1.LoggerR\x06logger\x12O\n" +
-	"\vmiddlewares\x18\a \x01(\v2-.runtime.api.config.middleware.v1.MiddlewaresR\vmiddlewares\x12=\n" +
-	"\bsecurity\x18\b \x01(\v2!.contrib.api.security.v1.SecurityR\bsecurity\x12*\n" +
+	"\vmiddlewares\x18\a \x01(\v2-.runtime.api.config.middleware.v1.MiddlewaresR\vmiddlewares\x12?\n" +
+	"\abrokers\x18\b \x01(\v2%.runtime.api.config.broker.v1.BrokersR\abrokers\x12=\n" +
+	"\bsecurity\x18\t \x01(\v2!.contrib.api.security.v1.SecurityR\bsecurity\x12*\n" +
 	"\acaptcha\x18\n" +
 	" \x01(\v2\x10.conf.pb.CaptchaR\acaptcha\x12.\n" +
 	"\troot_user\x18\v \x01(\v2\x11.conf.pb.RootUserR\brootUser\x12+\n" +
@@ -252,9 +263,10 @@ var file_internal_conf_pb_conf_proto_goTypes = []any{
 	(*v12.Discoveries)(nil), // 5: runtime.api.config.discovery.v1.Discoveries
 	(*v13.Logger)(nil),      // 6: runtime.api.config.logger.v1.Logger
 	(*v14.Middlewares)(nil), // 7: runtime.api.config.middleware.v1.Middlewares
-	(*v15.Security)(nil),    // 8: contrib.api.security.v1.Security
-	(*Captcha)(nil),         // 9: conf.pb.Captcha
-	(*RootUser)(nil),        // 10: conf.pb.RootUser
+	(*v15.Brokers)(nil),     // 8: runtime.api.config.broker.v1.Brokers
+	(*v16.Security)(nil),    // 9: contrib.api.security.v1.Security
+	(*Captcha)(nil),         // 10: conf.pb.Captcha
+	(*RootUser)(nil),        // 11: conf.pb.RootUser
 }
 var file_internal_conf_pb_conf_proto_depIdxs = []int32{
 	2,  // 0: conf.pb.Bootstrap.servers:type_name -> runtime.api.config.transport.v1.Servers
@@ -264,14 +276,15 @@ var file_internal_conf_pb_conf_proto_depIdxs = []int32{
 	5,  // 4: conf.pb.Bootstrap.discoveries:type_name -> runtime.api.config.discovery.v1.Discoveries
 	6,  // 5: conf.pb.Bootstrap.logger:type_name -> runtime.api.config.logger.v1.Logger
 	7,  // 6: conf.pb.Bootstrap.middlewares:type_name -> runtime.api.config.middleware.v1.Middlewares
-	8,  // 7: conf.pb.Bootstrap.security:type_name -> contrib.api.security.v1.Security
-	9,  // 8: conf.pb.Bootstrap.captcha:type_name -> conf.pb.Captcha
-	10, // 9: conf.pb.Bootstrap.root_user:type_name -> conf.pb.RootUser
-	10, // [10:10] is the sub-list for method output_type
-	10, // [10:10] is the sub-list for method input_type
-	10, // [10:10] is the sub-list for extension type_name
-	10, // [10:10] is the sub-list for extension extendee
-	0,  // [0:10] is the sub-list for field type_name
+	8,  // 7: conf.pb.Bootstrap.brokers:type_name -> runtime.api.config.broker.v1.Brokers
+	9,  // 8: conf.pb.Bootstrap.security:type_name -> contrib.api.security.v1.Security
+	10, // 9: conf.pb.Bootstrap.captcha:type_name -> conf.pb.Captcha
+	11, // 10: conf.pb.Bootstrap.root_user:type_name -> conf.pb.RootUser
+	11, // [11:11] is the sub-list for method output_type
+	11, // [11:11] is the sub-list for method input_type
+	11, // [11:11] is the sub-list for extension type_name
+	11, // [11:11] is the sub-list for extension extendee
+	0,  // [0:11] is the sub-list for field type_name
 }
 
 func init() { file_internal_conf_pb_conf_proto_init() }

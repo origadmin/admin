@@ -2,6 +2,7 @@
 package conf
 
 import (
+	brokerv1 "github.com/origadmin/runtime/api/gen/go/config/broker/v1"
 	datav1 "github.com/origadmin/runtime/api/gen/go/config/data/v1"
 	discoveryv1 "github.com/origadmin/runtime/api/gen/go/config/discovery/v1"
 	loggerv1 "github.com/origadmin/runtime/api/gen/go/config/logger/v1"
@@ -133,6 +134,10 @@ func (c *Config) GetRootUser() (*confpb.RootUser, error) {
 
 func (c *Config) GetBootstrap() *confpb.Bootstrap {
 	return &c.Bootstrap
+}
+
+func (c *Config) GetBrokers() *brokerv1.Brokers {
+	return c.Bootstrap.GetBrokers()
 }
 
 func (c *Config) DecodedConfig() any {
