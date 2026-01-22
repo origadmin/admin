@@ -10,8 +10,6 @@ import (
 
 	watcher "github.com/origadmin/casbin-watcher/v3"
 	_ "github.com/origadmin/casbin-watcher/v3/drivers/nats"
-	authnv1 "github.com/origadmin/contrib/api/gen/go/security/authn/v1"
-	authzv1 "github.com/origadmin/contrib/api/gen/go/security/authz/v1"
 	"github.com/origadmin/contrib/security"
 	"github.com/origadmin/contrib/security/authn/jwt"
 	"github.com/origadmin/contrib/security/authz/casbin"
@@ -47,30 +45,6 @@ func init() {
 	}
 }
 
-// ProvideAuthenticatorOptions creates the JWT options from the application configuration.
-func ProvideAuthenticatorOptions(c *conf.Config) (*jwt.Options, error) {
-	securityConfig := c.GetBootstrap().GetSecurity()
-	if securityConfig == nil {
-		return nil, errors.New("security configuration not found in bootstrap config")
-	}
-	authnConfig := securityConfig.GetAuthn()
-	if authnConfig == nil {
-		return nil, errors.New("authn configuration not found in security config")
-	}
-	jwtConfig, _, err := configutil.Normalize(authnConfig.GetActive(), authnConfig.GetDefault(),
-		authnConfig.GetConfigs())
-	if err != nil {
-		return nil, fmt.Errorf("failed to normalize JWT authenticator configuration: %w", err)
-	}
-	return jwt.NewOptions(jwtConfig)
-}
-
-// ProvideCredentialCreator creates the JWT authenticator instance.
-// It returns a credential.Creator interface, which is implemented by *jwt.Authenticator.
-func ProvideCredentialCreator(opts *jwt.Options, logger log.Logger) (credential.Creator, error) {
-	return jwt.New(opts, logger)
-}
-
 // ProvideAuthorizer creates the Casbin authorizer.
 func ProvideAuthorizer(app *runtime.App, c *conf.Config, adapter *data.CasbinAdapter,
 	w *watcher.Watcher) (*casbin.Authorizer, error) {
@@ -83,15 +57,11 @@ func ProvideAuthorizer(app *runtime.App, c *conf.Config, adapter *data.CasbinAda
 		return nil, errors.New("authz configuration not found")
 	}
 
-	var casbinConfig *authzv1.Authorizer
-	for _, cfg := range authzConfig.GetConfigs() {
-		if cfg.GetType() == "casbin" {
-			casbinConfig = cfg
-			break
-		}
+	casbinConfig, _, err := configutil.Normalize(authzConfig.GetActive(), authzConfig.GetDefault(), authzConfig.GetConfigs())
+	if err != nil {
+		return nil, fmt.Errorf("failed to normalize Casbin authorizer configuration: %w", err)
 	}
-
-	if casbinConfig == nil || casbinConfig.GetCasbin() == nil {
+	if casbinConfig == nil || casbinConfig.GetCasbin() == nil || casbinConfig.GetType() == "casbin" {
 		return nil, errors.New("casbin authorizer configuration not found")
 	}
 	opts, err := casbin.NewOptions(casbinConfig, casbin.WithPolicyAdapter(adapter), casbin.WithWatcher(w))
@@ -100,6 +70,32 @@ func ProvideAuthorizer(app *runtime.App, c *conf.Config, adapter *data.CasbinAda
 	}
 
 	return casbin.New(opts, app.Logger())
+}
+
+// ProvideAuthenticator creates the Casbin authorizer.
+func ProvideAuthenticator(app *runtime.App, c *conf.Config) (*jwt.Authenticator, error) {
+	securityConfig := c.GetBootstrap().GetSecurity()
+	if securityConfig == nil {
+		return nil, errors.New("security configuration not found")
+	}
+	authnConfig := securityConfig.GetAuthn()
+	if authnConfig == nil {
+		return nil, errors.New("authz configuration not found")
+	}
+
+	jwtConfig, _, err := configutil.Normalize(authnConfig.GetActive(), authnConfig.GetDefault(), authnConfig.GetConfigs())
+	if err != nil {
+		return nil, fmt.Errorf("failed to normalize JWT authenticator configuration: %w", err)
+	}
+
+	if jwtConfig == nil || jwtConfig.GetJwt() == nil || jwtConfig.GetType() != "jwt" {
+		return nil, errors.New("JWT authenticator configuration not found")
+	}
+	opts, err := jwt.NewOptions(jwtConfig)
+	if err != nil {
+		return nil, err
+	}
+	return jwt.New(opts, app.Logger())
 }
 
 func ProvideWatcher(app *runtime.App, c *conf.Config) (*watcher.Watcher, error) {
@@ -119,35 +115,6 @@ func ProvideWatcher(app *runtime.App, c *conf.Config) (*watcher.Watcher, error) 
 		return nil, err
 	}
 	return w, nil
-}
-
-// ProvideAuthenticator creates the Casbin authorizer.
-func ProvideAuthenticator(app *runtime.App, c *conf.Config) (*jwt.Authenticator, error) {
-	securityConfig := c.GetBootstrap().GetSecurity()
-	if securityConfig == nil {
-		return nil, errors.New("security configuration not found")
-	}
-	authnConfig := securityConfig.GetAuthn()
-	if authnConfig == nil {
-		return nil, errors.New("authz configuration not found")
-	}
-
-	var jwtConfig *authnv1.Authenticator
-	for _, cfg := range authnConfig.GetConfigs() {
-		if cfg.GetType() == "jwt" {
-			jwtConfig = cfg
-			break
-		}
-	}
-
-	if jwtConfig == nil || jwtConfig.GetJwt() == nil {
-		return nil, errors.New("casbin authorizer configuration not found")
-	}
-	opts, err := jwt.NewOptions(jwtConfig)
-	if err != nil {
-		return nil, err
-	}
-	return jwt.New(opts, app.Logger())
 }
 
 func ProvideCache(app *runtime.App) (container.CacheProvider, error) {
@@ -334,10 +301,9 @@ var ProviderSet = wire.NewSet(
 	wire.FieldsOf(new(*confpb.Bootstrap), "Security"),
 	wire.FieldsOf(new(*confpb.Bootstrap), "Servers"),
 	wire.FieldsOf(new(*confpb.Bootstrap), "Captcha"),
+	wire.Bind(new(credential.Creator), new(*jwt.Authenticator)),
 	ProvideLogger,
 	ProvideCache,
-	ProvideAuthenticatorOptions,
-	ProvideCredentialCreator,
 	ProvideWatcher,
 	ProvideAuthenticator,
 	ProvideAuthorizer,

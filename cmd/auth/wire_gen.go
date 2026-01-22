@@ -58,17 +58,12 @@ func wireApp(app *runtime.App, bootstrap *conf.Config) (*kratos.App, func(), err
 		return nil, nil, err
 	}
 	captchaUseCase := biz.NewCaptchaUseCase(captcha, v)
-	options, err := providers.ProvideAuthenticatorOptions(bootstrap)
+	authenticator, err := providers.ProvideAuthenticator(app, bootstrap)
 	if err != nil {
 		cleanup()
 		return nil, nil, err
 	}
-	creator, err := providers.ProvideCredentialCreator(options, v)
-	if err != nil {
-		cleanup()
-		return nil, nil, err
-	}
-	authService := service.NewAuthService(authUseCase, captchaUseCase, creator, v)
+	authService := service.NewAuthService(authUseCase, captchaUseCase, authenticator, v)
 	meRepo := dal.NewMeRepo(database, v)
 	meUseCase := biz.NewMeUseCase(meRepo, v)
 	meService := service.NewMeService(meUseCase)
