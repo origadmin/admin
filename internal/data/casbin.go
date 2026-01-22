@@ -6,6 +6,7 @@ package data
 
 import (
 	"fmt"
+
 	"github.com/casbin/casbin/v3/model"
 	"github.com/casbin/casbin/v3/persist"
 

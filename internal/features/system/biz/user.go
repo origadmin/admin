@@ -10,7 +10,10 @@ import (
 	"fmt"
 	"strconv"
 
+	kratosLog "github.com/go-kratos/kratos/v2/log"
+
 	"github.com/origadmin/contrib/security"
+	"github.com/origadmin/runtime/log"
 	"github.com/origadmin/toolkits/crypto/hash"
 	"origadmin/application/admin/api/v1/services/types"
 	"origadmin/application/admin/internal/data/enums"
@@ -21,11 +24,16 @@ import (
 type UserUseCase struct {
 	repo   dto.UserRepo
 	hasher hash.Crypto
+	log    *kratosLog.Helper
 }
 
 // NewUserUseCase new a User use case.
-func NewUserUseCase(repo dto.UserRepo, hasher hash.Crypto) *UserUseCase {
-	return &UserUseCase{repo: repo, hasher: hasher}
+func NewUserUseCase(repo dto.UserRepo, hasher hash.Crypto, logger log.Logger) *UserUseCase {
+	return &UserUseCase{
+		repo:   repo,
+		hasher: hasher,
+		log:    log.NewHelper(log.With(logger, "module", "system.biz.user")),
+	}
 }
 
 func (uc *UserUseCase) ListUserResources(ctx context.Context, id int64) ([]*types.Resource, error) {

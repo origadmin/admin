@@ -10,29 +10,35 @@ import (
 
 	"github.com/google/wire"
 
+	"github.com/origadmin/contrib/transport/watermill"
 	"github.com/origadmin/runtime"
 	grpcv1 "github.com/origadmin/runtime/api/gen/go/config/transport/grpc/v1"
 	httpv1 "github.com/origadmin/runtime/api/gen/go/config/transport/http/v1"
 	transportv1 "github.com/origadmin/runtime/api/gen/go/config/transport/v1"
+	watermillv1 "github.com/origadmin/runtime/api/gen/go/config/transport/watermill/v1"
 	"github.com/origadmin/runtime/container"
 	"github.com/origadmin/runtime/log"
 	"github.com/origadmin/runtime/service/transport"
 	"github.com/origadmin/runtime/service/transport/grpc"
 	"github.com/origadmin/runtime/service/transport/http"
 	authv1 "origadmin/application/admin/api/v1/services/auth"
+	"origadmin/application/admin/internal/events"
 	"origadmin/application/admin/internal/features/auth/service"
 )
 
 // ProviderSet is server providers.
-var ProviderSet = wire.NewSet(NewServers)
+var ProviderSet = wire.NewSet(
+	NewServers,
+)
 
-// NewServers creates and configures the auth service servers (gRPC, HTTP).
+// NewServers creates and configures the auth service servers (gRPC, HTTP, and Watermill).
 func NewServers(
 	app *runtime.App,
 	cfg *transportv1.Servers,
 	authSvc *service.AuthService,
 	meSvc *service.MeService,
 	casbinSvc *service.CasbinService,
+	policySyncSvc *service.PolicySyncService, // Inject PolicySyncService
 	middlewareProvider container.ServerMiddlewareProvider,
 ) ([]transport.Server, error) {
 	if cfg == nil {
@@ -41,9 +47,12 @@ func NewServers(
 
 	var transportServers []transport.Server
 	for _, serverCfg := range cfg.GetConfigs() {
+		// Check if the server configuration is for the 'auth' service.
 		if serverCfg.GetName() != "auth" && serverCfg.GetName() != "origadmin.service.auth" {
 			continue
 		}
+
+		// Create server based on the specified protocol.
 		switch serverCfg.GetProtocol() {
 		case "http":
 			srv, err := NewHTTPServer(app, serverCfg.GetHttp(), authSvc, meSvc, casbinSvc, middlewareProvider)
@@ -57,14 +66,45 @@ func NewServers(
 				return nil, err
 			}
 			transportServers = append(transportServers, srv)
-		default:
-			return nil, errors.New("protocol is not supported: " + serverCfg.GetProtocol())
+		case "watermill":
+			srv, err := NewWatermillServer(app, serverCfg.GetWatermill(), policySyncSvc)
+			if err != nil {
+				return nil, err
+			}
+			transportServers = append(transportServers, srv)
 		}
 	}
+
 	if len(transportServers) == 0 {
 		return nil, errors.New("no servers named 'auth' or 'origadmin.service.auth' were created")
 	}
 	return transportServers, nil
+}
+
+// NewWatermillServer creates a new Watermill server and registers event handlers.
+func NewWatermillServer(
+	_ *runtime.App,
+	cfg *watermillv1.Watermill,
+	policySyncSvc *service.PolicySyncService,
+) (transport.Server, error) {
+	if cfg == nil {
+		return nil, errors.New("watermill config is nil")
+	}
+
+	srv, err := watermill.NewServer(cfg)
+	if err != nil {
+		return nil, err
+	}
+
+	// Register the policy sync handler using AddConsumerHandler
+	srv.AddConsumerHandler(
+		"PolicySyncUserRoleAssigned",
+		events.UserRoleAssignedTopic,
+		policySyncSvc.HandleUserRoleAssigned,
+	)
+
+	log.Info("Watermill server and policy sync handler initialized.")
+	return srv, nil
 }
 
 // NewHTTPServer new an HTTP server.

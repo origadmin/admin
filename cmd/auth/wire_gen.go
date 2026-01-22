@@ -78,6 +78,8 @@ func wireApp(app *runtime.App, bootstrap *conf.Config) (*kratos.App, func(), err
 		cleanup()
 		return nil, nil, err
 	}
+	authPolicyRepository := dal.NewAuthPolicyRepository(casbinAdapter, watcher, v)
+	policySyncService := service.NewPolicySyncService(authPolicyRepository, v)
 	authorizer, err := providers.ProvideAuthorizer(app, bootstrap, casbinAdapter, watcher)
 	if err != nil {
 		cleanup()
@@ -89,7 +91,7 @@ func wireApp(app *runtime.App, bootstrap *conf.Config) (*kratos.App, func(), err
 		cleanup()
 		return nil, nil, err
 	}
-	v2, err := server.NewServers(app, servers, authService, meService, casbinService, serverMiddlewareProvider)
+	v2, err := server.NewServers(app, servers, authService, meService, casbinService, policySyncService, serverMiddlewareProvider)
 	if err != nil {
 		cleanup()
 		return nil, nil, err

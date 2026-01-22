@@ -290,6 +290,7 @@ var ProviderGatewaySet = wire.NewSet(
 )
 
 var ProviderBackendSet = wire.NewSet(
+
 	ProvideClientMiddlewares,
 	ProvideServiceMiddlewares,
 	ProvideSkipper,
@@ -310,3 +311,11 @@ var ProviderSet = wire.NewSet(
 	ProvideCaptcha,
 	ProvideHasher,
 )
+
+//// PolicyManagerProviderSet provides the PolicyManager and its dependencies.
+//var PolicyManagerProviderSet = wire.NewSet(
+//	ProvideWatcher,
+//	data.NewCasbinAdapter, // Assumes NewCasbinAdapter is in the data package
+//	dal.NewAuthPolicyRepository,
+//
+//)

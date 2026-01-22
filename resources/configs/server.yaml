@@ -60,3 +60,12 @@ servers:
         middlewares:
           - "recovery"
           - "authz"
+    # Auth Service Watermill Server (for event consumption)
+    - name: "auth"
+      protocol: "watermill"
+      watermill:
+        broker:
+          type: "nats"
+          nats:
+            address: "localhost:4222"
+            # jetstream_enabled: true # Uncomment if using NATS JetStream

@@ -6,10 +6,13 @@ package service
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/origadmin/runtime/errors"
+	"github.com/origadmin/runtime/log"
 	"origadmin/application/admin/api/v1/services/system"
 	"origadmin/application/admin/internal/data/entity/ent"
+	"origadmin/application/admin/internal/events"
 	"origadmin/application/admin/internal/features/system/biz"
 	"origadmin/application/admin/internal/features/system/dto"
 	"origadmin/application/admin/internal/helpers/db"
@@ -17,11 +20,18 @@ import (
 
 type UserService struct {
 	system.UnimplementedUserServiceServer
-	uc *biz.UserUseCase
+	uc        *biz.UserUseCase
+	publisher events.Publisher
+	log       *log.Helper
 }
 
-func NewUserService(uc *biz.UserUseCase) *UserService {
-	return &UserService{uc: uc}
+// NewUserService creates a new UserService.
+func NewUserService(uc *biz.UserUseCase, publisher events.Publisher, logger log.Logger) *UserService {
+	return &UserService{
+		uc:        uc,
+		publisher: publisher,
+		log:       log.NewHelper(log.With(logger, "module", "system.service.user")),
+	}
 }
 
 func (s *UserService) ListUserResources(ctx context.Context, req *system.ListUserResourcesRequest) (*system.ListUserResourcesResponse, error) {
@@ -45,6 +55,24 @@ func (s *UserService) UpdateUserRoles(ctx context.Context, req *system.UpdateUse
 		}
 		return nil, err
 	}
+
+	userIDStr := fmt.Sprintf("%d", req.GetId())
+	roleIDsStr := make([]string, len(req.GetRoleIds()))
+	for i, roleID := range req.GetRoleIds() {
+		roleIDsStr[i] = fmt.Sprintf("%d", roleID)
+	}
+
+	msg, err := events.NewUserRoleAssignedMessage(userIDStr, roleIDsStr, "system-service")
+	if err != nil {
+		s.log.Errorf("failed to create UserRoleAssignedEvent message for user %s: %v", userIDStr, err)
+	} else {
+		// Corrected call to s.publisher.Publish, removing the ctx parameter.
+		err = s.publisher.Publish(events.UserRoleAssignedTopic, msg)
+		if err != nil {
+			s.log.Errorf("failed to publish UserRoleAssignedEvent for user %s: %v", userIDStr, err)
+		}
+	}
+
 	return &system.UpdateUserRolesResponse{}, nil
 }
 
