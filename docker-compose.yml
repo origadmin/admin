@@ -1,4 +1,4 @@
-version: '3.8'
+version: "3.8"
 
 services:
   consul:
@@ -36,7 +36,7 @@ services:
     environment:
       # Configure Kratos to use Consul for service discovery
       # This assumes your Kratos app is configured to read these env vars
-      Kratos_Discovery_Consul_Address: consul:8500
+      KRATOS_DISCOVERY_CONSUL_ADDRESS: consul:8500
       NATS_SERVER_URL: nats://nats:4222 # Add NATS server URL for gateway
 
   auth:
@@ -51,7 +51,7 @@ services:
       - nats
       - consul # Add dependency on consul
     environment:
-      Kratos_Discovery_Consul_Address: consul:8500
+      KRATOS_DISCOVERY_CONSUL_ADDRESS: consul:8500
       NATS_SERVER_URL: nats://nats:4222 # Add NATS server URL for auth service
 
   system:
@@ -66,5 +66,5 @@ services:
       - nats
       - consul # Add dependency on consul
     environment:
-      Kratos_Discovery_Consul_Address: consul:8500
+      KRATOS_DISCOVERY_CONSUL_ADDRESS: consul:8500
       NATS_SERVER_URL: nats://nats:4222 # Add NATS server URL for system
