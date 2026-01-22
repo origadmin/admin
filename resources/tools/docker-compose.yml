@@ -16,7 +16,7 @@ services:
       - "4222:4222" # NATS client port
       - "8222:8222" # NATS monitoring port
     volumes:
-      - ./resources/tools/nats/nats.conf:/etc/nats/nats.conf # Mount the local config file
+      - ./nats/nats.conf:/etc/nats/nats.conf # Mount the local config file
 
   redis:
     image: redis:8.4.0-alpine
