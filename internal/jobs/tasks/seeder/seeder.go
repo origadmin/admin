@@ -22,7 +22,7 @@ import (
 	"github.com/origadmin/contrib/security"
 	"origadmin/application/admin/api/v1/services/types"
 	"origadmin/application/admin/internal/conf"
-	"origadmin/application/admin/internal/conf/pb"
+	confpb "origadmin/application/admin/internal/conf/pb"
 	"origadmin/application/admin/internal/features/system/biz"
 	"origadmin/application/admin/internal/features/system/dto"
 	"origadmin/application/admin/internal/helpers/contextutil"

@@ -1,16 +1,15 @@
-/*
- * Copyright (c) 2024 OrigAdmin. All rights reserved.
- */
-
-// The seed command is a one-off task to initialize the database with default data.
 package main
 
 import (
+	"context"
 	"flag"
 
 	"github.com/joho/godotenv"
+
 	_ "github.com/sqlite3ent/sqlite3" // Import for sqlite3 driver
 
+	_ "github.com/origadmin/contrib/config/consul"
+	_ "github.com/origadmin/contrib/registry/consul"
 	"github.com/origadmin/runtime"
 	runtimebootstrap "github.com/origadmin/runtime/bootstrap"
 	"github.com/origadmin/runtime/log"
@@ -21,7 +20,7 @@ import (
 
 var (
 	// Name is the name of the compiled software.
-	Name = "origadmin.task.seed"
+	Name = "origadmin.job.initializer"
 	// Version is the version of the compiled software.
 	Version = "v1.0.0"
 
@@ -34,36 +33,40 @@ func init() {
 }
 
 func main() {
-	_ = godotenv.Load("resources/.env.system")
+	_ = godotenv.Load("resources/.env.initializer")
+
 	flag.Parse()
 
 	confPath := confhelper.FindConfPath(flagconf)
 	if confPath == "" {
-		log.Fatal("Could not find configuration file.")
+		log.Fatalf("Could not find configuration file. Searched -conf flag, executable path, and development path.")
 	}
 
+	log.Infof("Loading configuration from: %s\n", confPath)
+
 	rt := runtime.New(Name, Version)
-	if err := rt.Load(confPath, runtimebootstrap.WithConfigTransformer(conf.New())); err != nil {
+	err := rt.Load(confPath, runtimebootstrap.WithConfigTransformer(conf.New()))
+	if err != nil {
 		log.Fatalf("failed to create runtime: %v", err)
 	}
 	defer rt.Config().Close()
+	log.Infof("Starting %s %s (ID: %s)\n", rt.AppInfo().Name(), rt.AppInfo().Version(), rt.AppInfo().ID())
 
 	bootstrapConfig, ok := rt.StructuredConfig().(*conf.Config)
 	if !ok {
 		log.Fatalf("failed to get bootstrap config")
 	}
 
-	// wireApp builds the dependencies needed for the seed task.
-	s, cleanup, err := wireApp(rt, bootstrapConfig)
+	initSvc, cleanup, err := wireApp(rt, bootstrapConfig)
 	if err != nil {
 		log.Fatalf("failed to wire app: %v", err)
 	}
 	defer cleanup()
 
-	// Execute the seed task.
-	if err := s.Run(); err != nil {
-		log.Fatalf("seed task failed: %v", err)
+	// Execute the initialization logic
+	if err := initSvc.Init(context.Background()); err != nil {
+		log.Fatalf("initialization failed: %v", err)
 	}
 
-	log.Info("seed task completed successfully.")
+	log.Info("All initialization tasks completed successfully.")
 }

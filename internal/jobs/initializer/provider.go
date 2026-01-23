@@ -1,0 +1,34 @@
+package initializer
+
+import (
+	"github.com/google/wire"
+	"github.com/origadmin/runtime/log"
+
+	"origadmin/application/admin/internal/jobs/initializer/nats"
+	"origadmin/application/admin/internal/jobs/initializer/seeder"
+)
+
+// ProviderSet is the main provider set for the initializer job.
+// It aggregates all specific initializer providers and assembles the composite initializer.
+var ProviderSet = wire.NewSet(
+	nats.ProviderSet,
+	seeder.ProviderSet,
+	ProvideCompositeInitializer,
+)
+
+// ProvideCompositeInitializer assembles the composite initializer from individual initializer components.
+// The order of arguments determines the execution order if we construct the slice manually here.
+func ProvideCompositeInitializer(
+	logger log.Logger,
+	natsInit *nats.Initializer,
+	seederInit *seeder.Initializer,
+) Initializer {
+	// The order of initializers is explicitly defined here.
+	// 1. Infrastructure (NATS)
+	// 2. Data (Seeder)
+	initializers := []Initializer{
+		natsInit,
+		seederInit,
+	}
+	return NewCompositeInitializer(initializers, logger)
+}

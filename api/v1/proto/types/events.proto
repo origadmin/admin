@@ -1,0 +1,23 @@
+syntax = "proto3";
+
+package api.v1.proto.types;
+
+import "google/protobuf/timestamp.proto";
+
+option go_package = "origadmin/application/admin/api/v1/proto/types;types";
+
+// UserRoleAssignedEvent represents an event where one or more roles are assigned to a user.
+// This event is published to a message broker for other services to consume.
+message UserRoleAssignedEvent {
+  // The timestamp when the event was generated.
+  google.protobuf.Timestamp timestamp = 1;
+
+  // The unique identifier of the user.
+  string user_id = 2;
+
+  // A list of unique identifiers for the roles that were assigned.
+  repeated string role_ids = 3;
+
+  // The name of the service that published the event (e.g., "origadmin.service.system").
+  string source = 4;
+}

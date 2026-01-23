@@ -52,8 +52,13 @@ func wireApp(app *runtime.App, bootstrap *conf.Config) (*kratos.App, func(), err
 		cleanup()
 		return nil, nil, err
 	}
-	userUseCase := biz.NewUserUseCase(userRepo, crypto)
-	userService := service.NewUserService(userUseCase)
+	userUseCase := biz.NewUserUseCase(userRepo, crypto, v)
+	publisher, err := providers.ProvidePublisher(bootstrap)
+	if err != nil {
+		cleanup()
+		return nil, nil, err
+	}
+	userService := service.NewUserService(userUseCase, publisher, v)
 	permissionRepo := dal.NewPermissionRepo(database)
 	permissionUseCase := biz.NewPermissionUseCase(permissionRepo)
 	permissionService := service.NewPermissionService(permissionUseCase)

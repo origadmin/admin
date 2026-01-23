@@ -9,7 +9,7 @@ import (
 
 	"github.com/origadmin/runtime"
 	"origadmin/application/admin/internal/conf"
-	"origadmin/application/admin/internal/data"
+	"origadmin/application/admin/internal/data" // Added data import
 	"origadmin/application/admin/internal/features/auth/biz"
 	"origadmin/application/admin/internal/features/auth/dal"
 	"origadmin/application/admin/internal/features/auth/server"
@@ -20,12 +20,13 @@ import (
 // wireApp init kratos application.
 func wireApp(app *runtime.App, bootstrap *conf.Config) (*kratos.App, func(), error) {
 	panic(wire.Build(
-		// Shared infrastructure providers
-		providers.ProviderSet,
+		// General backend providers
 		providers.ProviderBackendSet,
 
-		// Auth-specific providers
-		data.ProviderSet,
+		// Data layer provider
+		data.ProviderSet, // Explicitly added data.ProviderSet
+
+		// Auth feature module providers
 		dal.ProviderSet,
 		biz.ProviderSet,
 		service.ProviderSet,

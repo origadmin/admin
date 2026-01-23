@@ -11,22 +11,23 @@ import (
 	"github.com/origadmin/runtime/errors"
 	"github.com/origadmin/runtime/log"
 	"origadmin/application/admin/api/v1/services/system"
+	"origadmin/application/admin/internal/broker"
 	"origadmin/application/admin/internal/data/entity/ent"
-	"origadmin/application/admin/internal/events"
 	"origadmin/application/admin/internal/features/system/biz"
 	"origadmin/application/admin/internal/features/system/dto"
+	"origadmin/application/admin/internal/features/system/events"
 	"origadmin/application/admin/internal/helpers/db"
 )
 
 type UserService struct {
 	system.UnimplementedUserServiceServer
 	uc        *biz.UserUseCase
-	publisher events.Publisher
+	publisher broker.Publisher
 	log       *log.Helper
 }
 
 // NewUserService creates a new UserService.
-func NewUserService(uc *biz.UserUseCase, publisher events.Publisher, logger log.Logger) *UserService {
+func NewUserService(uc *biz.UserUseCase, publisher broker.Publisher, logger log.Logger) *UserService {
 	return &UserService{
 		uc:        uc,
 		publisher: publisher,

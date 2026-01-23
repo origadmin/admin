@@ -6,7 +6,7 @@ replace github.com/armon/go-metrics v0.5.4 => github.com/origadmin/go-metrics v0
 
 replace github.com/origadmin/runtime v0.2.15 => ../../runtime
 
-replace github.com/origadmin/contrib v1.3.0 => ../../contrib
+replace github.com/origadmin/contrib v1.3.1 => ../../contrib
 
 require (
 	entgo.io/ent v0.14.5
@@ -20,11 +20,11 @@ require (
 	github.com/google/wire v0.7.0
 	github.com/mattn/go-sqlite3 v1.14.33 // indirect
 	github.com/mojocn/base64Captcha v1.3.8
-	github.com/origadmin/contrib v1.3.0
+	github.com/origadmin/contrib v1.3.1
 	github.com/origadmin/runtime v0.2.15
 	github.com/origadmin/slog-kratos v1.0.5 // indirect
-	github.com/origadmin/toolkits/codec v1.3.1
-	github.com/origadmin/toolkits/crypto v1.3.0
+	github.com/origadmin/toolkits v1.3.1
+	github.com/origadmin/toolkits/crypto v1.3.1
 	github.com/origadmin/toolkits/errors v1.3.1
 	github.com/sqlite3ent/sqlite3 v1.40.0
 	golang.org/x/net v0.49.0 // indirect

@@ -127,20 +127,20 @@ build:
 	@echo "Building standard backend-only snapshot..."
 	goreleaser build --single-target --clean --snapshot
 
-.PHONY: build-all-in-one
+.PHONY: build-all
 # build an all-in-one snapshot binary with embedded UI
-build-all-in-one: build-ui
+build-all: build-ui
 	@echo "Building all-in-one snapshot with embedded UI..."
-	goreleaser build --single-target --clean --snapshot --config .goreleaser.all-in-one.yaml
+	goreleaser build --single-target --clean --snapshot --config .goreleaser.all.yaml
 
 .PHONY: release
 # create a full release (backend-only)
 release:
 	goreleaser release --clean
 
-.PHONY: release-all-in-one
+.PHONY: release-all
 # create a full all-in-one release with embedded UI
-release-all-in-one: build-ui
+release-all: build-ui
 	goreleaser release --config .goreleaser.all-in-one.yaml --clean
 
 #.PHONY: server
@@ -175,10 +175,16 @@ gen:
 	@go generate ./internal/data/entity/ent/generate.go
 
 	@echo "Generating main wire..."
-	@go generate ./cmd/seed/wire.work.go
-	@go generate ./cmd/system/wire.work.go
-	@go generate ./cmd/auth/wire.work.go
-	@go generate ./cmd/gateway/wire.work.go
+ifeq ($(GOHOSTOS), windows)
+	@powershell -Command "Get-ChildItem cmd -Directory | ForEach-Object { Write-Host ('Generating wire for {0}...' -f $$_.Name); go generate $$_.FullName }"
+else
+	@for dir in cmd/*; do \
+		if [ -d "$$dir" ]; then \
+			echo "Generating wire for $$dir..."; \
+			go generate $$dir; \
+		fi \
+	done
+endif
 
 	@echo "Generating dto data convert functions ..."
 	@go generate ./internal/features/system/dto

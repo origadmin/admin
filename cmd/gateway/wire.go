@@ -23,8 +23,7 @@ import (
 // wireApp init kratos application.
 func wireApp(app *runtime.App, bootstrap *conf.Config) (*kratos.App, func(), error) {
 	panic(wire.Build(
-		// Shared infrastructure providers
-		providers.ProviderSet,
+		// Gateway-specific providers, which includes common providers.
 		providers.ProviderGatewaySet,
 
 		// Service-specific providers

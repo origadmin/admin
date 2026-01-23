@@ -19,6 +19,9 @@ before:
 builds:
   - env:
       - CGO_ENABLED=0
+    # Add the 'embed_ui' tag to enable embedding the frontend
+    tags:
+      - embed_ui
     flags:
       - -trimpath
     ldflags: -s -w -X main.builtBy=OrigAdmin -X main.version={{.Version}} -X main.commit={{.ShortCommit}} -X main.date={{.Date}} -X main.treeState={{ .IsGitDirty }}
@@ -28,22 +31,22 @@ builds:
       - windows
       - linux
       - freebsd
-#      - netbsd
-#      - illumos
+    #      - netbsd
+    #      - illumos
     goarch:
       - "amd64"
       - "arm64"
       - "arm"
       - "386"
-#      - ppc64
-#      - ppc64le
-#      - s390x
-#      - mips64
-#      - mips64le
-#      - riscv64
-#      - loong64
+    #      - ppc64
+    #      - ppc64le
+    #      - s390x
+    #      - mips64
+    #      - mips64le
+    #      - riscv64
+    #      - loong64
     goarm:
-#      - "6"
+      #      - "6"
       - "7"
     gomips:
       - hardfloat
