@@ -2,111 +2,89 @@
  * Copyright (c) 2024 OrigAdmin. All rights reserved.
  */
 
-// Package biz is a biz layer for the auth module of OrigAdmin.
 package biz
 
 import (
 	"context"
-	"sync/atomic"
-	"time"
+	"fmt"
 
-	"google.golang.org/grpc"
-
+	"github.com/casbin/casbin/v3/model"
 	"github.com/origadmin/runtime/log"
-
-	"origadmin/application/admin/internal/helpers/repo"
-
-	"github.com/origadmin/runtime"
-	pb "origadmin/application/admin/api/v1/services/auth"
-	"origadmin/application/admin/internal/features/auth/dto"
+	"origadmin/application/admin/internal/features/auth/dal"
+	systempb "origadmin/application/admin/api/v1/services/system"
 )
 
-// CasbinServiceBiz is a Casbin use case.
-type CasbinServiceBiz struct {
-	dao          dto.CasbinRepo
-	limiter      repo.PageLimiter
-	log          *log.Helper
-	lastModified *atomic.Int64
+// CasbinSynchronizer is responsible for performing a one-time, full synchronization
+// of policies from the system's policy service to the Casbin persistence layer.
+type CasbinSynchronizer struct {
+	storageManager dal.CasbinStorageManager
+	policyClient   systempb.PolicyServiceServer
+	log            *log.Helper
 }
 
-func (c CasbinServiceBiz) StreamRules(request *pb.StreamRulesRequest, stream grpc.ServerStreamingServer[pb.StreamRulesResponse]) error {
-	c.log.Debug("StreamRules")
-	ctx := stream.Context()
-	if request.WithPolicies {
-		if err := c.streamPolicies(ctx, stream); err != nil {
-			return err
-		}
+// NewCasbinSynchronizer creates a new synchronizer.
+func NewCasbinSynchronizer(
+	logger log.Logger,
+	storageManager dal.CasbinStorageManager,
+	policyClient systempb.PolicyServiceServer,
+) *CasbinSynchronizer {
+	return &CasbinSynchronizer{
+		storageManager: storageManager,
+		policyClient:   policyClient,
+		log:            log.NewHelper(log.With(logger, "module", "biz/casbin-synchronizer")),
 	}
-
-	if request.WithGroupings {
-		if err := c.streamGroupings(ctx, stream); err != nil {
-			return err
-		}
-	}
-	return nil
 }
 
-func (c CasbinServiceBiz) ListPolicies(ctx context.Context, in *pb.ListPoliciesRequest) (*pb.ListPoliciesResponse, error) {
-	c.log.Debug("ListPolicies")
-	return c.dao.ListPolicies(ctx, in)
-}
+// Sync performs the full synchronization. It should be called once at application startup.
+func (s *CasbinSynchronizer) Sync(ctx context.Context) error {
+	s.log.WithContext(ctx).Info("Starting full synchronization of Casbin policies from system policy service...")
 
-func (c CasbinServiceBiz) ListGroupings(ctx context.Context, in *pb.ListGroupingsRequest) (*pb.ListGroupingsResponse, error) {
-	c.log.Debug("ListGroupings")
-	return c.dao.ListGroupings(ctx, in)
-}
-
-func (c CasbinServiceBiz) WatchUpdate(_ context.Context,
-	in *pb.WatchUpdateRequest) (*pb.WatchUpdateResponse, error) {
-	c.log.Debug("WatchUpdate")
-	return &pb.WatchUpdateResponse{ModifiedDate: c.lastModified.Load()}, nil
-}
-
-func (c CasbinServiceBiz) UpdateRules() {
-	// todo: load from db
-	c.lastModified.Store(time.Now().Unix())
-}
-
-func (c CasbinServiceBiz) streamPolicies(ctx context.Context, stream grpc.ServerStreamingServer[pb.StreamRulesResponse]) error {
-	policies, err := c.ListPolicies(ctx, &pb.ListPoliciesRequest{})
+	// 1. Directly fetch all business-level authorization data from the policy service.
+	allPoliciesResp, err := s.policyClient.ListAllPolicies(ctx, &systempb.ListAllPoliciesRequest{})
 	if err != nil {
-		return err
+		return fmt.Errorf("failed to list all policies from system policy service: %w", err)
 	}
-	for _, rule := range policies.Rules {
-		if err := stream.Send(newPolicyResponse(rule)); err != nil {
-			return err
+	s.log.WithContext(ctx).Infof("System policy service returned %d role-permissions, %d permission definitions, and %d user-roles.",
+		len(allPoliciesResp.GetRolePermissions()), len(allPoliciesResp.GetPermissionDefinitions()), len(allPoliciesResp.GetUserRoles()))
+
+	// 2. Translate the business-level data into Casbin-specific rules.
+	// This logic now resides entirely within the auth module.
+	m := model.NewModel()
+
+	// Create a map for quick lookup of permission definitions by keyword.
+	permDefMap := make(map[string]*systempb.PermissionDefinition)
+	for _, permDef := range allPoliciesResp.GetPermissionDefinitions() {
+		permDefMap[permDef.PermissionKeyword] = permDef
+	}
+
+	// Translate role-permissions to Casbin 'p' rules.
+	for _, rolePerm := range allPoliciesResp.GetRolePermissions() {
+		if permDef, ok := permDefMap[rolePerm.PermissionKeyword]; ok {
+			// p, role_id, resource_path, action_verb, domain_id
+			m.AddPolicy("p", "p", []string{
+				rolePerm.RoleId,
+				permDef.ResourcePath,
+				permDef.ActionVerb,
+				rolePerm.DomainId,
+			})
 		}
 	}
+
+	// Translate user-roles to Casbin 'g' rules.
+	for _, userRole := range allPoliciesResp.GetUserRoles() {
+		// g, user_id, role_id, domain_id
+		m.AddPolicy("g", "g", []string{
+			userRole.UserId,
+			userRole.RoleId,
+			userRole.DomainId,
+		})
+	}
+
+	// 3. Pass the complete model to the DAL to be atomically persisted.
+	if err := s.storageManager.OverwriteAllPolicies(ctx, m); err != nil {
+		return fmt.Errorf("failed to overwrite policies via storage manager: %w", err)
+	}
+
+	s.log.WithContext(ctx).Info("Successfully synchronized all Casbin policies.")
 	return nil
-}
-
-func (c CasbinServiceBiz) streamGroupings(ctx context.Context, stream grpc.ServerStreamingServer[pb.StreamRulesResponse]) error {
-	groupings, err := c.ListGroupings(ctx, &pb.ListGroupingsRequest{})
-	if err != nil {
-		return err
-	}
-	for _, rule := range groupings.Rules {
-		if err := stream.Send(newGroupingResponse(rule)); err != nil {
-			return err
-		}
-	}
-	return nil
-}
-
-func newPolicyResponse(rule *pb.PolicyRule) *pb.StreamRulesResponse {
-	return &pb.StreamRulesResponse{
-		RuleType: &pb.StreamRulesResponse_Policy{Policy: rule},
-	}
-}
-
-func newGroupingResponse(rule *pb.GroupingRule) *pb.StreamRulesResponse {
-	return &pb.StreamRulesResponse{
-		RuleType: &pb.StreamRulesResponse_Grouping{Grouping: rule},
-	}
-}
-
-// NewCasbinServiceBiz new a Casbin use case.
-func NewCasbinServiceBiz(r *runtime.App, repo dto.CasbinRepo) *CasbinServiceBiz {
-	return &CasbinServiceBiz{dao: repo, limiter: defaultLimiter, log: log.NewHelper(log.With(r.Logger(), "module", "biz/casbin")),
-		lastModified: &atomic.Int64{}}
 }

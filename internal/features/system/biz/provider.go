@@ -16,4 +16,5 @@ var ProviderSet = wire.NewSet(
 	NewUserUseCase,
 	NewPermissionUseCase,
 	NewViewUseCase,
+	NewPolicyBiz, // Provides the business logic for policy generation.
 )

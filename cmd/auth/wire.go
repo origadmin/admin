@@ -9,11 +9,12 @@ import (
 
 	"github.com/origadmin/runtime"
 	"origadmin/application/admin/internal/conf"
-	"origadmin/application/admin/internal/data" // Added data import
-	"origadmin/application/admin/internal/features/auth/biz"
-	"origadmin/application/admin/internal/features/auth/dal"
-	"origadmin/application/admin/internal/features/auth/server"
-	"origadmin/application/admin/internal/features/auth/service"
+	"origadmin/application/admin/internal/data"
+	authbiz "origadmin/application/admin/internal/features/auth/biz"
+	authdal "origadmin/application/admin/internal/features/auth/dal"
+	authserver "origadmin/application/admin/internal/features/auth/server"
+	authservice "origadmin/application/admin/internal/features/auth/service"
+	"origadmin/application/admin/internal/gateway/client"
 	"origadmin/application/admin/internal/helpers/providers"
 )
 
@@ -24,13 +25,16 @@ func wireApp(app *runtime.App, bootstrap *conf.Config) (*kratos.App, func(), err
 		providers.ProviderBackendSet,
 
 		// Data layer provider
-		data.ProviderSet, // Explicitly added data.ProviderSet
+		data.ProviderSet,
+
+		// Gateway clients (for auth to call system service via gRPC)
+		client.ProviderSet,
 
 		// Auth feature module providers
-		dal.ProviderSet,
-		biz.ProviderSet,
-		service.ProviderSet,
-		server.ProviderSet,
+		authdal.ProviderSet,
+		authbiz.ProviderSet,
+		authservice.ProviderSet,
+		authserver.ProviderSet,
 
 		NewApp,
 	))

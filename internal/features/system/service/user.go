@@ -8,14 +8,19 @@ import (
 	"context"
 	"fmt"
 
+	"github.com/ThreeDotsLabs/watermill"
+	"github.com/ThreeDotsLabs/watermill/message"
+	"google.golang.org/protobuf/proto"
+	"google.golang.org/protobuf/types/known/timestamppb"
+
 	"github.com/origadmin/runtime/errors"
 	"github.com/origadmin/runtime/log"
 	"origadmin/application/admin/api/v1/services/system"
+	"origadmin/application/admin/api/v1/services/types"
 	"origadmin/application/admin/internal/broker"
 	"origadmin/application/admin/internal/data/entity/ent"
 	"origadmin/application/admin/internal/features/system/biz"
 	"origadmin/application/admin/internal/features/system/dto"
-	"origadmin/application/admin/internal/features/system/events"
 	"origadmin/application/admin/internal/helpers/db"
 )
 
@@ -63,12 +68,19 @@ func (s *UserService) UpdateUserRoles(ctx context.Context, req *system.UpdateUse
 		roleIDsStr[i] = fmt.Sprintf("%d", roleID)
 	}
 
-	msg, err := events.NewUserRoleAssignedMessage(userIDStr, roleIDsStr, "system-service")
+	event := &types.UserRoleAssignedEvent{
+		Timestamp: timestamppb.Now(),
+		UserId:    userIDStr,
+		RoleIds:   roleIDsStr,
+		Source:    "system-service",
+	}
+
+	payload, err := proto.Marshal(event)
 	if err != nil {
-		s.log.Errorf("failed to create UserRoleAssignedEvent message for user %s: %v", userIDStr, err)
+		s.log.Errorf("failed to marshal UserRoleAssignedEvent for user %s: %v", userIDStr, err)
 	} else {
-		// Corrected call to s.publisher.Publish, removing the ctx parameter.
-		err = s.publisher.Publish(events.UserRoleAssignedTopic, msg)
+		msg := message.NewMessage(watermill.NewUUID(), payload)
+		err = s.publisher.Publish(broker.UserRoleAssignedTopic, msg)
 		if err != nil {
 			s.log.Errorf("failed to publish UserRoleAssignedEvent for user %s: %v", userIDStr, err)
 		}

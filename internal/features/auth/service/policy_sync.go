@@ -5,59 +5,73 @@
 package service
 
 import (
-	"context"
-	"encoding/json"
-
 	"github.com/ThreeDotsLabs/watermill/message"
+	"google.golang.org/protobuf/proto"
+
 	"github.com/origadmin/contrib/security/authz"
 	"github.com/origadmin/runtime/log"
-	"origadmin/application/admin/internal/events"
+	"origadmin/application/admin/api/v1/services/types"
 )
 
 // PolicySyncService is a business logic handler that updates authorization policies based on events.
 // It does NOT manage its own subscription or Watermill lifecycle.
 type PolicySyncService struct {
-	policyManager authz.PolicyManager
-	log           *log.Helper
+	policyModifier authz.PolicyModifier
+	reloader       authz.Reloader
+	log            *log.Helper
 }
 
 // NewPolicySyncService creates a new PolicySyncService.
-// It only needs a PolicyManager and a Logger.
-func NewPolicySyncService(pm authz.PolicyManager, logger log.Logger) *PolicySyncService {
+func NewPolicySyncService(policyModifier authz.PolicyModifier, authorizer authz.Authorizer, logger log.Logger) *PolicySyncService {
+	reloader, ok := authorizer.(authz.Reloader)
+	if !ok {
+		// Fallback for authorizers that don't support reloading (e.g. noop)
+		reloader = &noopReloader{}
+	}
 	return &PolicySyncService{
-		policyManager: pm,
-		log:           log.NewHelper(log.With(logger, "module", "auth.service.policy_sync")),
+		policyModifier: policyModifier,
+		reloader:       reloader,
+		log:            log.NewHelper(log.With(logger, "module", "auth.service.policy_sync")),
 	}
 }
 
+type noopReloader struct{}
+
+func (n *noopReloader) Reload() error { return nil }
+
 // HandleUserRoleAssigned processes a UserRoleAssignedEvent.
-// This method is designed to be registered directly with the watermill.Server.
 func (s *PolicySyncService) HandleUserRoleAssigned(msg *message.Message) error {
-	var event events.UserRoleAssignedEvent
-	if err := json.Unmarshal(msg.Payload, &event); err != nil {
+	var event types.UserRoleAssignedEvent
+	if err := proto.Unmarshal(msg.Payload, &event); err != nil {
 		s.log.Errorf("Failed to unmarshal UserRoleAssignedEvent: %v", err)
-		return err // Return error to Watermill for potential retry/DLQ
+		return err
 	}
 
-	s.log.Infof("Processing UserRoleAssignedEvent: UserID=%s, RoleIDs=%v", event.UserID, event.RoleIDs)
+	userID := event.GetUserId()
+	roleIDs := event.GetRoleIds()
+	s.log.Infof("Processing UserRoleAssignedEvent: UserID=%s, RoleIDs=%v", userID, roleIDs)
 
-	// Here you might want to clear existing roles for the user before adding new ones,
-	// depending on whether the event represents a full sync or an incremental update.
-	// For this implementation, we assume an incremental add.
+	// 1. Remove all existing roles for the user
+	if _, err := s.policyModifier.RemoveAllUserRoles(msg.Context(), userID); err != nil {
+		s.log.Errorf("Failed to remove old roles for UserID=%s: %v", userID, err)
+		return err
+	}
 
-	for _, roleID := range event.RoleIDs {
-		added, err := s.policyManager.AddGroupingPolicy(context.Background(), event.UserID, roleID)
-		if err != nil {
-			s.log.Errorf("Failed to add grouping policy for UserID=%s, RoleID=%s: %v", event.UserID, roleID, err)
-			return err // Return error to Watermill
-		}
-
-		if added {
-			s.log.Infof("Successfully added grouping policy for UserID=%s, RoleID=%s", event.UserID, roleID)
-		} else {
-			s.log.Infof("Grouping policy for UserID=%s, RoleID=%s already exists.", event.UserID, roleID)
+	// 2. Add the new roles
+	for _, roleID := range roleIDs {
+		if _, err := s.policyModifier.AddUserRole(msg.Context(), userID, roleID); err != nil {
+			s.log.Errorf("Failed to add role '%s' to user '%s': %v", roleID, userID, err)
+			// Consider transaction rollback logic here if needed
+			return err
 		}
 	}
 
-	return nil // Return nil for successful processing
+	// 3. Trigger policy reload via the reloader
+	if err := s.reloader.Reload(); err != nil {
+		s.log.Errorf("Failed to trigger policy reload: %v", err)
+		return err
+	}
+
+	s.log.Infof("Successfully processed UserRoleAssignedEvent for UserID=%s", userID)
+	return nil
 }

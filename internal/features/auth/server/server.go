@@ -5,6 +5,7 @@
 package server
 
 import (
+	"context"
 	"errors"
 	stdhttp "net/http"
 
@@ -22,7 +23,7 @@ import (
 	"github.com/origadmin/runtime/service/transport/grpc"
 	"github.com/origadmin/runtime/service/transport/http"
 	authv1 "origadmin/application/admin/api/v1/services/auth"
-	"origadmin/application/admin/internal/events"
+	"origadmin/application/admin/internal/broker"
 	"origadmin/application/admin/internal/features/auth/service"
 )
 
@@ -38,12 +39,25 @@ func NewServers(
 	authSvc *service.AuthService,
 	meSvc *service.MeService,
 	casbinSvc *service.CasbinService,
-	policySyncSvc *service.PolicySyncService, // Inject PolicySyncService
+	policySyncSvc *service.PolicySyncService,
+	bootstrap *service.CasbinBootstrap,
 	middlewareProvider container.ServerMiddlewareProvider,
 ) ([]transport.Server, error) {
 	if cfg == nil {
 		return nil, errors.New("servers config is nil")
 	}
+
+	// Register BeforeStart hook to bootstrap Casbin policies
+	app.AddHookBeforeStart(func(ctx context.Context) error {
+		log.Info("Executing Casbin bootstrap before server starts...")
+		if err := bootstrap.Bootstrap(ctx); err != nil {
+			log.Errorf("Casbin bootstrap failed: %v", err)
+			// Don't fail startup, allow admin to manually sync later
+		} else {
+			log.Info("Casbin bootstrap completed successfully")
+		}
+		return nil
+	})
 
 	var transportServers []transport.Server
 	for _, serverCfg := range cfg.GetConfigs() {
@@ -99,7 +113,7 @@ func NewWatermillServer(
 	// Register the policy sync handler using AddConsumerHandler
 	srv.AddConsumerHandler(
 		"PolicySyncUserRoleAssigned",
-		events.UserRoleAssignedTopic,
+		broker.UserRoleAssignedTopic,
 		policySyncSvc.HandleUserRoleAssigned,
 	)
 

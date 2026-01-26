@@ -176,12 +176,12 @@ gen:
 
 	@echo "Generating main wire..."
 ifeq ($(GOHOSTOS), windows)
-	@powershell -Command "Get-ChildItem cmd -Directory | ForEach-Object { Write-Host ('Generating wire for {0}...' -f $$_.Name); go generate $$_.FullName }"
+	@powershell -Command "$$dirs = Get-ChildItem -Path 'cmd' -Directory; foreach ($$dir in $$dirs) { $$wireFile = Join-Path $$dir.FullName 'wire.work.go'; if (Test-Path $$wireFile) { Write-Host ('Generating wire for {0}...' -f $$dir.Name); go generate $$wireFile } }"
 else
 	@for dir in cmd/*; do \
-		if [ -d "$$dir" ]; then \
+		if [ -f "$$dir/wire.work.go" ]; then \
 			echo "Generating wire for $$dir..."; \
-			go generate $$dir; \
+			go generate $$dir/wire.work.go; \
 		fi \
 	done
 endif

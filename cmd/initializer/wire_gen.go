@@ -14,7 +14,7 @@ import (
 	"origadmin/application/admin/internal/features/system/dal"
 	"origadmin/application/admin/internal/helpers/providers"
 	"origadmin/application/admin/internal/jobs/initializer"
-	"origadmin/application/admin/internal/jobs/initializer/nats"
+	"origadmin/application/admin/internal/jobs/initializer/broker"
 	seeder2 "origadmin/application/admin/internal/jobs/initializer/seeder"
 	"origadmin/application/admin/internal/jobs/tasks/seeder"
 )
@@ -31,25 +31,18 @@ import (
 // wireApp init the initializer service.
 func wireApp(rt *runtime.App, bootstrap *conf.Config) (initializer.Initializer, func(), error) {
 	v := providers.ProvideLogger(rt)
-	conn, cleanup, err := nats.ProvideConnection(bootstrap, v)
-	if err != nil {
-		return nil, nil, err
-	}
-	natsInitializer := nats.NewInitializer(conn, v)
+	brokerInitializer := broker.NewInitializer(bootstrap, v)
 	provider, err := data.NewStorageProvider(rt)
 	if err != nil {
-		cleanup()
 		return nil, nil, err
 	}
-	database, cleanup2, err := data.ProvideDatabase(provider, v)
+	database, cleanup, err := data.ProvideDatabase(provider, v)
 	if err != nil {
-		cleanup()
 		return nil, nil, err
 	}
 	userRepo := dal.NewUserRepo(database)
 	crypto, err := providers.ProvideHasher()
 	if err != nil {
-		cleanup2()
 		cleanup()
 		return nil, nil, err
 	}
@@ -60,14 +53,12 @@ func wireApp(rt *runtime.App, bootstrap *conf.Config) (initializer.Initializer, 
 	viewUseCase := biz.NewViewUseCase(viewRepo)
 	seederSeeder, err := seeder.NewSeeder(userUseCase, resourceUseCase, viewUseCase, bootstrap, v)
 	if err != nil {
-		cleanup2()
 		cleanup()
 		return nil, nil, err
 	}
 	seederInitializer := seeder2.NewInitializer(seederSeeder, v)
-	initializerInitializer := initializer.ProvideCompositeInitializer(v, natsInitializer, seederInitializer)
+	initializerInitializer := initializer.ProvideCompositeInitializer(v, brokerInitializer, seederInitializer)
 	return initializerInitializer, func() {
-		cleanup2()
 		cleanup()
 	}, nil
 }

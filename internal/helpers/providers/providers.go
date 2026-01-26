@@ -34,6 +34,7 @@ import (
 	confpb "origadmin/application/admin/internal/conf/pb"
 	"origadmin/application/admin/internal/data"
 	"origadmin/application/admin/internal/helpers/captcha"
+	"origadmin/application/admin/internal/helpers/pubsub"
 )
 
 var (
@@ -81,7 +82,8 @@ var ProviderBackendSet = wire.NewSet(
 	ProvideClientMiddlewares,
 	ProvideSkipper,
 	ProvidePublisher,
-	wire.Bind(new(broker.Publisher), new(*nats.Publisher)), // Binds the interface
+	pubsub.NewWatermillLogger,
+	//wire.Bind(new(broker.Publisher), new(*nats.Publisher)), // Binds the interface
 )
 
 // ProvideLogger provides a logger instance from the runtime App.
@@ -199,7 +201,7 @@ func ProvideAuthorizer(app *runtime.App, c *conf.Config, adapter *data.CasbinAda
 	if err != nil {
 		return nil, fmt.Errorf("failed to normalize Casbin authorizer configuration: %w", err)
 	}
-	if casbinConfig == nil || casbinConfig.GetCasbin() == nil || casbinConfig.GetType() == "casbin" {
+	if casbinConfig == nil || casbinConfig.GetCasbin() == nil || casbinConfig.GetType() != "casbin" {
 		return nil, errors.New("casbin authorizer configuration not found")
 	}
 	opts, err := casbin.NewOptions(casbinConfig, casbin.WithPolicyAdapter(adapter), casbin.WithWatcher(w))
@@ -308,7 +310,7 @@ func ProvideCaptcha(app *runtime.App, p container.CacheProvider, cfg *confpb.Boo
 }
 
 // ProvidePublisher creates a Watermill message.Publisher based on broker configuration.
-func ProvidePublisher(c *conf.Config) (*nats.Publisher, error) {
+func ProvidePublisher(c *conf.Config, wmLogger watermill.LoggerAdapter) (broker.Publisher, error) {
 	brokerConfig := c.GetBrokers()
 	if brokerConfig == nil {
 		return nil, errors.New("broker configuration not found")
@@ -319,14 +321,9 @@ func ProvidePublisher(c *conf.Config) (*nats.Publisher, error) {
 		return nil, errors.New("broker url not found")
 	}
 
-	wmLogger := watermill.NewStdLogger(false, false)
-
-	publisher, err := nats.NewPublisher(
-		nats.PublisherConfig{
-			URL: brokerUrl,
-		},
-		wmLogger,
-	)
+	publisher, err := pubsub.NewPublisher(nats.PublisherConfig{
+		URL: brokerUrl,
+	}, wmLogger)
 	if err != nil {
 		return nil, fmt.Errorf("failed to create NATS publisher: %w", err)
 	}

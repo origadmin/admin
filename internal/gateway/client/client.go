@@ -45,6 +45,7 @@ type SystemBridgeSet struct {
 	Permission system.PermissionServiceHTTPServer
 	Resource   system.ResourceServiceHTTPServer
 	View       system.ViewServiceHTTPServer
+	Policy     system.PolicyServiceHTTPServer // Added for auth module to fetch policies
 }
 
 // NewGRPCConn finds a client configuration by service name or convention
@@ -123,5 +124,6 @@ func NewSystemBridgeSet(app *runtime.App, bootstrap *conf.Config, middlewareProv
 		Permission: system.NewPermissionServiceGRPC2HTTP(conn),
 		Resource:   system.NewResourceServiceGRPC2HTTP(conn),
 		View:       system.NewViewServiceGRPC2HTTP(conn),
+		Policy:     system.NewPolicyServiceGRPC2HTTP(conn), // Add PolicyService client
 	}, nil
 }

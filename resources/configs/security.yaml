@@ -17,4 +17,4 @@ security:
 brokers:
   default:
     type: nats
-    url: "nats://localhost:4222/casbin-policy-updates?channel=my-channel&jetstream=true"
+    url: "nats://localhost:4222/casbin-channel?jetstream=true&queue_group=casbin-watcher"

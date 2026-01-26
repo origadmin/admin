@@ -80,6 +80,19 @@ func (a *CasbinAdapter) AddPolicy(_ string, ptype string, rule []string) error {
 	})
 }
 
+// AddPolicies adds multiple policy rules to the storage.
+func (a *CasbinAdapter) AddPolicies(_ string, ptype string, rules [][]string) error {
+	return a.db.Tx(a.Context(), func(ctx context.Context) error {
+		cr := a.db.CasbinRule(ctx)
+		lines := make([]*ent.CasbinRuleCreate, len(rules))
+		for i, rule := range rules {
+			lines[i] = savePolicyLine(cr, ptype, rule)
+		}
+		_, err := cr.CreateBulk(lines...).Save(ctx)
+		return err
+	})
+}
+
 // UpdatePolicy updates a policy rule from storage.
 func (a *CasbinAdapter) UpdatePolicy(_ string, ptype string, oldRule []string, newRule []string) error {
 	return a.db.Tx(a.Context(), func(ctx context.Context) error {
@@ -186,6 +199,21 @@ func (a *CasbinAdapter) RemovePolicy(_ string, ptype string, rule []string) erro
 		filter := buildInstanceFilter(ptype, rule)
 		_, err := cr.Delete().Where(filter...).Exec(ctx)
 		return err
+	})
+}
+
+// RemovePolicies removes multiple policy rules from the storage.
+func (a *CasbinAdapter) RemovePolicies(_ string, ptype string, rules [][]string) error {
+	return a.db.Tx(a.Context(), func(ctx context.Context) error {
+		cr := a.db.CasbinRule(ctx)
+		for _, rule := range rules {
+			filter := buildInstanceFilter(ptype, rule)
+			if _, err := cr.Delete().Where(filter...).Exec(ctx); err != nil {
+				// In a transaction, the first error will cause a rollback.
+				return err
+			}
+		}
+		return nil
 	})
 }
 

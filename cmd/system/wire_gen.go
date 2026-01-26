@@ -16,6 +16,7 @@ import (
 	"origadmin/application/admin/internal/features/system/server"
 	"origadmin/application/admin/internal/features/system/service"
 	"origadmin/application/admin/internal/helpers/providers"
+	"origadmin/application/admin/internal/helpers/pubsub"
 )
 
 import (
@@ -53,7 +54,8 @@ func wireApp(app *runtime.App, bootstrap *conf.Config) (*kratos.App, func(), err
 		return nil, nil, err
 	}
 	userUseCase := biz.NewUserUseCase(userRepo, crypto, v)
-	publisher, err := providers.ProvidePublisher(bootstrap)
+	loggerAdapter := pubsub.NewWatermillLogger(v)
+	publisher, err := providers.ProvidePublisher(bootstrap, loggerAdapter)
 	if err != nil {
 		cleanup()
 		return nil, nil, err
