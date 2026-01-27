@@ -8,7 +8,7 @@ package dto
 import (
 	"context"
 
-	"github.com/origadmin/contrib/security"
+	"github.com/origadmin/runtime/security"
 	"origadmin/application/admin/api/v1/services/system"
 	"origadmin/application/admin/api/v1/services/types"
 	"origadmin/application/admin/internal/helpers/repo"

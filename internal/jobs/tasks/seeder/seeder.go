@@ -19,7 +19,7 @@ import (
 	"github.com/go-kratos/kratos/v2/log"
 	"github.com/google/wire"
 
-	"github.com/origadmin/contrib/security"
+	"github.com/origadmin/runtime/security"
 	"origadmin/application/admin/api/v1/services/types"
 	"origadmin/application/admin/internal/conf"
 	confpb "origadmin/application/admin/internal/conf/pb"

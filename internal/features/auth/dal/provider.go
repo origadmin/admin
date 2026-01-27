@@ -15,5 +15,4 @@ var ProviderSet = wire.NewSet(
 
 	// For runtime, incremental policy updates.
 	NewCasbinModifier,
-	//wire.Bind(new(authz.PolicyModifier), new(*casbinModifier)),
 )

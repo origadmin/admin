@@ -12,7 +12,7 @@ import (
 
 	watcher "github.com/origadmin/casbin-watcher/v3"
 	_ "github.com/origadmin/casbin-watcher/v3/drivers/nats"
-	"github.com/origadmin/contrib/security"
+	contribsecurity "github.com/origadmin/contrib/security"
 	"github.com/origadmin/contrib/security/authn/jwt"
 	"github.com/origadmin/contrib/security/authz/casbin"
 	"github.com/origadmin/contrib/security/credential"
@@ -24,6 +24,7 @@ import (
 	"github.com/origadmin/runtime/extensions/configutil"
 	"github.com/origadmin/runtime/log"
 	"github.com/origadmin/runtime/middleware"
+	"github.com/origadmin/runtime/security"
 	"github.com/origadmin/toolkits/crypto/hash"
 	"github.com/origadmin/toolkits/crypto/hash/algorithms/bcrypt"
 	"github.com/origadmin/toolkits/crypto/hash/types"
@@ -37,15 +38,32 @@ import (
 	"origadmin/application/admin/internal/helpers/pubsub"
 )
 
+const (
+	// policyNamePublic defines the policy name for publicly accessible endpoints.
+	policyNamePublic = "public"
+	// policyNameAuthN defines the policy name for endpoints that require JWT authentication only.
+	policyNameAuthN = "authn"
+)
+
 var (
-	factory  = securitymiddleware.NewFactory()
-	policies = make(map[string]security.Policy)
+	factory = securitymiddleware.NewFactory()
+	// gatewaySkipMap contains service methods that should be skipped by the gateway authn middleware.
+	gatewaySkipMap = make(map[string]struct{})
+	// backendSkipMap contains service methods that should be skipped by the backend authz middleware.
+	backendSkipMap = make(map[string]struct{})
 )
 
 func init() {
+	// Pre-filter policies at startup to create fast lookup maps for skippers,
+	// using locally defined constants for correctness.
 	ps := security.RegisteredPolicies()
 	for _, p := range ps {
-		policies[p.ServiceMethod] = p
+		if p.Name == policyNamePublic {
+			gatewaySkipMap[p.ServiceMethod] = struct{}{}
+			backendSkipMap[p.ServiceMethod] = struct{}{}
+		} else if p.Name == policyNameAuthN {
+			backendSkipMap[p.ServiceMethod] = struct{}{}
+		}
 	}
 }
 
@@ -128,7 +146,7 @@ func ProvideAuthenticator(app *runtime.App, c *conf.Config) (*jwt.Authenticator,
 }
 
 // ProvideGatewayMiddlewares creates gateway-specific middlewares.
-func ProvideGatewayMiddlewares(app *runtime.App, authenticator *jwt.Authenticator, skip security.Skipper) (container.ServerMiddlewareProvider, error) {
+func ProvideGatewayMiddlewares(app *runtime.App, authenticator *jwt.Authenticator, skip contribsecurity.Skipper) (container.ServerMiddlewareProvider, error) {
 	provider, err := app.MiddlewareProvider()
 	if err != nil {
 		return nil, err
@@ -154,15 +172,8 @@ func ProvideClientMiddlewares(app *runtime.App) (container.ClientMiddlewareProvi
 }
 
 // ProvideGatewaySkipper creates a skipper for the gateway.
-func ProvideGatewaySkipper(app *runtime.App, _ *conf.Config) security.Skipper {
-	skips := make(map[string]struct{})
-	for _, v := range policies {
-		if v.Name == "public" {
-			skips[v.ServiceMethod] = struct{}{}
-		}
-	}
-
-	return func(ctx context.Context, req security.Request) bool {
+func ProvideGatewaySkipper(app *runtime.App, _ *conf.Config) contribsecurity.Skipper {
+	return func(ctx context.Context, req contribsecurity.Request) bool {
 		helper := log.NewHelper(log.With(app.Logger(),
 			"kind", req.Kind(),
 			"operation", req.GetOperation(),
@@ -177,7 +188,8 @@ func ProvideGatewaySkipper(app *runtime.App, _ *conf.Config) security.Skipper {
 		} else {
 			return false
 		}
-		if _, ok := skips[req.GetOperation()]; ok {
+		// Use the pre-filtered map for a fast lookup.
+		if _, ok := gatewaySkipMap[req.GetOperation()]; ok {
 			helper.Infof("skip gateway checker: %s", req.GetOperation())
 			return true
 		}
@@ -232,7 +244,7 @@ func ProvideWatcher(app *runtime.App, c *conf.Config) (*watcher.Watcher, error) 
 }
 
 // ProvideServiceMiddlewares creates backend-specific middlewares.
-func ProvideServiceMiddlewares(app *runtime.App, authorizer *casbin.Authorizer, skip security.Skipper) (container.ServerMiddlewareProvider, error) {
+func ProvideServiceMiddlewares(app *runtime.App, authorizer *casbin.Authorizer, skip contribsecurity.Skipper) (container.ServerMiddlewareProvider, error) {
 	provider, err := app.MiddlewareProvider()
 	if err != nil {
 		return nil, err
@@ -245,8 +257,8 @@ func ProvideServiceMiddlewares(app *runtime.App, authorizer *casbin.Authorizer, 
 }
 
 // ProvideSkipper creates a skipper for the backend.
-func ProvideSkipper(app *runtime.App, _ *conf.Config) security.Skipper {
-	adminSkipper := skip.Principal(func(principal security.Principal) bool {
+func ProvideSkipper(app *runtime.App, _ *conf.Config) contribsecurity.Skipper {
+	adminSkipper := skip.Principal(func(principal contribsecurity.Principal) bool {
 		helper := log.NewHelper(log.With(app.Logger()))
 		pid := strconv.Itoa(int(data.SystemUserID))
 		if principal.GetID() == pid {
@@ -255,15 +267,10 @@ func ProvideSkipper(app *runtime.App, _ *conf.Config) security.Skipper {
 		}
 		return false
 	})
-	skips := make(map[string]struct{})
-	for _, v := range policies {
-		if v.Name == "public" || v.Name == "jwt-auth" {
-			skips[v.ServiceMethod] = struct{}{}
-		}
-	}
-	pathSkipper := func(ctx context.Context, req security.Request) bool {
+	pathSkipper := func(ctx context.Context, req contribsecurity.Request) bool {
 		helper := log.NewHelper(log.With(app.Logger(), "kind", req.Kind(), "operation", req.GetOperation(), "method", req.GetMethod(), "path", req.GetRouteTemplate()))
-		if _, ok := skips[req.GetOperation()]; ok {
+		// Use the pre-filtered map for a fast lookup.
+		if _, ok := backendSkipMap[req.GetOperation()]; ok {
 			helper.Infof("skip checker: %s", req.GetOperation())
 			return true
 		}

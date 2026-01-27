@@ -6,6 +6,7 @@ package data
 
 import (
 	"fmt"
+	"strings" // Import the strings package
 
 	"github.com/casbin/casbin/v3/model"
 	"github.com/casbin/casbin/v3/persist"
@@ -21,37 +22,40 @@ import (
 // This adapter is responsible for all database operations related to Casbin policies.
 // It does NOT send notifications; that is the responsibility of the service layer.
 type CasbinAdapter struct {
-	ctx context.Context
-	db  *ent.Database
+	Ctx context.Context
+	DB  *ent.Database
 }
 
 // NewAdapter creates a new casbin adapter.
 func NewAdapter(rt *runtime.App, db *ent.Database) (*CasbinAdapter, error) {
-	return &CasbinAdapter{ctx: rt.Context(), db: db}, nil
+	return &CasbinAdapter{Ctx: rt.Context(), DB: db}, nil
 }
 
 // Context returns the context of the adapter.
 func (a *CasbinAdapter) Context() context.Context {
-	return a.ctx
+	return a.Ctx
 }
 
 // LoadPolicy loads all policy rules from the storage.
-func (a *CasbinAdapter) LoadPolicy(model model.Model) error {
-	client := a.db.CasbinRule(a.Context())
+func (a *CasbinAdapter) LoadPolicy(m model.Model) error { // Renamed model to m to avoid shadowing
+	client := a.DB.CasbinRule(a.Context())
 	policies, err := client.Query().Order(ent.Asc("id")).All(a.Context())
 	if err != nil {
 		return err
 	}
 	for _, policy := range policies {
-		loadPolicyLine(policy, model)
+		line := formatPolicyLine(policy)                        // Use the new helper to format the line
+		if err := persist.LoadPolicyLine(line, m); err != nil { // Use persist.LoadPolicyLine
+			return err
+		}
 	}
 	return nil
 }
 
 // SavePolicy saves all policy rules to the storage.
 func (a *CasbinAdapter) SavePolicy(model model.Model) error {
-	return a.db.Tx(a.Context(), func(ctx context.Context) error {
-		cr := a.db.CasbinRule(ctx)
+	return a.DB.Tx(a.Context(), func(ctx context.Context) error {
+		cr := a.DB.CasbinRule(ctx)
 		if _, err := cr.Delete().Exec(ctx); err != nil {
 			return err
 		}
@@ -73,8 +77,8 @@ func (a *CasbinAdapter) SavePolicy(model model.Model) error {
 
 // AddPolicy adds a policy rule to the storage.
 func (a *CasbinAdapter) AddPolicy(_ string, ptype string, rule []string) error {
-	return a.db.Tx(a.Context(), func(ctx context.Context) error {
-		cr := a.db.CasbinRule(ctx)
+	return a.DB.Tx(a.Context(), func(ctx context.Context) error {
+		cr := a.DB.CasbinRule(ctx)
 		_, err := savePolicyLine(cr, ptype, rule).Save(ctx)
 		return err
 	})
@@ -82,8 +86,8 @@ func (a *CasbinAdapter) AddPolicy(_ string, ptype string, rule []string) error {
 
 // AddPolicies adds multiple policy rules to the storage.
 func (a *CasbinAdapter) AddPolicies(_ string, ptype string, rules [][]string) error {
-	return a.db.Tx(a.Context(), func(ctx context.Context) error {
-		cr := a.db.CasbinRule(ctx)
+	return a.DB.Tx(a.Context(), func(ctx context.Context) error {
+		cr := a.DB.CasbinRule(ctx)
 		lines := make([]*ent.CasbinRuleCreate, len(rules))
 		for i, rule := range rules {
 			lines[i] = savePolicyLine(cr, ptype, rule)
@@ -95,8 +99,8 @@ func (a *CasbinAdapter) AddPolicies(_ string, ptype string, rules [][]string) er
 
 // UpdatePolicy updates a policy rule from storage.
 func (a *CasbinAdapter) UpdatePolicy(_ string, ptype string, oldRule []string, newRule []string) error {
-	return a.db.Tx(a.Context(), func(ctx context.Context) error {
-		cr := a.db.CasbinRule(ctx)
+	return a.DB.Tx(a.Context(), func(ctx context.Context) error {
+		cr := a.DB.CasbinRule(ctx)
 		oldFilter := buildInstanceFilter(ptype, oldRule)
 		newValues := instanceLine(ptype, newRule)
 
@@ -121,7 +125,7 @@ func (a *CasbinAdapter) UpdatePolicy(_ string, ptype string, oldRule []string, n
 
 // UpdatePolicies updates multiple policy rules from storage.
 func (a *CasbinAdapter) UpdatePolicies(_ string, ptype string, oldRules [][]string, newRules [][]string) error {
-	return a.db.Tx(a.Context(), func(ctx context.Context) error {
+	return a.DB.Tx(a.Context(), func(ctx context.Context) error {
 		if len(oldRules) != len(newRules) {
 			return fmt.Errorf("old and new rules must have the same length")
 		}
@@ -138,7 +142,7 @@ func (a *CasbinAdapter) UpdatePolicies(_ string, ptype string, oldRules [][]stri
 
 // updatePolicyInTx is a helper for UpdatePolicies to run within a transaction.
 func (a *CasbinAdapter) updatePolicyInTx(ctx context.Context, ptype string, oldRule []string, newRule []string) error {
-	cr := a.db.CasbinRule(ctx)
+	cr := a.DB.CasbinRule(ctx)
 	oldFilter := buildInstanceFilter(ptype, oldRule)
 	newValues := instanceLine(ptype, newRule)
 
@@ -163,8 +167,8 @@ func (a *CasbinAdapter) updatePolicyInTx(ctx context.Context, ptype string, oldR
 // UpdateFilteredPolicies updates policy rules that match the filter from storage.
 func (a *CasbinAdapter) UpdateFilteredPolicies(_ string, ptype string, newRules [][]string, fieldIndex int, fieldValues ...string) ([][]string, error) {
 	var oldPolicies [][]string
-	err := a.db.Tx(a.Context(), func(ctx context.Context) error {
-		cr := a.db.CasbinRule(ctx)
+	err := a.DB.Tx(a.Context(), func(ctx context.Context) error {
+		cr := a.DB.CasbinRule(ctx)
 		filter, err := buildFilteredFilter(ptype, fieldIndex, fieldValues...)
 		if err != nil {
 			return err
@@ -194,8 +198,8 @@ func (a *CasbinAdapter) UpdateFilteredPolicies(_ string, ptype string, newRules 
 
 // RemovePolicy removes a policy rule from the storage.
 func (a *CasbinAdapter) RemovePolicy(_ string, ptype string, rule []string) error {
-	return a.db.Tx(a.Context(), func(ctx context.Context) error {
-		cr := a.db.CasbinRule(ctx)
+	return a.DB.Tx(a.Context(), func(ctx context.Context) error {
+		cr := a.DB.CasbinRule(ctx)
 		filter := buildInstanceFilter(ptype, rule)
 		_, err := cr.Delete().Where(filter...).Exec(ctx)
 		return err
@@ -204,8 +208,8 @@ func (a *CasbinAdapter) RemovePolicy(_ string, ptype string, rule []string) erro
 
 // RemovePolicies removes multiple policy rules from the storage.
 func (a *CasbinAdapter) RemovePolicies(_ string, ptype string, rules [][]string) error {
-	return a.db.Tx(a.Context(), func(ctx context.Context) error {
-		cr := a.db.CasbinRule(ctx)
+	return a.DB.Tx(a.Context(), func(ctx context.Context) error {
+		cr := a.DB.CasbinRule(ctx)
 		for _, rule := range rules {
 			filter := buildInstanceFilter(ptype, rule)
 			if _, err := cr.Delete().Where(filter...).Exec(ctx); err != nil {
@@ -219,8 +223,8 @@ func (a *CasbinAdapter) RemovePolicies(_ string, ptype string, rules [][]string)
 
 // RemoveFilteredPolicy removes policy rules that match the filter from the storage.
 func (a *CasbinAdapter) RemoveFilteredPolicy(_ string, ptype string, fieldIndex int, fieldValues ...string) error {
-	return a.db.Tx(a.Context(), func(ctx context.Context) error {
-		cr := a.db.CasbinRule(ctx)
+	return a.DB.Tx(a.Context(), func(ctx context.Context) error {
+		cr := a.DB.CasbinRule(ctx)
 		cond, err := buildFilteredFilter(ptype, fieldIndex, fieldValues...)
 		if err != nil {
 			return err
@@ -232,16 +236,43 @@ func (a *CasbinAdapter) RemoveFilteredPolicy(_ string, ptype string, fieldIndex 
 
 // --- Helper Functions ---
 
-func policyToRule(p *ent.CasbinRule) []string {
-	return []string{p.V0, p.V1, p.V2, p.V3, p.V4, p.V5}
+// formatPolicyLine formats a CasbinRule entity into a policy line string.
+func formatPolicyLine(p *ent.CasbinRule) string {
+	var line []string
+	line = append(line, p.Ptype)
+	if p.V0 != "" {
+		line = append(line, p.V0)
+	}
+	if p.V1 != "" {
+		line = append(line, p.V1)
+	}
+	if p.V2 != "" {
+		line = append(line, p.V2)
+	}
+	if p.V3 != "" {
+		line = append(line, p.V3)
+	}
+	if p.V4 != "" {
+		line = append(line, p.V4)
+	}
+	if p.V5 != "" {
+		line = append(line, p.V5)
+	}
+	return strings.Join(line, ", ")
 }
 
-func loadPolicyLine(line *ent.CasbinRule, model model.Model) {
-	key := line.Ptype
-	sec := key[:1]
-	rule := policyToRule(line)
-	model[sec][key].Policy = append(model[sec][key].Policy, rule)
+func policyToRule(p *ent.CasbinRule) []string {
+	rule := []string{p.V0, p.V1, p.V2, p.V3, p.V4, p.V5}
+	// Trim trailing empty strings
+	for i := len(rule) - 1; i >= 0; i-- {
+		if rule[i] != "" {
+			return rule[:i+1]
+		}
+	}
+	return []string{}
 }
+
+// Removed the custom loadPolicyLine function as it's replaced by persist.LoadPolicyLine
 
 func instanceLine(ptype string, rule []string) *ent.CasbinRule {
 	instance := &ent.CasbinRule{Ptype: ptype}

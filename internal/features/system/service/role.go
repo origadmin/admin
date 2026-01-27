@@ -84,3 +84,8 @@ func (s *RoleService) DeleteRole(ctx context.Context, req *system.DeleteRoleRequ
 	}
 	return &system.DeleteRoleResponse{}, nil
 }
+
+// UpdateRolePermissions updates the permissions for a specific role.
+func (s *RoleService) UpdateRolePermissions(ctx context.Context, roleID int64, permissionIDs []int64) error {
+	return s.uc.UpdateRolePermissions(ctx, roleID, permissionIDs)
+}

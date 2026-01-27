@@ -11,13 +11,10 @@ import (
 )
 
 var (
-	generator = New()
+	generator = identifier.Get("snowflake")
 )
 
-func New() identifier.Generator[int64] {
-	return identifier.Get[int64]("snowflake")
-}
-
 func Gen() int64 {
-	return generator.Generate()
+	v, _ := generator.GenerateNumber()
+	return v
 }
