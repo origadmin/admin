@@ -32,10 +32,6 @@ service CasbinService {
   }
 
   rpc StreamRules(StreamRulesRequest) returns (stream StreamRulesResponse) {
-//    option (google.api.http) = {
-//      get: "/casbin/stream"
-//      response_body: "*"
-//    };
   }
 }
 

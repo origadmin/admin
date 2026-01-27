@@ -9,142 +9,19 @@ import "validate/validate.proto";
 
 option go_package = "origadmin/application/admin/api/v1/services/message;message";
 option java_multiple_files = true;
-option java_outer_classname = "APIV1ServicesMessagePersonalProto";
+option java_outer_classname = "APIV1ServicesMessageMessageProto";
 option java_package = "com.origadmin.api.v1.services.message";
 
-// PersonalService Personal user service
-service PersonalService {
-  // GetPersonalProfile Update the personal user information
-  rpc GetPersonalProfile(GetPersonalProfileRequest) returns (GetPersonalProfileResponse) {
-    option (google.api.http) = {get: "/message/personal/profile"};
-  }
-  // ListPersonalResources List the personal user's menu
-  rpc ListPersonalResources(ListPersonalResourcesRequest) returns (ListPersonalResourcesResponse) {
-    option (google.api.http) = {get: "/message/personal/resources"};
-  }
-  // ListPersonalResources List the personal user's menu
-  rpc ListPersonalRoles(ListPersonalRolesRequest) returns (ListPersonalRolesResponse) {
-    option (google.api.http) = {get: "/message/personal/roles"};
-  }
-  // PersonalLogout Personal user logs out
-  rpc PersonalLogout(PersonalLogoutRequest) returns (PersonalLogoutResponse) {
-    option (google.api.http) = {
-      post: "/message/personal/logout"
-      body: "data"
-    };
-  }
-  // RefreshPersonalToken Refresh the personal user's token
-  rpc RefreshPersonalToken(RefreshPersonalTokenRequest) returns (RefreshPersonalTokenResponse) {
-    option (google.api.http) = {
-      post: "/message/personal/token/refresh"
-      body: "data"
-    };
-  }
-  // UpdatePersonalProfilePassword The user changes the password
-  rpc UpdatePersonalPassword(UpdatePersonalPasswordRequest) returns (UpdatePersonalPasswordResponse) {
-    option (google.api.http) = {
-      put: "/message/personal/password"
-      body: "data"
-    };
-  }
-  // UpdatePersonalProfile Update the personal user information
-  rpc UpdatePersonalProfile(UpdatePersonalProfileRequest) returns (UpdatePersonalProfileResponse) {
-    option (google.api.http) = {
-      put: "/message/personal/profile"
-      body: "data"
-    };
-  }
-  // UpdatePersonalSetting User settings are saved
-  rpc UpdatePersonalSetting(UpdatePersonalSettingRequest) returns (UpdatePersonalSettingResponse) {
-    option (google.api.http) = {
-      put: "/message/personal/setting"
-      body: "data"
-    };
-  }
+// MessageService is the message service definition
+service MessageService {
+  // StreamRules
+  rpc StreamMessage(StreamMessageRequest) returns (stream StreamMessageResponse) {}
 }
 
-message UpdatePersonalSettingRequest {
-  google.protobuf.Any data = 1 [json_name = "data"];
+message StreamMessageRequest {
+  string message = 1 [json_name = "message"];
 }
 
-message UpdatePersonalSettingResponse {}
-
-message UpdatePersonalRoleRequest {
-  api.v1.services.types.Role role = 1 [json_name = "role"];
-}
-
-message UpdatePersonalRoleResponse {}
-
-message ListPersonalResourcesRequest {
-  // The parent resource id, for example, "shelves/shelf1".
-  int64 id = 1 [json_name = "id"];
-  // The current page number.
-  int32 current = 2 [json_name = "current"];
-  // The maximum number of items to return.
-  int32 page_size = 3 [json_name = "page_size"];
-  // The next_page_token value returned from a previous List request, if any.
-  string page_token = 4 [json_name = "page_token"];
-  // The no_paging is used to disable pagination.
-  bool no_paging = 5 [json_name = "no_paging"];
-  // The only_count is the query parameter for set only to query the total number
-  bool only_count = 6 [json_name = "only_count"];
-}
-
-message ListPersonalResourcesResponse {
-  // The total number of items in the list.
-  int64 total_size = 1 [json_name = "total"];
-  // list of resources
-  repeated api.v1.services.types.Resource resources = 2 [json_name = "resources"];
-  // Token to retrieve the next page of results, or empty if there are no
-  // more results in the list.
-  string next_page_token = 5 [json_name = "next_page_token"];
-}
-
-message UpdatePersonalPasswordRequest {
-  google.protobuf.Any data = 1 [json_name = "data"];
-}
-
-message UpdatePersonalPasswordResponse {}
-
-message PersonalPasswordRestRequest {
-  int64 id = 1 [
-    json_name = "id",
-    (validate.rules).int64 = {gt: 0}
-  ];
-}
-
-message PersonalPasswordRestResponse {}
-
-message UpdatePersonalProfileRequest {
-  google.protobuf.Any data = 1 [json_name = "data"];
-}
-
-message UpdatePersonalProfileResponse {}
-
-message PersonalLogoutRequest {
-  google.protobuf.Any data = 2 [json_name = "data"];
-}
-
-message PersonalLogoutResponse {
-  bool success = 1;
-}
-
-message ListPersonalRolesRequest {}
-
-message ListPersonalRolesResponse {
-  repeated api.v1.services.types.Role roles = 1;
-}
-
-message GetPersonalProfileRequest {}
-
-message GetPersonalProfileResponse {
-  api.v1.services.types.User user = 1 [json_name = "user"];
-}
-
-message RefreshPersonalTokenRequest {
-  google.protobuf.Any data = 1 [json_name = "data"];
-}
-
-message RefreshPersonalTokenResponse {
-  string token = 1 [json_name = "token"];
+message StreamMessageResponse {
+  string message = 1 [json_name = "message"];
 }

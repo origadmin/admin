@@ -1396,88 +1396,6 @@ func (x *Position) GetDepartmentId() int64 {
 	return 0
 }
 
-// PositionEdges holds the relations/edges for other nodes in the graph.
-type PositionEdges struct {
-	state protoimpl.MessageState `protogen:"open.v1"`
-	// Department holds the value of the department edge.
-	Department *Department `protobuf:"bytes,1,opt,name=department,proto3" json:"department,omitempty"`
-	// Users holds the value of the users edge.
-	Users []*User `protobuf:"bytes,2,rep,name=users,proto3" json:"users,omitempty"`
-	// Permissions holds the value of the permissions edge.
-	Permissions []*Permission `protobuf:"bytes,3,rep,name=permissions,proto3" json:"permissions,omitempty"`
-	// UserPositions holds the value of the user_positions edge.
-	UserPositions []*UserPosition `protobuf:"bytes,4,rep,name=user_positions,proto3" json:"user_positions,omitempty"`
-	// PositionPermissions holds the value of the position_permissions edge.
-	PositionPermissions []*PositionPermission `protobuf:"bytes,5,rep,name=position_permissions,proto3" json:"position_permissions,omitempty"`
-	unknownFields       protoimpl.UnknownFields
-	sizeCache           protoimpl.SizeCache
-}
-
-func (x *PositionEdges) Reset() {
-	*x = PositionEdges{}
-	mi := &file_types_system_proto_msgTypes[9]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *PositionEdges) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*PositionEdges) ProtoMessage() {}
-
-func (x *PositionEdges) ProtoReflect() protoreflect.Message {
-	mi := &file_types_system_proto_msgTypes[9]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use PositionEdges.ProtoReflect.Descriptor instead.
-func (*PositionEdges) Descriptor() ([]byte, []int) {
-	return file_types_system_proto_rawDescGZIP(), []int{9}
-}
-
-func (x *PositionEdges) GetDepartment() *Department {
-	if x != nil {
-		return x.Department
-	}
-	return nil
-}
-
-func (x *PositionEdges) GetUsers() []*User {
-	if x != nil {
-		return x.Users
-	}
-	return nil
-}
-
-func (x *PositionEdges) GetPermissions() []*Permission {
-	if x != nil {
-		return x.Permissions
-	}
-	return nil
-}
-
-func (x *PositionEdges) GetUserPositions() []*UserPosition {
-	if x != nil {
-		return x.UserPositions
-	}
-	return nil
-}
-
-func (x *PositionEdges) GetPositionPermissions() []*PositionPermission {
-	if x != nil {
-		return x.PositionPermissions
-	}
-	return nil
-}
-
 // permission.table.comment
 type Permission struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
@@ -1510,7 +1428,7 @@ type Permission struct {
 
 func (x *Permission) Reset() {
 	*x = Permission{}
-	mi := &file_types_system_proto_msgTypes[10]
+	mi := &file_types_system_proto_msgTypes[9]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1522,7 +1440,7 @@ func (x *Permission) String() string {
 func (*Permission) ProtoMessage() {}
 
 func (x *Permission) ProtoReflect() protoreflect.Message {
-	mi := &file_types_system_proto_msgTypes[10]
+	mi := &file_types_system_proto_msgTypes[9]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1535,7 +1453,7 @@ func (x *Permission) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Permission.ProtoReflect.Descriptor instead.
 func (*Permission) Descriptor() ([]byte, []int) {
-	return file_types_system_proto_rawDescGZIP(), []int{10}
+	return file_types_system_proto_rawDescGZIP(), []int{9}
 }
 
 func (x *Permission) GetId() int64 {
@@ -1635,7 +1553,7 @@ type UserPosition struct {
 
 func (x *UserPosition) Reset() {
 	*x = UserPosition{}
-	mi := &file_types_system_proto_msgTypes[11]
+	mi := &file_types_system_proto_msgTypes[10]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1647,7 +1565,7 @@ func (x *UserPosition) String() string {
 func (*UserPosition) ProtoMessage() {}
 
 func (x *UserPosition) ProtoReflect() protoreflect.Message {
-	mi := &file_types_system_proto_msgTypes[11]
+	mi := &file_types_system_proto_msgTypes[10]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1660,7 +1578,7 @@ func (x *UserPosition) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use UserPosition.ProtoReflect.Descriptor instead.
 func (*UserPosition) Descriptor() ([]byte, []int) {
-	return file_types_system_proto_rawDescGZIP(), []int{11}
+	return file_types_system_proto_rawDescGZIP(), []int{10}
 }
 
 func (x *UserPosition) GetId() int64 {
@@ -1718,7 +1636,7 @@ type PositionPermission struct {
 
 func (x *PositionPermission) Reset() {
 	*x = PositionPermission{}
-	mi := &file_types_system_proto_msgTypes[12]
+	mi := &file_types_system_proto_msgTypes[11]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1730,7 +1648,7 @@ func (x *PositionPermission) String() string {
 func (*PositionPermission) ProtoMessage() {}
 
 func (x *PositionPermission) ProtoReflect() protoreflect.Message {
-	mi := &file_types_system_proto_msgTypes[12]
+	mi := &file_types_system_proto_msgTypes[11]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1743,7 +1661,7 @@ func (x *PositionPermission) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use PositionPermission.ProtoReflect.Descriptor instead.
 func (*PositionPermission) Descriptor() ([]byte, []int) {
-	return file_types_system_proto_rawDescGZIP(), []int{12}
+	return file_types_system_proto_rawDescGZIP(), []int{11}
 }
 
 func (x *PositionPermission) GetId() int64 {
@@ -1801,7 +1719,7 @@ type RolePermission struct {
 
 func (x *RolePermission) Reset() {
 	*x = RolePermission{}
-	mi := &file_types_system_proto_msgTypes[13]
+	mi := &file_types_system_proto_msgTypes[12]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1813,7 +1731,7 @@ func (x *RolePermission) String() string {
 func (*RolePermission) ProtoMessage() {}
 
 func (x *RolePermission) ProtoReflect() protoreflect.Message {
-	mi := &file_types_system_proto_msgTypes[13]
+	mi := &file_types_system_proto_msgTypes[12]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1826,7 +1744,7 @@ func (x *RolePermission) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use RolePermission.ProtoReflect.Descriptor instead.
 func (*RolePermission) Descriptor() ([]byte, []int) {
-	return file_types_system_proto_rawDescGZIP(), []int{13}
+	return file_types_system_proto_rawDescGZIP(), []int{12}
 }
 
 func (x *RolePermission) GetId() int64 {
@@ -1886,7 +1804,7 @@ type PermissionResource struct {
 
 func (x *PermissionResource) Reset() {
 	*x = PermissionResource{}
-	mi := &file_types_system_proto_msgTypes[14]
+	mi := &file_types_system_proto_msgTypes[13]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1898,7 +1816,7 @@ func (x *PermissionResource) String() string {
 func (*PermissionResource) ProtoMessage() {}
 
 func (x *PermissionResource) ProtoReflect() protoreflect.Message {
-	mi := &file_types_system_proto_msgTypes[14]
+	mi := &file_types_system_proto_msgTypes[13]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1911,7 +1829,7 @@ func (x *PermissionResource) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use PermissionResource.ProtoReflect.Descriptor instead.
 func (*PermissionResource) Descriptor() ([]byte, []int) {
-	return file_types_system_proto_rawDescGZIP(), []int{14}
+	return file_types_system_proto_rawDescGZIP(), []int{13}
 }
 
 func (x *PermissionResource) GetId() int64 {
@@ -2105,15 +2023,7 @@ const file_types_system_proto_rawDesc = "" +
 	"\x04name\x18\x04 \x01(\tR\x04name\x12\x18\n" +
 	"\akeyword\x18\x05 \x01(\tR\akeyword\x12 \n" +
 	"\vdescription\x18\x06 \x01(\tR\vdescription\x12$\n" +
-	"\rdepartment_id\x18\a \x01(\x03R\rdepartment_id\"\xf6\x02\n" +
-	"\rPositionEdges\x12A\n" +
-	"\n" +
-	"department\x18\x01 \x01(\v2!.api.v1.services.types.DepartmentR\n" +
-	"department\x121\n" +
-	"\x05users\x18\x02 \x03(\v2\x1b.api.v1.services.types.UserR\x05users\x12C\n" +
-	"\vpermissions\x18\x03 \x03(\v2!.api.v1.services.types.PermissionR\vpermissions\x12K\n" +
-	"\x0euser_positions\x18\x04 \x03(\v2#.api.v1.services.types.UserPositionR\x0euser_positions\x12]\n" +
-	"\x14position_permissions\x18\x05 \x03(\v2).api.v1.services.types.PositionPermissionR\x14position_permissions\"\xa2\x04\n" +
+	"\rdepartment_id\x18\a \x01(\x03R\rdepartment_id\"\xa2\x04\n" +
 	"\n" +
 	"Permission\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\x03R\x02id\x12<\n" +
@@ -2179,7 +2089,7 @@ func file_types_system_proto_rawDescGZIP() []byte {
 	return file_types_system_proto_rawDescData
 }
 
-var file_types_system_proto_msgTypes = make([]protoimpl.MessageInfo, 17)
+var file_types_system_proto_msgTypes = make([]protoimpl.MessageInfo, 16)
 var file_types_system_proto_goTypes = []any{
 	(*View)(nil),                  // 0: api.v1.services.types.View
 	(*Role)(nil),                  // 1: api.v1.services.types.Role
@@ -2190,76 +2100,70 @@ var file_types_system_proto_goTypes = []any{
 	(*Department)(nil),            // 6: api.v1.services.types.Department
 	(*UserDepartment)(nil),        // 7: api.v1.services.types.UserDepartment
 	(*Position)(nil),              // 8: api.v1.services.types.Position
-	(*PositionEdges)(nil),         // 9: api.v1.services.types.PositionEdges
-	(*Permission)(nil),            // 10: api.v1.services.types.Permission
-	(*UserPosition)(nil),          // 11: api.v1.services.types.UserPosition
-	(*PositionPermission)(nil),    // 12: api.v1.services.types.PositionPermission
-	(*RolePermission)(nil),        // 13: api.v1.services.types.RolePermission
-	(*PermissionResource)(nil),    // 14: api.v1.services.types.PermissionResource
-	nil,                           // 15: api.v1.services.types.Resource.PropertiesEntry
-	nil,                           // 16: api.v1.services.types.Permission.DataRulesEntry
-	(*timestamppb.Timestamp)(nil), // 17: google.protobuf.Timestamp
+	(*Permission)(nil),            // 9: api.v1.services.types.Permission
+	(*UserPosition)(nil),          // 10: api.v1.services.types.UserPosition
+	(*PositionPermission)(nil),    // 11: api.v1.services.types.PositionPermission
+	(*RolePermission)(nil),        // 12: api.v1.services.types.RolePermission
+	(*PermissionResource)(nil),    // 13: api.v1.services.types.PermissionResource
+	nil,                           // 14: api.v1.services.types.Resource.PropertiesEntry
+	nil,                           // 15: api.v1.services.types.Permission.DataRulesEntry
+	(*timestamppb.Timestamp)(nil), // 16: google.protobuf.Timestamp
 }
 var file_types_system_proto_depIdxs = []int32{
-	17, // 0: api.v1.services.types.View.create_time:type_name -> google.protobuf.Timestamp
-	17, // 1: api.v1.services.types.View.update_time:type_name -> google.protobuf.Timestamp
+	16, // 0: api.v1.services.types.View.create_time:type_name -> google.protobuf.Timestamp
+	16, // 1: api.v1.services.types.View.update_time:type_name -> google.protobuf.Timestamp
 	0,  // 2: api.v1.services.types.View.children:type_name -> api.v1.services.types.View
 	0,  // 3: api.v1.services.types.View.parent:type_name -> api.v1.services.types.View
 	5,  // 4: api.v1.services.types.View.resources:type_name -> api.v1.services.types.Resource
 	1,  // 5: api.v1.services.types.View.roles:type_name -> api.v1.services.types.Role
-	17, // 6: api.v1.services.types.Role.create_time:type_name -> google.protobuf.Timestamp
-	17, // 7: api.v1.services.types.Role.update_time:type_name -> google.protobuf.Timestamp
+	16, // 6: api.v1.services.types.Role.create_time:type_name -> google.protobuf.Timestamp
+	16, // 7: api.v1.services.types.Role.update_time:type_name -> google.protobuf.Timestamp
 	0,  // 8: api.v1.services.types.Role.views:type_name -> api.v1.services.types.View
 	2,  // 9: api.v1.services.types.Role.users:type_name -> api.v1.services.types.User
 	5,  // 10: api.v1.services.types.Role.resources:type_name -> api.v1.services.types.Resource
-	10, // 11: api.v1.services.types.Role.permissions:type_name -> api.v1.services.types.Permission
-	17, // 12: api.v1.services.types.User.create_time:type_name -> google.protobuf.Timestamp
-	17, // 13: api.v1.services.types.User.update_time:type_name -> google.protobuf.Timestamp
-	17, // 14: api.v1.services.types.User.last_login_time:type_name -> google.protobuf.Timestamp
-	17, // 15: api.v1.services.types.User.login_time:type_name -> google.protobuf.Timestamp
-	17, // 16: api.v1.services.types.User.sanction_date:type_name -> google.protobuf.Timestamp
+	9,  // 11: api.v1.services.types.Role.permissions:type_name -> api.v1.services.types.Permission
+	16, // 12: api.v1.services.types.User.create_time:type_name -> google.protobuf.Timestamp
+	16, // 13: api.v1.services.types.User.update_time:type_name -> google.protobuf.Timestamp
+	16, // 14: api.v1.services.types.User.last_login_time:type_name -> google.protobuf.Timestamp
+	16, // 15: api.v1.services.types.User.login_time:type_name -> google.protobuf.Timestamp
+	16, // 16: api.v1.services.types.User.sanction_date:type_name -> google.protobuf.Timestamp
 	1,  // 17: api.v1.services.types.User.roles:type_name -> api.v1.services.types.Role
 	2,  // 18: api.v1.services.types.UserRole.user:type_name -> api.v1.services.types.User
 	1,  // 19: api.v1.services.types.UserRole.role:type_name -> api.v1.services.types.Role
 	1,  // 20: api.v1.services.types.RoleView.role:type_name -> api.v1.services.types.Role
 	0,  // 21: api.v1.services.types.RoleView.view:type_name -> api.v1.services.types.View
-	17, // 22: api.v1.services.types.Resource.create_time:type_name -> google.protobuf.Timestamp
-	17, // 23: api.v1.services.types.Resource.update_time:type_name -> google.protobuf.Timestamp
-	15, // 24: api.v1.services.types.Resource.properties:type_name -> api.v1.services.types.Resource.PropertiesEntry
+	16, // 22: api.v1.services.types.Resource.create_time:type_name -> google.protobuf.Timestamp
+	16, // 23: api.v1.services.types.Resource.update_time:type_name -> google.protobuf.Timestamp
+	14, // 24: api.v1.services.types.Resource.properties:type_name -> api.v1.services.types.Resource.PropertiesEntry
 	5,  // 25: api.v1.services.types.Resource.children:type_name -> api.v1.services.types.Resource
 	5,  // 26: api.v1.services.types.Resource.parent:type_name -> api.v1.services.types.Resource
-	10, // 27: api.v1.services.types.Resource.permissions:type_name -> api.v1.services.types.Permission
-	17, // 28: api.v1.services.types.Department.create_time:type_name -> google.protobuf.Timestamp
-	17, // 29: api.v1.services.types.Department.update_time:type_name -> google.protobuf.Timestamp
+	9,  // 27: api.v1.services.types.Resource.permissions:type_name -> api.v1.services.types.Permission
+	16, // 28: api.v1.services.types.Department.create_time:type_name -> google.protobuf.Timestamp
+	16, // 29: api.v1.services.types.Department.update_time:type_name -> google.protobuf.Timestamp
 	6,  // 30: api.v1.services.types.Department.children:type_name -> api.v1.services.types.Department
 	6,  // 31: api.v1.services.types.Department.parent:type_name -> api.v1.services.types.Department
 	2,  // 32: api.v1.services.types.UserDepartment.user:type_name -> api.v1.services.types.User
 	6,  // 33: api.v1.services.types.UserDepartment.department:type_name -> api.v1.services.types.Department
-	17, // 34: api.v1.services.types.Position.create_time:type_name -> google.protobuf.Timestamp
-	17, // 35: api.v1.services.types.Position.update_time:type_name -> google.protobuf.Timestamp
-	6,  // 36: api.v1.services.types.PositionEdges.department:type_name -> api.v1.services.types.Department
-	2,  // 37: api.v1.services.types.PositionEdges.users:type_name -> api.v1.services.types.User
-	10, // 38: api.v1.services.types.PositionEdges.permissions:type_name -> api.v1.services.types.Permission
-	11, // 39: api.v1.services.types.PositionEdges.user_positions:type_name -> api.v1.services.types.UserPosition
-	12, // 40: api.v1.services.types.PositionEdges.position_permissions:type_name -> api.v1.services.types.PositionPermission
-	17, // 41: api.v1.services.types.Permission.create_time:type_name -> google.protobuf.Timestamp
-	17, // 42: api.v1.services.types.Permission.update_time:type_name -> google.protobuf.Timestamp
-	16, // 43: api.v1.services.types.Permission.data_rules:type_name -> api.v1.services.types.Permission.DataRulesEntry
-	5,  // 44: api.v1.services.types.Permission.resources:type_name -> api.v1.services.types.Resource
-	0,  // 45: api.v1.services.types.Permission.views:type_name -> api.v1.services.types.View
-	2,  // 46: api.v1.services.types.UserPosition.user:type_name -> api.v1.services.types.User
-	8,  // 47: api.v1.services.types.UserPosition.position:type_name -> api.v1.services.types.Position
-	8,  // 48: api.v1.services.types.PositionPermission.position:type_name -> api.v1.services.types.Position
-	10, // 49: api.v1.services.types.PositionPermission.permission:type_name -> api.v1.services.types.Permission
-	1,  // 50: api.v1.services.types.RolePermission.role:type_name -> api.v1.services.types.Role
-	10, // 51: api.v1.services.types.RolePermission.permission:type_name -> api.v1.services.types.Permission
-	10, // 52: api.v1.services.types.PermissionResource.permission:type_name -> api.v1.services.types.Permission
-	5,  // 53: api.v1.services.types.PermissionResource.resource:type_name -> api.v1.services.types.Resource
-	54, // [54:54] is the sub-list for method output_type
-	54, // [54:54] is the sub-list for method input_type
-	54, // [54:54] is the sub-list for extension type_name
-	54, // [54:54] is the sub-list for extension extendee
-	0,  // [0:54] is the sub-list for field type_name
+	16, // 34: api.v1.services.types.Position.create_time:type_name -> google.protobuf.Timestamp
+	16, // 35: api.v1.services.types.Position.update_time:type_name -> google.protobuf.Timestamp
+	16, // 36: api.v1.services.types.Permission.create_time:type_name -> google.protobuf.Timestamp
+	16, // 37: api.v1.services.types.Permission.update_time:type_name -> google.protobuf.Timestamp
+	15, // 38: api.v1.services.types.Permission.data_rules:type_name -> api.v1.services.types.Permission.DataRulesEntry
+	5,  // 39: api.v1.services.types.Permission.resources:type_name -> api.v1.services.types.Resource
+	0,  // 40: api.v1.services.types.Permission.views:type_name -> api.v1.services.types.View
+	2,  // 41: api.v1.services.types.UserPosition.user:type_name -> api.v1.services.types.User
+	8,  // 42: api.v1.services.types.UserPosition.position:type_name -> api.v1.services.types.Position
+	8,  // 43: api.v1.services.types.PositionPermission.position:type_name -> api.v1.services.types.Position
+	9,  // 44: api.v1.services.types.PositionPermission.permission:type_name -> api.v1.services.types.Permission
+	1,  // 45: api.v1.services.types.RolePermission.role:type_name -> api.v1.services.types.Role
+	9,  // 46: api.v1.services.types.RolePermission.permission:type_name -> api.v1.services.types.Permission
+	9,  // 47: api.v1.services.types.PermissionResource.permission:type_name -> api.v1.services.types.Permission
+	5,  // 48: api.v1.services.types.PermissionResource.resource:type_name -> api.v1.services.types.Resource
+	49, // [49:49] is the sub-list for method output_type
+	49, // [49:49] is the sub-list for method input_type
+	49, // [49:49] is the sub-list for extension type_name
+	49, // [49:49] is the sub-list for extension extendee
+	0,  // [0:49] is the sub-list for field type_name
 }
 
 func init() { file_types_system_proto_init() }
@@ -2274,7 +2178,7 @@ func file_types_system_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_types_system_proto_rawDesc), len(file_types_system_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   17,
+			NumMessages:   16,
 			NumExtensions: 0,
 			NumServices:   0,
 		},
