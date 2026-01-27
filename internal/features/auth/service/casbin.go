@@ -8,6 +8,7 @@ import (
 	"context"
 
 	"github.com/casbin/casbin/v3/model"
+
 	"github.com/origadmin/runtime/log"
 	v1 "origadmin/application/admin/api/v1/services/auth"
 	"origadmin/application/admin/internal/data"
@@ -40,7 +41,7 @@ func (s *CasbinService) ListPolicies(ctx context.Context, req *v1.ListPoliciesRe
 	for ptype, ast := range m["p"] {
 		for _, policy := range ast.Policy {
 			rules = append(rules, &v1.PolicyRule{
-				Ptype:  ptype,
+				PType:  ptype,
 				Params: policy,
 			})
 		}
@@ -62,7 +63,7 @@ func (s *CasbinService) ListGroupings(ctx context.Context, req *v1.ListGroupings
 	for ptype, ast := range m["g"] {
 		for _, policy := range ast.Policy {
 			rules = append(rules, &v1.GroupingRule{
-				Ptype:  ptype,
+				PType:  ptype,
 				Params: policy,
 			})
 		}
@@ -100,7 +101,7 @@ func (s *CasbinService) StreamRules(req *v1.StreamRulesRequest, stream v1.Casbin
 				if err := stream.Send(&v1.StreamRulesResponse{
 					Rule: &v1.StreamRulesResponse_Policy{
 						Policy: &v1.PolicyRule{
-							Ptype:  ptype,
+							PType:  ptype,
 							Params: policy,
 						},
 					},
@@ -118,7 +119,7 @@ func (s *CasbinService) StreamRules(req *v1.StreamRulesRequest, stream v1.Casbin
 				if err := stream.Send(&v1.StreamRulesResponse{
 					Rule: &v1.StreamRulesResponse_Grouping{
 						Grouping: &v1.GroupingRule{
-							Ptype:  ptype,
+							PType:  ptype,
 							Params: policy,
 						},
 					},

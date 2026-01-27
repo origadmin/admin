@@ -67,7 +67,10 @@ func wireApp(app *runtime.App, bootstrap *conf.Config) (*kratos.App, func(), err
 	viewRepo := dal.NewViewRepo(database)
 	viewUseCase := biz.NewViewUseCase(viewRepo)
 	viewService := service.NewViewService(viewUseCase)
-	systemService := service.NewSystemService(resourceService, roleService, userService, permissionService, viewService)
+	authorizationRepo := dal.NewAuthorizationRepo(database, v)
+	authorizationUseCase := biz.NewAuthorizationUseCase(authorizationRepo, v)
+	authorizationService := service.NewAuthorizationService(authorizationUseCase, v)
+	systemService := service.NewSystemService(resourceService, roleService, userService, permissionService, viewService, authorizationService)
 	casbinAdapter, err := data.NewAdapter(app, database)
 	if err != nil {
 		cleanup()

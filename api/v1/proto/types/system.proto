@@ -144,16 +144,10 @@ message User {
 message UserRole {
   // ID of the ent.
   int64 id = 1 [json_name = "id"];
-  // CreateTime holds the value of the "create_time" field.
-  google.protobuf.Timestamp create_time = 2 [json_name = "create_time"];
-  // UpdateTime holds the value of the "update_time" field.
-  google.protobuf.Timestamp update_time = 3 [json_name = "update_time"];
   // UserID holds the value of the "user_id" field.
-  int64 user_id = 4 [json_name = "user_id"];
+  int64 user_id = 2 [json_name = "user_id"];
   // RoleID holds the value of the "role_id" field.
-  int64 role_id = 5 [json_name = "role_id"];
-  // RoleName holds the value of the "role_name" field.
-  string role_name = 6 [json_name = "role_name"];
+  int64 role_id = 3 [json_name = "role_id"];
   // User holds the value of the user edge.
   User user = 100 [json_name = "user"];
   // Role holds the value of the role edge.
@@ -164,14 +158,10 @@ message UserRole {
 message RoleView {
   // ID of the ent.
   int64 id = 1 [json_name = "id"];
-  // CreateTime holds the value of the "create_time" field.
-  google.protobuf.Timestamp create_time = 2 [json_name = "create_time"];
-  // UpdateTime holds the value of the "update_time" field.
-  google.protobuf.Timestamp update_time = 3 [json_name = "update_time"];
   // RoleID holds the value of the "role_id" field.
-  int64 role_id = 4 [json_name = "role_id"];
+  int64 role_id = 2 [json_name = "role_id"];
   // ViewID holds the value of the "view_id" field.
-  int64 view_id = 5 [json_name = "view_id"];
+  int64 view_id = 3 [json_name = "view_id"];
   // Role holds the value of the role edge.
   Role role = 100 [json_name = "role"];
   // View holds the value of the view edge.
@@ -267,6 +257,10 @@ message UserDepartment {
   int64 user_id = 2 [json_name = "user_id"];
   // field.foreign_key.comment
   int64 department_id = 3 [json_name = "department_id"];
+  // User holds the value of the user edge.
+  User user = 100 [json_name = "user"];
+  // Department holds the value of the department edge.
+  Department department = 101 [json_name = "department"];
 }
 
 // position.table.comment
@@ -286,20 +280,6 @@ message Position {
   string description = 6 [json_name = "description"];
   // department.field.department_id
   int64 department_id = 7 [json_name = "department_id"];
-}
-
-// PositionEdges holds the relations/edges for other nodes in the graph.
-message PositionEdges {
-  // Department holds the value of the department edge.
-  Department department = 1 [json_name = "department"];
-  // Users holds the value of the users edge.
-  repeated User users = 2 [json_name = "users"];
-  // Permissions holds the value of the permissions edge.
-  repeated Permission permissions = 3 [json_name = "permissions"];
-  // UserPositions holds the value of the user_positions edge.
-  repeated UserPosition user_positions = 4 [json_name = "user_positions"];
-  // PositionPermissions holds the value of the position_permissions edge.
-  repeated PositionPermission position_permissions = 5 [json_name = "position_permissions"];
 }
 
 // permission.table.comment
@@ -338,6 +318,10 @@ message UserPosition {
   int64 user_id = 2 [json_name = "user_id"];
   // field.foreign_key.comment
   int64 position_id = 3 [json_name = "position_id"];
+  // User holds the value of the user edge.
+  User user = 100 [json_name = "user"];
+  // Position holds the value of the position edge.
+  Position position = 101 [json_name = "position"];
 }
 
 // position_permission.table.comment
@@ -349,6 +333,10 @@ message PositionPermission {
   int64 position_id = 2 [json_name = "position_id"];
   // position_permission.field.permission_id
   int64 permission_id = 3 [json_name = "permission_id"];
+  // Position holds the value of the position edge.
+  Position position = 100 [json_name = "position"];
+  // Permission holds the value of the permission edge.
+  Permission permission = 101 [json_name = "permission"];
 }
 
 // role_permission.table.comment
@@ -360,6 +348,10 @@ message RolePermission {
   int64 role_id = 2 [json_name = "role_id"];
   // field.foreign_key.comment
   int64 permission_id = 3 [json_name = "permission_id"];
+  // Role holds the value of the role edge.
+  Role role = 100 [json_name = "role"];
+  // Permission holds the value of the permission edge.
+  Permission permission = 101 [json_name = "permission"];
 }
 
 // permission_resource.table.comment
@@ -373,4 +365,8 @@ message PermissionResource {
   int64 resource_id = 3 [json_name = "resource_id"];
   // permission_resource.field.actions
   string actions = 4 [json_name = "actions"];
+  // Pole holds the value of the permission edge.
+  Permission permission = 100 [json_name = "permission"];
+  // Resource holds the value of the resource edge.
+  Resource resource = 101 [json_name = "resource"];
 }

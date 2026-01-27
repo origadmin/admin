@@ -841,11 +841,11 @@ func (m *StreamRulesResponse) validate(all bool) error {
 
 	var errors []error
 
-	switch v := m.RuleType.(type) {
+	switch v := m.Rule.(type) {
 	case *StreamRulesResponse_Policy:
 		if v == nil {
 			err := StreamRulesResponseValidationError{
-				field:  "RuleType",
+				field:  "Rule",
 				reason: "oneof value cannot be a typed-nil",
 			}
 			if !all {
@@ -886,7 +886,7 @@ func (m *StreamRulesResponse) validate(all bool) error {
 	case *StreamRulesResponse_Grouping:
 		if v == nil {
 			err := StreamRulesResponseValidationError{
-				field:  "RuleType",
+				field:  "Rule",
 				reason: "oneof value cannot be a typed-nil",
 			}
 			if !all {

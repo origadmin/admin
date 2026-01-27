@@ -5,7 +5,6 @@
 package server
 
 import (
-	"context"
 	"errors"
 	stdhttp "net/http"
 
@@ -33,6 +32,8 @@ var ProviderSet = wire.NewSet(
 )
 
 // NewServers creates and configures the auth service servers (gRPC, HTTP, and Watermill).
+// It receives PolicyBootstrap as a dependency but does not execute it;
+// PolicyBootstrap's execution is handled at the application's main entry point.
 func NewServers(
 	app *runtime.App,
 	cfg *transportv1.Servers,
@@ -40,24 +41,11 @@ func NewServers(
 	meSvc *service.MeService,
 	casbinSvc *service.CasbinService,
 	policySyncSvc *service.PolicySyncService,
-	bootstrap *service.CasbinBootstrap,
 	middlewareProvider container.ServerMiddlewareProvider,
 ) ([]transport.Server, error) {
 	if cfg == nil {
 		return nil, errors.New("servers config is nil")
 	}
-
-	// Register BeforeStart hook to bootstrap Casbin policies
-	app.AddHookBeforeStart(func(ctx context.Context) error {
-		log.Info("Executing Casbin bootstrap before server starts...")
-		if err := bootstrap.Bootstrap(ctx); err != nil {
-			log.Errorf("Casbin bootstrap failed: %v", err)
-			// Don't fail startup, allow admin to manually sync later
-		} else {
-			log.Info("Casbin bootstrap completed successfully")
-		}
-		return nil
-	})
 
 	var transportServers []transport.Server
 	for _, serverCfg := range cfg.GetConfigs() {

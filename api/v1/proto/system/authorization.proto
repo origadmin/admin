@@ -1,0 +1,48 @@
+syntax = "proto3";
+
+package api.v1.services.system;
+
+import "policy/v1/policy.proto";
+
+option go_package = "origadmin/application/admin/api/v1/services/system;system";
+option java_multiple_files = true;
+option java_outer_classname = "APIServiceAuthorizationProto";
+option java_package = "com.origadmin.api.v1.services.system";
+option objc_class_prefix = "APIServiceAuthorization";
+
+// AuthorizationService defines the contract for providing a complete set of authorization policies.
+// This service is consumed by other modules (like auth) to synchronize their state.
+// SECURITY: This is a foundational service and should NOT be exposed publicly.
+// Access must be restricted at the infrastructure level (e.g., firewall, internal network).
+service AuthorizationService {
+  // ListAllPolicies retrieves the entire set of policies, pre-processed into a generic,
+  // implementation-agnostic format.
+  // This RPC is intended for internal gRPC calls only and bypasses authn/authz checks.
+  rpc ListAllPolicies(ListAllPoliciesRequest) returns (ListAllPoliciesResponse) {
+    option (contrib.api.policy.v1.policy) = {name: "public"};
+  }
+}
+
+// AccessRule represents a generic "Subject-Object-Action" policy.
+// This is implementation-agnostic. For Casbin, it maps to a 'p' rule.
+message AccessRule {
+  string subject = 1; // The subject (e.g., "role:admin", "user:123")
+  string object = 2;  // The object/resource (e.g., "/api/users")
+  string action = 3;  // The action (e.g., "GET", "write")
+  string domain = 4;  // Optional domain/tenant, defaults to "*"
+}
+
+// GroupingRule represents a generic "User-in-Group" relationship.
+// This is implementation-agnostic. For Casbin, it maps to a 'g' rule.
+message GroupingRule {
+  string user = 1;   // The user identifier (e.g., "user:123")
+  string group = 2;  // The group/role identifier (e.g., "role:admin")
+  string domain = 3; // Optional domain/tenant, defaults to "*"
+}
+
+message ListAllPoliciesRequest {}
+
+message ListAllPoliciesResponse {
+  repeated AccessRule access_rules = 1;
+  repeated GroupingRule grouping_rules = 2;
+}

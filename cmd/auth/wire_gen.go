@@ -12,6 +12,7 @@ import (
 	"origadmin/application/admin/internal/conf"
 	"origadmin/application/admin/internal/data"
 	"origadmin/application/admin/internal/features/auth/biz"
+	"origadmin/application/admin/internal/features/auth/client"
 	"origadmin/application/admin/internal/features/auth/dal"
 	"origadmin/application/admin/internal/features/auth/server"
 	"origadmin/application/admin/internal/features/auth/service"
@@ -67,24 +68,28 @@ func wireApp(app *runtime.App, bootstrap *conf.Config) (*kratos.App, func(), err
 	meRepo := dal.NewMeRepo(database, v)
 	meUseCase := biz.NewMeUseCase(meRepo, v)
 	meService := service.NewMeService(meUseCase)
-	casbinService := service.NewCasbinService()
 	casbinAdapter, err := data.NewAdapter(app, database)
 	if err != nil {
 		cleanup()
 		return nil, nil, err
 	}
+	casbinService := service.NewCasbinService(casbinAdapter, v)
 	watcher, err := providers.ProvideWatcher(app, bootstrap)
 	if err != nil {
 		cleanup()
 		return nil, nil, err
 	}
-	authPolicyRepository := dal.NewAuthPolicyRepository(casbinAdapter, watcher, v)
-	policySyncService := service.NewPolicySyncService(authPolicyRepository, v)
+	policyModifier, err := dal.NewCasbinModifier(casbinAdapter, watcher, v)
+	if err != nil {
+		cleanup()
+		return nil, nil, err
+	}
 	authorizer, err := providers.ProvideAuthorizer(app, bootstrap, casbinAdapter, watcher)
 	if err != nil {
 		cleanup()
 		return nil, nil, err
 	}
+	policySyncService := service.NewPolicySyncService(policyModifier, authorizer, v)
 	skipper := providers.ProvideSkipper(app, bootstrap)
 	serverMiddlewareProvider, err := providers.ProvideServiceMiddlewares(app, authorizer, skipper)
 	if err != nil {
@@ -96,7 +101,21 @@ func wireApp(app *runtime.App, bootstrap *conf.Config) (*kratos.App, func(), err
 		cleanup()
 		return nil, nil, err
 	}
-	kratosApp := NewApp(app, v2)
+	clientMiddlewareProvider, err := providers.ProvideClientMiddlewares(app)
+	if err != nil {
+		cleanup()
+		return nil, nil, err
+	}
+	authorizationServiceClient, err := client.NewAuthorizationServiceClient(app, bootstrap, clientMiddlewareProvider)
+	if err != nil {
+		cleanup()
+		return nil, nil, err
+	}
+	policyProvider := client.NewSystemPolicyProvider(authorizationServiceClient, v)
+	policySyncer := biz.NewPolicySyncer(policyProvider, policyModifier, v)
+	policyBootstrap := service.NewPolicyBootstrap(policySyncer, v)
+	v3 := NewBootstrapOptions(policyBootstrap)
+	kratosApp := NewApp(app, v2, v3)
 	return kratosApp, func() {
 		cleanup()
 	}, nil

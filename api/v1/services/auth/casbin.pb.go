@@ -340,11 +340,11 @@ func (x *StreamRulesRequest) GetWithGroupings() bool {
 
 type StreamRulesResponse struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// Types that are valid to be assigned to RuleType:
+	// Types that are valid to be assigned to Rule:
 	//
 	//	*StreamRulesResponse_Policy
 	//	*StreamRulesResponse_Grouping
-	RuleType      isStreamRulesResponse_RuleType `protobuf_oneof:"rule_type"`
+	Rule          isStreamRulesResponse_Rule `protobuf_oneof:"rule"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -379,16 +379,16 @@ func (*StreamRulesResponse) Descriptor() ([]byte, []int) {
 	return file_auth_casbin_proto_rawDescGZIP(), []int{7}
 }
 
-func (x *StreamRulesResponse) GetRuleType() isStreamRulesResponse_RuleType {
+func (x *StreamRulesResponse) GetRule() isStreamRulesResponse_Rule {
 	if x != nil {
-		return x.RuleType
+		return x.Rule
 	}
 	return nil
 }
 
 func (x *StreamRulesResponse) GetPolicy() *PolicyRule {
 	if x != nil {
-		if x, ok := x.RuleType.(*StreamRulesResponse_Policy); ok {
+		if x, ok := x.Rule.(*StreamRulesResponse_Policy); ok {
 			return x.Policy
 		}
 	}
@@ -397,15 +397,15 @@ func (x *StreamRulesResponse) GetPolicy() *PolicyRule {
 
 func (x *StreamRulesResponse) GetGrouping() *GroupingRule {
 	if x != nil {
-		if x, ok := x.RuleType.(*StreamRulesResponse_Grouping); ok {
+		if x, ok := x.Rule.(*StreamRulesResponse_Grouping); ok {
 			return x.Grouping
 		}
 	}
 	return nil
 }
 
-type isStreamRulesResponse_RuleType interface {
-	isStreamRulesResponse_RuleType()
+type isStreamRulesResponse_Rule interface {
+	isStreamRulesResponse_Rule()
 }
 
 type StreamRulesResponse_Policy struct {
@@ -416,9 +416,9 @@ type StreamRulesResponse_Grouping struct {
 	Grouping *GroupingRule `protobuf:"bytes,2,opt,name=grouping,proto3,oneof"`
 }
 
-func (*StreamRulesResponse_Policy) isStreamRulesResponse_RuleType() {}
+func (*StreamRulesResponse_Policy) isStreamRulesResponse_Rule() {}
 
-func (*StreamRulesResponse_Grouping) isStreamRulesResponse_RuleType() {}
+func (*StreamRulesResponse_Grouping) isStreamRulesResponse_Rule() {}
 
 type WatchUpdateRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
@@ -528,11 +528,11 @@ const file_auth_casbin_proto_rawDesc = "" +
 	"\x06params\x18\x02 \x03(\tR\x06params\"b\n" +
 	"\x12StreamRulesRequest\x12$\n" +
 	"\rwith_policies\x18\x01 \x01(\bR\rwith_policies\x12&\n" +
-	"\x0ewith_groupings\x18\x02 \x01(\bR\x0ewith_groupings\"\xa0\x01\n" +
+	"\x0ewith_groupings\x18\x02 \x01(\bR\x0ewith_groupings\"\x9b\x01\n" +
 	"\x13StreamRulesResponse\x12:\n" +
 	"\x06policy\x18\x01 \x01(\v2 .api.v1.services.auth.PolicyRuleH\x00R\x06policy\x12@\n" +
-	"\bgrouping\x18\x02 \x01(\v2\".api.v1.services.auth.GroupingRuleH\x00R\bgroupingB\v\n" +
-	"\trule_type\":\n" +
+	"\bgrouping\x18\x02 \x01(\v2\".api.v1.services.auth.GroupingRuleH\x00R\bgroupingB\x06\n" +
+	"\x04rule\":\n" +
 	"\x12WatchUpdateRequest\x12$\n" +
 	"\rlast_modified\x18\x01 \x01(\x03R\rlast_modified\";\n" +
 	"\x13WatchUpdateResponse\x12$\n" +

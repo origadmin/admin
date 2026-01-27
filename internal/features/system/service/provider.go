@@ -7,7 +7,7 @@ package service
 
 import (
 	"github.com/google/wire"
-	systempb "origadmin/application/admin/api/v1/services/system" // Import the new system proto
+	systemv1 "origadmin/application/admin/api/v1/services/system"
 )
 
 // ProviderSet is service providers.
@@ -18,7 +18,8 @@ var ProviderSet = wire.NewSet(
 	NewPermissionService,
 	NewViewService,
 	NewSystemService,
-	NewCasbinService,
-	// Bind the concrete implementation to the new proto-defined interface.
-	wire.Bind(new(systempb.PolicyServiceServer), new(*CasbinService)),
+	NewAuthorizationService, // Add the new service constructor
+
+	// Bind the concrete implementation to the proto-defined interface.
+	wire.Bind(new(systemv1.AuthorizationServiceServer), new(*AuthorizationService)),
 )

@@ -67,7 +67,7 @@ message StreamRulesRequest {
 }
 
 message StreamRulesResponse {
-  oneof rule_type {
+  oneof rule {
     PolicyRule policy = 1;
     GroupingRule grouping = 2;
   }

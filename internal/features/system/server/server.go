@@ -119,6 +119,7 @@ func NewGRPCServer(_ *runtime.App, cfg *grpcv1.Server, svc *service.SystemServic
 	systemv1.RegisterPermissionServiceServer(srv, svc.Permission)
 	systemv1.RegisterResourceServiceServer(srv, svc.Resource)
 	systemv1.RegisterViewServiceServer(srv, svc.View)
+	systemv1.RegisterAuthorizationServiceServer(srv, svc.Authorization) // Add this line
 
 	return srv, nil
 }

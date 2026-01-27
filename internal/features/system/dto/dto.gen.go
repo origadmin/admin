@@ -188,6 +188,8 @@ func ConvertPermissionResourceToPermissionResourcePB(from *PermissionResource) *
 		Id:           int64(from.ID),
 		PermissionId: from.PermissionID,
 		ResourceId:   from.ResourceID,
+		Permission:   ConvertPermissionToPermissionPB(from.Edges.Permission),
+		Resource:     ConvertResourceToResourcePB(from.Edges.Resource),
 	}
 	return to
 }
@@ -312,6 +314,8 @@ func ConvertPositionPermissionToPositionPermissionPB(from *PositionPermission) *
 		Id:           int64(from.ID),
 		PositionId:   from.PositionID,
 		PermissionId: from.PermissionID,
+		Position:     ConvertPositionToPositionPB(from.Edges.Position),
+		Permission:   ConvertPermissionToPermissionPB(from.Edges.Permission),
 	}
 	return to
 }
@@ -477,6 +481,8 @@ func ConvertRolePermissionToRolePermissionPB(from *RolePermission) *RolePermissi
 		Id:           int64(from.ID),
 		RoleId:       from.RoleID,
 		PermissionId: from.PermissionID,
+		Role:         ConvertRoleToRolePB(from.Edges.Role),
+		Permission:   ConvertPermissionToPermissionPB(from.Edges.Permission),
 	}
 	return to
 }
@@ -539,6 +545,8 @@ func ConvertUserDepartmentToUserDepartmentPB(from *UserDepartment) *UserDepartme
 		Id:           int64(from.ID),
 		UserId:       from.UserID,
 		DepartmentId: from.DepartmentID,
+		User:         ConvertUserToUserPB(from.Edges.User),
+		Department:   ConvertDepartmentToDepartmentPB(from.Edges.Department),
 	}
 	return to
 }
@@ -601,6 +609,8 @@ func ConvertUserPositionToUserPositionPB(from *UserPosition) *UserPositionPB {
 		Id:         int64(from.ID),
 		UserId:     from.UserID,
 		PositionId: from.PositionID,
+		User:       ConvertUserToUserPB(from.Edges.User),
+		Position:   ConvertPositionToPositionPB(from.Edges.Position),
 	}
 	return to
 }

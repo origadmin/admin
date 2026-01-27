@@ -5,11 +5,12 @@
 package service
 
 type SystemService struct {
-	Resource   *ResourceService
-	Role       *RoleService
-	User       *UserService
-	Permission *PermissionService
-	View       *ViewService
+	Resource      *ResourceService
+	Role          *RoleService
+	User          *UserService
+	Permission    *PermissionService
+	View          *ViewService
+	Authorization *AuthorizationService
 }
 
 func NewSystemService(
@@ -18,12 +19,14 @@ func NewSystemService(
 	user *UserService,
 	permission *PermissionService,
 	view *ViewService,
+	authorization *AuthorizationService,
 ) *SystemService {
 	return &SystemService{
-		Resource:   resource,
-		Role:       role,
-		User:       user,
-		Permission: permission,
-		View:       view,
+		Resource:      resource,
+		Role:          role,
+		User:          user,
+		Permission:    permission,
+		View:          view,
+		Authorization: authorization,
 	}
 }

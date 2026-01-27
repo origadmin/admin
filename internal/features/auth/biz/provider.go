@@ -6,7 +6,6 @@ package biz
 
 import (
 	"github.com/google/wire"
-	"origadmin/application/admin/internal/features/auth/client"
 )
 
 // ProviderSet is biz providers.
@@ -14,6 +13,5 @@ var ProviderSet = wire.NewSet(
 	NewAuthUseCase,
 	NewMeUseCase,
 	NewCaptchaUseCase,
-	NewCasbinSynchronizer,
-	client.ProviderSet,
+	NewPolicySyncer, // NewPolicySyncer is the correct synchronizer
 )

@@ -16,6 +16,7 @@ import (
 	"github.com/origadmin/runtime/log"
 	"origadmin/application/admin/internal/conf"
 	_ "origadmin/application/admin/internal/data/entity/ent/runtime"
+	authservice "origadmin/application/admin/internal/features/auth/service" // Import authservice
 	confhelper "origadmin/application/admin/internal/helpers/conf"
 )
 
@@ -35,8 +36,16 @@ func init() {
 	flag.StringVar(&flagconf, "conf", "", "config path, eg: -conf bootstrap.yaml")
 }
 
-func NewApp(app *runtime.App, servers []transport.Server) *kratos.App {
-	return app.NewApp(servers)
+// NewBootstrapOptions creates Kratos options from the PolicyBootstrap.
+// This acts as a transformer for wire to inject the BeforeStart hook.
+func NewBootstrapOptions(bootstrap *authservice.PolicyBootstrap) []kratos.Option {
+	return []kratos.Option{kratos.BeforeStart(bootstrap.Bootstrap)}
+}
+
+// NewApp creates a new Kratos application.
+func NewApp(app *runtime.App, servers []transport.Server, opts []kratos.Option) *kratos.App {
+	// Prepend the bootstrap options to any other options.
+	return app.NewApp(servers, opts...)
 }
 
 func main() {
@@ -69,14 +78,14 @@ func main() {
 		log.Fatalf("failed to get bootstrap config")
 	}
 
-	// wireApp now takes the runtime instance and builds the kratos app.
+	// wireApp now builds the entire application, including options.
 	kratosApp, cleanupApp, err := wireApp(rt, bootstrapConfig)
 	if err != nil {
 		log.Fatalf("failed to wire app: %v", err)
 	}
 	defer cleanupApp()
 
-	// Run the application
+	// Run the application. The BeforeStart hook is now injected via wire.
 	if err := kratosApp.Run(); err != nil {
 		log.Fatalf("app run failed: %v", err)
 	}

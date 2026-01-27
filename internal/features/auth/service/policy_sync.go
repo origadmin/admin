@@ -9,6 +9,7 @@ import (
 	"google.golang.org/protobuf/proto"
 
 	"github.com/origadmin/contrib/security/authz"
+	"github.com/origadmin/contrib/security/authz/casbin"
 	"github.com/origadmin/runtime/log"
 	"origadmin/application/admin/api/v1/services/types"
 )
@@ -22,15 +23,11 @@ type PolicySyncService struct {
 }
 
 // NewPolicySyncService creates a new PolicySyncService.
-func NewPolicySyncService(policyModifier authz.PolicyModifier, authorizer authz.Authorizer, logger log.Logger) *PolicySyncService {
-	reloader, ok := authorizer.(authz.Reloader)
-	if !ok {
-		// Fallback for authorizers that don't support reloading (e.g. noop)
-		reloader = &noopReloader{}
-	}
+func NewPolicySyncService(policyModifier authz.PolicyModifier, authorizer *casbin.Authorizer,
+	logger log.Logger) *PolicySyncService {
 	return &PolicySyncService{
 		policyModifier: policyModifier,
-		reloader:       reloader,
+		reloader:       authorizer,
 		log:            log.NewHelper(log.With(logger, "module", "auth.service.policy_sync")),
 	}
 }

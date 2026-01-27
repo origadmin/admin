@@ -11,6 +11,6 @@ var ProviderSet = wire.NewSet(
 	NewAuthService,
 	NewMeService,
 	NewCasbinService,
+	NewPolicyBootstrap,
 	NewPolicySyncService,
-	NewCasbinBootstrap, // Provide the bootstrap for startup initialization
 )
