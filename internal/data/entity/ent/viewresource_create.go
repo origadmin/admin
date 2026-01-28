@@ -162,7 +162,9 @@ func (_c *ViewResourceCreate) createSpec() (*ViewResource, *sqlgraph.CreateSpec)
 	return _node, _spec
 }
 
-// SetViewResource set the ViewResource
+// SetViewResource sets the ViewResource fields from input struct.
+// If no fields are specified, all fields from Columns will be set.
+// Zero values are included in the update.
 func (_c *ViewResourceCreate) SetViewResource(input *ViewResource, fields ...string) *ViewResourceCreate {
 	m := _c.mutation
 	if len(fields) == 0 {
@@ -172,7 +174,9 @@ func (_c *ViewResourceCreate) SetViewResource(input *ViewResource, fields ...str
 	return _c
 }
 
-// SetViewResourceWithZero set the ViewResource
+// SetViewResourceSkipZero sets the ViewResource fields from input struct.
+// If no fields are specified, all fields from Columns will be set.
+// Zero values are skipped and not updated.
 func (_c *ViewResourceCreate) SetViewResourceSkipZero(input *ViewResource, fields ...string) *ViewResourceCreate {
 	m := _c.mutation
 	if len(fields) == 0 {

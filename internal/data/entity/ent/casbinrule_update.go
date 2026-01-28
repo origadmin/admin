@@ -428,7 +428,9 @@ func (_u *CasbinRuleUpdateOne) sqlSave(ctx context.Context) (_node *CasbinRule, 
 	return _node, nil
 }
 
-// SetCasbinRule set the CasbinRule. This method includes zero values in the update.
+// SetCasbinRule sets the CasbinRule fields from input struct.
+// If no fields are specified, all mutable fields except ID will be set.
+// Zero values are included in the update.
 func (cru *CasbinRuleUpdate) SetCasbinRule(input *CasbinRule, fields ...string) *CasbinRuleUpdate {
 	m := cru.mutation
 	if len(fields) == 0 {
@@ -438,7 +440,9 @@ func (cru *CasbinRuleUpdate) SetCasbinRule(input *CasbinRule, fields ...string) 
 	return cru
 }
 
-// SetCasbinRuleSkipZero set the CasbinRule, skipping zero values.
+// SetCasbinRuleSkipZero sets the CasbinRule fields from input struct.
+// If no fields are specified, all mutable fields except ID will be set.
+// Zero values are skipped and not updated.
 func (cru *CasbinRuleUpdate) SetCasbinRuleSkipZero(input *CasbinRule, fields ...string) *CasbinRuleUpdate {
 	m := cru.mutation
 	if len(fields) == 0 {
@@ -448,7 +452,9 @@ func (cru *CasbinRuleUpdate) SetCasbinRuleSkipZero(input *CasbinRule, fields ...
 	return cru
 }
 
-// SetCasbinRule set the CasbinRule. This method includes zero values in the update.
+// SetCasbinRule sets the CasbinRule fields from input struct.
+// If no fields are specified, all fields except ID will be set.
+// Zero values are included in the update.
 func (cruo *CasbinRuleUpdateOne) SetCasbinRule(input *CasbinRule, fields ...string) *CasbinRuleUpdateOne {
 	m := cruo.mutation
 	if len(fields) == 0 {
@@ -458,7 +464,9 @@ func (cruo *CasbinRuleUpdateOne) SetCasbinRule(input *CasbinRule, fields ...stri
 	return cruo
 }
 
-// SetCasbinRuleSkipZero set the CasbinRule, skipping zero values.
+// SetCasbinRuleSkipZero sets the CasbinRule fields from input struct.
+// If no fields are specified, all fields except ID will be set.
+// Zero values are skipped and not updated.
 func (cruo *CasbinRuleUpdateOne) SetCasbinRuleSkipZero(input *CasbinRule, fields ...string) *CasbinRuleUpdateOne {
 	m := cruo.mutation
 	if len(fields) == 0 {
@@ -468,8 +476,8 @@ func (cruo *CasbinRuleUpdateOne) SetCasbinRuleSkipZero(input *CasbinRule, fields
 	return cruo
 }
 
-// Omit allows the unselect one or more fields/columns for the given query,
-// instead of selecting all fields in the entity.
+// Omit excludes the specified fields from the update operation.
+// By default, all fields are updated. Use this method to exclude specific fields.
 func (cruo *CasbinRuleUpdateOne) Omit(fields ...string) *CasbinRuleUpdateOne {
 	omits := make(map[string]struct{}, len(fields))
 	for i := range fields {

@@ -456,7 +456,9 @@ func (_u *RolePermissionUpdateOne) sqlSave(ctx context.Context) (_node *RolePerm
 	return _node, nil
 }
 
-// SetRolePermission set the RolePermission. This method includes zero values in the update.
+// SetRolePermission sets the RolePermission fields from input struct.
+// If no fields are specified, all mutable fields except ID will be set.
+// Zero values are included in the update.
 func (rpu *RolePermissionUpdate) SetRolePermission(input *RolePermission, fields ...string) *RolePermissionUpdate {
 	m := rpu.mutation
 	if len(fields) == 0 {
@@ -466,7 +468,9 @@ func (rpu *RolePermissionUpdate) SetRolePermission(input *RolePermission, fields
 	return rpu
 }
 
-// SetRolePermissionSkipZero set the RolePermission, skipping zero values.
+// SetRolePermissionSkipZero sets the RolePermission fields from input struct.
+// If no fields are specified, all mutable fields except ID will be set.
+// Zero values are skipped and not updated.
 func (rpu *RolePermissionUpdate) SetRolePermissionSkipZero(input *RolePermission, fields ...string) *RolePermissionUpdate {
 	m := rpu.mutation
 	if len(fields) == 0 {
@@ -476,7 +480,9 @@ func (rpu *RolePermissionUpdate) SetRolePermissionSkipZero(input *RolePermission
 	return rpu
 }
 
-// SetRolePermission set the RolePermission. This method includes zero values in the update.
+// SetRolePermission sets the RolePermission fields from input struct.
+// If no fields are specified, all fields except ID will be set.
+// Zero values are included in the update.
 func (rpuo *RolePermissionUpdateOne) SetRolePermission(input *RolePermission, fields ...string) *RolePermissionUpdateOne {
 	m := rpuo.mutation
 	if len(fields) == 0 {
@@ -486,7 +492,9 @@ func (rpuo *RolePermissionUpdateOne) SetRolePermission(input *RolePermission, fi
 	return rpuo
 }
 
-// SetRolePermissionSkipZero set the RolePermission, skipping zero values.
+// SetRolePermissionSkipZero sets the RolePermission fields from input struct.
+// If no fields are specified, all fields except ID will be set.
+// Zero values are skipped and not updated.
 func (rpuo *RolePermissionUpdateOne) SetRolePermissionSkipZero(input *RolePermission, fields ...string) *RolePermissionUpdateOne {
 	m := rpuo.mutation
 	if len(fields) == 0 {
@@ -496,8 +504,8 @@ func (rpuo *RolePermissionUpdateOne) SetRolePermissionSkipZero(input *RolePermis
 	return rpuo
 }
 
-// Omit allows the unselect one or more fields/columns for the given query,
-// instead of selecting all fields in the entity.
+// Omit excludes the specified fields from the update operation.
+// By default, all fields are updated. Use this method to exclude specific fields.
 func (rpuo *RolePermissionUpdateOne) Omit(fields ...string) *RolePermissionUpdateOne {
 	omits := make(map[string]struct{}, len(fields))
 	for i := range fields {

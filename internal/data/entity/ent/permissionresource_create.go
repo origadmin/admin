@@ -162,7 +162,9 @@ func (_c *PermissionResourceCreate) createSpec() (*PermissionResource, *sqlgraph
 	return _node, _spec
 }
 
-// SetPermissionResource set the PermissionResource
+// SetPermissionResource sets the PermissionResource fields from input struct.
+// If no fields are specified, all fields from Columns will be set.
+// Zero values are included in the update.
 func (_c *PermissionResourceCreate) SetPermissionResource(input *PermissionResource, fields ...string) *PermissionResourceCreate {
 	m := _c.mutation
 	if len(fields) == 0 {
@@ -172,7 +174,9 @@ func (_c *PermissionResourceCreate) SetPermissionResource(input *PermissionResou
 	return _c
 }
 
-// SetPermissionResourceWithZero set the PermissionResource
+// SetPermissionResourceSkipZero sets the PermissionResource fields from input struct.
+// If no fields are specified, all fields from Columns will be set.
+// Zero values are skipped and not updated.
 func (_c *PermissionResourceCreate) SetPermissionResourceSkipZero(input *PermissionResource, fields ...string) *PermissionResourceCreate {
 	m := _c.mutation
 	if len(fields) == 0 {

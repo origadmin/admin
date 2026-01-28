@@ -412,7 +412,7 @@ func newViewPermissionsStep() *sqlgraph.Step {
 	)
 }
 
-// SelectColumns returns all selected fields.
+// SelectColumns returns all selected fields excluding the ID field.
 func SelectColumns(fields []string) []string {
 	// Default removal FieldID
 	filteredFields := make([]string, 0, len(fields))
@@ -424,13 +424,16 @@ func SelectColumns(fields []string) []string {
 	return filteredFields
 }
 
-// OmitColumns returns all fields that are not in the list of fields.
+// OmitColumns returns all fields from Columns that are not in the provided list.
+// The ID field is always excluded.
 func OmitColumns(fields ...string) []string {
 	// Default removal FieldID
 	return omitColumns(Columns, fields, true)
 }
 
-// OmitCustomColumns returns all fields that are not in the list of fields.
+// OmitCustomColumns returns all fields from src that are not in the provided list.
+// If src is empty, Columns will be used as the source.
+// The ID field is always excluded.
 func OmitCustomColumns(src []string, fields ...string) []string {
 	if len(src) == 0 {
 		src = Columns
@@ -439,13 +442,16 @@ func OmitCustomColumns(src []string, fields ...string) []string {
 	return omitColumns(src, fields, true)
 }
 
-// OmitColumnsWithID returns all fields that are not in the list of fields.
+// OmitColumnsWithID returns all fields from Columns that are not in the provided list.
+// The ID field is included in the result.
 func OmitColumnsWithID(fields ...string) []string {
 	// Not remove FieldID
 	return omitColumns(Columns, fields, false)
 }
 
-// OmitCustomColumns returns all fields that are not in the list of fields.
+// OmitCustomColumnsWithID returns all fields from src that are not in the provided list.
+// If src is empty, Columns will be used as the source.
+// The ID field is included in the result.
 func OmitCustomColumnsWithID(src []string, fields ...string) []string {
 	if len(src) == 0 {
 		src = Columns
@@ -454,6 +460,8 @@ func OmitCustomColumnsWithID(src []string, fields ...string) []string {
 	return omitColumns(src, fields, false)
 }
 
+// omitColumns returns all fields from src that are not in the fields list.
+// If omitID is true, the ID field is excluded from the result.
 func omitColumns(src []string, fields []string, omitID bool) []string {
 	// Default removal FieldID
 	filteredFields := make([]string, 0, len(src))
@@ -465,6 +473,7 @@ func omitColumns(src []string, fields []string, omitID bool) []string {
 	return filteredFields
 }
 
+// contains checks if the item exists in the slice.
 func contains(slice []string, item string) bool {
 	for _, s := range slice {
 		if s == item {

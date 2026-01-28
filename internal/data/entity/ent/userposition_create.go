@@ -162,7 +162,9 @@ func (_c *UserPositionCreate) createSpec() (*UserPosition, *sqlgraph.CreateSpec)
 	return _node, _spec
 }
 
-// SetUserPosition set the UserPosition
+// SetUserPosition sets the UserPosition fields from input struct.
+// If no fields are specified, all fields from Columns will be set.
+// Zero values are included in the update.
 func (_c *UserPositionCreate) SetUserPosition(input *UserPosition, fields ...string) *UserPositionCreate {
 	m := _c.mutation
 	if len(fields) == 0 {
@@ -172,7 +174,9 @@ func (_c *UserPositionCreate) SetUserPosition(input *UserPosition, fields ...str
 	return _c
 }
 
-// SetUserPositionWithZero set the UserPosition
+// SetUserPositionSkipZero sets the UserPosition fields from input struct.
+// If no fields are specified, all fields from Columns will be set.
+// Zero values are skipped and not updated.
 func (_c *UserPositionCreate) SetUserPositionSkipZero(input *UserPosition, fields ...string) *UserPositionCreate {
 	m := _c.mutation
 	if len(fields) == 0 {

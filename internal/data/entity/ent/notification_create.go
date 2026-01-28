@@ -317,7 +317,9 @@ func (_c *NotificationCreate) createSpec() (*Notification, *sqlgraph.CreateSpec)
 	return _node, _spec
 }
 
-// SetNotification set the Notification
+// SetNotification sets the Notification fields from input struct.
+// If no fields are specified, all fields from Columns will be set.
+// Zero values are included in the update.
 func (_c *NotificationCreate) SetNotification(input *Notification, fields ...string) *NotificationCreate {
 	m := _c.mutation
 	if len(fields) == 0 {
@@ -327,7 +329,9 @@ func (_c *NotificationCreate) SetNotification(input *Notification, fields ...str
 	return _c
 }
 
-// SetNotificationWithZero set the Notification
+// SetNotificationSkipZero sets the Notification fields from input struct.
+// If no fields are specified, all fields from Columns will be set.
+// Zero values are skipped and not updated.
 func (_c *NotificationCreate) SetNotificationSkipZero(input *Notification, fields ...string) *NotificationCreate {
 	m := _c.mutation
 	if len(fields) == 0 {

@@ -749,7 +749,9 @@ func (_c *ResourceCreate) createSpec() (*Resource, *sqlgraph.CreateSpec) {
 	return _node, _spec
 }
 
-// SetResource set the Resource
+// SetResource sets the Resource fields from input struct.
+// If no fields are specified, all fields from Columns will be set.
+// Zero values are included in the update.
 func (_c *ResourceCreate) SetResource(input *Resource, fields ...string) *ResourceCreate {
 	m := _c.mutation
 	if len(fields) == 0 {
@@ -759,7 +761,9 @@ func (_c *ResourceCreate) SetResource(input *Resource, fields ...string) *Resour
 	return _c
 }
 
-// SetResourceWithZero set the Resource
+// SetResourceSkipZero sets the Resource fields from input struct.
+// If no fields are specified, all fields from Columns will be set.
+// Zero values are skipped and not updated.
 func (_c *ResourceCreate) SetResourceSkipZero(input *Resource, fields ...string) *ResourceCreate {
 	m := _c.mutation
 	if len(fields) == 0 {

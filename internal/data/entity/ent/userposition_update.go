@@ -456,7 +456,9 @@ func (_u *UserPositionUpdateOne) sqlSave(ctx context.Context) (_node *UserPositi
 	return _node, nil
 }
 
-// SetUserPosition set the UserPosition. This method includes zero values in the update.
+// SetUserPosition sets the UserPosition fields from input struct.
+// If no fields are specified, all mutable fields except ID will be set.
+// Zero values are included in the update.
 func (upu *UserPositionUpdate) SetUserPosition(input *UserPosition, fields ...string) *UserPositionUpdate {
 	m := upu.mutation
 	if len(fields) == 0 {
@@ -466,7 +468,9 @@ func (upu *UserPositionUpdate) SetUserPosition(input *UserPosition, fields ...st
 	return upu
 }
 
-// SetUserPositionSkipZero set the UserPosition, skipping zero values.
+// SetUserPositionSkipZero sets the UserPosition fields from input struct.
+// If no fields are specified, all mutable fields except ID will be set.
+// Zero values are skipped and not updated.
 func (upu *UserPositionUpdate) SetUserPositionSkipZero(input *UserPosition, fields ...string) *UserPositionUpdate {
 	m := upu.mutation
 	if len(fields) == 0 {
@@ -476,7 +480,9 @@ func (upu *UserPositionUpdate) SetUserPositionSkipZero(input *UserPosition, fiel
 	return upu
 }
 
-// SetUserPosition set the UserPosition. This method includes zero values in the update.
+// SetUserPosition sets the UserPosition fields from input struct.
+// If no fields are specified, all fields except ID will be set.
+// Zero values are included in the update.
 func (upuo *UserPositionUpdateOne) SetUserPosition(input *UserPosition, fields ...string) *UserPositionUpdateOne {
 	m := upuo.mutation
 	if len(fields) == 0 {
@@ -486,7 +492,9 @@ func (upuo *UserPositionUpdateOne) SetUserPosition(input *UserPosition, fields .
 	return upuo
 }
 
-// SetUserPositionSkipZero set the UserPosition, skipping zero values.
+// SetUserPositionSkipZero sets the UserPosition fields from input struct.
+// If no fields are specified, all fields except ID will be set.
+// Zero values are skipped and not updated.
 func (upuo *UserPositionUpdateOne) SetUserPositionSkipZero(input *UserPosition, fields ...string) *UserPositionUpdateOne {
 	m := upuo.mutation
 	if len(fields) == 0 {
@@ -496,8 +504,8 @@ func (upuo *UserPositionUpdateOne) SetUserPositionSkipZero(input *UserPosition, 
 	return upuo
 }
 
-// Omit allows the unselect one or more fields/columns for the given query,
-// instead of selecting all fields in the entity.
+// Omit excludes the specified fields from the update operation.
+// By default, all fields are updated. Use this method to exclude specific fields.
 func (upuo *UserPositionUpdateOne) Omit(fields ...string) *UserPositionUpdateOne {
 	omits := make(map[string]struct{}, len(fields))
 	for i := range fields {

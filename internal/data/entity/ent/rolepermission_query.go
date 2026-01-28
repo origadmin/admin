@@ -634,8 +634,9 @@ func (_q *RolePermissionQuery) Modify(modifiers ...func(s *sql.Selector)) *RoleP
 	return _q.Select()
 }
 
-// Omit allows the unselect one or more fields/columns for the given query,
-// instead of selecting all fields in the entity.
+// Omit excludes the specified fields/columns from the query result.
+// By default, all fields are selected. Use this method to select only specific fields.
+//
 // Example:
 //
 //	var v []struct {

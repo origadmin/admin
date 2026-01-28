@@ -1352,7 +1352,9 @@ func (_u *DepartmentUpdateOne) sqlSave(ctx context.Context) (_node *Department, 
 	return _node, nil
 }
 
-// SetDepartment set the Department. This method includes zero values in the update.
+// SetDepartment sets the Department fields from input struct.
+// If no fields are specified, all mutable fields except ID will be set.
+// Zero values are included in the update.
 func (du *DepartmentUpdate) SetDepartment(input *Department, fields ...string) *DepartmentUpdate {
 	m := du.mutation
 	if len(fields) == 0 {
@@ -1362,7 +1364,9 @@ func (du *DepartmentUpdate) SetDepartment(input *Department, fields ...string) *
 	return du
 }
 
-// SetDepartmentSkipZero set the Department, skipping zero values.
+// SetDepartmentSkipZero sets the Department fields from input struct.
+// If no fields are specified, all mutable fields except ID will be set.
+// Zero values are skipped and not updated.
 func (du *DepartmentUpdate) SetDepartmentSkipZero(input *Department, fields ...string) *DepartmentUpdate {
 	m := du.mutation
 	if len(fields) == 0 {
@@ -1372,7 +1376,9 @@ func (du *DepartmentUpdate) SetDepartmentSkipZero(input *Department, fields ...s
 	return du
 }
 
-// SetDepartment set the Department. This method includes zero values in the update.
+// SetDepartment sets the Department fields from input struct.
+// If no fields are specified, all fields except ID will be set.
+// Zero values are included in the update.
 func (duo *DepartmentUpdateOne) SetDepartment(input *Department, fields ...string) *DepartmentUpdateOne {
 	m := duo.mutation
 	if len(fields) == 0 {
@@ -1382,7 +1388,9 @@ func (duo *DepartmentUpdateOne) SetDepartment(input *Department, fields ...strin
 	return duo
 }
 
-// SetDepartmentSkipZero set the Department, skipping zero values.
+// SetDepartmentSkipZero sets the Department fields from input struct.
+// If no fields are specified, all fields except ID will be set.
+// Zero values are skipped and not updated.
 func (duo *DepartmentUpdateOne) SetDepartmentSkipZero(input *Department, fields ...string) *DepartmentUpdateOne {
 	m := duo.mutation
 	if len(fields) == 0 {
@@ -1392,8 +1400,8 @@ func (duo *DepartmentUpdateOne) SetDepartmentSkipZero(input *Department, fields 
 	return duo
 }
 
-// Omit allows the unselect one or more fields/columns for the given query,
-// instead of selecting all fields in the entity.
+// Omit excludes the specified fields from the update operation.
+// By default, all fields are updated. Use this method to exclude specific fields.
 func (duo *DepartmentUpdateOne) Omit(fields ...string) *DepartmentUpdateOne {
 	omits := make(map[string]struct{}, len(fields))
 	for i := range fields {

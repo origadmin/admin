@@ -456,7 +456,9 @@ func (_u *UserDepartmentUpdateOne) sqlSave(ctx context.Context) (_node *UserDepa
 	return _node, nil
 }
 
-// SetUserDepartment set the UserDepartment. This method includes zero values in the update.
+// SetUserDepartment sets the UserDepartment fields from input struct.
+// If no fields are specified, all mutable fields except ID will be set.
+// Zero values are included in the update.
 func (udu *UserDepartmentUpdate) SetUserDepartment(input *UserDepartment, fields ...string) *UserDepartmentUpdate {
 	m := udu.mutation
 	if len(fields) == 0 {
@@ -466,7 +468,9 @@ func (udu *UserDepartmentUpdate) SetUserDepartment(input *UserDepartment, fields
 	return udu
 }
 
-// SetUserDepartmentSkipZero set the UserDepartment, skipping zero values.
+// SetUserDepartmentSkipZero sets the UserDepartment fields from input struct.
+// If no fields are specified, all mutable fields except ID will be set.
+// Zero values are skipped and not updated.
 func (udu *UserDepartmentUpdate) SetUserDepartmentSkipZero(input *UserDepartment, fields ...string) *UserDepartmentUpdate {
 	m := udu.mutation
 	if len(fields) == 0 {
@@ -476,7 +480,9 @@ func (udu *UserDepartmentUpdate) SetUserDepartmentSkipZero(input *UserDepartment
 	return udu
 }
 
-// SetUserDepartment set the UserDepartment. This method includes zero values in the update.
+// SetUserDepartment sets the UserDepartment fields from input struct.
+// If no fields are specified, all fields except ID will be set.
+// Zero values are included in the update.
 func (uduo *UserDepartmentUpdateOne) SetUserDepartment(input *UserDepartment, fields ...string) *UserDepartmentUpdateOne {
 	m := uduo.mutation
 	if len(fields) == 0 {
@@ -486,7 +492,9 @@ func (uduo *UserDepartmentUpdateOne) SetUserDepartment(input *UserDepartment, fi
 	return uduo
 }
 
-// SetUserDepartmentSkipZero set the UserDepartment, skipping zero values.
+// SetUserDepartmentSkipZero sets the UserDepartment fields from input struct.
+// If no fields are specified, all fields except ID will be set.
+// Zero values are skipped and not updated.
 func (uduo *UserDepartmentUpdateOne) SetUserDepartmentSkipZero(input *UserDepartment, fields ...string) *UserDepartmentUpdateOne {
 	m := uduo.mutation
 	if len(fields) == 0 {
@@ -496,8 +504,8 @@ func (uduo *UserDepartmentUpdateOne) SetUserDepartmentSkipZero(input *UserDepart
 	return uduo
 }
 
-// Omit allows the unselect one or more fields/columns for the given query,
-// instead of selecting all fields in the entity.
+// Omit excludes the specified fields from the update operation.
+// By default, all fields are updated. Use this method to exclude specific fields.
 func (uduo *UserDepartmentUpdateOne) Omit(fields ...string) *UserDepartmentUpdateOne {
 	omits := make(map[string]struct{}, len(fields))
 	for i := range fields {

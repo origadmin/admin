@@ -6,566 +6,265 @@ package casbin
 
 import (
 	"context"
-	"sync"
+	"fmt"
 	"testing"
 	"time"
 
 	"github.com/casbin/casbin/v3"
-	"github.com/origadmin/casbin-watcher/v3"
-	"github.com/origadmin/contrib/security/authz"
-	"github.com/origadmin/runtime/log"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 
+	"github.com/origadmin/casbin-watcher/v3"
 	_ "github.com/origadmin/casbin-watcher/v3/drivers/mem"
+	"github.com/origadmin/contrib/security/authz"
+	"github.com/origadmin/runtime/log"
 
 	"origadmin/application/admin/internal/data"
-	"origadmin/application/admin/internal/features/auth/dal"
+	"origadmin/application/admin/internal/data/entity/ent"
 	"origadmin/application/admin/internal/data/entity/ent/enttest"
+	"origadmin/application/admin/internal/features/auth/dal"
 )
 
-// TestCasbinModifier_WriteAndEnforce 测试写入Adapter后Enforcer能否正确验证
-// 这是文档中指出的缺失测试: CasbinAdapter操作测试
-// 测试流程: Modifier写入Adapter → Watcher通知 → Enforcer重新加载 → 验证权限
-func TestCasbinModifier_WriteAndEnforce(t *testing.T) {
+func setupTest(t *testing.T) (context.Context, authz.PolicyModifier, *casbin.SyncedEnforcer, func()) {
 	ctx := context.Background()
 
-	// 1. 创建测试数据库
-	client := enttest.Open(t, "sqlite3", "file:casbin_modifier?mode=memory&cache=shared&_fk=1")
-	defer client.Close()
-
-	// 2. 创建 Adapter (数据写入层)
-	adapter := &data.CasbinAdapter{
-		Ctx: ctx,
-		DB:  client,
-	}
-
-	// 3. 创建 GoChannel Watcher (通知层) - 使用内存 channel 用于测试
-	endpointURL := "mem://casbin_updates?shared=true"
-	watcher, err := watcher.NewWatcher(ctx, endpointURL)
-	require.NoError(t, err)
-	defer watcher.Close()
-
-	// 4. 创建 PolicyModifier (业务层)
-	modifier, err := dal.NewCasbinModifier(adapter, watcher, log.DefaultLogger)
-	require.NoError(t, err)
-
-	// 5. 创建 Enforcer (验证层) - 模拟另一个实例
-	modelPath := "../../../resources/casbin_model.conf"
-	enforcer, err := casbin.NewEnforcer(modelPath, adapter)
-	require.NoError(t, err)
-
-	// 设置 watcher 的回调,让 enforcer 自动重新加载
-	updateCh := make(chan string, 1)
-	err = watcher.SetUpdateCallback(func(msg string) {
-		updateCh <- msg
-	})
-	require.NoError(t, err)
-
-	t.Run("AddUserRole_ThenVerifyWithEnforcer", func(t *testing.T) {
-		// 步骤1: 通过 Modifier 写入用户-角色关系
-		userID := "user123"
-		roleID := "role456"
-
-		added, err := modifier.AddUserRole(ctx, userID, roleID)
-		require.NoError(t, err)
-		assert.True(t, added, "AddUserRole should succeed")
-
-		// 步骤2: 等待 Watcher 通知
-		select {
-		case msg := <-updateCh:
-			assert.NotEmpty(t, msg, "Watcher should send notification")
-		case <-time.After(5 * time.Second):
-			t.Fatal("Watcher notification timeout")
-		}
-
-		// 步骤3: Enforcer 重新加载策略 (模拟收到通知后)
-		err = enforcer.LoadPolicy()
-		require.NoError(t, err, "Enforcer should reload policy")
-
-		// 步骤4: 使用 Enforcer 验证用户是否有角色
-		hasRole, err := enforcer.HasGroupingPolicy(userID, roleID)
-		require.NoError(t, err)
-		assert.True(t, hasRole, "Enforcer should see the user-role link")
-	})
-
-	t.Run("AddRolePermission_ThenVerifyWithEnforcer", func(t *testing.T) {
-		// 步骤1: 添加角色-权限关系
-		roleID := "admin"
-		spec := authz.RuleSpec{
-			Resource: "system:user:create",
-			Action:   "write",
-		}
-
-		added, err := modifier.AddRolePermission(ctx, roleID, spec)
-		require.NoError(t, err)
-		assert.True(t, added, "AddRolePermission should succeed")
-
-		// 步骤2: 等待 Watcher 通知
-		select {
-		case msg := <-updateCh:
-			assert.NotEmpty(t, msg, "Watcher should send notification")
-		case <-time.After(5 * time.Second):
-			t.Fatal("Watcher notification timeout")
-		}
-
-		// 步骤3: Enforcer 重新加载策略
-		err = enforcer.LoadPolicy()
-		require.NoError(t, err)
-
-		// 步骤4: 验证角色是否有权限
-		allowed, err := enforcer.Enforce(roleID, spec.Resource, spec.Action, "*")
-		require.NoError(t, err)
-		assert.True(t, allowed, "Enforcer should see the role-permission link")
-	})
-
-	t.Run("RemoveUserRole_ThenVerifyWithEnforcer", func(t *testing.T) {
-		userID := "user789"
-		roleID := "role999"
-
-		// 先添加
-		_, _ = modifier.AddUserRole(ctx, userID, roleID)
-
-		// 等待通知并重新加载
-		select {
-		case <-updateCh:
-		case <-time.After(5 * time.Second):
-		}
-		_ = enforcer.LoadPolicy()
-
-		// 验证存在
-		hasRole, _ := enforcer.HasGroupingPolicy(userID, roleID)
-		assert.True(t, hasRole, "User should have role before removal")
-
-		// 移除
-		removed, err := modifier.RemoveUserRole(ctx, userID, roleID)
-		require.NoError(t, err)
-		assert.True(t, removed, "RemoveUserRole should succeed")
-
-		// 等待通知并重新加载
-		select {
-		case <-updateCh:
-		case <-time.After(5 * time.Second):
-		}
-		_ = enforcer.LoadPolicy()
-
-		// 验证已移除
-		hasRole, err = enforcer.HasGroupingPolicy(userID, roleID)
-		require.NoError(t, err)
-		assert.False(t, hasRole, "Enforcer should not see the user-role link after removal")
-	})
-
-	t.Run("RemoveAllUserRoles_ThenVerifyWithEnforcer", func(t *testing.T) {
-		userID := "user_multi"
-
-		// 添加多个角色
-		_, _ = modifier.AddUserRole(ctx, userID, "role1")
-		_, _ = modifier.AddUserRole(ctx, userID, "role2")
-		_, _ = modifier.AddUserRole(ctx, userID, "role3")
-
-		// 等待通知并重新加载
-		for i := 0; i < 3; i++ {
-			select {
-			case <-updateCh:
-			case <-time.After(5 * time.Second):
-			}
-		}
-		_ = enforcer.LoadPolicy()
-
-		// 验证有3个角色
-		roles, _ := enforcer.GetRolesForUser(userID)
-		assert.Len(t, roles, 3, "User should have 3 roles")
-
-		// 移除所有角色
-		removed, err := modifier.RemoveAllUserRoles(ctx, userID)
-		require.NoError(t, err)
-		assert.True(t, removed, "RemoveAllUserRoles should succeed")
-
-		// 等待通知并重新加载
-		select {
-		case <-updateCh:
-		case <-time.After(5 * time.Second):
-		}
-		_ = enforcer.LoadPolicy()
-
-		// 验证已移除所有角色
-		roles, _ = enforcer.GetRolesForUser(userID)
-		assert.Len(t, roles, 0, "User should have no roles after removal")
-	})
-
-	t.Run("DirectUserPermission_ThenVerifyWithEnforcer", func(t *testing.T) {
-		userID := "user_direct"
-		spec := authz.RuleSpec{
-			Resource: "system:config:read",
-			Action:   "read",
-		}
-
-		// 添加用户直接权限
-		added, err := modifier.AddUserPermission(ctx, userID, spec)
-		require.NoError(t, err)
-		assert.True(t, added)
-
-		// 等待通知并重新加载
-		select {
-		case <-updateCh:
-		case <-time.After(5 * time.Second):
-		}
-		_ = enforcer.LoadPolicy()
-
-		// 验证用户直接权限
-		allowed, err := enforcer.Enforce(userID, spec.Resource, spec.Action, "*")
-		require.NoError(t, err)
-		assert.True(t, allowed, "Enforcer should see the user-permission link")
-	})
-}
-
-// TestCasbinModifier_ConcurrentWrites 测试并发写入场景
-// 验证 Adapter 在并发情况下的正确性
-func TestCasbinModifier_ConcurrentWrites(t *testing.T) {
-	ctx := context.Background()
-
-	client := enttest.Open(t, "sqlite3", "file:casbin_concurrent?mode=memory&cache=shared&_fk=1")
-	defer client.Close()
+	client := enttest.Open(t, "sqlite3", fmt.Sprintf("file:%s?mode=memory&cache=shared&_fk=1", t.Name()))
+	db := ent.NewDatabaseWithClient(client)
 
 	adapter := &data.CasbinAdapter{
 		Ctx: ctx,
-		DB:  client,
+		DB:  db,
 	}
 
-	endpointURL := "mem://casbin_updates?shared=true"
-	watcher, err := watcher.NewWatcher(ctx, endpointURL)
+	w, err := watcher.NewWatcher(ctx, fmt.Sprintf("mem://%s?shared=true", t.Name()))
 	require.NoError(t, err)
-	defer watcher.Close()
 
-	modifier, err := dal.NewCasbinModifier(adapter, watcher, log.DefaultLogger)
+	modifier, err := dal.NewCasbinModifier(adapter, w, log.DefaultLogger)
 	require.NoError(t, err)
 
 	modelPath := "../../../resources/casbin_model.conf"
-	enforcer, err := casbin.NewEnforcer(modelPath, adapter)
+	enforcer, err := casbin.NewSyncedEnforcer(modelPath, adapter)
 	require.NoError(t, err)
 
-	t.Run("ConcurrentAddUserRole", func(t *testing.T) {
-		const concurrency = 10
-		userID := "user_concurrent"
-
-		var wg sync.WaitGroup
-		errChan := make(chan error, concurrency)
-
-		for i := 0; i < concurrency; i++ {
-			wg.Add(1)
-			go func(roleIndex int) {
-				defer wg.Done()
-				roleID := "role_" + string(rune('0'+roleIndex))
-
-				_, err := modifier.AddUserRole(ctx, userID, roleID)
-				if err != nil {
-					errChan <- err
-				}
-			}(i)
-		}
-
-		wg.Wait()
-		close(errChan)
-
-		// 检查是否有错误
-		for err := range errChan {
-			t.Errorf("Concurrent add failed: %v", err)
-		}
-
-		// 重新加载并验证
-		_ = enforcer.LoadPolicy()
-		roles, err := enforcer.GetRolesForUser(userID)
-		require.NoError(t, err)
-		assert.Len(t, roles, concurrency, "All concurrent adds should succeed")
-	})
-
-	t.Run("ConcurrentAddRolePermission", func(t *testing.T) {
-		const concurrency = 10
-		roleID := "role_perm_concurrent"
-
-		var wg sync.WaitGroup
-		errChan := make(chan error, concurrency)
-
-		for i := 0; i < concurrency; i++ {
-			wg.Add(1)
-			go func(permIndex int) {
-				defer wg.Done()
-				spec := authz.RuleSpec{
-					Resource: string(rune('a' + permIndex)),
-					Action:   "read",
-				}
-
-				_, err := modifier.AddRolePermission(ctx, roleID, spec)
-				if err != nil {
-					errChan <- err
-				}
-			}(i)
-		}
-
-		wg.Wait()
-		close(errChan)
-
-		for err := range errChan {
-			t.Errorf("Concurrent add permission failed: %v", err)
-		}
-
-		// 验证每个权限都能正确检查
-		_ = enforcer.LoadPolicy()
-
-		for i := 0; i < concurrency; i++ {
-			resource := string(rune('a' + i))
-			allowed, err := enforcer.Enforce(roleID, resource, "read", "*")
-			require.NoError(t, err)
-			assert.True(t, allowed, "Permission %s should be allowed", resource)
+	err = w.SetUpdateCallback(func(s string) {
+		t.Logf("Watcher callback triggered, reloading policy. Message: %s", s)
+		if err := enforcer.LoadPolicy(); err != nil {
+			t.Logf("Error reloading policy in watcher callback: %v", err)
 		}
 	})
-}
+	require.NoError(t, err)
 
-// TestCasbinModifier_WatcherNotification 测试 Watcher 通知机制
-func TestCasbinModifier_WatcherNotification(t *testing.T) {
-	ctx := context.Background()
+	err = enforcer.LoadPolicy()
+	require.NoError(t, err, "Initial policy load should succeed")
 
-	client := enttest.Open(t, "sqlite3", "file:casbin_watcher?mode=memory&cache=shared&_fk=1")
-	defer client.Close()
-
-	adapter := &data.CasbinAdapter{
-		Ctx: ctx,
-		DB:  client,
+	cleanup := func() {
+		w.Close()
+		client.Close()
 	}
 
-	endpointURL := "mem://casbin_updates?shared=true"
-	watcher, err := watcher.NewWatcher(ctx, endpointURL)
-	require.NoError(t, err)
-	defer watcher.Close()
-
-	updateCount := 0
-	var mu sync.Mutex
-
-	err = watcher.SetUpdateCallback(func(msg string) {
-		mu.Lock()
-		defer mu.Unlock()
-		updateCount++
-	})
-	require.NoError(t, err)
-
-	modifier, err := dal.NewCasbinModifier(adapter, watcher, log.DefaultLogger)
-	require.NoError(t, err)
-
-	t.Run("WatcherUpdateCount", func(t *testing.T) {
-		mu.Lock()
-		initialCount := updateCount
-		mu.Unlock()
-
-		// 执行多次修改操作
-		_, _ = modifier.AddUserRole(ctx, "user1", "role1")
-		_, _ = modifier.AddUserRole(ctx, "user2", "role2")
-		_, _ = modifier.AddRolePermission(ctx, "role1", authz.RuleSpec{Resource: "r1", Action: "read"})
-
-		// 等待所有通知
-		time.Sleep(100 * time.Millisecond)
-
-		mu.Lock()
-		count := updateCount
-		mu.Unlock()
-
-		assert.Equal(t, initialCount+3, count,
-			"Watcher should be notified for each successful modification")
-	})
-
-	t.Run("NoNotificationOnDuplicate", func(t *testing.T) {
-		// 添加重复的角色 (第二次应该不触发通知)
-		_, _ = modifier.AddUserRole(ctx, "user_dup", "role_dup")
-
-		// 等待通知
-		time.Sleep(100 * time.Millisecond)
-
-		mu.Lock()
-		countAfterFirstAdd := updateCount
-		mu.Unlock()
-
-		_, _ = modifier.AddUserRole(ctx, "user_dup", "role_dup") // 重复添加
-
-		// 等待(不应该有新通知)
-		time.Sleep(100 * time.Millisecond)
-
-		mu.Lock()
-		count := updateCount
-		mu.Unlock()
-
-		assert.Equal(t, countAfterFirstAdd, count,
-			"Watcher should not be notified for duplicate/no-op operations")
-	})
-
-	t.Run("NoWatcher_SilentFailure", func(t *testing.T) {
-		// 创建没有 watcher 的 modifier
-		modifierNoWatcher, err := dal.NewCasbinModifier(adapter, nil, log.DefaultLogger)
-		require.NoError(t, err)
-
-		// 应该能正常工作,只是没有通知
-		added, err := modifierNoWatcher.AddUserRole(ctx, "user_nowatcher", "role_nowatcher")
-		require.NoError(t, err)
-		assert.True(t, added)
-
-		mu.Lock()
-		count := updateCount
-		mu.Unlock()
-
-		assert.Equal(t, countAfterFirstAdd, count, "Watcher count should not change")
-	})
+	return ctx, modifier, enforcer, cleanup
 }
 
-// TestCasbinModifier_AdapterDirectAccess 测试直接访问 Adapter 并用 Enforcer 验证
-// 这正是你提到的测试场景:写入Adapter → Enforcer检测
-func TestCasbinModifier_AdapterDirectAccess(t *testing.T) {
-	ctx := context.Background()
+func TestPolicyModifier(t *testing.T) {
+	const waitFor = 5 * time.Second
+	const tick = 100 * time.Millisecond
+	const domain1 = "domain1"
+	const domain2 = "domain2"
+	const defaultDomain = ""
 
-	client := enttest.Open(t, "sqlite3", "file:adapter_direct?mode=memory&cache=shared&_fk=1")
-	defer client.Close()
+	t.Run("AddAndRemoveRoles", func(t *testing.T) {
+		ctx, modifier, enforcer, cleanup := setupTest(t)
+		defer cleanup()
 
-	adapter := &data.CasbinAdapter{
-		Ctx: ctx,
-		DB:  client,
-	}
+		subject := "user1"
+		role1 := authz.RoleSpec{Role: "admin", Domain: domain1}
+		role2 := authz.RoleSpec{Role: "viewer", Domain: domain1}
+		role3 := authz.RoleSpec{Role: "admin", Domain: domain2}
 
-	endpointURL := "mem://casbin_updates?shared=true"
-	watcher, err := watcher.NewWatcher(ctx, endpointURL)
-	require.NoError(t, err)
-	defer watcher.Close()
-
-	modifier, err := dal.NewCasbinModifier(adapter, watcher, log.DefaultLogger)
-	require.NoError(t, err)
-
-	updateCh := make(chan string, 10)
-	err = watcher.SetUpdateCallback(func(msg string) {
-		updateCh <- msg
-	})
-	require.NoError(t, err)
-
-	modelPath := "../../../resources/casbin_model.conf"
-
-	t.Run("SimulateDataUpdateNotification", func(t *testing.T) {
-		// 场景: 模拟接收到数据更新通知后的完整流程
-
-		// 1. 模拟外部写入 (通过 Modifier)
-		userID := "user_notify"
-		roleID := "role_notify"
-
-		added, err := modifier.AddUserRole(ctx, userID, roleID)
-		require.NoError(t, err)
-		require.True(t, added)
-
-		// 2. 等待 Watcher 通知
-		select {
-		case msg := <-updateCh:
-			assert.NotEmpty(t, msg, "Watcher should send notification")
-		case <-time.After(5 * time.Second):
-			t.Fatal("Watcher notification timeout")
-		}
-
-		// 3. 模拟另一个实例收到 Watcher 通知,创建新的 Enforcer
-		// 这模拟了分布式环境下,其他实例收到通知后的行为
-		enforcer2, err := casbin.NewEnforcer(modelPath, adapter)
+		// Add multiple roles
+		_, err := modifier.AddRoles(ctx, subject, role1, role2, role3)
 		require.NoError(t, err)
 
-		// 4. Enforcer 重新加载策略 (模拟收到通知后的动作)
-		err = enforcer2.LoadPolicy()
+		require.Eventually(t, func() bool {
+			r := enforcer.GetRolesForUserInDomain(subject, domain1)
+			return len(r) == 2
+		}, waitFor, tick, "Should have 2 roles in domain1")
+		require.Eventually(t, func() bool {
+			r := enforcer.GetRolesForUserInDomain(subject, domain2)
+			return len(r) == 1
+		}, waitFor, tick, "Should have 1 role in domain2")
+
+		// Remove specific role
+		_, err = modifier.RemoveRoles(ctx, subject, role1)
 		require.NoError(t, err)
+		require.Eventually(t, func() bool {
+			has, _ := enforcer.HasGroupingPolicy(subject, role1.Role, role1.Domain)
+			return !has
+		}, waitFor, tick, "Should remove specific role")
 
-		// 5. 验证 Enforcer 能看到最新数据
-		hasRole, err := enforcer2.HasGroupingPolicy(userID, roleID)
+		// Remove all roles in a domain
+		_, err = modifier.RemoveRoles(ctx, subject, authz.RoleSpec{Domain: domain1})
 		require.NoError(t, err)
-		assert.True(t, hasRole, "Enforcer should see the latest policy after reload")
+		require.Eventually(t, func() bool {
+			r := enforcer.GetRolesForUserInDomain(subject, domain1)
+			return len(r) == 0
+		}, waitFor, tick, "Should remove all roles in domain1")
 
-		// 6. 进一步验证: 权限检查也能正确工作
-		_, _ = modifier.AddRolePermission(ctx, roleID, authz.RuleSpec{
-			Resource: "test:resource",
-			Action:   "read",
-		})
-
-		// 等待通知
-		select {
-		case <-updateCh:
-		case <-time.After(5 * time.Second):
-			t.Fatal("Watcher notification timeout")
-		}
-
-		err = enforcer2.LoadPolicy()
+		// Remove a role across all domains
+		_, err = modifier.RemoveRoles(ctx, subject, authz.RoleSpec{Role: "admin"})
 		require.NoError(t, err)
+		require.Eventually(t, func() bool {
+			has, _ := enforcer.HasGroupingPolicy(subject, role3.Role, role3.Domain)
+			return !has
+		}, waitFor, tick, "Should remove admin role from domain2")
 
-		allowed, err := enforcer2.Enforce(roleID, "test:resource", "read", "*")
+		// Final check: remove all remaining roles for the user
+		_, _ = modifier.AddRoles(ctx, subject, role1) // re-add for final test
+		time.Sleep(tick * 2)
+		_, err = modifier.RemoveRoles(ctx, subject)
 		require.NoError(t, err)
-		assert.True(t, allowed, "Permission check should work after policy update")
+		require.Eventually(t, func() bool {
+			r, _ := enforcer.GetImplicitRolesForUser(subject)
+			return len(r) == 0
+		}, waitFor, tick, "Should remove all roles for user")
 	})
 
-	t.Run("UpdatePropagationDelay", func(t *testing.T) {
-		// 测试更新传播和时序问题
+	t.Run("UpdateRole", func(t *testing.T) {
+		ctx, modifier, enforcer, cleanup := setupTest(t)
+		defer cleanup()
 
-		// 1. 初始状态
-		enforcer1, _ := casbin.NewEnforcer(modelPath, adapter)
-		enforcer1.LoadPolicy()
+		subject := "user_updater"
+		oldRole := authz.RoleSpec{Role: "editor", Domain: domain1}
+		newRole := authz.RoleSpec{Role: "publisher", Domain: domain1}
 
-		userID := "user_delay"
-		roleID := "role_delay"
-
-		// 2. 验证初始无角色
-		hasRole, _ := enforcer1.HasGroupingPolicy(userID, roleID)
-		assert.False(t, hasRole)
-
-		// 3. 添加角色
-		_, _ = modifier.AddUserRole(ctx, userID, roleID)
-
-		// 等待通知
-		select {
-		case <-updateCh:
-		case <-time.After(5 * time.Second):
-		}
-
-		// 4. 不重新加载,Enforcer 应该看不到新数据
-		hasRole, _ = enforcer1.HasGroupingPolicy(userID, roleID)
-		assert.False(t, hasRole, "Enforcer should not see update without reload")
-
-		// 5. 重新加载后应该看到
-		err := enforcer1.LoadPolicy()
+		// Add initial role
+		_, err := modifier.AddRoles(ctx, subject, oldRole)
 		require.NoError(t, err)
+		require.Eventually(t, func() bool {
+			has, _ := enforcer.HasGroupingPolicy(subject, oldRole.Role, oldRole.Domain)
+			return has
+		}, waitFor, tick)
 
-		hasRole, _ = enforcer1.HasGroupingPolicy(userID, roleID)
-		assert.True(t, hasRole, "Enforcer should see update after reload")
+		// Update the role
+		updated, err := modifier.UpdateRole(ctx, subject, oldRole, newRole)
+		require.NoError(t, err)
+		assert.True(t, updated)
+
+		require.Eventually(t, func() bool {
+			oldHas, _ := enforcer.HasGroupingPolicy(subject, oldRole.Role, oldRole.Domain)
+			newHas, _ := enforcer.HasGroupingPolicy(subject, newRole.Role, newRole.Domain)
+			return !oldHas && newHas
+		}, waitFor, tick, "Enforcer should see updated role but not the old one")
 	})
 
-	t.Run("TwoInstanceConsistency", func(t *testing.T) {
-		// 测试两个实例的一致性
+	t.Run("AddAndRemovePermissions", func(t *testing.T) {
+		ctx, modifier, enforcer, cleanup := setupTest(t)
+		defer cleanup()
 
-		// 创建两个 watcher 模拟两个服务实例
-		watcher1, err := watcher.NewWatcher(ctx, endpointURL)
+		subject := "role_manager"
+		perm1 := authz.RuleSpec{Resource: "orders", Action: "read", Domain: domain1}
+		perm2 := authz.RuleSpec{Resource: "orders", Action: "write", Domain: domain1}
+		perm3 := authz.RuleSpec{Resource: "products", Action: "read", Domain: domain2}
+
+		// Add permissions
+		_, err := modifier.AddPermissions(ctx, subject, perm1, perm2, perm3)
 		require.NoError(t, err)
-		defer watcher1.Close()
+		require.Eventually(t, func() bool {
+			p := enforcer.GetPermissionsForUserInDomain(subject, domain1)
+			return len(p) == 2
+		}, waitFor, tick)
 
-		watcher2, err := watcher.NewWatcher(ctx, endpointURL)
+		// Remove specific permission
+		_, err = modifier.RemovePermissions(ctx, subject, perm1)
 		require.NoError(t, err)
-		defer watcher2.Close()
+		require.Eventually(t, func() bool {
+			has, _ := enforcer.Enforce(subject, perm1.Resource, perm1.Action, perm1.Domain)
+			return !has
+		}, waitFor, tick)
 
-		// 创建两个 enforcer
-		enf1, err := casbin.NewEnforcer(modelPath, adapter)
+		// Remove all permissions for a resource in a domain
+		_, err = modifier.RemovePermissions(ctx, subject, authz.RuleSpec{Resource: "orders", Domain: domain1})
 		require.NoError(t, err)
-		enf1.SetWatcher(watcher1)
+		require.Eventually(t, func() bool {
+			p := enforcer.GetPermissionsForUserInDomain(subject, domain1)
+			return len(p) == 0
+		}, waitFor, tick)
 
-		enf2, err := casbin.NewEnforcer(modelPath, adapter)
+		// Remove all permissions for the subject
+		_, err = modifier.RemovePermissions(ctx, subject)
 		require.NoError(t, err)
-		enf2.SetWatcher(watcher2)
+		require.Eventually(t, func() bool {
+			p, _ := enforcer.GetImplicitPermissionsForUser(subject)
+			return len(p) == 0
+		}, waitFor, tick)
+	})
 
-		// 设置回调自动重新加载
-		enf1.SetWatcher(watcher1)
-		enf2.SetWatcher(watcher2)
+	t.Run("UpdatePermission", func(t *testing.T) {
+		ctx, modifier, enforcer, cleanup := setupTest(t)
+		defer cleanup()
 
-		// 通过 enforcer1 添加策略
-		_, _ = enf1.AddPolicy("role1", "resource1", "read", "*")
+		subject := "user_updater"
+		oldSpec := authz.RuleSpec{Resource: "profile", Action: "read", Domain: domain1}
+		newSpec := authz.RuleSpec{Resource: "profile", Action: "write", Domain: domain1}
 
-		// 等待传播
-		time.Sleep(200 * time.Millisecond)
-
-		// 验证 enforcer2 也能看到
-		allowed, err := enf2.Enforce("role1", "resource1", "read", "*")
+		// Add initial permission
+		_, err := modifier.AddPermissions(ctx, subject, oldSpec)
 		require.NoError(t, err)
-		assert.True(t, allowed, "Enforcer2 should see policy added by Enforcer1")
+		require.Eventually(t, func() bool {
+			has, _ := enforcer.Enforce(subject, oldSpec.Resource, oldSpec.Action, oldSpec.Domain)
+			return has
+		}, waitFor, tick)
+
+		// Update the permission
+		updated, err := modifier.UpdatePermission(ctx, subject, oldSpec, newSpec)
+		require.NoError(t, err)
+		assert.True(t, updated)
+
+		require.Eventually(t, func() bool {
+			oldHas, _ := enforcer.Enforce(subject, oldSpec.Resource, oldSpec.Action, oldSpec.Domain)
+			newHas, _ := enforcer.Enforce(subject, newSpec.Resource, newSpec.Action, newSpec.Domain)
+			return !oldHas && newHas
+		}, waitFor, tick, "Enforcer should see updated permission but not the old one")
+	})
+
+	t.Run("OperationsInDefaultDomain", func(t *testing.T) {
+		ctx, modifier, enforcer, cleanup := setupTest(t)
+		defer cleanup()
+
+		subject := "user_no_domain"
+		role := authz.RoleSpec{Role: "global_admin", Domain: defaultDomain}
+		perm := authz.RuleSpec{Resource: "global_settings", Action: "write", Domain: defaultDomain}
+
+		// Add role without domain
+		_, err := modifier.AddRoles(ctx, subject, role)
+		require.NoError(t, err)
+		require.Eventually(t, func() bool {
+			has, _ := enforcer.HasGroupingPolicy(subject, role.Role, defaultDomain)
+			return has
+		}, waitFor, tick, "Should add role in default domain")
+
+		// Add permission without domain
+		_, err = modifier.AddPermissions(ctx, subject, perm)
+		require.NoError(t, err)
+		require.Eventually(t, func() bool {
+			has, _ := enforcer.Enforce(subject, perm.Resource, perm.Action, defaultDomain)
+			return has
+		}, waitFor, tick, "Should add permission in default domain")
+
+		// Remove role without domain
+		_, err = modifier.RemoveRoles(ctx, subject, role)
+		require.NoError(t, err)
+		require.Eventually(t, func() bool {
+			has, _ := enforcer.HasGroupingPolicy(subject, role.Role, defaultDomain)
+			return !has
+		}, waitFor, tick, "Should remove role from default domain")
+
+		// Remove permission without domain
+		_, err = modifier.RemovePermissions(ctx, subject, perm)
+		require.NoError(t, err)
+		require.Eventually(t, func() bool {
+			has, _ := enforcer.Enforce(subject, perm.Resource, perm.Action, defaultDomain)
+			return !has
+		}, waitFor, tick, "Should remove permission from default domain")
 	})
 }

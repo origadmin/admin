@@ -23,9 +23,10 @@ import (
 	"origadmin/application/admin/internal/data/entity/ent/viewresource"
 )
 
-// SetFields sets the values of the fields with the given names. It returns an
-// error if the field is not defined in the schema, or if the type mismatched the
-// field type. This method includes zero values in the update.
+// SetFields sets the values of the fields with the given names.
+// It returns an error if the field is not defined in the schema,
+// or if the type mismatches the field type.
+// Zero values are included in the update.
 func (m *CasbinRuleMutation) SetFields(input *CasbinRule, fields ...string) error {
 	for i := range fields {
 		switch fields[i] {
@@ -44,15 +45,15 @@ func (m *CasbinRuleMutation) SetFields(input *CasbinRule, fields ...string) erro
 		case casbinrule.FieldV5:
 			m.SetV5(input.V5)
 		default:
-			return fmt.Errorf("unknown CasbinRule field %s", fields[i])
+			return fmt.Errorf("unknown %s field %s", "CasbinRule", fields[i])
 		}
 	}
 	return nil
 }
 
 // SetFieldsSkipZero sets the values of the fields with the given names, skipping zero values.
-// It returns an error if the field is not defined in the schema, or if the type mismatched the
-// field type.
+// It returns an error if the field is not defined in the schema,
+// or if the type mismatches the field type.
 func (m *CasbinRuleMutation) SetFieldsSkipZero(input *CasbinRule, fields ...string) error {
 	for i := range fields {
 		switch fields[i] {
@@ -92,15 +93,16 @@ func (m *CasbinRuleMutation) SetFieldsSkipZero(input *CasbinRule, fields ...stri
 				m.SetV5(input.V5)
 			}
 		default:
-			return fmt.Errorf("unknown CasbinRule field %s", fields[i])
+			return fmt.Errorf("unknown %s field %s", "CasbinRule", fields[i])
 		}
 	}
 	return nil
 }
 
-// SetFields sets the values of the fields with the given names. It returns an
-// error if the field is not defined in the schema, or if the type mismatched the
-// field type. This method includes zero values in the update.
+// SetFields sets the values of the fields with the given names.
+// It returns an error if the field is not defined in the schema,
+// or if the type mismatches the field type.
+// Zero values are included in the update.
 func (m *DepartmentMutation) SetFields(input *Department, fields ...string) error {
 	for i := range fields {
 		switch fields[i] {
@@ -127,15 +129,15 @@ func (m *DepartmentMutation) SetFields(input *Department, fields ...string) erro
 		case department.FieldID:
 			m.SetID(input.ID)
 		default:
-			return fmt.Errorf("unknown Department field %s", fields[i])
+			return fmt.Errorf("unknown %s field %s", "Department", fields[i])
 		}
 	}
 	return nil
 }
 
 // SetFieldsSkipZero sets the values of the fields with the given names, skipping zero values.
-// It returns an error if the field is not defined in the schema, or if the type mismatched the
-// field type.
+// It returns an error if the field is not defined in the schema,
+// or if the type mismatches the field type.
 func (m *DepartmentMutation) SetFieldsSkipZero(input *Department, fields ...string) error {
 	for i := range fields {
 		switch fields[i] {
@@ -193,15 +195,16 @@ func (m *DepartmentMutation) SetFieldsSkipZero(input *Department, fields ...stri
 				m.SetID(input.ID)
 			}
 		default:
-			return fmt.Errorf("unknown Department field %s", fields[i])
+			return fmt.Errorf("unknown %s field %s", "Department", fields[i])
 		}
 	}
 	return nil
 }
 
-// SetFields sets the values of the fields with the given names. It returns an
-// error if the field is not defined in the schema, or if the type mismatched the
-// field type. This method includes zero values in the update.
+// SetFields sets the values of the fields with the given names.
+// It returns an error if the field is not defined in the schema,
+// or if the type mismatches the field type.
+// Zero values are included in the update.
 func (m *NotificationMutation) SetFields(input *Notification, fields ...string) error {
 	for i := range fields {
 		switch fields[i] {
@@ -224,15 +227,15 @@ func (m *NotificationMutation) SetFields(input *Notification, fields ...string) 
 		case notification.FieldID:
 			m.SetID(input.ID)
 		default:
-			return fmt.Errorf("unknown Notification field %s", fields[i])
+			return fmt.Errorf("unknown %s field %s", "Notification", fields[i])
 		}
 	}
 	return nil
 }
 
 // SetFieldsSkipZero sets the values of the fields with the given names, skipping zero values.
-// It returns an error if the field is not defined in the schema, or if the type mismatched the
-// field type.
+// It returns an error if the field is not defined in the schema,
+// or if the type mismatches the field type.
 func (m *NotificationMutation) SetFieldsSkipZero(input *Notification, fields ...string) error {
 	for i := range fields {
 		switch fields[i] {
@@ -280,15 +283,16 @@ func (m *NotificationMutation) SetFieldsSkipZero(input *Notification, fields ...
 				m.SetID(input.ID)
 			}
 		default:
-			return fmt.Errorf("unknown Notification field %s", fields[i])
+			return fmt.Errorf("unknown %s field %s", "Notification", fields[i])
 		}
 	}
 	return nil
 }
 
-// SetFields sets the values of the fields with the given names. It returns an
-// error if the field is not defined in the schema, or if the type mismatched the
-// field type. This method includes zero values in the update.
+// SetFields sets the values of the fields with the given names.
+// It returns an error if the field is not defined in the schema,
+// or if the type mismatches the field type.
+// Zero values are included in the update.
 func (m *PermissionMutation) SetFields(input *Permission, fields ...string) error {
 	for i := range fields {
 		switch fields[i] {
@@ -313,15 +317,15 @@ func (m *PermissionMutation) SetFields(input *Permission, fields ...string) erro
 		case permission.FieldID:
 			m.SetID(input.ID)
 		default:
-			return fmt.Errorf("unknown Permission field %s", fields[i])
+			return fmt.Errorf("unknown %s field %s", "Permission", fields[i])
 		}
 	}
 	return nil
 }
 
 // SetFieldsSkipZero sets the values of the fields with the given names, skipping zero values.
-// It returns an error if the field is not defined in the schema, or if the type mismatched the
-// field type.
+// It returns an error if the field is not defined in the schema,
+// or if the type mismatches the field type.
 func (m *PermissionMutation) SetFieldsSkipZero(input *Permission, fields ...string) error {
 	for i := range fields {
 		switch fields[i] {
@@ -374,15 +378,16 @@ func (m *PermissionMutation) SetFieldsSkipZero(input *Permission, fields ...stri
 				m.SetID(input.ID)
 			}
 		default:
-			return fmt.Errorf("unknown Permission field %s", fields[i])
+			return fmt.Errorf("unknown %s field %s", "Permission", fields[i])
 		}
 	}
 	return nil
 }
 
-// SetFields sets the values of the fields with the given names. It returns an
-// error if the field is not defined in the schema, or if the type mismatched the
-// field type. This method includes zero values in the update.
+// SetFields sets the values of the fields with the given names.
+// It returns an error if the field is not defined in the schema,
+// or if the type mismatches the field type.
+// Zero values are included in the update.
 func (m *PermissionResourceMutation) SetFields(input *PermissionResource, fields ...string) error {
 	for i := range fields {
 		switch fields[i] {
@@ -391,15 +396,15 @@ func (m *PermissionResourceMutation) SetFields(input *PermissionResource, fields
 		case permissionresource.FieldResourceID:
 			m.SetResourceID(input.ResourceID)
 		default:
-			return fmt.Errorf("unknown PermissionResource field %s", fields[i])
+			return fmt.Errorf("unknown %s field %s", "PermissionResource", fields[i])
 		}
 	}
 	return nil
 }
 
 // SetFieldsSkipZero sets the values of the fields with the given names, skipping zero values.
-// It returns an error if the field is not defined in the schema, or if the type mismatched the
-// field type.
+// It returns an error if the field is not defined in the schema,
+// or if the type mismatches the field type.
 func (m *PermissionResourceMutation) SetFieldsSkipZero(input *PermissionResource, fields ...string) error {
 	for i := range fields {
 		switch fields[i] {
@@ -414,15 +419,16 @@ func (m *PermissionResourceMutation) SetFieldsSkipZero(input *PermissionResource
 				m.SetResourceID(input.ResourceID)
 			}
 		default:
-			return fmt.Errorf("unknown PermissionResource field %s", fields[i])
+			return fmt.Errorf("unknown %s field %s", "PermissionResource", fields[i])
 		}
 	}
 	return nil
 }
 
-// SetFields sets the values of the fields with the given names. It returns an
-// error if the field is not defined in the schema, or if the type mismatched the
-// field type. This method includes zero values in the update.
+// SetFields sets the values of the fields with the given names.
+// It returns an error if the field is not defined in the schema,
+// or if the type mismatches the field type.
+// Zero values are included in the update.
 func (m *PositionMutation) SetFields(input *Position, fields ...string) error {
 	for i := range fields {
 		switch fields[i] {
@@ -441,15 +447,15 @@ func (m *PositionMutation) SetFields(input *Position, fields ...string) error {
 		case position.FieldID:
 			m.SetID(input.ID)
 		default:
-			return fmt.Errorf("unknown Position field %s", fields[i])
+			return fmt.Errorf("unknown %s field %s", "Position", fields[i])
 		}
 	}
 	return nil
 }
 
 // SetFieldsSkipZero sets the values of the fields with the given names, skipping zero values.
-// It returns an error if the field is not defined in the schema, or if the type mismatched the
-// field type.
+// It returns an error if the field is not defined in the schema,
+// or if the type mismatches the field type.
 func (m *PositionMutation) SetFieldsSkipZero(input *Position, fields ...string) error {
 	for i := range fields {
 		switch fields[i] {
@@ -487,15 +493,16 @@ func (m *PositionMutation) SetFieldsSkipZero(input *Position, fields ...string) 
 				m.SetID(input.ID)
 			}
 		default:
-			return fmt.Errorf("unknown Position field %s", fields[i])
+			return fmt.Errorf("unknown %s field %s", "Position", fields[i])
 		}
 	}
 	return nil
 }
 
-// SetFields sets the values of the fields with the given names. It returns an
-// error if the field is not defined in the schema, or if the type mismatched the
-// field type. This method includes zero values in the update.
+// SetFields sets the values of the fields with the given names.
+// It returns an error if the field is not defined in the schema,
+// or if the type mismatches the field type.
+// Zero values are included in the update.
 func (m *PositionPermissionMutation) SetFields(input *PositionPermission, fields ...string) error {
 	for i := range fields {
 		switch fields[i] {
@@ -504,15 +511,15 @@ func (m *PositionPermissionMutation) SetFields(input *PositionPermission, fields
 		case positionpermission.FieldPermissionID:
 			m.SetPermissionID(input.PermissionID)
 		default:
-			return fmt.Errorf("unknown PositionPermission field %s", fields[i])
+			return fmt.Errorf("unknown %s field %s", "PositionPermission", fields[i])
 		}
 	}
 	return nil
 }
 
 // SetFieldsSkipZero sets the values of the fields with the given names, skipping zero values.
-// It returns an error if the field is not defined in the schema, or if the type mismatched the
-// field type.
+// It returns an error if the field is not defined in the schema,
+// or if the type mismatches the field type.
 func (m *PositionPermissionMutation) SetFieldsSkipZero(input *PositionPermission, fields ...string) error {
 	for i := range fields {
 		switch fields[i] {
@@ -527,15 +534,16 @@ func (m *PositionPermissionMutation) SetFieldsSkipZero(input *PositionPermission
 				m.SetPermissionID(input.PermissionID)
 			}
 		default:
-			return fmt.Errorf("unknown PositionPermission field %s", fields[i])
+			return fmt.Errorf("unknown %s field %s", "PositionPermission", fields[i])
 		}
 	}
 	return nil
 }
 
-// SetFields sets the values of the fields with the given names. It returns an
-// error if the field is not defined in the schema, or if the type mismatched the
-// field type. This method includes zero values in the update.
+// SetFields sets the values of the fields with the given names.
+// It returns an error if the field is not defined in the schema,
+// or if the type mismatches the field type.
+// Zero values are included in the update.
 func (m *ResourceMutation) SetFields(input *Resource, fields ...string) error {
 	for i := range fields {
 		switch fields[i] {
@@ -582,15 +590,15 @@ func (m *ResourceMutation) SetFields(input *Resource, fields ...string) error {
 		case resource.FieldID:
 			m.SetID(input.ID)
 		default:
-			return fmt.Errorf("unknown Resource field %s", fields[i])
+			return fmt.Errorf("unknown %s field %s", "Resource", fields[i])
 		}
 	}
 	return nil
 }
 
 // SetFieldsSkipZero sets the values of the fields with the given names, skipping zero values.
-// It returns an error if the field is not defined in the schema, or if the type mismatched the
-// field type.
+// It returns an error if the field is not defined in the schema,
+// or if the type mismatches the field type.
 func (m *ResourceMutation) SetFieldsSkipZero(input *Resource, fields ...string) error {
 	for i := range fields {
 		switch fields[i] {
@@ -698,15 +706,16 @@ func (m *ResourceMutation) SetFieldsSkipZero(input *Resource, fields ...string) 
 				m.SetID(input.ID)
 			}
 		default:
-			return fmt.Errorf("unknown Resource field %s", fields[i])
+			return fmt.Errorf("unknown %s field %s", "Resource", fields[i])
 		}
 	}
 	return nil
 }
 
-// SetFields sets the values of the fields with the given names. It returns an
-// error if the field is not defined in the schema, or if the type mismatched the
-// field type. This method includes zero values in the update.
+// SetFields sets the values of the fields with the given names.
+// It returns an error if the field is not defined in the schema,
+// or if the type mismatches the field type.
+// Zero values are included in the update.
 func (m *RoleMutation) SetFields(input *Role, fields ...string) error {
 	for i := range fields {
 		switch fields[i] {
@@ -729,15 +738,15 @@ func (m *RoleMutation) SetFields(input *Role, fields ...string) error {
 		case role.FieldID:
 			m.SetID(input.ID)
 		default:
-			return fmt.Errorf("unknown Role field %s", fields[i])
+			return fmt.Errorf("unknown %s field %s", "Role", fields[i])
 		}
 	}
 	return nil
 }
 
 // SetFieldsSkipZero sets the values of the fields with the given names, skipping zero values.
-// It returns an error if the field is not defined in the schema, or if the type mismatched the
-// field type.
+// It returns an error if the field is not defined in the schema,
+// or if the type mismatches the field type.
 func (m *RoleMutation) SetFieldsSkipZero(input *Role, fields ...string) error {
 	for i := range fields {
 		switch fields[i] {
@@ -785,15 +794,16 @@ func (m *RoleMutation) SetFieldsSkipZero(input *Role, fields ...string) error {
 				m.SetID(input.ID)
 			}
 		default:
-			return fmt.Errorf("unknown Role field %s", fields[i])
+			return fmt.Errorf("unknown %s field %s", "Role", fields[i])
 		}
 	}
 	return nil
 }
 
-// SetFields sets the values of the fields with the given names. It returns an
-// error if the field is not defined in the schema, or if the type mismatched the
-// field type. This method includes zero values in the update.
+// SetFields sets the values of the fields with the given names.
+// It returns an error if the field is not defined in the schema,
+// or if the type mismatches the field type.
+// Zero values are included in the update.
 func (m *RolePermissionMutation) SetFields(input *RolePermission, fields ...string) error {
 	for i := range fields {
 		switch fields[i] {
@@ -802,15 +812,15 @@ func (m *RolePermissionMutation) SetFields(input *RolePermission, fields ...stri
 		case rolepermission.FieldPermissionID:
 			m.SetPermissionID(input.PermissionID)
 		default:
-			return fmt.Errorf("unknown RolePermission field %s", fields[i])
+			return fmt.Errorf("unknown %s field %s", "RolePermission", fields[i])
 		}
 	}
 	return nil
 }
 
 // SetFieldsSkipZero sets the values of the fields with the given names, skipping zero values.
-// It returns an error if the field is not defined in the schema, or if the type mismatched the
-// field type.
+// It returns an error if the field is not defined in the schema,
+// or if the type mismatches the field type.
 func (m *RolePermissionMutation) SetFieldsSkipZero(input *RolePermission, fields ...string) error {
 	for i := range fields {
 		switch fields[i] {
@@ -825,15 +835,16 @@ func (m *RolePermissionMutation) SetFieldsSkipZero(input *RolePermission, fields
 				m.SetPermissionID(input.PermissionID)
 			}
 		default:
-			return fmt.Errorf("unknown RolePermission field %s", fields[i])
+			return fmt.Errorf("unknown %s field %s", "RolePermission", fields[i])
 		}
 	}
 	return nil
 }
 
-// SetFields sets the values of the fields with the given names. It returns an
-// error if the field is not defined in the schema, or if the type mismatched the
-// field type. This method includes zero values in the update.
+// SetFields sets the values of the fields with the given names.
+// It returns an error if the field is not defined in the schema,
+// or if the type mismatches the field type.
+// Zero values are included in the update.
 func (m *UserMutation) SetFields(input *User, fields ...string) error {
 	for i := range fields {
 		switch fields[i] {
@@ -896,15 +907,15 @@ func (m *UserMutation) SetFields(input *User, fields ...string) error {
 		case user.FieldID:
 			m.SetID(input.ID)
 		default:
-			return fmt.Errorf("unknown User field %s", fields[i])
+			return fmt.Errorf("unknown %s field %s", "User", fields[i])
 		}
 	}
 	return nil
 }
 
 // SetFieldsSkipZero sets the values of the fields with the given names, skipping zero values.
-// It returns an error if the field is not defined in the schema, or if the type mismatched the
-// field type.
+// It returns an error if the field is not defined in the schema,
+// or if the type mismatches the field type.
 func (m *UserMutation) SetFieldsSkipZero(input *User, fields ...string) error {
 	for i := range fields {
 		switch fields[i] {
@@ -1040,15 +1051,16 @@ func (m *UserMutation) SetFieldsSkipZero(input *User, fields ...string) error {
 				m.SetID(input.ID)
 			}
 		default:
-			return fmt.Errorf("unknown User field %s", fields[i])
+			return fmt.Errorf("unknown %s field %s", "User", fields[i])
 		}
 	}
 	return nil
 }
 
-// SetFields sets the values of the fields with the given names. It returns an
-// error if the field is not defined in the schema, or if the type mismatched the
-// field type. This method includes zero values in the update.
+// SetFields sets the values of the fields with the given names.
+// It returns an error if the field is not defined in the schema,
+// or if the type mismatches the field type.
+// Zero values are included in the update.
 func (m *UserDepartmentMutation) SetFields(input *UserDepartment, fields ...string) error {
 	for i := range fields {
 		switch fields[i] {
@@ -1057,15 +1069,15 @@ func (m *UserDepartmentMutation) SetFields(input *UserDepartment, fields ...stri
 		case userdepartment.FieldDepartmentID:
 			m.SetDepartmentID(input.DepartmentID)
 		default:
-			return fmt.Errorf("unknown UserDepartment field %s", fields[i])
+			return fmt.Errorf("unknown %s field %s", "UserDepartment", fields[i])
 		}
 	}
 	return nil
 }
 
 // SetFieldsSkipZero sets the values of the fields with the given names, skipping zero values.
-// It returns an error if the field is not defined in the schema, or if the type mismatched the
-// field type.
+// It returns an error if the field is not defined in the schema,
+// or if the type mismatches the field type.
 func (m *UserDepartmentMutation) SetFieldsSkipZero(input *UserDepartment, fields ...string) error {
 	for i := range fields {
 		switch fields[i] {
@@ -1080,15 +1092,16 @@ func (m *UserDepartmentMutation) SetFieldsSkipZero(input *UserDepartment, fields
 				m.SetDepartmentID(input.DepartmentID)
 			}
 		default:
-			return fmt.Errorf("unknown UserDepartment field %s", fields[i])
+			return fmt.Errorf("unknown %s field %s", "UserDepartment", fields[i])
 		}
 	}
 	return nil
 }
 
-// SetFields sets the values of the fields with the given names. It returns an
-// error if the field is not defined in the schema, or if the type mismatched the
-// field type. This method includes zero values in the update.
+// SetFields sets the values of the fields with the given names.
+// It returns an error if the field is not defined in the schema,
+// or if the type mismatches the field type.
+// Zero values are included in the update.
 func (m *UserPositionMutation) SetFields(input *UserPosition, fields ...string) error {
 	for i := range fields {
 		switch fields[i] {
@@ -1097,15 +1110,15 @@ func (m *UserPositionMutation) SetFields(input *UserPosition, fields ...string) 
 		case userposition.FieldPositionID:
 			m.SetPositionID(input.PositionID)
 		default:
-			return fmt.Errorf("unknown UserPosition field %s", fields[i])
+			return fmt.Errorf("unknown %s field %s", "UserPosition", fields[i])
 		}
 	}
 	return nil
 }
 
 // SetFieldsSkipZero sets the values of the fields with the given names, skipping zero values.
-// It returns an error if the field is not defined in the schema, or if the type mismatched the
-// field type.
+// It returns an error if the field is not defined in the schema,
+// or if the type mismatches the field type.
 func (m *UserPositionMutation) SetFieldsSkipZero(input *UserPosition, fields ...string) error {
 	for i := range fields {
 		switch fields[i] {
@@ -1120,15 +1133,16 @@ func (m *UserPositionMutation) SetFieldsSkipZero(input *UserPosition, fields ...
 				m.SetPositionID(input.PositionID)
 			}
 		default:
-			return fmt.Errorf("unknown UserPosition field %s", fields[i])
+			return fmt.Errorf("unknown %s field %s", "UserPosition", fields[i])
 		}
 	}
 	return nil
 }
 
-// SetFields sets the values of the fields with the given names. It returns an
-// error if the field is not defined in the schema, or if the type mismatched the
-// field type. This method includes zero values in the update.
+// SetFields sets the values of the fields with the given names.
+// It returns an error if the field is not defined in the schema,
+// or if the type mismatches the field type.
+// Zero values are included in the update.
 func (m *UserRoleMutation) SetFields(input *UserRole, fields ...string) error {
 	for i := range fields {
 		switch fields[i] {
@@ -1137,15 +1151,15 @@ func (m *UserRoleMutation) SetFields(input *UserRole, fields ...string) error {
 		case userrole.FieldRoleID:
 			m.SetRoleID(input.RoleID)
 		default:
-			return fmt.Errorf("unknown UserRole field %s", fields[i])
+			return fmt.Errorf("unknown %s field %s", "UserRole", fields[i])
 		}
 	}
 	return nil
 }
 
 // SetFieldsSkipZero sets the values of the fields with the given names, skipping zero values.
-// It returns an error if the field is not defined in the schema, or if the type mismatched the
-// field type.
+// It returns an error if the field is not defined in the schema,
+// or if the type mismatches the field type.
 func (m *UserRoleMutation) SetFieldsSkipZero(input *UserRole, fields ...string) error {
 	for i := range fields {
 		switch fields[i] {
@@ -1160,15 +1174,16 @@ func (m *UserRoleMutation) SetFieldsSkipZero(input *UserRole, fields ...string) 
 				m.SetRoleID(input.RoleID)
 			}
 		default:
-			return fmt.Errorf("unknown UserRole field %s", fields[i])
+			return fmt.Errorf("unknown %s field %s", "UserRole", fields[i])
 		}
 	}
 	return nil
 }
 
-// SetFields sets the values of the fields with the given names. It returns an
-// error if the field is not defined in the schema, or if the type mismatched the
-// field type. This method includes zero values in the update.
+// SetFields sets the values of the fields with the given names.
+// It returns an error if the field is not defined in the schema,
+// or if the type mismatches the field type.
+// Zero values are included in the update.
 func (m *ViewMutation) SetFields(input *View, fields ...string) error {
 	for i := range fields {
 		switch fields[i] {
@@ -1207,15 +1222,15 @@ func (m *ViewMutation) SetFields(input *View, fields ...string) error {
 		case view.FieldID:
 			m.SetID(input.ID)
 		default:
-			return fmt.Errorf("unknown View field %s", fields[i])
+			return fmt.Errorf("unknown %s field %s", "View", fields[i])
 		}
 	}
 	return nil
 }
 
 // SetFieldsSkipZero sets the values of the fields with the given names, skipping zero values.
-// It returns an error if the field is not defined in the schema, or if the type mismatched the
-// field type.
+// It returns an error if the field is not defined in the schema,
+// or if the type mismatches the field type.
 func (m *ViewMutation) SetFieldsSkipZero(input *View, fields ...string) error {
 	for i := range fields {
 		switch fields[i] {
@@ -1304,15 +1319,16 @@ func (m *ViewMutation) SetFieldsSkipZero(input *View, fields ...string) error {
 				m.SetID(input.ID)
 			}
 		default:
-			return fmt.Errorf("unknown View field %s", fields[i])
+			return fmt.Errorf("unknown %s field %s", "View", fields[i])
 		}
 	}
 	return nil
 }
 
-// SetFields sets the values of the fields with the given names. It returns an
-// error if the field is not defined in the schema, or if the type mismatched the
-// field type. This method includes zero values in the update.
+// SetFields sets the values of the fields with the given names.
+// It returns an error if the field is not defined in the schema,
+// or if the type mismatches the field type.
+// Zero values are included in the update.
 func (m *ViewPermissionMutation) SetFields(input *ViewPermission, fields ...string) error {
 	for i := range fields {
 		switch fields[i] {
@@ -1321,15 +1337,15 @@ func (m *ViewPermissionMutation) SetFields(input *ViewPermission, fields ...stri
 		case viewpermission.FieldPermissionID:
 			m.SetPermissionID(input.PermissionID)
 		default:
-			return fmt.Errorf("unknown ViewPermission field %s", fields[i])
+			return fmt.Errorf("unknown %s field %s", "ViewPermission", fields[i])
 		}
 	}
 	return nil
 }
 
 // SetFieldsSkipZero sets the values of the fields with the given names, skipping zero values.
-// It returns an error if the field is not defined in the schema, or if the type mismatched the
-// field type.
+// It returns an error if the field is not defined in the schema,
+// or if the type mismatches the field type.
 func (m *ViewPermissionMutation) SetFieldsSkipZero(input *ViewPermission, fields ...string) error {
 	for i := range fields {
 		switch fields[i] {
@@ -1344,15 +1360,16 @@ func (m *ViewPermissionMutation) SetFieldsSkipZero(input *ViewPermission, fields
 				m.SetPermissionID(input.PermissionID)
 			}
 		default:
-			return fmt.Errorf("unknown ViewPermission field %s", fields[i])
+			return fmt.Errorf("unknown %s field %s", "ViewPermission", fields[i])
 		}
 	}
 	return nil
 }
 
-// SetFields sets the values of the fields with the given names. It returns an
-// error if the field is not defined in the schema, or if the type mismatched the
-// field type. This method includes zero values in the update.
+// SetFields sets the values of the fields with the given names.
+// It returns an error if the field is not defined in the schema,
+// or if the type mismatches the field type.
+// Zero values are included in the update.
 func (m *ViewResourceMutation) SetFields(input *ViewResource, fields ...string) error {
 	for i := range fields {
 		switch fields[i] {
@@ -1361,15 +1378,15 @@ func (m *ViewResourceMutation) SetFields(input *ViewResource, fields ...string) 
 		case viewresource.FieldResourceID:
 			m.SetResourceID(input.ResourceID)
 		default:
-			return fmt.Errorf("unknown ViewResource field %s", fields[i])
+			return fmt.Errorf("unknown %s field %s", "ViewResource", fields[i])
 		}
 	}
 	return nil
 }
 
 // SetFieldsSkipZero sets the values of the fields with the given names, skipping zero values.
-// It returns an error if the field is not defined in the schema, or if the type mismatched the
-// field type.
+// It returns an error if the field is not defined in the schema,
+// or if the type mismatches the field type.
 func (m *ViewResourceMutation) SetFieldsSkipZero(input *ViewResource, fields ...string) error {
 	for i := range fields {
 		switch fields[i] {
@@ -1384,7 +1401,7 @@ func (m *ViewResourceMutation) SetFieldsSkipZero(input *ViewResource, fields ...
 				m.SetResourceID(input.ResourceID)
 			}
 		default:
-			return fmt.Errorf("unknown ViewResource field %s", fields[i])
+			return fmt.Errorf("unknown %s field %s", "ViewResource", fields[i])
 		}
 	}
 	return nil

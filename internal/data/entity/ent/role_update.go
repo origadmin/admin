@@ -1190,7 +1190,9 @@ func (_u *RoleUpdateOne) sqlSave(ctx context.Context) (_node *Role, err error) {
 	return _node, nil
 }
 
-// SetRole set the Role. This method includes zero values in the update.
+// SetRole sets the Role fields from input struct.
+// If no fields are specified, all mutable fields except ID will be set.
+// Zero values are included in the update.
 func (ru *RoleUpdate) SetRole(input *Role, fields ...string) *RoleUpdate {
 	m := ru.mutation
 	if len(fields) == 0 {
@@ -1200,7 +1202,9 @@ func (ru *RoleUpdate) SetRole(input *Role, fields ...string) *RoleUpdate {
 	return ru
 }
 
-// SetRoleSkipZero set the Role, skipping zero values.
+// SetRoleSkipZero sets the Role fields from input struct.
+// If no fields are specified, all mutable fields except ID will be set.
+// Zero values are skipped and not updated.
 func (ru *RoleUpdate) SetRoleSkipZero(input *Role, fields ...string) *RoleUpdate {
 	m := ru.mutation
 	if len(fields) == 0 {
@@ -1210,7 +1214,9 @@ func (ru *RoleUpdate) SetRoleSkipZero(input *Role, fields ...string) *RoleUpdate
 	return ru
 }
 
-// SetRole set the Role. This method includes zero values in the update.
+// SetRole sets the Role fields from input struct.
+// If no fields are specified, all fields except ID will be set.
+// Zero values are included in the update.
 func (ruo *RoleUpdateOne) SetRole(input *Role, fields ...string) *RoleUpdateOne {
 	m := ruo.mutation
 	if len(fields) == 0 {
@@ -1220,7 +1226,9 @@ func (ruo *RoleUpdateOne) SetRole(input *Role, fields ...string) *RoleUpdateOne 
 	return ruo
 }
 
-// SetRoleSkipZero set the Role, skipping zero values.
+// SetRoleSkipZero sets the Role fields from input struct.
+// If no fields are specified, all fields except ID will be set.
+// Zero values are skipped and not updated.
 func (ruo *RoleUpdateOne) SetRoleSkipZero(input *Role, fields ...string) *RoleUpdateOne {
 	m := ruo.mutation
 	if len(fields) == 0 {
@@ -1230,8 +1238,8 @@ func (ruo *RoleUpdateOne) SetRoleSkipZero(input *Role, fields ...string) *RoleUp
 	return ruo
 }
 
-// Omit allows the unselect one or more fields/columns for the given query,
-// instead of selecting all fields in the entity.
+// Omit excludes the specified fields from the update operation.
+// By default, all fields are updated. Use this method to exclude specific fields.
 func (ruo *RoleUpdateOne) Omit(fields ...string) *RoleUpdateOne {
 	omits := make(map[string]struct{}, len(fields))
 	for i := range fields {

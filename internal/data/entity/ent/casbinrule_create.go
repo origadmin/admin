@@ -262,7 +262,9 @@ func (_c *CasbinRuleCreate) createSpec() (*CasbinRule, *sqlgraph.CreateSpec) {
 	return _node, _spec
 }
 
-// SetCasbinRule set the CasbinRule
+// SetCasbinRule sets the CasbinRule fields from input struct.
+// If no fields are specified, all fields from Columns will be set.
+// Zero values are included in the update.
 func (_c *CasbinRuleCreate) SetCasbinRule(input *CasbinRule, fields ...string) *CasbinRuleCreate {
 	m := _c.mutation
 	if len(fields) == 0 {
@@ -272,7 +274,9 @@ func (_c *CasbinRuleCreate) SetCasbinRule(input *CasbinRule, fields ...string) *
 	return _c
 }
 
-// SetCasbinRuleWithZero set the CasbinRule
+// SetCasbinRuleSkipZero sets the CasbinRule fields from input struct.
+// If no fields are specified, all fields from Columns will be set.
+// Zero values are skipped and not updated.
 func (_c *CasbinRuleCreate) SetCasbinRuleSkipZero(input *CasbinRule, fields ...string) *CasbinRuleCreate {
 	m := _c.mutation
 	if len(fields) == 0 {

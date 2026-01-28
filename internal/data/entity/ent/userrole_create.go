@@ -162,7 +162,9 @@ func (_c *UserRoleCreate) createSpec() (*UserRole, *sqlgraph.CreateSpec) {
 	return _node, _spec
 }
 
-// SetUserRole set the UserRole
+// SetUserRole sets the UserRole fields from input struct.
+// If no fields are specified, all fields from Columns will be set.
+// Zero values are included in the update.
 func (_c *UserRoleCreate) SetUserRole(input *UserRole, fields ...string) *UserRoleCreate {
 	m := _c.mutation
 	if len(fields) == 0 {
@@ -172,7 +174,9 @@ func (_c *UserRoleCreate) SetUserRole(input *UserRole, fields ...string) *UserRo
 	return _c
 }
 
-// SetUserRoleWithZero set the UserRole
+// SetUserRoleSkipZero sets the UserRole fields from input struct.
+// If no fields are specified, all fields from Columns will be set.
+// Zero values are skipped and not updated.
 func (_c *UserRoleCreate) SetUserRoleSkipZero(input *UserRole, fields ...string) *UserRoleCreate {
 	m := _c.mutation
 	if len(fields) == 0 {

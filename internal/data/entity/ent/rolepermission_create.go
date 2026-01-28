@@ -162,7 +162,9 @@ func (_c *RolePermissionCreate) createSpec() (*RolePermission, *sqlgraph.CreateS
 	return _node, _spec
 }
 
-// SetRolePermission set the RolePermission
+// SetRolePermission sets the RolePermission fields from input struct.
+// If no fields are specified, all fields from Columns will be set.
+// Zero values are included in the update.
 func (_c *RolePermissionCreate) SetRolePermission(input *RolePermission, fields ...string) *RolePermissionCreate {
 	m := _c.mutation
 	if len(fields) == 0 {
@@ -172,7 +174,9 @@ func (_c *RolePermissionCreate) SetRolePermission(input *RolePermission, fields 
 	return _c
 }
 
-// SetRolePermissionWithZero set the RolePermission
+// SetRolePermissionSkipZero sets the RolePermission fields from input struct.
+// If no fields are specified, all fields from Columns will be set.
+// Zero values are skipped and not updated.
 func (_c *RolePermissionCreate) SetRolePermissionSkipZero(input *RolePermission, fields ...string) *RolePermissionCreate {
 	m := _c.mutation
 	if len(fields) == 0 {

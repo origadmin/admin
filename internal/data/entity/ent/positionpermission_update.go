@@ -456,7 +456,9 @@ func (_u *PositionPermissionUpdateOne) sqlSave(ctx context.Context) (_node *Posi
 	return _node, nil
 }
 
-// SetPositionPermission set the PositionPermission. This method includes zero values in the update.
+// SetPositionPermission sets the PositionPermission fields from input struct.
+// If no fields are specified, all mutable fields except ID will be set.
+// Zero values are included in the update.
 func (ppu *PositionPermissionUpdate) SetPositionPermission(input *PositionPermission, fields ...string) *PositionPermissionUpdate {
 	m := ppu.mutation
 	if len(fields) == 0 {
@@ -466,7 +468,9 @@ func (ppu *PositionPermissionUpdate) SetPositionPermission(input *PositionPermis
 	return ppu
 }
 
-// SetPositionPermissionSkipZero set the PositionPermission, skipping zero values.
+// SetPositionPermissionSkipZero sets the PositionPermission fields from input struct.
+// If no fields are specified, all mutable fields except ID will be set.
+// Zero values are skipped and not updated.
 func (ppu *PositionPermissionUpdate) SetPositionPermissionSkipZero(input *PositionPermission, fields ...string) *PositionPermissionUpdate {
 	m := ppu.mutation
 	if len(fields) == 0 {
@@ -476,7 +480,9 @@ func (ppu *PositionPermissionUpdate) SetPositionPermissionSkipZero(input *Positi
 	return ppu
 }
 
-// SetPositionPermission set the PositionPermission. This method includes zero values in the update.
+// SetPositionPermission sets the PositionPermission fields from input struct.
+// If no fields are specified, all fields except ID will be set.
+// Zero values are included in the update.
 func (ppuo *PositionPermissionUpdateOne) SetPositionPermission(input *PositionPermission, fields ...string) *PositionPermissionUpdateOne {
 	m := ppuo.mutation
 	if len(fields) == 0 {
@@ -486,7 +492,9 @@ func (ppuo *PositionPermissionUpdateOne) SetPositionPermission(input *PositionPe
 	return ppuo
 }
 
-// SetPositionPermissionSkipZero set the PositionPermission, skipping zero values.
+// SetPositionPermissionSkipZero sets the PositionPermission fields from input struct.
+// If no fields are specified, all fields except ID will be set.
+// Zero values are skipped and not updated.
 func (ppuo *PositionPermissionUpdateOne) SetPositionPermissionSkipZero(input *PositionPermission, fields ...string) *PositionPermissionUpdateOne {
 	m := ppuo.mutation
 	if len(fields) == 0 {
@@ -496,8 +504,8 @@ func (ppuo *PositionPermissionUpdateOne) SetPositionPermissionSkipZero(input *Po
 	return ppuo
 }
 
-// Omit allows the unselect one or more fields/columns for the given query,
-// instead of selecting all fields in the entity.
+// Omit excludes the specified fields from the update operation.
+// By default, all fields are updated. Use this method to exclude specific fields.
 func (ppuo *PositionPermissionUpdateOne) Omit(fields ...string) *PositionPermissionUpdateOne {
 	omits := make(map[string]struct{}, len(fields))
 	for i := range fields {

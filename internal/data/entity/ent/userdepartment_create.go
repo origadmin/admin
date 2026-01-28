@@ -162,7 +162,9 @@ func (_c *UserDepartmentCreate) createSpec() (*UserDepartment, *sqlgraph.CreateS
 	return _node, _spec
 }
 
-// SetUserDepartment set the UserDepartment
+// SetUserDepartment sets the UserDepartment fields from input struct.
+// If no fields are specified, all fields from Columns will be set.
+// Zero values are included in the update.
 func (_c *UserDepartmentCreate) SetUserDepartment(input *UserDepartment, fields ...string) *UserDepartmentCreate {
 	m := _c.mutation
 	if len(fields) == 0 {
@@ -172,7 +174,9 @@ func (_c *UserDepartmentCreate) SetUserDepartment(input *UserDepartment, fields 
 	return _c
 }
 
-// SetUserDepartmentWithZero set the UserDepartment
+// SetUserDepartmentSkipZero sets the UserDepartment fields from input struct.
+// If no fields are specified, all fields from Columns will be set.
+// Zero values are skipped and not updated.
 func (_c *UserDepartmentCreate) SetUserDepartmentSkipZero(input *UserDepartment, fields ...string) *UserDepartmentCreate {
 	m := _c.mutation
 	if len(fields) == 0 {

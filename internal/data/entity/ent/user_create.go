@@ -1009,7 +1009,9 @@ func (_c *UserCreate) createSpec() (*User, *sqlgraph.CreateSpec) {
 	return _node, _spec
 }
 
-// SetUser set the User
+// SetUser sets the User fields from input struct.
+// If no fields are specified, all fields from Columns will be set.
+// Zero values are included in the update.
 func (_c *UserCreate) SetUser(input *User, fields ...string) *UserCreate {
 	m := _c.mutation
 	if len(fields) == 0 {
@@ -1019,7 +1021,9 @@ func (_c *UserCreate) SetUser(input *User, fields ...string) *UserCreate {
 	return _c
 }
 
-// SetUserWithZero set the User
+// SetUserSkipZero sets the User fields from input struct.
+// If no fields are specified, all fields from Columns will be set.
+// Zero values are skipped and not updated.
 func (_c *UserCreate) SetUserSkipZero(input *User, fields ...string) *UserCreate {
 	m := _c.mutation
 	if len(fields) == 0 {

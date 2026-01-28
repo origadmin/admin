@@ -456,7 +456,9 @@ func (_u *ViewPermissionUpdateOne) sqlSave(ctx context.Context) (_node *ViewPerm
 	return _node, nil
 }
 
-// SetViewPermission set the ViewPermission. This method includes zero values in the update.
+// SetViewPermission sets the ViewPermission fields from input struct.
+// If no fields are specified, all mutable fields except ID will be set.
+// Zero values are included in the update.
 func (vpu *ViewPermissionUpdate) SetViewPermission(input *ViewPermission, fields ...string) *ViewPermissionUpdate {
 	m := vpu.mutation
 	if len(fields) == 0 {
@@ -466,7 +468,9 @@ func (vpu *ViewPermissionUpdate) SetViewPermission(input *ViewPermission, fields
 	return vpu
 }
 
-// SetViewPermissionSkipZero set the ViewPermission, skipping zero values.
+// SetViewPermissionSkipZero sets the ViewPermission fields from input struct.
+// If no fields are specified, all mutable fields except ID will be set.
+// Zero values are skipped and not updated.
 func (vpu *ViewPermissionUpdate) SetViewPermissionSkipZero(input *ViewPermission, fields ...string) *ViewPermissionUpdate {
 	m := vpu.mutation
 	if len(fields) == 0 {
@@ -476,7 +480,9 @@ func (vpu *ViewPermissionUpdate) SetViewPermissionSkipZero(input *ViewPermission
 	return vpu
 }
 
-// SetViewPermission set the ViewPermission. This method includes zero values in the update.
+// SetViewPermission sets the ViewPermission fields from input struct.
+// If no fields are specified, all fields except ID will be set.
+// Zero values are included in the update.
 func (vpuo *ViewPermissionUpdateOne) SetViewPermission(input *ViewPermission, fields ...string) *ViewPermissionUpdateOne {
 	m := vpuo.mutation
 	if len(fields) == 0 {
@@ -486,7 +492,9 @@ func (vpuo *ViewPermissionUpdateOne) SetViewPermission(input *ViewPermission, fi
 	return vpuo
 }
 
-// SetViewPermissionSkipZero set the ViewPermission, skipping zero values.
+// SetViewPermissionSkipZero sets the ViewPermission fields from input struct.
+// If no fields are specified, all fields except ID will be set.
+// Zero values are skipped and not updated.
 func (vpuo *ViewPermissionUpdateOne) SetViewPermissionSkipZero(input *ViewPermission, fields ...string) *ViewPermissionUpdateOne {
 	m := vpuo.mutation
 	if len(fields) == 0 {
@@ -496,8 +504,8 @@ func (vpuo *ViewPermissionUpdateOne) SetViewPermissionSkipZero(input *ViewPermis
 	return vpuo
 }
 
-// Omit allows the unselect one or more fields/columns for the given query,
-// instead of selecting all fields in the entity.
+// Omit excludes the specified fields from the update operation.
+// By default, all fields are updated. Use this method to exclude specific fields.
 func (vpuo *ViewPermissionUpdateOne) Omit(fields ...string) *ViewPermissionUpdateOne {
 	omits := make(map[string]struct{}, len(fields))
 	for i := range fields {

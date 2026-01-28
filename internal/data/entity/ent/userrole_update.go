@@ -456,7 +456,9 @@ func (_u *UserRoleUpdateOne) sqlSave(ctx context.Context) (_node *UserRole, err 
 	return _node, nil
 }
 
-// SetUserRole set the UserRole. This method includes zero values in the update.
+// SetUserRole sets the UserRole fields from input struct.
+// If no fields are specified, all mutable fields except ID will be set.
+// Zero values are included in the update.
 func (uru *UserRoleUpdate) SetUserRole(input *UserRole, fields ...string) *UserRoleUpdate {
 	m := uru.mutation
 	if len(fields) == 0 {
@@ -466,7 +468,9 @@ func (uru *UserRoleUpdate) SetUserRole(input *UserRole, fields ...string) *UserR
 	return uru
 }
 
-// SetUserRoleSkipZero set the UserRole, skipping zero values.
+// SetUserRoleSkipZero sets the UserRole fields from input struct.
+// If no fields are specified, all mutable fields except ID will be set.
+// Zero values are skipped and not updated.
 func (uru *UserRoleUpdate) SetUserRoleSkipZero(input *UserRole, fields ...string) *UserRoleUpdate {
 	m := uru.mutation
 	if len(fields) == 0 {
@@ -476,7 +480,9 @@ func (uru *UserRoleUpdate) SetUserRoleSkipZero(input *UserRole, fields ...string
 	return uru
 }
 
-// SetUserRole set the UserRole. This method includes zero values in the update.
+// SetUserRole sets the UserRole fields from input struct.
+// If no fields are specified, all fields except ID will be set.
+// Zero values are included in the update.
 func (uruo *UserRoleUpdateOne) SetUserRole(input *UserRole, fields ...string) *UserRoleUpdateOne {
 	m := uruo.mutation
 	if len(fields) == 0 {
@@ -486,7 +492,9 @@ func (uruo *UserRoleUpdateOne) SetUserRole(input *UserRole, fields ...string) *U
 	return uruo
 }
 
-// SetUserRoleSkipZero set the UserRole, skipping zero values.
+// SetUserRoleSkipZero sets the UserRole fields from input struct.
+// If no fields are specified, all fields except ID will be set.
+// Zero values are skipped and not updated.
 func (uruo *UserRoleUpdateOne) SetUserRoleSkipZero(input *UserRole, fields ...string) *UserRoleUpdateOne {
 	m := uruo.mutation
 	if len(fields) == 0 {
@@ -496,8 +504,8 @@ func (uruo *UserRoleUpdateOne) SetUserRoleSkipZero(input *UserRole, fields ...st
 	return uruo
 }
 
-// Omit allows the unselect one or more fields/columns for the given query,
-// instead of selecting all fields in the entity.
+// Omit excludes the specified fields from the update operation.
+// By default, all fields are updated. Use this method to exclude specific fields.
 func (uruo *UserRoleUpdateOne) Omit(fields ...string) *UserRoleUpdateOne {
 	omits := make(map[string]struct{}, len(fields))
 	for i := range fields {

@@ -456,7 +456,9 @@ func (_u *ViewResourceUpdateOne) sqlSave(ctx context.Context) (_node *ViewResour
 	return _node, nil
 }
 
-// SetViewResource set the ViewResource. This method includes zero values in the update.
+// SetViewResource sets the ViewResource fields from input struct.
+// If no fields are specified, all mutable fields except ID will be set.
+// Zero values are included in the update.
 func (vru *ViewResourceUpdate) SetViewResource(input *ViewResource, fields ...string) *ViewResourceUpdate {
 	m := vru.mutation
 	if len(fields) == 0 {
@@ -466,7 +468,9 @@ func (vru *ViewResourceUpdate) SetViewResource(input *ViewResource, fields ...st
 	return vru
 }
 
-// SetViewResourceSkipZero set the ViewResource, skipping zero values.
+// SetViewResourceSkipZero sets the ViewResource fields from input struct.
+// If no fields are specified, all mutable fields except ID will be set.
+// Zero values are skipped and not updated.
 func (vru *ViewResourceUpdate) SetViewResourceSkipZero(input *ViewResource, fields ...string) *ViewResourceUpdate {
 	m := vru.mutation
 	if len(fields) == 0 {
@@ -476,7 +480,9 @@ func (vru *ViewResourceUpdate) SetViewResourceSkipZero(input *ViewResource, fiel
 	return vru
 }
 
-// SetViewResource set the ViewResource. This method includes zero values in the update.
+// SetViewResource sets the ViewResource fields from input struct.
+// If no fields are specified, all fields except ID will be set.
+// Zero values are included in the update.
 func (vruo *ViewResourceUpdateOne) SetViewResource(input *ViewResource, fields ...string) *ViewResourceUpdateOne {
 	m := vruo.mutation
 	if len(fields) == 0 {
@@ -486,7 +492,9 @@ func (vruo *ViewResourceUpdateOne) SetViewResource(input *ViewResource, fields .
 	return vruo
 }
 
-// SetViewResourceSkipZero set the ViewResource, skipping zero values.
+// SetViewResourceSkipZero sets the ViewResource fields from input struct.
+// If no fields are specified, all fields except ID will be set.
+// Zero values are skipped and not updated.
 func (vruo *ViewResourceUpdateOne) SetViewResourceSkipZero(input *ViewResource, fields ...string) *ViewResourceUpdateOne {
 	m := vruo.mutation
 	if len(fields) == 0 {
@@ -496,8 +504,8 @@ func (vruo *ViewResourceUpdateOne) SetViewResourceSkipZero(input *ViewResource, 
 	return vruo
 }
 
-// Omit allows the unselect one or more fields/columns for the given query,
-// instead of selecting all fields in the entity.
+// Omit excludes the specified fields from the update operation.
+// By default, all fields are updated. Use this method to exclude specific fields.
 func (vruo *ViewResourceUpdateOne) Omit(fields ...string) *ViewResourceUpdateOne {
 	omits := make(map[string]struct{}, len(fields))
 	for i := range fields {

@@ -162,7 +162,9 @@ func (_c *PositionPermissionCreate) createSpec() (*PositionPermission, *sqlgraph
 	return _node, _spec
 }
 
-// SetPositionPermission set the PositionPermission
+// SetPositionPermission sets the PositionPermission fields from input struct.
+// If no fields are specified, all fields from Columns will be set.
+// Zero values are included in the update.
 func (_c *PositionPermissionCreate) SetPositionPermission(input *PositionPermission, fields ...string) *PositionPermissionCreate {
 	m := _c.mutation
 	if len(fields) == 0 {
@@ -172,7 +174,9 @@ func (_c *PositionPermissionCreate) SetPositionPermission(input *PositionPermiss
 	return _c
 }
 
-// SetPositionPermissionWithZero set the PositionPermission
+// SetPositionPermissionSkipZero sets the PositionPermission fields from input struct.
+// If no fields are specified, all fields from Columns will be set.
+// Zero values are skipped and not updated.
 func (_c *PositionPermissionCreate) SetPositionPermissionSkipZero(input *PositionPermission, fields ...string) *PositionPermissionCreate {
 	m := _c.mutation
 	if len(fields) == 0 {

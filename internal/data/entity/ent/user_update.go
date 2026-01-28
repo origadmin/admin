@@ -2332,7 +2332,9 @@ func (_u *UserUpdateOne) sqlSave(ctx context.Context) (_node *User, err error) {
 	return _node, nil
 }
 
-// SetUser set the User. This method includes zero values in the update.
+// SetUser sets the User fields from input struct.
+// If no fields are specified, all mutable fields except ID will be set.
+// Zero values are included in the update.
 func (uu *UserUpdate) SetUser(input *User, fields ...string) *UserUpdate {
 	m := uu.mutation
 	if len(fields) == 0 {
@@ -2342,7 +2344,9 @@ func (uu *UserUpdate) SetUser(input *User, fields ...string) *UserUpdate {
 	return uu
 }
 
-// SetUserSkipZero set the User, skipping zero values.
+// SetUserSkipZero sets the User fields from input struct.
+// If no fields are specified, all mutable fields except ID will be set.
+// Zero values are skipped and not updated.
 func (uu *UserUpdate) SetUserSkipZero(input *User, fields ...string) *UserUpdate {
 	m := uu.mutation
 	if len(fields) == 0 {
@@ -2352,7 +2356,9 @@ func (uu *UserUpdate) SetUserSkipZero(input *User, fields ...string) *UserUpdate
 	return uu
 }
 
-// SetUser set the User. This method includes zero values in the update.
+// SetUser sets the User fields from input struct.
+// If no fields are specified, all fields except ID will be set.
+// Zero values are included in the update.
 func (uuo *UserUpdateOne) SetUser(input *User, fields ...string) *UserUpdateOne {
 	m := uuo.mutation
 	if len(fields) == 0 {
@@ -2362,7 +2368,9 @@ func (uuo *UserUpdateOne) SetUser(input *User, fields ...string) *UserUpdateOne 
 	return uuo
 }
 
-// SetUserSkipZero set the User, skipping zero values.
+// SetUserSkipZero sets the User fields from input struct.
+// If no fields are specified, all fields except ID will be set.
+// Zero values are skipped and not updated.
 func (uuo *UserUpdateOne) SetUserSkipZero(input *User, fields ...string) *UserUpdateOne {
 	m := uuo.mutation
 	if len(fields) == 0 {
@@ -2372,8 +2380,8 @@ func (uuo *UserUpdateOne) SetUserSkipZero(input *User, fields ...string) *UserUp
 	return uuo
 }
 
-// Omit allows the unselect one or more fields/columns for the given query,
-// instead of selecting all fields in the entity.
+// Omit excludes the specified fields from the update operation.
+// By default, all fields are updated. Use this method to exclude specific fields.
 func (uuo *UserUpdateOne) Omit(fields ...string) *UserUpdateOne {
 	omits := make(map[string]struct{}, len(fields))
 	for i := range fields {

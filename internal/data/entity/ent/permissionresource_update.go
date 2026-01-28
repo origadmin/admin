@@ -456,7 +456,9 @@ func (_u *PermissionResourceUpdateOne) sqlSave(ctx context.Context) (_node *Perm
 	return _node, nil
 }
 
-// SetPermissionResource set the PermissionResource. This method includes zero values in the update.
+// SetPermissionResource sets the PermissionResource fields from input struct.
+// If no fields are specified, all mutable fields except ID will be set.
+// Zero values are included in the update.
 func (pru *PermissionResourceUpdate) SetPermissionResource(input *PermissionResource, fields ...string) *PermissionResourceUpdate {
 	m := pru.mutation
 	if len(fields) == 0 {
@@ -466,7 +468,9 @@ func (pru *PermissionResourceUpdate) SetPermissionResource(input *PermissionReso
 	return pru
 }
 
-// SetPermissionResourceSkipZero set the PermissionResource, skipping zero values.
+// SetPermissionResourceSkipZero sets the PermissionResource fields from input struct.
+// If no fields are specified, all mutable fields except ID will be set.
+// Zero values are skipped and not updated.
 func (pru *PermissionResourceUpdate) SetPermissionResourceSkipZero(input *PermissionResource, fields ...string) *PermissionResourceUpdate {
 	m := pru.mutation
 	if len(fields) == 0 {
@@ -476,7 +480,9 @@ func (pru *PermissionResourceUpdate) SetPermissionResourceSkipZero(input *Permis
 	return pru
 }
 
-// SetPermissionResource set the PermissionResource. This method includes zero values in the update.
+// SetPermissionResource sets the PermissionResource fields from input struct.
+// If no fields are specified, all fields except ID will be set.
+// Zero values are included in the update.
 func (pruo *PermissionResourceUpdateOne) SetPermissionResource(input *PermissionResource, fields ...string) *PermissionResourceUpdateOne {
 	m := pruo.mutation
 	if len(fields) == 0 {
@@ -486,7 +492,9 @@ func (pruo *PermissionResourceUpdateOne) SetPermissionResource(input *Permission
 	return pruo
 }
 
-// SetPermissionResourceSkipZero set the PermissionResource, skipping zero values.
+// SetPermissionResourceSkipZero sets the PermissionResource fields from input struct.
+// If no fields are specified, all fields except ID will be set.
+// Zero values are skipped and not updated.
 func (pruo *PermissionResourceUpdateOne) SetPermissionResourceSkipZero(input *PermissionResource, fields ...string) *PermissionResourceUpdateOne {
 	m := pruo.mutation
 	if len(fields) == 0 {
@@ -496,8 +504,8 @@ func (pruo *PermissionResourceUpdateOne) SetPermissionResourceSkipZero(input *Pe
 	return pruo
 }
 
-// Omit allows the unselect one or more fields/columns for the given query,
-// instead of selecting all fields in the entity.
+// Omit excludes the specified fields from the update operation.
+// By default, all fields are updated. Use this method to exclude specific fields.
 func (pruo *PermissionResourceUpdateOne) Omit(fields ...string) *PermissionResourceUpdateOne {
 	omits := make(map[string]struct{}, len(fields))
 	for i := range fields {

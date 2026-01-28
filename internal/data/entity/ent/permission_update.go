@@ -1848,7 +1848,9 @@ func (_u *PermissionUpdateOne) sqlSave(ctx context.Context) (_node *Permission, 
 	return _node, nil
 }
 
-// SetPermission set the Permission. This method includes zero values in the update.
+// SetPermission sets the Permission fields from input struct.
+// If no fields are specified, all mutable fields except ID will be set.
+// Zero values are included in the update.
 func (pu *PermissionUpdate) SetPermission(input *Permission, fields ...string) *PermissionUpdate {
 	m := pu.mutation
 	if len(fields) == 0 {
@@ -1858,7 +1860,9 @@ func (pu *PermissionUpdate) SetPermission(input *Permission, fields ...string) *
 	return pu
 }
 
-// SetPermissionSkipZero set the Permission, skipping zero values.
+// SetPermissionSkipZero sets the Permission fields from input struct.
+// If no fields are specified, all mutable fields except ID will be set.
+// Zero values are skipped and not updated.
 func (pu *PermissionUpdate) SetPermissionSkipZero(input *Permission, fields ...string) *PermissionUpdate {
 	m := pu.mutation
 	if len(fields) == 0 {
@@ -1868,7 +1872,9 @@ func (pu *PermissionUpdate) SetPermissionSkipZero(input *Permission, fields ...s
 	return pu
 }
 
-// SetPermission set the Permission. This method includes zero values in the update.
+// SetPermission sets the Permission fields from input struct.
+// If no fields are specified, all fields except ID will be set.
+// Zero values are included in the update.
 func (puo *PermissionUpdateOne) SetPermission(input *Permission, fields ...string) *PermissionUpdateOne {
 	m := puo.mutation
 	if len(fields) == 0 {
@@ -1878,7 +1884,9 @@ func (puo *PermissionUpdateOne) SetPermission(input *Permission, fields ...strin
 	return puo
 }
 
-// SetPermissionSkipZero set the Permission, skipping zero values.
+// SetPermissionSkipZero sets the Permission fields from input struct.
+// If no fields are specified, all fields except ID will be set.
+// Zero values are skipped and not updated.
 func (puo *PermissionUpdateOne) SetPermissionSkipZero(input *Permission, fields ...string) *PermissionUpdateOne {
 	m := puo.mutation
 	if len(fields) == 0 {
@@ -1888,8 +1896,8 @@ func (puo *PermissionUpdateOne) SetPermissionSkipZero(input *Permission, fields 
 	return puo
 }
 
-// Omit allows the unselect one or more fields/columns for the given query,
-// instead of selecting all fields in the entity.
+// Omit excludes the specified fields from the update operation.
+// By default, all fields are updated. Use this method to exclude specific fields.
 func (puo *PermissionUpdateOne) Omit(fields ...string) *PermissionUpdateOne {
 	omits := make(map[string]struct{}, len(fields))
 	for i := range fields {

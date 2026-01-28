@@ -162,7 +162,9 @@ func (_c *ViewPermissionCreate) createSpec() (*ViewPermission, *sqlgraph.CreateS
 	return _node, _spec
 }
 
-// SetViewPermission set the ViewPermission
+// SetViewPermission sets the ViewPermission fields from input struct.
+// If no fields are specified, all fields from Columns will be set.
+// Zero values are included in the update.
 func (_c *ViewPermissionCreate) SetViewPermission(input *ViewPermission, fields ...string) *ViewPermissionCreate {
 	m := _c.mutation
 	if len(fields) == 0 {
@@ -172,7 +174,9 @@ func (_c *ViewPermissionCreate) SetViewPermission(input *ViewPermission, fields 
 	return _c
 }
 
-// SetViewPermissionWithZero set the ViewPermission
+// SetViewPermissionSkipZero sets the ViewPermission fields from input struct.
+// If no fields are specified, all fields from Columns will be set.
+// Zero values are skipped and not updated.
 func (_c *ViewPermissionCreate) SetViewPermissionSkipZero(input *ViewPermission, fields ...string) *ViewPermissionCreate {
 	m := _c.mutation
 	if len(fields) == 0 {

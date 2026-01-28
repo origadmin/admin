@@ -70,13 +70,13 @@ func (s *PolicySyncer) Sync(ctx context.Context) error {
 	s.log.WithContext(ctx).Info("Clearing existing policies for managed subjects and users...")
 	for subject := range subjectsToClear {
 		// This handles both role permissions and direct user permissions ('p' rules)
-		if _, err := s.modifier.RemoveAllUserPermissions(ctx, subject); err != nil {
+		if _, err := s.modifier.RemovePermissions(ctx, subject); err != nil {
 			s.log.WithContext(ctx).Warnf("Failed to clear permissions for subject '%s': %v", subject, err)
 		}
 	}
 	for user := range usersToClear {
 		// This handles user-role assignments ('g' rules)
-		if _, err := s.modifier.RemoveAllUserRoles(ctx, user); err != nil {
+		if _, err := s.modifier.RemoveRoles(ctx, user); err != nil {
 			s.log.WithContext(ctx).Warnf("Failed to clear roles for user '%s': %v", user, err)
 		}
 	}
@@ -93,7 +93,7 @@ func (s *PolicySyncer) Sync(ctx context.Context) error {
 
 		// The PolicyModifier interface abstracts away the difference between role and user permissions.
 		// We can use a single method for both.
-		if _, err := s.modifier.AddUserPermission(ctx, subject, spec); err != nil {
+		if _, err := s.modifier.AddPermissions(ctx, subject, spec); err != nil {
 			s.log.WithContext(ctx).Errorf("Failed to add permission for subject '%s': %v", subject, err)
 		}
 	}
@@ -101,7 +101,11 @@ func (s *PolicySyncer) Sync(ctx context.Context) error {
 	// 5. Add all new grouping rules (translating to 'g' rules for Casbin).
 	s.log.WithContext(ctx).Info("Applying new grouping policies...")
 	for _, rule := range resp.GetGroupingRules() {
-		if _, err := s.modifier.AddUserRole(ctx, rule.GetUser(), rule.GetGroup()); err != nil {
+		roleSpec := authz.RoleSpec{
+			Role:   rule.GetGroup(),
+			Domain: rule.GetDomain(),
+		}
+		if _, err := s.modifier.AddRoles(ctx, rule.GetUser(), roleSpec); err != nil {
 			s.log.WithContext(ctx).Errorf("Failed to add user '%s' to group '%s': %v", rule.GetUser(), rule.GetGroup(), err)
 		}
 	}

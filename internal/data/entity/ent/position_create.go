@@ -401,7 +401,9 @@ func (_c *PositionCreate) createSpec() (*Position, *sqlgraph.CreateSpec) {
 	return _node, _spec
 }
 
-// SetPosition set the Position
+// SetPosition sets the Position fields from input struct.
+// If no fields are specified, all fields from Columns will be set.
+// Zero values are included in the update.
 func (_c *PositionCreate) SetPosition(input *Position, fields ...string) *PositionCreate {
 	m := _c.mutation
 	if len(fields) == 0 {
@@ -411,7 +413,9 @@ func (_c *PositionCreate) SetPosition(input *Position, fields ...string) *Positi
 	return _c
 }
 
-// SetPositionWithZero set the Position
+// SetPositionSkipZero sets the Position fields from input struct.
+// If no fields are specified, all fields from Columns will be set.
+// Zero values are skipped and not updated.
 func (_c *PositionCreate) SetPositionSkipZero(input *Position, fields ...string) *PositionCreate {
 	m := _c.mutation
 	if len(fields) == 0 {

@@ -6,7 +6,7 @@ package data
 
 import (
 	"fmt"
-	"strings" // Import the strings package
+	"strings"
 
 	"github.com/casbin/casbin/v3/model"
 	"github.com/casbin/casbin/v3/persist"
@@ -19,8 +19,6 @@ import (
 )
 
 // CasbinAdapter implements the casbin persist.UpdatableAdapter for ent.
-// This adapter is responsible for all database operations related to Casbin policies.
-// It does NOT send notifications; that is the responsibility of the service layer.
 type CasbinAdapter struct {
 	Ctx context.Context
 	DB  *ent.Database
@@ -37,15 +35,37 @@ func (a *CasbinAdapter) Context() context.Context {
 }
 
 // LoadPolicy loads all policy rules from the storage.
-func (a *CasbinAdapter) LoadPolicy(m model.Model) error { // Renamed model to m to avoid shadowing
+func (a *CasbinAdapter) LoadPolicy(m model.Model) error {
 	client := a.DB.CasbinRule(a.Context())
 	policies, err := client.Query().Order(ent.Asc("id")).All(a.Context())
 	if err != nil {
 		return err
 	}
+
 	for _, policy := range policies {
-		line := formatPolicyLine(policy)                        // Use the new helper to format the line
-		if err := persist.LoadPolicyLine(line, m); err != nil { // Use persist.LoadPolicyLine
+		key := policy.Ptype
+		sec := key[:1]
+		ast, ok := m[sec][key]
+		if !ok {
+			return fmt.Errorf("policy type '%s' not found in Casbin model", key)
+		}
+		expectedLen := len(ast.Tokens)
+
+		allDBFields := []string{policy.V0, policy.V1, policy.V2, policy.V3, policy.V4, policy.V5}
+
+		rule := make([]string, expectedLen)
+		for i := 0; i < expectedLen; i++ {
+			if i < len(allDBFields) {
+				rule[i] = allDBFields[i]
+			} else {
+				rule[i] = ""
+			}
+		}
+
+		ruleStr := strings.Join(rule, ", ")
+		line := policy.Ptype + ", " + ruleStr
+
+		if err := persist.LoadPolicyLine(line, m); err != nil {
 			return err
 		}
 	}
@@ -100,26 +120,7 @@ func (a *CasbinAdapter) AddPolicies(_ string, ptype string, rules [][]string) er
 // UpdatePolicy updates a policy rule from storage.
 func (a *CasbinAdapter) UpdatePolicy(_ string, ptype string, oldRule []string, newRule []string) error {
 	return a.DB.Tx(a.Context(), func(ctx context.Context) error {
-		cr := a.DB.CasbinRule(ctx)
-		oldFilter := buildInstanceFilter(ptype, oldRule)
-		newValues := instanceLine(ptype, newRule)
-
-		count, err := cr.Update().
-			Where(oldFilter...).
-			SetV0(newValues.V0).
-			SetV1(newValues.V1).
-			SetV2(newValues.V2).
-			SetV3(newValues.V3).
-			SetV4(newValues.V4).
-			SetV5(newValues.V5).
-			Save(ctx)
-		if err != nil {
-			return err
-		}
-		if count == 0 {
-			return fmt.Errorf("policy to update not found")
-		}
-		return nil
+		return a.updatePolicyInTx(ctx, ptype, oldRule, newRule)
 	})
 }
 
@@ -143,7 +144,10 @@ func (a *CasbinAdapter) UpdatePolicies(_ string, ptype string, oldRules [][]stri
 // updatePolicyInTx is a helper for UpdatePolicies to run within a transaction.
 func (a *CasbinAdapter) updatePolicyInTx(ctx context.Context, ptype string, oldRule []string, newRule []string) error {
 	cr := a.DB.CasbinRule(ctx)
-	oldFilter := buildInstanceFilter(ptype, oldRule)
+	oldFilter, err := buildInstanceFilter(ptype, oldRule)
+	if err != nil {
+		return err
+	}
 	newValues := instanceLine(ptype, newRule)
 
 	count, err := cr.Update().
@@ -182,8 +186,12 @@ func (a *CasbinAdapter) UpdateFilteredPolicies(_ string, ptype string, newRules 
 			oldPolicies = append(oldPolicies, policyToRule(p))
 		}
 
-		if _, err := cr.Delete().Where(filter...).Exec(ctx); err != nil {
+		count, err := cr.Delete().Where(filter...).Exec(ctx)
+		if err != nil {
 			return err
+		}
+		if count == 0 {
+			return fmt.Errorf("policies to update not found for filter")
 		}
 
 		for _, newRule := range newRules {
@@ -200,8 +208,17 @@ func (a *CasbinAdapter) UpdateFilteredPolicies(_ string, ptype string, newRules 
 func (a *CasbinAdapter) RemovePolicy(_ string, ptype string, rule []string) error {
 	return a.DB.Tx(a.Context(), func(ctx context.Context) error {
 		cr := a.DB.CasbinRule(ctx)
-		filter := buildInstanceFilter(ptype, rule)
-		_, err := cr.Delete().Where(filter...).Exec(ctx)
+		filter, err := buildInstanceFilter(ptype, rule)
+		if err != nil {
+			return err
+		}
+		count, err := cr.Delete().Where(filter...).Exec(ctx)
+		if err != nil {
+			return err
+		}
+		if count == 0 {
+			return fmt.Errorf("policy to remove not found: %s, %v", ptype, rule)
+		}
 		return err
 	})
 }
@@ -211,10 +228,16 @@ func (a *CasbinAdapter) RemovePolicies(_ string, ptype string, rules [][]string)
 	return a.DB.Tx(a.Context(), func(ctx context.Context) error {
 		cr := a.DB.CasbinRule(ctx)
 		for _, rule := range rules {
-			filter := buildInstanceFilter(ptype, rule)
-			if _, err := cr.Delete().Where(filter...).Exec(ctx); err != nil {
-				// In a transaction, the first error will cause a rollback.
+			filter, err := buildInstanceFilter(ptype, rule)
+			if err != nil {
 				return err
+			}
+			count, err := cr.Delete().Where(filter...).Exec(ctx)
+			if err != nil {
+				return err
+			}
+			if count == 0 {
+				return fmt.Errorf("policy to remove not found: %s, %v", ptype, rule)
 			}
 		}
 		return nil
@@ -229,132 +252,130 @@ func (a *CasbinAdapter) RemoveFilteredPolicy(_ string, ptype string, fieldIndex 
 		if err != nil {
 			return err
 		}
-		_, err = cr.Delete().Where(cond...).Exec(ctx)
+		count, err := cr.Delete().Where(cond...).Exec(ctx)
+		if err != nil {
+			return err
+		}
+		if count == 0 {
+			return fmt.Errorf("policy to remove not found for filter")
+		}
+		return err
+	})
+}
+
+// RemovePoliciesByFields removes policies that match a given set of field filters.
+// This is a custom, generic method for the adapter.
+func (a *CasbinAdapter) RemovePoliciesByFields(ptype string, filters map[string]string) error {
+	return a.DB.Tx(a.Context(), func(ctx context.Context) error {
+		cr := a.DB.CasbinRule(ctx)
+		preds, err := buildPredicatesFromFilters(ptype, filters)
+		if err != nil {
+			return err
+		}
+		count, err := cr.Delete().Where(preds...).Exec(ctx)
+		if err != nil {
+			return err
+		}
+		if count == 0 {
+			return fmt.Errorf("policies to remove not found for filter: %v", filters)
+		}
 		return err
 	})
 }
 
 // --- Helper Functions ---
 
-// formatPolicyLine formats a CasbinRule entity into a policy line string.
-func formatPolicyLine(p *ent.CasbinRule) string {
-	var line []string
-	line = append(line, p.Ptype)
-	if p.V0 != "" {
-		line = append(line, p.V0)
-	}
-	if p.V1 != "" {
-		line = append(line, p.V1)
-	}
-	if p.V2 != "" {
-		line = append(line, p.V2)
-	}
-	if p.V3 != "" {
-		line = append(line, p.V3)
-	}
-	if p.V4 != "" {
-		line = append(line, p.V4)
-	}
-	if p.V5 != "" {
-		line = append(line, p.V5)
-	}
-	return strings.Join(line, ", ")
-}
-
+// policyToRule converts a CasbinRule entity to a string slice representing the rule.
+// It returns all V0-V5 fields, even if they are empty, to maintain consistency with the database schema.
 func policyToRule(p *ent.CasbinRule) []string {
-	rule := []string{p.V0, p.V1, p.V2, p.V3, p.V4, p.V5}
-	// Trim trailing empty strings
-	for i := len(rule) - 1; i >= 0; i-- {
-		if rule[i] != "" {
-			return rule[:i+1]
-		}
-	}
-	return []string{}
+	return []string{p.V0, p.V1, p.V2, p.V3, p.V4, p.V5}
 }
 
-// Removed the custom loadPolicyLine function as it's replaced by persist.LoadPolicyLine
-
+// instanceLine creates a CasbinRule entity from a policy type and rule string slice.
 func instanceLine(ptype string, rule []string) *ent.CasbinRule {
 	instance := &ent.CasbinRule{Ptype: ptype}
-	for i, v := range rule {
-		switch i {
-		case 0:
-			instance.V0 = v
-		case 1:
-			instance.V1 = v
-		case 2:
-			instance.V2 = v
-		case 3:
-			instance.V3 = v
-		case 4:
-			instance.V4 = v
-		case 5:
-			instance.V5 = v
-		}
-	}
+	paddedRule := make([]string, 6)
+	copy(paddedRule, rule)
+	instance.V0 = paddedRule[0]
+	instance.V1 = paddedRule[1]
+	instance.V2 = paddedRule[2]
+	instance.V3 = paddedRule[3]
+	instance.V4 = paddedRule[4]
+	instance.V5 = paddedRule[5]
 	return instance
 }
 
+// savePolicyLine creates a CasbinRuleCreate builder from a policy type and rule string slice.
 func savePolicyLine(cr *ent.CasbinRuleClient, ptype string, rule []string) *ent.CasbinRuleCreate {
 	line := cr.Create().SetPtype(ptype)
-	for i, v := range rule {
-		switch i {
-		case 0:
-			line.SetV0(v)
-		case 1:
-			line.SetV1(v)
-		case 2:
-			line.SetV2(v)
-		case 3:
-			line.SetV3(v)
-		case 4:
-			line.SetV4(v)
-		case 5:
-			line.SetV5(v)
-		}
-	}
+	paddedRule := make([]string, 6)
+	copy(paddedRule, rule)
+	line.SetV0(paddedRule[0])
+	line.SetV1(paddedRule[1])
+	line.SetV2(paddedRule[2])
+	line.SetV3(paddedRule[3])
+	line.SetV4(paddedRule[4])
+	line.SetV5(paddedRule[5])
 	return line
 }
 
-func buildInstanceFilter(ptype string, rule []string) []predicate.CasbinRule {
-	paddedRule := make([]string, 6)
-	copy(paddedRule, rule)
-
-	return []predicate.CasbinRule{
-		casbinrule.PtypeEQ(ptype),
-		casbinrule.V0EQ(paddedRule[0]),
-		casbinrule.V1EQ(paddedRule[1]),
-		casbinrule.V2EQ(paddedRule[2]),
-		casbinrule.V3EQ(paddedRule[3]),
-		casbinrule.V4EQ(paddedRule[4]),
-		casbinrule.V5EQ(paddedRule[5]),
+// buildPredicatesFromFilters constructs a slice of predicates from a map of field filters.
+func buildPredicatesFromFilters(ptype string, filters map[string]string) ([]predicate.CasbinRule, error) {
+	preds := []predicate.CasbinRule{casbinrule.PtypeEQ(ptype)}
+	for field, value := range filters {
+		pred, err := appendVnEQPredicate(field, value)
+		if err != nil {
+			return nil, err
+		}
+		preds = append(preds, pred)
 	}
+	return preds, nil
 }
 
+// buildInstanceFilter creates a slice of predicates to filter by a specific policy instance.
+func buildInstanceFilter(ptype string, rule []string) ([]predicate.CasbinRule, error) {
+	preds := []predicate.CasbinRule{casbinrule.PtypeEQ(ptype)}
+	for i, v := range rule {
+		field := fmt.Sprintf("v%d", i)
+		pred, err := appendVnEQPredicate(field, v)
+		if err != nil {
+			return nil, err
+		}
+		preds = append(preds, pred)
+	}
+	return preds, nil
+}
+
+// buildFilteredFilter creates a slice of predicates for filtered policy operations.
 func buildFilteredFilter(ptype string, fieldIndex int, fieldValues ...string) ([]predicate.CasbinRule, error) {
 	if fieldIndex < 0 || fieldIndex+len(fieldValues) > 6 {
 		return nil, fmt.Errorf("invalid field index or field values for filtered policy")
 	}
-
-	cond := []predicate.CasbinRule{casbinrule.PtypeEQ(ptype)}
-	for i, fieldValue := range fieldValues {
-		fieldNum := fieldIndex + i
-		switch fieldNum {
-		case 0:
-			cond = append(cond, casbinrule.V0EQ(fieldValue))
-		case 1:
-			cond = append(cond, casbinrule.V1EQ(fieldValue))
-		case 2:
-			cond = append(cond, casbinrule.V2EQ(fieldValue))
-		case 3:
-			cond = append(cond, casbinrule.V3EQ(fieldValue))
-		case 4:
-			cond = append(cond, casbinrule.V4EQ(fieldValue))
-		case 5:
-			cond = append(cond, casbinrule.V5EQ(fieldValue))
-		}
+	filters := make(map[string]string)
+	for i, v := range fieldValues {
+		filters[fmt.Sprintf("v%d", fieldIndex+i)] = v
 	}
-	return cond, nil
+	return buildPredicatesFromFilters(ptype, filters)
+}
+
+// appendVnEQPredicate returns a predicate for a given field (v0-v5) and value.
+func appendVnEQPredicate(field, value string) (predicate.CasbinRule, error) {
+	switch field {
+	case "v0":
+		return casbinrule.V0EQ(value), nil
+	case "v1":
+		return casbinrule.V1EQ(value), nil
+	case "v2":
+		return casbinrule.V2EQ(value), nil
+	case "v3":
+		return casbinrule.V3EQ(value), nil
+	case "v4":
+		return casbinrule.V4EQ(value), nil
+	case "v5":
+		return casbinrule.V5EQ(value), nil
+	default:
+		return nil, fmt.Errorf("invalid filter field: %s", field)
+	}
 }
 
 var _ persist.UpdatableAdapter = (*CasbinAdapter)(nil)

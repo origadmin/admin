@@ -501,7 +501,9 @@ func (_c *DepartmentCreate) createSpec() (*Department, *sqlgraph.CreateSpec) {
 	return _node, _spec
 }
 
-// SetDepartment set the Department
+// SetDepartment sets the Department fields from input struct.
+// If no fields are specified, all fields from Columns will be set.
+// Zero values are included in the update.
 func (_c *DepartmentCreate) SetDepartment(input *Department, fields ...string) *DepartmentCreate {
 	m := _c.mutation
 	if len(fields) == 0 {
@@ -511,7 +513,9 @@ func (_c *DepartmentCreate) SetDepartment(input *Department, fields ...string) *
 	return _c
 }
 
-// SetDepartmentWithZero set the Department
+// SetDepartmentSkipZero sets the Department fields from input struct.
+// If no fields are specified, all fields from Columns will be set.
+// Zero values are skipped and not updated.
 func (_c *DepartmentCreate) SetDepartmentSkipZero(input *Department, fields ...string) *DepartmentCreate {
 	m := _c.mutation
 	if len(fields) == 0 {

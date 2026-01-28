@@ -1152,7 +1152,9 @@ func (_u *PositionUpdateOne) sqlSave(ctx context.Context) (_node *Position, err 
 	return _node, nil
 }
 
-// SetPosition set the Position. This method includes zero values in the update.
+// SetPosition sets the Position fields from input struct.
+// If no fields are specified, all mutable fields except ID will be set.
+// Zero values are included in the update.
 func (pu *PositionUpdate) SetPosition(input *Position, fields ...string) *PositionUpdate {
 	m := pu.mutation
 	if len(fields) == 0 {
@@ -1162,7 +1164,9 @@ func (pu *PositionUpdate) SetPosition(input *Position, fields ...string) *Positi
 	return pu
 }
 
-// SetPositionSkipZero set the Position, skipping zero values.
+// SetPositionSkipZero sets the Position fields from input struct.
+// If no fields are specified, all mutable fields except ID will be set.
+// Zero values are skipped and not updated.
 func (pu *PositionUpdate) SetPositionSkipZero(input *Position, fields ...string) *PositionUpdate {
 	m := pu.mutation
 	if len(fields) == 0 {
@@ -1172,7 +1176,9 @@ func (pu *PositionUpdate) SetPositionSkipZero(input *Position, fields ...string)
 	return pu
 }
 
-// SetPosition set the Position. This method includes zero values in the update.
+// SetPosition sets the Position fields from input struct.
+// If no fields are specified, all fields except ID will be set.
+// Zero values are included in the update.
 func (puo *PositionUpdateOne) SetPosition(input *Position, fields ...string) *PositionUpdateOne {
 	m := puo.mutation
 	if len(fields) == 0 {
@@ -1182,7 +1188,9 @@ func (puo *PositionUpdateOne) SetPosition(input *Position, fields ...string) *Po
 	return puo
 }
 
-// SetPositionSkipZero set the Position, skipping zero values.
+// SetPositionSkipZero sets the Position fields from input struct.
+// If no fields are specified, all fields except ID will be set.
+// Zero values are skipped and not updated.
 func (puo *PositionUpdateOne) SetPositionSkipZero(input *Position, fields ...string) *PositionUpdateOne {
 	m := puo.mutation
 	if len(fields) == 0 {
@@ -1192,8 +1200,8 @@ func (puo *PositionUpdateOne) SetPositionSkipZero(input *Position, fields ...str
 	return puo
 }
 
-// Omit allows the unselect one or more fields/columns for the given query,
-// instead of selecting all fields in the entity.
+// Omit excludes the specified fields from the update operation.
+// By default, all fields are updated. Use this method to exclude specific fields.
 func (puo *PositionUpdateOne) Omit(fields ...string) *PositionUpdateOne {
 	omits := make(map[string]struct{}, len(fields))
 	for i := range fields {

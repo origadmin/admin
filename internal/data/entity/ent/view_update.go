@@ -1680,7 +1680,9 @@ func (_u *ViewUpdateOne) sqlSave(ctx context.Context) (_node *View, err error) {
 	return _node, nil
 }
 
-// SetView set the View. This method includes zero values in the update.
+// SetView sets the View fields from input struct.
+// If no fields are specified, all mutable fields except ID will be set.
+// Zero values are included in the update.
 func (vu *ViewUpdate) SetView(input *View, fields ...string) *ViewUpdate {
 	m := vu.mutation
 	if len(fields) == 0 {
@@ -1690,7 +1692,9 @@ func (vu *ViewUpdate) SetView(input *View, fields ...string) *ViewUpdate {
 	return vu
 }
 
-// SetViewSkipZero set the View, skipping zero values.
+// SetViewSkipZero sets the View fields from input struct.
+// If no fields are specified, all mutable fields except ID will be set.
+// Zero values are skipped and not updated.
 func (vu *ViewUpdate) SetViewSkipZero(input *View, fields ...string) *ViewUpdate {
 	m := vu.mutation
 	if len(fields) == 0 {
@@ -1700,7 +1704,9 @@ func (vu *ViewUpdate) SetViewSkipZero(input *View, fields ...string) *ViewUpdate
 	return vu
 }
 
-// SetView set the View. This method includes zero values in the update.
+// SetView sets the View fields from input struct.
+// If no fields are specified, all fields except ID will be set.
+// Zero values are included in the update.
 func (vuo *ViewUpdateOne) SetView(input *View, fields ...string) *ViewUpdateOne {
 	m := vuo.mutation
 	if len(fields) == 0 {
@@ -1710,7 +1716,9 @@ func (vuo *ViewUpdateOne) SetView(input *View, fields ...string) *ViewUpdateOne 
 	return vuo
 }
 
-// SetViewSkipZero set the View, skipping zero values.
+// SetViewSkipZero sets the View fields from input struct.
+// If no fields are specified, all fields except ID will be set.
+// Zero values are skipped and not updated.
 func (vuo *ViewUpdateOne) SetViewSkipZero(input *View, fields ...string) *ViewUpdateOne {
 	m := vuo.mutation
 	if len(fields) == 0 {
@@ -1720,8 +1728,8 @@ func (vuo *ViewUpdateOne) SetViewSkipZero(input *View, fields ...string) *ViewUp
 	return vuo
 }
 
-// Omit allows the unselect one or more fields/columns for the given query,
-// instead of selecting all fields in the entity.
+// Omit excludes the specified fields from the update operation.
+// By default, all fields are updated. Use this method to exclude specific fields.
 func (vuo *ViewUpdateOne) Omit(fields ...string) *ViewUpdateOne {
 	omits := make(map[string]struct{}, len(fields))
 	for i := range fields {
