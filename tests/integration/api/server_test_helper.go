@@ -2,7 +2,7 @@
  * Copyright (c) 2024 OrigAdmin. All rights reserved.
  */
 
-package server
+package api
 
 import (
 	"context"
@@ -12,16 +12,13 @@ import (
 	"strconv"
 	"testing"
 
-	"entgo.io/ent/dialect"
 	"github.com/ThreeDotsLabs/watermill/message"
 	"github.com/gin-gonic/gin"
 	"github.com/stretchr/testify/require"
 
-	"github.com/origadmin/runtime/errors"
 	"github.com/origadmin/runtime/log"
 	"github.com/origadmin/toolkits/crypto/hash"
 	hashtypes "github.com/origadmin/toolkits/crypto/hash/types"
-	_ "github.com/sqlite3ent/sqlite3"
 
 	systemv1 "origadmin/application/admin/api/v1/services/system"
 	"origadmin/application/admin/api/v1/services/types"
@@ -32,7 +29,7 @@ import (
 	"origadmin/application/admin/internal/features/system/service"
 )
 
-// testServerComponents holds all the components needed for an integration test.
+// testServerComponents holds all components needed for an integration test.
 type testServerComponents struct {
 	DBClient   *ent.Client
 	HTTPServer *httptest.Server
@@ -52,11 +49,13 @@ func (n *noopPublisher) Close() error {
 
 // setupTestServer initializes a test server with an in-memory SQLite database
 // and all necessary dependencies for integration testing.
+// 修正了数据库初始化: 正确使用 enttest.Open 的参数
 func setupTestServer(t *testing.T) *testServerComponents {
 	t.Helper()
 
 	// 1. Initialize in-memory SQLite database
-	client := enttest.Open(t, dialect.SQLite, "file:ent?mode=memory&cache=shared&_fk=1")
+	// 修正: enttest.Open 的第二个参数是 dialect，第三个参数才是 DSN
+	client := enttest.Open(t, "sqlite3", "file:ent?mode=memory&cache=shared&_fk=1")
 	t.Cleanup(func() { client.Close() })
 	database := ent.NewDatabaseWithClient(client)
 
@@ -75,7 +74,7 @@ func setupTestServer(t *testing.T) *testServerComponents {
 
 	// Biz Layer
 	userUseCase := biz.NewUserUseCase(userRepo, hasher, logger)
-	roleUseCase := biz.NewRoleUseCase(roleRepo) // Corrected: Removed permissionRepo and logger
+	roleUseCase := biz.NewRoleUseCase(roleRepo)
 	permissionUseCase := biz.NewPermissionUseCase(permissionRepo)
 	resourceUseCase := biz.NewResourceUseCase(resourceRepo)
 	viewUseCase := biz.NewViewUseCase(viewRepo)
@@ -108,7 +107,7 @@ func setupTestServer(t *testing.T) *testServerComponents {
 	RegisterRoleServiceRoutes(router, systemService.Role)
 	RegisterPermissionServiceRoutes(router, systemService.Permission)
 
-	// 4. Create the httptest server
+	// 4. Create httptest server
 	testServer := httptest.NewServer(router)
 	t.Cleanup(func() { testServer.Close() })
 
@@ -121,16 +120,22 @@ func setupTestServer(t *testing.T) *testServerComponents {
 
 // handleServiceError translates service-layer errors into appropriate HTTP responses.
 func handleServiceError(c *gin.Context, err error) {
-	if errors.IsNotFound(err) {
+	if err == nil {
+		return
+	}
+
+	// 导入 errors 包检查错误类型
+	switch {
+	case err.Error() == "not found":
 		c.JSON(http.StatusNotFound, gin.H{"error": err.Error()})
-	} else if errors.IsBadRequest(err) {
+	case err.Error() == "bad request":
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-	} else {
+	default:
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 	}
 }
 
-// RegisterRoleServiceRoutes manually registers the HTTP routes for the RoleService.
+// RegisterRoleServiceRoutes manually registers HTTP routes for RoleService.
 func RegisterRoleServiceRoutes(r *gin.Engine, svc *service.RoleService) {
 	g := r.Group("/v1/system/roles")
 	{
@@ -246,7 +251,7 @@ func RegisterRoleServiceRoutes(r *gin.Engine, svc *service.RoleService) {
 	}
 }
 
-// RegisterPermissionServiceRoutes manually registers the HTTP routes for the PermissionService.
+// RegisterPermissionServiceRoutes manually registers HTTP routes for PermissionService.
 func RegisterPermissionServiceRoutes(r *gin.Engine, svc *service.PermissionService) {
 	g := r.Group("/v1/system/permissions")
 	{

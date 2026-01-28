@@ -1,0 +1,4 @@
+# Base permissions for the system
+# - name: Permission Name
+#   keyword: permission::keyword
+#   description: A brief description of the permission.

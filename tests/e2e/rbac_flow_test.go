@@ -1,8 +1,6 @@
 package e2e
 
 import (
-	"encoding/json"
-	"fmt"
 	"io"
 	"net/http"
 	"strconv"
@@ -17,23 +15,6 @@ import (
 	typesv1 "origadmin/application/admin/api/v1/services/types"
 )
 
-// Global variables to store state between test steps
-var (
-	adminToken  string
-	editorToken string
-	viewerToken string
-
-	// IDs of created resources
-	roleEditorID int64
-	roleViewerID int64
-	userEditorID int64
-	userViewerID int64
-
-	// Resource IDs found from system
-	resUserListID   int64
-	resUserCreateID int64
-)
-
 // TestRBACFlow executes the complete Role-Based Access Control workflow.
 func TestRBACFlow(t *testing.T) {
 	// Generate a unique suffix for this test run to ensure data isolation.
@@ -46,6 +27,11 @@ func TestRBACFlow(t *testing.T) {
 	viewerRoleKeyword := "evk_" + uniqueSuffix
 	editorTestUser := "tbe_" + uniqueSuffix
 	viewerTestUser := "tbv_" + uniqueSuffix
+
+	var adminToken string
+	var resUserListID, resUserCreateID int64
+	var roleEditorID, roleViewerID int64
+	var userEditorID, userViewerID int64
 
 	// 1. Admin Login
 	t.Run("Step1_AdminLogin", func(t *testing.T) {
@@ -119,7 +105,7 @@ func TestRBACFlow(t *testing.T) {
 
 	// 5. Verify Editor Permissions
 	t.Run("Step5_VerifyEditor", func(t *testing.T) {
-		editorToken = login(t, editorUser, "password123")
+		editorToken := login(t, editorUser, "password123")
 		require.NotEmpty(t, editorToken)
 
 		// Try to list users (Should Succeed)
@@ -147,7 +133,7 @@ func TestRBACFlow(t *testing.T) {
 
 	// 6. Verify Viewer Permissions
 	t.Run("Step6_VerifyViewer", func(t *testing.T) {
-		viewerToken = login(t, viewerUser, "password123")
+		viewerToken := login(t, viewerUser, "password123")
 		require.NotEmpty(t, viewerToken)
 
 		// Try to list users (Should Succeed)
@@ -162,82 +148,4 @@ func TestRBACFlow(t *testing.T) {
 		assert.Equal(t, http.StatusForbidden, respCreate.StatusCode, "Viewer should NOT be able to create a user")
 		respCreate.Body.Close()
 	})
-}
-
-// --- Helper functions ---
-
-func createRole(t *testing.T, token, name, keyword string, resourceIDs []int64) int64 {
-	reqBody := map[string]interface{}{
-		"role": map[string]interface{}{
-			"name":    name,
-			"keyword": keyword,
-			"status":  1,
-		},
-		"resource_ids": resourceIDs, // Assign resources on creation
-	}
-
-	resp := doRequest(t, "POST", "/api/v1/sys/roles", reqBody, token)
-	defer resp.Body.Close()
-
-	bodyBytes, _ := io.ReadAll(resp.Body)
-	require.Equal(t, http.StatusOK, resp.StatusCode, "Failed to create role: %s", string(bodyBytes))
-
-	var resMap map[string]interface{}
-	json.Unmarshal(bodyBytes, &resMap)
-
-	roleMap := resMap["role"].(map[string]interface{})
-	idVal := roleMap["id"]
-
-	var id int64
-	switch v := idVal.(type) {
-	case float64:
-		id = int64(v)
-	case string:
-		fmt.Sscanf(v, "%d", &id)
-	}
-
-	return id
-}
-
-func createUser(t *testing.T, token, username, password string, roleIDs []int64) int64 {
-	user := &typesv1.User{
-		Username: username,
-		Nickname: username,
-		Email:    username + "@example.com",
-		Status:   1,
-	}
-
-	req := &systemv1.CreateUserRequest{
-		User:     user,
-		Password: password,
-		RoleIds:  roleIDs,
-	}
-
-	resp := doRequest(t, "POST", "/api/v1/sys/users", req, token)
-	defer resp.Body.Close()
-
-	bodyBytes, _ := io.ReadAll(resp.Body)
-	require.Equal(t, http.StatusOK, resp.StatusCode, "Failed to create user: %s", string(bodyBytes))
-
-	var createResp systemv1.CreateUserResponse
-	unmarshaler := protojson.UnmarshalOptions{DiscardUnknown: true}
-	err := unmarshaler.Unmarshal(bodyBytes, &createResp)
-	require.NoError(t, err)
-
-	return createResp.User.Id
-}
-
-func deleteResource(t *testing.T, token, path string, id int64, force bool) {
-	if id == 0 {
-		return // Do not try to delete a resource with an ID of 0
-	}
-	fullPath := fmt.Sprintf("%s/%d", path, id)
-	if force {
-		fullPath += "?force=true" // Keep this attempt, it might work for cleanup
-	}
-	resp := doRequest(t, "DELETE", fullPath, nil, token)
-	defer resp.Body.Close()
-
-	// Use assert instead of require to allow other cleanup tasks to run
-	assert.Equal(t, http.StatusOK, resp.StatusCode, "Failed to delete resource at %s", fullPath)
 }

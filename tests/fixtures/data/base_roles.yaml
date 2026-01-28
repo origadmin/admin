@@ -1,0 +1,6 @@
+# Base roles for the system
+# - name: Role Name
+#   keyword: role_keyword
+#   permissions:
+#     - permission::keyword1
+#     - permission::keyword2
