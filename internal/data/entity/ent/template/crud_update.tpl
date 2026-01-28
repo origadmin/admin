@@ -10,25 +10,29 @@
         {{ $fields = .MutableFields }}
     {{- end }}
 
-    {{ print "// Set" .Name " set the " .Name ". This method includes zero values in the update." }}
+    // Set{{ .Name }} sets the {{ .Name }} fields from input struct.
+    // If no fields are specified, all mutable fields except ID will be set.
+    // Zero values are included in the update.
     func ({{ $receiver }} *{{ $builder }}) Set{{ .Name }}(input *{{ .Name }}, fields ...string) *{{ $builder }} {
-        {{- $const := print .Package}}
-        m := {{ $receiver }}.mutation
-        if len(fields) == 0 {
-            fields =  {{$const}}.OmitColumns({{$const}}.FieldID)
-        }
-        _ = m.SetFields(input, fields...)
-        return {{ $receiver }}
+    {{- $const := print .Package}}
+    m := {{ $receiver }}.mutation
+    if len(fields) == 0 {
+    fields = {{ $const }}.OmitColumns({{ $const }}.FieldID)
+    }
+    _ = m.SetFields(input, fields...)
+    return {{ $receiver }}
     }
 
-    {{ print "// Set" .Name "SkipZero set the " .Name ", skipping zero values." }}
+    // Set{{ .Name }}SkipZero sets the {{ .Name }} fields from input struct.
+    // If no fields are specified, all mutable fields except ID will be set.
+    // Zero values are skipped and not updated.
     func ({{ $receiver }} *{{ $builder }}) Set{{ .Name }}SkipZero(input *{{ .Name }}, fields ...string) *{{ $builder }} {
-        {{- $const := print .Package}}
-        m := {{ $receiver }}.mutation
-        if len(fields) == 0 {
-            fields =  {{$const}}.OmitColumns({{$const}}.FieldID)
-        }
-        _ = m.SetFieldsSkipZero(input, fields...)
-        return {{ $receiver }}
+    {{- $const := print .Package}}
+    m := {{ $receiver }}.mutation
+    if len(fields) == 0 {
+    fields = {{ $const }}.OmitColumns({{ $const }}.FieldID)
+    }
+    _ = m.SetFieldsSkipZero(input, fields...)
+    return {{ $receiver }}
     }
 {{- end -}}

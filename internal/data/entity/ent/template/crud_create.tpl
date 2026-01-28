@@ -11,24 +11,28 @@
         {{ $fields = append $fields .ID }}
     {{- end }}
 
-    {{ print "// Set" .Name " set the " .Name }}
-		func ({{ $receiver }} *{{ $builder }}) Set{{ .Name }}(input *{{ .Name }}, fields ...string) *{{ $builder }} {
+    // Set{{ .Name }} sets the {{ .Name }} fields from input struct.
+    // If no fields are specified, all fields from Columns will be set.
+    // Zero values are included in the update.
+    func ({{ $receiver }} *{{ $builder }}) Set{{ .Name }}(input *{{ .Name }}, fields ...string) *{{ $builder }} {
 		m := {{ $receiver }}.mutation
 		if len(fields) == 0 {
-		fields = {{ $const }}.Columns
+    fields = {{ $const }}.Columns
 		}
 		_ = m.SetFields(input, fields...)
 		return {{ $receiver }}
-		}
+    }
 
-    {{ print "// Set" .Name "WithZero set the " .Name }}
-		func ({{ $receiver }} *{{ $builder }}) Set{{ .Name }}SkipZero(input *{{ .Name }}, fields ...string) *{{ $builder }} {
+    // Set{{ .Name }}SkipZero sets the {{ .Name }} fields from input struct.
+    // If no fields are specified, all fields from Columns will be set.
+    // Zero values are skipped and not updated.
+    func ({{ $receiver }} *{{ $builder }}) Set{{ .Name }}SkipZero(input *{{ .Name }}, fields ...string) *{{ $builder }} {
 		m := {{ $receiver }}.mutation
 		if len(fields) == 0 {
-		fields = {{ $const }}.Columns
+    fields = {{ $const }}.Columns
 		}
 		_ = m.SetFieldsSkipZero(input, fields...)
 		return {{ $receiver }}
-		}
+    }
 
 {{- end -}}
