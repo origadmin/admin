@@ -68,4 +68,5 @@ servers:
           type: "nats"
           nats:
             address: "localhost:4222"
-            jetstream_enabled: true # Uncomment if using NATS JetStream
+            jetstream_enabled: true
+            jetstream_stream_name: "system_events"

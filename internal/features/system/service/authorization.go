@@ -32,5 +32,14 @@ func NewAuthorizationService(uc *biz.AuthorizationUseCase, logger log.Logger) *A
 // implementation-agnostic format.
 func (s *AuthorizationService) ListAllPolicies(ctx context.Context, req *systemv1.ListAllPoliciesRequest) (*systemv1.ListAllPoliciesResponse, error) {
 	// The business logic is delegated to the use case.
-	return s.uc.ListAllPolicies(ctx, req)
+	return s.uc.ListAllPolicies(ctx)
+}
+
+// ListPoliciesForRoles retrieves access rules for a specific set of roles.
+func (s *AuthorizationService) ListPoliciesForRoles(ctx context.Context, req *systemv1.ListPoliciesForRolesRequest) (*systemv1.ListPoliciesForRolesResponse, error) {
+	rules, err := s.uc.ListPoliciesForRoles(ctx, req.GetRoleKeywords()...)
+	if err != nil {
+		return nil, err
+	}
+	return &systemv1.ListPoliciesForRolesResponse{AccessRules: rules}, nil
 }

@@ -33,3 +33,15 @@ func (p *systemPolicyProvider) ListAllPolicies(ctx context.Context) (*systemv1.L
 	// The actual gRPC call.
 	return p.client.ListAllPolicies(ctx, &systemv1.ListAllPoliciesRequest{})
 }
+
+// ListPoliciesForRoles calls the remote ListPoliciesForRoles method on the system service.
+func (p *systemPolicyProvider) ListPoliciesForRoles(ctx context.Context, roleKeywords ...string) ([]*systemv1.AccessRule, error) {
+	p.log.WithContext(ctx).Infof("Fetching policies for roles %v from remote system service...", roleKeywords)
+	resp, err := p.client.ListPoliciesForRoles(ctx, &systemv1.ListPoliciesForRolesRequest{
+		RoleKeywords: roleKeywords,
+	})
+	if err != nil {
+		return nil, err
+	}
+	return resp.GetAccessRules(), nil
+}

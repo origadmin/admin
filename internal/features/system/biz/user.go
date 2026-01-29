@@ -40,7 +40,7 @@ func (uc *UserUseCase) ListUserResources(ctx context.Context, id int64) ([]*type
 	return uc.repo.ListResourceByUserID(ctx, id)
 }
 
-func (uc *UserUseCase) UpdateUserRoles(ctx context.Context, id int64, roleIDs []int64) error {
+func (uc *UserUseCase) UpdateUserRoles(ctx context.Context, id int64, roleIDs []int64) ([]*types.Role, error) {
 	return uc.repo.AddRoleIDs(ctx, id, roleIDs)
 }
 

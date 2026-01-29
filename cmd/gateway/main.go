@@ -32,6 +32,7 @@ func init() {
 	flag.StringVar(&flagconf, "conf", "", "config path, eg: -conf bootstrap.yaml")
 }
 func NewApp(app *runtime.App, servers []transport.Server) *kratos.App {
+	log.SetLogger(app.Logger())
 	return app.NewApp(servers)
 }
 

@@ -45,6 +45,7 @@ func NewBootstrapOptions(bootstrap *authservice.PolicyBootstrap) []kratos.Option
 // NewApp creates a new Kratos application.
 func NewApp(app *runtime.App, servers []transport.Server, opts []kratos.Option) *kratos.App {
 	// Prepend the bootstrap options to any other options.
+	log.SetLogger(app.Logger())
 	return app.NewApp(servers, opts...)
 }
 

@@ -518,3 +518,243 @@ var _ interface {
 	Cause() error
 	ErrorName() string
 } = ListAllPoliciesResponseValidationError{}
+
+// Validate checks the field values on ListPoliciesForRolesRequest with the
+// rules defined in the proto definition for this message. If any rules are
+// violated, the first error encountered is returned, or nil if there are no violations.
+func (m *ListPoliciesForRolesRequest) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on ListPoliciesForRolesRequest with the
+// rules defined in the proto definition for this message. If any rules are
+// violated, the result is a list of violation errors wrapped in
+// ListPoliciesForRolesRequestMultiError, or nil if none found.
+func (m *ListPoliciesForRolesRequest) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *ListPoliciesForRolesRequest) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	if len(errors) > 0 {
+		return ListPoliciesForRolesRequestMultiError(errors)
+	}
+
+	return nil
+}
+
+// ListPoliciesForRolesRequestMultiError is an error wrapping multiple
+// validation errors returned by ListPoliciesForRolesRequest.ValidateAll() if
+// the designated constraints aren't met.
+type ListPoliciesForRolesRequestMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m ListPoliciesForRolesRequestMultiError) Error() string {
+	msgs := make([]string, 0, len(m))
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m ListPoliciesForRolesRequestMultiError) AllErrors() []error { return m }
+
+// ListPoliciesForRolesRequestValidationError is the validation error returned
+// by ListPoliciesForRolesRequest.Validate if the designated constraints
+// aren't met.
+type ListPoliciesForRolesRequestValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e ListPoliciesForRolesRequestValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e ListPoliciesForRolesRequestValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e ListPoliciesForRolesRequestValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e ListPoliciesForRolesRequestValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e ListPoliciesForRolesRequestValidationError) ErrorName() string {
+	return "ListPoliciesForRolesRequestValidationError"
+}
+
+// Error satisfies the builtin error interface
+func (e ListPoliciesForRolesRequestValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sListPoliciesForRolesRequest.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = ListPoliciesForRolesRequestValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = ListPoliciesForRolesRequestValidationError{}
+
+// Validate checks the field values on ListPoliciesForRolesResponse with the
+// rules defined in the proto definition for this message. If any rules are
+// violated, the first error encountered is returned, or nil if there are no violations.
+func (m *ListPoliciesForRolesResponse) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on ListPoliciesForRolesResponse with the
+// rules defined in the proto definition for this message. If any rules are
+// violated, the result is a list of violation errors wrapped in
+// ListPoliciesForRolesResponseMultiError, or nil if none found.
+func (m *ListPoliciesForRolesResponse) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *ListPoliciesForRolesResponse) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	for idx, item := range m.GetAccessRules() {
+		_, _ = idx, item
+
+		if all {
+			switch v := interface{}(item).(type) {
+			case interface{ ValidateAll() error }:
+				if err := v.ValidateAll(); err != nil {
+					errors = append(errors, ListPoliciesForRolesResponseValidationError{
+						field:  fmt.Sprintf("AccessRules[%v]", idx),
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			case interface{ Validate() error }:
+				if err := v.Validate(); err != nil {
+					errors = append(errors, ListPoliciesForRolesResponseValidationError{
+						field:  fmt.Sprintf("AccessRules[%v]", idx),
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			}
+		} else if v, ok := interface{}(item).(interface{ Validate() error }); ok {
+			if err := v.Validate(); err != nil {
+				return ListPoliciesForRolesResponseValidationError{
+					field:  fmt.Sprintf("AccessRules[%v]", idx),
+					reason: "embedded message failed validation",
+					cause:  err,
+				}
+			}
+		}
+
+	}
+
+	if len(errors) > 0 {
+		return ListPoliciesForRolesResponseMultiError(errors)
+	}
+
+	return nil
+}
+
+// ListPoliciesForRolesResponseMultiError is an error wrapping multiple
+// validation errors returned by ListPoliciesForRolesResponse.ValidateAll() if
+// the designated constraints aren't met.
+type ListPoliciesForRolesResponseMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m ListPoliciesForRolesResponseMultiError) Error() string {
+	msgs := make([]string, 0, len(m))
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m ListPoliciesForRolesResponseMultiError) AllErrors() []error { return m }
+
+// ListPoliciesForRolesResponseValidationError is the validation error returned
+// by ListPoliciesForRolesResponse.Validate if the designated constraints
+// aren't met.
+type ListPoliciesForRolesResponseValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e ListPoliciesForRolesResponseValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e ListPoliciesForRolesResponseValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e ListPoliciesForRolesResponseValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e ListPoliciesForRolesResponseValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e ListPoliciesForRolesResponseValidationError) ErrorName() string {
+	return "ListPoliciesForRolesResponseValidationError"
+}
+
+// Error satisfies the builtin error interface
+func (e ListPoliciesForRolesResponseValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sListPoliciesForRolesResponse.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = ListPoliciesForRolesResponseValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = ListPoliciesForRolesResponseValidationError{}

@@ -21,28 +21,41 @@ service AuthorizationService {
   rpc ListAllPolicies(ListAllPoliciesRequest) returns (ListAllPoliciesResponse) {
     option (contrib.api.policy.v1.policy) = {name: "public"};
   }
+
+  // ListPoliciesForRoles retrieves access rules for a specific set of roles.
+  rpc ListPoliciesForRoles(ListPoliciesForRolesRequest) returns (ListPoliciesForRolesResponse) {
+    option (contrib.api.policy.v1.policy) = {name: "public"};
+  }
 }
 
 // AccessRule represents a generic "Subject-Object-Action" policy.
 // This is implementation-agnostic. For Casbin, it maps to a 'p' rule.
 message AccessRule {
-  string subject = 1; // The subject (e.g., "role:admin", "user:123")
-  string object = 2;  // The object/resource (e.g., "/api/users")
-  string action = 3;  // The action (e.g., "GET", "write")
-  string domain = 4;  // Optional domain/tenant, defaults to "*"
+  string subject = 1 [json_name = "subject"]; // The subject (e.g., "role:admin", "user:123")
+  string object = 2 [json_name = "object"];  // The object/resource (e.g., "/api/users")
+  string action = 3 [json_name = "action"];  // The action (e.g., "GET", "write")
+  string domain = 4 [json_name = "domain"];  // Optional domain/tenant, defaults to "*"
 }
 
 // GroupingRule represents a generic "User-in-Group" relationship.
 // This is implementation-agnostic. For Casbin, it maps to a 'g' rule.
 message GroupingRule {
-  string user = 1;   // The user identifier (e.g., "user:123")
-  string group = 2;  // The group/role identifier (e.g., "role:admin")
-  string domain = 3; // Optional domain/tenant, defaults to "*"
+  string user = 1 [json_name = "user"];   // The user identifier (e.g., "user:123")
+  string group = 2 [json_name = "group"];  // The group/role identifier (e.g., "role:admin")
+  string domain = 3 [json_name = "domain"]; // Optional domain/tenant, defaults to "*"
 }
 
 message ListAllPoliciesRequest {}
 
 message ListAllPoliciesResponse {
-  repeated AccessRule access_rules = 1;
-  repeated GroupingRule grouping_rules = 2;
+  repeated AccessRule access_rules = 1 [json_name = "access_rules"];
+  repeated GroupingRule grouping_rules = 2 [json_name = "grouping_rules"];
+}
+
+message ListPoliciesForRolesRequest {
+  repeated string role_keywords = 1 [json_name = "role_keywords"];
+}
+
+message ListPoliciesForRolesResponse {
+  repeated AccessRule access_rules = 1 [json_name = "access_rules"];
 }

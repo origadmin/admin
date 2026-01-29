@@ -6,9 +6,18 @@ package service
 
 import (
 	"context"
+	"time"
+
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
 
 	"github.com/origadmin/runtime/log"
 	"origadmin/application/admin/internal/features/auth/biz"
+)
+
+const (
+	maxRetries    = 10
+	retryInterval = 3 * time.Second
 )
 
 // PolicyBootstrap is responsible for bootstrapping authorization policies at service startup.
@@ -25,16 +34,32 @@ func NewPolicyBootstrap(syncer *biz.PolicySyncer, logger log.Logger) *PolicyBoot
 	}
 }
 
-// Bootstrap performs one-time initialization of authorization policies.
+// Bootstrap performs one-time initialization of authorization policies with a retry mechanism.
 // This should be called at application startup via a BeforeStart hook.
 func (b *PolicyBootstrap) Bootstrap(ctx context.Context) error {
 	b.log.WithContext(ctx).Info("Starting authorization policy bootstrap...")
-	if err := b.syncer.Sync(ctx); err != nil {
-		// We log the error but return it to stop the application startup if strict consistency is required.
-		// If you want to allow the app to start even if sync fails, return nil here.
-		b.log.WithContext(ctx).Errorf("Authorization policy bootstrap failed: %v", err)
+
+	var lastErr error
+	for i := 0; i < maxRetries; i++ {
+		err := b.syncer.Sync(ctx)
+		if err == nil {
+			b.log.WithContext(ctx).Info("Authorization policy bootstrap completed successfully.")
+			return nil
+		}
+
+		lastErr = err
+		st, ok := status.FromError(err)
+		if ok && (st.Code() == codes.Unavailable || st.Code() == codes.DeadlineExceeded) {
+			b.log.WithContext(ctx).Warnf("System service not available, retrying in %v... (attempt %d/%d)", retryInterval, i+1, maxRetries)
+			time.Sleep(retryInterval)
+			continue
+		}
+
+		// For other errors, fail immediately.
+		b.log.WithContext(ctx).Errorf("Authorization policy bootstrap failed with a non-retriable error: %v", err)
 		return err
 	}
-	b.log.WithContext(ctx).Info("Authorization policy bootstrap completed successfully.")
-	return nil
+
+	b.log.WithContext(ctx).Errorf("Authorization policy bootstrap failed after %d attempts: %v", maxRetries, lastErr)
+	return lastErr
 }

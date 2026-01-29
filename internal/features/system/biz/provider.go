@@ -7,6 +7,7 @@ package biz
 
 import (
 	"github.com/google/wire"
+	authbiz "origadmin/application/admin/internal/features/auth/biz"
 )
 
 // ProviderSet is biz providers.
@@ -17,4 +18,5 @@ var ProviderSet = wire.NewSet(
 	NewPermissionUseCase,
 	NewViewUseCase,
 	NewAuthorizationUseCase,
+	wire.Bind(new(authbiz.PolicyProvider), new(*AuthorizationUseCase)),
 )

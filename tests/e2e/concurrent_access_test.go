@@ -4,12 +4,15 @@ package e2e
 
 import (
 	"fmt"
+	"io"
 	"net/http"
 	"sync"
 	"testing"
 	"time"
 
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
+	"google.golang.org/protobuf/encoding/protojson"
 
 	systemv1 "origadmin/application/admin/api/v1/services/system"
 	typesv1 "origadmin/application/admin/api/v1/services/types"
@@ -18,6 +21,33 @@ import (
 func TestConcurrentPermissionAccess(t *testing.T) {
 	// 准备测试环境
 	adminToken := loginAndGetToken(t)
+	require.NotEmpty(t, adminToken, "Admin login failed")
+
+	var resUserListID, resUserCreateID int64
+
+	// Find Core Resources (APIs)
+	t.Run("FindResources", func(t *testing.T) {
+		resp := doRequest(t, "GET", "/api/v1/sys/resources?page_size=1000", nil, adminToken)
+		defer resp.Body.Close()
+		require.Equal(t, http.StatusOK, resp.StatusCode)
+
+		var listResp systemv1.ListResourcesResponse
+		bodyBytes, _ := io.ReadAll(resp.Body)
+		err := protojson.Unmarshal(bodyBytes, &listResp)
+		require.NoError(t, err)
+
+		for _, res := range listResp.Resources {
+			switch res.Keyword {
+			case "system:user:list_users":
+				resUserListID = res.Id
+			case "system:user:create_user":
+				resUserCreateID = res.Id
+			}
+		}
+		require.NotZero(t, resUserListID, "Resource 'system:user:list_users' should be found")
+		require.NotZero(t, resUserCreateID, "Resource 'system:user:create_user' should be found")
+		t.Logf("Found resource IDs: UserList=%d, UserCreate=%d", resUserListID, resUserCreateID)
+	})
 
 	// 创建测试角色
 	uniqueSuffix := fmt.Sprintf("%d", time.Now().Unix())

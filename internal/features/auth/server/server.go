@@ -85,7 +85,7 @@ func NewServers(
 
 // NewWatermillServer creates a new Watermill server and registers event handlers.
 func NewWatermillServer(
-	_ *runtime.App,
+	app *runtime.App,
 	cfg *watermillv1.Watermill,
 	policySyncSvc *service.PolicySyncService,
 ) (transport.Server, error) {
@@ -93,19 +93,28 @@ func NewWatermillServer(
 		return nil, errors.New("watermill config is nil")
 	}
 
-	srv, err := watermill.NewServer(cfg)
+	logger := log.NewHelper(app.Logger())
+	logger.Infof("watermill config %+v", cfg)
+	srv, err := watermill.NewServer(cfg, log.WithLogger(app.Logger()))
 	if err != nil {
 		return nil, err
 	}
 
-	// Register the policy sync handler using AddConsumerHandler
+	// Register the policy sync handler for user-role changes.
 	srv.AddConsumerHandler(
 		"PolicySyncUserRoleAssigned",
 		broker.UserRoleAssignedTopic,
 		policySyncSvc.HandleUserRoleAssigned,
 	)
 
-	log.Info("Watermill server and policy sync handler initialized.")
+	// Register the policy sync handler for role-permission changes.
+	srv.AddConsumerHandler(
+		"PolicySyncRolePolicyChanged",
+		broker.RolePolicyChangedTopic,
+		policySyncSvc.HandleRolePolicyChanged,
+	)
+
+	logger.Info("Watermill server and policy sync handlers initialized.")
 	return srv, nil
 }
 

@@ -39,6 +39,7 @@ func init() {
 }
 
 func NewApp(app *runtime.App, servers []transport.Server) *kratos.App {
+	log.SetLogger(app.Logger())
 	return app.NewApp(servers)
 }
 

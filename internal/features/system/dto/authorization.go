@@ -14,6 +14,7 @@ import (
 // It returns Protobuf types directly, as conversion is handled within the DAL.
 type AuthorizationRepo interface {
 	ListRolePermissions(ctx context.Context) ([]*types.RolePermission, error)
+	ListRolePermissionsByRoleKeywords(ctx context.Context, roleKeywords ...string) ([]*types.RolePermission, error)
 	ListPermissions(ctx context.Context) ([]*types.Permission, error)
 	ListUserRoles(ctx context.Context) ([]*types.UserRole, error)
 }

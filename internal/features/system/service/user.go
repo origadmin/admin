@@ -54,7 +54,7 @@ func (s *UserService) ListUserResources(ctx context.Context, req *system.ListUse
 }
 
 func (s *UserService) UpdateUserRoles(ctx context.Context, req *system.UpdateUserRolesRequest) (*system.UpdateUserRolesResponse, error) {
-	err := s.uc.UpdateUserRoles(ctx, req.GetId(), req.GetRoleIds())
+	roles, err := s.uc.UpdateUserRoles(ctx, req.GetId(), req.GetRoleIds())
 	if err != nil {
 		if ent.IsNotFound(err) {
 			return nil, errors.NotFound("USER_NOT_FOUND", "User not found")
@@ -62,17 +62,17 @@ func (s *UserService) UpdateUserRoles(ctx context.Context, req *system.UpdateUse
 		return nil, err
 	}
 
-	userIDStr := fmt.Sprintf("%d", req.GetId())
-	roleIDsStr := make([]string, len(req.GetRoleIds()))
-	for i, roleID := range req.GetRoleIds() {
-		roleIDsStr[i] = fmt.Sprintf("%d", roleID)
+	userIDStr := fmt.Sprintf("user:%d", req.GetId())
+	roleKeywords := make([]string, len(roles))
+	for i, role := range roles {
+		roleKeywords[i] = role.Keyword
 	}
 
 	event := &types.UserRoleAssignedEvent{
-		Timestamp: timestamppb.Now(),
-		UserId:    userIDStr,
-		RoleIds:   roleIDsStr,
-		Source:    "system-service",
+		Timestamp:    timestamppb.Now(),
+		UserId:       userIDStr,
+		RoleKeywords: roleKeywords,
+		Source:       "system.service",
 	}
 
 	payload, err := proto.Marshal(event)
@@ -169,7 +169,7 @@ func (s *UserService) DeleteUser(ctx context.Context, req *system.DeleteUserRequ
 	err := s.uc.DeleteUser(ctx, req.GetId())
 	if err != nil {
 		if ent.IsNotFound(err) {
-			return nil, errors.NotFound("USER_NOT_FOUND", "User not found")
+			return nil, errors.NotFound("ROLE_NOT_FOUND", "Role not found")
 		}
 		return nil, err
 	}

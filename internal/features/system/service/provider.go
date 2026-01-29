@@ -18,7 +18,7 @@ var ProviderSet = wire.NewSet(
 	NewPermissionService,
 	NewViewService,
 	NewSystemService,
-	NewAuthorizationService, // Add the new service constructor
+	NewAuthorizationService,
 
 	// Bind the concrete implementation to the proto-defined interface.
 	wire.Bind(new(systemv1.AuthorizationServiceServer), new(*AuthorizationService)),

@@ -27,6 +27,7 @@ func wireApp(app *runtime.App, bootstrap *conf.Config) (*kratos.App, func(), err
 		// Data layer provider
 		data.ProviderSet,
 
+		// Client provider for gRPC calls
 		authclient.ProviderSet,
 
 		// Auth feature module providers

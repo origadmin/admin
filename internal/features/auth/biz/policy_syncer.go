@@ -7,6 +7,7 @@ package biz
 import (
 	"context"
 	"fmt"
+	"time"
 
 	"github.com/origadmin/contrib/security/authz"
 	"github.com/origadmin/runtime/log"
@@ -14,10 +15,18 @@ import (
 	systempb "origadmin/application/admin/api/v1/services/system"
 )
 
+const (
+	// retryInterval is the duration to wait before retrying a policy fetch
+	// if the initial attempt returns no rules, to account for transactional delays.
+	retryInterval = 200 * time.Millisecond
+)
+
 // PolicyProvider defines the interface for fetching the source-of-truth policies
 // in a pre-processed, implementation-agnostic format.
 type PolicyProvider interface {
 	ListAllPolicies(ctx context.Context) (*systempb.ListAllPoliciesResponse, error)
+	// ListPoliciesForRoles fetches all access rules for a specific set of roles, identified by their keywords.
+	ListPoliciesForRoles(ctx context.Context, roleKeywords ...string) ([]*systempb.AccessRule, error)
 }
 
 // PolicySyncer is responsible for synchronizing policies from a PolicyProvider
@@ -111,5 +120,65 @@ func (s *PolicySyncer) Sync(ctx context.Context) error {
 	}
 
 	s.log.WithContext(ctx).Info("Policy synchronization finished successfully.")
+	return nil
+}
+
+// SyncRoles performs a targeted synchronization for a specific set of roles.
+// If roleKeywords is empty, it falls back to a full synchronization.
+func (s *PolicySyncer) SyncRoles(ctx context.Context, roleKeywords ...string) error {
+	if len(roleKeywords) == 0 {
+		s.log.WithContext(ctx).Info("No role keywords provided, performing a full policy synchronization.")
+		return s.Sync(ctx)
+	}
+
+	s.log.WithContext(ctx).Infof("SYNCER: Starting targeted policy synchronization for roles: %v", roleKeywords)
+
+	// 1. Clear existing permissions for the specified roles.
+	// The subject in 'p' rules for roles is the role keyword itself.
+	for _, roleKeyword := range roleKeywords {
+		s.log.WithContext(ctx).Infof("SYNCER: Removing permissions for role '%s'", roleKeyword)
+		if _, err := s.modifier.RemovePermissions(ctx, roleKeyword); err != nil {
+			s.log.WithContext(ctx).Warnf("Failed to clear permissions for role '%s': %v", roleKeyword, err)
+			// Continue even if clearing fails, as adding new rules might fix inconsistencies.
+		}
+	}
+
+	// 2. Fetch the new, correct set of access rules for these roles.
+	rules, err := s.provider.ListPoliciesForRoles(ctx, roleKeywords...)
+	if err != nil {
+		s.log.WithContext(ctx).Errorf("SYNCER: Failed to fetch policies for roles %v: %v", roleKeywords, err)
+		return fmt.Errorf("failed to fetch policies for roles: %w", err)
+	}
+
+	// HACK: Retry once if no rules are found, to mitigate race conditions where the message
+	// is consumed before the writing transaction is fully committed and visible.
+	if len(rules) == 0 {
+		s.log.WithContext(ctx).Warnf("SYNCER: Received 0 access rules on first attempt. Retrying after %v...", retryInterval)
+		time.Sleep(retryInterval)
+		rules, err = s.provider.ListPoliciesForRoles(ctx, roleKeywords...)
+		if err != nil {
+			s.log.WithContext(ctx).Errorf("SYNCER: Failed to fetch policies on retry for roles %v: %v", roleKeywords, err)
+			return fmt.Errorf("failed to fetch policies on retry: %w", err)
+		}
+	}
+
+	s.log.WithContext(ctx).Infof("SYNCER: Received %d access rules from provider.", len(rules))
+
+	// 3. Add the new access rules.
+	if len(rules) > 0 {
+		s.log.WithContext(ctx).Infof("SYNCER: Applying %d new access rules for roles %v.", len(rules), roleKeywords)
+		for _, rule := range rules {
+			spec := authz.RuleSpec{
+				Resource: rule.GetObject(),
+				Action:   rule.GetAction(),
+				Domain:   rule.GetDomain(),
+			}
+			if _, err := s.modifier.AddPermissions(ctx, rule.GetSubject(), spec); err != nil {
+				s.log.WithContext(ctx).Errorf("Failed to add permission for subject '%s': %v", rule.GetSubject(), err)
+			}
+		}
+	}
+
+	s.log.WithContext(ctx).Infof("SYNCER: Targeted policy synchronization for roles %v finished successfully.", roleKeywords)
 	return nil
 }

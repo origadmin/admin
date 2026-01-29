@@ -89,18 +89,6 @@ func wireApp(app *runtime.App, bootstrap *conf.Config) (*kratos.App, func(), err
 		cleanup()
 		return nil, nil, err
 	}
-	policySyncService := service.NewPolicySyncService(policyModifier, authorizer, v)
-	skipper := providers.ProvideSkipper(app, bootstrap)
-	serverMiddlewareProvider, err := providers.ProvideServiceMiddlewares(app, authorizer, skipper)
-	if err != nil {
-		cleanup()
-		return nil, nil, err
-	}
-	v2, err := server.NewServers(app, servers, authService, meService, casbinService, policySyncService, serverMiddlewareProvider)
-	if err != nil {
-		cleanup()
-		return nil, nil, err
-	}
 	clientMiddlewareProvider, err := providers.ProvideClientMiddlewares(app)
 	if err != nil {
 		cleanup()
@@ -113,6 +101,18 @@ func wireApp(app *runtime.App, bootstrap *conf.Config) (*kratos.App, func(), err
 	}
 	policyProvider := client.NewSystemPolicyProvider(authorizationServiceClient, v)
 	policySyncer := biz.NewPolicySyncer(policyProvider, policyModifier, v)
+	policySyncService := service.NewPolicySyncService(policyModifier, authorizer, policySyncer, v)
+	skipper := providers.ProvideSkipper(app, bootstrap)
+	serverMiddlewareProvider, err := providers.ProvideServiceMiddlewares(app, authorizer, skipper)
+	if err != nil {
+		cleanup()
+		return nil, nil, err
+	}
+	v2, err := server.NewServers(app, servers, authService, meService, casbinService, policySyncService, serverMiddlewareProvider)
+	if err != nil {
+		cleanup()
+		return nil, nil, err
+	}
 	policyBootstrap := service.NewPolicyBootstrap(policySyncer, v)
 	v3 := NewBootstrapOptions(policyBootstrap)
 	kratosApp := NewApp(app, v2, v3)

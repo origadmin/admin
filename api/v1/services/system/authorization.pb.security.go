@@ -15,6 +15,12 @@ func init() {
 			Name:          "public",
 			VersionID:     "d8c85cf903343096633f17ff30d97631417397a857b60bbff3eab15f9d620b42",
 		},
+		{
+			ServiceMethod: "/api.v1.services.system.AuthorizationService/ListPoliciesForRoles",
+			GatewayPath:   "",
+			Name:          "public",
+			VersionID:     "9688bec67d5fb98132cc7383b1b9acaab7b9be1479ea96e1f65b3af3f75863b7",
+		},
 	}
 
 	security.RegisterPolicies(policies)

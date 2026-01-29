@@ -10,6 +10,8 @@ import (
 	"github.com/origadmin/runtime/log"
 	"origadmin/application/admin/api/v1/services/types"
 	"origadmin/application/admin/internal/data/entity/ent"
+	"origadmin/application/admin/internal/data/entity/ent/role"
+	"origadmin/application/admin/internal/data/entity/ent/rolepermission"
 	"origadmin/application/admin/internal/features/system/dto"
 )
 
@@ -43,6 +45,31 @@ func (r *authorizationRepo) ListRolePermissions(ctx context.Context) ([]*types.R
 	}
 
 	// Manually convert the slice using the generated item converter.
+	dtos := make([]*types.RolePermission, len(rolePerms))
+	for i, rp := range rolePerms {
+		dtos[i] = dto.ConvertRolePermissionToRolePermissionPB(rp)
+	}
+
+	return dtos, nil
+}
+
+// ListRolePermissionsByRoleKeywords queries role-permission relations for a specific set of role keywords.
+func (r *authorizationRepo) ListRolePermissionsByRoleKeywords(ctx context.Context, roleKeywords ...string) ([]*types.RolePermission, error) {
+	r.log.WithContext(ctx).Infof("DAL: Querying role_permissions for keywords: %v", roleKeywords)
+	rolePerms, err := r.db.RolePermission(ctx).Query().
+		Where(rolepermission.HasRoleWith(role.KeywordIn(roleKeywords...))).
+		WithRole().
+		WithPermission(func(q *ent.PermissionQuery) {
+			q.WithResources()
+		}).
+		All(ctx)
+	if err != nil {
+		r.log.WithContext(ctx).Errorf("failed to query role_permissions by role keywords: %v", err)
+		return nil, err
+	}
+
+	r.log.WithContext(ctx).Infof("DAL: Found %d role_permission records for keywords: %v", len(rolePerms), roleKeywords)
+
 	dtos := make([]*types.RolePermission, len(rolePerms))
 	for i, rp := range rolePerms {
 		dtos[i] = dto.ConvertRolePermissionToRolePermissionPB(rp)

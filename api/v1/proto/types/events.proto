@@ -4,20 +4,34 @@ package api.v1.proto.types;
 
 import "google/protobuf/timestamp.proto";
 
-option go_package = "origadmin/application/admin/api/v1/proto/types;types";
+option go_package = "origadmin/application/admin/api/v1/services/types;types";
 
 // UserRoleAssignedEvent represents an event where one or more roles are assigned to a user.
 // This event is published to a message broker for other services to consume.
 message UserRoleAssignedEvent {
   // The timestamp when the event was generated.
-  google.protobuf.Timestamp timestamp = 1;
+  google.protobuf.Timestamp timestamp = 1 [json_name = "timestamp"];
 
   // The unique identifier of the user.
-  string user_id = 2;
+  string user_id = 2 [json_name = "user_id"];
 
-  // A list of unique identifiers for the roles that were assigned.
-  repeated string role_ids = 3;
+  // A list of unique keywords for the roles that were assigned.
+  repeated string role_keywords = 3 [json_name = "role_keywords"];
 
   // The name of the service that published the event (e.g., "origadmin.service.system").
-  string source = 4;
+  string source = 4 [json_name = "source"];
+}
+
+// RolePolicyChangedEvent represents an event where role-permission associations have changed.
+// This is a signal for policy enforcers like Casbin to reload their policies.
+message RolePolicyChangedEvent {
+  // The timestamp when the event was generated.
+  google.protobuf.Timestamp timestamp = 1 [json_name = "timestamp"];
+
+  // The name of the service that published the event (e.g., "origadmin.service.system").
+  string source = 2 [json_name = "source"];
+
+  // A list of unique keywords for the roles that were changed.
+  // If this list is empty, it implies a global change, and a full sync should be performed.
+  repeated string role_keywords = 3 [json_name = "role_keywords"];
 }

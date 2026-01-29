@@ -29,16 +29,20 @@ var (
 )
 
 const AuthorizationServiceListAllPoliciesBridgeOperation = "/api.v1.services.system.AuthorizationService/ListAllPolicies"
+const AuthorizationServiceListPoliciesForRolesBridgeOperation = "/api.v1.services.system.AuthorizationService/ListPoliciesForRoles"
 
 type AuthorizationServiceBridgeServer interface {
 	// ListAllPolicies retrieves the entire set of policies, pre-processed into a generic,
 	// implementation-agnostic format.
 	// This RPC is intended for internal gRPC calls only and bypasses authn/authz checks.
 	ListAllPolicies(context.Context, *ListAllPoliciesRequest) (*ListAllPoliciesResponse, error)
+	// ListPoliciesForRoles retrieves access rules for a specific set of roles.
+	ListPoliciesForRoles(context.Context, *ListPoliciesForRolesRequest) (*ListPoliciesForRolesResponse, error)
 }
 
 type AuthorizationServiceHooker interface {
 	AuthorizationServiceListAllPoliciesHooker
+	AuthorizationServiceListPoliciesForRolesHooker
 }
 
 type AuthorizationServiceHookedBridger interface {
@@ -48,6 +52,10 @@ type AuthorizationServiceHookedBridger interface {
 type AuthorizationServiceListAllPoliciesHooker interface {
 	PrepareListAllPolicies(http.Context, *ListAllPoliciesRequest) (context.Context, error)
 	CompleteListAllPolicies(http.Context, *ListAllPoliciesRequest, *ListAllPoliciesResponse) error
+}
+type AuthorizationServiceListPoliciesForRolesHooker interface {
+	PrepareListPoliciesForRoles(http.Context, *ListPoliciesForRolesRequest) (context.Context, error)
+	CompleteListPoliciesForRoles(http.Context, *ListPoliciesForRolesRequest, *ListPoliciesForRolesResponse) error
 }
 
 // UnimplementedAuthorizationServiceHooked must be embedded to have
@@ -62,6 +70,14 @@ func (UnimplementedAuthorizationServiceHooked) PrepareListAllPolicies(ctx http.C
 }
 
 func (UnimplementedAuthorizationServiceHooked) CompleteListAllPolicies(ctx http.Context, in *ListAllPoliciesRequest, out *ListAllPoliciesResponse) error {
+	return ctx.Result(200, out)
+}
+
+func (UnimplementedAuthorizationServiceHooked) PrepareListPoliciesForRoles(ctx http.Context, in *ListPoliciesForRolesRequest) (context.Context, error) {
+	return ctx, nil
+}
+
+func (UnimplementedAuthorizationServiceHooked) CompleteListPoliciesForRoles(ctx http.Context, in *ListPoliciesForRolesRequest, out *ListPoliciesForRolesResponse) error {
 	return ctx.Result(200, out)
 }
 
@@ -89,6 +105,10 @@ func NewAuthorizationServiceBridge(client grpc.ClientConnInterface) Authorizatio
 
 func (c *AuthorizationServiceBridgeImpl) ListAllPolicies(ctx context.Context, in *ListAllPoliciesRequest) (*ListAllPoliciesResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListAllPolicies not implemented")
+}
+
+func (c *AuthorizationServiceBridgeImpl) ListPoliciesForRoles(ctx context.Context, in *ListPoliciesForRolesRequest) (*ListPoliciesForRolesResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ListPoliciesForRoles not implemented")
 }
 
 func (c *AuthorizationServiceBridgeImpl) mustEmbedUnimplementedAuthorizationServiceServer() {}

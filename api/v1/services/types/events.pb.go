@@ -29,9 +29,9 @@ type UserRoleAssignedEvent struct {
 	// The timestamp when the event was generated.
 	Timestamp *timestamppb.Timestamp `protobuf:"bytes,1,opt,name=timestamp,proto3" json:"timestamp,omitempty"`
 	// The unique identifier of the user.
-	UserId string `protobuf:"bytes,2,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
-	// A list of unique identifiers for the roles that were assigned.
-	RoleIds []string `protobuf:"bytes,3,rep,name=role_ids,json=roleIds,proto3" json:"role_ids,omitempty"`
+	UserId string `protobuf:"bytes,2,opt,name=user_id,proto3" json:"user_id,omitempty"`
+	// A list of unique keywords for the roles that were assigned.
+	RoleKeywords []string `protobuf:"bytes,3,rep,name=role_keywords,proto3" json:"role_keywords,omitempty"`
 	// The name of the service that published the event (e.g., "origadmin.service.system").
 	Source        string `protobuf:"bytes,4,opt,name=source,proto3" json:"source,omitempty"`
 	unknownFields protoimpl.UnknownFields
@@ -82,9 +82,9 @@ func (x *UserRoleAssignedEvent) GetUserId() string {
 	return ""
 }
 
-func (x *UserRoleAssignedEvent) GetRoleIds() []string {
+func (x *UserRoleAssignedEvent) GetRoleKeywords() []string {
 	if x != nil {
-		return x.RoleIds
+		return x.RoleKeywords
 	}
 	return nil
 }
@@ -96,17 +96,87 @@ func (x *UserRoleAssignedEvent) GetSource() string {
 	return ""
 }
 
+// RolePolicyChangedEvent represents an event where role-permission associations have changed.
+// This is a signal for policy enforcers like Casbin to reload their policies.
+type RolePolicyChangedEvent struct {
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// The timestamp when the event was generated.
+	Timestamp *timestamppb.Timestamp `protobuf:"bytes,1,opt,name=timestamp,proto3" json:"timestamp,omitempty"`
+	// The name of the service that published the event (e.g., "origadmin.service.system").
+	Source string `protobuf:"bytes,2,opt,name=source,proto3" json:"source,omitempty"`
+	// A list of unique keywords for the roles that were changed.
+	// If this list is empty, it implies a global change, and a full sync should be performed.
+	RoleKeywords  []string `protobuf:"bytes,3,rep,name=role_keywords,proto3" json:"role_keywords,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *RolePolicyChangedEvent) Reset() {
+	*x = RolePolicyChangedEvent{}
+	mi := &file_types_events_proto_msgTypes[1]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *RolePolicyChangedEvent) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*RolePolicyChangedEvent) ProtoMessage() {}
+
+func (x *RolePolicyChangedEvent) ProtoReflect() protoreflect.Message {
+	mi := &file_types_events_proto_msgTypes[1]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use RolePolicyChangedEvent.ProtoReflect.Descriptor instead.
+func (*RolePolicyChangedEvent) Descriptor() ([]byte, []int) {
+	return file_types_events_proto_rawDescGZIP(), []int{1}
+}
+
+func (x *RolePolicyChangedEvent) GetTimestamp() *timestamppb.Timestamp {
+	if x != nil {
+		return x.Timestamp
+	}
+	return nil
+}
+
+func (x *RolePolicyChangedEvent) GetSource() string {
+	if x != nil {
+		return x.Source
+	}
+	return ""
+}
+
+func (x *RolePolicyChangedEvent) GetRoleKeywords() []string {
+	if x != nil {
+		return x.RoleKeywords
+	}
+	return nil
+}
+
 var File_types_events_proto protoreflect.FileDescriptor
 
 const file_types_events_proto_rawDesc = "" +
 	"\n" +
-	"\x12types/events.proto\x12\x12api.v1.proto.types\x1a\x1fgoogle/protobuf/timestamp.proto\"\x9d\x01\n" +
+	"\x12types/events.proto\x12\x12api.v1.proto.types\x1a\x1fgoogle/protobuf/timestamp.proto\"\xa9\x01\n" +
 	"\x15UserRoleAssignedEvent\x128\n" +
-	"\ttimestamp\x18\x01 \x01(\v2\x1a.google.protobuf.TimestampR\ttimestamp\x12\x17\n" +
-	"\auser_id\x18\x02 \x01(\tR\x06userId\x12\x19\n" +
-	"\brole_ids\x18\x03 \x03(\tR\aroleIds\x12\x16\n" +
-	"\x06source\x18\x04 \x01(\tR\x06sourceB\xc7\x01\n" +
-	"\x16com.api.v1.proto.typesB\vEventsProtoP\x01Z4origadmin/application/admin/api/v1/proto/types;types\xa2\x02\x04AVPT\xaa\x02\x12Api.V1.Proto.Types\xca\x02\x12Api\\V1\\Proto\\Types\xe2\x02\x1eApi\\V1\\Proto\\Types\\GPBMetadata\xea\x02\x15Api::V1::Proto::Typesb\x06proto3"
+	"\ttimestamp\x18\x01 \x01(\v2\x1a.google.protobuf.TimestampR\ttimestamp\x12\x18\n" +
+	"\auser_id\x18\x02 \x01(\tR\auser_id\x12$\n" +
+	"\rrole_keywords\x18\x03 \x03(\tR\rrole_keywords\x12\x16\n" +
+	"\x06source\x18\x04 \x01(\tR\x06source\"\x90\x01\n" +
+	"\x16RolePolicyChangedEvent\x128\n" +
+	"\ttimestamp\x18\x01 \x01(\v2\x1a.google.protobuf.TimestampR\ttimestamp\x12\x16\n" +
+	"\x06source\x18\x02 \x01(\tR\x06source\x12$\n" +
+	"\rrole_keywords\x18\x03 \x03(\tR\rrole_keywordsB\xca\x01\n" +
+	"\x16com.api.v1.proto.typesB\vEventsProtoP\x01Z7origadmin/application/admin/api/v1/services/types;types\xa2\x02\x04AVPT\xaa\x02\x12Api.V1.Proto.Types\xca\x02\x12Api\\V1\\Proto\\Types\xe2\x02\x1eApi\\V1\\Proto\\Types\\GPBMetadata\xea\x02\x15Api::V1::Proto::Typesb\x06proto3"
 
 var (
 	file_types_events_proto_rawDescOnce sync.Once
@@ -120,18 +190,20 @@ func file_types_events_proto_rawDescGZIP() []byte {
 	return file_types_events_proto_rawDescData
 }
 
-var file_types_events_proto_msgTypes = make([]protoimpl.MessageInfo, 1)
+var file_types_events_proto_msgTypes = make([]protoimpl.MessageInfo, 2)
 var file_types_events_proto_goTypes = []any{
-	(*UserRoleAssignedEvent)(nil), // 0: api.v1.proto.types.UserRoleAssignedEvent
-	(*timestamppb.Timestamp)(nil), // 1: google.protobuf.Timestamp
+	(*UserRoleAssignedEvent)(nil),  // 0: api.v1.proto.types.UserRoleAssignedEvent
+	(*RolePolicyChangedEvent)(nil), // 1: api.v1.proto.types.RolePolicyChangedEvent
+	(*timestamppb.Timestamp)(nil),  // 2: google.protobuf.Timestamp
 }
 var file_types_events_proto_depIdxs = []int32{
-	1, // 0: api.v1.proto.types.UserRoleAssignedEvent.timestamp:type_name -> google.protobuf.Timestamp
-	1, // [1:1] is the sub-list for method output_type
-	1, // [1:1] is the sub-list for method input_type
-	1, // [1:1] is the sub-list for extension type_name
-	1, // [1:1] is the sub-list for extension extendee
-	0, // [0:1] is the sub-list for field type_name
+	2, // 0: api.v1.proto.types.UserRoleAssignedEvent.timestamp:type_name -> google.protobuf.Timestamp
+	2, // 1: api.v1.proto.types.RolePolicyChangedEvent.timestamp:type_name -> google.protobuf.Timestamp
+	2, // [2:2] is the sub-list for method output_type
+	2, // [2:2] is the sub-list for method input_type
+	2, // [2:2] is the sub-list for extension type_name
+	2, // [2:2] is the sub-list for extension extendee
+	0, // [0:2] is the sub-list for field type_name
 }
 
 func init() { file_types_events_proto_init() }
@@ -145,7 +217,7 @@ func file_types_events_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_types_events_proto_rawDesc), len(file_types_events_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   1,
+			NumMessages:   2,
 			NumExtensions: 0,
 			NumServices:   0,
 		},

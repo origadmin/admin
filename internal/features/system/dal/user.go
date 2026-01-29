@@ -154,8 +154,20 @@ func (r *userRepo) List(ctx context.Context, opts ...*dto.UserQueryOption) ([]*t
 	return dto.ConvertUsersToUsersPB(result), count, err
 }
 
-func (r *userRepo) AddRoleIDs(ctx context.Context, id int64, roleIDs []int64) error {
-	return r.db.User(ctx).UpdateOneID(id).AddRoleIDs(roleIDs...).Exec(ctx)
+func (r *userRepo) AddRoleIDs(ctx context.Context, id int64, roleIDs []int64) ([]*types.Role, error) {
+	var roles []*ent.Role
+	err := r.db.Tx(ctx, func(tx context.Context) error {
+		u, err := r.db.User(tx).UpdateOneID(id).ClearRoles().AddRoleIDs(roleIDs...).Save(ctx)
+		if err != nil {
+			return err
+		}
+		roles, err = u.QueryRoles().All(ctx)
+		return err
+	})
+	if err != nil {
+		return nil, err
+	}
+	return dto.ConvertRolesToRolesPB(roles), nil
 }
 
 func (r *userRepo) GetByUsername(ctx context.Context, username string) (*types.User, error) {

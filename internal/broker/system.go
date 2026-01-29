@@ -3,6 +3,7 @@ package broker
 
 // Define topic constants for system-related events.
 const (
-	UserRoleAssignedTopic   = "system.user.role_assigned"
-	UserRoleUnassignedTopic = "system.user.role_unassigned"
+	UserRoleAssignedTopic   = "system:user:role_assigned"
+	UserRoleUnassignedTopic = "system:user:role_unassigned"
+	RolePolicyChangedTopic  = "role:policy:changed"
 )

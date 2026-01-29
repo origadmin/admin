@@ -19,7 +19,8 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	AuthorizationService_ListAllPolicies_FullMethodName = "/api.v1.services.system.AuthorizationService/ListAllPolicies"
+	AuthorizationService_ListAllPolicies_FullMethodName      = "/api.v1.services.system.AuthorizationService/ListAllPolicies"
+	AuthorizationService_ListPoliciesForRoles_FullMethodName = "/api.v1.services.system.AuthorizationService/ListPoliciesForRoles"
 )
 
 // AuthorizationServiceClient is the client API for AuthorizationService service.
@@ -35,6 +36,8 @@ type AuthorizationServiceClient interface {
 	// implementation-agnostic format.
 	// This RPC is intended for internal gRPC calls only and bypasses authn/authz checks.
 	ListAllPolicies(ctx context.Context, in *ListAllPoliciesRequest, opts ...grpc.CallOption) (*ListAllPoliciesResponse, error)
+	// ListPoliciesForRoles retrieves access rules for a specific set of roles.
+	ListPoliciesForRoles(ctx context.Context, in *ListPoliciesForRolesRequest, opts ...grpc.CallOption) (*ListPoliciesForRolesResponse, error)
 }
 
 type authorizationServiceClient struct {
@@ -55,6 +58,16 @@ func (c *authorizationServiceClient) ListAllPolicies(ctx context.Context, in *Li
 	return out, nil
 }
 
+func (c *authorizationServiceClient) ListPoliciesForRoles(ctx context.Context, in *ListPoliciesForRolesRequest, opts ...grpc.CallOption) (*ListPoliciesForRolesResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(ListPoliciesForRolesResponse)
+	err := c.cc.Invoke(ctx, AuthorizationService_ListPoliciesForRoles_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // AuthorizationServiceServer is the server API for AuthorizationService service.
 // All implementations must embed UnimplementedAuthorizationServiceServer
 // for forward compatibility.
@@ -68,6 +81,8 @@ type AuthorizationServiceServer interface {
 	// implementation-agnostic format.
 	// This RPC is intended for internal gRPC calls only and bypasses authn/authz checks.
 	ListAllPolicies(context.Context, *ListAllPoliciesRequest) (*ListAllPoliciesResponse, error)
+	// ListPoliciesForRoles retrieves access rules for a specific set of roles.
+	ListPoliciesForRoles(context.Context, *ListPoliciesForRolesRequest) (*ListPoliciesForRolesResponse, error)
 	mustEmbedUnimplementedAuthorizationServiceServer()
 }
 
@@ -80,6 +95,9 @@ type UnimplementedAuthorizationServiceServer struct{}
 
 func (UnimplementedAuthorizationServiceServer) ListAllPolicies(context.Context, *ListAllPoliciesRequest) (*ListAllPoliciesResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListAllPolicies not implemented")
+}
+func (UnimplementedAuthorizationServiceServer) ListPoliciesForRoles(context.Context, *ListPoliciesForRolesRequest) (*ListPoliciesForRolesResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ListPoliciesForRoles not implemented")
 }
 func (UnimplementedAuthorizationServiceServer) mustEmbedUnimplementedAuthorizationServiceServer() {}
 func (UnimplementedAuthorizationServiceServer) testEmbeddedByValue()                              {}
@@ -120,6 +138,24 @@ func _AuthorizationService_ListAllPolicies_Handler(srv interface{}, ctx context.
 	return interceptor(ctx, in, info, handler)
 }
 
+func _AuthorizationService_ListPoliciesForRoles_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListPoliciesForRolesRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AuthorizationServiceServer).ListPoliciesForRoles(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: AuthorizationService_ListPoliciesForRoles_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AuthorizationServiceServer).ListPoliciesForRoles(ctx, req.(*ListPoliciesForRolesRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // AuthorizationService_ServiceDesc is the grpc.ServiceDesc for AuthorizationService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -130,6 +166,10 @@ var AuthorizationService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "ListAllPolicies",
 			Handler:    _AuthorizationService_ListAllPolicies_Handler,
+		},
+		{
+			MethodName: "ListPoliciesForRoles",
+			Handler:    _AuthorizationService_ListPoliciesForRoles_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
