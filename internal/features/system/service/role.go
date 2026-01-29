@@ -44,6 +44,7 @@ func (s *RoleService) publishPolicyChangeEvent(roleKeywords ...string) {
 	if len(roleKeywords) == 0 {
 		s.log.Warn("publishPolicyChangeEvent called with no roleKeywords, which will trigger a full sync.")
 	}
+	s.log.WithContext(context.Background()).Infof("CONFIRM: Preparing to publish RolePolicyChangedEvent with keywords: %v", roleKeywords)
 	event := &types.RolePolicyChangedEvent{
 		Timestamp:    timestamppb.New(time.Now()),
 		Source:       "system.service",

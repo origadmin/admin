@@ -8,9 +8,6 @@ import (
 	"context"
 	"strings"
 
-	"github.com/casbin/casbin/v3/persist"
-
-	watcher "github.com/origadmin/casbin-watcher/v3"
 	"github.com/origadmin/contrib/security/authz"
 	"github.com/origadmin/runtime/log"
 	"origadmin/application/admin/internal/data"
@@ -19,16 +16,13 @@ import (
 // casbinModifier implements the authz.PolicyModifier interface.
 type casbinModifier struct {
 	adapter *data.CasbinAdapter // Use concrete type to access custom methods
-	watcher persist.Watcher
 	log     *log.Helper
 }
 
 // NewCasbinModifier creates a new PolicyModifier.
-func NewCasbinModifier(adapter *data.CasbinAdapter, watcher *watcher.Watcher, logger log.Logger) (authz.PolicyModifier,
-	error) {
+func NewCasbinModifier(adapter *data.CasbinAdapter, logger log.Logger) (authz.PolicyModifier, error) {
 	return &casbinModifier{
 		adapter: adapter,
-		watcher: watcher,
 		log:     log.NewHelper(log.With(logger, "module", "auth.dal.casbin_modifier")),
 	}, nil
 }
@@ -146,21 +140,14 @@ func (m *casbinModifier) UpdatePermission(ctx context.Context, subject string, o
 	return m.handleAdapterResult(ctx, err)
 }
 
-// handleAdapterResult interprets the adapter's result and triggers the watcher on success.
+// handleAdapterResult interprets the adapter's result.
 func (m *casbinModifier) handleAdapterResult(ctx context.Context, err error) (bool, error) {
 	if err == nil {
-		if m.watcher != nil {
-			if wErr := m.watcher.Update(); wErr != nil {
-				m.log.WithContext(ctx).Errorf("Failed to broadcast policy update via watcher: %v", wErr)
-				return false, wErr
-			}
-			m.log.WithContext(ctx).Info("Policy update broadcasted via watcher.")
-		}
 		return true, nil
 	}
 
 	if strings.Contains(err.Error(), "UNIQUE") || strings.Contains(err.Error(), "duplicate") || strings.Contains(err.Error(), "not found") {
-		m.log.WithContext(ctx).Debugf("Adapter returned a no-op error, not triggering watcher: %v", err)
+		m.log.WithContext(ctx).Debugf("Adapter returned a no-op error: %v", err)
 		return false, nil
 	}
 

@@ -16,5 +16,7 @@ type AuthorizationRepo interface {
 	ListRolePermissions(ctx context.Context) ([]*types.RolePermission, error)
 	ListRolePermissionsByRoleKeywords(ctx context.Context, roleKeywords ...string) ([]*types.RolePermission, error)
 	ListPermissions(ctx context.Context) ([]*types.Permission, error)
+	ListRolesByIDs(ctx context.Context, ids ...int64) ([]*types.Role, error)
+	ListPermissionsByIDs(ctx context.Context, ids ...int64) ([]*types.Permission, error)
 	ListUserRoles(ctx context.Context) ([]*types.UserRole, error)
 }

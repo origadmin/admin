@@ -83,6 +83,7 @@ func (s *PolicySyncService) HandleRolePolicyChanged(msg *message.Message) error 
 		s.log.Errorf("Failed to unmarshal RolePolicyChangedEvent: %v", err)
 		return err
 	}
+	s.log.WithContext(msg.Context()).Infof("CONFIRM: Received RolePolicyChangedEvent with keywords: %v", event.GetRoleKeywords())
 
 	s.log.Infof("Processing RolePolicyChangedEvent from source '%s' for roles %v", event.GetSource(), event.GetRoleKeywords())
 

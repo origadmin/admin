@@ -74,12 +74,12 @@ func wireApp(app *runtime.App, bootstrap *conf.Config) (*kratos.App, func(), err
 		return nil, nil, err
 	}
 	casbinService := service.NewCasbinService(casbinAdapter, v)
-	watcher, err := providers.ProvideWatcher(app, bootstrap)
+	policyModifier, err := dal.NewCasbinModifier(casbinAdapter, v)
 	if err != nil {
 		cleanup()
 		return nil, nil, err
 	}
-	policyModifier, err := dal.NewCasbinModifier(casbinAdapter, watcher, v)
+	watcher, err := providers.ProvideWatcher(app, bootstrap)
 	if err != nil {
 		cleanup()
 		return nil, nil, err
