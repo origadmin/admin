@@ -59,7 +59,9 @@ func (m *casbinModifier) RemoveRoles(ctx context.Context, subject string, roles 
 		if r.Role != "" {
 			filters["v1"] = r.Role
 		}
-		// Only filter by domain if it is explicitly provided.
+		// Only filter by domain if it is explicitly provided (even if it's an empty string).
+		// If r.Domain is empty, this condition will be false, meaning no domain filter is applied,
+		// which correctly implies "all domains".
 		if r.Domain != "" {
 			filters["v2"] = r.Domain
 		}
@@ -111,7 +113,9 @@ func (m *casbinModifier) RemovePermissions(ctx context.Context, subject string, 
 	var firstErr error
 	for _, p := range permissions {
 		filters := map[string]string{"v0": subject}
-		// Only filter by domain if it is explicitly provided.
+		// Only filter by domain if it is explicitly provided (even if it's an empty string).
+		// If p.Domain is empty, this condition will be false, meaning no domain filter is applied,
+		// which correctly implies "all domains".
 		if p.Domain != "" {
 			filters["v1"] = p.Domain
 		}
@@ -133,11 +137,58 @@ func (m *casbinModifier) RemovePermissions(ctx context.Context, subject string, 
 func (m *casbinModifier) UpdatePermission(ctx context.Context, subject string, oldPerm authz.RuleSpec, newPerm authz.RuleSpec) (bool, error) {
 	m.log.WithContext(ctx).Debugf("Updating permission for subject: %s", subject)
 
-	oldRule := []string{subject, oldPerm.Resource, oldPerm.Action, oldPerm.Domain}
-	newRule := []string{subject, newPerm.Resource, newPerm.Action, newPerm.Domain}
+	oldRule := []string{subject, oldPerm.Domain, oldPerm.Resource, oldPerm.Action}
+	newRule := []string{subject, newPerm.Domain, newPerm.Resource, newPerm.Action}
 
 	err := m.adapter.UpdatePolicy("p", "p", oldRule, newRule)
 	return m.handleAdapterResult(ctx, err)
+}
+
+// ClearPolicies implements the extended ClearPolicies interface.
+func (m *casbinModifier) ClearPolicies(ctx context.Context, subjects ...string) (bool, error) {
+	// Case 1: No subjects provided, which means clear ALL policies.
+	if len(subjects) == 0 {
+		m.log.WithContext(ctx).Info("Clearing ALL 'p' and 'g' policies from storage.")
+		// Clear all 'p' (permission) rules.
+		_, errP := m.handleAdapterResult(ctx, m.adapter.RemoveFilteredPolicy("", "p", 0))
+		if errP != nil {
+			m.log.WithContext(ctx).Errorf("Failed to clear all 'p' policies: %v", errP)
+			return false, errP
+		}
+		// Clear all 'g' (grouping/role) rules.
+		_, errG := m.handleAdapterResult(ctx, m.adapter.RemoveFilteredPolicy("", "g", 0))
+		if errG != nil {
+			m.log.WithContext(ctx).Errorf("Failed to clear all 'g' policies: %v", errG)
+			return false, errG
+		}
+		m.log.WithContext(ctx).Info("Successfully cleared all 'p' and 'g' policies.")
+		return true, nil
+	}
+
+	// Case 2: One or more subjects are provided, clear policies for each one.
+	m.log.WithContext(ctx).Debugf("Clearing all policies for subjects: %v", subjects)
+	var overallResult bool
+	var firstErr error
+	for _, subject := range subjects {
+		// Remove all role assignments (g-rules) for the subject
+		filters := map[string]string{"v0": subject}
+		okG, handledErrG := m.handleAdapterResult(ctx, m.adapter.RemovePoliciesByFields("g", filters))
+
+		// Remove all permission grants (p-rules) for the subject
+		okP, handledErrP := m.handleAdapterResult(ctx, m.adapter.RemovePoliciesByFields("p", filters))
+
+		if handledErrG != nil && firstErr == nil {
+			firstErr = handledErrG
+		}
+		if handledErrP != nil && firstErr == nil {
+			firstErr = handledErrP
+		}
+		if okG || okP {
+			overallResult = true
+		}
+	}
+
+	return overallResult, firstErr
 }
 
 // handleAdapterResult interprets the adapter's result.
@@ -146,7 +197,14 @@ func (m *casbinModifier) handleAdapterResult(ctx context.Context, err error) (bo
 		return true, nil
 	}
 
-	if strings.Contains(err.Error(), "UNIQUE") || strings.Contains(err.Error(), "duplicate") || strings.Contains(err.Error(), "not found") {
+	// "not found" is a valid case for removal operations, indicating the policy was already gone.
+	// We can treat it as a success from the modifier's perspective (the state is what we want it to be).
+	if strings.Contains(err.Error(), "not found") {
+		m.log.WithContext(ctx).Debugf("Adapter returned a 'not found' error, which is acceptable for removals: %v", err)
+		return false, nil // Return false for "changed", but no error.
+	}
+
+	if strings.Contains(err.Error(), "UNIQUE") || strings.Contains(err.Error(), "duplicate") {
 		m.log.WithContext(ctx).Debugf("Adapter returned a no-op error: %v", err)
 		return false, nil
 	}

@@ -70,28 +70,7 @@ func (a *CasbinAdapter) LoadPolicy(m model.Model) error {
 		return err
 	}
 	for _, policy := range policies {
-		allFields := []string{policy.Ptype}
-		if policy.V0 != "" {
-			allFields = append(allFields, policy.V0)
-		}
-		if policy.V1 != "" {
-			allFields = append(allFields, policy.V1)
-		}
-		if policy.V2 != "" {
-			allFields = append(allFields, policy.V2)
-		}
-		if policy.V3 != "" {
-			allFields = append(allFields, policy.V3)
-		}
-		if policy.V4 != "" {
-			allFields = append(allFields, policy.V4)
-		}
-		if policy.V5 != "" {
-			allFields = append(allFields, policy.V5)
-		}
-		if err := persist.LoadPolicyArray(allFields, m); err != nil {
-			return err
-		}
+		loadPolicyLine(policy, m)
 	}
 	return nil
 }
@@ -259,12 +238,8 @@ func (a *CasbinAdapter) UpdateFilteredPolicies(_ string, ptype string, newRules 
 			oldPolicies = append(oldPolicies, policyToRule(p))
 		}
 
-		count, err := cr.Delete().Where(filter...).Exec(ctx)
-		if err != nil {
+		if _, err := cr.Delete().Where(filter...).Exec(ctx); err != nil {
 			return err
-		}
-		if count == 0 {
-			return fmt.Errorf("policies to update not found for filter")
 		}
 
 		for _, newRule := range newRules {
@@ -285,14 +260,10 @@ func (a *CasbinAdapter) RemovePolicy(_ string, ptype string, rule []string) erro
 		if err != nil {
 			return err
 		}
-		count, err := cr.Delete().Where(filter...).Exec(ctx)
-		if err != nil {
+		if _, err := cr.Delete().Where(filter...).Exec(ctx); err != nil {
 			return err
 		}
-		if count == 0 {
-			return fmt.Errorf("policy to remove not found: %s, %v", ptype, rule)
-		}
-		return err
+		return nil
 	})
 }
 
@@ -305,12 +276,8 @@ func (a *CasbinAdapter) RemovePolicies(_ string, ptype string, rules [][]string)
 			if err != nil {
 				return err
 			}
-			count, err := cr.Delete().Where(filter...).Exec(ctx)
-			if err != nil {
+			if _, err := cr.Delete().Where(filter...).Exec(ctx); err != nil {
 				return err
-			}
-			if count == 0 {
-				return fmt.Errorf("policy to remove not found: %s, %v", ptype, rule)
 			}
 		}
 		return nil
@@ -325,14 +292,10 @@ func (a *CasbinAdapter) RemoveFilteredPolicy(_ string, ptype string, fieldIndex 
 		if err != nil {
 			return err
 		}
-		count, err := cr.Delete().Where(cond...).Exec(ctx)
-		if err != nil {
+		if _, err := cr.Delete().Where(cond...).Exec(ctx); err != nil {
 			return err
 		}
-		if count == 0 {
-			return fmt.Errorf("policy to remove not found for filter")
-		}
-		return err
+		return nil
 	})
 }
 
@@ -345,14 +308,10 @@ func (a *CasbinAdapter) RemovePoliciesByFields(ptype string, filters map[string]
 		if err != nil {
 			return err
 		}
-		count, err := cr.Delete().Where(preds...).Exec(ctx)
-		if err != nil {
+		if _, err := cr.Delete().Where(preds...).Exec(ctx); err != nil {
 			return err
 		}
-		if count == 0 {
-			return fmt.Errorf("policies to remove not found for filter: %v", filters)
-		}
-		return err
+		return nil
 	})
 }
 
@@ -381,6 +340,7 @@ func instanceLine(ptype string, rule []string) *ent.CasbinRule {
 // savePolicyLine creates a CasbinRuleCreate builder from a policy type and rule string slice.
 func savePolicyLine(cr *ent.CasbinRuleClient, ptype string, rule []string) *ent.CasbinRuleCreate {
 	line := cr.Create().SetPtype(ptype)
+	// Pad the rule to 6 fields to ensure all V-fields are set.
 	paddedRule := make([]string, 6)
 	copy(paddedRule, rule)
 	line.SetV0(paddedRule[0])
@@ -451,25 +411,40 @@ func appendVnEQPredicate(field, value string) (predicate.CasbinRule, error) {
 	}
 }
 
+// loadPolicyLine correctly formats a policy rule from the database for the Casbin model.
 func loadPolicyLine(line *ent.CasbinRule, model model.Model) {
-	var p = []string{line.Ptype,
-		line.V0, line.V1, line.V2, line.V3, line.V4, line.V5}
+	key := line.Ptype
+	sec := key[:1]
 
-	var lineText string
-	if line.V5 != "" {
-		lineText = strings.Join(p, ", ")
-	} else if line.V4 != "" {
-		lineText = strings.Join(p[:6], ", ")
-	} else if line.V3 != "" {
-		lineText = strings.Join(p[:5], ", ")
-	} else if line.V2 != "" {
-		lineText = strings.Join(p[:4], ", ")
-	} else if line.V1 != "" {
-		lineText = strings.Join(p[:3], ", ")
-	} else if line.V0 != "" {
-		lineText = strings.Join(p[:2], ", ")
+	// Get the assertion from the model to determine the number of tokens.
+	assertion, ok := model[sec][key]
+	if !ok {
+		return // Should not happen
 	}
 
+	tokens := assertion.Tokens
+
+	// Build the policy rule with the correct number of tokens.
+	rule := make([]string, len(tokens))
+	rule[0] = line.V0
+	if len(tokens) > 1 {
+		rule[1] = line.V1
+	}
+	if len(tokens) > 2 {
+		rule[2] = line.V2
+	}
+	if len(tokens) > 3 {
+		rule[3] = line.V3
+	}
+	if len(tokens) > 4 {
+		rule[4] = line.V4
+	}
+	if len(tokens) > 5 {
+		rule[5] = line.V5
+	}
+
+	// Join the tokens to form the policy line text.
+	lineText := line.Ptype + ", " + strings.Join(rule, ", ")
 	persist.LoadPolicyLine(lineText, model)
 }
 

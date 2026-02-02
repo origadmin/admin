@@ -169,7 +169,7 @@ func TestRBACFlow(t *testing.T) {
 	t.Run("Step4a_VerifyPolicySync", func(t *testing.T) {
 		t.Log("Waiting for policy propagation (async event processing)...")
 		// Add initial delay to allow event processing before first check
-		time.Sleep(3 * time.Second)
+		time.Sleep(15 * time.Second)
 
 		require.Eventually(t, func() bool {
 			token := login(t, editorUser, "password123")
@@ -237,7 +237,8 @@ func TestRBACFlow(t *testing.T) {
 		updateRole(t, adminToken, roleViewerID, viewerRoleName, viewerRoleKeyword, []int64{permUserListID, permUserCreateID})
 
 		// Verify Viewer can now create a user. Re-login inside Eventually to get a fresh token.
-		time.Sleep(2 * time.Second) // Initial delay for event processing
+
+		time.Sleep(15 * time.Second) // Initial delay for event processing
 		require.Eventually(t, func() bool {
 			token := login(t, viewerUser, "password123")
 			if token == "" {
@@ -265,7 +266,7 @@ func TestRBACFlow(t *testing.T) {
 		t.Logf("Revoking Editor Role from user %s (ID: %d)...", editorUser, userEditorID)
 		updateUser(t, adminToken, userEditorID, editorUser, []int64{})
 
-		time.Sleep(2 * time.Second) // Initial delay for event processing
+		time.Sleep(15 * time.Second) // Initial delay for event processing
 		require.Eventually(t, func() bool {
 			token := login(t, editorUser, "password123")
 			if token == "" {

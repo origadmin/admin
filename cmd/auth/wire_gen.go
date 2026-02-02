@@ -74,11 +74,6 @@ func wireApp(app *runtime.App, bootstrap *conf.Config) (*kratos.App, func(), err
 		return nil, nil, err
 	}
 	casbinService := service.NewCasbinService(casbinAdapter, v)
-	policyModifier, err := dal.NewCasbinModifier(casbinAdapter, v)
-	if err != nil {
-		cleanup()
-		return nil, nil, err
-	}
 	watcher, err := providers.ProvideWatcher(app, bootstrap)
 	if err != nil {
 		cleanup()
@@ -100,8 +95,13 @@ func wireApp(app *runtime.App, bootstrap *conf.Config) (*kratos.App, func(), err
 		return nil, nil, err
 	}
 	policyProvider := client.NewSystemPolicyProvider(authorizationServiceClient, v)
+	policyModifier, err := dal.NewCasbinModifier(casbinAdapter, v)
+	if err != nil {
+		cleanup()
+		return nil, nil, err
+	}
 	policySyncer := biz.NewPolicySyncer(policyProvider, policyModifier, v)
-	policySyncService := service.NewPolicySyncService(policyModifier, authorizer, policySyncer, v)
+	policySyncService := service.NewPolicySyncService(authorizer, policySyncer, v)
 	skipper := providers.ProvideSkipper(app, bootstrap)
 	serverMiddlewareProvider, err := providers.ProvideServiceMiddlewares(app, authorizer, skipper)
 	if err != nil {

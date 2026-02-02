@@ -32,8 +32,6 @@ var ProviderSet = wire.NewSet(
 )
 
 // NewServers creates and configures the auth service servers (gRPC, HTTP, and Watermill).
-// It receives PolicyBootstrap as a dependency but does not execute it;
-// PolicyBootstrap's execution is handled at the application's main entry point.
 func NewServers(
 	app *runtime.App,
 	cfg *transportv1.Servers,
@@ -49,12 +47,10 @@ func NewServers(
 
 	var transportServers []transport.Server
 	for _, serverCfg := range cfg.GetConfigs() {
-		// Check if the server configuration is for the 'auth' service.
 		if serverCfg.GetName() != "auth" && serverCfg.GetName() != "origadmin.service.auth" {
 			continue
 		}
 
-		// Create server based on the specified protocol.
 		switch serverCfg.GetProtocol() {
 		case "http":
 			srv, err := NewHTTPServer(app, serverCfg.GetHttp(), authSvc, meSvc, casbinSvc, middlewareProvider)
@@ -94,15 +90,15 @@ func NewWatermillServer(
 	}
 
 	logger := log.NewHelper(app.Logger())
-	logger.Infof("watermill config %+v", cfg)
 	srv, err := watermill.NewServer(cfg, log.WithLogger(app.Logger()))
 	if err != nil {
 		return nil, err
 	}
 
-	// Register the policy sync handler for user-role changes.
+	// Register the handler for any user-role change.
+	// This single handler triggers a full policy sync.
 	srv.AddConsumerHandler(
-		"PolicySyncUserRoleAssigned",
+		"PolicySyncUserRoleChanged",
 		broker.UserRoleAssignedTopic,
 		policySyncSvc.HandleUserRoleAssigned,
 	)
@@ -144,7 +140,6 @@ func NewHTTPServer(
 		return nil, err
 	}
 
-	// Register HTTP handlers
 	authv1.RegisterAuthServiceHTTPServer(srv, authSvc)
 	authv1.RegisterMeServiceHTTPServer(srv, meSvc)
 	authv1.RegisterCasbinServiceHTTPServer(srv, casbinSvc)
@@ -180,7 +175,6 @@ func NewGRPCServer(
 		return nil, err
 	}
 
-	// Register gRPC handlers
 	authv1.RegisterAuthServiceServer(srv, authSvc)
 	authv1.RegisterMeServiceServer(srv, meSvc)
 	authv1.RegisterCasbinServiceServer(srv, casbinSvc)

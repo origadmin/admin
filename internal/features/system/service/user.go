@@ -40,34 +40,17 @@ func NewUserService(uc *biz.UserUseCase, publisher broker.Publisher, logger log.
 	}
 }
 
-// publishUserRoleChangeEvent is a helper to publish a user role change event.
+// publishUserRoleChangeEvent publishes a generic event indicating a user's roles have changed.
+// The consumer is responsible for triggering a full policy sync.
 func (s *UserService) publishUserRoleChangeEvent(ctx context.Context, userID int64) {
-	// We need role keywords, not just IDs, to publish the event.
-	// We fetch the user with roles to ensure we have valid, confirmed data.
-	user, err := s.uc.GetUser(ctx, userID, &dto.UserQueryOption{WithRoles: true})
-	if err != nil {
-		s.log.Errorf("failed to fetch user %d for event publishing: %v", userID, err)
-		return
-	}
-
-	if len(user.Roles) == 0 {
-		s.log.Warnf("publishUserRoleChangeEvent called for user %d but no roles found.", userID)
-	}
-
-	roleKeywords := make([]string, len(user.Roles))
-	for i, role := range user.Roles {
-		roleKeywords[i] = role.Keyword
-	}
-
 	userIDStr := idutil.FormatUserID(userID)
 	event := &types.UserRoleAssignedEvent{
-		Timestamp:    timestamppb.Now(),
-		UserId:       userIDStr,
-		RoleKeywords: roleKeywords,
-		Source:       "system.service",
+		Timestamp: timestamppb.Now(),
+		UserId:    userIDStr,
+		Source:    "system.service",
 	}
 
-	s.log.Debugf("Publishing UserRoleAssignedEvent: UserID=%s (from userID=%d), RoleKeywords=%v", userIDStr, userID, roleKeywords)
+	s.log.Debugf("Publishing UserRoleAssignedEvent for UserID=%s to trigger policy sync.", userIDStr)
 
 	payload, err := proto.Marshal(event)
 	if err != nil {
@@ -200,5 +183,6 @@ func (s *UserService) DeleteUser(ctx context.Context, req *system.DeleteUserRequ
 		}
 		return nil, err
 	}
+	s.publishUserRoleChangeEvent(ctx, req.GetId())
 	return &system.DeleteUserResponse{}, nil
 }

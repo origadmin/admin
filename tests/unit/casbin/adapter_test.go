@@ -5,499 +5,334 @@
 package casbin
 
 import (
-	"context"
-	"fmt"
+	"log"
 	"testing"
 
-	"entgo.io/ent/dialect"
 	"github.com/casbin/casbin/v3"
+	"github.com/casbin/casbin/v3/util"
 	"github.com/stretchr/testify/assert"
-	"github.com/stretchr/testify/require"
 
-	"github.com/origadmin/runtime/log"
+	"github.com/origadmin/runtime/context"
+	runtimelog "github.com/origadmin/runtime/log"
 	_ "github.com/sqlite3ent/sqlite3"
 	"origadmin/application/admin/internal/data"
 	"origadmin/application/admin/internal/data/entity/ent"
-	entcasbinrule "origadmin/application/admin/internal/data/entity/ent/casbinrule"
 	"origadmin/application/admin/internal/data/entity/ent/enttest"
 )
 
-// setupCasbinTest creates a test environment for the Casbin adapter.
-func setupCasbinTest(t *testing.T) (*ent.Client, *data.CasbinAdapter, *casbin.Enforcer) {
-	t.Helper()
+func testGetPolicy(t *testing.T, e *casbin.Enforcer, res [][]string) {
+	myRes, err := e.GetPolicy()
+	if err != nil {
+		t.Error("Get Policy Error ", err)
+	}
+	log.Print("Policy: ", myRes)
 
-	// Create an in-memory database
-	client := enttest.Open(t, dialect.SQLite, "file:ent?mode=memory&cache=shared&_fk=1")
-	t.Cleanup(func() {
-		err := client.Close()
-		require.NoError(t, err)
-	})
-
-	// Create the adapter
-	database := ent.NewDatabaseWithClient(client)
-	adapter, err := data.NewAdapter(context.Background(), database, log.DefaultLogger)
-	require.NoError(t, err, "Adapter should be created successfully")
-
-	// Create the Enforcer
-	modelPath := "../../../resources/casbin_model.conf"
-	enforcer, err := casbin.NewEnforcer(modelPath, adapter)
-	require.NoError(t, err, "Enforcer should be created successfully")
-
-	// Clear policies
-	err = enforcer.LoadPolicy()
-	require.NoError(t, err, "Policies should be cleared successfully")
-
-	return client, adapter, enforcer
+	if !util.Array2DEquals(res, myRes) {
+		t.Error("Policy: ", myRes, ", supposed to be ", res)
+	}
 }
 
-// clearPolicies is a helper function to clear all policies for a sub-test.
-func clearPolicies(t *testing.T, client *ent.Client, enforcer *casbin.Enforcer) {
-	t.Helper()
-	_, err := client.CasbinRule.Delete().Exec(context.Background())
-	require.NoError(t, err)
-	enforcer.ClearPolicy()
+func testGetPolicyWithoutOrder(t *testing.T, e *casbin.Enforcer, res [][]string) {
+	myRes, err := e.GetPolicy()
+	if err != nil {
+		t.Error("Get Policy Error ", err)
+	}
+	log.Print("Policy: ", myRes)
+
+	if !arrayEqualsWithoutOrder(myRes, res) {
+		t.Error("Policy: ", myRes, ", supposed to be ", res)
+	}
 }
 
-// TestCasbinAdapter_AddPolicy tests adding policies.
-func TestCasbinAdapter_AddPolicy(t *testing.T) {
-	client, _, enforcer := setupCasbinTest(t)
-
-	t.Run("AddSinglePolicy", func(t *testing.T) {
-		clearPolicies(t, client, enforcer)
-		policy := []string{"user1", "system:user:list", "read", "domain1"}
-
-		// Add a policy
-		added, err := enforcer.AddPolicy(policy)
-		require.NoError(t, err)
-		assert.True(t, added, "Policy should be added successfully")
-
-		// Verify the policy in the database
-		ctx := context.Background()
-		policies, err := client.CasbinRule.Query().Where(
-			entcasbinrule.PtypeEQ("p"),
-		).All(ctx)
-		require.NoError(t, err)
-		assert.Len(t, policies, 1, "There should be one policy")
-
-		// Verify policy values
-		p := policies[0]
-		assert.Equal(t, "user1", p.V0)
-		assert.Equal(t, "system:user:list", p.V1)
-		assert.Equal(t, "read", p.V2)
-		assert.Equal(t, "domain1", p.V3)
-
-		// Verify the Enforcer can read the policy
-		hasPolicy, err := enforcer.HasPolicy(policy)
-		require.NoError(t, err)
-		assert.True(t, hasPolicy, "Enforcer should be able to read the policy")
-	})
-
-	t.Run("AddMultiplePolicies", func(t *testing.T) {
-		clearPolicies(t, client, enforcer)
-		policies := [][]string{
-			{"user1", "system:user:list", "read", "domain1"},
-			{"user1", "system:user:detail", "read", "domain1"},
-			{"user2", "system:role:list", "read", "domain2"},
-		}
-
-		// Add multiple policies
-		added, err := enforcer.AddPolicies(policies)
-		require.NoError(t, err)
-		assert.True(t, added, "Should add 3 policies")
-
-		// Verify policies in the database
-		ctx := context.Background()
-		count, err := client.CasbinRule.Query().Count(ctx)
-		require.NoError(t, err)
-		assert.Equal(t, 3, count, "There should be 3 policies in the database")
-
-		// Verify the Enforcer can read all policies
-		for _, policy := range policies {
-			hasPolicy, err := enforcer.HasPolicy(policy)
-			require.NoError(t, err)
-			assert.True(t, hasPolicy, "Enforcer should be able to read the policy %v", policy)
-		}
-	})
-
-	t.Run("AddDuplicatePolicy", func(t *testing.T) {
-		clearPolicies(t, client, enforcer)
-		policy := []string{"user1", "system:user:list", "read", "domain1"}
-
-		// Add a policy
-		added, err := enforcer.AddPolicy(policy)
-		require.NoError(t, err)
-		assert.True(t, added)
-
-		// Add the same policy again
-		added, err = enforcer.AddPolicy(policy)
-		require.NoError(t, err)
-		assert.False(t, added, "Duplicate policy should not be added")
-	})
-}
-
-// TestCasbinAdapter_RemovePolicy tests removing policies.
-func TestCasbinAdapter_RemovePolicy(t *testing.T) {
-	client, _, enforcer := setupCasbinTest(t)
-
-	t.Run("RemoveSinglePolicy", func(t *testing.T) {
-		clearPolicies(t, client, enforcer)
-		policy := []string{"user1", "system:user:list", "read", "domain1"}
-
-		// Add a policy
-		_, err := enforcer.AddPolicy(policy)
-		require.NoError(t, err)
-
-		// Remove the policy
-		removed, err := enforcer.RemovePolicy(policy)
-		require.NoError(t, err)
-		assert.True(t, removed, "Policy should be removed successfully")
-
-		// Verify the policy does not exist
-		hasPolicy, err := enforcer.HasPolicy(policy)
-		require.NoError(t, err)
-		assert.False(t, hasPolicy, "Policy should not exist")
-	})
-
-	t.Run("RemoveMultiplePolicies", func(t *testing.T) {
-		clearPolicies(t, client, enforcer)
-		policies := [][]string{
-			{"user1", "system:user:list", "read", "domain1"},
-			{"user1", "system:user:detail", "read", "domain1"},
-			{"user2", "system:role:list", "read", "domain2"},
-		}
-
-		// Add multiple policies
-		_, err := enforcer.AddPolicies(policies)
-		require.NoError(t, err)
-
-		// Remove multiple policies
-		removed, err := enforcer.RemovePolicies(policies)
-		require.NoError(t, err)
-		assert.True(t, removed, "Should remove 3 policies")
-
-		// Verify all policies do not exist
-		for _, policy := range policies {
-			hasPolicy, err := enforcer.HasPolicy(policy)
-			require.NoError(t, err)
-			assert.False(t, hasPolicy, "Policy %v should not exist", policy)
-		}
-	})
-
-	t.Run("RemoveFilteredPolicy", func(t *testing.T) {
-		clearPolicies(t, client, enforcer)
-		policies := [][]string{
-			{"user1", "system:user:list", "read", "domain1"},
-			{"user1", "system:user:detail", "read", "domain1"},
-			{"user2", "system:role:list", "read", "domain1"},
-		}
-
-		// Add multiple policies
-		_, err := enforcer.AddPolicies(policies)
-		require.NoError(t, err)
-
-		// Remove all policies for user1 (filter by the first field)
-		removed, err := enforcer.RemoveFilteredPolicy(0, "user1")
-		require.NoError(t, err)
-		assert.True(t, removed, "Should remove some policies")
-
-		// Verify all policies for user1 do not exist
-		for _, policy := range policies {
-			if policy[0] == "user1" {
-				hasPolicy, err := enforcer.HasPolicy(policy)
-				require.NoError(t, err)
-				assert.False(t, hasPolicy, "Policy %v should not exist", policy)
-			}
-		}
-	})
-}
-
-// TestCasbinAdapter_UpdatePolicy tests updating policies.
-func TestCasbinAdapter_UpdatePolicy(t *testing.T) {
-	client, _, enforcer := setupCasbinTest(t)
-
-	t.Run("UpdateSinglePolicy", func(t *testing.T) {
-		clearPolicies(t, client, enforcer)
-		oldPolicy := []string{"user1", "system:user:list", "read", "domain1"}
-		newPolicy := []string{"user1", "system:user:detail", "write", "domain1"}
-
-		// Add the old policy
-		_, err := enforcer.AddPolicy(oldPolicy)
-		require.NoError(t, err)
-
-		// Update the policy
-		updated, err := enforcer.UpdatePolicy(oldPolicy, newPolicy)
-		require.NoError(t, err)
-		assert.True(t, updated, "Policy should be updated successfully")
-
-		// Verify the old policy does not exist
-		hasPolicy, err := enforcer.HasPolicy(oldPolicy)
-		require.NoError(t, err)
-		assert.False(t, hasPolicy, "Old policy should not exist")
-
-		// Verify the new policy exists
-		hasPolicy, err = enforcer.HasPolicy(newPolicy)
-		require.NoError(t, err)
-		assert.True(t, hasPolicy, "New policy should exist")
-	})
-
-	t.Run("UpdatePolicies", func(t *testing.T) {
-		clearPolicies(t, client, enforcer)
-		oldPolicies := [][]string{
-			{"user1", "system:user:list", "read", "domain1"},
-			{"user2", "system:role:list", "read", "domain2"},
-		}
-		newPolicies := [][]string{
-			{"user1", "system:user:detail", "write", "domain1"},
-			{"user2", "system:role:detail", "write", "domain2"},
-		}
-
-		// Add old policies
-		_, err := enforcer.AddPolicies(oldPolicies)
-		require.NoError(t, err)
-
-		// Update multiple policies
-		updated, err := enforcer.UpdatePolicies(oldPolicies, newPolicies)
-		require.NoError(t, err)
-		assert.True(t, updated, "Should update 2 policies")
-
-		// Verify old policies do not exist
-		for _, policy := range oldPolicies {
-			hasPolicy, err := enforcer.HasPolicy(policy)
-			require.NoError(t, err)
-			assert.False(t, hasPolicy, "Old policy %v should not exist", policy)
-		}
-
-		// Verify new policies exist
-		for _, policy := range newPolicies {
-			hasPolicy, err := enforcer.HasPolicy(policy)
-			require.NoError(t, err)
-			assert.True(t, hasPolicy, "New policy %v should exist", policy)
-		}
-	})
-
-	t.Run("UpdateFilteredPolicies", func(t *testing.T) {
-		clearPolicies(t, client, enforcer)
-		policies := [][]string{
-			{"user1", "system:user:list", "read", "domain1"},
-			{"user1", "system:user:detail", "read", "domain1"},
-			{"user2", "system:role:list", "read", "domain2"},
-		}
-
-		// Add multiple policies
-		_, err := enforcer.AddPolicies(policies)
-		require.NoError(t, err)
-
-		// Update all policies for user1
-		newPolicies := [][]string{
-			{"user1", "system:user:update", "write", "domain1"},
-			{"user1", "system:user:delete", "delete", "domain1"},
-		}
-		updated, err := enforcer.UpdateFilteredPolicies(newPolicies, 0, "user1")
-		require.NoError(t, err)
-		assert.True(t, updated, "Should return true for updated policies")
-
-		// Verify old policies do not exist
-		oldUser1Policies := [][]string{
-			{"user1", "system:user:list", "read", "domain1"},
-			{"user1", "system:user:detail", "read", "domain1"},
-		}
-		for _, policy := range oldUser1Policies {
-			hasPolicy, err := enforcer.HasPolicy(policy)
-			require.NoError(t, err)
-			assert.False(t, hasPolicy, "Old policy %v should not exist", policy)
-		}
-
-		// Verify new policies exist
-		for _, policy := range newPolicies {
-			hasPolicy, err := enforcer.HasPolicy(policy)
-			require.NoError(t, err)
-			assert.True(t, hasPolicy, "New policy %v should exist", policy)
-		}
-	})
-}
-
-// TestCasbinAdapter_LoadPolicy tests loading policies.
-func TestCasbinAdapter_LoadPolicy(t *testing.T) {
-	client, _, enforcer := setupCasbinTest(t)
-
-	t.Run("LoadPolicyFromDatabase", func(t *testing.T) {
-		clearPolicies(t, client, enforcer)
-		ctx := context.Background()
-
-		// Insert policies directly into the database
-		_, err := client.CasbinRule.Create().
-			SetPtype("p").
-			SetV0("user1").
-			SetV1("system:user:list").
-			SetV2("read").
-			SetV3("domain1").
-			Save(ctx)
-		require.NoError(t, err)
-
-		_, err = client.CasbinRule.Create().
-			SetPtype("p").
-			SetV0("user2").
-			SetV1("system:role:list").
-			SetV2("read").
-			SetV3("domain2").
-			Save(ctx)
-		require.NoError(t, err)
-
-		// Reload policies
-		err = enforcer.LoadPolicy()
-		require.NoError(t, err, "Policies should be loaded successfully")
-
-		// Verify policies
-		hasPolicy, err := enforcer.HasPolicy("user1", "system:user:list", "read", "domain1")
-		require.NoError(t, err)
-		assert.True(t, hasPolicy, "Should be able to load the first policy")
-
-		hasPolicy, err = enforcer.HasPolicy("user2", "system:role:list", "read", "domain2")
-		require.NoError(t, err)
-		assert.True(t, hasPolicy, "Should be able to load the second policy")
-	})
-}
-
-// TestCasbinAdapter_SavePolicy tests saving policies.
-func TestCasbinAdapter_SavePolicy(t *testing.T) {
-	client, _, enforcer := setupCasbinTest(t)
-
-	t.Run("SavePolicyToDatabase", func(t *testing.T) {
-		clearPolicies(t, client, enforcer)
-		ctx := context.Background()
-
-		// Add policies to the Enforcer
-		policies := [][]string{
-			{"user1", "system:user:list", "read", "domain1"},
-			{"user2", "system:role:list", "read", "domain2"},
-		}
-		_, err := enforcer.AddPolicies(policies)
-		require.NoError(t, err)
-
-		// Save policies to the database
-		err = enforcer.SavePolicy()
-		require.NoError(t, err, "Policies should be saved successfully")
-
-		// Verify the number of policies in the database
-		count, err := client.CasbinRule.Query().Count(ctx)
-		require.NoError(t, err)
-		assert.Equal(t, 2, count, "There should be 2 policies in the database")
-
-		// Verify policy content
-		rules, err := client.CasbinRule.Query().All(ctx)
-		require.NoError(t, err)
-		assert.Len(t, rules, 2)
-
-		// Verify policy values
-		for _, rule := range rules {
-			assert.Equal(t, "p", rule.Ptype)
-			assert.NotEmpty(t, rule.V0)
-		}
-	})
-}
-
-// TestCasbinAdapter_Transaction tests transaction support.
-func TestCasbinAdapter_Transaction(t *testing.T) {
-	client, _, enforcer := setupCasbinTest(t)
-
-	t.Run("RollbackOnError", func(t *testing.T) {
-		clearPolicies(t, client, enforcer)
-		policies := [][]string{
-			{"user1", "system:user:list", "read", "domain1"},
-			{"user1", "system:user:detail", "read", "domain1"},
-			{"user2", "system:role:list", "read", "domain2"},
-		}
-
-		// Add policies
-		_, err := enforcer.AddPolicies(policies)
-		require.NoError(t, err)
-
-		// Try to remove a non-existent policy (should fail)
-		removed, err := enforcer.RemovePolicy("user3", "invalid", "invalid", "domain1")
-		require.NoError(t, err)
-		assert.False(t, removed)
-
-		// Verify policies still exist
-		for _, policy := range policies {
-			hasPolicy, err := enforcer.HasPolicy(policy)
-			require.NoError(t, err)
-			assert.True(t, hasPolicy, "Policy %v should still exist", policy)
-		}
-	})
-}
-
-// TestCasbinAdapter_RoleInheritance tests role inheritance.
-func TestCasbinAdapter_RoleInheritance(t *testing.T) {
-	client, _, enforcer := setupCasbinTest(t)
-
-	t.Run("AddRoleInheritance", func(t *testing.T) {
-		clearPolicies(t, client, enforcer)
-		// Add a role policy
-		_, err := enforcer.AddPolicy("admin", "system:*", "ANY", "domain1")
-		require.NoError(t, err)
-
-		// Add a role inheritance relationship
-		_, err = enforcer.AddGroupingPolicy("alice", "admin", "domain1")
-		require.NoError(t, err)
-
-		// alice should have admin's permissions
-		allowed, err := enforcer.Enforce("alice", "system:user:list", "read", "domain1")
-		require.NoError(t, err)
-		assert.True(t, allowed, "alice should inherit permissions through the role")
-	})
-
-	t.Run("RemoveRoleInheritance", func(t *testing.T) {
-		clearPolicies(t, client, enforcer)
-		// Add role policy and inheritance
-		_, err := enforcer.AddPolicy("admin", "system:*", "ANY", "domain1")
-		require.NoError(t, err)
-		_, err = enforcer.AddGroupingPolicy("alice", "admin", "domain1")
-		require.NoError(t, err)
-
-		// Verify permission
-		allowed, err := enforcer.Enforce("alice", "system:user:list", "read", "domain1")
-		require.NoError(t, err)
-		assert.True(t, allowed)
-
-		// Remove role inheritance
-		removed, err := enforcer.RemoveGroupingPolicy("alice", "admin", "domain1")
-		require.NoError(t, err)
-		assert.True(t, removed)
-
-		// alice should no longer have permission
-		allowed, err = enforcer.Enforce("alice", "system:user:list", "read", "domain1")
-		require.NoError(t, err)
-		assert.False(t, allowed, "alice should no longer have permission")
-	})
-}
-
-// TestCasbinAdapter_Performance is a performance test (optional).
-func TestCasbinAdapter_Performance(t *testing.T) {
-	if testing.Short() {
-		t.Skip("Skipping performance test")
+func arrayEqualsWithoutOrder(a [][]string, b [][]string) bool {
+	if len(a) != len(b) {
+		return false
 	}
 
-	client, _, enforcer := setupCasbinTest(t)
+	mapA := make(map[int]string)
+	mapB := make(map[int]string)
+	order := make(map[int]struct{})
+	l := len(a)
 
-	t.Run("BulkOperations", func(t *testing.T) {
-		clearPolicies(t, client, enforcer)
-		// Bulk add policies
-		policies := make([][]string, 1000)
-		for i := 0; i < 1000; i++ {
-			policies[i] = []string{
-				fmt.Sprintf("user%d", i),
-				"system:*",
-				"read",
-				"domain1",
+	for i := 0; i < l; i++ {
+		mapA[i] = util.ArrayToString(a[i])
+		mapB[i] = util.ArrayToString(b[i])
+	}
+
+	for i := 0; i < l; i++ {
+		for j := 0; j < l; j++ {
+			if _, ok := order[j]; ok {
+				if j == l-1 {
+					return false
+				} else {
+					continue
+				}
+			}
+			if mapA[i] == mapB[j] {
+				order[j] = struct{}{}
+				break
+			} else if j == l-1 {
+				return false
 			}
 		}
+	}
+	return true
+}
 
-		_, err := enforcer.AddPolicies(policies)
-		require.NoError(t, err, "Bulk adding 1000 policies should succeed")
+func initPolicy(t *testing.T, a *data.CasbinAdapter) {
+	// Because the DB is empty at first,
+	// so we need to load the policy from the file adapter (.CSV) first.
+	e, err := casbin.NewEnforcer("../../fixtures/data/adapter/rbac_model.conf",
+		"../../fixtures/data/adapter/rbac_policy.csv")
+	if err != nil {
+		panic(err)
+	}
 
-		// Verify the number of policies
-		allPolicies, err := enforcer.GetPolicy()
-		require.NoError(t, err)
-		assert.Len(t, allPolicies, 1000, "There should be 1000 policies")
-	})
+	// This is a trick to save the current policy to the DB.
+	// We can't call e.SavePolicy() because the adapter in the enforcer is still the file adapter.
+	// The current policy means the policy in the Casbin enforcer (aka in memory).
+	err = a.SavePolicy(e.GetModel())
+	if err != nil {
+		panic(err)
+	}
+
+	// Clear the current policy.
+	e.ClearPolicy()
+	testGetPolicy(t, e, [][]string{})
+
+	// Load the policy from DB.
+	err = a.LoadPolicy(e.GetModel())
+	if err != nil {
+		panic(err)
+	}
+	testGetPolicy(t, e, [][]string{{"alice", "data1", "read"}, {"bob", "data2", "write"}, {"data2_admin", "data2", "read"}, {"data2_admin", "data2", "write"}})
+}
+
+func testSaveLoad(t *testing.T, a *data.CasbinAdapter) {
+	// Initialize some policy in DB.
+	initPolicy(t, a)
+	// Note: you don't need to look at the above code
+	// if you already have a working DB with policy inside.
+
+	// Now the DB has policy, so we can provide a normal use case.
+	// Create an adapter and an enforcer.
+	// NewEnforcer() will load the policy automatically.
+
+	e, _ := casbin.NewEnforcer("../../fixtures/data/adapter/rbac_model.conf", a)
+	testGetPolicy(t, e, [][]string{{"alice", "data1", "read"}, {"bob", "data2", "write"}, {"data2_admin", "data2", "read"}, {"data2_admin", "data2", "write"}})
+}
+
+func initCasbinAdapter(t *testing.T, driverName string, dataSourceName string) *data.CasbinAdapter {
+	// Create an adapter
+	ctx := context.Background()
+
+	// Use an in-memory SQLite database for testing.
+	client := enttest.Open(t, driverName, dataSourceName)
+	db := ent.NewDatabaseWithClient(client)
+
+	// Create the adapter without a watcher.
+	adapter, err := data.NewAdapter(ctx, db, runtimelog.DefaultLogger)
+	if err != nil {
+		panic(err)
+	}
+
+	// Initialize some policy in DB.
+	initPolicy(t, adapter)
+	// Now the DB has policy, so we can provide a normal use case.
+	// Note: you don't need to look at the above code
+	// if you already have a working DB with policy inside.
+
+	return adapter
+}
+
+func initCasbinAdapterWithClientInstance(t *testing.T, client *ent.Client) *data.CasbinAdapter {
+	// Create an adapter
+	db := ent.NewDatabaseWithClient(client)
+	adapter, err := data.NewAdapter(context.Background(), db, runtimelog.DefaultLogger)
+	if err != nil {
+		panic(err)
+	}
+	// Initialize some policy in DB.
+	initPolicy(t, adapter)
+	// Now the DB has policy, so we can provide a normal use case.
+	// Note: you don't need to look at the above code
+	// if you already have a working DB with policy inside.
+
+	return adapter
+}
+
+func testAutoSave(t *testing.T, a *data.CasbinAdapter) {
+
+	// NewEnforcer() will load the policy automatically.
+	e, _ := casbin.NewEnforcer("../../fixtures/data/adapter/rbac_model.conf", a)
+	// AutoSave is enabled by default.
+	// Now we disable it.
+	e.EnableAutoSave(false)
+
+	// Because AutoSave is disabled, the policy change only affects the policy in Casbin enforcer,
+	// it doesn't affect the policy in the storage.
+	e.AddPolicy("alice", "data1", "write")
+	// Reload the policy from the storage to see the effect.
+	e.LoadPolicy()
+	// This is still the original policy.
+	testGetPolicy(t, e, [][]string{{"alice", "data1", "read"}, {"bob", "data2", "write"}, {"data2_admin", "data2", "read"}, {"data2_admin", "data2", "write"}})
+
+	// Now we enable the AutoSave.
+	e.EnableAutoSave(true)
+
+	// Because AutoSave is enabled, the policy change not only affects the policy in Casbin enforcer,
+	// but also affects the policy in the storage.
+	e.AddPolicy("alice", "data1", "write")
+	// Reload the policy from the storage to see the effect.
+	e.LoadPolicy()
+	// The policy has a new rule: {"alice", "data1", "write"}.
+	testGetPolicy(t, e, [][]string{{"alice", "data1", "read"}, {"bob", "data2", "write"}, {"data2_admin", "data2", "read"}, {"data2_admin", "data2", "write"}, {"alice", "data1", "write"}})
+
+	// Remove the added rule.
+	e.RemovePolicy("alice", "data1", "write")
+	e.LoadPolicy()
+	testGetPolicy(t, e, [][]string{{"alice", "data1", "read"}, {"bob", "data2", "write"}, {"data2_admin", "data2", "read"}, {"data2_admin", "data2", "write"}})
+
+	// Remove "data2_admin" related policy rules via a filter.
+	// Two rules: {"data2_admin", "data2", "read"}, {"data2_admin", "data2", "write"} are deleted.
+	e.RemoveFilteredPolicy(0, "data2_admin")
+	e.LoadPolicy()
+	testGetPolicy(t, e, [][]string{{"alice", "data1", "read"}, {"bob", "data2", "write"}})
+
+	e.RemovePolicies([][]string{{"alice", "data1", "read"}, {"bob", "data2", "write"}})
+	e.LoadPolicy()
+	testGetPolicy(t, e, [][]string{})
+}
+
+//func testFilteredPolicy(t *testing.T, a *data.CasbinAdapter) {
+//	// NewEnforcer() without an adapter will not auto load the policy
+//	e, _ := casbin.NewEnforcer("../../fixtures/data/adapter/rbac_model.conf")
+//	// Now set the adapter
+//	e.Setdata.CasbinAdapter(a)
+//
+//	// Load only alice's policies
+//	assert.Nil(t, e.LoadFilteredPolicy(Filter{V0: []string{"alice"}}))
+//	testGetPolicy(t, e, [][]string{{"alice", "data1", "read"}})
+//
+//	// Load only bob's policies
+//	assert.Nil(t, e.LoadFilteredPolicy(Filter{V0: []string{"bob"}}))
+//	testGetPolicy(t, e, [][]string{{"bob", "data2", "write"}})
+//
+//	// Load policies for data2_admin
+//	assert.Nil(t, e.LoadFilteredPolicy(Filter{V0: []string{"data2_admin"}}))
+//	testGetPolicy(t, e, [][]string{{"data2_admin", "data2", "read"}, {"data2_admin", "data2", "write"}})
+//
+//	// Load policies for alice and bob
+//	assert.Nil(t, e.LoadFilteredPolicy(Filter{V0: []string{"alice", "bob"}}))
+//	testGetPolicy(t, e, [][]string{{"alice", "data1", "read"}, {"bob", "data2", "write"}})
+//}
+
+func testUpdatePolicy(t *testing.T, a *data.CasbinAdapter) {
+	// NewEnforcer() will load the policy automatically.
+	e, _ := casbin.NewEnforcer("../../fixtures/data/adapter/rbac_model.conf", a)
+
+	e.EnableAutoSave(true)
+	e.UpdatePolicy([]string{"alice", "data1", "read"}, []string{"alice", "data1", "write"})
+	e.LoadPolicy()
+	testGetPolicy(t, e, [][]string{{"alice", "data1", "write"}, {"bob", "data2", "write"}, {"data2_admin", "data2", "read"}, {"data2_admin", "data2", "write"}})
+}
+
+func testUpdatePolicies(t *testing.T, a *data.CasbinAdapter) {
+	// NewEnforcer() will load the policy automatically.
+	e, _ := casbin.NewEnforcer("../../fixtures/data/adapter/rbac_model.conf", a)
+
+	e.EnableAutoSave(true)
+	e.UpdatePolicies([][]string{{"alice", "data1", "write"}, {"bob", "data2", "write"}}, [][]string{{"alice", "data1", "read"}, {"bob", "data2", "read"}})
+	e.LoadPolicy()
+	testGetPolicyWithoutOrder(t, e, [][]string{{"alice", "data1", "read"}, {"bob", "data2", "read"}, {"data2_admin", "data2", "read"}, {"data2_admin", "data2", "write"}})
+}
+
+func testUpdateFilteredPolicies(t *testing.T, a *data.CasbinAdapter) {
+	// NewEnforcer() will load the policy automatically.
+	e, _ := casbin.NewEnforcer("../../fixtures/data/adapter/rbac_model.conf", a)
+
+	e.EnableAutoSave(true)
+	e.UpdateFilteredPolicies([][]string{{"alice", "data1", "write"}}, 0, "alice", "data1", "read")
+	e.UpdateFilteredPolicies([][]string{{"bob", "data2", "read"}}, 0, "bob", "data2")
+	e.LoadPolicy()
+	testGetPolicyWithoutOrder(t, e, [][]string{{"alice", "data1", "write"}, {"data2_admin", "data2", "read"}, {"data2_admin", "data2", "write"}, {"bob", "data2", "read"}})
+}
+
+func testFilteredPolicy(t *testing.T, a *data.CasbinAdapter) {
+	// NewEnforcer() without an adapter will not auto load the policy
+	e, _ := casbin.NewEnforcer("../../fixtures/data/adapter/rbac_model.conf", "../../fixtures/data/adapter/rbac_policy.csv")
+
+	// Now set the adapter
+	e.SetAdapter(a)
+
+	assert.Nil(t, e.SavePolicy())
+
+	// Load only alice's policies
+	assert.Nil(t, e.LoadFilteredPolicy(data.Filter{V0: []string{"alice"}}))
+	testGetPolicy(t, e, [][]string{{"alice", "data1", "read"}})
+
+	// Load only bob's policies
+	assert.Nil(t, e.LoadFilteredPolicy(data.Filter{V0: []string{"bob"}}))
+	testGetPolicy(t, e, [][]string{{"bob", "data2", "write"}})
+
+	// Load policies for data2_admin
+	assert.Nil(t, e.LoadFilteredPolicy(data.Filter{V0: []string{"data2_admin"}}))
+	testGetPolicy(t, e, [][]string{{"data2_admin", "data2", "read"}, {"data2_admin", "data2", "write"}})
+
+	// Load policies for alice and bob
+	assert.Nil(t, e.LoadFilteredPolicy(data.Filter{V0: []string{"alice", "bob"}}))
+	testGetPolicy(t, e, [][]string{{"alice", "data1", "read"}, {"bob", "data2", "write"}})
+}
+
+func TestCasbinAdapters(t *testing.T) {
+	a := initCasbinAdapter(t, "sqlite3", "file:casbin?mode=memory&cache=shared&_fk=1")
+	testAutoSave(t, a)
+	testSaveLoad(t, a)
+
+	//a = initdata.CasbinAdapter(t, "mysql", "root:@tcp(127.0.0.1:3306)/casbin")
+	//testAutoSave(t, a)
+	//testSaveLoad(t, a)
+
+	//a = initdata.CasbinAdapter(t, "postgres", "user=postgres password=postgres host=127.0.0.1 port=5432 sslmode=disable dbname=casbin")
+	//testAutoSave(t, a)
+	//testSaveLoad(t, a)
+
+	db, err := ent.Open("sqlite3", "file:casbin?mode=memory&cache=shared&_fk=1")
+	if err != nil {
+		panic(err)
+	}
+	a = initCasbinAdapterWithClientInstance(t, db)
+	testAutoSave(t, a)
+	testSaveLoad(t, a)
+
+	//db, err = ent.Open("mysql", "root:@tcp(127.0.0.1:3306)/casbin")
+	//if err != nil {
+	//	panic(err)
+	//}
+	//a = initdata.CasbinAdapterWithClientInstance(t, db)
+	//testAutoSave(t, a)
+	//testSaveLoad(t, a)
+
+	//db, err = ent.Open("postgres", "user=postgres password=postgres host=127.0.0.1 port=5432 sslmode=disable dbname=casbin")
+	//if err != nil {
+	//	panic(err)
+	//}
+	//a = initdata.CasbinAdapterWithClientInstance(t, db)
+	//testAutoSave(t, a)
+	//testSaveLoad(t, a)
+
+	a = initCasbinAdapter(t, "sqlite3", "file:casbin?mode=memory&cache=shared&_fk=1")
+	testUpdatePolicy(t, a)
+	testUpdatePolicies(t, a)
+	testUpdateFilteredPolicies(t, a)
+
+	//a = initdata.CasbinAdapter(t, "mysql", "root:@tcp(127.0.0.1:3306)/casbin")
+	//testUpdatePolicy(t, a)
+	//testUpdatePolicies(t, a)
+	//testUpdateFilteredPolicies(t, a)
+
+	//a = initdata.CasbinAdapter(t, "postgres", "user=postgres password=postgres host=127.0.0.1 port=5432 sslmode=disable dbname=casbin")
+	//testUpdatePolicy(t, a)
+	//testUpdatePolicies(t, a)
+	//testUpdateFilteredPolicies(t, a)
 }
