@@ -14,9 +14,11 @@ import (
 	_ "github.com/origadmin/casbin-watcher/v3/drivers/nats"
 	contribsecurity "github.com/origadmin/contrib/security"
 	"github.com/origadmin/contrib/security/authn/jwt"
+	"github.com/origadmin/contrib/security/authz"
 	"github.com/origadmin/contrib/security/authz/casbin"
 	"github.com/origadmin/contrib/security/credential"
 	securitymiddleware "github.com/origadmin/contrib/security/middleware"
+	authzmiddleware "github.com/origadmin/contrib/security/middleware/authz"
 	"github.com/origadmin/contrib/security/request"
 	"github.com/origadmin/contrib/security/skip"
 	"github.com/origadmin/runtime"
@@ -151,7 +153,7 @@ func ProvideGatewayMiddlewares(app *runtime.App, authenticator *jwt.Authenticato
 	if err != nil {
 		return nil, err
 	}
-	m := factory.NewGateway(authenticator, skip)
+	m := factory.NewGateway(authenticator, skip, log.WithLogger(app.Logger()))
 	provider.RegisterServerMiddleware("authn", m)
 	provider.RegisterClientMiddleware("authn", middleware.Noop())
 	log.NewHelper(app.Logger()).Infof("registered %+v middlewares", provider.Names())
@@ -216,7 +218,7 @@ func ProvideAuthorizer(app *runtime.App, c *conf.Config, adapter *data.CasbinAda
 	if casbinConfig == nil || casbinConfig.GetCasbin() == nil || casbinConfig.GetType() != "casbin" {
 		return nil, errors.New("casbin authorizer configuration not found")
 	}
-	opts, err := casbin.NewOptions(casbinConfig, casbin.WithPolicyAdapter(adapter), casbin.WithWatcher(w))
+	opts, err := casbin.NewOptions(casbinConfig, casbin.WithPolicyAdapter(adapter), casbin.WithWatcher(w), casbin.WithLogger(app.Logger()))
 	if err != nil {
 		return nil, err
 	}
@@ -243,13 +245,21 @@ func ProvideWatcher(app *runtime.App, c *conf.Config) (*watcher.Watcher, error) 
 	return w, nil
 }
 
+func ruleSpec(ctx context.Context, p contribsecurity.Principal, req contribsecurity.Request) authz.RuleSpec {
+	return authz.RuleSpec{
+		Domain:   p.GetDomain(),
+		Resource: req.GetOperation(),
+		Action:   "ANY",
+	}
+}
+
 // ProvideServiceMiddlewares creates backend-specific middlewares.
 func ProvideServiceMiddlewares(app *runtime.App, authorizer *casbin.Authorizer, skip contribsecurity.Skipper) (container.ServerMiddlewareProvider, error) {
 	provider, err := app.MiddlewareProvider()
 	if err != nil {
 		return nil, err
 	}
-	m := factory.NewBackend(authorizer, skip)
+	m := factory.NewBackend(authorizer, skip, log.WithLogger(app.Logger()), authzmiddleware.WithRuleSpec(ruleSpec))
 	provider.RegisterServerMiddleware("authz", m)
 	provider.RegisterClientMiddleware("authz", middleware.Noop())
 	log.NewHelper(app.Logger()).Infof("registered %+v middlewares", provider.Names())

@@ -88,12 +88,13 @@ func (r *permissionRepo) Update(ctx context.Context, p *types.Permission, opts .
 			// If no field mask, skip zero values to prevent accidental clearing of fields.
 			update.SetPermissionSkipZero(entPermission)
 		}
-
-		if opt.WithResourceIDs != nil {
-			update.ClearResources().AddResourceIDs(opt.WithResourceIDs...)
+		update.ClearResources()
+		if len(opt.WithResourceIDs) > 0 {
+			update.AddResourceIDs(opt.WithResourceIDs...)
 		}
-		if opt.WithViewIDs != nil {
-			update.ClearViews().AddViewIDs(opt.WithViewIDs...)
+		update.ClearViews()
+		if len(opt.WithViewIDs) > 0 {
+			update.AddViewIDs(opt.WithViewIDs...)
 		}
 
 		var err error

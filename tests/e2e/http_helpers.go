@@ -153,3 +153,109 @@ func deleteResource(t *testing.T, token, path string, id int64, isUser bool) {
 	// We don't strictly require OK, as cleanup should be best-effort.
 	// require.Equal(t, http.StatusOK, resp.StatusCode, "Failed to delete resource %s", url)
 }
+
+// createResource is a helper function to create a new resource.
+// It assumes that the resource is unique per test run via the uniqueSuffix in its keyword.
+func createResource(t *testing.T, token, name, keyword, path, method, operation string) int64 {
+	t.Helper()
+	resPayload := &typesv1.Resource{
+		Name:      name,
+		Keyword:   keyword,
+		Path:      path,
+		Method:    method,
+		Operation: operation,
+	}
+	req := &systemv1.CreateResourceRequest{
+		Resource: resPayload,
+	}
+	resp := doRequest(t, "POST", "/api/v1/sys/resources", req, token)
+	defer resp.Body.Close()
+	bodyBytes, _ := io.ReadAll(resp.Body)
+	require.Equal(t, http.StatusOK, resp.StatusCode, "Failed to create resource. Response: %s", string(bodyBytes))
+
+	var createResp systemv1.CreateResourceResponse
+	err := protojson.Unmarshal(bodyBytes, &createResp)
+	require.NoError(t, err)
+	require.NotZero(t, createResp.GetResource().GetId())
+	return createResp.GetResource().GetId()
+}
+
+// createPermission is a helper function to create a new permission.
+func createPermission(t *testing.T, token, name, keyword string, resourceIDs []int64) int64 {
+	t.Helper()
+	permPayload := &typesv1.Permission{
+		Name:    name,
+		Keyword: keyword,
+	}
+	req := &systemv1.CreatePermissionRequest{
+		Permission:  permPayload,
+		ResourceIds: resourceIDs,
+	}
+	resp := doRequest(t, "POST", "/api/v1/sys/permissions", req, token)
+	defer resp.Body.Close()
+	bodyBytes, _ := io.ReadAll(resp.Body)
+	require.Equal(t, http.StatusOK, resp.StatusCode, "Failed to create permission. Response: %s", string(bodyBytes))
+
+	var createResp systemv1.CreatePermissionResponse
+	err := protojson.Unmarshal(bodyBytes, &createResp)
+	require.NoError(t, err)
+	require.NotZero(t, createResp.GetPermission().GetId())
+	return createResp.GetPermission().GetId()
+}
+
+// updateRole is a helper function to update an existing role.
+func updateRole(t *testing.T, token string, roleID int64, name, keyword string, permissionIDs []int64) {
+	t.Helper()
+	rolePayload := &typesv1.Role{
+		Id:      roleID,
+		Name:    name,
+		Keyword: keyword,
+	}
+	req := &systemv1.UpdateRoleRequest{
+		Role:          rolePayload,
+		PermissionIds: permissionIDs,
+	}
+	url := "/api/v1/sys/roles/" + strconv.FormatInt(roleID, 10)
+	resp := doRequest(t, "PUT", url, req, token)
+	defer resp.Body.Close()
+	bodyBytes, _ := io.ReadAll(resp.Body)
+	require.Equal(t, http.StatusOK, resp.StatusCode, "Failed to update role. Response: %s", string(bodyBytes))
+}
+
+// updateUser is a helper function to update an existing user.
+func updateUser(t *testing.T, token string, userID int64, username string, roleIDs []int64) {
+	t.Helper()
+	userPayload := &typesv1.User{
+		Id:       userID,
+		Username: username,
+	}
+	req := &systemv1.UpdateUserRequest{
+		User:    userPayload,
+		RoleIds: roleIDs,
+	}
+	url := "/api/v1/sys/users/" + strconv.FormatInt(userID, 10)
+	resp := doRequest(t, "PUT", url, req, token)
+	defer resp.Body.Close()
+	bodyBytes, _ := io.ReadAll(resp.Body)
+	require.Equal(t, http.StatusOK, resp.StatusCode, "Failed to update user. Response: %s", string(bodyBytes))
+}
+
+// updateResource is a helper function to update an existing resource.
+func updateResource(t *testing.T, token string, resID int64, keyword, path, method, operation string) {
+	t.Helper()
+	resPayload := &typesv1.Resource{
+		Id:        resID,
+		Keyword:   keyword,
+		Path:      path,
+		Method:    method,
+		Operation: operation,
+	}
+	req := &systemv1.UpdateResourceRequest{
+		Resource: resPayload,
+	}
+	url := "/api/v1/sys/resources/" + strconv.FormatInt(resID, 10)
+	resp := doRequest(t, "PUT", url, req, token)
+	defer resp.Body.Close()
+	bodyBytes, _ := io.ReadAll(resp.Body)
+	require.Equal(t, http.StatusOK, resp.StatusCode, "Failed to update resource. Response: %s", string(bodyBytes))
+}

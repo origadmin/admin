@@ -6,7 +6,6 @@ package service
 
 import (
 	"context"
-	"fmt"
 
 	"github.com/ThreeDotsLabs/watermill"
 	"github.com/ThreeDotsLabs/watermill/message"
@@ -22,6 +21,7 @@ import (
 	"origadmin/application/admin/internal/features/system/biz"
 	"origadmin/application/admin/internal/features/system/dto"
 	"origadmin/application/admin/internal/helpers/db"
+	"origadmin/application/admin/internal/helpers/idutil"
 )
 
 type UserService struct {
@@ -40,6 +40,47 @@ func NewUserService(uc *biz.UserUseCase, publisher broker.Publisher, logger log.
 	}
 }
 
+// publishUserRoleChangeEvent is a helper to publish a user role change event.
+func (s *UserService) publishUserRoleChangeEvent(ctx context.Context, userID int64) {
+	// We need role keywords, not just IDs, to publish the event.
+	// We fetch the user with roles to ensure we have valid, confirmed data.
+	user, err := s.uc.GetUser(ctx, userID, &dto.UserQueryOption{WithRoles: true})
+	if err != nil {
+		s.log.Errorf("failed to fetch user %d for event publishing: %v", userID, err)
+		return
+	}
+
+	if len(user.Roles) == 0 {
+		s.log.Warnf("publishUserRoleChangeEvent called for user %d but no roles found.", userID)
+	}
+
+	roleKeywords := make([]string, len(user.Roles))
+	for i, role := range user.Roles {
+		roleKeywords[i] = role.Keyword
+	}
+
+	userIDStr := idutil.FormatUserID(userID)
+	event := &types.UserRoleAssignedEvent{
+		Timestamp:    timestamppb.Now(),
+		UserId:       userIDStr,
+		RoleKeywords: roleKeywords,
+		Source:       "system.service",
+	}
+
+	s.log.Debugf("Publishing UserRoleAssignedEvent: UserID=%s (from userID=%d), RoleKeywords=%v", userIDStr, userID, roleKeywords)
+
+	payload, err := proto.Marshal(event)
+	if err != nil {
+		s.log.Errorf("failed to marshal UserRoleAssignedEvent for user %s: %v", userIDStr, err)
+		return
+	}
+
+	msg := message.NewMessage(watermill.NewUUID(), payload)
+	if err := s.publisher.Publish(broker.UserRoleAssignedTopic, msg); err != nil {
+		s.log.Errorf("failed to publish UserRoleAssignedEvent for user %s: %v", userIDStr, err)
+	}
+}
+
 func (s *UserService) ListUserResources(ctx context.Context, req *system.ListUserResourcesRequest) (*system.ListUserResourcesResponse, error) {
 	resources, err := s.uc.ListUserResources(ctx, req.GetId())
 	if err != nil {
@@ -54,38 +95,14 @@ func (s *UserService) ListUserResources(ctx context.Context, req *system.ListUse
 }
 
 func (s *UserService) UpdateUserRoles(ctx context.Context, req *system.UpdateUserRolesRequest) (*system.UpdateUserRolesResponse, error) {
-	roles, err := s.uc.UpdateUserRoles(ctx, req.GetId(), req.GetRoleIds())
+	_, err := s.uc.UpdateUserRoles(ctx, req.GetId(), req.GetRoleIds())
 	if err != nil {
 		if ent.IsNotFound(err) {
 			return nil, errors.NotFound("USER_NOT_FOUND", "User not found")
 		}
 		return nil, err
 	}
-
-	userIDStr := fmt.Sprintf("user:%d", req.GetId())
-	roleKeywords := make([]string, len(roles))
-	for i, role := range roles {
-		roleKeywords[i] = role.Keyword
-	}
-
-	event := &types.UserRoleAssignedEvent{
-		Timestamp:    timestamppb.Now(),
-		UserId:       userIDStr,
-		RoleKeywords: roleKeywords,
-		Source:       "system.service",
-	}
-
-	payload, err := proto.Marshal(event)
-	if err != nil {
-		s.log.Errorf("failed to marshal UserRoleAssignedEvent for user %s: %v", userIDStr, err)
-	} else {
-		msg := message.NewMessage(watermill.NewUUID(), payload)
-		err = s.publisher.Publish(broker.UserRoleAssignedTopic, msg)
-		if err != nil {
-			s.log.Errorf("failed to publish UserRoleAssignedEvent for user %s: %v", userIDStr, err)
-		}
-	}
-
+	s.publishUserRoleChangeEvent(ctx, req.GetId())
 	return &system.UpdateUserRolesResponse{}, nil
 }
 
@@ -150,6 +167,9 @@ func (s *UserService) CreateUser(ctx context.Context, req *system.CreateUserRequ
 	if err != nil {
 		return nil, err
 	}
+	if len(req.GetRoleIds()) > 0 {
+		s.publishUserRoleChangeEvent(ctx, user.Id)
+	}
 	return &system.CreateUserResponse{User: user}, nil
 }
 
@@ -161,6 +181,13 @@ func (s *UserService) UpdateUser(ctx context.Context, req *system.UpdateUserRequ
 			return nil, errors.NotFound("USER_NOT_FOUND", "User not found")
 		}
 		return nil, err
+	}
+	if req.RoleIds != nil {
+		_, err = s.uc.UpdateUserRoles(ctx, user.Id, req.GetRoleIds())
+		if err != nil {
+			return nil, err
+		}
+		s.publishUserRoleChangeEvent(ctx, user.Id)
 	}
 	return &system.UpdateUserResponse{User: user}, nil
 }

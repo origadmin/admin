@@ -2,12 +2,12 @@ package service
 
 import (
 	"context"
-	"fmt"
 
 	v1 "origadmin/application/admin/api/v1/services/auth"
 	"origadmin/application/admin/api/v1/services/types"
 	"origadmin/application/admin/internal/features/auth/biz"
 	"origadmin/application/admin/internal/helpers/captcha"
+	"origadmin/application/admin/internal/helpers/idutil"
 
 	"github.com/go-kratos/kratos/v2/errors"
 	"github.com/go-kratos/kratos/v2/log"
@@ -60,7 +60,7 @@ func (s *AuthService) Login(ctx context.Context, req *v1.LoginRequest) (*v1.Logi
 		roleKeywords = append(roleKeywords, role.Keyword)
 	}
 	p := securityPrincipal.New(
-		fmt.Sprint(user.Id),
+		idutil.FormatUserID(user.Id),
 		securityPrincipal.WithRoles(roleKeywords),
 	)
 

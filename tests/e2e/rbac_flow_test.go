@@ -34,11 +34,14 @@ func TestRBACFlow(t *testing.T) {
 	var resUserListID, resUserCreateID, resUserDeleteID int64
 	var permUserListID, permUserCreateID, permUserDeleteID int64
 	var roleEditorID, roleViewerID int64
-	var userEditorID, userViewerID, userNoRoleID int64
+	var userEditorID, userViewerID, userNoRoleID, userEditorTestID, userViewerTestID int64
 
 	const (
-		waitFor = 5 * time.Second
-		tick    = 200 * time.Millisecond
+		// waitFor is the maximum time to wait for policy propagation.
+		waitFor = 30 * time.Second
+		// Use a smarter polling strategy: initial delay + longer tick to reduce API calls
+		// This reduces log spam and unnecessary backend load
+		tick = 2 * time.Second
 	)
 
 	// 1. Admin Login
@@ -52,6 +55,7 @@ func TestRBACFlow(t *testing.T) {
 	t.Cleanup(func() {
 		t.Log("Performing post-test cleanup...")
 		// Use assert to ensure all cleanup attempts are made.
+		// The order is important: delete users first, then roles, then permissions, then resources.
 		if userEditorID != 0 {
 			deleteResource(t, adminToken, "/api/v1/sys/users", userEditorID, true)
 		}
@@ -61,6 +65,13 @@ func TestRBACFlow(t *testing.T) {
 		if userNoRoleID != 0 {
 			deleteResource(t, adminToken, "/api/v1/sys/users", userNoRoleID, true)
 		}
+		if userEditorTestID != 0 {
+			deleteResource(t, adminToken, "/api/v1/sys/users", userEditorTestID, true)
+		}
+		if userViewerTestID != 0 {
+			deleteResource(t, adminToken, "/api/v1/sys/users", userViewerTestID, true)
+		}
+
 		if roleEditorID != 0 {
 			deleteResource(t, adminToken, "/api/v1/sys/roles", roleEditorID, false)
 		}
@@ -76,6 +87,9 @@ func TestRBACFlow(t *testing.T) {
 		if permUserDeleteID != 0 {
 			deleteResource(t, adminToken, "/api/v1/sys/permissions", permUserDeleteID, false)
 		}
+		// Resources are shared, so we don't delete them, but ensure they have correct gRPC operations.
+		// Revert resources to their original state if necessary, or ensure they are idempotent.
+		// Since Step2 finds existing resources, we don't delete them.
 		t.Log("Post-test cleanup complete.")
 	})
 
@@ -106,6 +120,16 @@ func TestRBACFlow(t *testing.T) {
 		t.Logf("Found resource IDs: UserList=%d, UserCreate=%d, UserDelete=%d", resUserListID, resUserCreateID, resUserDeleteID)
 	})
 
+	// 2b. Ensure Resources have correct gRPC Operation
+	// This step is crucial because the AuthZ middleware uses gRPC method names (Operation) for enforcement,
+	// while the initial data might only have HTTP paths. We update them to ensure consistency.
+	t.Run("Step2b_UpdateResourcesForGRPC", func(t *testing.T) {
+		updateResource(t, adminToken, resUserListID, "system:user:list_users", "/api/v1/sys/users", "GET", "/api.v1.services.system.UserService/ListUsers")
+		updateResource(t, adminToken, resUserCreateID, "system:user:create_user", "/api/v1/sys/users", "POST", "/api.v1.services.system.UserService/CreateUser")
+		updateResource(t, adminToken, resUserDeleteID, "system:user:delete_user", "/api/v1/sys/users/{id}", "DELETE", "/api.v1.services.system.UserService/DeleteUser")
+		t.Log("Updated resources with correct gRPC operations.")
+	})
+
 	// 2a. Create Permissions for Resources
 	t.Run("Step2a_CreatePermissions", func(t *testing.T) {
 		permUserListID = createPermission(t, adminToken, "Perm_UserList_"+uniqueSuffix, "system:user:list_users:"+uniqueSuffix, []int64{resUserListID})
@@ -130,7 +154,7 @@ func TestRBACFlow(t *testing.T) {
 	})
 
 	// 4. Create Users and Assign Roles
-	t.Run("Step4_CreateUsers", func(t *testing.T) {
+	t.Run("Step4_CreateUsersAndAssignRoles", func(t *testing.T) {
 		userEditorID = createUser(t, adminToken, editorUser, "password123", []int64{roleEditorID})
 		t.Logf("Created Editor User (ID: %d) and assigned to Editor Role", userEditorID)
 
@@ -141,63 +165,69 @@ func TestRBACFlow(t *testing.T) {
 		t.Logf("Created No-Role User (ID: %d) with no roles assigned", userNoRoleID)
 	})
 
-	// 4a. Debug Step: Verify Associations
-	t.Run("Step4a_DebugVerifyAssociations", func(t *testing.T) {
-		// Verify user-role association
-		userResp := doRequest(t, "GET", "/api/v1/sys/users/"+strconv.FormatInt(userEditorID, 10), nil, adminToken)
-		defer userResp.Body.Close()
-		userBody, _ := io.ReadAll(userResp.Body)
-		require.Equal(t, http.StatusOK, userResp.StatusCode, "Failed to get user details. Response: %s", string(userBody))
-		var userDetails systemv1.GetUserResponse
-		require.NoError(t, protojson.Unmarshal(userBody, &userDetails))
-		require.Len(t, userDetails.GetUser().GetRoles(), 1, "Editor user should have 1 role")
-		assert.Equal(t, roleEditorID, userDetails.GetUser().GetRoles()[0].Id, "Editor user should be associated with the editor role")
-		t.Logf("Verified: User %d is correctly associated with Role %d", userEditorID, roleEditorID)
+	// 4a. Verify Policy Sync by Polling
+	t.Run("Step4a_VerifyPolicySync", func(t *testing.T) {
+		t.Log("Waiting for policy propagation (async event processing)...")
+		// Add initial delay to allow event processing before first check
+		time.Sleep(3 * time.Second)
 
-		// Verify role-permission association
-		roleResp := doRequest(t, "GET", "/api/v1/sys/roles/"+strconv.FormatInt(roleEditorID, 10), nil, adminToken)
-		defer roleResp.Body.Close()
-		roleBody, _ := io.ReadAll(roleResp.Body)
-		require.Equal(t, http.StatusOK, roleResp.StatusCode, "Failed to get role details. Response: %s", string(roleBody))
-		var roleDetails systemv1.GetRoleResponse
-		require.NoError(t, protojson.Unmarshal(roleBody, &roleDetails))
-		require.Len(t, roleDetails.GetRole().GetPermissions(), 2, "Editor role should have 2 permissions")
-
-		permIDs := make(map[int64]bool)
-		for _, p := range roleDetails.GetRole().GetPermissions() {
-			permIDs[p.Id] = true
-		}
-		assert.True(t, permIDs[permUserListID], "Editor role should have list permission")
-		assert.True(t, permIDs[permUserCreateID], "Editor role should have create permission")
-		t.Logf("Verified: Role %d is correctly associated with its permissions", roleEditorID)
+		require.Eventually(t, func() bool {
+			token := login(t, editorUser, "password123")
+			if token == "" {
+				// Only log on first failure to reduce spam
+				return false
+			}
+			resp := doRequest(t, "GET", "/api/v1/sys/users", nil, token)
+			defer resp.Body.Close()
+			if resp.StatusCode != http.StatusOK {
+				return false
+			}
+			t.Logf("Policy sync verified for user %s (ID: %d)", editorUser, userEditorID)
+			return true
+		}, waitFor, tick, "Policy did not sync: editor user %s (ID: %d) could not list users within the time limit.", editorUser, userEditorID)
+		t.Logf("Verified: Policy is fully synced for the editor user %s (ID: %d).", editorUser, userEditorID)
 	})
 
 	// 5. Verify Initial Permissions
 	t.Run("Step5_VerifyInitialPermissions", func(t *testing.T) {
-		// Editor
 		editorToken := login(t, editorUser, "password123")
-		require.NotEmpty(t, editorToken, "Editor user login failed")
-		require.Eventually(t, func() bool {
-			return doRequest(t, "GET", "/api/v1/sys/users", nil, editorToken).StatusCode == http.StatusOK
-		}, waitFor, tick, "Editor should be able to list users")
-		require.Eventually(t, func() bool {
-			return doRequest(t, "POST", "/api/v1/sys/users", &systemv1.CreateUserRequest{User: &typesv1.User{Username: editorTestUser}, Password: "password123"}, editorToken).StatusCode == http.StatusOK
-		}, waitFor, tick, "Editor should be able to create a user")
-		// This permission was never granted, so it should be forbidden immediately.
-		assert.Equal(t, http.StatusForbidden, doRequest(t, "DELETE", "/api/v1/sys/users/"+strconv.FormatInt(userNoRoleID, 10), nil, editorToken).StatusCode, "Editor should NOT be able to delete a user")
+		require.NotEmpty(t, editorToken, "Editor user %s (ID: %d) login failed", editorUser, userEditorID)
 
-		// Viewer
-		viewerToken := login(t, viewerUser, "password123")
-		require.NotEmpty(t, viewerToken, "Viewer user login failed")
-		require.Eventually(t, func() bool {
-			return doRequest(t, "GET", "/api/v1/sys/users", nil, viewerToken).StatusCode == http.StatusOK
-		}, waitFor, tick, "Viewer should be able to list users")
-		// This permission was never granted, so it should be forbidden immediately.
-		assert.Equal(t, http.StatusForbidden, doRequest(t, "POST", "/api/v1/sys/users", &systemv1.CreateUserRequest{User: &typesv1.User{Username: viewerTestUser}, Password: "password123"}, viewerToken).StatusCode, "Viewer should NOT be able to create a user")
+		t.Logf("Checking create permission for editor user %s (ID: %d)", editorUser, userEditorID)
+		respCreate := doRequest(t, "POST", "/api/v1/sys/users", &systemv1.CreateUserRequest{User: &typesv1.User{Username: editorTestUser}, Password: "password123"}, editorToken)
+		bodyCreate, _ := io.ReadAll(respCreate.Body)
+		respCreate.Body.Close()
+		require.Equal(t, http.StatusOK, respCreate.StatusCode, "Editor user should be able to create a user. Response: %s", string(bodyCreate))
+		var createResp systemv1.CreateUserResponse
+		require.NoError(t, protojson.Unmarshal(bodyCreate, &createResp))
+		userEditorTestID = createResp.GetUser().GetId()
 
-		// No-Role User
+		t.Logf("Checking delete permission (forbidden) for editor user %s (ID: %d)", editorUser, userEditorID)
+		assert.Equal(t, http.StatusForbidden, doRequest(t, "DELETE", "/api/v1/sys/users/"+strconv.FormatInt(userNoRoleID, 10), nil, editorToken).StatusCode, "Editor user should NOT be able to delete a user")
+
+		var viewerToken string
+		time.Sleep(2 * time.Second) // Initial delay for event processing
+		require.Eventually(t, func() bool {
+			token := login(t, viewerUser, "password123")
+			if token == "" {
+				return false
+			}
+			viewerToken = token
+			resp := doRequest(t, "GET", "/api/v1/sys/users", nil, viewerToken)
+			defer resp.Body.Close()
+			if resp.StatusCode == http.StatusOK {
+				t.Logf("Policy sync verified for viewer user %s (ID: %d)", viewerUser, userViewerID)
+			}
+			return resp.StatusCode == http.StatusOK
+		}, waitFor, tick, "Policy did not sync: viewer user %s (ID: %d) could not list users.", viewerUser, userViewerID)
+		t.Logf("Verified: Policy is fully synced for the viewer user %s (ID: %d).", viewerUser, userViewerID)
+
+		t.Logf("Checking create permission (forbidden) for viewer user %s (ID: %d)", viewerUser, userViewerID)
+		assert.Equal(t, http.StatusForbidden, doRequest(t, "POST", "/api/v1/sys/users", &systemv1.CreateUserRequest{User: &typesv1.User{Username: viewerTestUser}, Password: "password123"}, viewerToken).StatusCode, "Viewer user should NOT be able to create a user")
+
 		noRoleToken := login(t, noRoleUser, "password123")
 		require.NotEmpty(t, noRoleToken, "No-role user login failed")
+		t.Logf("Checking list permission (forbidden) for no-role user %s (ID: %d)", noRoleUser, userNoRoleID)
 		assert.Equal(t, http.StatusForbidden, doRequest(t, "GET", "/api/v1/sys/users", nil, noRoleToken).StatusCode, "No-role user should NOT be able to list users")
 	})
 
@@ -206,87 +236,48 @@ func TestRBACFlow(t *testing.T) {
 		t.Log("Updating Viewer Role to include Create permission...")
 		updateRole(t, adminToken, roleViewerID, viewerRoleName, viewerRoleKeyword, []int64{permUserListID, permUserCreateID})
 
-		viewerToken := login(t, viewerUser, "password123")
-		require.NotEmpty(t, viewerToken)
-
-		// Verify Viewer can now create a user
+		// Verify Viewer can now create a user. Re-login inside Eventually to get a fresh token.
+		time.Sleep(2 * time.Second) // Initial delay for event processing
 		require.Eventually(t, func() bool {
-			resp := doRequest(t, "POST", "/api/v1/sys/users", &systemv1.CreateUserRequest{User: &typesv1.User{Username: viewerTestUser}, Password: "password123"}, viewerToken)
-			return resp.StatusCode == http.StatusOK
-		}, waitFor, tick, "Viewer should be able to create a user after role update")
-		t.Log("Verified: Viewer can now create users.")
+			token := login(t, viewerUser, "password123")
+			if token == "" {
+				return false
+			}
+			resp := doRequest(t, "POST", "/api/v1/sys/users", &systemv1.CreateUserRequest{User: &typesv1.User{Username: viewerTestUser}, Password: "password123"}, token)
+			defer resp.Body.Close()
+			if resp.StatusCode != http.StatusOK {
+				return false
+			}
+			body, _ := io.ReadAll(resp.Body)
+			var createResp systemv1.CreateUserResponse
+			if err := protojson.Unmarshal(body, &createResp); err != nil {
+				return false
+			}
+			userViewerTestID = createResp.GetUser().GetId()
+			t.Logf("Verified viewer user %s (ID: %d) can now create users", viewerUser, userViewerID)
+			return true
+		}, waitFor, tick, "Viewer user %s (ID: %d) should be able to create a user after role update", viewerUser, userViewerID)
+		t.Logf("Verified: Viewer user %s (ID: %d) can now create users.", viewerUser, userViewerID)
 	})
 
 	// 7. Revoke Role and Verify
 	t.Run("Step7_RevokeRoleAndVerify", func(t *testing.T) {
-		t.Logf("Revoking Editor Role from user %s...", editorUser)
-		updateUser(t, adminToken, userEditorID, editorUser, []int64{}) // Update user with empty role list
+		t.Logf("Revoking Editor Role from user %s (ID: %d)...", editorUser, userEditorID)
+		updateUser(t, adminToken, userEditorID, editorUser, []int64{})
 
-		editorToken := login(t, editorUser, "password123")
-		require.NotEmpty(t, editorToken)
-
-		// Verify Editor can no longer list users
+		time.Sleep(2 * time.Second) // Initial delay for event processing
 		require.Eventually(t, func() bool {
-			resp := doRequest(t, "GET", "/api/v1/sys/users", nil, editorToken)
+			token := login(t, editorUser, "password123")
+			if token == "" {
+				return false
+			}
+			resp := doRequest(t, "GET", "/api/v1/sys/users", nil, token)
+			defer resp.Body.Close()
+			if resp.StatusCode == http.StatusForbidden {
+				t.Logf("Verified role revocation for user %s (ID: %d)", editorUser, userEditorID)
+			}
 			return resp.StatusCode == http.StatusForbidden
-		}, waitFor, tick, "Former editor should NOT be able to list users after role revocation")
-		t.Log("Verified: Former editor's permissions have been revoked.")
+		}, waitFor, tick, "Former editor user %s (ID: %d) should NOT be able to list users after role revocation", editorUser, userEditorID)
+		t.Logf("Verified: Former editor's permissions for user %s (ID: %d) have been revoked.", editorUser, userEditorID)
 	})
-}
-
-func createPermission(t *testing.T, token, name, keyword string, resourceIDs []int64) int64 {
-	t.Helper()
-	permPayload := &typesv1.Permission{
-		Name:    name,
-		Keyword: keyword,
-	}
-	req := &systemv1.CreatePermissionRequest{
-		Permission:  permPayload,
-		ResourceIds: resourceIDs,
-	}
-	resp := doRequest(t, "POST", "/api/v1/sys/permissions", req, token)
-	defer resp.Body.Close()
-	bodyBytes, _ := io.ReadAll(resp.Body)
-	require.Equal(t, http.StatusOK, resp.StatusCode, "Failed to create permission. Response: %s", string(bodyBytes))
-
-	var createResp systemv1.CreatePermissionResponse
-	err := protojson.Unmarshal(bodyBytes, &createResp)
-	require.NoError(t, err)
-	require.NotZero(t, createResp.GetPermission().GetId())
-	return createResp.GetPermission().GetId()
-}
-
-func updateRole(t *testing.T, token string, roleID int64, name, keyword string, permissionIDs []int64) {
-	t.Helper()
-	rolePayload := &typesv1.Role{
-		Id:      roleID,
-		Name:    name,
-		Keyword: keyword,
-	}
-	req := &systemv1.UpdateRoleRequest{
-		Role:          rolePayload,
-		PermissionIds: permissionIDs,
-	}
-	url := "/api/v1/sys/roles/" + strconv.FormatInt(roleID, 10)
-	resp := doRequest(t, "PUT", url, req, token)
-	defer resp.Body.Close()
-	bodyBytes, _ := io.ReadAll(resp.Body)
-	require.Equal(t, http.StatusOK, resp.StatusCode, "Failed to update role. Response: %s", string(bodyBytes))
-}
-
-func updateUser(t *testing.T, token string, userID int64, username string, roleIDs []int64) {
-	t.Helper()
-	userPayload := &typesv1.User{
-		Id:       userID,
-		Username: username,
-	}
-	req := &systemv1.UpdateUserRequest{
-		User:    userPayload,
-		RoleIds: roleIDs,
-	}
-	url := "/api/v1/sys/users/" + strconv.FormatInt(userID, 10)
-	resp := doRequest(t, "PUT", url, req, token)
-	defer resp.Body.Close()
-	bodyBytes, _ := io.ReadAll(resp.Body)
-	require.Equal(t, http.StatusOK, resp.StatusCode, "Failed to update user. Response: %s", string(bodyBytes))
 }

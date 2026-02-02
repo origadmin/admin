@@ -95,9 +95,9 @@ func (r *roleRepo) Update(ctx context.Context, rl *types.Role, opts ...*dto.Role
 		} else {
 			update.SetRoleSkipZero(entRole)
 		}
-
-		if opt.WithPermissionIDs != nil {
-			update.ClearPermissions().AddPermissionIDs(opt.WithPermissionIDs...)
+		update.ClearPermissions()
+		if len(opt.WithPermissionIDs) > 0 {
+			update.AddPermissionIDs(opt.WithPermissionIDs...)
 		}
 
 		var err error

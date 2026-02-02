@@ -14,6 +14,7 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 
+	"github.com/origadmin/runtime/log"
 	_ "github.com/sqlite3ent/sqlite3"
 	"origadmin/application/admin/internal/data"
 	"origadmin/application/admin/internal/data/entity/ent"
@@ -34,7 +35,8 @@ func setupCasbinTest(t *testing.T) (*ent.Client, *data.CasbinAdapter, *casbin.En
 
 	// Create the adapter
 	database := ent.NewDatabaseWithClient(client)
-	adapter := &data.CasbinAdapter{Ctx: context.Background(), DB: database}
+	adapter, err := data.NewAdapter(context.Background(), database, log.DefaultLogger)
+	require.NoError(t, err, "Adapter should be created successfully")
 
 	// Create the Enforcer
 	modelPath := "../../../resources/casbin_model.conf"

@@ -21,7 +21,7 @@ import (
 )
 
 // ProviderSet is data providers.
-var ProviderSet = wire.NewSet(NewData, ProvideDatabase, NewStorageProvider, NewAdapter)
+var ProviderSet = wire.NewSet(NewData, ProvideDatabase, NewStorageProvider, NewAdapterWithApp)
 
 // SystemUserID holds the ID of the system user. It is 0 if no system user is found.
 var SystemUserID int64

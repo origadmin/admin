@@ -113,9 +113,9 @@ func (r *userRepo) Update(ctx context.Context, u *types.User, opts ...*dto.UserU
 			// If no field mask, skip zero values to prevent accidental clearing of fields.
 			update.SetUserSkipZero(entUser)
 		}
-
-		if opt.WithRoleIDs != nil {
-			update.ClearRoles().AddRoleIDs(opt.WithRoleIDs...)
+		update.ClearRoles()
+		if len(opt.WithRoleIDs) > 0 {
+			update.AddRoleIDs(opt.WithRoleIDs...)
 		}
 
 		var err error

@@ -90,7 +90,7 @@ func (m *casbinModifier) AddPermissions(ctx context.Context, subject string, per
 
 	rules := make([][]string, len(permissions))
 	for i, p := range permissions {
-		rules[i] = []string{subject, p.Resource, p.Action, p.Domain}
+		rules[i] = []string{subject, p.Domain, p.Resource, p.Action}
 	}
 
 	err := m.adapter.AddPolicies("p", "p", rules)
@@ -111,15 +111,15 @@ func (m *casbinModifier) RemovePermissions(ctx context.Context, subject string, 
 	var firstErr error
 	for _, p := range permissions {
 		filters := map[string]string{"v0": subject}
-		if p.Resource != "" {
-			filters["v1"] = p.Resource
-		}
-		if p.Action != "" {
-			filters["v2"] = p.Action
-		}
 		// Only filter by domain if it is explicitly provided.
 		if p.Domain != "" {
-			filters["v3"] = p.Domain
+			filters["v1"] = p.Domain
+		}
+		if p.Resource != "" {
+			filters["v2"] = p.Resource
+		}
+		if p.Action != "" {
+			filters["v3"] = p.Action
 		}
 
 		err := m.adapter.RemovePoliciesByFields("p", filters)

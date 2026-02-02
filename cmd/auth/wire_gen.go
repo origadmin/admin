@@ -68,7 +68,7 @@ func wireApp(app *runtime.App, bootstrap *conf.Config) (*kratos.App, func(), err
 	meRepo := dal.NewMeRepo(database, v)
 	meUseCase := biz.NewMeUseCase(meRepo, v)
 	meService := service.NewMeService(meUseCase)
-	casbinAdapter, err := data.NewAdapter(app, database)
+	casbinAdapter, err := data.NewAdapterWithApp(app, database)
 	if err != nil {
 		cleanup()
 		return nil, nil, err
