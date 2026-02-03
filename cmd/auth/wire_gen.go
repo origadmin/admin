@@ -20,6 +20,7 @@ import (
 )
 
 import (
+	_ "github.com/lib/pq"
 	_ "github.com/origadmin/contrib/config/consul"
 	_ "github.com/origadmin/contrib/registry/consul"
 	_ "github.com/sqlite3ent/sqlite3"
@@ -101,7 +102,7 @@ func wireApp(app *runtime.App, bootstrap *conf.Config) (*kratos.App, func(), err
 	}
 	policySyncer := biz.NewPolicySyncer(policyProvider, policyModifier, authorizer, v)
 	adminService := service.NewAdminService(policySyncer, authorizer, v)
-	policySyncService := service.NewPolicySyncService(policySyncer, v)
+	policySyncService := service.NewPolicySyncService(policySyncer, watcher, v)
 	skipper := providers.ProvideSkipper(app, bootstrap)
 	serverMiddlewareProvider, err := providers.ProvideServiceMiddlewares(app, authorizer, skipper)
 	if err != nil {

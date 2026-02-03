@@ -101,13 +101,36 @@ func (i *Initializer) provisionNatsJetStream(brokerURL string) error {
 
 	i.log.Infof("Provisioning JetStream for topic: '%s' with queue group: '%s'...", topic, queueGroup)
 
+	// Parse deliver_policy from URL parameters
+	deliverPolicy := parsedURL.Query().Get("deliver_policy")
+	if deliverPolicy == "" {
+		deliverPolicy = "last" // Default to 'last' to prevent consuming all historical messages
+	}
+	i.log.Infof("Using deliver_policy: '%s' for topic: '%s'", deliverPolicy, topic)
+
 	// Configure JetStream to use AutoProvision. This will create a stream with the same name as the topic.
 	// The StreamConfig field does not exist in this version of the library and must not be used.
+	subOpts := []natsio.SubOpt{natsio.Durable(queueGroup)}
+
+	// Add deliver policy option based on configuration
+	switch deliverPolicy {
+	case "new":
+		subOpts = append(subOpts, natsio.DeliverNew())
+	case "last":
+		subOpts = append(subOpts, natsio.DeliverLast())
+	case "last_per_subject":
+		subOpts = append(subOpts, natsio.DeliverLastPerSubject())
+	case "all":
+		subOpts = append(subOpts, natsio.DeliverAll())
+	default:
+		// Default to 'last' for safety
+		i.log.Warnf("Unknown deliver_policy '%s', defaulting to 'last'", deliverPolicy)
+		subOpts = append(subOpts, natsio.DeliverLast())
+	}
+
 	jetStreamConfig := nats.JetStreamConfig{
-		AutoProvision: true,
-		SubscribeOptions: []natsio.SubOpt{
-			natsio.Durable(queueGroup),
-		},
+		AutoProvision:    true,
+		SubscribeOptions: subOpts,
 	}
 
 	// Use the Watermill driver to provision the stream.

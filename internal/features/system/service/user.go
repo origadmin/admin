@@ -151,7 +151,7 @@ func (s *UserService) CreateUser(ctx context.Context, req *system.CreateUserRequ
 		return nil, err
 	}
 	if len(req.GetRoleIds()) > 0 {
-		s.publishUserRoleChangeEvent(ctx, user.Id)
+		s.publishUserRoleChangeEvent(ctx, user.GetId())
 	}
 	return &system.CreateUserResponse{User: user}, nil
 }
@@ -165,13 +165,8 @@ func (s *UserService) UpdateUser(ctx context.Context, req *system.UpdateUserRequ
 		}
 		return nil, err
 	}
-	if req.RoleIds != nil {
-		_, err = s.uc.UpdateUserRoles(ctx, user.Id, req.GetRoleIds())
-		if err != nil {
-			return nil, err
-		}
-		s.publishUserRoleChangeEvent(ctx, user.Id)
-	}
+
+	s.publishUserRoleChangeEvent(ctx, user.GetId())
 	return &system.UpdateUserResponse{User: user}, nil
 }
 

@@ -223,14 +223,10 @@ func updateRole(t *testing.T, token string, roleID int64, name, keyword string, 
 }
 
 // updateUser is a helper function to update an existing user.
-func updateUser(t *testing.T, token string, userID int64, username string, roleIDs []int64) {
+func updateUser(t *testing.T, token string, userID int64, user *typesv1.User, updateMaskPaths []string, roleIDs []int64) {
 	t.Helper()
-	userPayload := &typesv1.User{
-		Id:       userID,
-		Username: username,
-	}
 	req := &systemv1.UpdateUserRequest{
-		User:    userPayload,
+		User:    user,
 		RoleIds: roleIDs,
 	}
 	url := "/api/v1/sys/users/" + strconv.FormatInt(userID, 10)

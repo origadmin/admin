@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"strconv"
+	"strings"
 
 	"github.com/ThreeDotsLabs/watermill"
 	"github.com/ThreeDotsLabs/watermill-nats/v2/pkg/nats"
@@ -219,7 +220,8 @@ func ProvideAuthorizer(app *runtime.App, c *conf.Config, adapter *data.CasbinAda
 	if casbinConfig == nil || casbinConfig.GetCasbin() == nil || casbinConfig.GetType() != "casbin" {
 		return nil, errors.New("casbin authorizer configuration not found")
 	}
-	opts, err := casbin.NewOptions(casbinConfig, casbin.WithPolicyAdapter(adapter), casbin.WithWatcher(w), casbin.WithLogger(app.Logger()))
+	// We remove WithWatcher(w) from here to handle it manually and explicitly.
+	opts, err := casbin.NewOptions(casbinConfig, casbin.WithPolicyAdapter(adapter), casbin.WithLogger(app.Logger()))
 	if err != nil {
 		return nil, err
 	}
@@ -228,30 +230,41 @@ func ProvideAuthorizer(app *runtime.App, c *conf.Config, adapter *data.CasbinAda
 	if err != nil {
 		return nil, err
 	}
-	// --- BEGIN FIX ---
-	// Manually and explicitly set the watcher and its callback to be absolutely sure.
-	// This bypasses any potential issues in the casbin.New or WithWatcher option.
-	enforcer := authorizer.GetEnforcer()
-	if err := enforcer.SetWatcher(w); err != nil {
-		return nil, fmt.Errorf("failed to explicitly set watcher for enforcer: %w", err)
-	}
-	// We also explicitly set the callback to ensure the enforcer reloads its policy.
-	// The watcher's callback will call the enforcer's LoadPolicy method.
-	if err := w.SetUpdateCallback(func(msg string) {
-		callbackHelper := log.NewHelper(log.With(app.Logger(), "module", "casbin.watcher.callback"))
-		callbackHelper.Infof("Policy update notification received: %s. Attempting to reload policies...", msg)
-		if err := enforcer.LoadPolicy(); err != nil {
-			callbackHelper.Errorf("Failed to reload policy after watcher update: %v", err)
-		} else {
-			callbackHelper.Info("Policy reloaded successfully via watcher callback.")
+
+	// Set up watcher for Stage 2 of the two-stage update flow:
+	// After business data is synced to casbin_rule, watcher.Update() broadcasts
+	// the update to all auth service instances, which then call LoadPolicy().
+	if w != nil {
+		enforcer := authorizer.GetEnforcer()
+		helper := log.NewHelper(log.With(app.Logger(), "module", "casbin.watcher.setup"))
+
+		// 1. Explicitly set the watcher on the enforcer instance.
+		if err := enforcer.SetWatcher(w); err != nil {
+			helper.Errorf("Failed to explicitly set watcher for enforcer: %v", err)
+			return nil, fmt.Errorf("failed to explicitly set watcher for enforcer: %w", err)
 		}
-	}); err != nil {
-		return nil, fmt.Errorf("failed to explicitly set watcher callback: %w", err)
+		helper.Info("Watcher explicitly set on Casbin Enforcer.")
+
+		// 2. Explicitly set the callback to a function that logs and then reloads.
+		// This is Stage 2: when a watcher update is received, reload policies from database.
+		if err := w.SetUpdateCallback(func(msg string) {
+			callbackHelper := log.NewHelper(log.With(app.Logger(), "module", "casbin.watcher.callback"))
+			callbackHelper.Infof("Stage 2: Policy update notification received: %s. Reloading policies from database...", msg)
+			if err := enforcer.LoadPolicy(); err != nil {
+				callbackHelper.Errorf("Stage 2 failed: Failed to reload policy after watcher update: %v", err)
+			} else {
+				callbackHelper.Info("Stage 2 completed: Policy reloaded successfully from database to memory.")
+			}
+		}); err != nil {
+			helper.Errorf("Failed to explicitly set watcher callback: %v", err)
+			return nil, fmt.Errorf("failed to explicitly set watcher callback: %w", err)
+		}
+		helper.Info("Watcher callback explicitly set for Stage 2 policy reload.")
+	} else {
+		log.NewHelper(app.Logger()).Warn("Watcher is nil, two-stage update flow will not work. Only local instance will have updated policies.")
 	}
-	// --- END FIX ---
 
 	return authorizer, nil
-
 }
 
 // ProvideWatcher creates a new casbin watcher.
@@ -366,9 +379,25 @@ func ProvidePublisher(c *conf.Config, wmLogger watermill.LoggerAdapter) (broker.
 		return nil, errors.New("broker url not found")
 	}
 
-	publisher, err := pubsub.NewPublisher(nats.PublisherConfig{
+	// Parse broker URL to check for JetStream configuration
+	// The URL format should be: nats://host:port?jetstream=true
+	// or nats://host:port/topic?jetstream=true (topic is ignored for publisher)
+	publisherConfig := nats.PublisherConfig{
 		URL: brokerUrl,
-	}, wmLogger)
+	}
+
+	// Check if JetStream is enabled in the URL
+	if brokerConfig.GetDefault().GetType() == "nats" {
+		// Use same JetStream configuration as watermill server
+		// This ensures publisher and subscriber are compatible
+		if strings.Contains(brokerUrl, "jetstream=true") {
+			publisherConfig.JetStream = nats.JetStreamConfig{
+				Disabled: false,
+			}
+		}
+	}
+
+	publisher, err := pubsub.NewPublisher(publisherConfig, wmLogger)
 	if err != nil {
 		return nil, fmt.Errorf("failed to create NATS publisher: %w", err)
 	}

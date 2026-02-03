@@ -170,7 +170,7 @@ func (s *PolicySyncer) Sync(ctx context.Context) error {
 		return fmt.Errorf("failed to fetch policies: %w", err)
 	}
 
-	s.log.WithContext(ctx).Infof("Fetched %d access rules and %d grouping rules.",
+	s.log.WithContext(ctx).Infof("DIAGNOSIS: Fetched %d access rules ('p' rules) and %d grouping rules ('g' rules) from provider.",
 		len(resp.GetAccessRules()), len(resp.GetGroupingRules()))
 
 	// 2. Atomically clear all existing policies by calling ClearPolicies without arguments.

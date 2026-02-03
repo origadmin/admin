@@ -20,6 +20,7 @@ import (
 )
 
 import (
+	_ "github.com/lib/pq"
 	_ "github.com/origadmin/contrib/config/consul"
 	_ "github.com/origadmin/contrib/registry/consul"
 	_ "github.com/sqlite3ent/sqlite3"
