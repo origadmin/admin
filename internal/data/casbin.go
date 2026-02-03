@@ -22,6 +22,8 @@ import (
 )
 
 // CasbinAdapter implements the casbin persist.UpdatableAdapter for ent.
+// Its sole responsibility is to act as a persistence layer for a Casbin Enforcer.
+// It should not contain business logic or custom data manipulation methods.
 type CasbinAdapter struct {
 	ctx      context.Context
 	db       *ent.Database
@@ -48,8 +50,8 @@ func NewAdapter(ctx context.Context, db *ent.Database, logger log.Logger) (*Casb
 	}, nil
 }
 
-// NewAdapterWithApp creates a new casbin adapter.
-func NewAdapterWithApp(app *runtime.App, db *ent.Database) (*CasbinAdapter, error) {
+// NewAdapterFromApp creates a new casbin adapter.
+func NewAdapterFromApp(app *runtime.App, db *ent.Database) (*CasbinAdapter, error) {
 	return &CasbinAdapter{
 		ctx: app.Context(),
 		db:  db,
@@ -57,15 +59,10 @@ func NewAdapterWithApp(app *runtime.App, db *ent.Database) (*CasbinAdapter, erro
 	}, nil
 }
 
-// Context returns the context of the adapter.
-func (a *CasbinAdapter) Context() context.Context {
-	return a.ctx
-}
-
 // LoadPolicy loads all policy rules from the storage.
 func (a *CasbinAdapter) LoadPolicy(m model.Model) error {
-	client := a.db.CasbinRule(a.Context())
-	policies, err := client.Query().Order(ent.Asc("id")).All(a.Context())
+	client := a.db.CasbinRule(a.ctx)
+	policies, err := client.Query().Order(ent.Asc("id")).All(a.ctx)
 	if err != nil {
 		return err
 	}
@@ -76,14 +73,13 @@ func (a *CasbinAdapter) LoadPolicy(m model.Model) error {
 }
 
 // LoadFilteredPolicy loads only policy rules that match the filter.
-// Filter parameter here is a Filter structure
 func (a *CasbinAdapter) LoadFilteredPolicy(model model.Model, filter interface{}) error {
 	filterValue, ok := filter.(Filter)
 	if !ok {
 		return fmt.Errorf("invalid filter type: %v", reflect.TypeOf(filter))
 	}
 
-	session := a.db.CasbinRule(a.Context()).Query()
+	session := a.db.CasbinRule(a.ctx).Query()
 	if len(filterValue.Ptype) != 0 {
 		session.Where(casbinrule.PtypeIn(filterValue.Ptype...))
 	}
@@ -126,7 +122,7 @@ func (a *CasbinAdapter) IsFiltered() bool {
 
 // SavePolicy saves all policy rules to the storage.
 func (a *CasbinAdapter) SavePolicy(model model.Model) error {
-	return a.db.Tx(a.Context(), func(ctx context.Context) error {
+	return a.db.Tx(a.ctx, func(ctx context.Context) error {
 		cr := a.db.CasbinRule(ctx)
 		if _, err := cr.Delete().Exec(ctx); err != nil {
 			return err
@@ -149,7 +145,7 @@ func (a *CasbinAdapter) SavePolicy(model model.Model) error {
 
 // AddPolicy adds a policy rule to the storage.
 func (a *CasbinAdapter) AddPolicy(_ string, ptype string, rule []string) error {
-	return a.db.Tx(a.Context(), func(ctx context.Context) error {
+	return a.db.Tx(a.ctx, func(ctx context.Context) error {
 		cr := a.db.CasbinRule(ctx)
 		_, err := savePolicyLine(cr, ptype, rule).Save(ctx)
 		return err
@@ -158,7 +154,7 @@ func (a *CasbinAdapter) AddPolicy(_ string, ptype string, rule []string) error {
 
 // AddPolicies adds multiple policy rules to the storage.
 func (a *CasbinAdapter) AddPolicies(_ string, ptype string, rules [][]string) error {
-	return a.db.Tx(a.Context(), func(ctx context.Context) error {
+	return a.db.Tx(a.ctx, func(ctx context.Context) error {
 		cr := a.db.CasbinRule(ctx)
 		lines := make([]*ent.CasbinRuleCreate, len(rules))
 		for i, rule := range rules {
@@ -171,14 +167,14 @@ func (a *CasbinAdapter) AddPolicies(_ string, ptype string, rules [][]string) er
 
 // UpdatePolicy updates a policy rule from storage.
 func (a *CasbinAdapter) UpdatePolicy(_ string, ptype string, oldRule []string, newRule []string) error {
-	return a.db.Tx(a.Context(), func(ctx context.Context) error {
+	return a.db.Tx(a.ctx, func(ctx context.Context) error {
 		return a.updatePolicyInTx(ctx, ptype, oldRule, newRule)
 	})
 }
 
 // UpdatePolicies updates multiple policy rules from storage.
 func (a *CasbinAdapter) UpdatePolicies(_ string, ptype string, oldRules [][]string, newRules [][]string) error {
-	return a.db.Tx(a.Context(), func(ctx context.Context) error {
+	return a.db.Tx(a.ctx, func(ctx context.Context) error {
 		if len(oldRules) != len(newRules) {
 			return fmt.Errorf("old and new rules must have the same length")
 		}
@@ -202,7 +198,7 @@ func (a *CasbinAdapter) updatePolicyInTx(ctx context.Context, ptype string, oldR
 	}
 	newValues := instanceLine(ptype, newRule)
 
-	count, err := cr.Update().
+	_, err = cr.Update().
 		Where(oldFilter...).
 		SetV0(newValues.V0).
 		SetV1(newValues.V1).
@@ -211,19 +207,13 @@ func (a *CasbinAdapter) updatePolicyInTx(ctx context.Context, ptype string, oldR
 		SetV4(newValues.V4).
 		SetV5(newValues.V5).
 		Save(ctx)
-	if err != nil {
-		return err
-	}
-	if count == 0 {
-		return fmt.Errorf("policy to update not found")
-	}
-	return nil
+	return err
 }
 
 // UpdateFilteredPolicies updates policy rules that match the filter from storage.
 func (a *CasbinAdapter) UpdateFilteredPolicies(_ string, ptype string, newRules [][]string, fieldIndex int, fieldValues ...string) ([][]string, error) {
 	var oldPolicies [][]string
-	err := a.db.Tx(a.Context(), func(ctx context.Context) error {
+	err := a.db.Tx(a.ctx, func(ctx context.Context) error {
 		cr := a.db.CasbinRule(ctx)
 		filter, err := buildFilteredFilter(ptype, fieldIndex, fieldValues...)
 		if err != nil {
@@ -254,7 +244,7 @@ func (a *CasbinAdapter) UpdateFilteredPolicies(_ string, ptype string, newRules 
 
 // RemovePolicy removes a policy rule from the storage.
 func (a *CasbinAdapter) RemovePolicy(_ string, ptype string, rule []string) error {
-	return a.db.Tx(a.Context(), func(ctx context.Context) error {
+	return a.db.Tx(a.ctx, func(ctx context.Context) error {
 		cr := a.db.CasbinRule(ctx)
 		filter, err := buildInstanceFilter(ptype, rule)
 		if err != nil {
@@ -269,7 +259,7 @@ func (a *CasbinAdapter) RemovePolicy(_ string, ptype string, rule []string) erro
 
 // RemovePolicies removes multiple policy rules from the storage.
 func (a *CasbinAdapter) RemovePolicies(_ string, ptype string, rules [][]string) error {
-	return a.db.Tx(a.Context(), func(ctx context.Context) error {
+	return a.db.Tx(a.ctx, func(ctx context.Context) error {
 		cr := a.db.CasbinRule(ctx)
 		for _, rule := range rules {
 			filter, err := buildInstanceFilter(ptype, rule)
@@ -286,7 +276,7 @@ func (a *CasbinAdapter) RemovePolicies(_ string, ptype string, rules [][]string)
 
 // RemoveFilteredPolicy removes policy rules that match the filter from the storage.
 func (a *CasbinAdapter) RemoveFilteredPolicy(_ string, ptype string, fieldIndex int, fieldValues ...string) error {
-	return a.db.Tx(a.Context(), func(ctx context.Context) error {
+	return a.db.Tx(a.ctx, func(ctx context.Context) error {
 		cr := a.db.CasbinRule(ctx)
 		cond, err := buildFilteredFilter(ptype, fieldIndex, fieldValues...)
 		if err != nil {
@@ -299,26 +289,9 @@ func (a *CasbinAdapter) RemoveFilteredPolicy(_ string, ptype string, fieldIndex 
 	})
 }
 
-// RemovePoliciesByFields removes policies that match a given set of field filters.
-// This is a custom, generic method for the adapter.
-func (a *CasbinAdapter) RemovePoliciesByFields(ptype string, filters map[string]string) error {
-	return a.db.Tx(a.Context(), func(ctx context.Context) error {
-		cr := a.db.CasbinRule(ctx)
-		preds, err := buildPredicatesFromFilters(ptype, filters)
-		if err != nil {
-			return err
-		}
-		if _, err := cr.Delete().Where(preds...).Exec(ctx); err != nil {
-			return err
-		}
-		return nil
-	})
-}
-
 // --- Helper Functions ---
 
 // policyToRule converts a CasbinRule entity to a string slice representing the rule.
-// It returns all V0-V5 fields, even if they are empty, to maintain consistency with the database schema.
 func policyToRule(p *ent.CasbinRule) []string {
 	return []string{p.V0, p.V1, p.V2, p.V3, p.V4, p.V5}
 }
@@ -354,7 +327,10 @@ func savePolicyLine(cr *ent.CasbinRuleClient, ptype string, rule []string) *ent.
 
 // buildPredicatesFromFilters constructs a slice of predicates from a map of field filters.
 func buildPredicatesFromFilters(ptype string, filters map[string]string) ([]predicate.CasbinRule, error) {
-	preds := []predicate.CasbinRule{casbinrule.PtypeEQ(ptype)}
+	var preds []predicate.CasbinRule
+	if ptype != "" {
+		preds = append(preds, casbinrule.PtypeEQ(ptype))
+	}
 	for field, value := range filters {
 		pred, err := appendVnEQPredicate(field, value)
 		if err != nil {
@@ -445,7 +421,7 @@ func loadPolicyLine(line *ent.CasbinRule, model model.Model) {
 
 	// Join the tokens to form the policy line text.
 	lineText := line.Ptype + ", " + strings.Join(rule, ", ")
-	persist.LoadPolicyLine(lineText, model)
+	_ = persist.LoadPolicyLine(lineText, model)
 }
 
 var _ persist.UpdatableAdapter = (*CasbinAdapter)(nil)

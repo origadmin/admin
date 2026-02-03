@@ -17,6 +17,60 @@ servers:
     - url: http://localhost:8000
     - url: https://localhost:8000
 paths:
+  /api/v1/auth/admin/enforcer/policies:
+    get:
+      tags:
+        - AdminService
+      description: "GetEnforcerPolicies retrieves all policy rules currently loaded into the Casbin Enforcer's memory.\r\n This is primarily for debugging and auditing purposes."
+      operationId: AdminService_GetEnforcerPolicies
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/api.v1.services.auth.EnforcerPoliciesResponse'
+        default:
+          description: Default error response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/google.rpc.Status'
+  /api/v1/auth/admin/sync:
+    post:
+      tags:
+        - AdminService
+      description: "ForcePolicySync triggers an immediate, full synchronization of all authorization policies.\r\n This bypasses any debouncing or scheduled syncs and is a high-risk operation."
+      operationId: AdminService_ForcePolicySync
+      responses:
+        "200":
+          description: OK
+          content: { }
+        default:
+          description: Default error response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/google.rpc.Status'
+  /api/v1/auth/admin/sync/status:
+    get:
+      tags:
+        - AdminService
+      description: GetPolicySyncStatus retrieves the current status and metrics of the policy synchronization service.
+      operationId: AdminService_GetPolicySyncStatus
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/api.v1.services.auth.PolicySyncStatusResponse'
+        default:
+          description: Default error response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/google.rpc.Status'
     /auth/captcha:
         get:
             tags:
@@ -141,65 +195,6 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/api.v1.services.auth.RegisterResponse'
-                default:
-                    description: Default error response
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/google.rpc.Status'
-    /casbin/groupings:
-        get:
-            tags:
-                - CasbinService
-            operationId: CasbinService_ListGroupings
-            responses:
-                "200":
-                    description: OK
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/api.v1.services.auth.ListGroupingsResponse'
-                default:
-                    description: Default error response
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/google.rpc.Status'
-    /casbin/policies:
-        get:
-            tags:
-                - CasbinService
-            operationId: CasbinService_ListPolicies
-            responses:
-                "200":
-                    description: OK
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/api.v1.services.auth.ListPoliciesResponse'
-                default:
-                    description: Default error response
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/google.rpc.Status'
-    /casbin/watch:
-        get:
-            tags:
-                - CasbinService
-            operationId: CasbinService_WatchUpdate
-            parameters:
-                - name: last_modified
-                  in: query
-                  schema:
-                    type: string
-            responses:
-                "200":
-                    description: OK
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/api.v1.services.auth.WatchUpdateResponse'
                 default:
                     description: Default error response
                     content:
@@ -1997,6 +1992,24 @@ paths:
                                 $ref: '#/components/schemas/google.rpc.Status'
 components:
     schemas:
+      api.v1.services.auth.CasbinRule:
+        type: object
+        properties:
+          ptype:
+            type: string
+          v:
+            type: array
+            items:
+              type: string
+        description: CasbinRule represents a single policy rule (p-rule or g-rule) from the Casbin Enforcer.
+      api.v1.services.auth.EnforcerPoliciesResponse:
+        type: object
+        properties:
+          policies:
+            type: array
+            items:
+              $ref: '#/components/schemas/api.v1.services.auth.CasbinRule'
+        description: EnforcerPoliciesResponse contains all policy rules loaded into the Casbin Enforcer's memory.
         api.v1.services.auth.GetCaptchaResponse:
             type: object
             properties:
@@ -2032,22 +2045,6 @@ components:
                     items:
                         $ref: '#/components/schemas/api.v1.services.types.Role'
             description: The response message for the GetUserRoles RPC.
-        api.v1.services.auth.GroupingRule:
-            type: object
-            properties:
-                p_type:
-                    type: string
-                params:
-                    type: array
-                    items:
-                        type: string
-        api.v1.services.auth.ListGroupingsResponse:
-            type: object
-            properties:
-                rules:
-                    type: array
-                    items:
-                        $ref: '#/components/schemas/api.v1.services.auth.GroupingRule'
         api.v1.services.auth.ListMyViewsResponse:
             type: object
             properties:
@@ -2056,13 +2053,6 @@ components:
                     items:
                         $ref: '#/components/schemas/api.v1.services.types.View'
             description: The response message for the ListMyViews RPC.
-        api.v1.services.auth.ListPoliciesResponse:
-            type: object
-            properties:
-                rules:
-                    type: array
-                    items:
-                        $ref: '#/components/schemas/api.v1.services.auth.PolicyRule'
         api.v1.services.auth.LoginRequest:
             type: object
             properties:
@@ -2097,15 +2087,28 @@ components:
             type: object
             properties: {}
             description: The response message for the Logout RPC.
-        api.v1.services.auth.PolicyRule:
+      api.v1.services.auth.PolicySyncStatusResponse:
             type: object
             properties:
-                p_type:
+              sync_pending:
+                type: boolean
+              last_sync_time:
+                type: string
+                format: date-time
+              last_sync_duration:
                     type: string
-                params:
-                    type: array
-                    items:
-                        type: string
+              total_events:
+                type: string
+              successful_syncs:
+                type: string
+              failed_syncs:
+                type: string
+              duplicate_events:
+                type: string
+              failure_rate:
+                type: number
+                format: double
+            description: PolicySyncStatusResponse contains the status and metrics of the policy synchronization service.
         api.v1.services.auth.RefreshTokenRequest:
             type: object
             properties:
@@ -2166,11 +2169,6 @@ components:
             type: object
             properties: {}
             description: The response message for the UpdateProfile RPC.
-        api.v1.services.auth.WatchUpdateResponse:
-            type: object
-            properties:
-                modified_date:
-                    type: string
         api.v1.services.datastore.CreateDatastoreResponse:
             type: object
             properties:
@@ -3432,10 +3430,10 @@ components:
             name: Authorization
             in: header
 tags:
+  - name: AdminService
+    description: "AdminService provides administrative and operational endpoints for the auth service.\r\n These endpoints are intended for system administrators, operators, and for use in testing."
     - name: AuthService
       description: Service AuthService provides APIs for the authentication lifecycle.
-    - name: CasbinService
-      description: The Casbin service definition.
     - name: DatastoreService
       description: The data service definition.
     - name: DepartmentService

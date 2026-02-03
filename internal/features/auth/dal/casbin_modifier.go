@@ -47,26 +47,21 @@ func (m *casbinModifier) RemoveRoles(ctx context.Context, subject string, roles 
 
 	// If no specs are provided, remove all roles for the subject across all domains.
 	if len(roles) == 0 {
-		filters := map[string]string{"v0": subject}
-		err := m.adapter.RemovePoliciesByFields("g", filters)
+		err := m.adapter.RemoveFilteredPolicy("", "g", 0, subject)
 		return m.handleAdapterResult(ctx, err)
 	}
 
 	// Process each spec as a separate filter.
 	var firstErr error
 	for _, r := range roles {
-		filters := map[string]string{"v0": subject}
+		args := []string{subject}
 		if r.Role != "" {
-			filters["v1"] = r.Role
+			args = append(args, r.Role)
+			if r.Domain != "" {
+				args = append(args, r.Domain)
+			}
 		}
-		// Only filter by domain if it is explicitly provided (even if it's an empty string).
-		// If r.Domain is empty, this condition will be false, meaning no domain filter is applied,
-		// which correctly implies "all domains".
-		if r.Domain != "" {
-			filters["v2"] = r.Domain
-		}
-
-		err := m.adapter.RemovePoliciesByFields("g", filters)
+		err := m.adapter.RemoveFilteredPolicy("", "g", 0, args...)
 		if err != nil && firstErr == nil {
 			firstErr = err
 		}
@@ -102,31 +97,15 @@ func (m *casbinModifier) AddPermissions(ctx context.Context, subject string, per
 func (m *casbinModifier) RemovePermissions(ctx context.Context, subject string, permissions ...authz.RuleSpec) (bool, error) {
 	m.log.WithContext(ctx).Debugf("Removing permissions for subject: %s", subject)
 
-	// If no specs are provided, remove all permissions for the subject across all domains.
 	if len(permissions) == 0 {
-		filters := map[string]string{"v0": subject}
-		err := m.adapter.RemovePoliciesByFields("p", filters)
+		err := m.adapter.RemoveFilteredPolicy("", "p", 0, subject)
 		return m.handleAdapterResult(ctx, err)
 	}
 
-	// Process each spec as a separate filter.
 	var firstErr error
 	for _, p := range permissions {
-		filters := map[string]string{"v0": subject}
-		// Only filter by domain if it is explicitly provided (even if it's an empty string).
-		// If p.Domain is empty, this condition will be false, meaning no domain filter is applied,
-		// which correctly implies "all domains".
-		if p.Domain != "" {
-			filters["v1"] = p.Domain
-		}
-		if p.Resource != "" {
-			filters["v2"] = p.Resource
-		}
-		if p.Action != "" {
-			filters["v3"] = p.Action
-		}
-
-		err := m.adapter.RemovePoliciesByFields("p", filters)
+		args := []string{subject, p.Domain, p.Resource, p.Action}
+		err := m.adapter.RemoveFilteredPolicy("", "p", 0, args...)
 		if err != nil && firstErr == nil {
 			firstErr = err
 		}
@@ -144,7 +123,6 @@ func (m *casbinModifier) UpdatePermission(ctx context.Context, subject string, o
 	return m.handleAdapterResult(ctx, err)
 }
 
-// ClearPolicies implements the extended ClearPolicies interface.
 func (m *casbinModifier) ClearPolicies(ctx context.Context, subjects ...string) (bool, error) {
 	// Case 1: No subjects provided, which means clear ALL policies.
 	if len(subjects) == 0 {
@@ -167,28 +145,21 @@ func (m *casbinModifier) ClearPolicies(ctx context.Context, subjects ...string) 
 
 	// Case 2: One or more subjects are provided, clear policies for each one.
 	m.log.WithContext(ctx).Debugf("Clearing all policies for subjects: %v", subjects)
-	var overallResult bool
 	var firstErr error
 	for _, subject := range subjects {
-		// Remove all role assignments (g-rules) for the subject
-		filters := map[string]string{"v0": subject}
-		okG, handledErrG := m.handleAdapterResult(ctx, m.adapter.RemovePoliciesByFields("g", filters))
+		// Remove all g-rules for subject
+		errG := m.adapter.RemoveFilteredPolicy("", "g", 0, subject)
+		// Remove all p-rules for subject
+		errP := m.adapter.RemoveFilteredPolicy("", "p", 0, subject)
 
-		// Remove all permission grants (p-rules) for the subject
-		okP, handledErrP := m.handleAdapterResult(ctx, m.adapter.RemovePoliciesByFields("p", filters))
-
-		if handledErrG != nil && firstErr == nil {
-			firstErr = handledErrG
+		if errG != nil && firstErr == nil {
+			firstErr = errG
 		}
-		if handledErrP != nil && firstErr == nil {
-			firstErr = handledErrP
-		}
-		if okG || okP {
-			overallResult = true
+		if errP != nil && firstErr == nil {
+			firstErr = errP
 		}
 	}
-
-	return overallResult, firstErr
+	return m.handleAdapterResult(ctx, firstErr)
 }
 
 // handleAdapterResult interprets the adapter's result.

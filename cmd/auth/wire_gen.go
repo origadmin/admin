@@ -68,12 +68,11 @@ func wireApp(app *runtime.App, bootstrap *conf.Config) (*kratos.App, func(), err
 	meRepo := dal.NewMeRepo(database, v)
 	meUseCase := biz.NewMeUseCase(meRepo, v)
 	meService := service.NewMeService(meUseCase)
-	casbinAdapter, err := data.NewAdapterWithApp(app, database)
+	casbinAdapter, err := data.NewAdapterFromApp(app, database)
 	if err != nil {
 		cleanup()
 		return nil, nil, err
 	}
-	casbinService := service.NewCasbinService(casbinAdapter, v)
 	watcher, err := providers.ProvideWatcher(app, bootstrap)
 	if err != nil {
 		cleanup()
@@ -108,7 +107,7 @@ func wireApp(app *runtime.App, bootstrap *conf.Config) (*kratos.App, func(), err
 		cleanup()
 		return nil, nil, err
 	}
-	v2, err := server.NewServers(app, servers, authService, meService, casbinService, policySyncService, serverMiddlewareProvider)
+	v2, err := server.NewServers(app, servers, authService, meService, policySyncService, serverMiddlewareProvider)
 	if err != nil {
 		cleanup()
 		return nil, nil, err
