@@ -157,3 +157,34 @@ func (r *authorizationRepo) ListUserRoles(ctx context.Context) ([]*types.UserRol
 
 	return dtos, nil
 }
+
+// ListAllPolicies retrieves all role permissions and user roles in a single, atomic operation.
+func (r *authorizationRepo) ListAllPolicies(ctx context.Context) ([]*types.RolePermission, []*types.UserRole, error) {
+	var rolePerms []*types.RolePermission
+	var userRoles []*types.UserRole
+
+	// Execute both queries within a single read-only transaction to ensure data consistency.
+	// The 'ent' database wrapper handles transaction context propagation.
+	err := r.db.Tx(ctx, func(txCtx context.Context) error {
+		var err error
+
+		// Reuse existing methods, passing the transaction context.
+		rolePerms, err = r.ListRolePermissions(txCtx)
+		if err != nil {
+			return err
+		}
+
+		userRoles, err = r.ListUserRoles(txCtx)
+		if err != nil {
+			return err
+		}
+
+		return nil
+	})
+
+	if err != nil {
+		return nil, nil, err
+	}
+
+	return rolePerms, userRoles, nil
+}

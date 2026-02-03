@@ -42,6 +42,10 @@ paths:
         - AdminService
       description: "ForcePolicySync triggers an immediate, full synchronization of all authorization policies.\r\n This bypasses any debouncing or scheduled syncs and is a high-risk operation."
       operationId: AdminService_ForcePolicySync
+      requestBody:
+        content:
+          application/json: { }
+        required: true
       responses:
         "200":
           description: OK

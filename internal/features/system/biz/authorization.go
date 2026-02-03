@@ -33,13 +33,9 @@ func NewAuthorizationUseCase(repo dto.AuthorizationRepo, logger log.Logger) *Aut
 func (uc *AuthorizationUseCase) ListAllPolicies(ctx context.Context) (*systemv1.ListAllPoliciesResponse, error) {
 	uc.log.WithContext(ctx).Info("Listing all policies")
 
-	// 1. Fetch protobuf data directly from the repository.
-	rolePerms, err := uc.repo.ListRolePermissions(ctx)
-	if err != nil {
-		return nil, err // Error is already logged in the DAL layer
-	}
-
-	userRoles, err := uc.repo.ListUserRoles(ctx)
+	// 1. Fetch protobuf data directly from the repository in a single atomic transaction.
+	// This ensures that we get a consistent snapshot of role permissions and user roles.
+	rolePerms, userRoles, err := uc.repo.ListAllPolicies(ctx)
 	if err != nil {
 		return nil, err // Error is already logged in the DAL layer
 	}

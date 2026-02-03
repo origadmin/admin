@@ -19,4 +19,8 @@ type AuthorizationRepo interface {
 	ListRolesByIDs(ctx context.Context, ids ...int64) ([]*types.Role, error)
 	ListPermissionsByIDs(ctx context.Context, ids ...int64) ([]*types.Permission, error)
 	ListUserRoles(ctx context.Context) ([]*types.UserRole, error)
+
+	// ListAllPolicies retrieves all role permissions and user roles in a single, atomic operation.
+	// This ensures data consistency for full policy synchronization.
+	ListAllPolicies(ctx context.Context) ([]*types.RolePermission, []*types.UserRole, error)
 }

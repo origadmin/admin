@@ -95,6 +95,7 @@ var ProviderGatewaySet = wire.NewSet(
 var ProviderBackendSet = wire.NewSet(
 	ProviderCommonSet,
 	ProvideAuthorizer,
+	wire.Bind(new(authz.Reloader), new(*casbin.Authorizer)), // Bind Authorizer to Reloader interface
 	ProvideWatcher,
 	ProvideAuthenticator,                                        // Provides *jwt.Authenticator
 	wire.Bind(new(credential.Creator), new(*jwt.Authenticator)), // Binds the interface

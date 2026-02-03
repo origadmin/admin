@@ -7,11 +7,20 @@ package biz
 import (
 	"context"
 	"fmt"
+	"sync"
+	"sync/atomic"
+	"time"
+
+	"google.golang.org/protobuf/types/known/timestamppb"
 
 	"github.com/origadmin/contrib/security/authz"
 	"github.com/origadmin/runtime/log"
-
+	authv1 "origadmin/application/admin/api/v1/services/auth"
 	systempb "origadmin/application/admin/api/v1/services/system"
+)
+
+const (
+	DefaultReloadDelay = 2 * time.Second
 )
 
 // PolicyProvider defines the interface for fetching the source-of-truth policies
@@ -23,20 +32,129 @@ type PolicyProvider interface {
 }
 
 // PolicySyncer is responsible for synchronizing policies from a PolicyProvider
-// to a PolicyModifier. Its logic is greatly simplified because the provider
-// now returns ready-to-use generic policy rules.
+// to a PolicyModifier. It also manages the synchronization schedule and metrics.
 type PolicySyncer struct {
-	provider PolicyProvider
-	modifier authz.PolicyModifier
-	log      *log.Helper
+	provider    PolicyProvider
+	modifier    authz.PolicyModifier
+	reloader    authz.Reloader
+	log         *log.Helper
+	reloadDelay time.Duration
+	reloadMu    sync.Mutex
+	reloadTimer *time.Timer
+
+	// Metrics
+	lastSyncTime     atomic.Value // time.Time
+	lastSyncDuration atomic.Int64 // milliseconds
+	totalEvents      atomic.Int64
+	successfulSyncs  atomic.Int64
+	failedSyncs      atomic.Int64
 }
 
 // NewPolicySyncer creates a new PolicySyncer.
-func NewPolicySyncer(provider PolicyProvider, modifier authz.PolicyModifier, logger log.Logger) *PolicySyncer {
+func NewPolicySyncer(provider PolicyProvider, modifier authz.PolicyModifier, reloader authz.Reloader, logger log.Logger) *PolicySyncer {
 	return &PolicySyncer{
-		provider: provider,
-		modifier: modifier,
-		log:      log.NewHelper(log.With(logger, "module", "auth.biz.policy_syncer")),
+		provider:    provider,
+		modifier:    modifier,
+		reloader:    reloader,
+		log:         log.NewHelper(log.With(logger, "module", "auth.biz.policy_syncer")),
+		reloadDelay: DefaultReloadDelay,
+	}
+}
+
+// ScheduleFullSync schedules a delayed full synchronization with debounce logic.
+func (s *PolicySyncer) ScheduleFullSync() {
+	s.totalEvents.Add(1)
+	s.reloadMu.Lock()
+	defer s.reloadMu.Unlock()
+
+	if s.reloadTimer != nil {
+		s.reloadTimer.Stop()
+	}
+
+	s.reloadTimer = time.AfterFunc(s.reloadDelay, func() {
+		s.DoFullSyncAndReload()
+	})
+
+	s.log.Debugf("Full policy sync scheduled in %v", s.reloadDelay)
+}
+
+// ForceSync triggers an immediate full policy synchronization, bypassing the debounce timer.
+func (s *PolicySyncer) ForceSync(ctx context.Context) error {
+	s.log.Info("Force triggering policy sync (manual request)")
+
+	// Cancel any pending scheduled sync
+	s.reloadMu.Lock()
+	if s.reloadTimer != nil {
+		s.reloadTimer.Stop()
+		s.reloadTimer = nil
+	}
+	s.reloadMu.Unlock()
+
+	// Execute sync immediately
+	s.DoFullSyncAndReload()
+	return nil
+}
+
+// DoFullSyncAndReload performs a full synchronization of all policies and reloads the enforcer.
+func (s *PolicySyncer) DoFullSyncAndReload() {
+	s.reloadMu.Lock()
+	defer s.reloadMu.Unlock()
+
+	s.reloadTimer = nil
+
+	s.log.Info("Executing full policy synchronization...")
+	start := time.Now()
+	ctx := context.Background()
+
+	if err := s.Sync(ctx); err != nil {
+		s.failedSyncs.Add(1)
+		s.log.Errorf("Failed to perform full policy synchronization: %v", err)
+		return
+	}
+
+	if err := s.reloader.Reload(); err != nil {
+		s.failedSyncs.Add(1)
+		s.log.Errorf("Failed to reload policies after full sync: %v", err)
+		return
+	}
+
+	duration := time.Since(start).Milliseconds()
+	s.lastSyncDuration.Store(duration)
+	s.lastSyncTime.Store(time.Now())
+	s.successfulSyncs.Add(1)
+	s.log.Infof("Full policy synchronization completed successfully in %dms", duration)
+}
+
+// GetMetrics returns the current status and metrics of the syncer.
+func (s *PolicySyncer) GetMetrics() *authv1.PolicySyncStatusResponse {
+	s.reloadMu.Lock()
+	pending := s.reloadTimer != nil
+	s.reloadMu.Unlock()
+
+	lastTime, _ := s.lastSyncTime.Load().(time.Time)
+	var lastTimeProto *timestamppb.Timestamp
+	if !lastTime.IsZero() {
+		lastTimeProto = timestamppb.New(lastTime)
+	}
+
+	total := s.totalEvents.Load()
+	failed := s.failedSyncs.Load()
+	var failureRate float64
+	if total > 0 {
+		totalSyncs := s.successfulSyncs.Load() + failed
+		if totalSyncs > 0 {
+			failureRate = float64(failed) / float64(totalSyncs) * 100
+		}
+	}
+
+	return &authv1.PolicySyncStatusResponse{
+		SyncPending:      pending,
+		LastSyncTime:     lastTimeProto,
+		LastSyncDuration: s.lastSyncDuration.Load(),
+		TotalEvents:      total,
+		SuccessfulSyncs:  s.successfulSyncs.Load(),
+		FailedSyncs:      failed,
+		FailureRate:      failureRate,
 	}
 }
 

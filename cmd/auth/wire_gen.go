@@ -68,7 +68,23 @@ func wireApp(app *runtime.App, bootstrap *conf.Config) (*kratos.App, func(), err
 	meRepo := dal.NewMeRepo(database, v)
 	meUseCase := biz.NewMeUseCase(meRepo, v)
 	meService := service.NewMeService(meUseCase)
+	clientMiddlewareProvider, err := providers.ProvideClientMiddlewares(app)
+	if err != nil {
+		cleanup()
+		return nil, nil, err
+	}
+	authorizationServiceClient, err := client.NewAuthorizationServiceClient(app, bootstrap, clientMiddlewareProvider)
+	if err != nil {
+		cleanup()
+		return nil, nil, err
+	}
+	policyProvider := client.NewSystemPolicyProvider(authorizationServiceClient, v)
 	casbinAdapter, err := data.NewAdapterFromApp(app, database)
+	if err != nil {
+		cleanup()
+		return nil, nil, err
+	}
+	policyModifier, err := dal.NewCasbinModifier(casbinAdapter, v)
 	if err != nil {
 		cleanup()
 		return nil, nil, err
@@ -83,31 +99,16 @@ func wireApp(app *runtime.App, bootstrap *conf.Config) (*kratos.App, func(), err
 		cleanup()
 		return nil, nil, err
 	}
-	clientMiddlewareProvider, err := providers.ProvideClientMiddlewares(app)
-	if err != nil {
-		cleanup()
-		return nil, nil, err
-	}
-	authorizationServiceClient, err := client.NewAuthorizationServiceClient(app, bootstrap, clientMiddlewareProvider)
-	if err != nil {
-		cleanup()
-		return nil, nil, err
-	}
-	policyProvider := client.NewSystemPolicyProvider(authorizationServiceClient, v)
-	policyModifier, err := dal.NewCasbinModifier(casbinAdapter, v)
-	if err != nil {
-		cleanup()
-		return nil, nil, err
-	}
-	policySyncer := biz.NewPolicySyncer(policyProvider, policyModifier, v)
-	policySyncService := service.NewPolicySyncService(authorizer, policySyncer, v)
+	policySyncer := biz.NewPolicySyncer(policyProvider, policyModifier, authorizer, v)
+	adminService := service.NewAdminService(policySyncer, authorizer, v)
+	policySyncService := service.NewPolicySyncService(policySyncer, v)
 	skipper := providers.ProvideSkipper(app, bootstrap)
 	serverMiddlewareProvider, err := providers.ProvideServiceMiddlewares(app, authorizer, skipper)
 	if err != nil {
 		cleanup()
 		return nil, nil, err
 	}
-	v2, err := server.NewServers(app, servers, authService, meService, policySyncService, serverMiddlewareProvider)
+	v2, err := server.NewServers(app, servers, authService, meService, adminService, policySyncService, serverMiddlewareProvider)
 	if err != nil {
 		cleanup()
 		return nil, nil, err

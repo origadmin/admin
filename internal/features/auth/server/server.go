@@ -37,6 +37,7 @@ func NewServers(
 	cfg *transportv1.Servers,
 	authSvc *service.AuthService,
 	meSvc *service.MeService,
+	adminSvc *service.AdminService,
 	policySyncSvc *service.PolicySyncService,
 	middlewareProvider container.ServerMiddlewareProvider,
 ) ([]transport.Server, error) {
@@ -52,13 +53,13 @@ func NewServers(
 
 		switch serverCfg.GetProtocol() {
 		case "http":
-			srv, err := NewHTTPServer(app, serverCfg.GetHttp(), authSvc, meSvc, middlewareProvider)
+			srv, err := NewHTTPServer(app, serverCfg.GetHttp(), authSvc, meSvc, adminSvc, middlewareProvider)
 			if err != nil {
 				return nil, err
 			}
 			transportServers = append(transportServers, srv)
 		case "grpc":
-			srv, err := NewGRPCServer(app, serverCfg.GetGrpc(), authSvc, meSvc, middlewareProvider)
+			srv, err := NewGRPCServer(app, serverCfg.GetGrpc(), authSvc, meSvc, adminSvc, middlewareProvider)
 			if err != nil {
 				return nil, err
 			}
@@ -119,6 +120,7 @@ func NewHTTPServer(
 	cfg *httpv1.Server,
 	authSvc *service.AuthService,
 	meSvc *service.MeService,
+	adminSvc *service.AdminService,
 	provider container.ServerMiddlewareProvider,
 ) (*transport.HTTPServer, error) {
 	if cfg == nil {
@@ -140,6 +142,7 @@ func NewHTTPServer(
 
 	authv1.RegisterAuthServiceHTTPServer(srv, authSvc)
 	authv1.RegisterMeServiceHTTPServer(srv, meSvc)
+	authv1.RegisterAdminServiceHTTPServer(srv, adminSvc)
 
 	srv.WalkHandle(func(method, path string, handler stdhttp.HandlerFunc) {
 		log.Infof("HTTP %s %s", method, path)
@@ -153,6 +156,7 @@ func NewGRPCServer(
 	cfg *grpcv1.Server,
 	authSvc *service.AuthService,
 	meSvc *service.MeService,
+	adminSvc *service.AdminService,
 	provider container.ServerMiddlewareProvider,
 ) (*transport.GRPCServer, error) {
 	if cfg == nil {
@@ -173,6 +177,7 @@ func NewGRPCServer(
 
 	authv1.RegisterAuthServiceServer(srv, authSvc)
 	authv1.RegisterMeServiceServer(srv, meSvc)
+	authv1.RegisterAdminServiceServer(srv, adminSvc)
 
 	return srv, nil
 }
