@@ -26,7 +26,7 @@ servers:
     - name: "auth"
       protocol: "grpc"
       grpc:
-        addr: "0.0.0.0:9081"
+        addr: "0.0.0.0:18011"
         timeout: 5s
         middlewares:
           - "recovery"
@@ -34,7 +34,7 @@ servers:
     - name: "auth"
       protocol: "http"
       http:
-        addr: "0.0.0.0:9082"
+        addr: "0.0.0.0:18012"
         timeout: 5s
         middlewares:
           - "recovery"
@@ -43,7 +43,7 @@ servers:
     - name: "system"
       protocol: "grpc"
       grpc:
-        addr: "0.0.0.0:9001"
+        addr: "0.0.0.0:18001"
         timeout: 5s
         # Apply middlewares by name. These names must correspond to entries
         # in the middlewares.yaml configuration file.
@@ -54,7 +54,7 @@ servers:
     - name: "system"
       protocol: "http"
       http:
-        addr: "0.0.0.0:9002"
+        addr: "0.0.0.0:18002"
         timeout: 5s
         # Apply middlewares by name.
         middlewares:

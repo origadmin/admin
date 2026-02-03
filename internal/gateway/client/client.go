@@ -34,8 +34,9 @@ const (
 
 // AuthBridgeSet holds all the clients for the 'auth' service.
 type AuthBridgeSet struct {
-	Auth auth.AuthServiceHTTPServer
-	Me   auth.MeServiceHTTPServer
+	Auth  auth.AuthServiceHTTPServer
+	Me    auth.MeServiceHTTPServer
+	Admin auth.AdminServiceHTTPServer
 }
 
 // SystemBridgeSet holds all the clients for the 'system' service.
@@ -105,8 +106,9 @@ func NewAuthBridgeSet(app *runtime.App, bootstrap *conf.Config, middlewareProvid
 		return nil, err
 	}
 	return &AuthBridgeSet{
-		Auth: auth.NewAuthServiceGRPC2HTTP(conn),
-		Me:   auth.NewMeServiceGRPC2HTTP(conn),
+		Auth:  auth.NewAuthServiceGRPC2HTTP(conn),
+		Me:    auth.NewMeServiceGRPC2HTTP(conn),
+		Admin: auth.NewAdminServiceGRPC2HTTP(conn),
 	}, nil
 }
 

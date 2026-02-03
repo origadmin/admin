@@ -10,13 +10,14 @@ import (
 	"github.com/go-kratos/kratos/v2"
 	"github.com/go-kratos/kratos/v2/transport"
 	"github.com/joho/godotenv"
-	_ "github.com/sqlite3ent/sqlite3" // Import for sqlite3 driver
+	_ "github.com/lib/pq"
 
 	_ "github.com/origadmin/contrib/config/consul"
 	_ "github.com/origadmin/contrib/registry/consul"
 	"github.com/origadmin/runtime"
 	runtimebootstrap "github.com/origadmin/runtime/bootstrap"
 	"github.com/origadmin/runtime/log"
+	_ "github.com/sqlite3ent/sqlite3"
 	"origadmin/application/admin/internal/conf"
 	_ "origadmin/application/admin/internal/data/entity/ent/runtime"
 	confhelper "origadmin/application/admin/internal/helpers/conf"

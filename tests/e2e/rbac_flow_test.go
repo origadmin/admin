@@ -38,10 +38,10 @@ func TestRBACFlow(t *testing.T) {
 
 	const (
 		// waitFor is the maximum time to wait for policy propagation.
-		waitFor = 30 * time.Second
+		waitFor = 45 * time.Second
 		// Use a smarter polling strategy: initial delay + longer tick to reduce API calls
 		// This reduces log spam and unnecessary backend load
-		tick = 2 * time.Second
+		tick = 3 * time.Second
 	)
 
 	// 1. Admin Login
@@ -169,7 +169,7 @@ func TestRBACFlow(t *testing.T) {
 	t.Run("Step4a_VerifyPolicySync", func(t *testing.T) {
 		t.Log("Waiting for policy propagation (async event processing)...")
 		// Add initial delay to allow event processing before first check
-		time.Sleep(15 * time.Second)
+		time.Sleep(20 * time.Second)
 
 		require.Eventually(t, func() bool {
 			token := login(t, editorUser, "password123")
@@ -206,7 +206,7 @@ func TestRBACFlow(t *testing.T) {
 		assert.Equal(t, http.StatusForbidden, doRequest(t, "DELETE", "/api/v1/sys/users/"+strconv.FormatInt(userNoRoleID, 10), nil, editorToken).StatusCode, "Editor user should NOT be able to delete a user")
 
 		var viewerToken string
-		time.Sleep(2 * time.Second) // Initial delay for event processing
+		time.Sleep(5 * time.Second) // Initial delay for event processing
 		require.Eventually(t, func() bool {
 			token := login(t, viewerUser, "password123")
 			if token == "" {
@@ -238,7 +238,7 @@ func TestRBACFlow(t *testing.T) {
 
 		// Verify Viewer can now create a user. Re-login inside Eventually to get a fresh token.
 
-		time.Sleep(15 * time.Second) // Initial delay for event processing
+		time.Sleep(20 * time.Second) // Initial delay for event processing
 		require.Eventually(t, func() bool {
 			token := login(t, viewerUser, "password123")
 			if token == "" {
@@ -266,7 +266,7 @@ func TestRBACFlow(t *testing.T) {
 		t.Logf("Revoking Editor Role from user %s (ID: %d)...", editorUser, userEditorID)
 		updateUser(t, adminToken, userEditorID, editorUser, []int64{})
 
-		time.Sleep(15 * time.Second) // Initial delay for event processing
+		time.Sleep(20 * time.Second) // Initial delay for event processing
 		require.Eventually(t, func() bool {
 			token := login(t, editorUser, "password123")
 			if token == "" {

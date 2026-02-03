@@ -27,9 +27,12 @@ import (
 var ProviderSet = wire.NewSet(NewServers)
 
 // NewServers creates and configures the system service servers (gRPC, HTTP).
-func NewServers(app *runtime.App, cfg *transportv1.Servers, svc *service.SystemService,
-	middlwareProvider container.ServerMiddlewareProvider) ([]transport.Server,
-	error) {
+func NewServers(
+	app *runtime.App,
+	cfg *transportv1.Servers,
+	svc *service.SystemService,
+	middlewareProvider container.ServerMiddlewareProvider,
+) ([]transport.Server, error) {
 	if cfg == nil {
 		return nil, errors.New("servers config is nil")
 	}
@@ -41,19 +44,26 @@ func NewServers(app *runtime.App, cfg *transportv1.Servers, svc *service.SystemS
 		}
 		switch serverCfg.GetProtocol() {
 		case "http":
-			srv, err := NewHTTPServer(app, serverCfg.GetHttp(), svc, middlwareProvider)
+			srv, err := NewHTTPServer(app, serverCfg.GetHttp(), svc, middlewareProvider)
 			if err != nil {
 				return nil, err
 			}
 			transportServers = append(transportServers, srv)
 		case "grpc":
-			srv, err := NewGRPCServer(app, serverCfg.GetGrpc(), svc, middlwareProvider)
+			srv, err := NewGRPCServer(app, serverCfg.GetGrpc(), svc, middlewareProvider)
 			if err != nil {
 				return nil, err
 			}
 			transportServers = append(transportServers, srv)
+		case "watermill":
+			//srv, err := NewWatermillServer(app, serverCfg.GetWatermill())
+			//if err != nil {
+			//	return nil, err
+			//}
+			//transportServers = append(transportServers, srv)
 		default:
-			return nil, errors.New("protocol is not supported: " + serverCfg.GetProtocol())
+			// Gracefully ignore unsupported protocols for this service
+			log.Warnf("protocol '%s' is not supported by the system service, skipping", serverCfg.GetProtocol())
 		}
 	}
 	if len(transportServers) == 0 {

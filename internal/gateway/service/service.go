@@ -47,4 +47,5 @@ func (s *GatewayService) RegisterHTTPHandlers(srv *transport.HTTPServer) {
 	// Register handlers for the 'auth' service
 	auth.RegisterAuthServiceHTTPServer(srv, s.Auth.Auth)
 	auth.RegisterMeServiceHTTPServer(srv, s.Auth.Me)
+	auth.RegisterAdminServiceHTTPServer(srv, s.Auth.Admin)
 }

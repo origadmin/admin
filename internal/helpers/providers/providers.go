@@ -224,7 +224,34 @@ func ProvideAuthorizer(app *runtime.App, c *conf.Config, adapter *data.CasbinAda
 		return nil, err
 	}
 
-	return casbin.New(opts, app.Logger())
+	authorizer, err := casbin.New(opts, app.Logger())
+	if err != nil {
+		return nil, err
+	}
+	// --- BEGIN FIX ---
+	// Manually and explicitly set the watcher and its callback to be absolutely sure.
+	// This bypasses any potential issues in the casbin.New or WithWatcher option.
+	enforcer := authorizer.GetEnforcer()
+	if err := enforcer.SetWatcher(w); err != nil {
+		return nil, fmt.Errorf("failed to explicitly set watcher for enforcer: %w", err)
+	}
+	// We also explicitly set the callback to ensure the enforcer reloads its policy.
+	// The watcher's callback will call the enforcer's LoadPolicy method.
+	if err := w.SetUpdateCallback(func(msg string) {
+		callbackHelper := log.NewHelper(log.With(app.Logger(), "module", "casbin.watcher.callback"))
+		callbackHelper.Infof("Policy update notification received: %s. Attempting to reload policies...", msg)
+		if err := enforcer.LoadPolicy(); err != nil {
+			callbackHelper.Errorf("Failed to reload policy after watcher update: %v", err)
+		} else {
+			callbackHelper.Info("Policy reloaded successfully via watcher callback.")
+		}
+	}); err != nil {
+		return nil, fmt.Errorf("failed to explicitly set watcher callback: %w", err)
+	}
+	// --- END FIX ---
+
+	return authorizer, nil
+
 }
 
 // ProvideWatcher creates a new casbin watcher.

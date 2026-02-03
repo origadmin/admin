@@ -1,7 +1,7 @@
 # databases.yaml
 data:
   databases:
-    configs:
-      - dialect: sqlite3
-        name: default
-        source: file:./data.db?cache=shared&_fk=1
+    default:
+      name: default_postgres
+      dialect: postgres
+      source: ${DATABASE_SOURCE} # 从环境变量获取连接字符串
