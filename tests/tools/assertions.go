@@ -3,7 +3,9 @@
 package tools
 
 import (
+	"bytes"
 	"encoding/json"
+	"io"
 	"net/http"
 	"testing"
 
@@ -14,7 +16,7 @@ import (
 func AssertHTTPStatusCode(t *testing.T, resp *http.Response, expected int) {
 	t.Helper()
 	require.Equal(t, expected, resp.StatusCode,
-		"Expected status %d, got %d. Body: %s", expected, resp.StatusCode, getResponseBody(resp))
+		"Expected status %d, got %d. Body: %s", expected, resp.StatusCode, getResponseBodyForError(resp))
 }
 
 // AssertJSONBody decodes and validates JSON response
@@ -25,12 +27,14 @@ func AssertJSONBody(t *testing.T, resp *http.Response, target interface{}) {
 	require.NoError(t, json.NewDecoder(body).Decode(target), "Failed to decode JSON response")
 }
 
-// getResponseBody reads response body for error messages
-func getResponseBody(resp *http.Response) string {
+// getResponseBodyForError reads response body for error messages without closing it
+func getResponseBodyForError(resp *http.Response) string {
 	if resp == nil || resp.Body == nil {
 		return ""
 	}
-	defer resp.Body.Close()
-	bodyBytes, _ := json.Marshal(resp)
+	// Read body without closing it, so caller can still read it
+	bodyBytes, _ := io.ReadAll(resp.Body)
+	// Reset the body so it can be read again
+	resp.Body = io.NopCloser(bytes.NewReader(bodyBytes))
 	return string(bodyBytes)
 }
