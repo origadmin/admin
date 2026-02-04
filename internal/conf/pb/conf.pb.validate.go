@@ -35,6 +35,133 @@ var (
 	_ = sort.Sort
 )
 
+// Validate checks the field values on Auth with the rules defined in the proto
+// definition for this message. If any rules are violated, the first error
+// encountered is returned, or nil if there are no violations.
+func (m *Auth) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on Auth with the rules defined in the
+// proto definition for this message. If any rules are violated, the result is
+// a list of violation errors wrapped in AuthMultiError, or nil if none found.
+func (m *Auth) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *Auth) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	if all {
+		switch v := interface{}(m.GetPolicySyncDelay()).(type) {
+		case interface{ ValidateAll() error }:
+			if err := v.ValidateAll(); err != nil {
+				errors = append(errors, AuthValidationError{
+					field:  "PolicySyncDelay",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		case interface{ Validate() error }:
+			if err := v.Validate(); err != nil {
+				errors = append(errors, AuthValidationError{
+					field:  "PolicySyncDelay",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		}
+	} else if v, ok := interface{}(m.GetPolicySyncDelay()).(interface{ Validate() error }); ok {
+		if err := v.Validate(); err != nil {
+			return AuthValidationError{
+				field:  "PolicySyncDelay",
+				reason: "embedded message failed validation",
+				cause:  err,
+			}
+		}
+	}
+
+	if len(errors) > 0 {
+		return AuthMultiError(errors)
+	}
+
+	return nil
+}
+
+// AuthMultiError is an error wrapping multiple validation errors returned by
+// Auth.ValidateAll() if the designated constraints aren't met.
+type AuthMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m AuthMultiError) Error() string {
+	msgs := make([]string, 0, len(m))
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m AuthMultiError) AllErrors() []error { return m }
+
+// AuthValidationError is the validation error returned by Auth.Validate if the
+// designated constraints aren't met.
+type AuthValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e AuthValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e AuthValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e AuthValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e AuthValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e AuthValidationError) ErrorName() string { return "AuthValidationError" }
+
+// Error satisfies the builtin error interface
+func (e AuthValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sAuth.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = AuthValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = AuthValidationError{}
+
 // Validate checks the field values on Bootstrap with the rules defined in the
 // proto definition for this message. If any rules are violated, the first
 // error encountered is returned, or nil if there are no violations.
@@ -377,6 +504,35 @@ func (m *Bootstrap) validate(all bool) error {
 	}
 
 	// no validation rules for DefaultDiscovery
+
+	if all {
+		switch v := interface{}(m.GetAuth()).(type) {
+		case interface{ ValidateAll() error }:
+			if err := v.ValidateAll(); err != nil {
+				errors = append(errors, BootstrapValidationError{
+					field:  "Auth",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		case interface{ Validate() error }:
+			if err := v.Validate(); err != nil {
+				errors = append(errors, BootstrapValidationError{
+					field:  "Auth",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		}
+	} else if v, ok := interface{}(m.GetAuth()).(interface{ Validate() error }); ok {
+		if err := v.Validate(); err != nil {
+			return BootstrapValidationError{
+				field:  "Auth",
+				reason: "embedded message failed validation",
+				cause:  err,
+			}
+		}
+	}
 
 	if len(errors) > 0 {
 		return BootstrapMultiError(errors)

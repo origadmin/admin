@@ -33,5 +33,8 @@ sources:
   - file:
       path: captcha.yaml
     type: file
+  - file:
+      path: auth.yaml
+    type: file
   # Environment variables are loaded last to override file settings.
   - type: env

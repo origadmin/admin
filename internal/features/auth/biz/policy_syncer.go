@@ -7,7 +7,6 @@ package biz
 import (
 	"context"
 	"fmt"
-	"sync"
 	"sync/atomic"
 	"time"
 
@@ -19,10 +18,7 @@ import (
 	"github.com/origadmin/runtime/log"
 	authv1 "origadmin/application/admin/api/v1/services/auth"
 	systempb "origadmin/application/admin/api/v1/services/system"
-)
-
-const (
-	DefaultReloadDelay = 1 * time.Second
+	"origadmin/application/admin/internal/helpers/debounce"
 )
 
 // PolicyProvider defines the interface for fetching the source-of-truth policies.
@@ -32,13 +28,11 @@ type PolicyProvider interface {
 
 // PolicySyncer is responsible for synchronizing policies from a PolicyProvider to a PolicyModifier.
 type PolicySyncer struct {
-	provider    PolicyProvider
-	modifier    authz.PolicyModifier
-	reloader    authz.Reloader
-	log         *log.Helper
-	reloadDelay time.Duration
-	reloadMu    sync.Mutex
-	reloadTimer *time.Timer
+	provider  PolicyProvider
+	modifier  authz.PolicyModifier
+	reloader  authz.Reloader
+	log       *log.Helper
+	debouncer debounce.Executor
 
 	// Metrics
 	lastSyncTime     atomic.Value // time.Time
@@ -49,8 +43,7 @@ type PolicySyncer struct {
 }
 
 // NewPolicySyncer creates a new PolicySyncer.
-// It internally constructs the appropriate reloader strategy based on the availability of a watcher.
-func NewPolicySyncer(provider PolicyProvider, modifier authz.PolicyModifier, authorizer authz.Authorizer, watcher persist.Watcher, logger log.Logger) *PolicySyncer {
+func NewPolicySyncer(provider PolicyProvider, modifier authz.PolicyModifier, authorizer authz.Authorizer, watcher persist.Watcher, debouncer debounce.Executor, logger log.Logger) *PolicySyncer {
 	logHelper := log.NewHelper(log.With(logger, "module", "auth.biz.policy_syncer"))
 
 	var reloader authz.Reloader
@@ -61,7 +54,6 @@ func NewPolicySyncer(provider PolicyProvider, modifier authz.PolicyModifier, aut
 		directReloader = noopReloader{}
 	}
 
-	// Check if the provided persist.Watcher is our specific *watcher.Watcher implementation.
 	if watcher != nil {
 		logHelper.Info("Watcher detected. Using watcher-based reloading strategy.")
 		reloader = &watcherReloader{
@@ -75,11 +67,11 @@ func NewPolicySyncer(provider PolicyProvider, modifier authz.PolicyModifier, aut
 	}
 
 	return &PolicySyncer{
-		provider:    provider,
-		modifier:    modifier,
-		reloader:    reloader,
-		log:         logHelper,
-		reloadDelay: DefaultReloadDelay,
+		provider:  provider,
+		modifier:  modifier,
+		reloader:  reloader,
+		log:       logHelper,
+		debouncer: debouncer,
 	}
 }
 
@@ -112,31 +104,14 @@ func (r noopReloader) Reload(force bool) error { return nil }
 // ScheduleSync schedules a delayed full synchronization with debounce logic.
 func (s *PolicySyncer) ScheduleSync() {
 	s.totalEvents.Add(1)
-	s.reloadMu.Lock()
-	defer s.reloadMu.Unlock()
-
-	if s.reloadTimer != nil {
-		s.reloadTimer.Stop()
-	}
-
-	s.reloadTimer = time.AfterFunc(s.reloadDelay, func() {
-		s.syncAndReload()
-	})
-
-	s.log.Debugf("Policy sync scheduled in %v", s.reloadDelay)
+	s.log.Debugf("Policy sync event received, scheduling execution.")
+	s.debouncer.Schedule(s.syncAndReload)
 }
 
 // ForceSync triggers an immediate full policy synchronization.
 func (s *PolicySyncer) ForceSync(ctx context.Context) error {
 	s.log.Info("Force triggering policy sync (manual request)")
-
-	s.reloadMu.Lock()
-	if s.reloadTimer != nil {
-		s.reloadTimer.Stop()
-		s.reloadTimer = nil
-	}
-	s.reloadMu.Unlock()
-
+	s.debouncer.Cancel()
 	s.syncAndReload()
 	return nil
 }
@@ -168,10 +143,7 @@ func (s *PolicySyncer) syncAndReload() {
 
 // GetMetrics returns the current status and metrics of the syncer.
 func (s *PolicySyncer) GetMetrics() *authv1.PolicySyncStatusResponse {
-	s.reloadMu.Lock()
-	pending := s.reloadTimer != nil
-	s.reloadMu.Unlock()
-
+	pending := s.debouncer.IsPending()
 	lastTime, _ := s.lastSyncTime.Load().(time.Time)
 	var lastTimeProto *timestamppb.Timestamp
 	if !lastTime.IsZero() {

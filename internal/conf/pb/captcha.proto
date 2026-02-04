@@ -13,17 +13,4 @@ message Captcha {
   int32 dot_count = 6 [json_name = "dot_count"];
   string cache_name = 7 [json_name = "cache_name"];
   string language = 8 [json_name = "language"];
-
-
-  //  runtime.api.config.data.v1.Caches caches = 5 [json_name = "caches"];
-  // 注释原有Redis配置（应由公共配置管理）
-  // message Redis {
-  //   string addr = 1 [json_name = "addr"];
-  //   string username = 2 [json_name = "username"];
-  //   string password = 3 [json_name = "password"];
-  //   int32 db = 4 [json_name = "db"];
-  //   string key_prefix = 5 [json_name = "key_prefix"];
-  // }
-
-  // Redis redis = 5 [json_name = "redis"];
 }

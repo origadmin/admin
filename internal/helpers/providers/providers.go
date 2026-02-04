@@ -78,6 +78,7 @@ var ProviderCommonSet = wire.NewSet(
 	ProvideHasher,
 	ProvideCaptcha,
 	wire.FieldsOf(new(*conf.Config), "Bootstrap"),
+	wire.FieldsOf(new(*confpb.Bootstrap), "Auth"),
 	wire.FieldsOf(new(*confpb.Bootstrap), "Security"),
 	wire.FieldsOf(new(*confpb.Bootstrap), "Servers"),
 	wire.FieldsOf(new(*confpb.Bootstrap), "Captcha"),
@@ -96,6 +97,7 @@ var ProviderGatewaySet = wire.NewSet(
 // ProviderBackendSet provides backend-specific dependencies.
 var ProviderBackendSet = wire.NewSet(
 	ProviderCommonSet,
+	NewDebounceExecutor,
 	ProvideAuthorizer,
 	wire.Bind(new(authz.Authorizer), new(*casbin.Authorizer)), // Bind Authorizer to Reloader interface
 	ProvideWatcher,
