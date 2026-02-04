@@ -12,7 +12,7 @@ import (
 	"entgo.io/ent/schema/mixin"
 
 	"origadmin/application/admin/internal/helpers/i18n"
-	"origadmin/application/admin/internal/helpers/id"
+	"origadmin/application/admin/internal/helpers/idutil"
 )
 
 type ID struct {
@@ -82,7 +82,7 @@ func (obj ID) PK(name string) ent.Field {
 	obj.Unique = true
 	obj.Positive = true
 	obj.Immutable = true
-	obj.DefaultFunc = id.Gen
+	obj.DefaultFunc = idutil.Gen
 	if obj.CommentKey == "" {
 		obj.CommentKey = "field.primary_key.comment"
 	}

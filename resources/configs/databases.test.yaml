@@ -1,8 +1,0 @@
-# databases.test.yaml
-data:
-  databases:
-    configs:
-      - dialect: sqlite3
-        name: default
-        # Use a path relative to the project root, ensuring both services connect to the same file.
-        source: file:test_e2e.db?cache=shared&_fk=1

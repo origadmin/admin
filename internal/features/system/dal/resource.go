@@ -150,13 +150,13 @@ func (r *resourceRepo) Update(ctx context.Context, res *types.Resource, opts ...
 			// If no field mask, skip zero values to prevent accidental clearing of fields.
 			update.SetResourceSkipZero(entResource)
 		}
-
-		if opt.WithPermissionIDs != nil {
-			update.ClearPermissions().AddPermissionIDs(opt.WithPermissionIDs...)
+		update.ClearPermissions()
+		if len(opt.WithPermissionIDs) > 0 {
+			update.AddPermissionIDs(opt.WithPermissionIDs...)
 		}
 
 		var err error
-		updatedResource, err = update.Save(ctx)
+		updatedResource, err = update.Save(tx)
 		return err
 	})
 	if err != nil {

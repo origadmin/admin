@@ -2,8 +2,8 @@
  * Copyright (c) 2024 OrigAdmin. All rights reserved.
  */
 
-// Package id implements the functions, types, and interfaces for the module.
-package id
+// Package idutil implements the functions, types, and interfaces for the module.
+package idutil
 
 import (
 	"github.com/origadmin/toolkits/identifier"

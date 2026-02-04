@@ -1,8 +1,0 @@
-captcha:
-  enabled: false
-  length: 6
-  width: 240
-  height: 80
-  maxskew: 0.7
-  dot_count: 80
-  cache_name: default
