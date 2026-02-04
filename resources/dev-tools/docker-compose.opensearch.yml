@@ -1,0 +1,60 @@
+version: "3.8"
+
+services:
+  # OpenSearch - Apache 2.0 许可,完全安全可商用
+  opensearch:
+    image: opensearchproject/opensearch:2.13.0
+    container_name: opensearch
+    environment:
+      - discovery.type=single-node
+      - DISABLE_SECURITY_PLUGIN=true
+      - "OPENSEARCH_JAVA_OPTS=-Xms512m -Xmx512m"
+    ports:
+      - "9200:9200"
+      - "9600:9600"
+    volumes:
+      - opensearch_data:/usr/share/opensearch/data
+    networks:
+      - log-network
+    healthcheck:
+      test: [ "CMD-SHELL", "curl -f http://localhost:9200/_cluster/health || exit 1" ]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+
+  # OpenSearch Dashboards - Apache 2.0 许可,安全可商用
+  opensearch-dashboards:
+    image: opensearchproject/opensearch-dashboards:2.13.0
+    container_name: opensearch-dashboards
+    ports:
+      - "5601:5601"
+    environment:
+      - OPENSEARCH_HOSTS=http://opensearch:9200
+      - DISABLE_SECURITY_DASHBOARDS_PLUGIN=true
+    depends_on:
+      opensearch:
+        condition: service_healthy
+    networks:
+      - log-network
+
+  # Fluent Bit - Apache 2.0 许可,安全可商用 (比 Filebeat 更轻量)
+  fluent-bit:
+    image: fluent/fluent-bit:3.0.7
+    container_name: fluent-bit
+    volumes:
+      - /var/lib/docker/containers:/var/lib/docker/containers:ro
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ./fluent-bit/fluent-bit.conf:/fluent-bit/etc/fluent-bit.conf:ro
+    depends_on:
+      opensearch:
+        condition: service_healthy
+    networks:
+      - log-network
+
+networks:
+  log-network:
+    name: origadmin-log-network
+
+volumes:
+  opensearch_data:
+    name: origadmin_opensearch_data

@@ -18,13 +18,13 @@ services:
     volumes:
       - ./nats/nats.conf:/etc/nats/nats.conf # Mount the local config file
 
-  valkey:
-    image: ghcr.io/valkey-io/valkey:9.0.2-alpine
-    container_name: backend_valkey
-    ports:
-      - "6379:6379"
-    volumes:
-      - valkey_data:/data
+  #  valkey:
+  #    image: ghcr.io/valkey-io/valkey:9.0.2-alpine
+  #    container_name: backend_valkey
+  #    ports:
+  #      - "6379:6379"
+  #    volumes:
+  #      - valkey_data:/data
 
   redis:
     image: redis:8.4.0-alpine

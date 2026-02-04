@@ -1,5 +1,22 @@
 version: "3.8"
 
+#
+# OrigAdmin Backend - Default Docker Compose Configuration
+#
+# This configuration uses:
+# - Consul (MPL 2.0): Service discovery and configuration
+# - NATS (Apache 2.0): Message queue
+#
+# License Notice:
+# Consul uses Mozilla Public License 2.0 (MPL 2.0).
+# MPL 2.0 is file-level copyleft: if you modify Consul's source code,
+# you must release those modifications. Using Consul as-is does NOT require
+# you to open source your application code.
+#
+# For a completely license-free alternative, consider using docker-compose.minimal.yml
+# which removes service discovery and uses direct networking.
+#
+
 services:
   consul:
     image: hashicorp/consul:1.22.2
@@ -11,7 +28,7 @@ services:
       - "8600:8600/udp" # DNS API (UDP)
 
   nats:
-    image: nats:2.12.3 # Changed from nats:2.9 to nats:latest
+    image: nats:2.12.3
     container_name: nats
     ports:
       - "4222:4222" # NATS client port
@@ -20,51 +37,49 @@ services:
   gateway:
     build:
       context: .
-      dockerfile: Dockerfile # Use the root Dockerfile
+      dockerfile: Dockerfile
       args:
-        SERVICE_NAME: gateway # Pass the service name as a build argument
+        SERVICE_NAME: gateway
     ports:
       - "8000:8000" # Expose gateway's HTTP port
       - "9000:9000" # Expose gateway's gRPC port
     volumes:
-      - .:/app # Mount the entire project directory to enable live reload
+      - .:/app
     depends_on:
       - auth
       - system
       - nats
-      - consul # Add dependency on consul
+      - consul
     environment:
-      # Configure Kratos to use Consul for service discovery
-      # This assumes your Kratos app is configured to read these env vars
       KRATOS_DISCOVERY_CONSUL_ADDRESS: consul:8500
-      NATS_SERVER_URL: nats://nats:4222 # Add NATS server URL for gateway
+      NATS_SERVER_URL: nats://nats:4222
 
   auth:
     build:
       context: .
-      dockerfile: Dockerfile # Use the root Dockerfile
+      dockerfile: Dockerfile
       args:
-        SERVICE_NAME: auth # Pass the service name as a build argument
+        SERVICE_NAME: auth
     volumes:
       - .:/app
     depends_on:
       - nats
-      - consul # Add dependency on consul
+      - consul
     environment:
       KRATOS_DISCOVERY_CONSUL_ADDRESS: consul:8500
-      NATS_SERVER_URL: nats://nats:4222 # Add NATS server URL for auth service
+      NATS_SERVER_URL: nats://nats:4222
 
   system:
     build:
       context: .
-      dockerfile: Dockerfile # Use the root Dockerfile
+      dockerfile: Dockerfile
       args:
-        SERVICE_NAME: system # Pass the service name as a build argument
+        SERVICE_NAME: system
     volumes:
       - .:/app
     depends_on:
       - nats
-      - consul # Add dependency on consul
+      - consul
     environment:
       KRATOS_DISCOVERY_CONSUL_ADDRESS: consul:8500
-      NATS_SERVER_URL: nats://nats:4222 # Add NATS server URL for system
+      NATS_SERVER_URL: nats://nats:4222

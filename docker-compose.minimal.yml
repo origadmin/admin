@@ -1,0 +1,58 @@
+version: "3.8"
+
+#
+# OrigAdmin Backend - Minimal Docker Compose Configuration
+#
+# This is a PURE configuration that includes ONLY the project's own services.
+# No third-party infrastructure services are included.
+#
+# This configuration is the SAFEST option from a licensing perspective.
+#
+# Use this configuration if:
+# - You want to avoid ALL third-party infrastructure in docker-compose
+# - You will provide your own message queue/service discovery
+# - You are deploying to an environment where infrastructure is managed separately
+#
+# Note: This configuration requires external infrastructure to function properly.
+# Services need a message queue (e.g., NATS) and optional service discovery.
+#
+
+services:
+  gateway:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        SERVICE_NAME: gateway
+    ports:
+      - "8000:8000" # Expose gateway's HTTP port
+      - "9000:9000" # Expose gateway's gRPC port
+    volumes:
+      - .:/app
+    # Configure external infrastructure via environment variables if needed:
+    # NATS_SERVER_URL: nats://your-nats-host:4222
+    # KRATOS_DISCOVERY_CONSUL_ADDRESS: your-consul-host:8500
+
+  auth:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        SERVICE_NAME: auth
+    volumes:
+      - .:/app
+    # Configure external infrastructure via environment variables if needed:
+    # NATS_SERVER_URL: nats://your-nats-host:4222
+    # KRATOS_DISCOVERY_CONSUL_ADDRESS: your-consul-host:8500
+
+  system:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        SERVICE_NAME: system
+    volumes:
+      - .:/app
+    # Configure external infrastructure via environment variables if needed:
+    # NATS_SERVER_URL: nats://your-nats-host:4222
+    # KRATOS_DISCOVERY_CONSUL_ADDRESS: your-consul-host:8500

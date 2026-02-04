@@ -1,0 +1,182 @@
+version: "3.8"
+
+#
+# ⚠️  IMPORTANT: This is an OPTIONAL configuration
+#
+# This docker-compose file integrates the Loki log collection system into the project.
+# Loki uses AGPL 3.0 license. Please evaluate legal risks before using in production.
+# For a fully open source and commercially friendly alternative, consider using OpenSearch.
+#
+# AGPL 3.0 Licensed Components:
+# - Grafana Loki: https://github.com/grafana/loki/blob/main/LICENSE
+# - Grafana Promtail: https://github.com/grafana/loki/blob/main/LICENSE
+# - Grafana: https://github.com/grafana/grafana/blob/main/LICENSE
+#
+# License Risk Warning:
+# If you provide services based on these components over the network to third parties,
+# you may be required to provide source code to users.
+#
+# Alternative (Apache 2.0):
+# - OpenSearch: Use docker-compose.opensearch.yml instead
+#
+
+services:
+  consul:
+    image: hashicorp/consul:1.22.2
+    container_name: consul
+    command: "agent -server -bootstrap-expect=1 -client=0.0.0.0"
+    ports:
+      - "8500:8500"
+      - "8600:8600/tcp"
+      - "8600:8600/udp"
+    labels:
+      com.origadmin.logging_jobname: infra
+      com.origadmin.service_name: consul
+      com.origadmin.service_version: "1.22.2"
+
+  nats:
+    image: nats:2.12.3
+    container_name: nats
+    ports:
+      - "4222:4222"
+      - "8222:8222"
+    labels:
+      com.origadmin.logging_jobname: infra
+      com.origadmin.service_name: nats
+      com.origadmin.service_version: "2.12.3"
+
+  # Loki - Log Storage Service (AGPL 3.0)
+  loki:
+    image: grafana/loki:2.9.6
+    container_name: loki
+    ports:
+      - "3100:3100"
+    volumes:
+      - ./resources/dev-tools/loki/loki-config.yaml:/etc/loki/config.yaml
+      - loki_data:/loki
+    command: -config.file=/etc/loki/config.yaml
+    labels:
+      com.origadmin.logging_jobname: infra
+      com.origadmin.service_name: loki
+      com.origadmin.service_version: "2.9.6"
+
+  # Promtail - Log Collection Service (AGPL 3.0)
+  promtail:
+    image: grafana/promtail:2.9.6
+    container_name: promtail
+    volumes:
+      - /var/lib/docker/containers:/var/lib/docker/containers:ro
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ./resources/dev-tools/loki/promtail-config.yaml:/etc/promtail/config.yaml
+    command: -config.file=/etc/promtail/config.yaml
+    depends_on:
+      - loki
+    labels:
+      com.origadmin.logging_jobname: infra
+      com.origadmin.service_name: promtail
+      com.origadmin.service_version: "2.9.6"
+
+  # Grafana - Visualization Service (AGPL 3.0)
+  grafana:
+    image: grafana/grafana:11.1.0
+    container_name: grafana
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./resources/dev-tools/loki/grafana/provisioning:/etc/grafana/provisioning
+      - grafana_data:/var/lib/grafana
+    environment:
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+      - TZ=Asia/Shanghai
+    depends_on:
+      - loki
+    labels:
+      com.origadmin.logging_jobname: infra
+      com.origadmin.service_name: grafana
+      com.origadmin.service_version: "11.1.0"
+
+  gateway:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        SERVICE_NAME: gateway
+    ports:
+      - "8000:8000"
+      - "9000:9000"
+    volumes:
+      - .:/app
+    depends_on:
+      - auth
+      - system
+      - nats
+      - consul
+    environment:
+      KRATOS_DISCOVERY_CONSUL_ADDRESS: consul:8500
+      NATS_SERVER_URL: nats://nats:4222
+    labels:
+      com.origadmin.logging_jobname: backend
+      com.origadmin.service_name: gateway
+      com.origadmin.service_version: "1.0.0"
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  auth:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        SERVICE_NAME: auth
+    volumes:
+      - .:/app
+    depends_on:
+      - nats
+      - consul
+    environment:
+      KRATOS_DISCOVERY_CONSUL_ADDRESS: consul:8500
+      NATS_SERVER_URL: nats://nats:4222
+    labels:
+      com.origadmin.logging_jobname: backend
+      com.origadmin.service_name: auth
+      com.origadmin.service_version: "1.0.0"
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  system:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        SERVICE_NAME: system
+    volumes:
+      - .:/app
+    depends_on:
+      - nats
+      - consul
+    environment:
+      KRATOS_DISCOVERY_CONSUL_ADDRESS: consul:8500
+      NATS_SERVER_URL: nats://nats:4222
+    labels:
+      com.origadmin.logging_jobname: backend
+      com.origadmin.service_name: system
+      com.origadmin.service_version: "1.0.0"
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+networks:
+  default:
+    name: origadmin-network
+
+volumes:
+  loki_data:
+  grafana_data:

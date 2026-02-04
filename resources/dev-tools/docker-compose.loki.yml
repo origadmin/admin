@@ -1,0 +1,58 @@
+services:
+  loki:
+    image: grafana/loki:2.9.6
+    container_name: loki
+    ports:
+      - "3100:3100"
+    volumes:
+      - ./loki/loki-config.yaml:/etc/loki/config.yaml
+      - loki_data:/loki
+    command: -config.file=/etc/loki/config.yaml
+    networks:
+      - log-network
+    labels:
+      com.origadmin.logging_service: "loki"
+
+  promtail:
+    image: grafana/promtail:2.9.6
+    container_name: promtail
+    volumes:
+      - /var/lib/docker/containers:/var/lib/docker/containers:ro
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ./loki/promtail-config.yaml:/etc/promtail/config.yaml
+    command: -config.file=/etc/promtail/config.yaml
+    depends_on:
+      - loki
+    networks:
+      - log-network
+    labels:
+      com.origadmin.logging_service: "promtail"
+
+  grafana:
+    image: grafana/grafana:11.1.0
+    container_name: grafana
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./loki/grafana/provisioning:/etc/grafana/provisioning
+      - grafana_data:/var/lib/grafana
+    environment:
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+      - TZ=Asia/Shanghai
+    depends_on:
+      - loki
+    networks:
+      - log-network
+    labels:
+      com.origadmin.logging_service: "grafana"
+
+networks:
+  log-network:
+    name: origadmin-log-network
+
+volumes:
+  loki_data:
+    name: origadmin_loki_data
+  grafana_data:
+    name: origadmin_grafana_data
