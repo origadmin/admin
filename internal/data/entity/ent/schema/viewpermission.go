@@ -48,10 +48,12 @@ func (ViewPermission) Edges() []ent.Edge {
 		edge.To("view", View.Type).
 			Field("view_id").
 			Unique().
-			Required(),
+			Required().
+			Annotations(entsql.OnDelete(entsql.Cascade)),
 		edge.To("permission", Permission.Type).
 			Field("permission_id").
 			Unique().
-			Required(),
+			Required().
+			Annotations(entsql.OnDelete(entsql.Cascade)),
 	}
 }

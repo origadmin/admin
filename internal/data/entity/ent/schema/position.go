@@ -61,11 +61,10 @@ func (Position) Edges() []ent.Edge {
 			Ref("positions").
 			Field("department_id").
 			Unique().
-			Required(), // Required() must set with Field Optional(), comment it if the field is not Optional() Field
+			Required(),
 		edge.From("users", User.Type).
 			Ref("positions").
 			Through("user_positions", UserPosition.Type),
-		// 新增: 岗位关联权限
 		edge.To("permissions", Permission.Type).
 			Through("position_permissions", PositionPermission.Type),
 	}

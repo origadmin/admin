@@ -65,6 +65,8 @@ const (
 	EdgePermissions = "permissions"
 	// EdgeViewResources holds the string denoting the view_resources edge name in mutations.
 	EdgeViewResources = "view_resources"
+	// EdgePermissionResources holds the string denoting the permission_resources edge name in mutations.
+	EdgePermissionResources = "permission_resources"
 	// Table holds the table name of the resource in the database.
 	Table = "sys_resources"
 	// ParentTable is the table that holds the parent relation/edge.
@@ -92,6 +94,13 @@ const (
 	ViewResourcesInverseTable = "sys_view_resources"
 	// ViewResourcesColumn is the table column denoting the view_resources relation/edge.
 	ViewResourcesColumn = "resource_id"
+	// PermissionResourcesTable is the table that holds the permission_resources relation/edge.
+	PermissionResourcesTable = "sys_permission_resources"
+	// PermissionResourcesInverseTable is the table name for the PermissionResource entity.
+	// It exists in this package in order to avoid circular dependency with the "permissionresource" package.
+	PermissionResourcesInverseTable = "sys_permission_resources"
+	// PermissionResourcesColumn is the table column denoting the permission_resources relation/edge.
+	PermissionResourcesColumn = "resource_id"
 )
 
 // Columns holds all SQL columns for resource fields.
@@ -355,6 +364,20 @@ func ByViewResources(term sql.OrderTerm, terms ...sql.OrderTerm) OrderOption {
 		sqlgraph.OrderByNeighborTerms(s, newViewResourcesStep(), append([]sql.OrderTerm{term}, terms...)...)
 	}
 }
+
+// ByPermissionResourcesCount orders the results by permission_resources count.
+func ByPermissionResourcesCount(opts ...sql.OrderTermOption) OrderOption {
+	return func(s *sql.Selector) {
+		sqlgraph.OrderByNeighborsCount(s, newPermissionResourcesStep(), opts...)
+	}
+}
+
+// ByPermissionResources orders the results by permission_resources terms.
+func ByPermissionResources(term sql.OrderTerm, terms ...sql.OrderTerm) OrderOption {
+	return func(s *sql.Selector) {
+		sqlgraph.OrderByNeighborTerms(s, newPermissionResourcesStep(), append([]sql.OrderTerm{term}, terms...)...)
+	}
+}
 func newParentStep() *sqlgraph.Step {
 	return sqlgraph.NewStep(
 		sqlgraph.From(Table, FieldID),
@@ -388,6 +411,13 @@ func newViewResourcesStep() *sqlgraph.Step {
 		sqlgraph.From(Table, FieldID),
 		sqlgraph.To(ViewResourcesInverseTable, FieldID),
 		sqlgraph.Edge(sqlgraph.O2M, true, ViewResourcesTable, ViewResourcesColumn),
+	)
+}
+func newPermissionResourcesStep() *sqlgraph.Step {
+	return sqlgraph.NewStep(
+		sqlgraph.From(Table, FieldID),
+		sqlgraph.To(PermissionResourcesInverseTable, FieldID),
+		sqlgraph.Edge(sqlgraph.O2M, true, PermissionResourcesTable, PermissionResourcesColumn),
 	)
 }
 

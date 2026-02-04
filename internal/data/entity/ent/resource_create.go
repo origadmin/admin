@@ -7,6 +7,7 @@ import (
 	"errors"
 	"fmt"
 	"origadmin/application/admin/internal/data/entity/ent/permission"
+	"origadmin/application/admin/internal/data/entity/ent/permissionresource"
 	"origadmin/application/admin/internal/data/entity/ent/resource"
 	"origadmin/application/admin/internal/data/entity/ent/view"
 	"origadmin/application/admin/internal/data/entity/ent/viewresource"
@@ -375,6 +376,21 @@ func (_c *ResourceCreate) AddViewResources(v ...*ViewResource) *ResourceCreate {
 	return _c.AddViewResourceIDs(ids...)
 }
 
+// AddPermissionResourceIDs adds the "permission_resources" edge to the PermissionResource entity by IDs.
+func (_c *ResourceCreate) AddPermissionResourceIDs(ids ...int) *ResourceCreate {
+	_c.mutation.AddPermissionResourceIDs(ids...)
+	return _c
+}
+
+// AddPermissionResources adds the "permission_resources" edges to the PermissionResource entity.
+func (_c *ResourceCreate) AddPermissionResources(v ...*PermissionResource) *ResourceCreate {
+	ids := make([]int, len(v))
+	for i := range v {
+		ids[i] = v[i].ID
+	}
+	return _c.AddPermissionResourceIDs(ids...)
+}
+
 // Mutation returns the ResourceMutation object of the builder.
 func (_c *ResourceCreate) Mutation() *ResourceMutation {
 	return _c.mutation
@@ -739,6 +755,22 @@ func (_c *ResourceCreate) createSpec() (*Resource, *sqlgraph.CreateSpec) {
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: sqlgraph.NewFieldSpec(viewresource.FieldID, field.TypeInt),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges = append(_spec.Edges, edge)
+	}
+	if nodes := _c.mutation.PermissionResourcesIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: true,
+			Table:   resource.PermissionResourcesTable,
+			Columns: []string{resource.PermissionResourcesColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(permissionresource.FieldID, field.TypeInt),
 			},
 		}
 		for _, k := range nodes {

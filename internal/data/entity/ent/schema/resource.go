@@ -89,7 +89,8 @@ func (Resource) Edges() []ent.Edge {
 			Ref("resources").
 			Through("view_resources", ViewResource.Type),
 		edge.From("permissions", Permission.Type).
-			Ref("resources"),
+			Ref("resources").
+			Through("permission_resources", PermissionResource.Type),
 	}
 }
 

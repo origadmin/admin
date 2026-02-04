@@ -59,10 +59,12 @@ func (UserPosition) Edges() []ent.Edge {
 		edge.To("user", User.Type).
 			Field("user_id").
 			Unique().
-			Required(),
+			Required().
+			Annotations(entsql.OnDelete(entsql.Cascade)),
 		edge.To("position", Position.Type).
 			Field("position_id").
 			Unique().
-			Required(),
+			Required().
+			Annotations(entsql.OnDelete(entsql.Cascade)),
 	}
 }

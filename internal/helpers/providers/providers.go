@@ -221,7 +221,7 @@ func ProvideAuthorizer(app *runtime.App, c *conf.Config, adapter *data.CasbinAda
 		return nil, errors.New("casbin authorizer configuration not found")
 	}
 	// We remove WithWatcher(w) from here to handle it manually and explicitly.
-	opts, err := casbin.NewOptions(casbinConfig, casbin.WithPolicyAdapter(adapter), casbin.WithLogger(app.Logger()))
+	opts, err := casbin.NewOptions(casbinConfig, casbin.WithPolicyAdapter(adapter), casbin.WithLogger(app.Logger()), casbin.WithWatcher(w))
 	if err != nil {
 		return nil, err
 	}
@@ -234,35 +234,35 @@ func ProvideAuthorizer(app *runtime.App, c *conf.Config, adapter *data.CasbinAda
 	// Set up watcher for Stage 2 of the two-stage update flow:
 	// After business data is synced to casbin_rule, watcher.Update() broadcasts
 	// the update to all auth service instances, which then call LoadPolicy().
-	if w != nil {
-		enforcer := authorizer.GetEnforcer()
-		helper := log.NewHelper(log.With(app.Logger(), "module", "casbin.watcher.setup"))
-
-		// 1. Explicitly set the watcher on the enforcer instance.
-		if err := enforcer.SetWatcher(w); err != nil {
-			helper.Errorf("Failed to explicitly set watcher for enforcer: %v", err)
-			return nil, fmt.Errorf("failed to explicitly set watcher for enforcer: %w", err)
-		}
-		helper.Info("Watcher explicitly set on Casbin Enforcer.")
-
-		// 2. Explicitly set the callback to a function that logs and then reloads.
-		// This is Stage 2: when a watcher update is received, reload policies from database.
-		if err := w.SetUpdateCallback(func(msg string) {
-			callbackHelper := log.NewHelper(log.With(app.Logger(), "module", "casbin.watcher.callback"))
-			callbackHelper.Infof("Stage 2: Policy update notification received: %s. Reloading policies from database...", msg)
-			if err := enforcer.LoadPolicy(); err != nil {
-				callbackHelper.Errorf("Stage 2 failed: Failed to reload policy after watcher update: %v", err)
-			} else {
-				callbackHelper.Info("Stage 2 completed: Policy reloaded successfully from database to memory.")
-			}
-		}); err != nil {
-			helper.Errorf("Failed to explicitly set watcher callback: %v", err)
-			return nil, fmt.Errorf("failed to explicitly set watcher callback: %w", err)
-		}
-		helper.Info("Watcher callback explicitly set for Stage 2 policy reload.")
-	} else {
-		log.NewHelper(app.Logger()).Warn("Watcher is nil, two-stage update flow will not work. Only local instance will have updated policies.")
-	}
+	//if w != nil {
+	//	enforcer := authorizer.GetEnforcer()
+	//	helper := log.NewHelper(log.With(app.Logger(), "module", "casbin.watcher.setup"))
+	//
+	//	// 1. Explicitly set the watcher on the enforcer instance.
+	//	if err := enforcer.SetWatcher(w); err != nil {
+	//		helper.Errorf("Failed to explicitly set watcher for enforcer: %v", err)
+	//		return nil, fmt.Errorf("failed to explicitly set watcher for enforcer: %w", err)
+	//	}
+	//	helper.Info("Watcher explicitly set on Casbin Enforcer.")
+	//
+	//	// 2. Explicitly set the callback to a function that logs and then reloads.
+	//	// This is Stage 2: when a watcher update is received, reload policies from database.
+	//	if err := w.SetUpdateCallback(func(msg string) {
+	//		callbackHelper := log.NewHelper(log.With(app.Logger(), "module", "casbin.watcher.callback"))
+	//		callbackHelper.Infof("Stage 2: Policy update notification received: %s. Reloading policies from database...", msg)
+	//		if err := enforcer.LoadPolicy(); err != nil {
+	//			callbackHelper.Errorf("Stage 2 failed: Failed to reload policy after watcher update: %v", err)
+	//		} else {
+	//			callbackHelper.Info("Stage 2 completed: Policy reloaded successfully from database to memory.")
+	//		}
+	//	}); err != nil {
+	//		helper.Errorf("Failed to explicitly set watcher callback: %v", err)
+	//		return nil, fmt.Errorf("failed to explicitly set watcher callback: %w", err)
+	//	}
+	//	helper.Info("Watcher callback explicitly set for Stage 2 policy reload.")
+	//} else {
+	//	log.NewHelper(app.Logger()).Warn("Watcher is nil, two-stage update flow will not work. Only local instance will have updated policies.")
+	//}
 
 	return authorizer, nil
 }

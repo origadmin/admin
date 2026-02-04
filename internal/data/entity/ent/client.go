@@ -1812,6 +1812,22 @@ func (c *ResourceClient) QueryViewResources(_m *Resource) *ViewResourceQuery {
 	return query
 }
 
+// QueryPermissionResources queries the permission_resources edge of a Resource.
+func (c *ResourceClient) QueryPermissionResources(_m *Resource) *PermissionResourceQuery {
+	query := (&PermissionResourceClient{config: c.config}).Query()
+	query.path = func(context.Context) (fromV *sql.Selector, _ error) {
+		id := _m.ID
+		step := sqlgraph.NewStep(
+			sqlgraph.From(resource.Table, resource.FieldID, id),
+			sqlgraph.To(permissionresource.Table, permissionresource.FieldID),
+			sqlgraph.Edge(sqlgraph.O2M, true, resource.PermissionResourcesTable, resource.PermissionResourcesColumn),
+		)
+		fromV = sqlgraph.Neighbors(_m.driver.Dialect(), step)
+		return fromV, nil
+	}
+	return query
+}
+
 // Hooks returns the client hooks.
 func (c *ResourceClient) Hooks() []Hook {
 	return c.hooks.Resource

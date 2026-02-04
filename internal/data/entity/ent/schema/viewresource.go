@@ -48,10 +48,12 @@ func (ViewResource) Edges() []ent.Edge {
 		edge.To("view", View.Type).
 			Field("view_id").
 			Unique().
-			Required(),
+			Required().
+			Annotations(entsql.OnDelete(entsql.Cascade)),
 		edge.To("resource", Resource.Type).
 			Field("resource_id").
 			Unique().
-			Required(),
+			Required().
+			Annotations(entsql.OnDelete(entsql.Cascade)),
 	}
 }

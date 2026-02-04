@@ -53,10 +53,12 @@ func (PermissionResource) Edges() []ent.Edge {
 		edge.To("permission", Permission.Type).
 			Field("permission_id").
 			Unique().
-			Required(),
+			Required().
+			Annotations(entsql.OnDelete(entsql.Cascade)),
 		edge.To("resource", Resource.Type).
 			Field("resource_id").
 			Unique().
-			Required(),
+			Required().
+			Annotations(entsql.OnDelete(entsql.Cascade)),
 	}
 }

@@ -177,5 +177,18 @@ func (r *viewRepo) Update(ctx context.Context, in *types.View, opts ...*dto.View
 
 // Delete deletes a view by its ID.
 func (r *viewRepo) Delete(ctx context.Context, id int64) error {
-	return r.db.View(ctx).DeleteOneID(id).Exec(ctx)
+	return r.db.Tx(ctx, func(txCtx context.Context) error {
+		// Clear all associations before deletion
+		err := r.db.View(txCtx).UpdateOneID(id).
+			ClearResources().
+			ClearPermissions().
+			ClearChildren().
+			Exec(txCtx)
+		if err != nil {
+			return err
+		}
+
+		// Delete the View entity
+		return r.db.View(txCtx).DeleteOneID(id).Exec(txCtx)
+	})
 }

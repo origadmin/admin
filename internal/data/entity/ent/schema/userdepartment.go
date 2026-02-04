@@ -59,10 +59,12 @@ func (UserDepartment) Edges() []ent.Edge {
 		edge.To("user", User.Type).
 			Field("user_id").
 			Unique().
-			Required(),
+			Required().
+			Annotations(entsql.OnDelete(entsql.Cascade)),
 		edge.To("department", Department.Type).
 			Field("department_id").
 			Unique().
-			Required(),
+			Required().
+			Annotations(entsql.OnDelete(entsql.Cascade)),
 	}
 }

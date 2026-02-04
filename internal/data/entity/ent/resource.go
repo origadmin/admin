@@ -77,9 +77,11 @@ type ResourceEdges struct {
 	Permissions []*Permission `json:"permissions,omitempty"`
 	// ViewResources holds the value of the view_resources edge.
 	ViewResources []*ViewResource `json:"view_resources,omitempty"`
+	// PermissionResources holds the value of the permission_resources edge.
+	PermissionResources []*PermissionResource `json:"permission_resources,omitempty"`
 	// loadedTypes holds the information for reporting if a
 	// type was loaded (or requested) in eager-loading or not.
-	loadedTypes [5]bool
+	loadedTypes [6]bool
 }
 
 // ParentOrErr returns the Parent value or an error if the edge
@@ -127,6 +129,15 @@ func (e ResourceEdges) ViewResourcesOrErr() ([]*ViewResource, error) {
 		return e.ViewResources, nil
 	}
 	return nil, &NotLoadedError{edge: "view_resources"}
+}
+
+// PermissionResourcesOrErr returns the PermissionResources value or an error if the edge
+// was not loaded in eager-loading.
+func (e ResourceEdges) PermissionResourcesOrErr() ([]*PermissionResource, error) {
+	if e.loadedTypes[5] {
+		return e.PermissionResources, nil
+	}
+	return nil, &NotLoadedError{edge: "permission_resources"}
 }
 
 // scanValues returns the types for scanning values from sql.Rows.
@@ -317,6 +328,11 @@ func (_m *Resource) QueryPermissions() *PermissionQuery {
 // QueryViewResources queries the "view_resources" edge of the Resource entity.
 func (_m *Resource) QueryViewResources() *ViewResourceQuery {
 	return NewResourceClient(_m.config).QueryViewResources(_m)
+}
+
+// QueryPermissionResources queries the "permission_resources" edge of the Resource entity.
+func (_m *Resource) QueryPermissionResources() *PermissionResourceQuery {
+	return NewResourceClient(_m.config).QueryPermissionResources(_m)
 }
 
 // Update returns a builder for updating this Resource.

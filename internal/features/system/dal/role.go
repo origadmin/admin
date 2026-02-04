@@ -78,7 +78,19 @@ func (r *roleRepo) Create(ctx context.Context, rl *types.Role, opts ...*dto.Role
 }
 
 func (r *roleRepo) Delete(ctx context.Context, id int64) error {
-	return r.db.Role(ctx).DeleteOneID(id).Exec(ctx)
+	return r.db.Tx(ctx, func(txCtx context.Context) error {
+		// Clear all associations before deletion (deletes intermediate table records)
+		err := r.db.Role(txCtx).UpdateOneID(id).
+			ClearPermissions().
+			ClearUsers().
+			Exec(txCtx)
+		if err != nil {
+			return err
+		}
+
+		// Delete the Role entity
+		return r.db.Role(txCtx).DeleteOneID(id).Exec(txCtx)
+	})
 }
 
 func (r *roleRepo) Update(ctx context.Context, rl *types.Role, opts ...*dto.RoleUpdateOption) (*types.Role, error) {

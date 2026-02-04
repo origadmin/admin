@@ -59,10 +59,12 @@ func (PositionPermission) Edges() []ent.Edge {
 		edge.To("position", Position.Type).
 			Field("position_id").
 			Unique().
-			Required(),
+			Required().
+			Annotations(entsql.OnDelete(entsql.Cascade)),
 		edge.To("permission", Permission.Type).
 			Field("permission_id").
 			Unique().
-			Required(),
+			Required().
+			Annotations(entsql.OnDelete(entsql.Cascade)),
 	}
 }

@@ -84,18 +84,28 @@ func (r *userRepo) Create(ctx context.Context, u *types.User, password string, o
 }
 
 func (r *userRepo) Delete(ctx context.Context, id int64) error {
+	// User uses soft-delete, so we only set delete_time.
+	// Associations (user_roles, user_positions, user_departments) are NOT cleared
+	// to allow for potential restoration of the user with their original associations.
 	return r.db.User(ctx).DeleteOneID(id).Exec(ctx)
 }
 
 func (r *userRepo) Restore(ctx context.Context, id int64) error {
 	// We must use `Update` which bypasses the soft-delete interceptor
 	// to restore a soft-deleted record.
-	_, err := r.db.User(ctx).
+	result, err := r.db.User(ctx).
 		Update().
 		Where(user.ID(id)).
 		ClearDeleteTime().
 		Save(ctx)
-	return err
+	if err != nil {
+		return err
+	}
+	// If no rows were affected, the user doesn't exist (including soft-deleted ones)
+	if result == 0 {
+		return &ent.NotFoundError{}
+	}
+	return nil
 }
 
 func (r *userRepo) Update(ctx context.Context, u *types.User, opts ...*dto.UserUpdateOption) (*types.User, error) {

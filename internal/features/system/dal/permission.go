@@ -70,7 +70,21 @@ func (r *permissionRepo) Create(ctx context.Context, p *types.Permission, opts .
 }
 
 func (r *permissionRepo) Delete(ctx context.Context, id int64) error {
-	return r.db.Permission(ctx).DeleteOneID(id).Exec(ctx)
+	return r.db.Tx(ctx, func(txCtx context.Context) error {
+		// Clear all associations before deletion (deletes intermediate table records)
+		err := r.db.Permission(txCtx).UpdateOneID(id).
+			ClearResources().
+			ClearRoles().
+			ClearPositions().
+			ClearViews().
+			Exec(txCtx)
+		if err != nil {
+			return err
+		}
+
+		// Delete the Permission entity
+		return r.db.Permission(txCtx).DeleteOneID(id).Exec(txCtx)
+	})
 }
 
 func (r *permissionRepo) Update(ctx context.Context, p *types.Permission, opts ...*dto.PermissionUpdateOption) (*types.Permission, error) {

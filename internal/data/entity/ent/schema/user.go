@@ -20,7 +20,6 @@ import (
 	gen "origadmin/application/admin/internal/data/entity/ent"
 	"origadmin/application/admin/internal/data/entity/ent/hook"
 	"origadmin/application/admin/internal/data/entity/ent/user"
-
 	"origadmin/application/admin/internal/data/enums"
 	"origadmin/application/admin/internal/helpers/ent/mixin"
 	"origadmin/application/admin/internal/helpers/i18n"
@@ -164,6 +163,8 @@ func (User) Hooks() []ent.Hook {
 		hook.On(preventDeleteSystemUser, ent.OpDelete|ent.OpDeleteOne),
 		// On UPDATE, convert DELETE operations to UPDATE operations.
 		mixin.SoftDeleteHook(mixin.SoftDeleteMixin{}),
+		// On DELETE, clear user edges
+		//hook.On(clearUserEdges, ent.OpDelete|ent.OpDeleteOne),
 	}
 }
 

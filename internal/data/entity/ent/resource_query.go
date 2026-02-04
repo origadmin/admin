@@ -8,6 +8,7 @@ import (
 	"fmt"
 	"math"
 	"origadmin/application/admin/internal/data/entity/ent/permission"
+	"origadmin/application/admin/internal/data/entity/ent/permissionresource"
 	"origadmin/application/admin/internal/data/entity/ent/predicate"
 	"origadmin/application/admin/internal/data/entity/ent/resource"
 	"origadmin/application/admin/internal/data/entity/ent/view"
@@ -23,16 +24,17 @@ import (
 // ResourceQuery is the builder for querying Resource entities.
 type ResourceQuery struct {
 	config
-	ctx               *QueryContext
-	order             []resource.OrderOption
-	inters            []Interceptor
-	predicates        []predicate.Resource
-	withParent        *ResourceQuery
-	withChildren      *ResourceQuery
-	withViews         *ViewQuery
-	withPermissions   *PermissionQuery
-	withViewResources *ViewResourceQuery
-	modifiers         []func(*sql.Selector)
+	ctx                     *QueryContext
+	order                   []resource.OrderOption
+	inters                  []Interceptor
+	predicates              []predicate.Resource
+	withParent              *ResourceQuery
+	withChildren            *ResourceQuery
+	withViews               *ViewQuery
+	withPermissions         *PermissionQuery
+	withViewResources       *ViewResourceQuery
+	withPermissionResources *PermissionResourceQuery
+	modifiers               []func(*sql.Selector)
 	// intermediate query (i.e. traversal path).
 	sql  *sql.Selector
 	path func(context.Context) (*sql.Selector, error)
@@ -172,6 +174,28 @@ func (_q *ResourceQuery) QueryViewResources() *ViewResourceQuery {
 			sqlgraph.From(resource.Table, resource.FieldID, selector),
 			sqlgraph.To(viewresource.Table, viewresource.FieldID),
 			sqlgraph.Edge(sqlgraph.O2M, true, resource.ViewResourcesTable, resource.ViewResourcesColumn),
+		)
+		fromU = sqlgraph.SetNeighbors(_q.driver.Dialect(), step)
+		return fromU, nil
+	}
+	return query
+}
+
+// QueryPermissionResources chains the current query on the "permission_resources" edge.
+func (_q *ResourceQuery) QueryPermissionResources() *PermissionResourceQuery {
+	query := (&PermissionResourceClient{config: _q.config}).Query()
+	query.path = func(ctx context.Context) (fromU *sql.Selector, err error) {
+		if err := _q.prepareQuery(ctx); err != nil {
+			return nil, err
+		}
+		selector := _q.sqlQuery(ctx)
+		if err := selector.Err(); err != nil {
+			return nil, err
+		}
+		step := sqlgraph.NewStep(
+			sqlgraph.From(resource.Table, resource.FieldID, selector),
+			sqlgraph.To(permissionresource.Table, permissionresource.FieldID),
+			sqlgraph.Edge(sqlgraph.O2M, true, resource.PermissionResourcesTable, resource.PermissionResourcesColumn),
 		)
 		fromU = sqlgraph.SetNeighbors(_q.driver.Dialect(), step)
 		return fromU, nil
@@ -366,16 +390,17 @@ func (_q *ResourceQuery) Clone() *ResourceQuery {
 		return nil
 	}
 	return &ResourceQuery{
-		config:            _q.config,
-		ctx:               _q.ctx.Clone(),
-		order:             append([]resource.OrderOption{}, _q.order...),
-		inters:            append([]Interceptor{}, _q.inters...),
-		predicates:        append([]predicate.Resource{}, _q.predicates...),
-		withParent:        _q.withParent.Clone(),
-		withChildren:      _q.withChildren.Clone(),
-		withViews:         _q.withViews.Clone(),
-		withPermissions:   _q.withPermissions.Clone(),
-		withViewResources: _q.withViewResources.Clone(),
+		config:                  _q.config,
+		ctx:                     _q.ctx.Clone(),
+		order:                   append([]resource.OrderOption{}, _q.order...),
+		inters:                  append([]Interceptor{}, _q.inters...),
+		predicates:              append([]predicate.Resource{}, _q.predicates...),
+		withParent:              _q.withParent.Clone(),
+		withChildren:            _q.withChildren.Clone(),
+		withViews:               _q.withViews.Clone(),
+		withPermissions:         _q.withPermissions.Clone(),
+		withViewResources:       _q.withViewResources.Clone(),
+		withPermissionResources: _q.withPermissionResources.Clone(),
 		// clone intermediate query.
 		sql:       _q.sql.Clone(),
 		path:      _q.path,
@@ -435,6 +460,17 @@ func (_q *ResourceQuery) WithViewResources(opts ...func(*ViewResourceQuery)) *Re
 		opt(query)
 	}
 	_q.withViewResources = query
+	return _q
+}
+
+// WithPermissionResources tells the query-builder to eager-load the nodes that are connected to
+// the "permission_resources" edge. The optional arguments are used to configure the query builder of the edge.
+func (_q *ResourceQuery) WithPermissionResources(opts ...func(*PermissionResourceQuery)) *ResourceQuery {
+	query := (&PermissionResourceClient{config: _q.config}).Query()
+	for _, opt := range opts {
+		opt(query)
+	}
+	_q.withPermissionResources = query
 	return _q
 }
 
@@ -516,12 +552,13 @@ func (_q *ResourceQuery) sqlAll(ctx context.Context, hooks ...queryHook) ([]*Res
 	var (
 		nodes       = []*Resource{}
 		_spec       = _q.querySpec()
-		loadedTypes = [5]bool{
+		loadedTypes = [6]bool{
 			_q.withParent != nil,
 			_q.withChildren != nil,
 			_q.withViews != nil,
 			_q.withPermissions != nil,
 			_q.withViewResources != nil,
+			_q.withPermissionResources != nil,
 		}
 	)
 	_spec.ScanValues = func(columns []string) ([]any, error) {
@@ -576,6 +613,15 @@ func (_q *ResourceQuery) sqlAll(ctx context.Context, hooks ...queryHook) ([]*Res
 		if err := _q.loadViewResources(ctx, query, nodes,
 			func(n *Resource) { n.Edges.ViewResources = []*ViewResource{} },
 			func(n *Resource, e *ViewResource) { n.Edges.ViewResources = append(n.Edges.ViewResources, e) }); err != nil {
+			return nil, err
+		}
+	}
+	if query := _q.withPermissionResources; query != nil {
+		if err := _q.loadPermissionResources(ctx, query, nodes,
+			func(n *Resource) { n.Edges.PermissionResources = []*PermissionResource{} },
+			func(n *Resource, e *PermissionResource) {
+				n.Edges.PermissionResources = append(n.Edges.PermissionResources, e)
+			}); err != nil {
 			return nil, err
 		}
 	}
@@ -778,6 +824,36 @@ func (_q *ResourceQuery) loadViewResources(ctx context.Context, query *ViewResou
 	}
 	query.Where(predicate.ViewResource(func(s *sql.Selector) {
 		s.Where(sql.InValues(s.C(resource.ViewResourcesColumn), fks...))
+	}))
+	neighbors, err := query.All(ctx)
+	if err != nil {
+		return err
+	}
+	for _, n := range neighbors {
+		fk := n.ResourceID
+		node, ok := nodeids[fk]
+		if !ok {
+			return fmt.Errorf(`unexpected referenced foreign-key "resource_id" returned %v for node %v`, fk, n.ID)
+		}
+		assign(node, n)
+	}
+	return nil
+}
+func (_q *ResourceQuery) loadPermissionResources(ctx context.Context, query *PermissionResourceQuery, nodes []*Resource, init func(*Resource), assign func(*Resource, *PermissionResource)) error {
+	fks := make([]driver.Value, 0, len(nodes))
+	nodeids := make(map[int64]*Resource)
+	for i := range nodes {
+		fks = append(fks, nodes[i].ID)
+		nodeids[nodes[i].ID] = nodes[i]
+		if init != nil {
+			init(nodes[i])
+		}
+	}
+	if len(query.ctx.Fields) > 0 {
+		query.ctx.AppendFieldOnce(permissionresource.FieldResourceID)
+	}
+	query.Where(predicate.PermissionResource(func(s *sql.Selector) {
+		s.Where(sql.InValues(s.C(resource.PermissionResourcesColumn), fks...))
 	}))
 	neighbors, err := query.All(ctx)
 	if err != nil {

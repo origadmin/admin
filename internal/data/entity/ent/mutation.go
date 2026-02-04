@@ -6386,48 +6386,51 @@ func (m *PositionPermissionMutation) ResetEdge(name string) error {
 // ResourceMutation represents an operation that mutates the Resource nodes in the graph.
 type ResourceMutation struct {
 	config
-	op                    Op
-	typ                   string
-	id                    *int64
-	create_time           *time.Time
-	update_time           *time.Time
-	keyword               *string
-	name                  *string
-	i18n                  *string
-	_type                 *string
-	status                *enums.Status
-	addstatus             *enums.Status
-	sequence              *int
-	addsequence           *int
-	method                *string
-	_path                 *string
-	operation             *string
-	service_name          *string
-	policy                *string
-	version_id            *string
-	last_sync_version_id  *string
-	sync_status           *string
-	tree_path             *string
-	properties            *string
-	description           *string
-	clearedFields         map[string]struct{}
-	parent                *int64
-	clearedparent         bool
-	children              map[int64]struct{}
-	removedchildren       map[int64]struct{}
-	clearedchildren       bool
-	views                 map[int64]struct{}
-	removedviews          map[int64]struct{}
-	clearedviews          bool
-	permissions           map[int64]struct{}
-	removedpermissions    map[int64]struct{}
-	clearedpermissions    bool
-	view_resources        map[int]struct{}
-	removedview_resources map[int]struct{}
-	clearedview_resources bool
-	done                  bool
-	oldValue              func(context.Context) (*Resource, error)
-	predicates            []predicate.Resource
+	op                          Op
+	typ                         string
+	id                          *int64
+	create_time                 *time.Time
+	update_time                 *time.Time
+	keyword                     *string
+	name                        *string
+	i18n                        *string
+	_type                       *string
+	status                      *enums.Status
+	addstatus                   *enums.Status
+	sequence                    *int
+	addsequence                 *int
+	method                      *string
+	_path                       *string
+	operation                   *string
+	service_name                *string
+	policy                      *string
+	version_id                  *string
+	last_sync_version_id        *string
+	sync_status                 *string
+	tree_path                   *string
+	properties                  *string
+	description                 *string
+	clearedFields               map[string]struct{}
+	parent                      *int64
+	clearedparent               bool
+	children                    map[int64]struct{}
+	removedchildren             map[int64]struct{}
+	clearedchildren             bool
+	views                       map[int64]struct{}
+	removedviews                map[int64]struct{}
+	clearedviews                bool
+	permissions                 map[int64]struct{}
+	removedpermissions          map[int64]struct{}
+	clearedpermissions          bool
+	view_resources              map[int]struct{}
+	removedview_resources       map[int]struct{}
+	clearedview_resources       bool
+	permission_resources        map[int]struct{}
+	removedpermission_resources map[int]struct{}
+	clearedpermission_resources bool
+	done                        bool
+	oldValue                    func(context.Context) (*Resource, error)
+	predicates                  []predicate.Resource
 }
 
 var _ ent.Mutation = (*ResourceMutation)(nil)
@@ -7550,6 +7553,60 @@ func (m *ResourceMutation) ResetViewResources() {
 	m.removedview_resources = nil
 }
 
+// AddPermissionResourceIDs adds the "permission_resources" edge to the PermissionResource entity by ids.
+func (m *ResourceMutation) AddPermissionResourceIDs(ids ...int) {
+	if m.permission_resources == nil {
+		m.permission_resources = make(map[int]struct{})
+	}
+	for i := range ids {
+		m.permission_resources[ids[i]] = struct{}{}
+	}
+}
+
+// ClearPermissionResources clears the "permission_resources" edge to the PermissionResource entity.
+func (m *ResourceMutation) ClearPermissionResources() {
+	m.clearedpermission_resources = true
+}
+
+// PermissionResourcesCleared reports if the "permission_resources" edge to the PermissionResource entity was cleared.
+func (m *ResourceMutation) PermissionResourcesCleared() bool {
+	return m.clearedpermission_resources
+}
+
+// RemovePermissionResourceIDs removes the "permission_resources" edge to the PermissionResource entity by IDs.
+func (m *ResourceMutation) RemovePermissionResourceIDs(ids ...int) {
+	if m.removedpermission_resources == nil {
+		m.removedpermission_resources = make(map[int]struct{})
+	}
+	for i := range ids {
+		delete(m.permission_resources, ids[i])
+		m.removedpermission_resources[ids[i]] = struct{}{}
+	}
+}
+
+// RemovedPermissionResources returns the removed IDs of the "permission_resources" edge to the PermissionResource entity.
+func (m *ResourceMutation) RemovedPermissionResourcesIDs() (ids []int) {
+	for id := range m.removedpermission_resources {
+		ids = append(ids, id)
+	}
+	return
+}
+
+// PermissionResourcesIDs returns the "permission_resources" edge IDs in the mutation.
+func (m *ResourceMutation) PermissionResourcesIDs() (ids []int) {
+	for id := range m.permission_resources {
+		ids = append(ids, id)
+	}
+	return
+}
+
+// ResetPermissionResources resets all changes to the "permission_resources" edge.
+func (m *ResourceMutation) ResetPermissionResources() {
+	m.permission_resources = nil
+	m.clearedpermission_resources = false
+	m.removedpermission_resources = nil
+}
+
 // Where appends a list predicates to the ResourceMutation builder.
 func (m *ResourceMutation) Where(ps ...predicate.Resource) {
 	m.predicates = append(m.predicates, ps...)
@@ -8042,7 +8099,7 @@ func (m *ResourceMutation) ResetField(name string) error {
 
 // AddedEdges returns all edge names that were set/added in this mutation.
 func (m *ResourceMutation) AddedEdges() []string {
-	edges := make([]string, 0, 5)
+	edges := make([]string, 0, 6)
 	if m.parent != nil {
 		edges = append(edges, resource.EdgeParent)
 	}
@@ -8057,6 +8114,9 @@ func (m *ResourceMutation) AddedEdges() []string {
 	}
 	if m.view_resources != nil {
 		edges = append(edges, resource.EdgeViewResources)
+	}
+	if m.permission_resources != nil {
+		edges = append(edges, resource.EdgePermissionResources)
 	}
 	return edges
 }
@@ -8093,13 +8153,19 @@ func (m *ResourceMutation) AddedIDs(name string) []ent.Value {
 			ids = append(ids, id)
 		}
 		return ids
+	case resource.EdgePermissionResources:
+		ids := make([]ent.Value, 0, len(m.permission_resources))
+		for id := range m.permission_resources {
+			ids = append(ids, id)
+		}
+		return ids
 	}
 	return nil
 }
 
 // RemovedEdges returns all edge names that were removed in this mutation.
 func (m *ResourceMutation) RemovedEdges() []string {
-	edges := make([]string, 0, 5)
+	edges := make([]string, 0, 6)
 	if m.removedchildren != nil {
 		edges = append(edges, resource.EdgeChildren)
 	}
@@ -8111,6 +8177,9 @@ func (m *ResourceMutation) RemovedEdges() []string {
 	}
 	if m.removedview_resources != nil {
 		edges = append(edges, resource.EdgeViewResources)
+	}
+	if m.removedpermission_resources != nil {
+		edges = append(edges, resource.EdgePermissionResources)
 	}
 	return edges
 }
@@ -8143,13 +8212,19 @@ func (m *ResourceMutation) RemovedIDs(name string) []ent.Value {
 			ids = append(ids, id)
 		}
 		return ids
+	case resource.EdgePermissionResources:
+		ids := make([]ent.Value, 0, len(m.removedpermission_resources))
+		for id := range m.removedpermission_resources {
+			ids = append(ids, id)
+		}
+		return ids
 	}
 	return nil
 }
 
 // ClearedEdges returns all edge names that were cleared in this mutation.
 func (m *ResourceMutation) ClearedEdges() []string {
-	edges := make([]string, 0, 5)
+	edges := make([]string, 0, 6)
 	if m.clearedparent {
 		edges = append(edges, resource.EdgeParent)
 	}
@@ -8164,6 +8239,9 @@ func (m *ResourceMutation) ClearedEdges() []string {
 	}
 	if m.clearedview_resources {
 		edges = append(edges, resource.EdgeViewResources)
+	}
+	if m.clearedpermission_resources {
+		edges = append(edges, resource.EdgePermissionResources)
 	}
 	return edges
 }
@@ -8182,6 +8260,8 @@ func (m *ResourceMutation) EdgeCleared(name string) bool {
 		return m.clearedpermissions
 	case resource.EdgeViewResources:
 		return m.clearedview_resources
+	case resource.EdgePermissionResources:
+		return m.clearedpermission_resources
 	}
 	return false
 }
@@ -8215,6 +8295,9 @@ func (m *ResourceMutation) ResetEdge(name string) error {
 		return nil
 	case resource.EdgeViewResources:
 		m.ResetViewResources()
+		return nil
+	case resource.EdgePermissionResources:
+		m.ResetPermissionResources()
 		return nil
 	}
 	return fmt.Errorf("unknown Resource edge %s", name)

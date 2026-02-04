@@ -119,7 +119,20 @@ func (r *resourceRepo) CreateFromPolicy(ctx context.Context, input *dto.Resource
 }
 
 func (r *resourceRepo) Delete(ctx context.Context, id int64) error {
-	return r.db.Resource(ctx).DeleteOneID(id).Exec(ctx)
+	return r.db.Tx(ctx, func(txCtx context.Context) error {
+		// Clear all associations before deletion
+		err := r.db.Resource(txCtx).UpdateOneID(id).
+			ClearPermissions().
+			ClearViews().
+			ClearChildren().
+			Exec(txCtx)
+		if err != nil {
+			return err
+		}
+
+		// Delete the Resource entity
+		return r.db.Resource(txCtx).DeleteOneID(id).Exec(txCtx)
+	})
 }
 
 func (r *resourceRepo) Update(ctx context.Context, res *types.Resource, opts ...*dto.ResourceUpdateOption) (*types.Resource, error) {
