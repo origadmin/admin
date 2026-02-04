@@ -1,4 +1,4 @@
-package e2e
+package auth
 
 import (
 	"io"
@@ -10,6 +10,7 @@ import (
 	"google.golang.org/protobuf/encoding/protojson"
 
 	v1 "origadmin/application/admin/api/v1/services/auth"
+	"origadmin/application/admin/tests/e2e"
 )
 
 func TestLogin_E2E(t *testing.T) {
@@ -20,7 +21,7 @@ func TestLogin_E2E(t *testing.T) {
 			Password: "admin123", // Corrected admin password
 		}
 
-		resp := doRequest(t, "POST", "/api/v1/auth/login", loginReq, "")
+		resp := e2e.DoRequest(t, "POST", "/api/v1/auth/login", loginReq, "")
 		defer resp.Body.Close()
 
 		respBody, err := io.ReadAll(resp.Body)

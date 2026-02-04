@@ -23,42 +23,43 @@ func TestCasbinModel(t *testing.T) {
 
 	t.Run("TestBasicPermission", func(t *testing.T) {
 		// 添加策略: role1 可以访问 resource1 的 read 操作
-		_, err := enforcer.AddPolicy("role1", "system:user:list", "read", "domain1")
+		_, err := enforcer.AddPolicy("role1", "domain1", "system:user:list", "read")
 		require.NoError(t, err)
 
 		// 验证权限
-		allowed, err := enforcer.Enforce("role1", "system:user:list", "read", "domain1")
+		allowed, err := enforcer.Enforce("role1", "domain1", "system:user:list", "read")
 		require.NoError(t, err)
 		assert.True(t, allowed, "role1 should have read permission")
 
 		// 验证无权限的操作
-		allowed, err = enforcer.Enforce("role1", "system:user:delete", "write", "domain1")
+		allowed, err = enforcer.Enforce("role1", "domain1", "system:user:delete", "write")
 		require.NoError(t, err)
 		assert.False(t, allowed, "role1 should not have delete permission")
 	})
 
 	t.Run("TestWildcardMatching", func(t *testing.T) {
-		// 添加通配符策略: * 表示所有操作
-		_, err := enforcer.AddPolicy("admin", "system:*", "*", "*")
+		// 添加通配符策略: domain使用通配符*匹配所有domain
+		_, err := enforcer.AddPolicy("admin", "*", "system:*", "ANY")
 		require.NoError(t, err)
 
-		// 验证通配符权限
+		// 验证通配符权限: 测试不同domain都能匹配
 		tests := []struct {
 			sub  string
+			dom  string
 			obj  string
 			act  string
-			dom  string
 			want bool
 		}{
-			{"admin", "system:user:list", "read", "domain1", true},
-			{"admin", "system:user:create", "write", "domain2", true},
-			{"admin", "system:role:delete", "delete", "domain3", true},
-			{"user", "system:user:list", "read", "domain1", false},
+			{"admin", "domain1", "system:user:list", "read", true},
+			{"admin", "domain2", "system:user:create", "write", true},
+			{"admin", "domain3", "system:role:delete", "delete", true},
+			{"admin", "any_domain", "system:user:list", "read", true},
+			{"user", "domain1", "system:user:list", "read", false},
 		}
 
 		for _, tt := range tests {
-			t.Run(tt.sub+"_"+tt.obj, func(t *testing.T) {
-				allowed, err := enforcer.Enforce(tt.sub, tt.obj, tt.act, tt.dom)
+			t.Run(tt.sub+"_"+tt.dom+"_"+tt.obj, func(t *testing.T) {
+				allowed, err := enforcer.Enforce(tt.sub, tt.dom, tt.obj, tt.act)
 				require.NoError(t, err)
 				assert.Equal(t, tt.want, allowed)
 			})
@@ -74,30 +75,30 @@ func TestCasbinModel(t *testing.T) {
 		require.NoError(t, err)
 
 		// 添加admin权限
-		_, err = enforcer.AddPolicy("admin", "system:user:list", "read", "domain1")
+		_, err = enforcer.AddPolicy("admin", "domain1", "system:user:list", "read")
 		require.NoError(t, err)
 
 		// 验证继承权限
-		allowed, err := enforcer.Enforce("user1", "system:user:list", "read", "domain1")
+		allowed, err := enforcer.Enforce("user1", "domain1", "system:user:list", "read")
 		require.NoError(t, err)
 		assert.True(t, allowed, "user1 should inherit permission from admin through role1")
 	})
 
 	t.Run("TestDomainIsolation", func(t *testing.T) {
 		// 域隔离测试
-		_, err := enforcer.AddPolicy("user1", "resource1", "read", "domain1")
+		_, err := enforcer.AddPolicy("user1", "domain1", "resource1", "read")
 		require.NoError(t, err)
 
-		_, err = enforcer.AddPolicy("user1", "resource1", "read", "domain2")
+		_, err = enforcer.AddPolicy("user1", "domain2", "resource1", "read")
 		require.NoError(t, err)
 
 		// user1 在 domain1 有权限
-		allowed, err := enforcer.Enforce("user1", "resource1", "read", "domain1")
+		allowed, err := enforcer.Enforce("user1", "domain1", "resource1", "read")
 		require.NoError(t, err)
 		assert.True(t, allowed)
 
 		// user1 在 domain2 也有权限
-		allowed, err = enforcer.Enforce("user1", "resource1", "read", "domain2")
+		allowed, err = enforcer.Enforce("user1", "domain2", "resource1", "read")
 		require.NoError(t, err)
 		assert.True(t, allowed)
 

@@ -36,6 +36,26 @@ func NewSystemTestClientWithPrefix(prefix string) *SystemTestClient {
 // Global system test client instance for backward compatibility
 var defaultSystemClient = NewSystemTestClientWithPrefix("/api/v1")
 
+// LoginAndGetToken performs admin login and returns the access token (exported version)
+func LoginAndGetToken(t *testing.T) string {
+	return loginAndGetToken(t)
+}
+
+// Login performs login and returns the access token (exported version)
+func Login(t *testing.T, username, password string) string {
+	return login(t, username, password)
+}
+
+// DoRequest sends an HTTP request with JSON body (exported version)
+func DoRequest(t *testing.T, method, path string, body interface{}, token string) *http.Response {
+	return doRequest(t, method, path, body, token)
+}
+
+// DeleteResource deletes a resource by ID (exported version)
+func DeleteResource(t *testing.T, token, path string, id int64, isUser bool) {
+	deleteResource(t, token, path, id, isUser)
+}
+
 // loginAndGetToken performs admin login and returns the access token
 func loginAndGetToken(t *testing.T) string {
 	return login(t, "admin", "admin123")
@@ -50,6 +70,36 @@ func login(t *testing.T, username, password string) string {
 func doRequest(t *testing.T, method, path string, body interface{}, token string) *http.Response {
 	client := tools.NewTestHTTPClient(baseURL)
 	return client.Request(t, method, path, body, token)
+}
+
+// CreateUser creates a new user via API and returns its ID (exported version)
+func CreateUser(t *testing.T, token, username, password string, roleIDs []int64) int64 {
+	return createUser(t, token, username, password, roleIDs)
+}
+
+// UpdateRole updates an existing role via API (exported version)
+func UpdateRole(t *testing.T, token string, roleID int64, name, keyword string, permissionIDs []int64) {
+	updateRole(t, token, roleID, name, keyword, permissionIDs)
+}
+
+// UpdateUser updates an existing user via API (exported version)
+func UpdateUser(t *testing.T, token string, userID int64, user interface{}, updateMaskPaths []string, roleIDs []int64) {
+	updateUser(t, token, userID, user, updateMaskPaths, roleIDs)
+}
+
+// UpdateResource updates an existing resource via API (exported version)
+func UpdateResource(t *testing.T, token string, resID int64, keyword, path, method, operation string) {
+	updateResource(t, token, resID, keyword, path, method, operation)
+}
+
+// CreatePermission creates a new permission via API and returns its ID (exported version)
+func CreatePermission(t *testing.T, token, name, keyword string, resourceIDs []int64) int64 {
+	return createPermission(t, token, name, keyword, resourceIDs)
+}
+
+// CreateRole creates a new role via API and returns its ID (exported version)
+func CreateRole(t *testing.T, token, name, keyword string, permissionIDs []int64) int64 {
+	return createRole(t, token, name, keyword, permissionIDs)
 }
 
 // createRole creates a new role via API and returns its ID (backward compatibility)

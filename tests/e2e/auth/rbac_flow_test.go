@@ -1,4 +1,4 @@
-package e2e
+package auth
 
 import (
 	"io"
@@ -13,6 +13,7 @@ import (
 
 	systemv1 "origadmin/application/admin/api/v1/services/system"
 	typesv1 "origadmin/application/admin/api/v1/services/types"
+	"origadmin/application/admin/tests/e2e"
 )
 
 // TestRBACFlow executes the complete Role-Based Access Control workflow,
@@ -45,7 +46,7 @@ func TestRBACFlow(t *testing.T) {
 
 	// 1. Admin Login
 	t.Run("Step1_AdminLogin", func(t *testing.T) {
-		adminToken = loginAndGetToken(t)
+		adminToken = e2e.LoginAndGetToken(t)
 		require.NotEmpty(t, adminToken, "Admin login failed")
 		t.Log("Admin logged in successfully")
 	})
@@ -56,35 +57,35 @@ func TestRBACFlow(t *testing.T) {
 		// Use assert to ensure all cleanup attempts are made.
 		// The order is important: delete users first, then roles, then permissions, then resources.
 		if userEditorID != 0 {
-			deleteResource(t, adminToken, "/api/v1/sys/users", userEditorID, true)
+			e2e.DeleteResource(t, adminToken, "/api/v1/sys/users", userEditorID, true)
 		}
 		if userViewerID != 0 {
-			deleteResource(t, adminToken, "/api/v1/sys/users", userViewerID, true)
+			e2e.DeleteResource(t, adminToken, "/api/v1/sys/users", userViewerID, true)
 		}
 		if userNoRoleID != 0 {
-			deleteResource(t, adminToken, "/api/v1/sys/users", userNoRoleID, true)
+			e2e.DeleteResource(t, adminToken, "/api/v1/sys/users", userNoRoleID, true)
 		}
 		if userEditorTestID != 0 {
-			deleteResource(t, adminToken, "/api/v1/sys/users", userEditorTestID, true)
+			e2e.DeleteResource(t, adminToken, "/api/v1/sys/users", userEditorTestID, true)
 		}
 		if userViewerTestID != 0 {
-			deleteResource(t, adminToken, "/api/v1/sys/users", userViewerTestID, true)
+			e2e.DeleteResource(t, adminToken, "/api/v1/sys/users", userViewerTestID, true)
 		}
 
 		if roleEditorID != 0 {
-			deleteResource(t, adminToken, "/api/v1/sys/roles", roleEditorID, false)
+			e2e.DeleteResource(t, adminToken, "/api/v1/sys/roles", roleEditorID, false)
 		}
 		if roleViewerID != 0 {
-			deleteResource(t, adminToken, "/api/v1/sys/roles", roleViewerID, false)
+			e2e.DeleteResource(t, adminToken, "/api/v1/sys/roles", roleViewerID, false)
 		}
 		if permUserListID != 0 {
-			deleteResource(t, adminToken, "/api/v1/sys/permissions", permUserListID, false)
+			e2e.DeleteResource(t, adminToken, "/api/v1/sys/permissions", permUserListID, false)
 		}
 		if permUserCreateID != 0 {
-			deleteResource(t, adminToken, "/api/v1/sys/permissions", permUserCreateID, false)
+			e2e.DeleteResource(t, adminToken, "/api/v1/sys/permissions", permUserCreateID, false)
 		}
 		if permUserDeleteID != 0 {
-			deleteResource(t, adminToken, "/api/v1/sys/permissions", permUserDeleteID, false)
+			e2e.DeleteResource(t, adminToken, "/api/v1/sys/permissions", permUserDeleteID, false)
 		}
 		// Resources are shared, so we don't delete them, but ensure they have correct gRPC operations.
 		// Revert resources to their original state if necessary, or ensure they are idempotent.
@@ -94,7 +95,7 @@ func TestRBACFlow(t *testing.T) {
 
 	// 2. Find Core Resources (APIs)
 	t.Run("Step2_FindResources", func(t *testing.T) {
-		resp := doRequest(t, "GET", "/api/v1/sys/resources?page_size=1000", nil, adminToken)
+		resp := e2e.DoRequest(t, "GET", "/api/v1/sys/resources?page_size=1000", nil, adminToken)
 		defer resp.Body.Close()
 		bodyBytes, _ := io.ReadAll(resp.Body)
 		require.Equal(t, http.StatusOK, resp.StatusCode, "Failed to find resources. Response: %s", string(bodyBytes))
@@ -123,44 +124,44 @@ func TestRBACFlow(t *testing.T) {
 	// This step is crucial because the AuthZ middleware uses gRPC method names (Operation) for enforcement,
 	// while the initial data might only have HTTP paths. We update them to ensure consistency.
 	t.Run("Step2b_UpdateResourcesForGRPC", func(t *testing.T) {
-		updateResource(t, adminToken, resUserListID, "system:user:list_users", "/api/v1/sys/users", "GET", "/api.v1.services.system.UserService/ListUsers")
-		updateResource(t, adminToken, resUserCreateID, "system:user:create_user", "/api/v1/sys/users", "POST", "/api.v1.services.system.UserService/CreateUser")
-		updateResource(t, adminToken, resUserDeleteID, "system:user:delete_user", "/api/v1/sys/users/{id}", "DELETE", "/api.v1.services.system.UserService/DeleteUser")
+		e2e.UpdateResource(t, adminToken, resUserListID, "system:user:list_users", "/api/v1/sys/users", "GET", "/api.v1.services.system.UserService/ListUsers")
+		e2e.UpdateResource(t, adminToken, resUserCreateID, "system:user:create_user", "/api/v1/sys/users", "POST", "/api.v1.services.system.UserService/CreateUser")
+		e2e.UpdateResource(t, adminToken, resUserDeleteID, "system:user:delete_user", "/api/v1/sys/users/{id}", "DELETE", "/api.v1.services.system.UserService/DeleteUser")
 		t.Log("Updated resources with correct gRPC operations.")
 	})
 
 	// 2a. Create Permissions for Resources
 	t.Run("Step2a_CreatePermissions", func(t *testing.T) {
-		permUserListID = createPermission(t, adminToken, "Perm_UserList_"+uniqueSuffix, "system:user:list_users:"+uniqueSuffix, []int64{resUserListID})
+		permUserListID = e2e.CreatePermission(t, adminToken, "Perm_UserList_"+uniqueSuffix, "system:user:list_users:"+uniqueSuffix, []int64{resUserListID})
 		t.Logf("Created Permission for UserList (ID: %d)", permUserListID)
 
-		permUserCreateID = createPermission(t, adminToken, "Perm_UserCreate_"+uniqueSuffix, "system:user:create_user:"+uniqueSuffix, []int64{resUserCreateID})
+		permUserCreateID = e2e.CreatePermission(t, adminToken, "Perm_UserCreate_"+uniqueSuffix, "system:user:create_user:"+uniqueSuffix, []int64{resUserCreateID})
 		t.Logf("Created Permission for UserCreate (ID: %d)", permUserCreateID)
 
-		permUserDeleteID = createPermission(t, adminToken, "Perm_UserDelete_"+uniqueSuffix, "system:user:delete_user:"+uniqueSuffix, []int64{resUserDeleteID})
+		permUserDeleteID = e2e.CreatePermission(t, adminToken, "Perm_UserDelete_"+uniqueSuffix, "system:user:delete_user:"+uniqueSuffix, []int64{resUserDeleteID})
 		t.Logf("Created Permission for UserDelete (ID: %d)", permUserDeleteID)
 	})
 
 	// 3. Create Roles and Assign Initial Permissions
 	t.Run("Step3_CreateRoles", func(t *testing.T) {
 		// Editor Role: Can list and create users.
-		roleEditorID = createRole(t, adminToken, editorRoleName, editorRoleKeyword, []int64{permUserListID, permUserCreateID})
+		roleEditorID = e2e.CreateRole(t, adminToken, editorRoleName, editorRoleKeyword, []int64{permUserListID, permUserCreateID})
 		t.Logf("Created Editor Role (ID: %d) with List and Create permissions", roleEditorID)
 
 		// Viewer Role: Can only list users.
-		roleViewerID = createRole(t, adminToken, viewerRoleName, viewerRoleKeyword, []int64{permUserListID})
+		roleViewerID = e2e.CreateRole(t, adminToken, viewerRoleName, viewerRoleKeyword, []int64{permUserListID})
 		t.Logf("Created Viewer Role (ID: %d) with List-only permission", roleViewerID)
 	})
 
 	// 4. Create Users and Assign Roles
 	t.Run("Step4_CreateUsersAndAssignRoles", func(t *testing.T) {
-		userEditorID = createUser(t, adminToken, editorUser, "password123", []int64{roleEditorID})
+		userEditorID = e2e.CreateUser(t, adminToken, editorUser, "password123", []int64{roleEditorID})
 		t.Logf("Created Editor User (ID: %d) and assigned to Editor Role", userEditorID)
 
-		userViewerID = createUser(t, adminToken, viewerUser, "password123", []int64{roleViewerID})
+		userViewerID = e2e.CreateUser(t, adminToken, viewerUser, "password123", []int64{roleViewerID})
 		t.Logf("Created Viewer User (ID: %d) and assigned to Viewer Role", userViewerID)
 
-		userNoRoleID = createUser(t, adminToken, noRoleUser, "password123", []int64{})
+		userNoRoleID = e2e.CreateUser(t, adminToken, noRoleUser, "password123", []int64{})
 		t.Logf("Created No-Role User (ID: %d) with no roles assigned", userNoRoleID)
 	})
 
@@ -169,12 +170,12 @@ func TestRBACFlow(t *testing.T) {
 		t.Log("Waiting for policy propagation (async event processing)...")
 
 		require.Eventually(t, func() bool {
-			token := login(t, editorUser, "password123")
+			token := e2e.Login(t, editorUser, "password123")
 			if token == "" {
 				// Only log on first failure to reduce spam
 				return false
 			}
-			resp := doRequest(t, "GET", "/api/v1/sys/users", nil, token)
+			resp := e2e.DoRequest(t, "GET", "/api/v1/sys/users", nil, token)
 			defer resp.Body.Close()
 			if resp.StatusCode != http.StatusOK {
 				return false
@@ -187,11 +188,11 @@ func TestRBACFlow(t *testing.T) {
 
 	// 5. Verify Initial Permissions
 	t.Run("Step5_VerifyInitialPermissions", func(t *testing.T) {
-		editorToken := login(t, editorUser, "password123")
+		editorToken := e2e.Login(t, editorUser, "password123")
 		require.NotEmpty(t, editorToken, "Editor user %s (ID: %d) login failed", editorUser, userEditorID)
 
 		t.Logf("Checking create permission for editor user %s (ID: %d)", editorUser, userEditorID)
-		respCreate := doRequest(t, "POST", "/api/v1/sys/users", &systemv1.CreateUserRequest{User: &typesv1.User{Username: editorTestUser}, Password: "password123"}, editorToken)
+		respCreate := e2e.DoRequest(t, "POST", "/api/v1/sys/users", &systemv1.CreateUserRequest{User: &typesv1.User{Username: editorTestUser}, Password: "password123"}, editorToken)
 		bodyCreate, _ := io.ReadAll(respCreate.Body)
 		respCreate.Body.Close()
 		require.Equal(t, http.StatusOK, respCreate.StatusCode, "Editor user should be able to create a user. Response: %s", string(bodyCreate))
@@ -200,16 +201,16 @@ func TestRBACFlow(t *testing.T) {
 		userEditorTestID = createResp.GetUser().GetId()
 
 		t.Logf("Checking delete permission (forbidden) for editor user %s (ID: %d)", editorUser, userEditorID)
-		assert.Equal(t, http.StatusForbidden, doRequest(t, "DELETE", "/api/v1/sys/users/"+strconv.FormatInt(userNoRoleID, 10), nil, editorToken).StatusCode, "Editor user should NOT be able to delete a user")
+		assert.Equal(t, http.StatusForbidden, e2e.DoRequest(t, "DELETE", "/api/v1/sys/users/"+strconv.FormatInt(userNoRoleID, 10), nil, editorToken).StatusCode, "Editor user should NOT be able to delete a user")
 
 		var viewerToken string
 		require.Eventually(t, func() bool {
-			token := login(t, viewerUser, "password123")
+			token := e2e.Login(t, viewerUser, "password123")
 			if token == "" {
 				return false
 			}
 			viewerToken = token
-			resp := doRequest(t, "GET", "/api/v1/sys/users", nil, viewerToken)
+			resp := e2e.DoRequest(t, "GET", "/api/v1/sys/users", nil, viewerToken)
 			defer resp.Body.Close()
 			if resp.StatusCode == http.StatusOK {
 				t.Logf("Policy sync verified for viewer user %s (ID: %d)", viewerUser, userViewerID)
@@ -219,26 +220,26 @@ func TestRBACFlow(t *testing.T) {
 		t.Logf("Verified: Policy is fully synced for the viewer user %s (ID: %d).", viewerUser, userViewerID)
 
 		t.Logf("Checking create permission (forbidden) for viewer user %s (ID: %d)", viewerUser, userViewerID)
-		assert.Equal(t, http.StatusForbidden, doRequest(t, "POST", "/api/v1/sys/users", &systemv1.CreateUserRequest{User: &typesv1.User{Username: viewerTestUser}, Password: "password123"}, viewerToken).StatusCode, "Viewer user should NOT be able to create a user")
+		assert.Equal(t, http.StatusForbidden, e2e.DoRequest(t, "POST", "/api/v1/sys/users", &systemv1.CreateUserRequest{User: &typesv1.User{Username: viewerTestUser}, Password: "password123"}, viewerToken).StatusCode, "Viewer user should NOT be able to create a user")
 
-		noRoleToken := login(t, noRoleUser, "password123")
+		noRoleToken := e2e.Login(t, noRoleUser, "password123")
 		require.NotEmpty(t, noRoleToken, "No-role user login failed")
 		t.Logf("Checking list permission (forbidden) for no-role user %s (ID: %d)", noRoleUser, userNoRoleID)
-		assert.Equal(t, http.StatusForbidden, doRequest(t, "GET", "/api/v1/sys/users", nil, noRoleToken).StatusCode, "No-role user should NOT be able to list users")
+		assert.Equal(t, http.StatusForbidden, e2e.DoRequest(t, "GET", "/api/v1/sys/users", nil, noRoleToken).StatusCode, "No-role user should NOT be able to list users")
 	})
 
 	// 6. Dynamically Update Role and Verify
 	t.Run("Step6_UpdateRoleAndVerify", func(t *testing.T) {
 		t.Log("Updating Viewer Role to include Create permission...")
-		updateRole(t, adminToken, roleViewerID, viewerRoleName, viewerRoleKeyword, []int64{permUserListID, permUserCreateID})
+		e2e.UpdateRole(t, adminToken, roleViewerID, viewerRoleName, viewerRoleKeyword, []int64{permUserListID, permUserCreateID})
 
 		// Verify Viewer can now create a user. Re-login inside Eventually to get a fresh token.
 		require.Eventually(t, func() bool {
-			token := login(t, viewerUser, "password123")
+			token := e2e.Login(t, viewerUser, "password123")
 			if token == "" {
 				return false
 			}
-			resp := doRequest(t, "POST", "/api/v1/sys/users", &systemv1.CreateUserRequest{User: &typesv1.User{Username: viewerTestUser}, Password: "password123"}, token)
+			resp := e2e.DoRequest(t, "POST", "/api/v1/sys/users", &systemv1.CreateUserRequest{User: &typesv1.User{Username: viewerTestUser}, Password: "password123"}, token)
 			defer resp.Body.Close()
 			if resp.StatusCode != http.StatusOK {
 				return false
@@ -259,14 +260,14 @@ func TestRBACFlow(t *testing.T) {
 	t.Run("Step7_RevokeRoleAndVerify", func(t *testing.T) {
 		t.Logf("Revoking Editor Role from user %s (ID: %d)...", editorUser, userEditorID)
 		// Use UpdateUser API with UpdateMask to revoke all roles
-		updateUser(t, adminToken, userEditorID, &typesv1.User{}, []string{"role_ids"}, []int64{})
+		e2e.UpdateUser(t, adminToken, userEditorID, &typesv1.User{}, []string{"role_ids"}, []int64{})
 
 		require.Eventually(t, func() bool {
-			token := login(t, editorUser, "password123")
+			token := e2e.Login(t, editorUser, "password123")
 			if token == "" {
 				return false
 			}
-			resp := doRequest(t, "GET", "/api/v1/sys/users", nil, token)
+			resp := e2e.DoRequest(t, "GET", "/api/v1/sys/users", nil, token)
 			defer resp.Body.Close()
 			if resp.StatusCode == http.StatusForbidden {
 				t.Logf("Verified role revocation for user %s (ID: %d)", editorUser, userEditorID)
