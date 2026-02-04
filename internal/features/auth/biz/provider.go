@@ -13,5 +13,5 @@ var ProviderSet = wire.NewSet(
 	NewAuthUseCase,
 	NewMeUseCase,
 	NewCaptchaUseCase,
-	NewPolicySyncer, // NewPolicySyncer is the correct synchronizer
+	NewPolicySyncer,
 )

@@ -9,6 +9,7 @@ import (
 
 	"github.com/ThreeDotsLabs/watermill"
 	"github.com/ThreeDotsLabs/watermill-nats/v2/pkg/nats"
+	"github.com/casbin/casbin/v3/persist"
 	"github.com/google/wire"
 
 	watcher "github.com/origadmin/casbin-watcher/v3"
@@ -96,7 +97,7 @@ var ProviderGatewaySet = wire.NewSet(
 var ProviderBackendSet = wire.NewSet(
 	ProviderCommonSet,
 	ProvideAuthorizer,
-	wire.Bind(new(authz.Reloader), new(*casbin.Authorizer)), // Bind Authorizer to Reloader interface
+	wire.Bind(new(authz.Authorizer), new(*casbin.Authorizer)), // Bind Authorizer to Reloader interface
 	ProvideWatcher,
 	ProvideAuthenticator,                                        // Provides *jwt.Authenticator
 	wire.Bind(new(credential.Creator), new(*jwt.Authenticator)), // Binds the interface
@@ -203,7 +204,8 @@ func ProvideGatewaySkipper(app *runtime.App, _ *conf.Config) contribsecurity.Ski
 }
 
 // ProvideAuthorizer creates the Casbin authorizer.
-func ProvideAuthorizer(app *runtime.App, c *conf.Config, adapter *data.CasbinAdapter, w *watcher.Watcher) (*casbin.Authorizer, error) {
+func ProvideAuthorizer(app *runtime.App, c *conf.Config, adapter *data.CasbinAdapter,
+	w persist.Watcher) (*casbin.Authorizer, error) {
 	securityConfig := c.GetBootstrap().GetSecurity()
 	if securityConfig == nil {
 		return nil, errors.New("security configuration not found")
@@ -268,22 +270,19 @@ func ProvideAuthorizer(app *runtime.App, c *conf.Config, adapter *data.CasbinAda
 }
 
 // ProvideWatcher creates a new casbin watcher.
-func ProvideWatcher(app *runtime.App, c *conf.Config) (*watcher.Watcher, error) {
+func ProvideWatcher(app *runtime.App, c *conf.Config) (persist.Watcher, error) {
+	var w persist.Watcher
 	brokerConfig := c.GetBrokers()
 	if brokerConfig == nil {
-		return nil, errors.New("broker configuration not found")
+		return w, nil
 	}
 
 	brokerUrl := brokerConfig.GetDefault().GetUrl()
 	if brokerUrl == "" {
-		return nil, errors.New("broker url not found")
+		return w, nil
 	}
 
-	w, err := watcher.NewWatcher(app.Context(), brokerUrl)
-	if err != nil {
-		return nil, err
-	}
-	return w, nil
+	return watcher.NewWatcher(app.Context(), brokerUrl)
 }
 
 func ruleSpec(ctx context.Context, p contribsecurity.Principal, req contribsecurity.Request) authz.RuleSpec {

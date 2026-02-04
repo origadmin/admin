@@ -46,6 +46,7 @@ func ProvideDatabase(pv storage.Provider, logger log.Logger) (*ent.Database, fun
 	}
 
 	activeDB := entsql.OpenDB(db.Dialect(), db.DB())
+	logHelper.Infof("Database dialect: %s", db.Dialect())
 	database := ent.NewDatabase(activeDB, ent.Debug())
 	ctx := context.Background()
 	// === The migration logic is moved here ===

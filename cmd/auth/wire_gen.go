@@ -100,9 +100,9 @@ func wireApp(app *runtime.App, bootstrap *conf.Config) (*kratos.App, func(), err
 		cleanup()
 		return nil, nil, err
 	}
-	policySyncer := biz.NewPolicySyncer(policyProvider, policyModifier, authorizer, v)
+	policySyncer := biz.NewPolicySyncer(policyProvider, policyModifier, authorizer, watcher, v)
 	adminService := service.NewAdminService(policySyncer, authorizer, v)
-	policySyncService := service.NewPolicySyncService(policySyncer, watcher, v)
+	policySyncService := service.NewPolicySyncService(policySyncer, v)
 	skipper := providers.ProvideSkipper(app, bootstrap)
 	serverMiddlewareProvider, err := providers.ProvideServiceMiddlewares(app, authorizer, skipper)
 	if err != nil {
