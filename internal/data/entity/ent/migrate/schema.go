@@ -27,8 +27,8 @@ var (
 		Columns:    CasbinRuleColumns,
 		PrimaryKey: []*schema.Column{CasbinRuleColumns[0]},
 	}
-	// SysDepartmentsColumns holds the columns for the "sys_departments" table.
-	SysDepartmentsColumns = []*schema.Column{
+	// OrgDepartmentsColumns holds the columns for the "org_departments" table.
+	OrgDepartmentsColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeInt64, Comment: "field.primary_key.comment"},
 		{Name: "create_time", Type: field.TypeTime, Comment: "create_time.field.comment"},
 		{Name: "update_time", Type: field.TypeTime, Comment: "update_time.field.comment"},
@@ -41,17 +41,17 @@ var (
 		{Name: "description", Type: field.TypeString, Size: 1024, Comment: "entity.department.field.description", Default: ""},
 		{Name: "parent_id", Type: field.TypeInt64, Nullable: true, Comment: "department.field.parent_id"},
 	}
-	// SysDepartmentsTable holds the schema information for the "sys_departments" table.
-	SysDepartmentsTable = &schema.Table{
-		Name:       "sys_departments",
+	// OrgDepartmentsTable holds the schema information for the "org_departments" table.
+	OrgDepartmentsTable = &schema.Table{
+		Name:       "org_departments",
 		Comment:    "entity.department.table.comment",
-		Columns:    SysDepartmentsColumns,
-		PrimaryKey: []*schema.Column{SysDepartmentsColumns[0]},
+		Columns:    OrgDepartmentsColumns,
+		PrimaryKey: []*schema.Column{OrgDepartmentsColumns[0]},
 		ForeignKeys: []*schema.ForeignKey{
 			{
-				Symbol:     "sys_departments_sys_departments_children",
-				Columns:    []*schema.Column{SysDepartmentsColumns[10]},
-				RefColumns: []*schema.Column{SysDepartmentsColumns[0]},
+				Symbol:     "org_departments_org_departments_children",
+				Columns:    []*schema.Column{OrgDepartmentsColumns[10]},
+				RefColumns: []*schema.Column{OrgDepartmentsColumns[0]},
 				OnDelete:   schema.SetNull,
 			},
 		},
@@ -59,73 +59,73 @@ var (
 			{
 				Name:    "department_create_time",
 				Unique:  false,
-				Columns: []*schema.Column{SysDepartmentsColumns[1]},
+				Columns: []*schema.Column{OrgDepartmentsColumns[1]},
 			},
 			{
 				Name:    "department_update_time",
 				Unique:  false,
-				Columns: []*schema.Column{SysDepartmentsColumns[2]},
+				Columns: []*schema.Column{OrgDepartmentsColumns[2]},
 			},
 			{
 				Name:    "department_keyword",
 				Unique:  false,
-				Columns: []*schema.Column{SysDepartmentsColumns[3]},
+				Columns: []*schema.Column{OrgDepartmentsColumns[3]},
 			},
 			{
 				Name:    "department_name",
 				Unique:  false,
-				Columns: []*schema.Column{SysDepartmentsColumns[4]},
+				Columns: []*schema.Column{OrgDepartmentsColumns[4]},
 			},
 			{
 				Name:    "department_sequence",
 				Unique:  false,
-				Columns: []*schema.Column{SysDepartmentsColumns[6]},
+				Columns: []*schema.Column{OrgDepartmentsColumns[6]},
 			},
 			{
 				Name:    "department_status",
 				Unique:  false,
-				Columns: []*schema.Column{SysDepartmentsColumns[7]},
+				Columns: []*schema.Column{OrgDepartmentsColumns[7]},
 			},
 		},
 	}
-	// NtfMessagesColumns holds the columns for the "ntf_messages" table.
-	NtfMessagesColumns = []*schema.Column{
+	// NtfNotificationsColumns holds the columns for the "ntf_notifications" table.
+	NtfNotificationsColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeInt64, Comment: "field.primary_key.comment"},
 		{Name: "create_author", Type: field.TypeInt64, Nullable: true, Comment: "create_author.field.comment", Default: 0},
 		{Name: "update_author", Type: field.TypeInt64, Nullable: true, Comment: "update_author.field.comment", Default: 0},
 		{Name: "create_time", Type: field.TypeTime, Comment: "create_time.field.comment"},
 		{Name: "update_time", Type: field.TypeTime, Comment: "update_time.field.comment"},
-		{Name: "subject", Type: field.TypeString, Comment: "entity.message.field.subject", Default: ""},
-		{Name: "content", Type: field.TypeString, Comment: "entity.message.field.content", Default: ""},
-		{Name: "status", Type: field.TypeInt8, Comment: "entity.message.field.status", Default: 0},
-		{Name: "category_id", Type: field.TypeInt64, Comment: "entity.message.field.category_id"},
+		{Name: "subject", Type: field.TypeString, Comment: "entity.notification.field.subject", Default: ""},
+		{Name: "content", Type: field.TypeString, Comment: "entity.notification.field.content", Default: ""},
+		{Name: "status", Type: field.TypeInt8, Comment: "entity.notification.field.status", Default: 0},
+		{Name: "category_id", Type: field.TypeInt64, Comment: "entity.notification.field.category_id"},
 	}
-	// NtfMessagesTable holds the schema information for the "ntf_messages" table.
-	NtfMessagesTable = &schema.Table{
-		Name:       "ntf_messages",
-		Comment:    "entity.message.table.comment",
-		Columns:    NtfMessagesColumns,
-		PrimaryKey: []*schema.Column{NtfMessagesColumns[0]},
+	// NtfNotificationsTable holds the schema information for the "ntf_notifications" table.
+	NtfNotificationsTable = &schema.Table{
+		Name:       "ntf_notifications",
+		Comment:    "entity.notification.table.comment",
+		Columns:    NtfNotificationsColumns,
+		PrimaryKey: []*schema.Column{NtfNotificationsColumns[0]},
 		Indexes: []*schema.Index{
 			{
-				Name:    "message_create_author",
+				Name:    "notification_create_author",
 				Unique:  false,
-				Columns: []*schema.Column{NtfMessagesColumns[1]},
+				Columns: []*schema.Column{NtfNotificationsColumns[1]},
 			},
 			{
-				Name:    "message_update_author",
+				Name:    "notification_update_author",
 				Unique:  false,
-				Columns: []*schema.Column{NtfMessagesColumns[2]},
+				Columns: []*schema.Column{NtfNotificationsColumns[2]},
 			},
 			{
-				Name:    "message_create_time",
+				Name:    "notification_create_time",
 				Unique:  false,
-				Columns: []*schema.Column{NtfMessagesColumns[3]},
+				Columns: []*schema.Column{NtfNotificationsColumns[3]},
 			},
 			{
-				Name:    "message_update_time",
+				Name:    "notification_update_time",
 				Unique:  false,
-				Columns: []*schema.Column{NtfMessagesColumns[4]},
+				Columns: []*schema.Column{NtfNotificationsColumns[4]},
 			},
 		},
 	}
@@ -195,8 +195,8 @@ var (
 			},
 		},
 	}
-	// SysPositionsColumns holds the columns for the "sys_positions" table.
-	SysPositionsColumns = []*schema.Column{
+	// OrgPositionsColumns holds the columns for the "org_positions" table.
+	OrgPositionsColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeInt64, Comment: "field.primary_key.comment"},
 		{Name: "create_time", Type: field.TypeTime, Comment: "create_time.field.comment"},
 		{Name: "update_time", Type: field.TypeTime, Comment: "update_time.field.comment"},
@@ -205,17 +205,17 @@ var (
 		{Name: "description", Type: field.TypeString, Size: 1024, Comment: "entity.position.field.description", Default: ""},
 		{Name: "department_id", Type: field.TypeInt64, Comment: "entity.department.field.department_id"},
 	}
-	// SysPositionsTable holds the schema information for the "sys_positions" table.
-	SysPositionsTable = &schema.Table{
-		Name:       "sys_positions",
+	// OrgPositionsTable holds the schema information for the "org_positions" table.
+	OrgPositionsTable = &schema.Table{
+		Name:       "org_positions",
 		Comment:    "entity.position.table.comment",
-		Columns:    SysPositionsColumns,
-		PrimaryKey: []*schema.Column{SysPositionsColumns[0]},
+		Columns:    OrgPositionsColumns,
+		PrimaryKey: []*schema.Column{OrgPositionsColumns[0]},
 		ForeignKeys: []*schema.ForeignKey{
 			{
-				Symbol:     "sys_positions_sys_departments_positions",
-				Columns:    []*schema.Column{SysPositionsColumns[6]},
-				RefColumns: []*schema.Column{SysDepartmentsColumns[0]},
+				Symbol:     "org_positions_org_departments_positions",
+				Columns:    []*schema.Column{OrgPositionsColumns[6]},
+				RefColumns: []*schema.Column{OrgDepartmentsColumns[0]},
 				OnDelete:   schema.NoAction,
 			},
 		},
@@ -223,37 +223,37 @@ var (
 			{
 				Name:    "position_create_time",
 				Unique:  false,
-				Columns: []*schema.Column{SysPositionsColumns[1]},
+				Columns: []*schema.Column{OrgPositionsColumns[1]},
 			},
 			{
 				Name:    "position_update_time",
 				Unique:  false,
-				Columns: []*schema.Column{SysPositionsColumns[2]},
+				Columns: []*schema.Column{OrgPositionsColumns[2]},
 			},
 		},
 	}
-	// SysPositionPermissionsColumns holds the columns for the "sys_position_permissions" table.
-	SysPositionPermissionsColumns = []*schema.Column{
+	// OrgPositionPermissionsColumns holds the columns for the "org_position_permissions" table.
+	OrgPositionPermissionsColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeInt, Increment: true},
 		{Name: "position_id", Type: field.TypeInt64, Comment: "position_permission.field.position_id"},
 		{Name: "permission_id", Type: field.TypeInt64, Comment: "position_permission.field.permission_id"},
 	}
-	// SysPositionPermissionsTable holds the schema information for the "sys_position_permissions" table.
-	SysPositionPermissionsTable = &schema.Table{
-		Name:       "sys_position_permissions",
+	// OrgPositionPermissionsTable holds the schema information for the "org_position_permissions" table.
+	OrgPositionPermissionsTable = &schema.Table{
+		Name:       "org_position_permissions",
 		Comment:    "entity.position_permission.table.comment",
-		Columns:    SysPositionPermissionsColumns,
-		PrimaryKey: []*schema.Column{SysPositionPermissionsColumns[0]},
+		Columns:    OrgPositionPermissionsColumns,
+		PrimaryKey: []*schema.Column{OrgPositionPermissionsColumns[0]},
 		ForeignKeys: []*schema.ForeignKey{
 			{
-				Symbol:     "sys_position_permissions_sys_positions_position",
-				Columns:    []*schema.Column{SysPositionPermissionsColumns[1]},
-				RefColumns: []*schema.Column{SysPositionsColumns[0]},
+				Symbol:     "org_position_permissions_org_positions_position",
+				Columns:    []*schema.Column{OrgPositionPermissionsColumns[1]},
+				RefColumns: []*schema.Column{OrgPositionsColumns[0]},
 				OnDelete:   schema.Cascade,
 			},
 			{
-				Symbol:     "sys_position_permissions_sys_permissions_permission",
-				Columns:    []*schema.Column{SysPositionPermissionsColumns[2]},
+				Symbol:     "org_position_permissions_sys_permissions_permission",
+				Columns:    []*schema.Column{OrgPositionPermissionsColumns[2]},
 				RefColumns: []*schema.Column{SysPermissionsColumns[0]},
 				OnDelete:   schema.Cascade,
 			},
@@ -262,7 +262,7 @@ var (
 			{
 				Name:    "positionpermission_position_id_permission_id",
 				Unique:  true,
-				Columns: []*schema.Column{SysPositionPermissionsColumns[1], SysPositionPermissionsColumns[2]},
+				Columns: []*schema.Column{OrgPositionPermissionsColumns[1], OrgPositionPermissionsColumns[2]},
 			},
 		},
 	}
@@ -481,29 +481,29 @@ var (
 			},
 		},
 	}
-	// SysUserDepartmentsColumns holds the columns for the "sys_user_departments" table.
-	SysUserDepartmentsColumns = []*schema.Column{
+	// OrgUserDepartmentsColumns holds the columns for the "org_user_departments" table.
+	OrgUserDepartmentsColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeInt, Increment: true},
 		{Name: "user_id", Type: field.TypeInt64, Comment: "field.foreign_key.comment"},
 		{Name: "department_id", Type: field.TypeInt64, Comment: "field.foreign_key.comment"},
 	}
-	// SysUserDepartmentsTable holds the schema information for the "sys_user_departments" table.
-	SysUserDepartmentsTable = &schema.Table{
-		Name:       "sys_user_departments",
+	// OrgUserDepartmentsTable holds the schema information for the "org_user_departments" table.
+	OrgUserDepartmentsTable = &schema.Table{
+		Name:       "org_user_departments",
 		Comment:    "entity.user_department.table.comment",
-		Columns:    SysUserDepartmentsColumns,
-		PrimaryKey: []*schema.Column{SysUserDepartmentsColumns[0]},
+		Columns:    OrgUserDepartmentsColumns,
+		PrimaryKey: []*schema.Column{OrgUserDepartmentsColumns[0]},
 		ForeignKeys: []*schema.ForeignKey{
 			{
-				Symbol:     "sys_user_departments_sys_users_user",
-				Columns:    []*schema.Column{SysUserDepartmentsColumns[1]},
+				Symbol:     "org_user_departments_sys_users_user",
+				Columns:    []*schema.Column{OrgUserDepartmentsColumns[1]},
 				RefColumns: []*schema.Column{SysUsersColumns[0]},
 				OnDelete:   schema.Cascade,
 			},
 			{
-				Symbol:     "sys_user_departments_sys_departments_department",
-				Columns:    []*schema.Column{SysUserDepartmentsColumns[2]},
-				RefColumns: []*schema.Column{SysDepartmentsColumns[0]},
+				Symbol:     "org_user_departments_org_departments_department",
+				Columns:    []*schema.Column{OrgUserDepartmentsColumns[2]},
+				RefColumns: []*schema.Column{OrgDepartmentsColumns[0]},
 				OnDelete:   schema.Cascade,
 			},
 		},
@@ -511,33 +511,33 @@ var (
 			{
 				Name:    "userdepartment_user_id_department_id",
 				Unique:  true,
-				Columns: []*schema.Column{SysUserDepartmentsColumns[1], SysUserDepartmentsColumns[2]},
+				Columns: []*schema.Column{OrgUserDepartmentsColumns[1], OrgUserDepartmentsColumns[2]},
 			},
 		},
 	}
-	// SysUserPositionsColumns holds the columns for the "sys_user_positions" table.
-	SysUserPositionsColumns = []*schema.Column{
+	// OrgUserPositionsColumns holds the columns for the "org_user_positions" table.
+	OrgUserPositionsColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeInt, Increment: true},
 		{Name: "user_id", Type: field.TypeInt64, Comment: "field.foreign_key.comment"},
 		{Name: "position_id", Type: field.TypeInt64, Comment: "field.foreign_key.comment"},
 	}
-	// SysUserPositionsTable holds the schema information for the "sys_user_positions" table.
-	SysUserPositionsTable = &schema.Table{
-		Name:       "sys_user_positions",
+	// OrgUserPositionsTable holds the schema information for the "org_user_positions" table.
+	OrgUserPositionsTable = &schema.Table{
+		Name:       "org_user_positions",
 		Comment:    "entity.user_position.table.comment",
-		Columns:    SysUserPositionsColumns,
-		PrimaryKey: []*schema.Column{SysUserPositionsColumns[0]},
+		Columns:    OrgUserPositionsColumns,
+		PrimaryKey: []*schema.Column{OrgUserPositionsColumns[0]},
 		ForeignKeys: []*schema.ForeignKey{
 			{
-				Symbol:     "sys_user_positions_sys_users_user",
-				Columns:    []*schema.Column{SysUserPositionsColumns[1]},
+				Symbol:     "org_user_positions_sys_users_user",
+				Columns:    []*schema.Column{OrgUserPositionsColumns[1]},
 				RefColumns: []*schema.Column{SysUsersColumns[0]},
 				OnDelete:   schema.Cascade,
 			},
 			{
-				Symbol:     "sys_user_positions_sys_positions_position",
-				Columns:    []*schema.Column{SysUserPositionsColumns[2]},
-				RefColumns: []*schema.Column{SysPositionsColumns[0]},
+				Symbol:     "org_user_positions_org_positions_position",
+				Columns:    []*schema.Column{OrgUserPositionsColumns[2]},
+				RefColumns: []*schema.Column{OrgPositionsColumns[0]},
 				OnDelete:   schema.Cascade,
 			},
 		},
@@ -545,7 +545,7 @@ var (
 			{
 				Name:    "userposition_user_id_position_id",
 				Unique:  true,
-				Columns: []*schema.Column{SysUserPositionsColumns[1], SysUserPositionsColumns[2]},
+				Columns: []*schema.Column{OrgUserPositionsColumns[1], OrgUserPositionsColumns[2]},
 			},
 		},
 	}
@@ -706,18 +706,18 @@ var (
 	// Tables holds all the tables in the schema.
 	Tables = []*schema.Table{
 		CasbinRuleTable,
-		SysDepartmentsTable,
-		NtfMessagesTable,
+		OrgDepartmentsTable,
+		NtfNotificationsTable,
 		SysPermissionsTable,
 		SysPermissionResourcesTable,
-		SysPositionsTable,
-		SysPositionPermissionsTable,
+		OrgPositionsTable,
+		OrgPositionPermissionsTable,
 		SysResourcesTable,
 		SysRolesTable,
 		SysRolePermissionsTable,
 		SysUsersTable,
-		SysUserDepartmentsTable,
-		SysUserPositionsTable,
+		OrgUserDepartmentsTable,
+		OrgUserPositionsTable,
 		SysUserRolesTable,
 		SysViewsTable,
 		SysViewPermissionsTable,
@@ -729,12 +729,12 @@ func init() {
 	CasbinRuleTable.Annotation = &entsql.Annotation{
 		Table: "casbin_rule",
 	}
-	SysDepartmentsTable.ForeignKeys[0].RefTable = SysDepartmentsTable
-	SysDepartmentsTable.Annotation = &entsql.Annotation{
-		Table: "sys_departments",
+	OrgDepartmentsTable.ForeignKeys[0].RefTable = OrgDepartmentsTable
+	OrgDepartmentsTable.Annotation = &entsql.Annotation{
+		Table: "org_departments",
 	}
-	NtfMessagesTable.Annotation = &entsql.Annotation{
-		Table: "ntf_messages",
+	NtfNotificationsTable.Annotation = &entsql.Annotation{
+		Table: "ntf_notifications",
 	}
 	SysPermissionsTable.Annotation = &entsql.Annotation{
 		Table: "sys_permissions",
@@ -744,14 +744,14 @@ func init() {
 	SysPermissionResourcesTable.Annotation = &entsql.Annotation{
 		Table: "sys_permission_resources",
 	}
-	SysPositionsTable.ForeignKeys[0].RefTable = SysDepartmentsTable
-	SysPositionsTable.Annotation = &entsql.Annotation{
-		Table: "sys_positions",
+	OrgPositionsTable.ForeignKeys[0].RefTable = OrgDepartmentsTable
+	OrgPositionsTable.Annotation = &entsql.Annotation{
+		Table: "org_positions",
 	}
-	SysPositionPermissionsTable.ForeignKeys[0].RefTable = SysPositionsTable
-	SysPositionPermissionsTable.ForeignKeys[1].RefTable = SysPermissionsTable
-	SysPositionPermissionsTable.Annotation = &entsql.Annotation{
-		Table: "sys_position_permissions",
+	OrgPositionPermissionsTable.ForeignKeys[0].RefTable = OrgPositionsTable
+	OrgPositionPermissionsTable.ForeignKeys[1].RefTable = SysPermissionsTable
+	OrgPositionPermissionsTable.Annotation = &entsql.Annotation{
+		Table: "org_position_permissions",
 	}
 	SysResourcesTable.ForeignKeys[0].RefTable = SysResourcesTable
 	SysResourcesTable.Annotation = &entsql.Annotation{
@@ -768,15 +768,15 @@ func init() {
 	SysUsersTable.Annotation = &entsql.Annotation{
 		Table: "sys_users",
 	}
-	SysUserDepartmentsTable.ForeignKeys[0].RefTable = SysUsersTable
-	SysUserDepartmentsTable.ForeignKeys[1].RefTable = SysDepartmentsTable
-	SysUserDepartmentsTable.Annotation = &entsql.Annotation{
-		Table: "sys_user_departments",
+	OrgUserDepartmentsTable.ForeignKeys[0].RefTable = SysUsersTable
+	OrgUserDepartmentsTable.ForeignKeys[1].RefTable = OrgDepartmentsTable
+	OrgUserDepartmentsTable.Annotation = &entsql.Annotation{
+		Table: "org_user_departments",
 	}
-	SysUserPositionsTable.ForeignKeys[0].RefTable = SysUsersTable
-	SysUserPositionsTable.ForeignKeys[1].RefTable = SysPositionsTable
-	SysUserPositionsTable.Annotation = &entsql.Annotation{
-		Table: "sys_user_positions",
+	OrgUserPositionsTable.ForeignKeys[0].RefTable = SysUsersTable
+	OrgUserPositionsTable.ForeignKeys[1].RefTable = OrgPositionsTable
+	OrgUserPositionsTable.Annotation = &entsql.Annotation{
+		Table: "org_user_positions",
 	}
 	SysUserRolesTable.ForeignKeys[0].RefTable = SysUsersTable
 	SysUserRolesTable.ForeignKeys[1].RefTable = SysRolesTable

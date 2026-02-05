@@ -47,7 +47,7 @@ func (UserPosition) Indexes() []ent.Index {
 // Annotations of the UserPosition
 func (UserPosition) Annotations() []schema.Annotation {
 	return []schema.Annotation{
-		entsql.Table("sys_user_positions"),
+		entsql.Table("org_user_positions"),
 		entsql.WithComments(true),
 		schema.Comment(i18n.Text("entity.user_position.table.comment")),
 	}

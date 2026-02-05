@@ -89,15 +89,15 @@ const (
 	// It exists in this package in order to avoid circular dependency with the "role" package.
 	RolesInverseTable = "sys_roles"
 	// PositionsTable is the table that holds the positions relation/edge. The primary key declared below.
-	PositionsTable = "sys_user_positions"
+	PositionsTable = "org_user_positions"
 	// PositionsInverseTable is the table name for the Position entity.
 	// It exists in this package in order to avoid circular dependency with the "position" package.
-	PositionsInverseTable = "sys_positions"
+	PositionsInverseTable = "org_positions"
 	// DepartmentsTable is the table that holds the departments relation/edge. The primary key declared below.
-	DepartmentsTable = "sys_user_departments"
+	DepartmentsTable = "org_user_departments"
 	// DepartmentsInverseTable is the table name for the Department entity.
 	// It exists in this package in order to avoid circular dependency with the "department" package.
-	DepartmentsInverseTable = "sys_departments"
+	DepartmentsInverseTable = "org_departments"
 	// UserRolesTable is the table that holds the user_roles relation/edge.
 	UserRolesTable = "sys_user_roles"
 	// UserRolesInverseTable is the table name for the UserRole entity.
@@ -106,17 +106,17 @@ const (
 	// UserRolesColumn is the table column denoting the user_roles relation/edge.
 	UserRolesColumn = "user_id"
 	// UserPositionsTable is the table that holds the user_positions relation/edge.
-	UserPositionsTable = "sys_user_positions"
+	UserPositionsTable = "org_user_positions"
 	// UserPositionsInverseTable is the table name for the UserPosition entity.
 	// It exists in this package in order to avoid circular dependency with the "userposition" package.
-	UserPositionsInverseTable = "sys_user_positions"
+	UserPositionsInverseTable = "org_user_positions"
 	// UserPositionsColumn is the table column denoting the user_positions relation/edge.
 	UserPositionsColumn = "user_id"
 	// UserDepartmentsTable is the table that holds the user_departments relation/edge.
-	UserDepartmentsTable = "sys_user_departments"
+	UserDepartmentsTable = "org_user_departments"
 	// UserDepartmentsInverseTable is the table name for the UserDepartment entity.
 	// It exists in this package in order to avoid circular dependency with the "userdepartment" package.
-	UserDepartmentsInverseTable = "sys_user_departments"
+	UserDepartmentsInverseTable = "org_user_departments"
 	// UserDepartmentsColumn is the table column denoting the user_departments relation/edge.
 	UserDepartmentsColumn = "user_id"
 )

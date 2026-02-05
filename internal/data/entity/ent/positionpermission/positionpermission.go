@@ -21,16 +21,16 @@ const (
 	// EdgePermission holds the string denoting the permission edge name in mutations.
 	EdgePermission = "permission"
 	// Table holds the table name of the positionpermission in the database.
-	Table = "sys_position_permissions"
+	Table = "org_position_permissions"
 	// PositionTable is the table that holds the position relation/edge.
-	PositionTable = "sys_position_permissions"
+	PositionTable = "org_position_permissions"
 	// PositionInverseTable is the table name for the Position entity.
 	// It exists in this package in order to avoid circular dependency with the "position" package.
-	PositionInverseTable = "sys_positions"
+	PositionInverseTable = "org_positions"
 	// PositionColumn is the table column denoting the position relation/edge.
 	PositionColumn = "position_id"
 	// PermissionTable is the table that holds the permission relation/edge.
-	PermissionTable = "sys_position_permissions"
+	PermissionTable = "org_position_permissions"
 	// PermissionInverseTable is the table name for the Permission entity.
 	// It exists in this package in order to avoid circular dependency with the "permission" package.
 	PermissionInverseTable = "sys_permissions"

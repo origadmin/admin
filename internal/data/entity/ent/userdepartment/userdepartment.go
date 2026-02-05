@@ -21,19 +21,19 @@ const (
 	// EdgeDepartment holds the string denoting the department edge name in mutations.
 	EdgeDepartment = "department"
 	// Table holds the table name of the userdepartment in the database.
-	Table = "sys_user_departments"
+	Table = "org_user_departments"
 	// UserTable is the table that holds the user relation/edge.
-	UserTable = "sys_user_departments"
+	UserTable = "org_user_departments"
 	// UserInverseTable is the table name for the User entity.
 	// It exists in this package in order to avoid circular dependency with the "user" package.
 	UserInverseTable = "sys_users"
 	// UserColumn is the table column denoting the user relation/edge.
 	UserColumn = "user_id"
 	// DepartmentTable is the table that holds the department relation/edge.
-	DepartmentTable = "sys_user_departments"
+	DepartmentTable = "org_user_departments"
 	// DepartmentInverseTable is the table name for the Department entity.
 	// It exists in this package in order to avoid circular dependency with the "department" package.
-	DepartmentInverseTable = "sys_departments"
+	DepartmentInverseTable = "org_departments"
 	// DepartmentColumn is the table column denoting the department relation/edge.
 	DepartmentColumn = "department_id"
 )

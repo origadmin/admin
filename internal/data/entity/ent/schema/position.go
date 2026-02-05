@@ -48,7 +48,7 @@ func (Position) Mixin() []ent.Mixin {
 // Annotations of the Position.
 func (Position) Annotations() []schema.Annotation {
 	return []schema.Annotation{
-		entsql.Table("sys_positions"),
+		entsql.Table("org_positions"),
 		entsql.WithComments(true),
 		schema.Comment(i18n.Text("entity.position.table.comment")),
 	}

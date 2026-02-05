@@ -47,7 +47,7 @@ func (PositionPermission) Indexes() []ent.Index {
 // Annotations of the PositionPermission.
 func (PositionPermission) Annotations() []schema.Annotation {
 	return []schema.Annotation{
-		entsql.Table("sys_position_permissions"),
+		entsql.Table("org_position_permissions"),
 		entsql.WithComments(true),
 		schema.Comment(i18n.Text("entity.position_permission.table.comment")),
 	}

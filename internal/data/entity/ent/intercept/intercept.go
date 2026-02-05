@@ -9,7 +9,7 @@ import (
 	"origadmin/application/admin/internal/data/entity/ent"
 	"origadmin/application/admin/internal/data/entity/ent/casbinrule"
 	"origadmin/application/admin/internal/data/entity/ent/department"
-	"origadmin/application/admin/internal/data/entity/ent/message"
+	"origadmin/application/admin/internal/data/entity/ent/notification"
 	"origadmin/application/admin/internal/data/entity/ent/permission"
 	"origadmin/application/admin/internal/data/entity/ent/permissionresource"
 	"origadmin/application/admin/internal/data/entity/ent/position"
@@ -139,31 +139,31 @@ func (f TraverseDepartment) Traverse(ctx context.Context, q ent.Query) error {
 	return fmt.Errorf("unexpected query type %T. expect *ent.DepartmentQuery", q)
 }
 
-// The MessageFunc type is an adapter to allow the use of ordinary function as a Querier.
-type MessageFunc func(context.Context, *ent.MessageQuery) (ent.Value, error)
+// The NotificationFunc type is an adapter to allow the use of ordinary function as a Querier.
+type NotificationFunc func(context.Context, *ent.NotificationQuery) (ent.Value, error)
 
 // Query calls f(ctx, q).
-func (f MessageFunc) Query(ctx context.Context, q ent.Query) (ent.Value, error) {
-	if q, ok := q.(*ent.MessageQuery); ok {
+func (f NotificationFunc) Query(ctx context.Context, q ent.Query) (ent.Value, error) {
+	if q, ok := q.(*ent.NotificationQuery); ok {
 		return f(ctx, q)
 	}
-	return nil, fmt.Errorf("unexpected query type %T. expect *ent.MessageQuery", q)
+	return nil, fmt.Errorf("unexpected query type %T. expect *ent.NotificationQuery", q)
 }
 
-// The TraverseMessage type is an adapter to allow the use of ordinary function as Traverser.
-type TraverseMessage func(context.Context, *ent.MessageQuery) error
+// The TraverseNotification type is an adapter to allow the use of ordinary function as Traverser.
+type TraverseNotification func(context.Context, *ent.NotificationQuery) error
 
 // Intercept is a dummy implementation of Intercept that returns the next Querier in the pipeline.
-func (f TraverseMessage) Intercept(next ent.Querier) ent.Querier {
+func (f TraverseNotification) Intercept(next ent.Querier) ent.Querier {
 	return next
 }
 
 // Traverse calls f(ctx, q).
-func (f TraverseMessage) Traverse(ctx context.Context, q ent.Query) error {
-	if q, ok := q.(*ent.MessageQuery); ok {
+func (f TraverseNotification) Traverse(ctx context.Context, q ent.Query) error {
+	if q, ok := q.(*ent.NotificationQuery); ok {
 		return f(ctx, q)
 	}
-	return fmt.Errorf("unexpected query type %T. expect *ent.MessageQuery", q)
+	return fmt.Errorf("unexpected query type %T. expect *ent.NotificationQuery", q)
 }
 
 // The PermissionFunc type is an adapter to allow the use of ordinary function as a Querier.
@@ -551,8 +551,8 @@ func NewQuery(q ent.Query) (Query, error) {
 		return &query[*ent.CasbinRuleQuery, predicate.CasbinRule, casbinrule.OrderOption]{typ: ent.TypeCasbinRule, tq: q}, nil
 	case *ent.DepartmentQuery:
 		return &query[*ent.DepartmentQuery, predicate.Department, department.OrderOption]{typ: ent.TypeDepartment, tq: q}, nil
-	case *ent.MessageQuery:
-		return &query[*ent.MessageQuery, predicate.Message, message.OrderOption]{typ: ent.TypeMessage, tq: q}, nil
+	case *ent.NotificationQuery:
+		return &query[*ent.NotificationQuery, predicate.Notification, notification.OrderOption]{typ: ent.TypeNotification, tq: q}, nil
 	case *ent.PermissionQuery:
 		return &query[*ent.PermissionQuery, predicate.Permission, permission.OrderOption]{typ: ent.TypePermission, tq: q}, nil
 	case *ent.PermissionResourceQuery:

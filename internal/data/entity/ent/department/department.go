@@ -45,32 +45,32 @@ const (
 	// EdgeUserDepartments holds the string denoting the user_departments edge name in mutations.
 	EdgeUserDepartments = "user_departments"
 	// Table holds the table name of the department in the database.
-	Table = "sys_departments"
+	Table = "org_departments"
 	// UsersTable is the table that holds the users relation/edge. The primary key declared below.
-	UsersTable = "sys_user_departments"
+	UsersTable = "org_user_departments"
 	// UsersInverseTable is the table name for the User entity.
 	// It exists in this package in order to avoid circular dependency with the "user" package.
 	UsersInverseTable = "sys_users"
 	// PositionsTable is the table that holds the positions relation/edge.
-	PositionsTable = "sys_positions"
+	PositionsTable = "org_positions"
 	// PositionsInverseTable is the table name for the Position entity.
 	// It exists in this package in order to avoid circular dependency with the "position" package.
-	PositionsInverseTable = "sys_positions"
+	PositionsInverseTable = "org_positions"
 	// PositionsColumn is the table column denoting the positions relation/edge.
 	PositionsColumn = "department_id"
 	// ParentTable is the table that holds the parent relation/edge.
-	ParentTable = "sys_departments"
+	ParentTable = "org_departments"
 	// ParentColumn is the table column denoting the parent relation/edge.
 	ParentColumn = "parent_id"
 	// ChildrenTable is the table that holds the children relation/edge.
-	ChildrenTable = "sys_departments"
+	ChildrenTable = "org_departments"
 	// ChildrenColumn is the table column denoting the children relation/edge.
 	ChildrenColumn = "parent_id"
 	// UserDepartmentsTable is the table that holds the user_departments relation/edge.
-	UserDepartmentsTable = "sys_user_departments"
+	UserDepartmentsTable = "org_user_departments"
 	// UserDepartmentsInverseTable is the table name for the UserDepartment entity.
 	// It exists in this package in order to avoid circular dependency with the "userdepartment" package.
-	UserDepartmentsInverseTable = "sys_user_departments"
+	UserDepartmentsInverseTable = "org_user_departments"
 	// UserDepartmentsColumn is the table column denoting the user_departments relation/edge.
 	UserDepartmentsColumn = "department_id"
 )

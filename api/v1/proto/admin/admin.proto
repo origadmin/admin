@@ -1,0 +1,34 @@
+syntax = "proto3";
+
+package api.v1.services.admin;
+
+import "google/api/annotations.proto";
+import "policy/v1/policy.proto";
+
+option go_package = "origadmin/application/admin/api/v1/services/admin;admin";
+option java_multiple_files = true;
+option java_outer_classname = "APIServiceAdminProto";
+option java_package = "com.origadmin.api.v1.services.admin";
+
+// AdminService provides administrative and operational endpoints.
+// Note: This service is a placeholder for future administrative features.
+service AdminService {
+  // HealthCheck provides a simple health check endpoint.
+  rpc HealthCheck(HealthCheckRequest) returns (HealthCheckResponse) {
+    option (google.api.http) = {
+      get: "/admin/health"
+    };
+    option (contrib.api.policy.v1.policy) = {name: "public"};
+  }
+}
+
+// HealthCheckRequest is the request for AdminService.HealthCheck.
+message HealthCheckRequest {}
+
+// HealthCheckResponse is the response for AdminService.HealthCheck.
+message HealthCheckResponse {
+  // The health status of the service.
+  string status = 1 [json_name = "status"];
+  // Additional information about the service.
+  map<string, string> info = 2 [json_name = "info"];
+}

@@ -1,0 +1,115 @@
+syntax = "proto3";
+
+package api.v1.services.organization;
+
+import "google/api/annotations.proto";
+import "google/protobuf/any.proto";
+import "google/protobuf/empty.proto";
+import "types/system.proto";
+import "policy/v1/policy.proto";
+
+option go_package = "origadmin/application/admin/api/v1/services/organization;organization";
+option java_multiple_files = true;
+option java_outer_classname = "APIServiceOrganizationPositionProto";
+option java_package = "com.origadmin.api.v1.services.organization";
+option objc_class_prefix = "APIServiceOrganizationPosition";
+
+// The organization position service definition.
+service PositionService {
+  rpc ListPositions(ListPositionsRequest) returns (ListPositionsResponse) {
+    option (google.api.http) = {get: "/org/positions"};
+    option (contrib.api.policy.v1.policy) = {name: "authz"};
+  }
+  rpc GetPosition(GetPositionRequest) returns (GetPositionResponse) {
+    option (google.api.http) = {get: "/org/positions/{id}"};
+    option (contrib.api.policy.v1.policy) = {name: "authz"};
+  }
+  rpc CreatePosition(CreatePositionRequest) returns (CreatePositionResponse) {
+    option (google.api.http) = {
+      post: "/org/positions"
+      body: "*"
+    };
+    option (contrib.api.policy.v1.policy) = {name: "authz"};
+  }
+  rpc UpdatePosition(UpdatePositionRequest) returns (UpdatePositionResponse) {
+    option (google.api.http) = {
+      put: "/org/positions/{position.id}"
+      body: "*"
+    };
+    option (contrib.api.policy.v1.policy) = {name: "authz"};
+  }
+  rpc DeletePosition(DeletePositionRequest) returns (DeletePositionResponse) {
+    option (google.api.http) = {delete: "/org/positions/{id}"};
+    option (contrib.api.policy.v1.policy) = {name: "authz"};
+  }
+}
+
+message ListPositionsRequest {
+  // The page number.
+  int32 page = 1 [json_name = "page"];
+  // The maximum number of items to return.
+  int32 page_size = 2 [json_name = "page_size"];
+  // The next_page_token value returned from a previous List request, if any.
+  string page_token = 3 [json_name = "page_token"];
+  // The paging_mode is used to specify the pagination mode.
+  optional string paging_mode = 4 [json_name = "paging_mode"];
+  // The only_count is the query parameter for set only to query the total number
+  bool only_count = 5 [json_name = "only_count"];
+  // The keyword is the query parameter for set only to query the position by keyword
+  string keyword = 6 [json_name = "keyword"];
+}
+
+message ListPositionsResponse {
+  // The total number of items in the list.
+  int32 total = 1 [json_name = "total"];
+  // The paging positions
+  repeated api.v1.services.types.Position positions = 2 [json_name = "positions"];
+  // The page number.
+  int32 page = 3 [json_name = "page"];
+  // The maximum number of items to return.
+  int32 page_size = 4 [json_name = "page_size"];
+  // Token to retrieve the next page of results, or empty if there are no
+  // more results in the list.
+  string next_page_token = 5 [json_name = "next_page_token"];
+  // Additional information about this response.
+  // content to be added without destroying the page data format
+  optional google.protobuf.Any extra = 6 [json_name = "extra"];
+}
+
+message GetPositionRequest {
+  // The field will contain id of the resource requested.
+  int64 id = 1 [json_name = "id"];
+}
+
+message GetPositionResponse {
+  // The position resource for get.
+  api.v1.services.types.Position position = 1 [json_name = "position"];
+}
+
+message CreatePositionRequest {
+  // The position object to create.
+  api.v1.services.types.Position position = 1 [json_name = "position"];
+}
+
+message CreatePositionResponse {
+  api.v1.services.types.Position position = 1 [json_name = "position"];
+}
+
+message UpdatePositionRequest {
+  // The position resource which replaces the resource on the server.
+  api.v1.services.types.Position position = 1 [json_name = "position"];
+}
+
+message UpdatePositionResponse {
+  // The position resource for update.
+  api.v1.services.types.Position position = 1 [json_name = "position"];
+}
+
+message DeletePositionRequest {
+  // The resource id of the position to be deleted.
+  int64 id = 1 [json_name = "id"];
+}
+
+message DeletePositionResponse {
+  google.protobuf.Empty empty = 1;
+}

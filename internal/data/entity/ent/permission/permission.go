@@ -58,10 +58,10 @@ const (
 	// It exists in this package in order to avoid circular dependency with the "role" package.
 	RolesInverseTable = "sys_roles"
 	// PositionsTable is the table that holds the positions relation/edge. The primary key declared below.
-	PositionsTable = "sys_position_permissions"
+	PositionsTable = "org_position_permissions"
 	// PositionsInverseTable is the table name for the Position entity.
 	// It exists in this package in order to avoid circular dependency with the "position" package.
-	PositionsInverseTable = "sys_positions"
+	PositionsInverseTable = "org_positions"
 	// ResourcesTable is the table that holds the resources relation/edge. The primary key declared below.
 	ResourcesTable = "sys_permission_resources"
 	// ResourcesInverseTable is the table name for the Resource entity.
@@ -80,10 +80,10 @@ const (
 	// RolePermissionsColumn is the table column denoting the role_permissions relation/edge.
 	RolePermissionsColumn = "permission_id"
 	// PositionPermissionsTable is the table that holds the position_permissions relation/edge.
-	PositionPermissionsTable = "sys_position_permissions"
+	PositionPermissionsTable = "org_position_permissions"
 	// PositionPermissionsInverseTable is the table name for the PositionPermission entity.
 	// It exists in this package in order to avoid circular dependency with the "positionpermission" package.
-	PositionPermissionsInverseTable = "sys_position_permissions"
+	PositionPermissionsInverseTable = "org_position_permissions"
 	// PositionPermissionsColumn is the table column denoting the position_permissions relation/edge.
 	PositionPermissionsColumn = "permission_id"
 	// PermissionResourcesTable is the table that holds the permission_resources relation/edge.

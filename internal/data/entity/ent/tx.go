@@ -16,8 +16,8 @@ type Tx struct {
 	CasbinRule *CasbinRuleClient
 	// Department is the client for interacting with the Department builders.
 	Department *DepartmentClient
-	// Message is the client for interacting with the Message builders.
-	Message *MessageClient
+	// Notification is the client for interacting with the Notification builders.
+	Notification *NotificationClient
 	// Permission is the client for interacting with the Permission builders.
 	Permission *PermissionClient
 	// PermissionResource is the client for interacting with the PermissionResource builders.
@@ -179,7 +179,7 @@ func (tx *Tx) Client() *Client {
 func (tx *Tx) init() {
 	tx.CasbinRule = NewCasbinRuleClient(tx.config)
 	tx.Department = NewDepartmentClient(tx.config)
-	tx.Message = NewMessageClient(tx.config)
+	tx.Notification = NewNotificationClient(tx.config)
 	tx.Permission = NewPermissionClient(tx.config)
 	tx.PermissionResource = NewPermissionResourceClient(tx.config)
 	tx.Position = NewPositionClient(tx.config)

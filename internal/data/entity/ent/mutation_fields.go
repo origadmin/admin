@@ -6,7 +6,7 @@ import (
 	"fmt"
 	"origadmin/application/admin/internal/data/entity/ent/casbinrule"
 	"origadmin/application/admin/internal/data/entity/ent/department"
-	"origadmin/application/admin/internal/data/entity/ent/message"
+	"origadmin/application/admin/internal/data/entity/ent/notification"
 	"origadmin/application/admin/internal/data/entity/ent/permission"
 	"origadmin/application/admin/internal/data/entity/ent/permissionresource"
 	"origadmin/application/admin/internal/data/entity/ent/position"
@@ -205,29 +205,29 @@ func (m *DepartmentMutation) SetFieldsSkipZero(input *Department, fields ...stri
 // It returns an error if the field is not defined in the schema,
 // or if the type mismatches the field type.
 // Zero values are included in the update.
-func (m *MessageMutation) SetFields(input *Message, fields ...string) error {
+func (m *NotificationMutation) SetFields(input *Notification, fields ...string) error {
 	for i := range fields {
 		switch fields[i] {
-		case message.FieldCreateAuthor:
+		case notification.FieldCreateAuthor:
 			m.SetCreateAuthor(input.CreateAuthor)
-		case message.FieldUpdateAuthor:
+		case notification.FieldUpdateAuthor:
 			m.SetUpdateAuthor(input.UpdateAuthor)
-		case message.FieldCreateTime:
+		case notification.FieldCreateTime:
 			m.SetCreateTime(input.CreateTime)
-		case message.FieldUpdateTime:
+		case notification.FieldUpdateTime:
 			m.SetUpdateTime(input.UpdateTime)
-		case message.FieldSubject:
+		case notification.FieldSubject:
 			m.SetSubject(input.Subject)
-		case message.FieldContent:
+		case notification.FieldContent:
 			m.SetContent(input.Content)
-		case message.FieldStatus:
+		case notification.FieldStatus:
 			m.SetStatus(input.Status)
-		case message.FieldCategoryID:
+		case notification.FieldCategoryID:
 			m.SetCategoryID(input.CategoryID)
-		case message.FieldID:
+		case notification.FieldID:
 			m.SetID(input.ID)
 		default:
-			return fmt.Errorf("unknown %s field %s", "Message", fields[i])
+			return fmt.Errorf("unknown %s field %s", "Notification", fields[i])
 		}
 	}
 	return nil
@@ -236,54 +236,54 @@ func (m *MessageMutation) SetFields(input *Message, fields ...string) error {
 // SetFieldsSkipZero sets the values of the fields with the given names, skipping zero values.
 // It returns an error if the field is not defined in the schema,
 // or if the type mismatches the field type.
-func (m *MessageMutation) SetFieldsSkipZero(input *Message, fields ...string) error {
+func (m *NotificationMutation) SetFieldsSkipZero(input *Notification, fields ...string) error {
 	for i := range fields {
 		switch fields[i] {
-		case message.FieldCreateAuthor:
+		case notification.FieldCreateAuthor:
 			// check int64 with sql.NullInt64 if it is zero
 			if input.CreateAuthor != 0 {
 				m.SetCreateAuthor(input.CreateAuthor)
 			}
-		case message.FieldUpdateAuthor:
+		case notification.FieldUpdateAuthor:
 			// check int64 with sql.NullInt64 if it is zero
 			if input.UpdateAuthor != 0 {
 				m.SetUpdateAuthor(input.UpdateAuthor)
 			}
-		case message.FieldCreateTime:
+		case notification.FieldCreateTime:
 			if !input.CreateTime.IsZero() {
 				m.SetCreateTime(input.CreateTime)
 			}
-		case message.FieldUpdateTime:
+		case notification.FieldUpdateTime:
 			if !input.UpdateTime.IsZero() {
 				m.SetUpdateTime(input.UpdateTime)
 			}
-		case message.FieldSubject:
+		case notification.FieldSubject:
 			// check string with sql.NullString if it is empty
 			if input.Subject != "" {
 				m.SetSubject(input.Subject)
 			}
-		case message.FieldContent:
+		case notification.FieldContent:
 			// check string with sql.NullString if it is empty
 			if input.Content != "" {
 				m.SetContent(input.Content)
 			}
-		case message.FieldStatus:
+		case notification.FieldStatus:
 			// check enums.Status with sql.NullInt64 if it is zero
 			if input.Status != 0 {
 				m.SetStatus(input.Status)
 			}
-		case message.FieldCategoryID:
+		case notification.FieldCategoryID:
 			// check int64 with sql.NullInt64 if it is zero
 			if input.CategoryID != 0 {
 				m.SetCategoryID(input.CategoryID)
 			}
-		case message.FieldID:
+		case notification.FieldID:
 			// check int64 with sql.NullInt64 if it is zero
 			if input.ID != 0 {
 				m.SetID(input.ID)
 			}
 		default:
-			return fmt.Errorf("unknown %s field %s", "Message", fields[i])
+			return fmt.Errorf("unknown %s field %s", "Notification", fields[i])
 		}
 	}
 	return nil

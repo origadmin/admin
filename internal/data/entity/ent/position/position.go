@@ -37,36 +37,36 @@ const (
 	// EdgePositionPermissions holds the string denoting the position_permissions edge name in mutations.
 	EdgePositionPermissions = "position_permissions"
 	// Table holds the table name of the position in the database.
-	Table = "sys_positions"
+	Table = "org_positions"
 	// DepartmentTable is the table that holds the department relation/edge.
-	DepartmentTable = "sys_positions"
+	DepartmentTable = "org_positions"
 	// DepartmentInverseTable is the table name for the Department entity.
 	// It exists in this package in order to avoid circular dependency with the "department" package.
-	DepartmentInverseTable = "sys_departments"
+	DepartmentInverseTable = "org_departments"
 	// DepartmentColumn is the table column denoting the department relation/edge.
 	DepartmentColumn = "department_id"
 	// UsersTable is the table that holds the users relation/edge. The primary key declared below.
-	UsersTable = "sys_user_positions"
+	UsersTable = "org_user_positions"
 	// UsersInverseTable is the table name for the User entity.
 	// It exists in this package in order to avoid circular dependency with the "user" package.
 	UsersInverseTable = "sys_users"
 	// PermissionsTable is the table that holds the permissions relation/edge. The primary key declared below.
-	PermissionsTable = "sys_position_permissions"
+	PermissionsTable = "org_position_permissions"
 	// PermissionsInverseTable is the table name for the Permission entity.
 	// It exists in this package in order to avoid circular dependency with the "permission" package.
 	PermissionsInverseTable = "sys_permissions"
 	// UserPositionsTable is the table that holds the user_positions relation/edge.
-	UserPositionsTable = "sys_user_positions"
+	UserPositionsTable = "org_user_positions"
 	// UserPositionsInverseTable is the table name for the UserPosition entity.
 	// It exists in this package in order to avoid circular dependency with the "userposition" package.
-	UserPositionsInverseTable = "sys_user_positions"
+	UserPositionsInverseTable = "org_user_positions"
 	// UserPositionsColumn is the table column denoting the user_positions relation/edge.
 	UserPositionsColumn = "position_id"
 	// PositionPermissionsTable is the table that holds the position_permissions relation/edge.
-	PositionPermissionsTable = "sys_position_permissions"
+	PositionPermissionsTable = "org_position_permissions"
 	// PositionPermissionsInverseTable is the table name for the PositionPermission entity.
 	// It exists in this package in order to avoid circular dependency with the "positionpermission" package.
-	PositionPermissionsInverseTable = "sys_position_permissions"
+	PositionPermissionsInverseTable = "org_position_permissions"
 	// PositionPermissionsColumn is the table column denoting the position_permissions relation/edge.
 	PositionPermissionsColumn = "position_id"
 )

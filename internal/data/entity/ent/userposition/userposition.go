@@ -21,19 +21,19 @@ const (
 	// EdgePosition holds the string denoting the position edge name in mutations.
 	EdgePosition = "position"
 	// Table holds the table name of the userposition in the database.
-	Table = "sys_user_positions"
+	Table = "org_user_positions"
 	// UserTable is the table that holds the user relation/edge.
-	UserTable = "sys_user_positions"
+	UserTable = "org_user_positions"
 	// UserInverseTable is the table name for the User entity.
 	// It exists in this package in order to avoid circular dependency with the "user" package.
 	UserInverseTable = "sys_users"
 	// UserColumn is the table column denoting the user relation/edge.
 	UserColumn = "user_id"
 	// PositionTable is the table that holds the position relation/edge.
-	PositionTable = "sys_user_positions"
+	PositionTable = "org_user_positions"
 	// PositionInverseTable is the table name for the Position entity.
 	// It exists in this package in order to avoid circular dependency with the "position" package.
-	PositionInverseTable = "sys_positions"
+	PositionInverseTable = "org_positions"
 	// PositionColumn is the table column denoting the position relation/edge.
 	PositionColumn = "position_id"
 )
