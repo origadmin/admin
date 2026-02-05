@@ -11,6 +11,7 @@ import (
 	_ "google.golang.org/genproto/googleapis/api/annotations"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
+	_ "google.golang.org/protobuf/types/known/emptypb"
 	types "origadmin/application/admin/api/v1/services/types"
 	reflect "reflect"
 	sync "sync"
@@ -525,11 +526,175 @@ func (x *GetUserRolesResponse) GetRoles() []*types.Role {
 	return nil
 }
 
+// The request message for the UpdatePreferences RPC (P2).
+type UpdatePreferencesRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Preferences   map[string]string      `protobuf:"bytes,1,rep,name=preferences,proto3" json:"preferences,omitempty" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *UpdatePreferencesRequest) Reset() {
+	*x = UpdatePreferencesRequest{}
+	mi := &file_auth_me_proto_msgTypes[12]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *UpdatePreferencesRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*UpdatePreferencesRequest) ProtoMessage() {}
+
+func (x *UpdatePreferencesRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_auth_me_proto_msgTypes[12]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use UpdatePreferencesRequest.ProtoReflect.Descriptor instead.
+func (*UpdatePreferencesRequest) Descriptor() ([]byte, []int) {
+	return file_auth_me_proto_rawDescGZIP(), []int{12}
+}
+
+func (x *UpdatePreferencesRequest) GetPreferences() map[string]string {
+	if x != nil {
+		return x.Preferences
+	}
+	return nil
+}
+
+// The response message for the UpdatePreferences RPC (P2).
+type UpdatePreferencesResponse struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *UpdatePreferencesResponse) Reset() {
+	*x = UpdatePreferencesResponse{}
+	mi := &file_auth_me_proto_msgTypes[13]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *UpdatePreferencesResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*UpdatePreferencesResponse) ProtoMessage() {}
+
+func (x *UpdatePreferencesResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_auth_me_proto_msgTypes[13]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use UpdatePreferencesResponse.ProtoReflect.Descriptor instead.
+func (*UpdatePreferencesResponse) Descriptor() ([]byte, []int) {
+	return file_auth_me_proto_rawDescGZIP(), []int{13}
+}
+
+// The request message for the GetUserSettings RPC (P2).
+type GetUserSettingsRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *GetUserSettingsRequest) Reset() {
+	*x = GetUserSettingsRequest{}
+	mi := &file_auth_me_proto_msgTypes[14]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *GetUserSettingsRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetUserSettingsRequest) ProtoMessage() {}
+
+func (x *GetUserSettingsRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_auth_me_proto_msgTypes[14]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetUserSettingsRequest.ProtoReflect.Descriptor instead.
+func (*GetUserSettingsRequest) Descriptor() ([]byte, []int) {
+	return file_auth_me_proto_rawDescGZIP(), []int{14}
+}
+
+// The response message for the GetUserSettings RPC (P2).
+type GetUserSettingsResponse struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Settings      map[string]string      `protobuf:"bytes,1,rep,name=settings,proto3" json:"settings,omitempty" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *GetUserSettingsResponse) Reset() {
+	*x = GetUserSettingsResponse{}
+	mi := &file_auth_me_proto_msgTypes[15]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *GetUserSettingsResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetUserSettingsResponse) ProtoMessage() {}
+
+func (x *GetUserSettingsResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_auth_me_proto_msgTypes[15]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetUserSettingsResponse.ProtoReflect.Descriptor instead.
+func (*GetUserSettingsResponse) Descriptor() ([]byte, []int) {
+	return file_auth_me_proto_rawDescGZIP(), []int{15}
+}
+
+func (x *GetUserSettingsResponse) GetSettings() map[string]string {
+	if x != nil {
+		return x.Settings
+	}
+	return nil
+}
+
 var File_auth_me_proto protoreflect.FileDescriptor
 
 const file_auth_me_proto_rawDesc = "" +
 	"\n" +
-	"\rauth/me.proto\x12\x14api.v1.services.auth\x1a\x1cgoogle/api/annotations.proto\x1a\x12types/system.proto\x1a\x16policy/v1/policy.proto\"\x14\n" +
+	"\rauth/me.proto\x12\x14api.v1.services.auth\x1a\x1cgoogle/api/annotations.proto\x1a\x1bgoogle/protobuf/empty.proto\x1a\x12types/system.proto\x1a\x16policy/v1/policy.proto\"\x14\n" +
 	"\x12ListMyViewsRequest\"H\n" +
 	"\x13ListMyViewsResponse\x121\n" +
 	"\x05views\x18\x01 \x03(\v2\x1b.api.v1.services.types.ViewR\x05views\"\x13\n" +
@@ -548,7 +713,19 @@ const file_auth_me_proto_rawDesc = "" +
 	"\tresources\x18\x01 \x03(\v2\x1f.api.v1.services.types.ResourceR\tresources\"\x15\n" +
 	"\x13GetUserRolesRequest\"I\n" +
 	"\x14GetUserRolesResponse\x121\n" +
-	"\x05roles\x18\x01 \x03(\v2\x1b.api.v1.services.types.RoleR\x05roles2\xcb\x06\n" +
+	"\x05roles\x18\x01 \x03(\v2\x1b.api.v1.services.types.RoleR\x05roles\"\xbd\x01\n" +
+	"\x18UpdatePreferencesRequest\x12a\n" +
+	"\vpreferences\x18\x01 \x03(\v2?.api.v1.services.auth.UpdatePreferencesRequest.PreferencesEntryR\vpreferences\x1a>\n" +
+	"\x10PreferencesEntry\x12\x10\n" +
+	"\x03key\x18\x01 \x01(\tR\x03key\x12\x14\n" +
+	"\x05value\x18\x02 \x01(\tR\x05value:\x028\x01\"\x1b\n" +
+	"\x19UpdatePreferencesResponse\"\x18\n" +
+	"\x16GetUserSettingsRequest\"\xaf\x01\n" +
+	"\x17GetUserSettingsResponse\x12W\n" +
+	"\bsettings\x18\x01 \x03(\v2;.api.v1.services.auth.GetUserSettingsResponse.SettingsEntryR\bsettings\x1a;\n" +
+	"\rSettingsEntry\x12\x10\n" +
+	"\x03key\x18\x01 \x01(\tR\x03key\x12\x14\n" +
+	"\x05value\x18\x02 \x01(\tR\x05value:\x028\x012\xfb\b\n" +
 	"\tMeService\x12\x80\x01\n" +
 	"\vListMyViews\x12(.api.v1.services.auth.ListMyViewsRequest\x1a).api.v1.services.auth.ListMyViewsResponse\"\x1c\xea\xea\x1b\a\n" +
 	"\x05authn\x82\xd3\xe4\x93\x02\v\x12\t/me/views\x12\x7f\n" +
@@ -562,7 +739,11 @@ const file_auth_me_proto_rawDesc = "" +
 	"\x10GetUserResources\x12-.api.v1.services.auth.GetUserResourcesRequest\x1a..api.v1.services.auth.GetUserResourcesResponse\" \xea\xea\x1b\a\n" +
 	"\x05authn\x82\xd3\xe4\x93\x02\x0f\x12\r/me/resources\x12\x83\x01\n" +
 	"\fGetUserRoles\x12).api.v1.services.auth.GetUserRolesRequest\x1a*.api.v1.services.auth.GetUserRolesResponse\"\x1c\xea\xea\x1b\a\n" +
-	"\x05authn\x82\xd3\xe4\x93\x02\v\x12\t/me/rolesB\xce\x01\n" +
+	"\x05authn\x82\xd3\xe4\x93\x02\v\x12\t/me/roles\x12\x9b\x01\n" +
+	"\x11UpdatePreferences\x12..api.v1.services.auth.UpdatePreferencesRequest\x1a/.api.v1.services.auth.UpdatePreferencesResponse\"%\xea\xea\x1b\a\n" +
+	"\x05authn\x82\xd3\xe4\x93\x02\x14:\x01*\x1a\x0f/me/preferences\x12\x8f\x01\n" +
+	"\x0fGetUserSettings\x12,.api.v1.services.auth.GetUserSettingsRequest\x1a-.api.v1.services.auth.GetUserSettingsResponse\"\x1f\xea\xea\x1b\a\n" +
+	"\x05authn\x82\xd3\xe4\x93\x02\x0e\x12\f/me/settingsB\xce\x01\n" +
 	"\x18com.api.v1.services.authB\aMeProtoP\x01Z5origadmin/application/admin/api/v1/services/auth;auth\xa2\x02\x04AVSA\xaa\x02\x14Api.V1.Services.Auth\xca\x02\x14Api\\V1\\Services\\Auth\xe2\x02 Api\\V1\\Services\\Auth\\GPBMetadata\xea\x02\x17Api::V1::Services::Authb\x06proto3"
 
 var (
@@ -577,48 +758,60 @@ func file_auth_me_proto_rawDescGZIP() []byte {
 	return file_auth_me_proto_rawDescData
 }
 
-var file_auth_me_proto_msgTypes = make([]protoimpl.MessageInfo, 12)
+var file_auth_me_proto_msgTypes = make([]protoimpl.MessageInfo, 18)
 var file_auth_me_proto_goTypes = []any{
-	(*ListMyViewsRequest)(nil),       // 0: api.v1.services.auth.ListMyViewsRequest
-	(*ListMyViewsResponse)(nil),      // 1: api.v1.services.auth.ListMyViewsResponse
-	(*GetProfileRequest)(nil),        // 2: api.v1.services.auth.GetProfileRequest
-	(*GetProfileResponse)(nil),       // 3: api.v1.services.auth.GetProfileResponse
-	(*UpdateProfileRequest)(nil),     // 4: api.v1.services.auth.UpdateProfileRequest
-	(*UpdateProfileResponse)(nil),    // 5: api.v1.services.auth.UpdateProfileResponse
-	(*UpdatePasswordRequest)(nil),    // 6: api.v1.services.auth.UpdatePasswordRequest
-	(*UpdatePasswordResponse)(nil),   // 7: api.v1.services.auth.UpdatePasswordResponse
-	(*GetUserResourcesRequest)(nil),  // 8: api.v1.services.auth.GetUserResourcesRequest
-	(*GetUserResourcesResponse)(nil), // 9: api.v1.services.auth.GetUserResourcesResponse
-	(*GetUserRolesRequest)(nil),      // 10: api.v1.services.auth.GetUserRolesRequest
-	(*GetUserRolesResponse)(nil),     // 11: api.v1.services.auth.GetUserRolesResponse
-	(*types.View)(nil),               // 12: api.v1.services.types.View
-	(*types.User)(nil),               // 13: api.v1.services.types.User
-	(*types.Resource)(nil),           // 14: api.v1.services.types.Resource
-	(*types.Role)(nil),               // 15: api.v1.services.types.Role
+	(*ListMyViewsRequest)(nil),        // 0: api.v1.services.auth.ListMyViewsRequest
+	(*ListMyViewsResponse)(nil),       // 1: api.v1.services.auth.ListMyViewsResponse
+	(*GetProfileRequest)(nil),         // 2: api.v1.services.auth.GetProfileRequest
+	(*GetProfileResponse)(nil),        // 3: api.v1.services.auth.GetProfileResponse
+	(*UpdateProfileRequest)(nil),      // 4: api.v1.services.auth.UpdateProfileRequest
+	(*UpdateProfileResponse)(nil),     // 5: api.v1.services.auth.UpdateProfileResponse
+	(*UpdatePasswordRequest)(nil),     // 6: api.v1.services.auth.UpdatePasswordRequest
+	(*UpdatePasswordResponse)(nil),    // 7: api.v1.services.auth.UpdatePasswordResponse
+	(*GetUserResourcesRequest)(nil),   // 8: api.v1.services.auth.GetUserResourcesRequest
+	(*GetUserResourcesResponse)(nil),  // 9: api.v1.services.auth.GetUserResourcesResponse
+	(*GetUserRolesRequest)(nil),       // 10: api.v1.services.auth.GetUserRolesRequest
+	(*GetUserRolesResponse)(nil),      // 11: api.v1.services.auth.GetUserRolesResponse
+	(*UpdatePreferencesRequest)(nil),  // 12: api.v1.services.auth.UpdatePreferencesRequest
+	(*UpdatePreferencesResponse)(nil), // 13: api.v1.services.auth.UpdatePreferencesResponse
+	(*GetUserSettingsRequest)(nil),    // 14: api.v1.services.auth.GetUserSettingsRequest
+	(*GetUserSettingsResponse)(nil),   // 15: api.v1.services.auth.GetUserSettingsResponse
+	nil,                               // 16: api.v1.services.auth.UpdatePreferencesRequest.PreferencesEntry
+	nil,                               // 17: api.v1.services.auth.GetUserSettingsResponse.SettingsEntry
+	(*types.View)(nil),                // 18: api.v1.services.types.View
+	(*types.User)(nil),                // 19: api.v1.services.types.User
+	(*types.Resource)(nil),            // 20: api.v1.services.types.Resource
+	(*types.Role)(nil),                // 21: api.v1.services.types.Role
 }
 var file_auth_me_proto_depIdxs = []int32{
-	12, // 0: api.v1.services.auth.ListMyViewsResponse.views:type_name -> api.v1.services.types.View
-	13, // 1: api.v1.services.auth.GetProfileResponse.user:type_name -> api.v1.services.types.User
-	13, // 2: api.v1.services.auth.UpdateProfileRequest.user:type_name -> api.v1.services.types.User
-	14, // 3: api.v1.services.auth.GetUserResourcesResponse.resources:type_name -> api.v1.services.types.Resource
-	15, // 4: api.v1.services.auth.GetUserRolesResponse.roles:type_name -> api.v1.services.types.Role
-	0,  // 5: api.v1.services.auth.MeService.ListMyViews:input_type -> api.v1.services.auth.ListMyViewsRequest
-	2,  // 6: api.v1.services.auth.MeService.GetProfile:input_type -> api.v1.services.auth.GetProfileRequest
-	4,  // 7: api.v1.services.auth.MeService.UpdateProfile:input_type -> api.v1.services.auth.UpdateProfileRequest
-	6,  // 8: api.v1.services.auth.MeService.UpdatePassword:input_type -> api.v1.services.auth.UpdatePasswordRequest
-	8,  // 9: api.v1.services.auth.MeService.GetUserResources:input_type -> api.v1.services.auth.GetUserResourcesRequest
-	10, // 10: api.v1.services.auth.MeService.GetUserRoles:input_type -> api.v1.services.auth.GetUserRolesRequest
-	1,  // 11: api.v1.services.auth.MeService.ListMyViews:output_type -> api.v1.services.auth.ListMyViewsResponse
-	3,  // 12: api.v1.services.auth.MeService.GetProfile:output_type -> api.v1.services.auth.GetProfileResponse
-	5,  // 13: api.v1.services.auth.MeService.UpdateProfile:output_type -> api.v1.services.auth.UpdateProfileResponse
-	7,  // 14: api.v1.services.auth.MeService.UpdatePassword:output_type -> api.v1.services.auth.UpdatePasswordResponse
-	9,  // 15: api.v1.services.auth.MeService.GetUserResources:output_type -> api.v1.services.auth.GetUserResourcesResponse
-	11, // 16: api.v1.services.auth.MeService.GetUserRoles:output_type -> api.v1.services.auth.GetUserRolesResponse
-	11, // [11:17] is the sub-list for method output_type
-	5,  // [5:11] is the sub-list for method input_type
-	5,  // [5:5] is the sub-list for extension type_name
-	5,  // [5:5] is the sub-list for extension extendee
-	0,  // [0:5] is the sub-list for field type_name
+	18, // 0: api.v1.services.auth.ListMyViewsResponse.views:type_name -> api.v1.services.types.View
+	19, // 1: api.v1.services.auth.GetProfileResponse.user:type_name -> api.v1.services.types.User
+	19, // 2: api.v1.services.auth.UpdateProfileRequest.user:type_name -> api.v1.services.types.User
+	20, // 3: api.v1.services.auth.GetUserResourcesResponse.resources:type_name -> api.v1.services.types.Resource
+	21, // 4: api.v1.services.auth.GetUserRolesResponse.roles:type_name -> api.v1.services.types.Role
+	16, // 5: api.v1.services.auth.UpdatePreferencesRequest.preferences:type_name -> api.v1.services.auth.UpdatePreferencesRequest.PreferencesEntry
+	17, // 6: api.v1.services.auth.GetUserSettingsResponse.settings:type_name -> api.v1.services.auth.GetUserSettingsResponse.SettingsEntry
+	0,  // 7: api.v1.services.auth.MeService.ListMyViews:input_type -> api.v1.services.auth.ListMyViewsRequest
+	2,  // 8: api.v1.services.auth.MeService.GetProfile:input_type -> api.v1.services.auth.GetProfileRequest
+	4,  // 9: api.v1.services.auth.MeService.UpdateProfile:input_type -> api.v1.services.auth.UpdateProfileRequest
+	6,  // 10: api.v1.services.auth.MeService.UpdatePassword:input_type -> api.v1.services.auth.UpdatePasswordRequest
+	8,  // 11: api.v1.services.auth.MeService.GetUserResources:input_type -> api.v1.services.auth.GetUserResourcesRequest
+	10, // 12: api.v1.services.auth.MeService.GetUserRoles:input_type -> api.v1.services.auth.GetUserRolesRequest
+	12, // 13: api.v1.services.auth.MeService.UpdatePreferences:input_type -> api.v1.services.auth.UpdatePreferencesRequest
+	14, // 14: api.v1.services.auth.MeService.GetUserSettings:input_type -> api.v1.services.auth.GetUserSettingsRequest
+	1,  // 15: api.v1.services.auth.MeService.ListMyViews:output_type -> api.v1.services.auth.ListMyViewsResponse
+	3,  // 16: api.v1.services.auth.MeService.GetProfile:output_type -> api.v1.services.auth.GetProfileResponse
+	5,  // 17: api.v1.services.auth.MeService.UpdateProfile:output_type -> api.v1.services.auth.UpdateProfileResponse
+	7,  // 18: api.v1.services.auth.MeService.UpdatePassword:output_type -> api.v1.services.auth.UpdatePasswordResponse
+	9,  // 19: api.v1.services.auth.MeService.GetUserResources:output_type -> api.v1.services.auth.GetUserResourcesResponse
+	11, // 20: api.v1.services.auth.MeService.GetUserRoles:output_type -> api.v1.services.auth.GetUserRolesResponse
+	13, // 21: api.v1.services.auth.MeService.UpdatePreferences:output_type -> api.v1.services.auth.UpdatePreferencesResponse
+	15, // 22: api.v1.services.auth.MeService.GetUserSettings:output_type -> api.v1.services.auth.GetUserSettingsResponse
+	15, // [15:23] is the sub-list for method output_type
+	7,  // [7:15] is the sub-list for method input_type
+	7,  // [7:7] is the sub-list for extension type_name
+	7,  // [7:7] is the sub-list for extension extendee
+	0,  // [0:7] is the sub-list for field type_name
 }
 
 func init() { file_auth_me_proto_init() }
@@ -632,7 +825,7 @@ func file_auth_me_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_auth_me_proto_rawDesc), len(file_auth_me_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   12,
+			NumMessages:   18,
 			NumExtensions: 0,
 			NumServices:   1,
 		},

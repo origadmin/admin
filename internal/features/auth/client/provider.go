@@ -6,27 +6,26 @@ package client
 
 import (
 	"fmt"
-
 	"github.com/google/wire"
+	"google.golang.org/grpc"
 
 	"github.com/origadmin/runtime"
-	transportv1 "github.com/origadmin/runtime/api/gen/go/config/transport/v1"
 	"github.com/origadmin/runtime/container"
-	runtimegrpc "github.com/origadmin/runtime/service/transport/grpc"
 	systemv1 "origadmin/application/admin/api/v1/services/system"
 	"origadmin/application/admin/internal/conf"
+	"origadmin/application/admin/internal/helpers/grpcclient"
 )
 
 const (
-	// ServiceNameSystem is the short name for the system service.
+	// ServiceNameSystem is the short name for the system service, which provides all needed clients.
 	ServiceNameSystem = "system"
 )
 
-// ProviderSet is client providers for the auth module.
+// ProviderSet provides all gRPC clients required by the auth feature.
 var ProviderSet = wire.NewSet(
 	NewAuthorizationServiceClient,
-	NewSystemPolicyProvider,
-	//wire.Bind(new(biz.PolicyProvider), new(*systemPolicyProvider)),
+	NewUserServiceClient,
+	NewViewServiceClient,
 )
 
 // NewAuthorizationServiceClient creates a gRPC client for the system's AuthorizationService.
@@ -35,50 +34,35 @@ func NewAuthorizationServiceClient(
 	bootstrap *conf.Config,
 	middlewareProvider container.ClientMiddlewareProvider,
 ) (systemv1.AuthorizationServiceClient, error) {
-	var clientConfig *transportv1.Client
-
-	// The conventional name for the system service's gRPC client
-	convention := fmt.Sprintf("origadmin.service.%s.client.grpc", ServiceNameSystem)
-
-	clients := bootstrap.Clients()
-	if clients != nil {
-		for _, cli := range clients.Configs {
-			if cli.GetGrpc() == nil {
-				continue
-			}
-			if cli.Name == ServiceNameSystem || cli.Name == convention {
-				clientConfig = cli
-				break
-			}
-		}
-	}
-
-	if clientConfig == nil {
-		return nil, fmt.Errorf("gRPC client config not found for service: %s (checked names: '%s', '%s')", ServiceNameSystem, ServiceNameSystem, convention)
-	}
-
-	registryProvider, err := app.RegistryProvider()
+	conn, err := grpcclient.NewConn(app, bootstrap, ServiceNameSystem, middlewareProvider)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("failed to create gRPC connection to system service for AuthorizationService: %w", err)
 	}
+	return systemv1.NewAuthorizationServiceClient(conn.(*grpc.ClientConn)), nil
+}
 
-	discoveries, err := registryProvider.Discoveries()
+// NewUserServiceClient creates a gRPC client for the system's UserService.
+func NewUserServiceClient(
+	app *runtime.App,
+	bootstrap *conf.Config,
+	middlewareProvider container.ClientMiddlewareProvider,
+) (systemv1.UserServiceClient, error) {
+	conn, err := grpcclient.NewConn(app, bootstrap, ServiceNameSystem, middlewareProvider)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("failed to create gRPC connection to system service for UserService: %w", err)
 	}
+	return systemv1.NewUserServiceClient(conn.(*grpc.ClientConn)), nil
+}
 
-	middlewares, err := middlewareProvider.ClientMiddlewares()
+// NewViewServiceClient creates a gRPC client for the system's ViewService.
+func NewViewServiceClient(
+	app *runtime.App,
+	bootstrap *conf.Config,
+	middlewareProvider container.ClientMiddlewareProvider,
+) (systemv1.ViewServiceClient, error) {
+	conn, err := grpcclient.NewConn(app, bootstrap, ServiceNameSystem, middlewareProvider)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("failed to create gRPC connection to system service for ViewService: %w", err)
 	}
-
-	conn, err := runtimegrpc.NewClient(app.Context(), clientConfig.GetGrpc(), &runtimegrpc.ClientOptions{
-		Discoveries:       discoveries,
-		ClientMiddlewares: middlewares,
-	})
-	if err != nil {
-		return nil, fmt.Errorf("failed to create gRPC connection to system service: %w", err)
-	}
-
-	return systemv1.NewAuthorizationServiceClient(conn), nil
+	return systemv1.NewViewServiceClient(conn.(*grpc.ClientConn)), nil
 }

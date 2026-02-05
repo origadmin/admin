@@ -404,6 +404,31 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/google.rpc.Status'
+  /me/preferences:
+    put:
+      tags:
+        - MeService
+      description: UpdatePreferences updates user preferences (P2).
+      operationId: MeService_UpdatePreferences
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/api.v1.services.auth.UpdatePreferencesRequest'
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/api.v1.services.auth.UpdatePreferencesResponse'
+        default:
+          description: Default error response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/google.rpc.Status'
     /me/profile:
         get:
             tags:
@@ -485,6 +510,25 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/google.rpc.Status'
+  /me/settings:
+    get:
+      tags:
+        - MeService
+      description: GetUserSettings retrieves user settings (P2).
+      operationId: MeService_GetUserSettings
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/api.v1.services.auth.GetUserSettingsResponse'
+        default:
+          description: Default error response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/google.rpc.Status'
     /me/views:
         get:
             tags:
@@ -2049,6 +2093,14 @@ components:
                     items:
                         $ref: '#/components/schemas/api.v1.services.types.Role'
             description: The response message for the GetUserRoles RPC.
+      api.v1.services.auth.GetUserSettingsResponse:
+        type: object
+        properties:
+          settings:
+            type: object
+            additionalProperties:
+              type: string
+        description: The response message for the GetUserSettings RPC (P2).
         api.v1.services.auth.ListMyViewsResponse:
             type: object
             properties:
@@ -2161,6 +2213,18 @@ components:
             type: object
             properties: {}
             description: The response message for the UpdatePassword RPC.
+      api.v1.services.auth.UpdatePreferencesRequest:
+        type: object
+        properties:
+          preferences:
+            type: object
+            additionalProperties:
+              type: string
+        description: The request message for the UpdatePreferences RPC (P2).
+      api.v1.services.auth.UpdatePreferencesResponse:
+        type: object
+        properties: { }
+        description: The response message for the UpdatePreferences RPC (P2).
         api.v1.services.auth.UpdateProfileRequest:
             type: object
             properties:

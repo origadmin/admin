@@ -19,12 +19,14 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	MeService_ListMyViews_FullMethodName      = "/api.v1.services.auth.MeService/ListMyViews"
-	MeService_GetProfile_FullMethodName       = "/api.v1.services.auth.MeService/GetProfile"
-	MeService_UpdateProfile_FullMethodName    = "/api.v1.services.auth.MeService/UpdateProfile"
-	MeService_UpdatePassword_FullMethodName   = "/api.v1.services.auth.MeService/UpdatePassword"
-	MeService_GetUserResources_FullMethodName = "/api.v1.services.auth.MeService/GetUserResources"
-	MeService_GetUserRoles_FullMethodName     = "/api.v1.services.auth.MeService/GetUserRoles"
+	MeService_ListMyViews_FullMethodName       = "/api.v1.services.auth.MeService/ListMyViews"
+	MeService_GetProfile_FullMethodName        = "/api.v1.services.auth.MeService/GetProfile"
+	MeService_UpdateProfile_FullMethodName     = "/api.v1.services.auth.MeService/UpdateProfile"
+	MeService_UpdatePassword_FullMethodName    = "/api.v1.services.auth.MeService/UpdatePassword"
+	MeService_GetUserResources_FullMethodName  = "/api.v1.services.auth.MeService/GetUserResources"
+	MeService_GetUserRoles_FullMethodName      = "/api.v1.services.auth.MeService/GetUserRoles"
+	MeService_UpdatePreferences_FullMethodName = "/api.v1.services.auth.MeService/UpdatePreferences"
+	MeService_GetUserSettings_FullMethodName   = "/api.v1.services.auth.MeService/GetUserSettings"
 )
 
 // MeServiceClient is the client API for MeService service.
@@ -45,6 +47,10 @@ type MeServiceClient interface {
 	GetUserResources(ctx context.Context, in *GetUserResourcesRequest, opts ...grpc.CallOption) (*GetUserResourcesResponse, error)
 	// GetUserRoles retrieves the role list for the current user.
 	GetUserRoles(ctx context.Context, in *GetUserRolesRequest, opts ...grpc.CallOption) (*GetUserRolesResponse, error)
+	// UpdatePreferences updates user preferences (P2).
+	UpdatePreferences(ctx context.Context, in *UpdatePreferencesRequest, opts ...grpc.CallOption) (*UpdatePreferencesResponse, error)
+	// GetUserSettings retrieves user settings (P2).
+	GetUserSettings(ctx context.Context, in *GetUserSettingsRequest, opts ...grpc.CallOption) (*GetUserSettingsResponse, error)
 }
 
 type meServiceClient struct {
@@ -115,6 +121,26 @@ func (c *meServiceClient) GetUserRoles(ctx context.Context, in *GetUserRolesRequ
 	return out, nil
 }
 
+func (c *meServiceClient) UpdatePreferences(ctx context.Context, in *UpdatePreferencesRequest, opts ...grpc.CallOption) (*UpdatePreferencesResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(UpdatePreferencesResponse)
+	err := c.cc.Invoke(ctx, MeService_UpdatePreferences_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *meServiceClient) GetUserSettings(ctx context.Context, in *GetUserSettingsRequest, opts ...grpc.CallOption) (*GetUserSettingsResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(GetUserSettingsResponse)
+	err := c.cc.Invoke(ctx, MeService_GetUserSettings_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // MeServiceServer is the server API for MeService service.
 // All implementations must embed UnimplementedMeServiceServer
 // for forward compatibility.
@@ -133,6 +159,10 @@ type MeServiceServer interface {
 	GetUserResources(context.Context, *GetUserResourcesRequest) (*GetUserResourcesResponse, error)
 	// GetUserRoles retrieves the role list for the current user.
 	GetUserRoles(context.Context, *GetUserRolesRequest) (*GetUserRolesResponse, error)
+	// UpdatePreferences updates user preferences (P2).
+	UpdatePreferences(context.Context, *UpdatePreferencesRequest) (*UpdatePreferencesResponse, error)
+	// GetUserSettings retrieves user settings (P2).
+	GetUserSettings(context.Context, *GetUserSettingsRequest) (*GetUserSettingsResponse, error)
 	mustEmbedUnimplementedMeServiceServer()
 }
 
@@ -160,6 +190,12 @@ func (UnimplementedMeServiceServer) GetUserResources(context.Context, *GetUserRe
 }
 func (UnimplementedMeServiceServer) GetUserRoles(context.Context, *GetUserRolesRequest) (*GetUserRolesResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetUserRoles not implemented")
+}
+func (UnimplementedMeServiceServer) UpdatePreferences(context.Context, *UpdatePreferencesRequest) (*UpdatePreferencesResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpdatePreferences not implemented")
+}
+func (UnimplementedMeServiceServer) GetUserSettings(context.Context, *GetUserSettingsRequest) (*GetUserSettingsResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetUserSettings not implemented")
 }
 func (UnimplementedMeServiceServer) mustEmbedUnimplementedMeServiceServer() {}
 func (UnimplementedMeServiceServer) testEmbeddedByValue()                   {}
@@ -290,6 +326,42 @@ func _MeService_GetUserRoles_Handler(srv interface{}, ctx context.Context, dec f
 	return interceptor(ctx, in, info, handler)
 }
 
+func _MeService_UpdatePreferences_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UpdatePreferencesRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MeServiceServer).UpdatePreferences(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: MeService_UpdatePreferences_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MeServiceServer).UpdatePreferences(ctx, req.(*UpdatePreferencesRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _MeService_GetUserSettings_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetUserSettingsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MeServiceServer).GetUserSettings(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: MeService_GetUserSettings_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MeServiceServer).GetUserSettings(ctx, req.(*GetUserSettingsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // MeService_ServiceDesc is the grpc.ServiceDesc for MeService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -320,6 +392,14 @@ var MeService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GetUserRoles",
 			Handler:    _MeService_GetUserRoles_Handler,
+		},
+		{
+			MethodName: "UpdatePreferences",
+			Handler:    _MeService_UpdatePreferences_Handler,
+		},
+		{
+			MethodName: "GetUserSettings",
+			Handler:    _MeService_GetUserSettings_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

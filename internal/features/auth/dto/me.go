@@ -18,4 +18,16 @@ type MeRepo interface {
 
 	// HasSystemRole checks if the user is assigned any role of type 'system'.
 	HasSystemRole(ctx context.Context, userID int64) (bool, error)
+
+	// UpdateProfile updates the user's profile information.
+	UpdateProfile(ctx context.Context, userID int64, user *types.User) error
+
+	// ChangePassword changes the user's password.
+	ChangePassword(ctx context.Context, userID int64, oldPassword, newPassword string) error
+
+	// UpdatePreferences updates user preferences (P2).
+	UpdatePreferences(ctx context.Context, userID int64, preferences map[string]string) error
+
+	// GetUserSettings retrieves user settings (P2).
+	GetUserSettings(ctx context.Context, userID int64) (map[string]string, error)
 }

@@ -45,6 +45,18 @@ func init() {
 			Name:          "authn",
 			VersionID:     "7137cf937a6be2b1a325a40e2b7cdd1371b591cfadc54185a908ca3714abfef8",
 		},
+		{
+			ServiceMethod: "/api.v1.services.auth.MeService/UpdatePreferences",
+			GatewayPath:   "PUT:/me/preferences",
+			Name:          "authn",
+			VersionID:     "1e48db1fa83d92662f6ec8ed25fd8ba50bcf97556c054626d247c0daa13ed51e",
+		},
+		{
+			ServiceMethod: "/api.v1.services.auth.MeService/GetUserSettings",
+			GatewayPath:   "GET:/me/settings",
+			Name:          "authn",
+			VersionID:     "6e0cfcd67c6e7baa464f7f6eded9580131ff8dbd129b465f358d8cf887fd6fb2",
+		},
 	}
 
 	security.RegisterPolicies(policies)

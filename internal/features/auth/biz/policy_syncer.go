@@ -17,18 +17,13 @@ import (
 	"github.com/origadmin/contrib/security/authz"
 	"github.com/origadmin/runtime/log"
 	authv1 "origadmin/application/admin/api/v1/services/auth"
-	systempb "origadmin/application/admin/api/v1/services/system"
+	"origadmin/application/admin/internal/features/auth/dto"
 	"origadmin/application/admin/internal/helpers/debounce"
 )
 
-// PolicyProvider defines the interface for fetching the source-of-truth policies.
-type PolicyProvider interface {
-	ListAllPolicies(ctx context.Context) (*systempb.ListAllPoliciesResponse, error)
-}
-
 // PolicySyncer is responsible for synchronizing policies from a PolicyProvider to a PolicyModifier.
 type PolicySyncer struct {
-	provider  PolicyProvider
+	provider  dto.PolicyProvider
 	modifier  authz.PolicyModifier
 	reloader  authz.Reloader
 	log       *log.Helper
@@ -43,7 +38,7 @@ type PolicySyncer struct {
 }
 
 // NewPolicySyncer creates a new PolicySyncer.
-func NewPolicySyncer(provider PolicyProvider, modifier authz.PolicyModifier, authorizer authz.Authorizer, watcher persist.Watcher, debouncer debounce.Executor, logger log.Logger) *PolicySyncer {
+func NewPolicySyncer(provider dto.PolicyProvider, modifier authz.PolicyModifier, authorizer authz.Authorizer, watcher persist.Watcher, debouncer debounce.Executor, logger log.Logger) *PolicySyncer {
 	logHelper := log.NewHelper(log.With(logger, "module", "auth.biz.policy_syncer"))
 
 	var reloader authz.Reloader

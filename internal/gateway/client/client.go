@@ -5,18 +5,15 @@
 package client
 
 import (
-	"fmt"
-
 	"github.com/google/wire"
 	"google.golang.org/grpc"
 
 	"github.com/origadmin/runtime"
-	transportv1 "github.com/origadmin/runtime/api/gen/go/config/transport/v1"
 	"github.com/origadmin/runtime/container"
-	runtimegrpc "github.com/origadmin/runtime/service/transport/grpc"
 	"origadmin/application/admin/api/v1/services/auth"
 	"origadmin/application/admin/api/v1/services/system"
 	"origadmin/application/admin/internal/conf"
+	"origadmin/application/admin/internal/helpers/grpcclient"
 )
 
 // ProviderSet is client providers.
@@ -52,49 +49,13 @@ type SystemBridgeSet struct {
 // and establishes a gRPC connection.
 //
 // The provided context is used for the client lifecycle.
+// This function now uses the shared helper from helpers/grpcclient.
 func NewGRPCConn(app *runtime.App, bootstrap *conf.Config, name string, middlewareProvider container.ClientMiddlewareProvider) (*grpc.ClientConn, error) {
-	var clientConfig *transportv1.Client
-
-	// The conventional name for gRPC clients
-	convention := fmt.Sprintf("origadmin.service.%s.client.grpc", name)
-
-	// Use the new, cleaner getter method
-	clients := bootstrap.Clients()
-	if clients != nil {
-		for _, cli := range clients.Configs {
-			// Capability Check: Must have gRPC config
-			if cli.GetGrpc() == nil {
-				continue
-			}
-
-			// Smart Matching: Match exact name OR convention name
-			if cli.Name == name || cli.Name == convention {
-				clientConfig = cli
-				break
-			}
-		}
-	}
-
-	if clientConfig == nil {
-		return nil, fmt.Errorf("gRPC client config not found for service: %s (checked name: '%s' and '%s')", name, name, convention)
-	}
-	registryProvider, err := app.RegistryProvider()
+	conn, err := grpcclient.NewConn(app, bootstrap, name, middlewareProvider)
 	if err != nil {
 		return nil, err
 	}
-	discoveries, err := registryProvider.Discoveries()
-	if err != nil {
-		return nil, err
-	}
-	middlewares, err := middlewareProvider.ClientMiddlewares()
-	if err != nil {
-		return nil, err
-	}
-
-	return runtimegrpc.NewClient(app.Context(), clientConfig.GetGrpc(), &runtimegrpc.ClientOptions{
-		Discoveries:       discoveries,
-		ClientMiddlewares: middlewares,
-	})
+	return conn.(*grpc.ClientConn), nil
 }
 
 // NewAuthBridgeSet creates a set of clients for the auth service.

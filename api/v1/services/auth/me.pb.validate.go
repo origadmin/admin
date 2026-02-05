@@ -1422,3 +1422,415 @@ var _ interface {
 	Cause() error
 	ErrorName() string
 } = GetUserRolesResponseValidationError{}
+
+// Validate checks the field values on UpdatePreferencesRequest with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the first error encountered is returned, or nil if there are no violations.
+func (m *UpdatePreferencesRequest) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on UpdatePreferencesRequest with the
+// rules defined in the proto definition for this message. If any rules are
+// violated, the result is a list of violation errors wrapped in
+// UpdatePreferencesRequestMultiError, or nil if none found.
+func (m *UpdatePreferencesRequest) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *UpdatePreferencesRequest) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	// no validation rules for Preferences
+
+	if len(errors) > 0 {
+		return UpdatePreferencesRequestMultiError(errors)
+	}
+
+	return nil
+}
+
+// UpdatePreferencesRequestMultiError is an error wrapping multiple validation
+// errors returned by UpdatePreferencesRequest.ValidateAll() if the designated
+// constraints aren't met.
+type UpdatePreferencesRequestMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m UpdatePreferencesRequestMultiError) Error() string {
+	msgs := make([]string, 0, len(m))
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m UpdatePreferencesRequestMultiError) AllErrors() []error { return m }
+
+// UpdatePreferencesRequestValidationError is the validation error returned by
+// UpdatePreferencesRequest.Validate if the designated constraints aren't met.
+type UpdatePreferencesRequestValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e UpdatePreferencesRequestValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e UpdatePreferencesRequestValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e UpdatePreferencesRequestValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e UpdatePreferencesRequestValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e UpdatePreferencesRequestValidationError) ErrorName() string {
+	return "UpdatePreferencesRequestValidationError"
+}
+
+// Error satisfies the builtin error interface
+func (e UpdatePreferencesRequestValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sUpdatePreferencesRequest.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = UpdatePreferencesRequestValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = UpdatePreferencesRequestValidationError{}
+
+// Validate checks the field values on UpdatePreferencesResponse with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the first error encountered is returned, or nil if there are no violations.
+func (m *UpdatePreferencesResponse) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on UpdatePreferencesResponse with the
+// rules defined in the proto definition for this message. If any rules are
+// violated, the result is a list of violation errors wrapped in
+// UpdatePreferencesResponseMultiError, or nil if none found.
+func (m *UpdatePreferencesResponse) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *UpdatePreferencesResponse) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	if len(errors) > 0 {
+		return UpdatePreferencesResponseMultiError(errors)
+	}
+
+	return nil
+}
+
+// UpdatePreferencesResponseMultiError is an error wrapping multiple validation
+// errors returned by UpdatePreferencesResponse.ValidateAll() if the
+// designated constraints aren't met.
+type UpdatePreferencesResponseMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m UpdatePreferencesResponseMultiError) Error() string {
+	msgs := make([]string, 0, len(m))
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m UpdatePreferencesResponseMultiError) AllErrors() []error { return m }
+
+// UpdatePreferencesResponseValidationError is the validation error returned by
+// UpdatePreferencesResponse.Validate if the designated constraints aren't met.
+type UpdatePreferencesResponseValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e UpdatePreferencesResponseValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e UpdatePreferencesResponseValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e UpdatePreferencesResponseValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e UpdatePreferencesResponseValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e UpdatePreferencesResponseValidationError) ErrorName() string {
+	return "UpdatePreferencesResponseValidationError"
+}
+
+// Error satisfies the builtin error interface
+func (e UpdatePreferencesResponseValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sUpdatePreferencesResponse.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = UpdatePreferencesResponseValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = UpdatePreferencesResponseValidationError{}
+
+// Validate checks the field values on GetUserSettingsRequest with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the first error encountered is returned, or nil if there are no violations.
+func (m *GetUserSettingsRequest) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on GetUserSettingsRequest with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the result is a list of violation errors wrapped in
+// GetUserSettingsRequestMultiError, or nil if none found.
+func (m *GetUserSettingsRequest) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *GetUserSettingsRequest) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	if len(errors) > 0 {
+		return GetUserSettingsRequestMultiError(errors)
+	}
+
+	return nil
+}
+
+// GetUserSettingsRequestMultiError is an error wrapping multiple validation
+// errors returned by GetUserSettingsRequest.ValidateAll() if the designated
+// constraints aren't met.
+type GetUserSettingsRequestMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m GetUserSettingsRequestMultiError) Error() string {
+	msgs := make([]string, 0, len(m))
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m GetUserSettingsRequestMultiError) AllErrors() []error { return m }
+
+// GetUserSettingsRequestValidationError is the validation error returned by
+// GetUserSettingsRequest.Validate if the designated constraints aren't met.
+type GetUserSettingsRequestValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e GetUserSettingsRequestValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e GetUserSettingsRequestValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e GetUserSettingsRequestValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e GetUserSettingsRequestValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e GetUserSettingsRequestValidationError) ErrorName() string {
+	return "GetUserSettingsRequestValidationError"
+}
+
+// Error satisfies the builtin error interface
+func (e GetUserSettingsRequestValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sGetUserSettingsRequest.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = GetUserSettingsRequestValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = GetUserSettingsRequestValidationError{}
+
+// Validate checks the field values on GetUserSettingsResponse with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the first error encountered is returned, or nil if there are no violations.
+func (m *GetUserSettingsResponse) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on GetUserSettingsResponse with the
+// rules defined in the proto definition for this message. If any rules are
+// violated, the result is a list of violation errors wrapped in
+// GetUserSettingsResponseMultiError, or nil if none found.
+func (m *GetUserSettingsResponse) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *GetUserSettingsResponse) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	// no validation rules for Settings
+
+	if len(errors) > 0 {
+		return GetUserSettingsResponseMultiError(errors)
+	}
+
+	return nil
+}
+
+// GetUserSettingsResponseMultiError is an error wrapping multiple validation
+// errors returned by GetUserSettingsResponse.ValidateAll() if the designated
+// constraints aren't met.
+type GetUserSettingsResponseMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m GetUserSettingsResponseMultiError) Error() string {
+	msgs := make([]string, 0, len(m))
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m GetUserSettingsResponseMultiError) AllErrors() []error { return m }
+
+// GetUserSettingsResponseValidationError is the validation error returned by
+// GetUserSettingsResponse.Validate if the designated constraints aren't met.
+type GetUserSettingsResponseValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e GetUserSettingsResponseValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e GetUserSettingsResponseValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e GetUserSettingsResponseValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e GetUserSettingsResponseValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e GetUserSettingsResponseValidationError) ErrorName() string {
+	return "GetUserSettingsResponseValidationError"
+}
+
+// Error satisfies the builtin error interface
+func (e GetUserSettingsResponseValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sGetUserSettingsResponse.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = GetUserSettingsResponseValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = GetUserSettingsResponseValidationError{}

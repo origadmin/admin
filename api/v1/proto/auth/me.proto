@@ -3,6 +3,7 @@ syntax = "proto3";
 package api.v1.services.auth;
 
 import "google/api/annotations.proto";
+import "google/protobuf/empty.proto";
 import "types/system.proto";
 import "policy/v1/policy.proto";
 
@@ -62,6 +63,23 @@ service MeService {
     };
     option (contrib.api.policy.v1.policy) = {name: "authn"};
   }
+
+  // UpdatePreferences updates user preferences (P2).
+  rpc UpdatePreferences(UpdatePreferencesRequest) returns (UpdatePreferencesResponse) {
+    option (google.api.http) = {
+      put: "/me/preferences"
+      body: "*"
+    };
+    option (contrib.api.policy.v1.policy) = {name: "authn"};
+  }
+
+  // GetUserSettings retrieves user settings (P2).
+  rpc GetUserSettings(GetUserSettingsRequest) returns (GetUserSettingsResponse) {
+    option (google.api.http) = {
+      get: "/me/settings"
+    };
+    option (contrib.api.policy.v1.policy) = {name: "authn"};
+  }
 }
 
 // The request message for the ListMyViews RPC. It is empty as we fetch all views.
@@ -112,4 +130,20 @@ message GetUserRolesRequest {}
 // The response message for the GetUserRoles RPC.
 message GetUserRolesResponse {
   repeated api.v1.services.types.Role roles = 1;
+}
+
+// The request message for the UpdatePreferences RPC (P2).
+message UpdatePreferencesRequest {
+  map<string, string> preferences = 1;
+}
+
+// The response message for the UpdatePreferences RPC (P2).
+message UpdatePreferencesResponse {}
+
+// The request message for the GetUserSettings RPC (P2).
+message GetUserSettingsRequest {}
+
+// The response message for the GetUserSettings RPC (P2).
+message GetUserSettingsResponse {
+  map<string, string> settings = 1;
 }

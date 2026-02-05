@@ -1,81 +1,74 @@
+/*
+ * Copyright (c) 2024 OrigAdmin. All rights reserved.
+ */
+
 package service
 
 import (
 	"context"
-	"strconv"
 
-	"github.com/go-kratos/kratos/v2/errors"
+	"github.com/go-kratos/kratos/v2/log"
 
-	"github.com/origadmin/contrib/security"
-	"github.com/origadmin/runtime/log"
-	v1 "origadmin/application/admin/api/v1/services/auth"
+	pb "origadmin/application/admin/api/v1/services/auth"
 	"origadmin/application/admin/internal/features/auth/biz"
 )
 
-// MeService is a service for the currently authenticated user.
+// MeService is the service for the /me endpoints.
 type MeService struct {
-	v1.UnimplementedMeServiceServer
-	uc *biz.MeUseCase
+	pb.UnimplementedMeServiceServer
+	meUseCase *biz.MeUseCase
+	log       *log.Helper
 }
 
-// NewMeService creates a new Me service.
-func NewMeService(uc *biz.MeUseCase) *MeService {
-	return &MeService{uc: uc}
-}
-
-// ListMyViews retrieves the menu tree for the currently authenticated user.
-func (s *MeService) ListMyViews(ctx context.Context, req *v1.ListMyViewsRequest) (*v1.ListMyViewsResponse, error) {
-	p, ok := security.FromContext(ctx)
-	if !ok {
-		return nil, errors.Unauthorized("UNAUTHORIZED", "missing principal")
+// NewMeService creates a new MeService.
+func NewMeService(meUseCase *biz.MeUseCase, logger log.Logger) *MeService {
+	return &MeService{
+		meUseCase: meUseCase,
+		log:       log.NewHelper(log.With(logger, "module", "service.me")),
 	}
+}
 
-	views, err := s.uc.ListMyViews(ctx, p)
+// GetProfile gets the current user's profile.
+func (s *MeService) GetProfile(ctx context.Context, req *pb.GetProfileRequest) (*pb.GetProfileResponse, error) {
+	user, err := s.meUseCase.GetProfile(ctx)
 	if err != nil {
 		return nil, err
 	}
-
-	return &v1.ListMyViewsResponse{Views: views}, nil
+	return &pb.GetProfileResponse{User: user}, nil
 }
 
-// GetProfile retrieves the profile of the currently authenticated user.
-func (s *MeService) GetProfile(ctx context.Context, req *v1.GetProfileRequest) (*v1.GetProfileResponse, error) {
-	// Get the principal from the context, which is populated by the auth middleware.
-	p, ok := security.FromContext(ctx)
-	if !ok {
-		log.Debugf("context type %T", ctx)
-		return nil, errors.Unauthorized("UNAUTHORIZED", "Missing user principal in context")
-	}
-
-	// The principal's ID is a string, so it needs to be converted to an integer.
-	userID, err := strconv.ParseInt(p.GetID(), 10, 64)
-	if err != nil {
-		return nil, errors.InternalServer("INVALID_PRINCIPAL_ID", "User ID in principal is not a valid integer")
-	}
-
-	user, err := s.uc.GetProfile(ctx, userID)
+// UpdateProfile updates the current user's profile.
+func (s *MeService) UpdateProfile(ctx context.Context, req *pb.UpdateProfileRequest) (*pb.UpdateProfileResponse, error) {
+	err := s.meUseCase.UpdateProfile(ctx, req.GetUser())
 	if err != nil {
 		return nil, err
 	}
-	return &v1.GetProfileResponse{User: user}, nil
+	return &pb.UpdateProfileResponse{}, nil
 }
 
-// UpdateProfile updates the profile of the currently authenticated user.
-func (s *MeService) UpdateProfile(ctx context.Context, req *v1.UpdateProfileRequest) (*v1.UpdateProfileResponse, error) {
-	return &v1.UpdateProfileResponse{}, nil
+// UpdatePassword changes the current user's password.
+func (s *MeService) UpdatePassword(ctx context.Context, req *pb.UpdatePasswordRequest) (*pb.UpdatePasswordResponse, error) {
+	err := s.meUseCase.ChangePassword(ctx, req.GetOldPassword(), req.GetNewPassword())
+	if err != nil {
+		return nil, err
+	}
+	return &pb.UpdatePasswordResponse{}, nil
 }
 
-// UpdatePassword changes the password for the currently authenticated user.
-func (s *MeService) UpdatePassword(ctx context.Context, req *v1.UpdatePasswordRequest) (*v1.UpdatePasswordResponse, error) {
-	return &v1.UpdatePasswordResponse{}, nil
+// UpdatePreferences updates the current user's preferences (P2).
+func (s *MeService) UpdatePreferences(ctx context.Context, req *pb.UpdatePreferencesRequest) (*pb.UpdatePreferencesResponse, error) {
+	err := s.meUseCase.UpdatePreferences(ctx, req.Preferences)
+	if err != nil {
+		return nil, err
+	}
+	return &pb.UpdatePreferencesResponse{}, nil
 }
 
-// GetUserResources retrieves the menu/resource list for the current user.
-func (s *MeService) GetUserResources(ctx context.Context, req *v1.GetUserResourcesRequest) (*v1.GetUserResourcesResponse, error) {
-	return &v1.GetUserResourcesResponse{}, nil
-}
-
-// GetUserRoles retrieves the role list for the current user.
-func (s *MeService) GetUserRoles(ctx context.Context, req *v1.GetUserRolesRequest) (*v1.GetUserRolesResponse, error) {
-	return &v1.GetUserRolesResponse{}, nil
+// GetUserSettings retrieves the current user's settings (P2).
+func (s *MeService) GetUserSettings(ctx context.Context, req *pb.GetUserSettingsRequest) (*pb.GetUserSettingsResponse, error) {
+	settings, err := s.meUseCase.GetUserSettings(ctx)
+	if err != nil {
+		return nil, err
+	}
+	return &pb.GetUserSettingsResponse{Settings: settings}, nil
 }
