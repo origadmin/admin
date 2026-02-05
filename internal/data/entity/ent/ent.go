@@ -8,7 +8,7 @@ import (
 	"fmt"
 	"origadmin/application/admin/internal/data/entity/ent/casbinrule"
 	"origadmin/application/admin/internal/data/entity/ent/department"
-	"origadmin/application/admin/internal/data/entity/ent/notification"
+	"origadmin/application/admin/internal/data/entity/ent/message"
 	"origadmin/application/admin/internal/data/entity/ent/permission"
 	"origadmin/application/admin/internal/data/entity/ent/permissionresource"
 	"origadmin/application/admin/internal/data/entity/ent/position"
@@ -91,7 +91,7 @@ func checkColumn(t, c string) error {
 		columnCheck = sql.NewColumnCheck(map[string]func(string) bool{
 			casbinrule.Table:         casbinrule.ValidColumn,
 			department.Table:         department.ValidColumn,
-			notification.Table:       notification.ValidColumn,
+			message.Table:            message.ValidColumn,
 			permission.Table:         permission.ValidColumn,
 			permissionresource.Table: permissionresource.ValidColumn,
 			position.Table:           position.ValidColumn,

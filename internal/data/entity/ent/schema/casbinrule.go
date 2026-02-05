@@ -2,8 +2,12 @@ package schema
 
 import (
 	"entgo.io/ent"
+	"entgo.io/ent/dialect/entsql"
+	"entgo.io/ent/schema"
 	"entgo.io/ent/schema/field"
 	"entgo.io/ent/schema/index"
+
+	"origadmin/application/admin/internal/helpers/i18n"
 )
 
 // CasbinRule holds the schema definition for the CasbinRule entity.
@@ -14,13 +18,13 @@ type CasbinRule struct {
 // Fields of the CasbinRule.
 func (CasbinRule) Fields() []ent.Field {
 	return []ent.Field{
-		field.String("Ptype").Default(""),
-		field.String("V0").Default(""),
-		field.String("V1").Default(""),
-		field.String("V2").Default(""),
-		field.String("V3").Default(""),
-		field.String("V4").Default(""),
-		field.String("V5").Default(""),
+		field.String("ptype").Default("").Comment(i18n.Text("entity.casbin_rule.field.ptype")),
+		field.String("v0").Default("").Comment(i18n.Text("entity.casbin_rule.field.v0")),
+		field.String("v1").Default("").Comment(i18n.Text("entity.casbin_rule.field.v1")),
+		field.String("v2").Default("").Comment(i18n.Text("entity.casbin_rule.field.v2")),
+		field.String("v3").Default("").Comment(i18n.Text("entity.casbin_rule.field.v3")),
+		field.String("v4").Default("").Comment(i18n.Text("entity.casbin_rule.field.v4")),
+		field.String("v5").Default("").Comment(i18n.Text("entity.casbin_rule.field.v5")),
 	}
 }
 
@@ -31,6 +35,15 @@ func (CasbinRule) Edges() []ent.Edge {
 
 func (CasbinRule) Index() []ent.Index {
 	return []ent.Index{
-		index.Fields("Ptype", "V0", "V1", "V2", "V3", "V4", "V5").Unique(),
+		index.Fields("ptype", "v0", "v1", "v2", "v3", "v4", "v5").Unique(),
+	}
+}
+
+// Annotations of the Notification.
+func (CasbinRule) Annotations() []schema.Annotation {
+	return []schema.Annotation{
+		entsql.Table("casbin_rule"),
+		entsql.WithComments(true),
+		schema.Comment(i18n.Text("entity.casbin_rule.table.comment")),
 	}
 }

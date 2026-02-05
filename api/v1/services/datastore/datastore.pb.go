@@ -7,11 +7,13 @@
 package datastore
 
 import (
+	_ "github.com/envoyproxy/protoc-gen-validate/validate"
+	_ "github.com/origadmin/contrib/api/gen/go/policy/v1"
 	_ "google.golang.org/genproto/googleapis/api/annotations"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
-	anypb "google.golang.org/protobuf/types/known/anypb"
 	emptypb "google.golang.org/protobuf/types/known/emptypb"
+	_ "google.golang.org/protobuf/types/known/timestamppb"
 	types "origadmin/application/admin/api/v1/services/types"
 	reflect "reflect"
 	sync "sync"
@@ -25,41 +27,37 @@ const (
 	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
 )
 
-// ListDatastoreRequest is the request for the DatastoreService.ListDatastore method.
-type ListDatastoreRequest struct {
+// UploadFileRequest is the request for DatastoreService.UploadFile.
+type UploadFileRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// The parent data id, for example, "shelves/shelf1".
-	Id int64 `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
-	// The current page number.
-	Current int32 `protobuf:"varint,2,opt,name=current,proto3" json:"current,omitempty"`
-	// The maximum number of items to return.
-	PageSize int32 `protobuf:"varint,3,opt,name=page_size,proto3" json:"page_size,omitempty"`
-	// The next_page_token value returned from a previous List request, if any.
-	PageToken string `protobuf:"bytes,4,opt,name=page_token,proto3" json:"page_token,omitempty"`
-	// The no_paging is used to disable pagination.
-	NoPaging bool `protobuf:"varint,5,opt,name=no_paging,proto3" json:"no_paging,omitempty"`
-	// The only_count is the query parameter for set only to query the total number
-	OnlyCount bool `protobuf:"varint,6,opt,name=only_count,proto3" json:"only_count,omitempty"`
-	// data type
-	Type          string `protobuf:"bytes,7,opt,name=type,proto3" json:"type,omitempty"`
+	// The file name.
+	Filename string `protobuf:"bytes,1,opt,name=filename,proto3" json:"filename,omitempty"`
+	// The file content type (MIME type).
+	ContentType string `protobuf:"bytes,2,opt,name=content_type,proto3" json:"content_type,omitempty"`
+	// The file content as bytes.
+	Content []byte `protobuf:"bytes,3,opt,name=content,proto3" json:"content,omitempty"`
+	// The owner ID.
+	OwnerId *int64 `protobuf:"varint,4,opt,name=owner_id,proto3,oneof" json:"owner_id,omitempty"`
+	// Additional metadata.
+	Metadata      map[string]string `protobuf:"bytes,5,rep,name=metadata,proto3" json:"metadata,omitempty" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *ListDatastoreRequest) Reset() {
-	*x = ListDatastoreRequest{}
+func (x *UploadFileRequest) Reset() {
+	*x = UploadFileRequest{}
 	mi := &file_datastore_datastore_proto_msgTypes[0]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *ListDatastoreRequest) String() string {
+func (x *UploadFileRequest) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*ListDatastoreRequest) ProtoMessage() {}
+func (*UploadFileRequest) ProtoMessage() {}
 
-func (x *ListDatastoreRequest) ProtoReflect() protoreflect.Message {
+func (x *UploadFileRequest) ProtoReflect() protoreflect.Message {
 	mi := &file_datastore_datastore_proto_msgTypes[0]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -71,95 +69,69 @@ func (x *ListDatastoreRequest) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use ListDatastoreRequest.ProtoReflect.Descriptor instead.
-func (*ListDatastoreRequest) Descriptor() ([]byte, []int) {
+// Deprecated: Use UploadFileRequest.ProtoReflect.Descriptor instead.
+func (*UploadFileRequest) Descriptor() ([]byte, []int) {
 	return file_datastore_datastore_proto_rawDescGZIP(), []int{0}
 }
 
-func (x *ListDatastoreRequest) GetId() int64 {
+func (x *UploadFileRequest) GetFilename() string {
 	if x != nil {
-		return x.Id
-	}
-	return 0
-}
-
-func (x *ListDatastoreRequest) GetCurrent() int32 {
-	if x != nil {
-		return x.Current
-	}
-	return 0
-}
-
-func (x *ListDatastoreRequest) GetPageSize() int32 {
-	if x != nil {
-		return x.PageSize
-	}
-	return 0
-}
-
-func (x *ListDatastoreRequest) GetPageToken() string {
-	if x != nil {
-		return x.PageToken
+		return x.Filename
 	}
 	return ""
 }
 
-func (x *ListDatastoreRequest) GetNoPaging() bool {
+func (x *UploadFileRequest) GetContentType() string {
 	if x != nil {
-		return x.NoPaging
-	}
-	return false
-}
-
-func (x *ListDatastoreRequest) GetOnlyCount() bool {
-	if x != nil {
-		return x.OnlyCount
-	}
-	return false
-}
-
-func (x *ListDatastoreRequest) GetType() string {
-	if x != nil {
-		return x.Type
+		return x.ContentType
 	}
 	return ""
 }
 
-// ListDatastoreResponse is the response for the DatastoreService.ListDatastore method.
-type ListDatastoreResponse struct {
+func (x *UploadFileRequest) GetContent() []byte {
+	if x != nil {
+		return x.Content
+	}
+	return nil
+}
+
+func (x *UploadFileRequest) GetOwnerId() int64 {
+	if x != nil && x.OwnerId != nil {
+		return *x.OwnerId
+	}
+	return 0
+}
+
+func (x *UploadFileRequest) GetMetadata() map[string]string {
+	if x != nil {
+		return x.Metadata
+	}
+	return nil
+}
+
+// UploadFileResponse is the response for DatastoreService.UploadFile.
+type UploadFileResponse struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// The total number of items in the list.
-	TotalSize int32 `protobuf:"varint,1,opt,name=total_size,proto3" json:"total_size,omitempty"`
-	// The paging datastore
-	Data []*types.DataObject `protobuf:"bytes,2,rep,name=data,proto3" json:"data,omitempty"`
-	// The current page number.
-	Current int32 `protobuf:"varint,3,opt,name=current,proto3" json:"current,omitempty"`
-	// The maximum number of items to return.
-	PageSize int32 `protobuf:"varint,4,opt,name=page_size,proto3" json:"page_size,omitempty"`
-	// Token to retrieve the next page of results, or empty if there are no
-	// more results in the list.
-	NextPageToken string `protobuf:"bytes,5,opt,name=next_page_token,proto3" json:"next_page_token,omitempty"`
-	// Additional information about this response.
-	// content to be added without destroying the current data format
-	Extra         *anypb.Any `protobuf:"bytes,6,opt,name=extra,proto3,oneof" json:"extra,omitempty"`
+	// The uploaded file info.
+	File          *types.File `protobuf:"bytes,1,opt,name=file,proto3" json:"file,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *ListDatastoreResponse) Reset() {
-	*x = ListDatastoreResponse{}
+func (x *UploadFileResponse) Reset() {
+	*x = UploadFileResponse{}
 	mi := &file_datastore_datastore_proto_msgTypes[1]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *ListDatastoreResponse) String() string {
+func (x *UploadFileResponse) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*ListDatastoreResponse) ProtoMessage() {}
+func (*UploadFileResponse) ProtoMessage() {}
 
-func (x *ListDatastoreResponse) ProtoReflect() protoreflect.Message {
+func (x *UploadFileResponse) ProtoReflect() protoreflect.Message {
 	mi := &file_datastore_datastore_proto_msgTypes[1]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -171,78 +143,231 @@ func (x *ListDatastoreResponse) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use ListDatastoreResponse.ProtoReflect.Descriptor instead.
-func (*ListDatastoreResponse) Descriptor() ([]byte, []int) {
+// Deprecated: Use UploadFileResponse.ProtoReflect.Descriptor instead.
+func (*UploadFileResponse) Descriptor() ([]byte, []int) {
 	return file_datastore_datastore_proto_rawDescGZIP(), []int{1}
 }
 
-func (x *ListDatastoreResponse) GetTotalSize() int32 {
+func (x *UploadFileResponse) GetFile() *types.File {
 	if x != nil {
-		return x.TotalSize
-	}
-	return 0
-}
-
-func (x *ListDatastoreResponse) GetData() []*types.DataObject {
-	if x != nil {
-		return x.Data
+		return x.File
 	}
 	return nil
 }
 
-func (x *ListDatastoreResponse) GetCurrent() int32 {
+// DownloadFileRequest is the request for DatastoreService.DownloadFile.
+type DownloadFileRequest struct {
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// The file ID.
+	FileId        int64 `protobuf:"varint,1,opt,name=file_id,proto3" json:"file_id,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *DownloadFileRequest) Reset() {
+	*x = DownloadFileRequest{}
+	mi := &file_datastore_datastore_proto_msgTypes[2]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *DownloadFileRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*DownloadFileRequest) ProtoMessage() {}
+
+func (x *DownloadFileRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_datastore_datastore_proto_msgTypes[2]
 	if x != nil {
-		return x.Current
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use DownloadFileRequest.ProtoReflect.Descriptor instead.
+func (*DownloadFileRequest) Descriptor() ([]byte, []int) {
+	return file_datastore_datastore_proto_rawDescGZIP(), []int{2}
+}
+
+func (x *DownloadFileRequest) GetFileId() int64 {
+	if x != nil {
+		return x.FileId
 	}
 	return 0
 }
 
-func (x *ListDatastoreResponse) GetPageSize() int32 {
+// DownloadFileResponse is the response for DatastoreService.DownloadFile.
+type DownloadFileResponse struct {
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// The file content as bytes.
+	Content []byte `protobuf:"bytes,1,opt,name=content,proto3" json:"content,omitempty"`
+	// The file content type.
+	ContentType string `protobuf:"bytes,2,opt,name=content_type,proto3" json:"content_type,omitempty"`
+	// The file name.
+	Filename      string `protobuf:"bytes,3,opt,name=filename,proto3" json:"filename,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *DownloadFileResponse) Reset() {
+	*x = DownloadFileResponse{}
+	mi := &file_datastore_datastore_proto_msgTypes[3]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *DownloadFileResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*DownloadFileResponse) ProtoMessage() {}
+
+func (x *DownloadFileResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_datastore_datastore_proto_msgTypes[3]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use DownloadFileResponse.ProtoReflect.Descriptor instead.
+func (*DownloadFileResponse) Descriptor() ([]byte, []int) {
+	return file_datastore_datastore_proto_rawDescGZIP(), []int{3}
+}
+
+func (x *DownloadFileResponse) GetContent() []byte {
+	if x != nil {
+		return x.Content
+	}
+	return nil
+}
+
+func (x *DownloadFileResponse) GetContentType() string {
+	if x != nil {
+		return x.ContentType
+	}
+	return ""
+}
+
+func (x *DownloadFileResponse) GetFilename() string {
+	if x != nil {
+		return x.Filename
+	}
+	return ""
+}
+
+// ListFilesRequest is the request for DatastoreService.ListFiles.
+type ListFilesRequest struct {
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// Filter by owner ID.
+	OwnerId *int64 `protobuf:"varint,1,opt,name=owner_id,proto3,oneof" json:"owner_id,omitempty"`
+	// Filter by content type.
+	ContentType *string `protobuf:"bytes,2,opt,name=content_type,proto3,oneof" json:"content_type,omitempty"`
+	// Page number.
+	Page int32 `protobuf:"varint,3,opt,name=page,proto3" json:"page,omitempty"`
+	// Page size.
+	PageSize      int32 `protobuf:"varint,4,opt,name=page_size,proto3" json:"page_size,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *ListFilesRequest) Reset() {
+	*x = ListFilesRequest{}
+	mi := &file_datastore_datastore_proto_msgTypes[4]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *ListFilesRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ListFilesRequest) ProtoMessage() {}
+
+func (x *ListFilesRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_datastore_datastore_proto_msgTypes[4]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ListFilesRequest.ProtoReflect.Descriptor instead.
+func (*ListFilesRequest) Descriptor() ([]byte, []int) {
+	return file_datastore_datastore_proto_rawDescGZIP(), []int{4}
+}
+
+func (x *ListFilesRequest) GetOwnerId() int64 {
+	if x != nil && x.OwnerId != nil {
+		return *x.OwnerId
+	}
+	return 0
+}
+
+func (x *ListFilesRequest) GetContentType() string {
+	if x != nil && x.ContentType != nil {
+		return *x.ContentType
+	}
+	return ""
+}
+
+func (x *ListFilesRequest) GetPage() int32 {
+	if x != nil {
+		return x.Page
+	}
+	return 0
+}
+
+func (x *ListFilesRequest) GetPageSize() int32 {
 	if x != nil {
 		return x.PageSize
 	}
 	return 0
 }
 
-func (x *ListDatastoreResponse) GetNextPageToken() string {
-	if x != nil {
-		return x.NextPageToken
-	}
-	return ""
-}
-
-func (x *ListDatastoreResponse) GetExtra() *anypb.Any {
-	if x != nil {
-		return x.Extra
-	}
-	return nil
-}
-
-// GetDatastoreRequest is the request for the DatastoreService.GetDatastore method.
-type GetDatastoreRequest struct {
+// ListFilesResponse is the response for DatastoreService.ListFiles.
+type ListFilesResponse struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// The field will contain id of the data requested, for example:
-	// "shelves/shelf1/datastore/data2"
-	Id            int64 `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
+	// The list of files.
+	Files []*types.File `protobuf:"bytes,1,rep,name=files,proto3" json:"files,omitempty"`
+	// Total count.
+	Total int32 `protobuf:"varint,2,opt,name=total,proto3" json:"total,omitempty"`
+	// Current page.
+	Page int32 `protobuf:"varint,3,opt,name=page,proto3" json:"page,omitempty"`
+	// Page size.
+	PageSize      int32 `protobuf:"varint,4,opt,name=page_size,proto3" json:"page_size,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *GetDatastoreRequest) Reset() {
-	*x = GetDatastoreRequest{}
-	mi := &file_datastore_datastore_proto_msgTypes[2]
+func (x *ListFilesResponse) Reset() {
+	*x = ListFilesResponse{}
+	mi := &file_datastore_datastore_proto_msgTypes[5]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *GetDatastoreRequest) String() string {
+func (x *ListFilesResponse) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*GetDatastoreRequest) ProtoMessage() {}
+func (*ListFilesResponse) ProtoMessage() {}
 
-func (x *GetDatastoreRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_datastore_datastore_proto_msgTypes[2]
+func (x *ListFilesResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_datastore_datastore_proto_msgTypes[5]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -253,42 +378,63 @@ func (x *GetDatastoreRequest) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use GetDatastoreRequest.ProtoReflect.Descriptor instead.
-func (*GetDatastoreRequest) Descriptor() ([]byte, []int) {
-	return file_datastore_datastore_proto_rawDescGZIP(), []int{2}
+// Deprecated: Use ListFilesResponse.ProtoReflect.Descriptor instead.
+func (*ListFilesResponse) Descriptor() ([]byte, []int) {
+	return file_datastore_datastore_proto_rawDescGZIP(), []int{5}
 }
 
-func (x *GetDatastoreRequest) GetId() int64 {
+func (x *ListFilesResponse) GetFiles() []*types.File {
 	if x != nil {
-		return x.Id
+		return x.Files
+	}
+	return nil
+}
+
+func (x *ListFilesResponse) GetTotal() int32 {
+	if x != nil {
+		return x.Total
 	}
 	return 0
 }
 
-// GetDatastoreResponse is the response for the DatastoreService.GetDatastore method.
-type GetDatastoreResponse struct {
+func (x *ListFilesResponse) GetPage() int32 {
+	if x != nil {
+		return x.Page
+	}
+	return 0
+}
+
+func (x *ListFilesResponse) GetPageSize() int32 {
+	if x != nil {
+		return x.PageSize
+	}
+	return 0
+}
+
+// GetFileRequest is the request for DatastoreService.GetFile.
+type GetFileRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// The field id should match the Noun in the method id.
-	Data          *types.DataObject `protobuf:"bytes,1,opt,name=data,proto3" json:"data,omitempty"`
+	// The file ID.
+	FileId        int64 `protobuf:"varint,1,opt,name=file_id,proto3" json:"file_id,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *GetDatastoreResponse) Reset() {
-	*x = GetDatastoreResponse{}
-	mi := &file_datastore_datastore_proto_msgTypes[3]
+func (x *GetFileRequest) Reset() {
+	*x = GetFileRequest{}
+	mi := &file_datastore_datastore_proto_msgTypes[6]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *GetDatastoreResponse) String() string {
+func (x *GetFileRequest) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*GetDatastoreResponse) ProtoMessage() {}
+func (*GetFileRequest) ProtoMessage() {}
 
-func (x *GetDatastoreResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_datastore_datastore_proto_msgTypes[3]
+func (x *GetFileRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_datastore_datastore_proto_msgTypes[6]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -299,34 +445,122 @@ func (x *GetDatastoreResponse) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use GetDatastoreResponse.ProtoReflect.Descriptor instead.
-func (*GetDatastoreResponse) Descriptor() ([]byte, []int) {
-	return file_datastore_datastore_proto_rawDescGZIP(), []int{3}
+// Deprecated: Use GetFileRequest.ProtoReflect.Descriptor instead.
+func (*GetFileRequest) Descriptor() ([]byte, []int) {
+	return file_datastore_datastore_proto_rawDescGZIP(), []int{6}
 }
 
-func (x *GetDatastoreResponse) GetData() *types.DataObject {
+func (x *GetFileRequest) GetFileId() int64 {
 	if x != nil {
-		return x.Data
+		return x.FileId
+	}
+	return 0
+}
+
+// GetFileResponse is the response for DatastoreService.GetFile.
+type GetFileResponse struct {
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// The file info.
+	File          *types.File `protobuf:"bytes,1,opt,name=file,proto3" json:"file,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *GetFileResponse) Reset() {
+	*x = GetFileResponse{}
+	mi := &file_datastore_datastore_proto_msgTypes[7]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *GetFileResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetFileResponse) ProtoMessage() {}
+
+func (x *GetFileResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_datastore_datastore_proto_msgTypes[7]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetFileResponse.ProtoReflect.Descriptor instead.
+func (*GetFileResponse) Descriptor() ([]byte, []int) {
+	return file_datastore_datastore_proto_rawDescGZIP(), []int{7}
+}
+
+func (x *GetFileResponse) GetFile() *types.File {
+	if x != nil {
+		return x.File
 	}
 	return nil
 }
 
-// CreateDatastoreRequest is the request for the DatastoreService.CreateDatastore method.
+// DeleteFileRequest is the request for DatastoreService.DeleteFile.
+type DeleteFileRequest struct {
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// The file ID.
+	FileId        int64 `protobuf:"varint,1,opt,name=file_id,proto3" json:"file_id,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *DeleteFileRequest) Reset() {
+	*x = DeleteFileRequest{}
+	mi := &file_datastore_datastore_proto_msgTypes[8]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *DeleteFileRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*DeleteFileRequest) ProtoMessage() {}
+
+func (x *DeleteFileRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_datastore_datastore_proto_msgTypes[8]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use DeleteFileRequest.ProtoReflect.Descriptor instead.
+func (*DeleteFileRequest) Descriptor() ([]byte, []int) {
+	return file_datastore_datastore_proto_rawDescGZIP(), []int{8}
+}
+
+func (x *DeleteFileRequest) GetFileId() int64 {
+	if x != nil {
+		return x.FileId
+	}
+	return 0
+}
+
+// CreateDatastoreRequest is the request for DatastoreService.CreateDatastore.
 type CreateDatastoreRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// The parent data id where the data is to be created.
-	Parent string `protobuf:"bytes,1,opt,name=parent,proto3" json:"parent,omitempty"`
-	// The data id to use for this data.
-	DataId string `protobuf:"bytes,2,opt,name=data_id,proto3" json:"data_id,omitempty"`
 	// The data object to create.
-	Data          *types.DataObject `protobuf:"bytes,3,opt,name=data,proto3" json:"data,omitempty"`
+	Data          *types.DataObject `protobuf:"bytes,1,opt,name=data,proto3" json:"data,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
 func (x *CreateDatastoreRequest) Reset() {
 	*x = CreateDatastoreRequest{}
-	mi := &file_datastore_datastore_proto_msgTypes[4]
+	mi := &file_datastore_datastore_proto_msgTypes[9]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -338,7 +572,7 @@ func (x *CreateDatastoreRequest) String() string {
 func (*CreateDatastoreRequest) ProtoMessage() {}
 
 func (x *CreateDatastoreRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_datastore_datastore_proto_msgTypes[4]
+	mi := &file_datastore_datastore_proto_msgTypes[9]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -351,21 +585,7 @@ func (x *CreateDatastoreRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CreateDatastoreRequest.ProtoReflect.Descriptor instead.
 func (*CreateDatastoreRequest) Descriptor() ([]byte, []int) {
-	return file_datastore_datastore_proto_rawDescGZIP(), []int{4}
-}
-
-func (x *CreateDatastoreRequest) GetParent() string {
-	if x != nil {
-		return x.Parent
-	}
-	return ""
-}
-
-func (x *CreateDatastoreRequest) GetDataId() string {
-	if x != nil {
-		return x.DataId
-	}
-	return ""
+	return file_datastore_datastore_proto_rawDescGZIP(), []int{9}
 }
 
 func (x *CreateDatastoreRequest) GetData() *types.DataObject {
@@ -375,17 +595,18 @@ func (x *CreateDatastoreRequest) GetData() *types.DataObject {
 	return nil
 }
 
-// CreateDatastoreResponse is the response for the DatastoreService.CreateDatastore method.
+// CreateDatastoreResponse is the response for DatastoreService.CreateDatastore.
 type CreateDatastoreResponse struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Data          *types.DataObject      `protobuf:"bytes,1,opt,name=data,proto3" json:"data,omitempty"`
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// The created data object.
+	Data          *types.DataObject `protobuf:"bytes,1,opt,name=data,proto3" json:"data,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
 func (x *CreateDatastoreResponse) Reset() {
 	*x = CreateDatastoreResponse{}
-	mi := &file_datastore_datastore_proto_msgTypes[5]
+	mi := &file_datastore_datastore_proto_msgTypes[10]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -397,7 +618,7 @@ func (x *CreateDatastoreResponse) String() string {
 func (*CreateDatastoreResponse) ProtoMessage() {}
 
 func (x *CreateDatastoreResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_datastore_datastore_proto_msgTypes[5]
+	mi := &file_datastore_datastore_proto_msgTypes[10]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -410,7 +631,7 @@ func (x *CreateDatastoreResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CreateDatastoreResponse.ProtoReflect.Descriptor instead.
 func (*CreateDatastoreResponse) Descriptor() ([]byte, []int) {
-	return file_datastore_datastore_proto_rawDescGZIP(), []int{5}
+	return file_datastore_datastore_proto_rawDescGZIP(), []int{10}
 }
 
 func (x *CreateDatastoreResponse) GetData() *types.DataObject {
@@ -420,12 +641,104 @@ func (x *CreateDatastoreResponse) GetData() *types.DataObject {
 	return nil
 }
 
-// UpdateDatastoreRequest is the request for the DatastoreService.UpdateDatastore method.
+// GetDatastoreRequest is the request for DatastoreService.GetDatastore.
+type GetDatastoreRequest struct {
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// The data ID.
+	Id            string `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *GetDatastoreRequest) Reset() {
+	*x = GetDatastoreRequest{}
+	mi := &file_datastore_datastore_proto_msgTypes[11]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *GetDatastoreRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetDatastoreRequest) ProtoMessage() {}
+
+func (x *GetDatastoreRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_datastore_datastore_proto_msgTypes[11]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetDatastoreRequest.ProtoReflect.Descriptor instead.
+func (*GetDatastoreRequest) Descriptor() ([]byte, []int) {
+	return file_datastore_datastore_proto_rawDescGZIP(), []int{11}
+}
+
+func (x *GetDatastoreRequest) GetId() string {
+	if x != nil {
+		return x.Id
+	}
+	return ""
+}
+
+// GetDatastoreResponse is the response for DatastoreService.GetDatastore.
+type GetDatastoreResponse struct {
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// The data object.
+	Data          *types.DataObject `protobuf:"bytes,1,opt,name=data,proto3" json:"data,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *GetDatastoreResponse) Reset() {
+	*x = GetDatastoreResponse{}
+	mi := &file_datastore_datastore_proto_msgTypes[12]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *GetDatastoreResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetDatastoreResponse) ProtoMessage() {}
+
+func (x *GetDatastoreResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_datastore_datastore_proto_msgTypes[12]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetDatastoreResponse.ProtoReflect.Descriptor instead.
+func (*GetDatastoreResponse) Descriptor() ([]byte, []int) {
+	return file_datastore_datastore_proto_rawDescGZIP(), []int{12}
+}
+
+func (x *GetDatastoreResponse) GetData() *types.DataObject {
+	if x != nil {
+		return x.Data
+	}
+	return nil
+}
+
+// UpdateDatastoreRequest is the request for DatastoreService.UpdateDatastore.
 type UpdateDatastoreRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// The id of the data object to update.
-	Id int64 `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
-	// The data object which replaces the data on the server.
+	// The ID of the data object to update.
+	Id string `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
+	// The data object to update.
 	Data          *types.DataObject `protobuf:"bytes,2,opt,name=data,proto3" json:"data,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
@@ -433,7 +746,7 @@ type UpdateDatastoreRequest struct {
 
 func (x *UpdateDatastoreRequest) Reset() {
 	*x = UpdateDatastoreRequest{}
-	mi := &file_datastore_datastore_proto_msgTypes[6]
+	mi := &file_datastore_datastore_proto_msgTypes[13]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -445,7 +758,7 @@ func (x *UpdateDatastoreRequest) String() string {
 func (*UpdateDatastoreRequest) ProtoMessage() {}
 
 func (x *UpdateDatastoreRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_datastore_datastore_proto_msgTypes[6]
+	mi := &file_datastore_datastore_proto_msgTypes[13]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -458,14 +771,14 @@ func (x *UpdateDatastoreRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use UpdateDatastoreRequest.ProtoReflect.Descriptor instead.
 func (*UpdateDatastoreRequest) Descriptor() ([]byte, []int) {
-	return file_datastore_datastore_proto_rawDescGZIP(), []int{6}
+	return file_datastore_datastore_proto_rawDescGZIP(), []int{13}
 }
 
-func (x *UpdateDatastoreRequest) GetId() int64 {
+func (x *UpdateDatastoreRequest) GetId() string {
 	if x != nil {
 		return x.Id
 	}
-	return 0
+	return ""
 }
 
 func (x *UpdateDatastoreRequest) GetData() *types.DataObject {
@@ -475,17 +788,18 @@ func (x *UpdateDatastoreRequest) GetData() *types.DataObject {
 	return nil
 }
 
-// UpdateDatastoreResponse is the response for the DatastoreService.UpdateDatastore method.
+// UpdateDatastoreResponse is the response for DatastoreService.UpdateDatastore.
 type UpdateDatastoreResponse struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Data          *types.DataObject      `protobuf:"bytes,1,opt,name=data,proto3" json:"data,omitempty"`
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// The updated data object.
+	Data          *types.DataObject `protobuf:"bytes,1,opt,name=data,proto3" json:"data,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
 func (x *UpdateDatastoreResponse) Reset() {
 	*x = UpdateDatastoreResponse{}
-	mi := &file_datastore_datastore_proto_msgTypes[7]
+	mi := &file_datastore_datastore_proto_msgTypes[14]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -497,7 +811,7 @@ func (x *UpdateDatastoreResponse) String() string {
 func (*UpdateDatastoreResponse) ProtoMessage() {}
 
 func (x *UpdateDatastoreResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_datastore_datastore_proto_msgTypes[7]
+	mi := &file_datastore_datastore_proto_msgTypes[14]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -510,7 +824,7 @@ func (x *UpdateDatastoreResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use UpdateDatastoreResponse.ProtoReflect.Descriptor instead.
 func (*UpdateDatastoreResponse) Descriptor() ([]byte, []int) {
-	return file_datastore_datastore_proto_rawDescGZIP(), []int{7}
+	return file_datastore_datastore_proto_rawDescGZIP(), []int{14}
 }
 
 func (x *UpdateDatastoreResponse) GetData() *types.DataObject {
@@ -520,19 +834,18 @@ func (x *UpdateDatastoreResponse) GetData() *types.DataObject {
 	return nil
 }
 
-// DeleteDatastoreRequest is the request for the DatastoreService.DeleteDatastore method.
+// DeleteDatastoreRequest is the request for DatastoreService.DeleteDatastore.
 type DeleteDatastoreRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// The data id of the data to be deleted, for example:
-	// "shelves/shelf1/datastore/data2"
-	Id            int64 `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
+	// The ID of the data object to delete.
+	Id            string `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
 func (x *DeleteDatastoreRequest) Reset() {
 	*x = DeleteDatastoreRequest{}
-	mi := &file_datastore_datastore_proto_msgTypes[8]
+	mi := &file_datastore_datastore_proto_msgTypes[15]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -544,7 +857,7 @@ func (x *DeleteDatastoreRequest) String() string {
 func (*DeleteDatastoreRequest) ProtoMessage() {}
 
 func (x *DeleteDatastoreRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_datastore_datastore_proto_msgTypes[8]
+	mi := &file_datastore_datastore_proto_msgTypes[15]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -557,116 +870,96 @@ func (x *DeleteDatastoreRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use DeleteDatastoreRequest.ProtoReflect.Descriptor instead.
 func (*DeleteDatastoreRequest) Descriptor() ([]byte, []int) {
-	return file_datastore_datastore_proto_rawDescGZIP(), []int{8}
+	return file_datastore_datastore_proto_rawDescGZIP(), []int{15}
 }
 
-func (x *DeleteDatastoreRequest) GetId() int64 {
+func (x *DeleteDatastoreRequest) GetId() string {
 	if x != nil {
 		return x.Id
 	}
-	return 0
-}
-
-// DeleteDatastoreResponse is the response for the DatastoreService.DeleteDatastore method.
-type DeleteDatastoreResponse struct {
-	state protoimpl.MessageState `protogen:"open.v1"`
-	// or Datastore data = 1; or google.protobuf.Empty empty = 1;
-	Empty         *emptypb.Empty `protobuf:"bytes,1,opt,name=empty,proto3" json:"empty,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *DeleteDatastoreResponse) Reset() {
-	*x = DeleteDatastoreResponse{}
-	mi := &file_datastore_datastore_proto_msgTypes[9]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *DeleteDatastoreResponse) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*DeleteDatastoreResponse) ProtoMessage() {}
-
-func (x *DeleteDatastoreResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_datastore_datastore_proto_msgTypes[9]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use DeleteDatastoreResponse.ProtoReflect.Descriptor instead.
-func (*DeleteDatastoreResponse) Descriptor() ([]byte, []int) {
-	return file_datastore_datastore_proto_rawDescGZIP(), []int{9}
-}
-
-func (x *DeleteDatastoreResponse) GetEmpty() *emptypb.Empty {
-	if x != nil {
-		return x.Empty
-	}
-	return nil
+	return ""
 }
 
 var File_datastore_datastore_proto protoreflect.FileDescriptor
 
 const file_datastore_datastore_proto_rawDesc = "" +
 	"\n" +
-	"\x19datastore/datastore.proto\x12\x19api.v1.services.datastore\x1a\x1cgoogle/api/annotations.proto\x1a\x19google/protobuf/any.proto\x1a\x1bgoogle/protobuf/empty.proto\x1a\x15types/datastore.proto\"\xd0\x01\n" +
-	"\x14ListDatastoreRequest\x12\x0e\n" +
-	"\x02id\x18\x01 \x01(\x03R\x02id\x12\x18\n" +
-	"\acurrent\x18\x02 \x01(\x05R\acurrent\x12\x1c\n" +
-	"\tpage_size\x18\x03 \x01(\x05R\tpage_size\x12\x1e\n" +
-	"\n" +
-	"page_token\x18\x04 \x01(\tR\n" +
-	"page_token\x12\x1c\n" +
-	"\tno_paging\x18\x05 \x01(\bR\tno_paging\x12\x1e\n" +
-	"\n" +
-	"only_count\x18\x06 \x01(\bR\n" +
-	"only_count\x12\x12\n" +
-	"\x04type\x18\a \x01(\tR\x04type\"\x8b\x02\n" +
-	"\x15ListDatastoreResponse\x12\x1e\n" +
-	"\n" +
-	"total_size\x18\x01 \x01(\x05R\n" +
-	"total_size\x125\n" +
-	"\x04data\x18\x02 \x03(\v2!.api.v1.services.types.DataObjectR\x04data\x12\x18\n" +
-	"\acurrent\x18\x03 \x01(\x05R\acurrent\x12\x1c\n" +
-	"\tpage_size\x18\x04 \x01(\x05R\tpage_size\x12(\n" +
-	"\x0fnext_page_token\x18\x05 \x01(\tR\x0fnext_page_token\x12/\n" +
-	"\x05extra\x18\x06 \x01(\v2\x14.google.protobuf.AnyH\x00R\x05extra\x88\x01\x01B\b\n" +
-	"\x06_extra\"%\n" +
-	"\x13GetDatastoreRequest\x12\x0e\n" +
-	"\x02id\x18\x01 \x01(\x03R\x02id\"M\n" +
-	"\x14GetDatastoreResponse\x125\n" +
-	"\x04data\x18\x01 \x01(\v2!.api.v1.services.types.DataObjectR\x04data\"\x81\x01\n" +
-	"\x16CreateDatastoreRequest\x12\x16\n" +
-	"\x06parent\x18\x01 \x01(\tR\x06parent\x12\x18\n" +
-	"\adata_id\x18\x02 \x01(\tR\adata_id\x125\n" +
-	"\x04data\x18\x03 \x01(\v2!.api.v1.services.types.DataObjectR\x04data\"P\n" +
+	"\x19datastore/datastore.proto\x12\x19api.v1.services.datastore\x1a\x1cgoogle/api/annotations.proto\x1a\x1bgoogle/protobuf/empty.proto\x1a\x1fgoogle/protobuf/timestamp.proto\x1a\x15types/datastore.proto\x1a\x17validate/validate.proto\x1a\x16policy/v1/policy.proto\"\xb9\x02\n" +
+	"\x11UploadFileRequest\x12#\n" +
+	"\bfilename\x18\x01 \x01(\tB\a\xfaB\x04r\x02\x10\x01R\bfilename\x12\"\n" +
+	"\fcontent_type\x18\x02 \x01(\tR\fcontent_type\x12\x18\n" +
+	"\acontent\x18\x03 \x01(\fR\acontent\x12\x1f\n" +
+	"\bowner_id\x18\x04 \x01(\x03H\x00R\bowner_id\x88\x01\x01\x12V\n" +
+	"\bmetadata\x18\x05 \x03(\v2:.api.v1.services.datastore.UploadFileRequest.MetadataEntryR\bmetadata\x1a;\n" +
+	"\rMetadataEntry\x12\x10\n" +
+	"\x03key\x18\x01 \x01(\tR\x03key\x12\x14\n" +
+	"\x05value\x18\x02 \x01(\tR\x05value:\x028\x01B\v\n" +
+	"\t_owner_id\"E\n" +
+	"\x12UploadFileResponse\x12/\n" +
+	"\x04file\x18\x01 \x01(\v2\x1b.api.v1.services.types.FileR\x04file\"8\n" +
+	"\x13DownloadFileRequest\x12!\n" +
+	"\afile_id\x18\x01 \x01(\x03B\a\xfaB\x04\"\x02 \x00R\afile_id\"p\n" +
+	"\x14DownloadFileResponse\x12\x18\n" +
+	"\acontent\x18\x01 \x01(\fR\acontent\x12\"\n" +
+	"\fcontent_type\x18\x02 \x01(\tR\fcontent_type\x12\x1a\n" +
+	"\bfilename\x18\x03 \x01(\tR\bfilename\"\xac\x01\n" +
+	"\x10ListFilesRequest\x12\x1f\n" +
+	"\bowner_id\x18\x01 \x01(\x03H\x00R\bowner_id\x88\x01\x01\x12'\n" +
+	"\fcontent_type\x18\x02 \x01(\tH\x01R\fcontent_type\x88\x01\x01\x12\x12\n" +
+	"\x04page\x18\x03 \x01(\x05R\x04page\x12\x1c\n" +
+	"\tpage_size\x18\x04 \x01(\x05R\tpage_sizeB\v\n" +
+	"\t_owner_idB\x0f\n" +
+	"\r_content_type\"\x8e\x01\n" +
+	"\x11ListFilesResponse\x121\n" +
+	"\x05files\x18\x01 \x03(\v2\x1b.api.v1.services.types.FileR\x05files\x12\x14\n" +
+	"\x05total\x18\x02 \x01(\x05R\x05total\x12\x12\n" +
+	"\x04page\x18\x03 \x01(\x05R\x04page\x12\x1c\n" +
+	"\tpage_size\x18\x04 \x01(\x05R\tpage_size\"3\n" +
+	"\x0eGetFileRequest\x12!\n" +
+	"\afile_id\x18\x01 \x01(\x03B\a\xfaB\x04\"\x02 \x00R\afile_id\"B\n" +
+	"\x0fGetFileResponse\x12/\n" +
+	"\x04file\x18\x01 \x01(\v2\x1b.api.v1.services.types.FileR\x04file\"6\n" +
+	"\x11DeleteFileRequest\x12!\n" +
+	"\afile_id\x18\x01 \x01(\x03B\a\xfaB\x04\"\x02 \x00R\afile_id\"O\n" +
+	"\x16CreateDatastoreRequest\x125\n" +
+	"\x04data\x18\x01 \x01(\v2!.api.v1.services.types.DataObjectR\x04data\"P\n" +
 	"\x17CreateDatastoreResponse\x125\n" +
-	"\x04data\x18\x01 \x01(\v2!.api.v1.services.types.DataObjectR\x04data\"_\n" +
-	"\x16UpdateDatastoreRequest\x12\x0e\n" +
-	"\x02id\x18\x01 \x01(\x03R\x02id\x125\n" +
+	"\x04data\x18\x01 \x01(\v2!.api.v1.services.types.DataObjectR\x04data\".\n" +
+	"\x13GetDatastoreRequest\x12\x17\n" +
+	"\x02id\x18\x01 \x01(\tB\a\xfaB\x04r\x02\x10\x01R\x02id\"M\n" +
+	"\x14GetDatastoreResponse\x125\n" +
+	"\x04data\x18\x01 \x01(\v2!.api.v1.services.types.DataObjectR\x04data\"h\n" +
+	"\x16UpdateDatastoreRequest\x12\x17\n" +
+	"\x02id\x18\x01 \x01(\tB\a\xfaB\x04r\x02\x10\x01R\x02id\x125\n" +
 	"\x04data\x18\x02 \x01(\v2!.api.v1.services.types.DataObjectR\x04data\"P\n" +
 	"\x17UpdateDatastoreResponse\x125\n" +
-	"\x04data\x18\x01 \x01(\v2!.api.v1.services.types.DataObjectR\x04data\"(\n" +
-	"\x16DeleteDatastoreRequest\x12\x0e\n" +
-	"\x02id\x18\x01 \x01(\x03R\x02id\"G\n" +
-	"\x17DeleteDatastoreResponse\x12,\n" +
-	"\x05empty\x18\x01 \x01(\v2\x16.google.protobuf.EmptyR\x05empty2\xee\x05\n" +
-	"\x10DatastoreService\x12\x86\x01\n" +
-	"\rListDatastore\x12/.api.v1.services.datastore.ListDatastoreRequest\x1a0.api.v1.services.datastore.ListDatastoreResponse\"\x12\x82\xd3\xe4\x93\x02\f\x12\n" +
-	"/datastore\x12\x88\x01\n" +
-	"\fGetDatastore\x12..api.v1.services.datastore.GetDatastoreRequest\x1a/.api.v1.services.datastore.GetDatastoreResponse\"\x17\x82\xd3\xe4\x93\x02\x11\x12\x0f/datastore/{id}\x12\x92\x01\n" +
-	"\x0fCreateDatastore\x121.api.v1.services.datastore.CreateDatastoreRequest\x1a2.api.v1.services.datastore.CreateDatastoreResponse\"\x18\x82\xd3\xe4\x93\x02\x12:\x04data\"\n" +
-	"/datastore\x12\x9c\x01\n" +
-	"\x0fUpdateDatastore\x121.api.v1.services.datastore.UpdateDatastoreRequest\x1a2.api.v1.services.datastore.UpdateDatastoreResponse\"\"\x82\xd3\xe4\x93\x02\x1c:\x04data\x1a\x14/datastore/{data.id}\x12\x91\x01\n" +
-	"\x0fDeleteDatastore\x121.api.v1.services.datastore.DeleteDatastoreRequest\x1a2.api.v1.services.datastore.DeleteDatastoreResponse\"\x17\x82\xd3\xe4\x93\x02\x11*\x0f/datastore/{id}B\xf8\x01\n" +
+	"\x04data\x18\x01 \x01(\v2!.api.v1.services.types.DataObjectR\x04data\"1\n" +
+	"\x16DeleteDatastoreRequest\x12\x17\n" +
+	"\x02id\x18\x01 \x01(\tB\a\xfaB\x04r\x02\x10\x01R\x02id2\xe3\n" +
+	"\n" +
+	"\x10DatastoreService\x12\x99\x01\n" +
+	"\n" +
+	"UploadFile\x12,.api.v1.services.datastore.UploadFileRequest\x1a-.api.v1.services.datastore.UploadFileResponse\".\xea\xea\x1b\x0f\n" +
+	"\rauthenticated\x82\xd3\xe4\x93\x02\x15:\x01*\"\x10/ds/files/upload\x12\x9f\x01\n" +
+	"\fDownloadFile\x12..api.v1.services.datastore.DownloadFileRequest\x1a/.api.v1.services.datastore.DownloadFileResponse\".\xea\xea\x1b\x0f\n" +
+	"\rauthenticated\x82\xd3\xe4\x93\x02\x15\x12\x13/ds/files/{file_id}\x12\x8c\x01\n" +
+	"\tListFiles\x12+.api.v1.services.datastore.ListFilesRequest\x1a,.api.v1.services.datastore.ListFilesResponse\"$\xea\xea\x1b\x0f\n" +
+	"\rauthenticated\x82\xd3\xe4\x93\x02\v\x12\t/ds/files\x12\x95\x01\n" +
+	"\aGetFile\x12).api.v1.services.datastore.GetFileRequest\x1a*.api.v1.services.datastore.GetFileResponse\"3\xea\xea\x1b\x0f\n" +
+	"\rauthenticated\x82\xd3\xe4\x93\x02\x1a\x12\x18/ds/files/{file_id}/info\x12\x82\x01\n" +
+	"\n" +
+	"DeleteFile\x12,.api.v1.services.datastore.DeleteFileRequest\x1a\x16.google.protobuf.Empty\".\xea\xea\x1b\x0f\n" +
+	"\rauthenticated\x82\xd3\xe4\x93\x02\x15*\x13/ds/files/{file_id}\x12\x9e\x01\n" +
+	"\x0fCreateDatastore\x121.api.v1.services.datastore.CreateDatastoreRequest\x1a2.api.v1.services.datastore.CreateDatastoreResponse\"$\xea\xea\x1b\x0f\n" +
+	"\rauthenticated\x82\xd3\xe4\x93\x02\v:\x04data\"\x03/ds\x12\x94\x01\n" +
+	"\fGetDatastore\x12..api.v1.services.datastore.GetDatastoreRequest\x1a/.api.v1.services.datastore.GetDatastoreResponse\"#\xea\xea\x1b\x0f\n" +
+	"\rauthenticated\x82\xd3\xe4\x93\x02\n" +
+	"\x12\b/ds/{id}\x12\xa8\x01\n" +
+	"\x0fUpdateDatastore\x121.api.v1.services.datastore.UpdateDatastoreRequest\x1a2.api.v1.services.datastore.UpdateDatastoreResponse\".\xea\xea\x1b\x0f\n" +
+	"\rauthenticated\x82\xd3\xe4\x93\x02\x15:\x04data\x1a\r/ds/{data.id}\x12\x81\x01\n" +
+	"\x0fDeleteDatastore\x121.api.v1.services.datastore.DeleteDatastoreRequest\x1a\x16.google.protobuf.Empty\"#\xea\xea\x1b\x0f\n" +
+	"\rauthenticated\x82\xd3\xe4\x93\x02\n" +
+	"*\b/ds/{id}B\xf8\x01\n" +
 	"\x1dcom.api.v1.services.datastoreB\x0eDatastoreProtoP\x01Z?origadmin/application/admin/api/v1/services/datastore;datastore\xa2\x02\x04AVSD\xaa\x02\x19Api.V1.Services.Datastore\xca\x02\x19Api\\V1\\Services\\Datastore\xe2\x02%Api\\V1\\Services\\Datastore\\GPBMetadata\xea\x02\x1cApi::V1::Services::Datastoreb\x06proto3"
 
 var (
@@ -681,46 +974,62 @@ func file_datastore_datastore_proto_rawDescGZIP() []byte {
 	return file_datastore_datastore_proto_rawDescData
 }
 
-var file_datastore_datastore_proto_msgTypes = make([]protoimpl.MessageInfo, 10)
+var file_datastore_datastore_proto_msgTypes = make([]protoimpl.MessageInfo, 17)
 var file_datastore_datastore_proto_goTypes = []any{
-	(*ListDatastoreRequest)(nil),    // 0: api.v1.services.datastore.ListDatastoreRequest
-	(*ListDatastoreResponse)(nil),   // 1: api.v1.services.datastore.ListDatastoreResponse
-	(*GetDatastoreRequest)(nil),     // 2: api.v1.services.datastore.GetDatastoreRequest
-	(*GetDatastoreResponse)(nil),    // 3: api.v1.services.datastore.GetDatastoreResponse
-	(*CreateDatastoreRequest)(nil),  // 4: api.v1.services.datastore.CreateDatastoreRequest
-	(*CreateDatastoreResponse)(nil), // 5: api.v1.services.datastore.CreateDatastoreResponse
-	(*UpdateDatastoreRequest)(nil),  // 6: api.v1.services.datastore.UpdateDatastoreRequest
-	(*UpdateDatastoreResponse)(nil), // 7: api.v1.services.datastore.UpdateDatastoreResponse
-	(*DeleteDatastoreRequest)(nil),  // 8: api.v1.services.datastore.DeleteDatastoreRequest
-	(*DeleteDatastoreResponse)(nil), // 9: api.v1.services.datastore.DeleteDatastoreResponse
-	(*types.DataObject)(nil),        // 10: api.v1.services.types.DataObject
-	(*anypb.Any)(nil),               // 11: google.protobuf.Any
-	(*emptypb.Empty)(nil),           // 12: google.protobuf.Empty
+	(*UploadFileRequest)(nil),       // 0: api.v1.services.datastore.UploadFileRequest
+	(*UploadFileResponse)(nil),      // 1: api.v1.services.datastore.UploadFileResponse
+	(*DownloadFileRequest)(nil),     // 2: api.v1.services.datastore.DownloadFileRequest
+	(*DownloadFileResponse)(nil),    // 3: api.v1.services.datastore.DownloadFileResponse
+	(*ListFilesRequest)(nil),        // 4: api.v1.services.datastore.ListFilesRequest
+	(*ListFilesResponse)(nil),       // 5: api.v1.services.datastore.ListFilesResponse
+	(*GetFileRequest)(nil),          // 6: api.v1.services.datastore.GetFileRequest
+	(*GetFileResponse)(nil),         // 7: api.v1.services.datastore.GetFileResponse
+	(*DeleteFileRequest)(nil),       // 8: api.v1.services.datastore.DeleteFileRequest
+	(*CreateDatastoreRequest)(nil),  // 9: api.v1.services.datastore.CreateDatastoreRequest
+	(*CreateDatastoreResponse)(nil), // 10: api.v1.services.datastore.CreateDatastoreResponse
+	(*GetDatastoreRequest)(nil),     // 11: api.v1.services.datastore.GetDatastoreRequest
+	(*GetDatastoreResponse)(nil),    // 12: api.v1.services.datastore.GetDatastoreResponse
+	(*UpdateDatastoreRequest)(nil),  // 13: api.v1.services.datastore.UpdateDatastoreRequest
+	(*UpdateDatastoreResponse)(nil), // 14: api.v1.services.datastore.UpdateDatastoreResponse
+	(*DeleteDatastoreRequest)(nil),  // 15: api.v1.services.datastore.DeleteDatastoreRequest
+	nil,                             // 16: api.v1.services.datastore.UploadFileRequest.MetadataEntry
+	(*types.File)(nil),              // 17: api.v1.services.types.File
+	(*types.DataObject)(nil),        // 18: api.v1.services.types.DataObject
+	(*emptypb.Empty)(nil),           // 19: google.protobuf.Empty
 }
 var file_datastore_datastore_proto_depIdxs = []int32{
-	10, // 0: api.v1.services.datastore.ListDatastoreResponse.data:type_name -> api.v1.services.types.DataObject
-	11, // 1: api.v1.services.datastore.ListDatastoreResponse.extra:type_name -> google.protobuf.Any
-	10, // 2: api.v1.services.datastore.GetDatastoreResponse.data:type_name -> api.v1.services.types.DataObject
-	10, // 3: api.v1.services.datastore.CreateDatastoreRequest.data:type_name -> api.v1.services.types.DataObject
-	10, // 4: api.v1.services.datastore.CreateDatastoreResponse.data:type_name -> api.v1.services.types.DataObject
-	10, // 5: api.v1.services.datastore.UpdateDatastoreRequest.data:type_name -> api.v1.services.types.DataObject
-	10, // 6: api.v1.services.datastore.UpdateDatastoreResponse.data:type_name -> api.v1.services.types.DataObject
-	12, // 7: api.v1.services.datastore.DeleteDatastoreResponse.empty:type_name -> google.protobuf.Empty
-	0,  // 8: api.v1.services.datastore.DatastoreService.ListDatastore:input_type -> api.v1.services.datastore.ListDatastoreRequest
-	2,  // 9: api.v1.services.datastore.DatastoreService.GetDatastore:input_type -> api.v1.services.datastore.GetDatastoreRequest
-	4,  // 10: api.v1.services.datastore.DatastoreService.CreateDatastore:input_type -> api.v1.services.datastore.CreateDatastoreRequest
-	6,  // 11: api.v1.services.datastore.DatastoreService.UpdateDatastore:input_type -> api.v1.services.datastore.UpdateDatastoreRequest
-	8,  // 12: api.v1.services.datastore.DatastoreService.DeleteDatastore:input_type -> api.v1.services.datastore.DeleteDatastoreRequest
-	1,  // 13: api.v1.services.datastore.DatastoreService.ListDatastore:output_type -> api.v1.services.datastore.ListDatastoreResponse
-	3,  // 14: api.v1.services.datastore.DatastoreService.GetDatastore:output_type -> api.v1.services.datastore.GetDatastoreResponse
-	5,  // 15: api.v1.services.datastore.DatastoreService.CreateDatastore:output_type -> api.v1.services.datastore.CreateDatastoreResponse
-	7,  // 16: api.v1.services.datastore.DatastoreService.UpdateDatastore:output_type -> api.v1.services.datastore.UpdateDatastoreResponse
-	9,  // 17: api.v1.services.datastore.DatastoreService.DeleteDatastore:output_type -> api.v1.services.datastore.DeleteDatastoreResponse
-	13, // [13:18] is the sub-list for method output_type
-	8,  // [8:13] is the sub-list for method input_type
-	8,  // [8:8] is the sub-list for extension type_name
-	8,  // [8:8] is the sub-list for extension extendee
-	0,  // [0:8] is the sub-list for field type_name
+	16, // 0: api.v1.services.datastore.UploadFileRequest.metadata:type_name -> api.v1.services.datastore.UploadFileRequest.MetadataEntry
+	17, // 1: api.v1.services.datastore.UploadFileResponse.file:type_name -> api.v1.services.types.File
+	17, // 2: api.v1.services.datastore.ListFilesResponse.files:type_name -> api.v1.services.types.File
+	17, // 3: api.v1.services.datastore.GetFileResponse.file:type_name -> api.v1.services.types.File
+	18, // 4: api.v1.services.datastore.CreateDatastoreRequest.data:type_name -> api.v1.services.types.DataObject
+	18, // 5: api.v1.services.datastore.CreateDatastoreResponse.data:type_name -> api.v1.services.types.DataObject
+	18, // 6: api.v1.services.datastore.GetDatastoreResponse.data:type_name -> api.v1.services.types.DataObject
+	18, // 7: api.v1.services.datastore.UpdateDatastoreRequest.data:type_name -> api.v1.services.types.DataObject
+	18, // 8: api.v1.services.datastore.UpdateDatastoreResponse.data:type_name -> api.v1.services.types.DataObject
+	0,  // 9: api.v1.services.datastore.DatastoreService.UploadFile:input_type -> api.v1.services.datastore.UploadFileRequest
+	2,  // 10: api.v1.services.datastore.DatastoreService.DownloadFile:input_type -> api.v1.services.datastore.DownloadFileRequest
+	4,  // 11: api.v1.services.datastore.DatastoreService.ListFiles:input_type -> api.v1.services.datastore.ListFilesRequest
+	6,  // 12: api.v1.services.datastore.DatastoreService.GetFile:input_type -> api.v1.services.datastore.GetFileRequest
+	8,  // 13: api.v1.services.datastore.DatastoreService.DeleteFile:input_type -> api.v1.services.datastore.DeleteFileRequest
+	9,  // 14: api.v1.services.datastore.DatastoreService.CreateDatastore:input_type -> api.v1.services.datastore.CreateDatastoreRequest
+	11, // 15: api.v1.services.datastore.DatastoreService.GetDatastore:input_type -> api.v1.services.datastore.GetDatastoreRequest
+	13, // 16: api.v1.services.datastore.DatastoreService.UpdateDatastore:input_type -> api.v1.services.datastore.UpdateDatastoreRequest
+	15, // 17: api.v1.services.datastore.DatastoreService.DeleteDatastore:input_type -> api.v1.services.datastore.DeleteDatastoreRequest
+	1,  // 18: api.v1.services.datastore.DatastoreService.UploadFile:output_type -> api.v1.services.datastore.UploadFileResponse
+	3,  // 19: api.v1.services.datastore.DatastoreService.DownloadFile:output_type -> api.v1.services.datastore.DownloadFileResponse
+	5,  // 20: api.v1.services.datastore.DatastoreService.ListFiles:output_type -> api.v1.services.datastore.ListFilesResponse
+	7,  // 21: api.v1.services.datastore.DatastoreService.GetFile:output_type -> api.v1.services.datastore.GetFileResponse
+	19, // 22: api.v1.services.datastore.DatastoreService.DeleteFile:output_type -> google.protobuf.Empty
+	10, // 23: api.v1.services.datastore.DatastoreService.CreateDatastore:output_type -> api.v1.services.datastore.CreateDatastoreResponse
+	12, // 24: api.v1.services.datastore.DatastoreService.GetDatastore:output_type -> api.v1.services.datastore.GetDatastoreResponse
+	14, // 25: api.v1.services.datastore.DatastoreService.UpdateDatastore:output_type -> api.v1.services.datastore.UpdateDatastoreResponse
+	19, // 26: api.v1.services.datastore.DatastoreService.DeleteDatastore:output_type -> google.protobuf.Empty
+	18, // [18:27] is the sub-list for method output_type
+	9,  // [9:18] is the sub-list for method input_type
+	9,  // [9:9] is the sub-list for extension type_name
+	9,  // [9:9] is the sub-list for extension extendee
+	0,  // [0:9] is the sub-list for field type_name
 }
 
 func init() { file_datastore_datastore_proto_init() }
@@ -728,14 +1037,15 @@ func file_datastore_datastore_proto_init() {
 	if File_datastore_datastore_proto != nil {
 		return
 	}
-	file_datastore_datastore_proto_msgTypes[1].OneofWrappers = []any{}
+	file_datastore_datastore_proto_msgTypes[0].OneofWrappers = []any{}
+	file_datastore_datastore_proto_msgTypes[4].OneofWrappers = []any{}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_datastore_datastore_proto_rawDesc), len(file_datastore_datastore_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   10,
+			NumMessages:   17,
 			NumExtensions: 0,
 			NumServices:   1,
 		},

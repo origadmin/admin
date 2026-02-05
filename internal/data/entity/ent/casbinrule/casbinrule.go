@@ -26,7 +26,7 @@ const (
 	// FieldV5 holds the string denoting the v5 field in the database.
 	FieldV5 = "v5"
 	// Table holds the table name of the casbinrule in the database.
-	Table = "casbin_rules"
+	Table = "casbin_rule"
 )
 
 // Columns holds all SQL columns for casbinrule fields.
@@ -52,19 +52,19 @@ func ValidColumn(column string) bool {
 }
 
 var (
-	// DefaultPtype holds the default value on creation for the "Ptype" field.
+	// DefaultPtype holds the default value on creation for the "ptype" field.
 	DefaultPtype string
-	// DefaultV0 holds the default value on creation for the "V0" field.
+	// DefaultV0 holds the default value on creation for the "v0" field.
 	DefaultV0 string
-	// DefaultV1 holds the default value on creation for the "V1" field.
+	// DefaultV1 holds the default value on creation for the "v1" field.
 	DefaultV1 string
-	// DefaultV2 holds the default value on creation for the "V2" field.
+	// DefaultV2 holds the default value on creation for the "v2" field.
 	DefaultV2 string
-	// DefaultV3 holds the default value on creation for the "V3" field.
+	// DefaultV3 holds the default value on creation for the "v3" field.
 	DefaultV3 string
-	// DefaultV4 holds the default value on creation for the "V4" field.
+	// DefaultV4 holds the default value on creation for the "v4" field.
 	DefaultV4 string
-	// DefaultV5 holds the default value on creation for the "V5" field.
+	// DefaultV5 holds the default value on creation for the "v5" field.
 	DefaultV5 string
 )
 
@@ -76,37 +76,37 @@ func ByID(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldID, opts...).ToFunc()
 }
 
-// ByPtype orders the results by the Ptype field.
+// ByPtype orders the results by the ptype field.
 func ByPtype(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldPtype, opts...).ToFunc()
 }
 
-// ByV0 orders the results by the V0 field.
+// ByV0 orders the results by the v0 field.
 func ByV0(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldV0, opts...).ToFunc()
 }
 
-// ByV1 orders the results by the V1 field.
+// ByV1 orders the results by the v1 field.
 func ByV1(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldV1, opts...).ToFunc()
 }
 
-// ByV2 orders the results by the V2 field.
+// ByV2 orders the results by the v2 field.
 func ByV2(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldV2, opts...).ToFunc()
 }
 
-// ByV3 orders the results by the V3 field.
+// ByV3 orders the results by the v3 field.
 func ByV3(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldV3, opts...).ToFunc()
 }
 
-// ByV4 orders the results by the V4 field.
+// ByV4 orders the results by the v4 field.
 func ByV4(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldV4, opts...).ToFunc()
 }
 
-// ByV5 orders the results by the V5 field.
+// ByV5 orders the results by the v5 field.
 func ByV5(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldV5, opts...).ToFunc()
 }

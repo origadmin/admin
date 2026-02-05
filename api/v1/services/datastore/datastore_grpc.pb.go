@@ -11,6 +11,7 @@ import (
 	grpc "google.golang.org/grpc"
 	codes "google.golang.org/grpc/codes"
 	status "google.golang.org/grpc/status"
+	emptypb "google.golang.org/protobuf/types/known/emptypb"
 )
 
 // This is a compile-time assertion to ensure that this generated file
@@ -19,9 +20,13 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	DatastoreService_ListDatastore_FullMethodName   = "/api.v1.services.datastore.DatastoreService/ListDatastore"
-	DatastoreService_GetDatastore_FullMethodName    = "/api.v1.services.datastore.DatastoreService/GetDatastore"
+	DatastoreService_UploadFile_FullMethodName      = "/api.v1.services.datastore.DatastoreService/UploadFile"
+	DatastoreService_DownloadFile_FullMethodName    = "/api.v1.services.datastore.DatastoreService/DownloadFile"
+	DatastoreService_ListFiles_FullMethodName       = "/api.v1.services.datastore.DatastoreService/ListFiles"
+	DatastoreService_GetFile_FullMethodName         = "/api.v1.services.datastore.DatastoreService/GetFile"
+	DatastoreService_DeleteFile_FullMethodName      = "/api.v1.services.datastore.DatastoreService/DeleteFile"
 	DatastoreService_CreateDatastore_FullMethodName = "/api.v1.services.datastore.DatastoreService/CreateDatastore"
+	DatastoreService_GetDatastore_FullMethodName    = "/api.v1.services.datastore.DatastoreService/GetDatastore"
 	DatastoreService_UpdateDatastore_FullMethodName = "/api.v1.services.datastore.DatastoreService/UpdateDatastore"
 	DatastoreService_DeleteDatastore_FullMethodName = "/api.v1.services.datastore.DatastoreService/DeleteDatastore"
 )
@@ -30,13 +35,27 @@ const (
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 //
-// The data service definition.
+// DatastoreService provides file storage and data management capabilities.
+// Note: This service is not yet implemented, proto definitions are prepared for future use.
 type DatastoreServiceClient interface {
-	ListDatastore(ctx context.Context, in *ListDatastoreRequest, opts ...grpc.CallOption) (*ListDatastoreResponse, error)
-	GetDatastore(ctx context.Context, in *GetDatastoreRequest, opts ...grpc.CallOption) (*GetDatastoreResponse, error)
+	// UploadFile uploads a file to the datastore.
+	UploadFile(ctx context.Context, in *UploadFileRequest, opts ...grpc.CallOption) (*UploadFileResponse, error)
+	// DownloadFile downloads a file from the datastore.
+	DownloadFile(ctx context.Context, in *DownloadFileRequest, opts ...grpc.CallOption) (*DownloadFileResponse, error)
+	// ListFiles retrieves a list of files.
+	ListFiles(ctx context.Context, in *ListFilesRequest, opts ...grpc.CallOption) (*ListFilesResponse, error)
+	// GetFile retrieves a file by ID.
+	GetFile(ctx context.Context, in *GetFileRequest, opts ...grpc.CallOption) (*GetFileResponse, error)
+	// DeleteFile deletes a file from the datastore.
+	DeleteFile(ctx context.Context, in *DeleteFileRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	// CreateDatastore creates a data object.
 	CreateDatastore(ctx context.Context, in *CreateDatastoreRequest, opts ...grpc.CallOption) (*CreateDatastoreResponse, error)
+	// GetDatastore retrieves a data object by ID.
+	GetDatastore(ctx context.Context, in *GetDatastoreRequest, opts ...grpc.CallOption) (*GetDatastoreResponse, error)
+	// UpdateDatastore updates a data object.
 	UpdateDatastore(ctx context.Context, in *UpdateDatastoreRequest, opts ...grpc.CallOption) (*UpdateDatastoreResponse, error)
-	DeleteDatastore(ctx context.Context, in *DeleteDatastoreRequest, opts ...grpc.CallOption) (*DeleteDatastoreResponse, error)
+	// DeleteDatastore deletes a data object.
+	DeleteDatastore(ctx context.Context, in *DeleteDatastoreRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
 }
 
 type datastoreServiceClient struct {
@@ -47,20 +66,50 @@ func NewDatastoreServiceClient(cc grpc.ClientConnInterface) DatastoreServiceClie
 	return &datastoreServiceClient{cc}
 }
 
-func (c *datastoreServiceClient) ListDatastore(ctx context.Context, in *ListDatastoreRequest, opts ...grpc.CallOption) (*ListDatastoreResponse, error) {
+func (c *datastoreServiceClient) UploadFile(ctx context.Context, in *UploadFileRequest, opts ...grpc.CallOption) (*UploadFileResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(ListDatastoreResponse)
-	err := c.cc.Invoke(ctx, DatastoreService_ListDatastore_FullMethodName, in, out, cOpts...)
+	out := new(UploadFileResponse)
+	err := c.cc.Invoke(ctx, DatastoreService_UploadFile_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *datastoreServiceClient) GetDatastore(ctx context.Context, in *GetDatastoreRequest, opts ...grpc.CallOption) (*GetDatastoreResponse, error) {
+func (c *datastoreServiceClient) DownloadFile(ctx context.Context, in *DownloadFileRequest, opts ...grpc.CallOption) (*DownloadFileResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(GetDatastoreResponse)
-	err := c.cc.Invoke(ctx, DatastoreService_GetDatastore_FullMethodName, in, out, cOpts...)
+	out := new(DownloadFileResponse)
+	err := c.cc.Invoke(ctx, DatastoreService_DownloadFile_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *datastoreServiceClient) ListFiles(ctx context.Context, in *ListFilesRequest, opts ...grpc.CallOption) (*ListFilesResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(ListFilesResponse)
+	err := c.cc.Invoke(ctx, DatastoreService_ListFiles_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *datastoreServiceClient) GetFile(ctx context.Context, in *GetFileRequest, opts ...grpc.CallOption) (*GetFileResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(GetFileResponse)
+	err := c.cc.Invoke(ctx, DatastoreService_GetFile_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *datastoreServiceClient) DeleteFile(ctx context.Context, in *DeleteFileRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(emptypb.Empty)
+	err := c.cc.Invoke(ctx, DatastoreService_DeleteFile_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -77,6 +126,16 @@ func (c *datastoreServiceClient) CreateDatastore(ctx context.Context, in *Create
 	return out, nil
 }
 
+func (c *datastoreServiceClient) GetDatastore(ctx context.Context, in *GetDatastoreRequest, opts ...grpc.CallOption) (*GetDatastoreResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(GetDatastoreResponse)
+	err := c.cc.Invoke(ctx, DatastoreService_GetDatastore_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *datastoreServiceClient) UpdateDatastore(ctx context.Context, in *UpdateDatastoreRequest, opts ...grpc.CallOption) (*UpdateDatastoreResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(UpdateDatastoreResponse)
@@ -87,9 +146,9 @@ func (c *datastoreServiceClient) UpdateDatastore(ctx context.Context, in *Update
 	return out, nil
 }
 
-func (c *datastoreServiceClient) DeleteDatastore(ctx context.Context, in *DeleteDatastoreRequest, opts ...grpc.CallOption) (*DeleteDatastoreResponse, error) {
+func (c *datastoreServiceClient) DeleteDatastore(ctx context.Context, in *DeleteDatastoreRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(DeleteDatastoreResponse)
+	out := new(emptypb.Empty)
 	err := c.cc.Invoke(ctx, DatastoreService_DeleteDatastore_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
@@ -101,13 +160,27 @@ func (c *datastoreServiceClient) DeleteDatastore(ctx context.Context, in *Delete
 // All implementations must embed UnimplementedDatastoreServiceServer
 // for forward compatibility.
 //
-// The data service definition.
+// DatastoreService provides file storage and data management capabilities.
+// Note: This service is not yet implemented, proto definitions are prepared for future use.
 type DatastoreServiceServer interface {
-	ListDatastore(context.Context, *ListDatastoreRequest) (*ListDatastoreResponse, error)
-	GetDatastore(context.Context, *GetDatastoreRequest) (*GetDatastoreResponse, error)
+	// UploadFile uploads a file to the datastore.
+	UploadFile(context.Context, *UploadFileRequest) (*UploadFileResponse, error)
+	// DownloadFile downloads a file from the datastore.
+	DownloadFile(context.Context, *DownloadFileRequest) (*DownloadFileResponse, error)
+	// ListFiles retrieves a list of files.
+	ListFiles(context.Context, *ListFilesRequest) (*ListFilesResponse, error)
+	// GetFile retrieves a file by ID.
+	GetFile(context.Context, *GetFileRequest) (*GetFileResponse, error)
+	// DeleteFile deletes a file from the datastore.
+	DeleteFile(context.Context, *DeleteFileRequest) (*emptypb.Empty, error)
+	// CreateDatastore creates a data object.
 	CreateDatastore(context.Context, *CreateDatastoreRequest) (*CreateDatastoreResponse, error)
+	// GetDatastore retrieves a data object by ID.
+	GetDatastore(context.Context, *GetDatastoreRequest) (*GetDatastoreResponse, error)
+	// UpdateDatastore updates a data object.
 	UpdateDatastore(context.Context, *UpdateDatastoreRequest) (*UpdateDatastoreResponse, error)
-	DeleteDatastore(context.Context, *DeleteDatastoreRequest) (*DeleteDatastoreResponse, error)
+	// DeleteDatastore deletes a data object.
+	DeleteDatastore(context.Context, *DeleteDatastoreRequest) (*emptypb.Empty, error)
 	mustEmbedUnimplementedDatastoreServiceServer()
 }
 
@@ -118,19 +191,31 @@ type DatastoreServiceServer interface {
 // pointer dereference when methods are called.
 type UnimplementedDatastoreServiceServer struct{}
 
-func (UnimplementedDatastoreServiceServer) ListDatastore(context.Context, *ListDatastoreRequest) (*ListDatastoreResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method ListDatastore not implemented")
+func (UnimplementedDatastoreServiceServer) UploadFile(context.Context, *UploadFileRequest) (*UploadFileResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UploadFile not implemented")
 }
-func (UnimplementedDatastoreServiceServer) GetDatastore(context.Context, *GetDatastoreRequest) (*GetDatastoreResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetDatastore not implemented")
+func (UnimplementedDatastoreServiceServer) DownloadFile(context.Context, *DownloadFileRequest) (*DownloadFileResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method DownloadFile not implemented")
+}
+func (UnimplementedDatastoreServiceServer) ListFiles(context.Context, *ListFilesRequest) (*ListFilesResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ListFiles not implemented")
+}
+func (UnimplementedDatastoreServiceServer) GetFile(context.Context, *GetFileRequest) (*GetFileResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetFile not implemented")
+}
+func (UnimplementedDatastoreServiceServer) DeleteFile(context.Context, *DeleteFileRequest) (*emptypb.Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method DeleteFile not implemented")
 }
 func (UnimplementedDatastoreServiceServer) CreateDatastore(context.Context, *CreateDatastoreRequest) (*CreateDatastoreResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CreateDatastore not implemented")
 }
+func (UnimplementedDatastoreServiceServer) GetDatastore(context.Context, *GetDatastoreRequest) (*GetDatastoreResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetDatastore not implemented")
+}
 func (UnimplementedDatastoreServiceServer) UpdateDatastore(context.Context, *UpdateDatastoreRequest) (*UpdateDatastoreResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdateDatastore not implemented")
 }
-func (UnimplementedDatastoreServiceServer) DeleteDatastore(context.Context, *DeleteDatastoreRequest) (*DeleteDatastoreResponse, error) {
+func (UnimplementedDatastoreServiceServer) DeleteDatastore(context.Context, *DeleteDatastoreRequest) (*emptypb.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DeleteDatastore not implemented")
 }
 func (UnimplementedDatastoreServiceServer) mustEmbedUnimplementedDatastoreServiceServer() {}
@@ -154,38 +239,92 @@ func RegisterDatastoreServiceServer(s grpc.ServiceRegistrar, srv DatastoreServic
 	s.RegisterService(&DatastoreService_ServiceDesc, srv)
 }
 
-func _DatastoreService_ListDatastore_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(ListDatastoreRequest)
+func _DatastoreService_UploadFile_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UploadFileRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(DatastoreServiceServer).ListDatastore(ctx, in)
+		return srv.(DatastoreServiceServer).UploadFile(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: DatastoreService_ListDatastore_FullMethodName,
+		FullMethod: DatastoreService_UploadFile_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(DatastoreServiceServer).ListDatastore(ctx, req.(*ListDatastoreRequest))
+		return srv.(DatastoreServiceServer).UploadFile(ctx, req.(*UploadFileRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _DatastoreService_GetDatastore_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetDatastoreRequest)
+func _DatastoreService_DownloadFile_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DownloadFileRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(DatastoreServiceServer).GetDatastore(ctx, in)
+		return srv.(DatastoreServiceServer).DownloadFile(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: DatastoreService_GetDatastore_FullMethodName,
+		FullMethod: DatastoreService_DownloadFile_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(DatastoreServiceServer).GetDatastore(ctx, req.(*GetDatastoreRequest))
+		return srv.(DatastoreServiceServer).DownloadFile(ctx, req.(*DownloadFileRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _DatastoreService_ListFiles_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListFilesRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(DatastoreServiceServer).ListFiles(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: DatastoreService_ListFiles_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(DatastoreServiceServer).ListFiles(ctx, req.(*ListFilesRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _DatastoreService_GetFile_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetFileRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(DatastoreServiceServer).GetFile(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: DatastoreService_GetFile_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(DatastoreServiceServer).GetFile(ctx, req.(*GetFileRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _DatastoreService_DeleteFile_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DeleteFileRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(DatastoreServiceServer).DeleteFile(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: DatastoreService_DeleteFile_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(DatastoreServiceServer).DeleteFile(ctx, req.(*DeleteFileRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -204,6 +343,24 @@ func _DatastoreService_CreateDatastore_Handler(srv interface{}, ctx context.Cont
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(DatastoreServiceServer).CreateDatastore(ctx, req.(*CreateDatastoreRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _DatastoreService_GetDatastore_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetDatastoreRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(DatastoreServiceServer).GetDatastore(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: DatastoreService_GetDatastore_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(DatastoreServiceServer).GetDatastore(ctx, req.(*GetDatastoreRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -252,16 +409,32 @@ var DatastoreService_ServiceDesc = grpc.ServiceDesc{
 	HandlerType: (*DatastoreServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
-			MethodName: "ListDatastore",
-			Handler:    _DatastoreService_ListDatastore_Handler,
+			MethodName: "UploadFile",
+			Handler:    _DatastoreService_UploadFile_Handler,
 		},
 		{
-			MethodName: "GetDatastore",
-			Handler:    _DatastoreService_GetDatastore_Handler,
+			MethodName: "DownloadFile",
+			Handler:    _DatastoreService_DownloadFile_Handler,
+		},
+		{
+			MethodName: "ListFiles",
+			Handler:    _DatastoreService_ListFiles_Handler,
+		},
+		{
+			MethodName: "GetFile",
+			Handler:    _DatastoreService_GetFile_Handler,
+		},
+		{
+			MethodName: "DeleteFile",
+			Handler:    _DatastoreService_DeleteFile_Handler,
 		},
 		{
 			MethodName: "CreateDatastore",
 			Handler:    _DatastoreService_CreateDatastore_Handler,
+		},
+		{
+			MethodName: "GetDatastore",
+			Handler:    _DatastoreService_GetDatastore_Handler,
 		},
 		{
 			MethodName: "UpdateDatastore",

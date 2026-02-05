@@ -19,13 +19,13 @@ type CasbinRuleCreate struct {
 	hooks    []Hook
 }
 
-// SetPtype sets the "Ptype" field.
+// SetPtype sets the "ptype" field.
 func (_c *CasbinRuleCreate) SetPtype(v string) *CasbinRuleCreate {
 	_c.mutation.SetPtype(v)
 	return _c
 }
 
-// SetNillablePtype sets the "Ptype" field if the given value is not nil.
+// SetNillablePtype sets the "ptype" field if the given value is not nil.
 func (_c *CasbinRuleCreate) SetNillablePtype(v *string) *CasbinRuleCreate {
 	if v != nil {
 		_c.SetPtype(*v)
@@ -33,13 +33,13 @@ func (_c *CasbinRuleCreate) SetNillablePtype(v *string) *CasbinRuleCreate {
 	return _c
 }
 
-// SetV0 sets the "V0" field.
+// SetV0 sets the "v0" field.
 func (_c *CasbinRuleCreate) SetV0(v string) *CasbinRuleCreate {
 	_c.mutation.SetV0(v)
 	return _c
 }
 
-// SetNillableV0 sets the "V0" field if the given value is not nil.
+// SetNillableV0 sets the "v0" field if the given value is not nil.
 func (_c *CasbinRuleCreate) SetNillableV0(v *string) *CasbinRuleCreate {
 	if v != nil {
 		_c.SetV0(*v)
@@ -47,13 +47,13 @@ func (_c *CasbinRuleCreate) SetNillableV0(v *string) *CasbinRuleCreate {
 	return _c
 }
 
-// SetV1 sets the "V1" field.
+// SetV1 sets the "v1" field.
 func (_c *CasbinRuleCreate) SetV1(v string) *CasbinRuleCreate {
 	_c.mutation.SetV1(v)
 	return _c
 }
 
-// SetNillableV1 sets the "V1" field if the given value is not nil.
+// SetNillableV1 sets the "v1" field if the given value is not nil.
 func (_c *CasbinRuleCreate) SetNillableV1(v *string) *CasbinRuleCreate {
 	if v != nil {
 		_c.SetV1(*v)
@@ -61,13 +61,13 @@ func (_c *CasbinRuleCreate) SetNillableV1(v *string) *CasbinRuleCreate {
 	return _c
 }
 
-// SetV2 sets the "V2" field.
+// SetV2 sets the "v2" field.
 func (_c *CasbinRuleCreate) SetV2(v string) *CasbinRuleCreate {
 	_c.mutation.SetV2(v)
 	return _c
 }
 
-// SetNillableV2 sets the "V2" field if the given value is not nil.
+// SetNillableV2 sets the "v2" field if the given value is not nil.
 func (_c *CasbinRuleCreate) SetNillableV2(v *string) *CasbinRuleCreate {
 	if v != nil {
 		_c.SetV2(*v)
@@ -75,13 +75,13 @@ func (_c *CasbinRuleCreate) SetNillableV2(v *string) *CasbinRuleCreate {
 	return _c
 }
 
-// SetV3 sets the "V3" field.
+// SetV3 sets the "v3" field.
 func (_c *CasbinRuleCreate) SetV3(v string) *CasbinRuleCreate {
 	_c.mutation.SetV3(v)
 	return _c
 }
 
-// SetNillableV3 sets the "V3" field if the given value is not nil.
+// SetNillableV3 sets the "v3" field if the given value is not nil.
 func (_c *CasbinRuleCreate) SetNillableV3(v *string) *CasbinRuleCreate {
 	if v != nil {
 		_c.SetV3(*v)
@@ -89,13 +89,13 @@ func (_c *CasbinRuleCreate) SetNillableV3(v *string) *CasbinRuleCreate {
 	return _c
 }
 
-// SetV4 sets the "V4" field.
+// SetV4 sets the "v4" field.
 func (_c *CasbinRuleCreate) SetV4(v string) *CasbinRuleCreate {
 	_c.mutation.SetV4(v)
 	return _c
 }
 
-// SetNillableV4 sets the "V4" field if the given value is not nil.
+// SetNillableV4 sets the "v4" field if the given value is not nil.
 func (_c *CasbinRuleCreate) SetNillableV4(v *string) *CasbinRuleCreate {
 	if v != nil {
 		_c.SetV4(*v)
@@ -103,13 +103,13 @@ func (_c *CasbinRuleCreate) SetNillableV4(v *string) *CasbinRuleCreate {
 	return _c
 }
 
-// SetV5 sets the "V5" field.
+// SetV5 sets the "v5" field.
 func (_c *CasbinRuleCreate) SetV5(v string) *CasbinRuleCreate {
 	_c.mutation.SetV5(v)
 	return _c
 }
 
-// SetNillableV5 sets the "V5" field if the given value is not nil.
+// SetNillableV5 sets the "v5" field if the given value is not nil.
 func (_c *CasbinRuleCreate) SetNillableV5(v *string) *CasbinRuleCreate {
 	if v != nil {
 		_c.SetV5(*v)
@@ -185,25 +185,25 @@ func (_c *CasbinRuleCreate) defaults() {
 // check runs all checks and user-defined validators on the builder.
 func (_c *CasbinRuleCreate) check() error {
 	if _, ok := _c.mutation.Ptype(); !ok {
-		return &ValidationError{Name: "Ptype", err: errors.New(`ent: missing required field "CasbinRule.Ptype"`)}
+		return &ValidationError{Name: "ptype", err: errors.New(`ent: missing required field "CasbinRule.ptype"`)}
 	}
 	if _, ok := _c.mutation.V0(); !ok {
-		return &ValidationError{Name: "V0", err: errors.New(`ent: missing required field "CasbinRule.V0"`)}
+		return &ValidationError{Name: "v0", err: errors.New(`ent: missing required field "CasbinRule.v0"`)}
 	}
 	if _, ok := _c.mutation.V1(); !ok {
-		return &ValidationError{Name: "V1", err: errors.New(`ent: missing required field "CasbinRule.V1"`)}
+		return &ValidationError{Name: "v1", err: errors.New(`ent: missing required field "CasbinRule.v1"`)}
 	}
 	if _, ok := _c.mutation.V2(); !ok {
-		return &ValidationError{Name: "V2", err: errors.New(`ent: missing required field "CasbinRule.V2"`)}
+		return &ValidationError{Name: "v2", err: errors.New(`ent: missing required field "CasbinRule.v2"`)}
 	}
 	if _, ok := _c.mutation.V3(); !ok {
-		return &ValidationError{Name: "V3", err: errors.New(`ent: missing required field "CasbinRule.V3"`)}
+		return &ValidationError{Name: "v3", err: errors.New(`ent: missing required field "CasbinRule.v3"`)}
 	}
 	if _, ok := _c.mutation.V4(); !ok {
-		return &ValidationError{Name: "V4", err: errors.New(`ent: missing required field "CasbinRule.V4"`)}
+		return &ValidationError{Name: "v4", err: errors.New(`ent: missing required field "CasbinRule.v4"`)}
 	}
 	if _, ok := _c.mutation.V5(); !ok {
-		return &ValidationError{Name: "V5", err: errors.New(`ent: missing required field "CasbinRule.V5"`)}
+		return &ValidationError{Name: "v5", err: errors.New(`ent: missing required field "CasbinRule.v5"`)}
 	}
 	return nil
 }

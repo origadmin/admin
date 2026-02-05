@@ -11,25 +11,25 @@ import (
 	"entgo.io/ent/dialect/sql"
 )
 
-// CasbinRule is the model entity for the CasbinRule schema.
+// entity.casbin_rule.table.comment
 type CasbinRule struct {
 	config `json:"-"`
 	// ID of the ent.
 	ID int `json:"id,omitempty"`
-	// Ptype holds the value of the "Ptype" field.
-	Ptype string `json:"Ptype,omitempty"`
-	// V0 holds the value of the "V0" field.
-	V0 string `json:"V0,omitempty"`
-	// V1 holds the value of the "V1" field.
-	V1 string `json:"V1,omitempty"`
-	// V2 holds the value of the "V2" field.
-	V2 string `json:"V2,omitempty"`
-	// V3 holds the value of the "V3" field.
-	V3 string `json:"V3,omitempty"`
-	// V4 holds the value of the "V4" field.
-	V4 string `json:"V4,omitempty"`
-	// V5 holds the value of the "V5" field.
-	V5           string `json:"V5,omitempty"`
+	// entity.casbin_rule.field.ptype
+	Ptype string `json:"ptype,omitempty"`
+	// entity.casbin_rule.field.v0
+	V0 string `json:"v0,omitempty"`
+	// entity.casbin_rule.field.v1
+	V1 string `json:"v1,omitempty"`
+	// entity.casbin_rule.field.v2
+	V2 string `json:"v2,omitempty"`
+	// entity.casbin_rule.field.v3
+	V3 string `json:"v3,omitempty"`
+	// entity.casbin_rule.field.v4
+	V4 string `json:"v4,omitempty"`
+	// entity.casbin_rule.field.v5
+	V5           string `json:"v5,omitempty"`
 	selectValues sql.SelectValues
 }
 
@@ -65,43 +65,43 @@ func (_m *CasbinRule) assignValues(columns []string, values []any) error {
 			_m.ID = int(value.Int64)
 		case casbinrule.FieldPtype:
 			if value, ok := values[i].(*sql.NullString); !ok {
-				return fmt.Errorf("unexpected type %T for field Ptype", values[i])
+				return fmt.Errorf("unexpected type %T for field ptype", values[i])
 			} else if value.Valid {
 				_m.Ptype = value.String
 			}
 		case casbinrule.FieldV0:
 			if value, ok := values[i].(*sql.NullString); !ok {
-				return fmt.Errorf("unexpected type %T for field V0", values[i])
+				return fmt.Errorf("unexpected type %T for field v0", values[i])
 			} else if value.Valid {
 				_m.V0 = value.String
 			}
 		case casbinrule.FieldV1:
 			if value, ok := values[i].(*sql.NullString); !ok {
-				return fmt.Errorf("unexpected type %T for field V1", values[i])
+				return fmt.Errorf("unexpected type %T for field v1", values[i])
 			} else if value.Valid {
 				_m.V1 = value.String
 			}
 		case casbinrule.FieldV2:
 			if value, ok := values[i].(*sql.NullString); !ok {
-				return fmt.Errorf("unexpected type %T for field V2", values[i])
+				return fmt.Errorf("unexpected type %T for field v2", values[i])
 			} else if value.Valid {
 				_m.V2 = value.String
 			}
 		case casbinrule.FieldV3:
 			if value, ok := values[i].(*sql.NullString); !ok {
-				return fmt.Errorf("unexpected type %T for field V3", values[i])
+				return fmt.Errorf("unexpected type %T for field v3", values[i])
 			} else if value.Valid {
 				_m.V3 = value.String
 			}
 		case casbinrule.FieldV4:
 			if value, ok := values[i].(*sql.NullString); !ok {
-				return fmt.Errorf("unexpected type %T for field V4", values[i])
+				return fmt.Errorf("unexpected type %T for field v4", values[i])
 			} else if value.Valid {
 				_m.V4 = value.String
 			}
 		case casbinrule.FieldV5:
 			if value, ok := values[i].(*sql.NullString); !ok {
-				return fmt.Errorf("unexpected type %T for field V5", values[i])
+				return fmt.Errorf("unexpected type %T for field v5", values[i])
 			} else if value.Valid {
 				_m.V5 = value.String
 			}
@@ -141,25 +141,25 @@ func (_m *CasbinRule) String() string {
 	var builder strings.Builder
 	builder.WriteString("CasbinRule(")
 	builder.WriteString(fmt.Sprintf("id=%v, ", _m.ID))
-	builder.WriteString("Ptype=")
+	builder.WriteString("ptype=")
 	builder.WriteString(_m.Ptype)
 	builder.WriteString(", ")
-	builder.WriteString("V0=")
+	builder.WriteString("v0=")
 	builder.WriteString(_m.V0)
 	builder.WriteString(", ")
-	builder.WriteString("V1=")
+	builder.WriteString("v1=")
 	builder.WriteString(_m.V1)
 	builder.WriteString(", ")
-	builder.WriteString("V2=")
+	builder.WriteString("v2=")
 	builder.WriteString(_m.V2)
 	builder.WriteString(", ")
-	builder.WriteString("V3=")
+	builder.WriteString("v3=")
 	builder.WriteString(_m.V3)
 	builder.WriteString(", ")
-	builder.WriteString("V4=")
+	builder.WriteString("v4=")
 	builder.WriteString(_m.V4)
 	builder.WriteString(", ")
-	builder.WriteString("V5=")
+	builder.WriteString("v5=")
 	builder.WriteString(_m.V5)
 	builder.WriteByte(')')
 	return builder.String()

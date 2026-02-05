@@ -12,6 +12,7 @@ import (
 	grpc "google.golang.org/grpc"
 	codes "google.golang.org/grpc/codes"
 	status "google.golang.org/grpc/status"
+	emptypb "google.golang.org/protobuf/types/known/emptypb"
 	io "io"
 )
 
@@ -28,24 +29,45 @@ var (
 	_ = codes.Unimplemented
 )
 
-const DatastoreServiceListDatastoreBridgeOperation = "/api.v1.services.datastore.DatastoreService/ListDatastore"
-const DatastoreServiceGetDatastoreBridgeOperation = "/api.v1.services.datastore.DatastoreService/GetDatastore"
+const DatastoreServiceUploadFileBridgeOperation = "/api.v1.services.datastore.DatastoreService/UploadFile"
+const DatastoreServiceDownloadFileBridgeOperation = "/api.v1.services.datastore.DatastoreService/DownloadFile"
+const DatastoreServiceListFilesBridgeOperation = "/api.v1.services.datastore.DatastoreService/ListFiles"
+const DatastoreServiceGetFileBridgeOperation = "/api.v1.services.datastore.DatastoreService/GetFile"
+const DatastoreServiceDeleteFileBridgeOperation = "/api.v1.services.datastore.DatastoreService/DeleteFile"
 const DatastoreServiceCreateDatastoreBridgeOperation = "/api.v1.services.datastore.DatastoreService/CreateDatastore"
+const DatastoreServiceGetDatastoreBridgeOperation = "/api.v1.services.datastore.DatastoreService/GetDatastore"
 const DatastoreServiceUpdateDatastoreBridgeOperation = "/api.v1.services.datastore.DatastoreService/UpdateDatastore"
 const DatastoreServiceDeleteDatastoreBridgeOperation = "/api.v1.services.datastore.DatastoreService/DeleteDatastore"
 
 type DatastoreServiceBridgeServer interface {
-	ListDatastore(context.Context, *ListDatastoreRequest) (*ListDatastoreResponse, error)
-	GetDatastore(context.Context, *GetDatastoreRequest) (*GetDatastoreResponse, error)
+	// UploadFile uploads a file to the datastore.
+	UploadFile(context.Context, *UploadFileRequest) (*UploadFileResponse, error)
+	// DownloadFile downloads a file from the datastore.
+	DownloadFile(context.Context, *DownloadFileRequest) (*DownloadFileResponse, error)
+	// ListFiles retrieves a list of files.
+	ListFiles(context.Context, *ListFilesRequest) (*ListFilesResponse, error)
+	// GetFile retrieves a file by ID.
+	GetFile(context.Context, *GetFileRequest) (*GetFileResponse, error)
+	// DeleteFile deletes a file from the datastore.
+	DeleteFile(context.Context, *DeleteFileRequest) (*emptypb.Empty, error)
+	// CreateDatastore creates a data object.
 	CreateDatastore(context.Context, *CreateDatastoreRequest) (*CreateDatastoreResponse, error)
+	// GetDatastore retrieves a data object by ID.
+	GetDatastore(context.Context, *GetDatastoreRequest) (*GetDatastoreResponse, error)
+	// UpdateDatastore updates a data object.
 	UpdateDatastore(context.Context, *UpdateDatastoreRequest) (*UpdateDatastoreResponse, error)
-	DeleteDatastore(context.Context, *DeleteDatastoreRequest) (*DeleteDatastoreResponse, error)
+	// DeleteDatastore deletes a data object.
+	DeleteDatastore(context.Context, *DeleteDatastoreRequest) (*emptypb.Empty, error)
 }
 
 type DatastoreServiceHooker interface {
-	DatastoreServiceListDatastoreHooker
-	DatastoreServiceGetDatastoreHooker
+	DatastoreServiceUploadFileHooker
+	DatastoreServiceDownloadFileHooker
+	DatastoreServiceListFilesHooker
+	DatastoreServiceGetFileHooker
+	DatastoreServiceDeleteFileHooker
 	DatastoreServiceCreateDatastoreHooker
+	DatastoreServiceGetDatastoreHooker
 	DatastoreServiceUpdateDatastoreHooker
 	DatastoreServiceDeleteDatastoreHooker
 }
@@ -54,17 +76,33 @@ type DatastoreServiceHookedBridger interface {
 	DatastoreServiceHooker
 	DatastoreServiceBridgeServer
 }
-type DatastoreServiceListDatastoreHooker interface {
-	PrepareListDatastore(http.Context, *ListDatastoreRequest) (context.Context, error)
-	CompleteListDatastore(http.Context, *ListDatastoreRequest, *ListDatastoreResponse) error
+type DatastoreServiceUploadFileHooker interface {
+	PrepareUploadFile(http.Context, *UploadFileRequest) (context.Context, error)
+	CompleteUploadFile(http.Context, *UploadFileRequest, *UploadFileResponse) error
 }
-type DatastoreServiceGetDatastoreHooker interface {
-	PrepareGetDatastore(http.Context, *GetDatastoreRequest) (context.Context, error)
-	CompleteGetDatastore(http.Context, *GetDatastoreRequest, *GetDatastoreResponse) error
+type DatastoreServiceDownloadFileHooker interface {
+	PrepareDownloadFile(http.Context, *DownloadFileRequest) (context.Context, error)
+	CompleteDownloadFile(http.Context, *DownloadFileRequest, *DownloadFileResponse) error
+}
+type DatastoreServiceListFilesHooker interface {
+	PrepareListFiles(http.Context, *ListFilesRequest) (context.Context, error)
+	CompleteListFiles(http.Context, *ListFilesRequest, *ListFilesResponse) error
+}
+type DatastoreServiceGetFileHooker interface {
+	PrepareGetFile(http.Context, *GetFileRequest) (context.Context, error)
+	CompleteGetFile(http.Context, *GetFileRequest, *GetFileResponse) error
+}
+type DatastoreServiceDeleteFileHooker interface {
+	PrepareDeleteFile(http.Context, *DeleteFileRequest) (context.Context, error)
+	CompleteDeleteFile(http.Context, *DeleteFileRequest, *emptypb.Empty) error
 }
 type DatastoreServiceCreateDatastoreHooker interface {
 	PrepareCreateDatastore(http.Context, *CreateDatastoreRequest) (context.Context, error)
 	CompleteCreateDatastore(http.Context, *CreateDatastoreRequest, *CreateDatastoreResponse) error
+}
+type DatastoreServiceGetDatastoreHooker interface {
+	PrepareGetDatastore(http.Context, *GetDatastoreRequest) (context.Context, error)
+	CompleteGetDatastore(http.Context, *GetDatastoreRequest, *GetDatastoreResponse) error
 }
 type DatastoreServiceUpdateDatastoreHooker interface {
 	PrepareUpdateDatastore(http.Context, *UpdateDatastoreRequest) (context.Context, error)
@@ -72,30 +110,37 @@ type DatastoreServiceUpdateDatastoreHooker interface {
 }
 type DatastoreServiceDeleteDatastoreHooker interface {
 	PrepareDeleteDatastore(http.Context, *DeleteDatastoreRequest) (context.Context, error)
-	CompleteDeleteDatastore(http.Context, *DeleteDatastoreRequest, *DeleteDatastoreResponse) error
+	CompleteDeleteDatastore(http.Context, *DeleteDatastoreRequest, *emptypb.Empty) error
 }
 
 func RegisterDatastoreServiceBridgeServer(s *http.Server, srv DatastoreServiceHookedBridger) {
 	r := s.Route("/")
-	r.GET("/datastore", _DatastoreService_ListDatastore0_Bridge_Handler(srv))
-	r.GET("/datastore/:id", _DatastoreService_GetDatastore0_Bridge_Handler(srv))
-	r.POST("/datastore", _DatastoreService_CreateDatastore0_Bridge_Handler(srv))
-	r.PUT("/datastore/:data.id", _DatastoreService_UpdateDatastore0_Bridge_Handler(srv))
-	r.DELETE("/datastore/:id", _DatastoreService_DeleteDatastore0_Bridge_Handler(srv))
+	r.POST("/ds/files/upload", _DatastoreService_UploadFile0_Bridge_Handler(srv))
+	r.GET("/ds/files/:file_id", _DatastoreService_DownloadFile0_Bridge_Handler(srv))
+	r.GET("/ds/files", _DatastoreService_ListFiles0_Bridge_Handler(srv))
+	r.GET("/ds/files/:file_id/info", _DatastoreService_GetFile0_Bridge_Handler(srv))
+	r.DELETE("/ds/files/:file_id", _DatastoreService_DeleteFile0_Bridge_Handler(srv))
+	r.POST("/ds", _DatastoreService_CreateDatastore0_Bridge_Handler(srv))
+	r.GET("/ds/:id", _DatastoreService_GetDatastore0_Bridge_Handler(srv))
+	r.PUT("/ds/:data.id", _DatastoreService_UpdateDatastore0_Bridge_Handler(srv))
+	r.DELETE("/ds/:id", _DatastoreService_DeleteDatastore0_Bridge_Handler(srv))
 }
 
-func _DatastoreService_ListDatastore0_Bridge_Handler(srv DatastoreServiceHookedBridger) func(ctx http.Context) error {
+func _DatastoreService_UploadFile0_Bridge_Handler(srv DatastoreServiceHookedBridger) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
-		var in ListDatastoreRequest
+		var in UploadFileRequest
+		if err := ctx.Bind(&in); err != nil {
+			return err
+		}
 		if err := ctx.BindQuery(&in); err != nil {
 			return err
 		}
-		http.SetOperation(ctx, OperationDatastoreServiceListDatastore)
+		http.SetOperation(ctx, OperationDatastoreServiceUploadFile)
 		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
-			return srv.ListDatastore(ctx, req.(*ListDatastoreRequest))
+			return srv.UploadFile(ctx, req.(*UploadFileRequest))
 		})
 
-		newctx, err := srv.PrepareListDatastore(ctx, &in)
+		newctx, err := srv.PrepareUploadFile(ctx, &in)
 		if err != nil {
 			return err
 		}
@@ -103,25 +148,25 @@ func _DatastoreService_ListDatastore0_Bridge_Handler(srv DatastoreServiceHookedB
 		if err != nil {
 			return err
 		}
-		return srv.CompleteListDatastore(ctx, &in, out.(*ListDatastoreResponse))
+		return srv.CompleteUploadFile(ctx, &in, out.(*UploadFileResponse))
 	}
 }
 
-func _DatastoreService_GetDatastore0_Bridge_Handler(srv DatastoreServiceHookedBridger) func(ctx http.Context) error {
+func _DatastoreService_DownloadFile0_Bridge_Handler(srv DatastoreServiceHookedBridger) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
-		var in GetDatastoreRequest
+		var in DownloadFileRequest
 		if err := ctx.BindQuery(&in); err != nil {
 			return err
 		}
 		if err := ctx.BindVars(&in); err != nil {
 			return err
 		}
-		http.SetOperation(ctx, OperationDatastoreServiceGetDatastore)
+		http.SetOperation(ctx, OperationDatastoreServiceDownloadFile)
 		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
-			return srv.GetDatastore(ctx, req.(*GetDatastoreRequest))
+			return srv.DownloadFile(ctx, req.(*DownloadFileRequest))
 		})
 
-		newctx, err := srv.PrepareGetDatastore(ctx, &in)
+		newctx, err := srv.PrepareDownloadFile(ctx, &in)
 		if err != nil {
 			return err
 		}
@@ -129,7 +174,82 @@ func _DatastoreService_GetDatastore0_Bridge_Handler(srv DatastoreServiceHookedBr
 		if err != nil {
 			return err
 		}
-		return srv.CompleteGetDatastore(ctx, &in, out.(*GetDatastoreResponse))
+		return srv.CompleteDownloadFile(ctx, &in, out.(*DownloadFileResponse))
+	}
+}
+
+func _DatastoreService_ListFiles0_Bridge_Handler(srv DatastoreServiceHookedBridger) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in ListFilesRequest
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationDatastoreServiceListFiles)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.ListFiles(ctx, req.(*ListFilesRequest))
+		})
+
+		newctx, err := srv.PrepareListFiles(ctx, &in)
+		if err != nil {
+			return err
+		}
+		out, err := h(newctx, &in)
+		if err != nil {
+			return err
+		}
+		return srv.CompleteListFiles(ctx, &in, out.(*ListFilesResponse))
+	}
+}
+
+func _DatastoreService_GetFile0_Bridge_Handler(srv DatastoreServiceHookedBridger) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in GetFileRequest
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		if err := ctx.BindVars(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationDatastoreServiceGetFile)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.GetFile(ctx, req.(*GetFileRequest))
+		})
+
+		newctx, err := srv.PrepareGetFile(ctx, &in)
+		if err != nil {
+			return err
+		}
+		out, err := h(newctx, &in)
+		if err != nil {
+			return err
+		}
+		return srv.CompleteGetFile(ctx, &in, out.(*GetFileResponse))
+	}
+}
+
+func _DatastoreService_DeleteFile0_Bridge_Handler(srv DatastoreServiceHookedBridger) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in DeleteFileRequest
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		if err := ctx.BindVars(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationDatastoreServiceDeleteFile)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.DeleteFile(ctx, req.(*DeleteFileRequest))
+		})
+
+		newctx, err := srv.PrepareDeleteFile(ctx, &in)
+		if err != nil {
+			return err
+		}
+		out, err := h(newctx, &in)
+		if err != nil {
+			return err
+		}
+		return srv.CompleteDeleteFile(ctx, &in, out.(*emptypb.Empty))
 	}
 }
 
@@ -156,6 +276,32 @@ func _DatastoreService_CreateDatastore0_Bridge_Handler(srv DatastoreServiceHooke
 			return err
 		}
 		return srv.CompleteCreateDatastore(ctx, &in, out.(*CreateDatastoreResponse))
+	}
+}
+
+func _DatastoreService_GetDatastore0_Bridge_Handler(srv DatastoreServiceHookedBridger) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in GetDatastoreRequest
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		if err := ctx.BindVars(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationDatastoreServiceGetDatastore)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.GetDatastore(ctx, req.(*GetDatastoreRequest))
+		})
+
+		newctx, err := srv.PrepareGetDatastore(ctx, &in)
+		if err != nil {
+			return err
+		}
+		out, err := h(newctx, &in)
+		if err != nil {
+			return err
+		}
+		return srv.CompleteGetDatastore(ctx, &in, out.(*GetDatastoreResponse))
 	}
 }
 
@@ -210,7 +356,7 @@ func _DatastoreService_DeleteDatastore0_Bridge_Handler(srv DatastoreServiceHooke
 		if err != nil {
 			return err
 		}
-		return srv.CompleteDeleteDatastore(ctx, &in, out.(*DeleteDatastoreResponse))
+		return srv.CompleteDeleteDatastore(ctx, &in, out.(*emptypb.Empty))
 	}
 }
 
@@ -221,19 +367,43 @@ func _DatastoreService_DeleteDatastore0_Bridge_Handler(srv DatastoreServiceHooke
 // pointer dereference when methods are called.
 type UnimplementedDatastoreServiceHooked struct{}
 
-func (UnimplementedDatastoreServiceHooked) PrepareListDatastore(ctx http.Context, in *ListDatastoreRequest) (context.Context, error) {
+func (UnimplementedDatastoreServiceHooked) PrepareUploadFile(ctx http.Context, in *UploadFileRequest) (context.Context, error) {
 	return ctx, nil
 }
 
-func (UnimplementedDatastoreServiceHooked) CompleteListDatastore(ctx http.Context, in *ListDatastoreRequest, out *ListDatastoreResponse) error {
+func (UnimplementedDatastoreServiceHooked) CompleteUploadFile(ctx http.Context, in *UploadFileRequest, out *UploadFileResponse) error {
 	return ctx.Result(200, out)
 }
 
-func (UnimplementedDatastoreServiceHooked) PrepareGetDatastore(ctx http.Context, in *GetDatastoreRequest) (context.Context, error) {
+func (UnimplementedDatastoreServiceHooked) PrepareDownloadFile(ctx http.Context, in *DownloadFileRequest) (context.Context, error) {
 	return ctx, nil
 }
 
-func (UnimplementedDatastoreServiceHooked) CompleteGetDatastore(ctx http.Context, in *GetDatastoreRequest, out *GetDatastoreResponse) error {
+func (UnimplementedDatastoreServiceHooked) CompleteDownloadFile(ctx http.Context, in *DownloadFileRequest, out *DownloadFileResponse) error {
+	return ctx.Result(200, out)
+}
+
+func (UnimplementedDatastoreServiceHooked) PrepareListFiles(ctx http.Context, in *ListFilesRequest) (context.Context, error) {
+	return ctx, nil
+}
+
+func (UnimplementedDatastoreServiceHooked) CompleteListFiles(ctx http.Context, in *ListFilesRequest, out *ListFilesResponse) error {
+	return ctx.Result(200, out)
+}
+
+func (UnimplementedDatastoreServiceHooked) PrepareGetFile(ctx http.Context, in *GetFileRequest) (context.Context, error) {
+	return ctx, nil
+}
+
+func (UnimplementedDatastoreServiceHooked) CompleteGetFile(ctx http.Context, in *GetFileRequest, out *GetFileResponse) error {
+	return ctx.Result(200, out)
+}
+
+func (UnimplementedDatastoreServiceHooked) PrepareDeleteFile(ctx http.Context, in *DeleteFileRequest) (context.Context, error) {
+	return ctx, nil
+}
+
+func (UnimplementedDatastoreServiceHooked) CompleteDeleteFile(ctx http.Context, in *DeleteFileRequest, out *emptypb.Empty) error {
 	return ctx.Result(200, out)
 }
 
@@ -242,6 +412,14 @@ func (UnimplementedDatastoreServiceHooked) PrepareCreateDatastore(ctx http.Conte
 }
 
 func (UnimplementedDatastoreServiceHooked) CompleteCreateDatastore(ctx http.Context, in *CreateDatastoreRequest, out *CreateDatastoreResponse) error {
+	return ctx.Result(200, out)
+}
+
+func (UnimplementedDatastoreServiceHooked) PrepareGetDatastore(ctx http.Context, in *GetDatastoreRequest) (context.Context, error) {
+	return ctx, nil
+}
+
+func (UnimplementedDatastoreServiceHooked) CompleteGetDatastore(ctx http.Context, in *GetDatastoreRequest, out *GetDatastoreResponse) error {
 	return ctx.Result(200, out)
 }
 
@@ -257,7 +435,7 @@ func (UnimplementedDatastoreServiceHooked) PrepareDeleteDatastore(ctx http.Conte
 	return ctx, nil
 }
 
-func (UnimplementedDatastoreServiceHooked) CompleteDeleteDatastore(ctx http.Context, in *DeleteDatastoreRequest, out *DeleteDatastoreResponse) error {
+func (UnimplementedDatastoreServiceHooked) CompleteDeleteDatastore(ctx http.Context, in *DeleteDatastoreRequest, out *emptypb.Empty) error {
 	return ctx.Result(200, out)
 }
 
@@ -283,23 +461,39 @@ func NewDatastoreServiceHTTPBridge(client *http.Client) DatastoreServiceHTTPServ
 	return &DatastoreServiceHTTPBridgeImpl{client: NewDatastoreServiceHTTPClient(client)}
 }
 
-func (c *DatastoreServiceHTTPBridgeImpl) ListDatastore(ctx context.Context, in *ListDatastoreRequest) (*ListDatastoreResponse, error) {
-	return c.client.ListDatastore(ctx, in)
+func (c *DatastoreServiceHTTPBridgeImpl) UploadFile(ctx context.Context, in *UploadFileRequest) (*UploadFileResponse, error) {
+	return c.client.UploadFile(ctx, in)
 }
 
-func (c *DatastoreServiceHTTPBridgeImpl) GetDatastore(ctx context.Context, in *GetDatastoreRequest) (*GetDatastoreResponse, error) {
-	return c.client.GetDatastore(ctx, in)
+func (c *DatastoreServiceHTTPBridgeImpl) DownloadFile(ctx context.Context, in *DownloadFileRequest) (*DownloadFileResponse, error) {
+	return c.client.DownloadFile(ctx, in)
+}
+
+func (c *DatastoreServiceHTTPBridgeImpl) ListFiles(ctx context.Context, in *ListFilesRequest) (*ListFilesResponse, error) {
+	return c.client.ListFiles(ctx, in)
+}
+
+func (c *DatastoreServiceHTTPBridgeImpl) GetFile(ctx context.Context, in *GetFileRequest) (*GetFileResponse, error) {
+	return c.client.GetFile(ctx, in)
+}
+
+func (c *DatastoreServiceHTTPBridgeImpl) DeleteFile(ctx context.Context, in *DeleteFileRequest) (*emptypb.Empty, error) {
+	return c.client.DeleteFile(ctx, in)
 }
 
 func (c *DatastoreServiceHTTPBridgeImpl) CreateDatastore(ctx context.Context, in *CreateDatastoreRequest) (*CreateDatastoreResponse, error) {
 	return c.client.CreateDatastore(ctx, in)
 }
 
+func (c *DatastoreServiceHTTPBridgeImpl) GetDatastore(ctx context.Context, in *GetDatastoreRequest) (*GetDatastoreResponse, error) {
+	return c.client.GetDatastore(ctx, in)
+}
+
 func (c *DatastoreServiceHTTPBridgeImpl) UpdateDatastore(ctx context.Context, in *UpdateDatastoreRequest) (*UpdateDatastoreResponse, error) {
 	return c.client.UpdateDatastore(ctx, in)
 }
 
-func (c *DatastoreServiceHTTPBridgeImpl) DeleteDatastore(ctx context.Context, in *DeleteDatastoreRequest) (*DeleteDatastoreResponse, error) {
+func (c *DatastoreServiceHTTPBridgeImpl) DeleteDatastore(ctx context.Context, in *DeleteDatastoreRequest) (*emptypb.Empty, error) {
 	return c.client.DeleteDatastore(ctx, in)
 }
 
@@ -311,23 +505,39 @@ func NewDatastoreServiceBridge(client grpc.ClientConnInterface) DatastoreService
 	return &DatastoreServiceBridgeImpl{client: NewDatastoreServiceClient(client)}
 }
 
-func (c *DatastoreServiceBridgeImpl) ListDatastore(ctx context.Context, in *ListDatastoreRequest) (*ListDatastoreResponse, error) {
-	return c.client.ListDatastore(ctx, in)
+func (c *DatastoreServiceBridgeImpl) UploadFile(ctx context.Context, in *UploadFileRequest) (*UploadFileResponse, error) {
+	return c.client.UploadFile(ctx, in)
 }
 
-func (c *DatastoreServiceBridgeImpl) GetDatastore(ctx context.Context, in *GetDatastoreRequest) (*GetDatastoreResponse, error) {
-	return c.client.GetDatastore(ctx, in)
+func (c *DatastoreServiceBridgeImpl) DownloadFile(ctx context.Context, in *DownloadFileRequest) (*DownloadFileResponse, error) {
+	return c.client.DownloadFile(ctx, in)
+}
+
+func (c *DatastoreServiceBridgeImpl) ListFiles(ctx context.Context, in *ListFilesRequest) (*ListFilesResponse, error) {
+	return c.client.ListFiles(ctx, in)
+}
+
+func (c *DatastoreServiceBridgeImpl) GetFile(ctx context.Context, in *GetFileRequest) (*GetFileResponse, error) {
+	return c.client.GetFile(ctx, in)
+}
+
+func (c *DatastoreServiceBridgeImpl) DeleteFile(ctx context.Context, in *DeleteFileRequest) (*emptypb.Empty, error) {
+	return c.client.DeleteFile(ctx, in)
 }
 
 func (c *DatastoreServiceBridgeImpl) CreateDatastore(ctx context.Context, in *CreateDatastoreRequest) (*CreateDatastoreResponse, error) {
 	return c.client.CreateDatastore(ctx, in)
 }
 
+func (c *DatastoreServiceBridgeImpl) GetDatastore(ctx context.Context, in *GetDatastoreRequest) (*GetDatastoreResponse, error) {
+	return c.client.GetDatastore(ctx, in)
+}
+
 func (c *DatastoreServiceBridgeImpl) UpdateDatastore(ctx context.Context, in *UpdateDatastoreRequest) (*UpdateDatastoreResponse, error) {
 	return c.client.UpdateDatastore(ctx, in)
 }
 
-func (c *DatastoreServiceBridgeImpl) DeleteDatastore(ctx context.Context, in *DeleteDatastoreRequest) (*DeleteDatastoreResponse, error) {
+func (c *DatastoreServiceBridgeImpl) DeleteDatastore(ctx context.Context, in *DeleteDatastoreRequest) (*emptypb.Empty, error) {
 	return c.client.DeleteDatastore(ctx, in)
 }
 
@@ -341,23 +551,39 @@ func NewDatastoreServiceGRPC2HTTP(client grpc.ClientConnInterface) DatastoreServ
 	return &DatastoreServiceGRPC2HTTPBridgeImpl{client: NewDatastoreServiceClient(client)}
 }
 
-func (c *DatastoreServiceGRPC2HTTPBridgeImpl) ListDatastore(ctx context.Context, in *ListDatastoreRequest) (*ListDatastoreResponse, error) {
-	return c.client.ListDatastore(ctx, in)
+func (c *DatastoreServiceGRPC2HTTPBridgeImpl) UploadFile(ctx context.Context, in *UploadFileRequest) (*UploadFileResponse, error) {
+	return c.client.UploadFile(ctx, in)
 }
 
-func (c *DatastoreServiceGRPC2HTTPBridgeImpl) GetDatastore(ctx context.Context, in *GetDatastoreRequest) (*GetDatastoreResponse, error) {
-	return c.client.GetDatastore(ctx, in)
+func (c *DatastoreServiceGRPC2HTTPBridgeImpl) DownloadFile(ctx context.Context, in *DownloadFileRequest) (*DownloadFileResponse, error) {
+	return c.client.DownloadFile(ctx, in)
+}
+
+func (c *DatastoreServiceGRPC2HTTPBridgeImpl) ListFiles(ctx context.Context, in *ListFilesRequest) (*ListFilesResponse, error) {
+	return c.client.ListFiles(ctx, in)
+}
+
+func (c *DatastoreServiceGRPC2HTTPBridgeImpl) GetFile(ctx context.Context, in *GetFileRequest) (*GetFileResponse, error) {
+	return c.client.GetFile(ctx, in)
+}
+
+func (c *DatastoreServiceGRPC2HTTPBridgeImpl) DeleteFile(ctx context.Context, in *DeleteFileRequest) (*emptypb.Empty, error) {
+	return c.client.DeleteFile(ctx, in)
 }
 
 func (c *DatastoreServiceGRPC2HTTPBridgeImpl) CreateDatastore(ctx context.Context, in *CreateDatastoreRequest) (*CreateDatastoreResponse, error) {
 	return c.client.CreateDatastore(ctx, in)
 }
 
+func (c *DatastoreServiceGRPC2HTTPBridgeImpl) GetDatastore(ctx context.Context, in *GetDatastoreRequest) (*GetDatastoreResponse, error) {
+	return c.client.GetDatastore(ctx, in)
+}
+
 func (c *DatastoreServiceGRPC2HTTPBridgeImpl) UpdateDatastore(ctx context.Context, in *UpdateDatastoreRequest) (*UpdateDatastoreResponse, error) {
 	return c.client.UpdateDatastore(ctx, in)
 }
 
-func (c *DatastoreServiceGRPC2HTTPBridgeImpl) DeleteDatastore(ctx context.Context, in *DeleteDatastoreRequest) (*DeleteDatastoreResponse, error) {
+func (c *DatastoreServiceGRPC2HTTPBridgeImpl) DeleteDatastore(ctx context.Context, in *DeleteDatastoreRequest) (*emptypb.Empty, error) {
 	return c.client.DeleteDatastore(ctx, in)
 }
 
@@ -369,23 +595,39 @@ func NewDatastoreServiceHTTP2GRPC(client *http.Client) DatastoreServiceServer {
 	return &DatastoreServiceHTTP2GRPCBridgeImpl{client: NewDatastoreServiceHTTPClient(client)}
 }
 
-func (c *DatastoreServiceHTTP2GRPCBridgeImpl) ListDatastore(ctx context.Context, in *ListDatastoreRequest) (*ListDatastoreResponse, error) {
-	return c.client.ListDatastore(ctx, in)
+func (c *DatastoreServiceHTTP2GRPCBridgeImpl) UploadFile(ctx context.Context, in *UploadFileRequest) (*UploadFileResponse, error) {
+	return c.client.UploadFile(ctx, in)
 }
 
-func (c *DatastoreServiceHTTP2GRPCBridgeImpl) GetDatastore(ctx context.Context, in *GetDatastoreRequest) (*GetDatastoreResponse, error) {
-	return c.client.GetDatastore(ctx, in)
+func (c *DatastoreServiceHTTP2GRPCBridgeImpl) DownloadFile(ctx context.Context, in *DownloadFileRequest) (*DownloadFileResponse, error) {
+	return c.client.DownloadFile(ctx, in)
+}
+
+func (c *DatastoreServiceHTTP2GRPCBridgeImpl) ListFiles(ctx context.Context, in *ListFilesRequest) (*ListFilesResponse, error) {
+	return c.client.ListFiles(ctx, in)
+}
+
+func (c *DatastoreServiceHTTP2GRPCBridgeImpl) GetFile(ctx context.Context, in *GetFileRequest) (*GetFileResponse, error) {
+	return c.client.GetFile(ctx, in)
+}
+
+func (c *DatastoreServiceHTTP2GRPCBridgeImpl) DeleteFile(ctx context.Context, in *DeleteFileRequest) (*emptypb.Empty, error) {
+	return c.client.DeleteFile(ctx, in)
 }
 
 func (c *DatastoreServiceHTTP2GRPCBridgeImpl) CreateDatastore(ctx context.Context, in *CreateDatastoreRequest) (*CreateDatastoreResponse, error) {
 	return c.client.CreateDatastore(ctx, in)
 }
 
+func (c *DatastoreServiceHTTP2GRPCBridgeImpl) GetDatastore(ctx context.Context, in *GetDatastoreRequest) (*GetDatastoreResponse, error) {
+	return c.client.GetDatastore(ctx, in)
+}
+
 func (c *DatastoreServiceHTTP2GRPCBridgeImpl) UpdateDatastore(ctx context.Context, in *UpdateDatastoreRequest) (*UpdateDatastoreResponse, error) {
 	return c.client.UpdateDatastore(ctx, in)
 }
 
-func (c *DatastoreServiceHTTP2GRPCBridgeImpl) DeleteDatastore(ctx context.Context, in *DeleteDatastoreRequest) (*DeleteDatastoreResponse, error) {
+func (c *DatastoreServiceHTTP2GRPCBridgeImpl) DeleteDatastore(ctx context.Context, in *DeleteDatastoreRequest) (*emptypb.Empty, error) {
 	return c.client.DeleteDatastore(ctx, in)
 }
 

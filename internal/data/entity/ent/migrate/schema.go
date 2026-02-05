@@ -9,22 +9,23 @@ import (
 )
 
 var (
-	// CasbinRulesColumns holds the columns for the "casbin_rules" table.
-	CasbinRulesColumns = []*schema.Column{
+	// CasbinRuleColumns holds the columns for the "casbin_rule" table.
+	CasbinRuleColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeInt, Increment: true},
-		{Name: "ptype", Type: field.TypeString, Default: ""},
-		{Name: "v0", Type: field.TypeString, Default: ""},
-		{Name: "v1", Type: field.TypeString, Default: ""},
-		{Name: "v2", Type: field.TypeString, Default: ""},
-		{Name: "v3", Type: field.TypeString, Default: ""},
-		{Name: "v4", Type: field.TypeString, Default: ""},
-		{Name: "v5", Type: field.TypeString, Default: ""},
+		{Name: "ptype", Type: field.TypeString, Comment: "entity.casbin_rule.field.ptype", Default: ""},
+		{Name: "v0", Type: field.TypeString, Comment: "entity.casbin_rule.field.v0", Default: ""},
+		{Name: "v1", Type: field.TypeString, Comment: "entity.casbin_rule.field.v1", Default: ""},
+		{Name: "v2", Type: field.TypeString, Comment: "entity.casbin_rule.field.v2", Default: ""},
+		{Name: "v3", Type: field.TypeString, Comment: "entity.casbin_rule.field.v3", Default: ""},
+		{Name: "v4", Type: field.TypeString, Comment: "entity.casbin_rule.field.v4", Default: ""},
+		{Name: "v5", Type: field.TypeString, Comment: "entity.casbin_rule.field.v5", Default: ""},
 	}
-	// CasbinRulesTable holds the schema information for the "casbin_rules" table.
-	CasbinRulesTable = &schema.Table{
-		Name:       "casbin_rules",
-		Columns:    CasbinRulesColumns,
-		PrimaryKey: []*schema.Column{CasbinRulesColumns[0]},
+	// CasbinRuleTable holds the schema information for the "casbin_rule" table.
+	CasbinRuleTable = &schema.Table{
+		Name:       "casbin_rule",
+		Comment:    "entity.casbin_rule.table.comment",
+		Columns:    CasbinRuleColumns,
+		PrimaryKey: []*schema.Column{CasbinRuleColumns[0]},
 	}
 	// SysDepartmentsColumns holds the columns for the "sys_departments" table.
 	SysDepartmentsColumns = []*schema.Column{
@@ -87,44 +88,44 @@ var (
 			},
 		},
 	}
-	// MsgNotificationsColumns holds the columns for the "msg_notifications" table.
-	MsgNotificationsColumns = []*schema.Column{
+	// NtfMessagesColumns holds the columns for the "ntf_messages" table.
+	NtfMessagesColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeInt64, Comment: "field.primary_key.comment"},
 		{Name: "create_author", Type: field.TypeInt64, Nullable: true, Comment: "create_author.field.comment", Default: 0},
 		{Name: "update_author", Type: field.TypeInt64, Nullable: true, Comment: "update_author.field.comment", Default: 0},
 		{Name: "create_time", Type: field.TypeTime, Comment: "create_time.field.comment"},
 		{Name: "update_time", Type: field.TypeTime, Comment: "update_time.field.comment"},
-		{Name: "subject", Type: field.TypeString, Comment: "entity.notification.field.subject", Default: ""},
-		{Name: "content", Type: field.TypeString, Comment: "entity.notification.field.content", Default: ""},
-		{Name: "status", Type: field.TypeInt8, Comment: "entity.notification.field.status", Default: 0},
-		{Name: "category_id", Type: field.TypeInt64, Comment: "entity.notification.field.category_id"},
+		{Name: "subject", Type: field.TypeString, Comment: "entity.message.field.subject", Default: ""},
+		{Name: "content", Type: field.TypeString, Comment: "entity.message.field.content", Default: ""},
+		{Name: "status", Type: field.TypeInt8, Comment: "entity.message.field.status", Default: 0},
+		{Name: "category_id", Type: field.TypeInt64, Comment: "entity.message.field.category_id"},
 	}
-	// MsgNotificationsTable holds the schema information for the "msg_notifications" table.
-	MsgNotificationsTable = &schema.Table{
-		Name:       "msg_notifications",
-		Comment:    "entity.notification.table.comment",
-		Columns:    MsgNotificationsColumns,
-		PrimaryKey: []*schema.Column{MsgNotificationsColumns[0]},
+	// NtfMessagesTable holds the schema information for the "ntf_messages" table.
+	NtfMessagesTable = &schema.Table{
+		Name:       "ntf_messages",
+		Comment:    "entity.message.table.comment",
+		Columns:    NtfMessagesColumns,
+		PrimaryKey: []*schema.Column{NtfMessagesColumns[0]},
 		Indexes: []*schema.Index{
 			{
-				Name:    "notification_create_author",
+				Name:    "message_create_author",
 				Unique:  false,
-				Columns: []*schema.Column{MsgNotificationsColumns[1]},
+				Columns: []*schema.Column{NtfMessagesColumns[1]},
 			},
 			{
-				Name:    "notification_update_author",
+				Name:    "message_update_author",
 				Unique:  false,
-				Columns: []*schema.Column{MsgNotificationsColumns[2]},
+				Columns: []*schema.Column{NtfMessagesColumns[2]},
 			},
 			{
-				Name:    "notification_create_time",
+				Name:    "message_create_time",
 				Unique:  false,
-				Columns: []*schema.Column{MsgNotificationsColumns[3]},
+				Columns: []*schema.Column{NtfMessagesColumns[3]},
 			},
 			{
-				Name:    "notification_update_time",
+				Name:    "message_update_time",
 				Unique:  false,
-				Columns: []*schema.Column{MsgNotificationsColumns[4]},
+				Columns: []*schema.Column{NtfMessagesColumns[4]},
 			},
 		},
 	}
@@ -704,9 +705,9 @@ var (
 	}
 	// Tables holds all the tables in the schema.
 	Tables = []*schema.Table{
-		CasbinRulesTable,
+		CasbinRuleTable,
 		SysDepartmentsTable,
-		MsgNotificationsTable,
+		NtfMessagesTable,
 		SysPermissionsTable,
 		SysPermissionResourcesTable,
 		SysPositionsTable,
@@ -725,12 +726,15 @@ var (
 )
 
 func init() {
+	CasbinRuleTable.Annotation = &entsql.Annotation{
+		Table: "casbin_rule",
+	}
 	SysDepartmentsTable.ForeignKeys[0].RefTable = SysDepartmentsTable
 	SysDepartmentsTable.Annotation = &entsql.Annotation{
 		Table: "sys_departments",
 	}
-	MsgNotificationsTable.Annotation = &entsql.Annotation{
-		Table: "msg_notifications",
+	NtfMessagesTable.Annotation = &entsql.Annotation{
+		Table: "ntf_messages",
 	}
 	SysPermissionsTable.Annotation = &entsql.Annotation{
 		Table: "sys_permissions",

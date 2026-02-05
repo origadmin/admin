@@ -12,8 +12,8 @@ type CasbinRule func(*sql.Selector)
 // Department is the predicate function for department builders.
 type Department func(*sql.Selector)
 
-// Notification is the predicate function for notification builders.
-type Notification func(*sql.Selector)
+// Message is the predicate function for message builders.
+type Message func(*sql.Selector)
 
 // Permission is the predicate function for permission builders.
 type Permission func(*sql.Selector)

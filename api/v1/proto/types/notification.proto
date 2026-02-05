@@ -1,0 +1,102 @@
+syntax = "proto3";
+
+package api.v1.services.types;
+
+import "google/protobuf/timestamp.proto";
+
+option go_package = "origadmin/application/admin/api/v1/services/types;types";
+option java_multiple_files = true;
+option java_outer_classname = "APIServiceTypeNotificationProto";
+option java_package = "com.origadmin.api.v1.services.types";
+option objc_class_prefix = "APIServiceType";
+
+// Notification represents a notification message.
+message Notification {
+  // The notification ID.
+  int64 id = 1 [json_name = "id"];
+
+  // The notification title.
+  string title = 2 [json_name = "title"];
+
+  // The notification content.
+  string content = 3 [json_name = "content"];
+
+  // The notification type.
+  NotificationType type = 4 [json_name = "type"];
+
+  // The delivery channel.
+  NotificationChannel channel = 5 [json_name = "channel"];
+
+  // The recipient user ID.
+  int64 recipient_id = 6 [json_name = "recipient_id"];
+
+  // Whether the notification has been read.
+  bool is_read = 7 [json_name = "is_read"];
+
+  // The time when the notification was created.
+  google.protobuf.Timestamp created_at = 8 [json_name = "created_at"];
+
+  // Additional metadata.
+  map<string, string> metadata = 9 [json_name = "metadata"];
+}
+
+// NotificationType represents the type of notification.
+enum NotificationType {
+  // Unspecified type.
+  NOTIFICATION_TYPE_UNSPECIFIED = 0;
+  // System notification.
+  NOTIFICATION_TYPE_SYSTEM = 1;
+  // User notification.
+  NOTIFICATION_TYPE_USER = 2;
+  // Security notification.
+  NOTIFICATION_TYPE_SECURITY = 3;
+  // Business notification.
+  NOTIFICATION_TYPE_BUSINESS = 4;
+}
+
+// NotificationChannel represents the delivery channel.
+enum NotificationChannel {
+  // Unspecified channel.
+  NOTIFICATION_CHANNEL_UNSPECIFIED = 0;
+  // In-app notification.
+  NOTIFICATION_CHANNEL_IN_APP = 1;
+  // Email notification.
+  NOTIFICATION_CHANNEL_EMAIL = 2;
+  // SMS notification.
+  NOTIFICATION_CHANNEL_SMS = 3;
+  // Push notification.
+  NOTIFICATION_CHANNEL_PUSH = 4;
+}
+
+// Template represents a notification template.
+message Template {
+  // The template ID.
+  int64 id = 1 [json_name = "id"];
+
+  // The template name.
+  string name = 2 [json_name = "name"];
+
+  // The template code.
+  string code = 3 [json_name = "code"];
+
+  // The template subject.
+  string subject = 4 [json_name = "subject"];
+
+  // The template content.
+  string content = 5 [json_name = "content"];
+
+  // The delivery channel.
+  NotificationChannel channel = 6 [json_name = "channel"];
+
+  // Whether the template is active.
+  bool is_active = 7 [json_name = "is_active"];
+
+  // The time when the template was created.
+  google.protobuf.Timestamp created_at = 8 [json_name = "created_at"];
+
+  // The time when the template was last updated.
+  google.protobuf.Timestamp updated_at = 9 [json_name = "updated_at"];
+
+  // Additional metadata.
+  map<string, string> metadata = 10 [json_name = "metadata"];
+}

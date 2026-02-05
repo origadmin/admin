@@ -10,6 +10,48 @@ option java_outer_classname = "APIServiceTypeDatastoreProto";
 option java_package = "com.origadmin.api.v1.services.types";
 option objc_class_prefix = "APIServiceType";
 
+// File represents a stored file.
+message File {
+  // The file ID.
+  int64 id = 1 [json_name = "id"];
+
+  // The file name.
+  string name = 2 [json_name = "name"];
+
+  // The file URL for download.
+  string url = 3 [json_name = "url"];
+
+  // The file content type (MIME type).
+  string content_type = 4 [json_name = "content_type"];
+
+  // The file size in bytes.
+  int64 size = 5 [json_name = "size"];
+
+  // The storage path.
+  string storage_path = 6 [json_name = "storage_path"];
+
+  // The owner user ID.
+  int64 created_by = 7 [json_name = "created_by"];
+
+  // The creation time.
+  google.protobuf.Timestamp created_at = 8 [json_name = "created_at"];
+
+  // Additional metadata.
+  map<string, string> metadata = 9 [json_name = "metadata"];
+}
+
+// FileStatus represents the status of a file upload.
+enum FileStatus {
+  // Unspecified status.
+  FILE_STATUS_UNSPECIFIED = 0;
+  // File upload is pending.
+  FILE_STATUS_PENDING = 1;
+  // File upload completed successfully.
+  FILE_STATUS_COMPLETED = 2;
+  // File upload failed.
+  FILE_STATUS_FAILED = 3;
+}
+
 // DataObject is the model entity for the DataObject schema.
 message DataObject {
   // ID of the ent.

@@ -1,0 +1,212 @@
+syntax = "proto3";
+
+package api.v1.services.notification;
+
+import "google/api/annotations.proto";
+import "google/protobuf/any.proto";
+import "google/protobuf/empty.proto";
+import "google/protobuf/timestamp.proto";
+import "types/notification.proto";
+import "validate/validate.proto";
+import "policy/v1/policy.proto";
+
+option go_package = "origadmin/application/admin/api/v1/services/notification;notification";
+option java_multiple_files = true;
+option java_outer_classname = "APIV1ServicesNotificationProto";
+option java_package = "com.origadmin.api.v1.services.notification";
+
+// NotificationService provides notification capabilities.
+// Note: This service is not yet implemented, proto definitions are prepared for future use.
+service NotificationService {
+  // SendNotification sends a notification to specified recipients.
+  rpc SendNotification(SendNotificationRequest) returns (SendNotificationResponse) {
+    option (google.api.http) = {
+      post: "/ntf/send"
+      body: "*"
+    };
+    option (contrib.api.policy.v1.policy) = {name: "admin"};
+  }
+
+  // ListNotifications retrieves notifications for the current user.
+  rpc ListNotifications(ListNotificationsRequest) returns (ListNotificationsResponse) {
+    option (google.api.http) = {
+      get: "/ntf"
+    };
+    option (contrib.api.policy.v1.policy) = {name: "authenticated"};
+  }
+
+  // MarkAsRead marks a notification as read.
+  rpc MarkAsRead(MarkAsReadRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      post: "/ntf/{notification_id}/read"
+      body: "*"
+    };
+    option (contrib.api.policy.v1.policy) = {name: "authenticated"};
+  }
+
+  // CreateTemplate creates a notification template.
+  rpc CreateTemplate(CreateTemplateRequest) returns (CreateTemplateResponse) {
+    option (google.api.http) = {
+      post: "/ntf/templates"
+      body: "template"
+    };
+    option (contrib.api.policy.v1.policy) = {name: "admin"};
+  }
+
+  // ListTemplates retrieves notification templates.
+  rpc ListTemplates(ListTemplatesRequest) returns (ListTemplatesResponse) {
+    option (google.api.http) = {
+      get: "/ntf/templates"
+    };
+    option (contrib.api.policy.v1.policy) = {name: "admin"};
+  }
+
+  // UpdateTemplate updates a notification template.
+  rpc UpdateTemplate(UpdateTemplateRequest) returns (UpdateTemplateResponse) {
+    option (google.api.http) = {
+      put: "/ntf/templates/{template.id}"
+      body: "template"
+    };
+    option (contrib.api.policy.v1.policy) = {name: "admin"};
+  }
+
+  // DeleteTemplate deletes a notification template.
+  rpc DeleteTemplate(DeleteTemplateRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      delete: "/ntf/templates/{template_id}"
+    };
+    option (contrib.api.policy.v1.policy) = {name: "admin"};
+  }
+}
+
+// SendNotificationRequest is the request for NotificationService.SendNotification.
+message SendNotificationRequest {
+  // The notification title.
+  string title = 1 [json_name = "title", (validate.rules).string = {min_len: 1}];
+
+  // The notification content.
+  string content = 2 [json_name = "content", (validate.rules).string = {min_len: 1}];
+
+  // The notification type.
+  api.v1.services.types.NotificationType type = 3 [json_name = "type"];
+
+  // The delivery channel.
+  api.v1.services.types.NotificationChannel channel = 4 [json_name = "channel"];
+
+  // The recipient user IDs. Empty means broadcast to all users.
+  repeated int64 recipient_ids = 5 [json_name = "recipient_ids"];
+
+  // Additional metadata.
+  map<string, string> metadata = 6 [json_name = "metadata"];
+}
+
+// SendNotificationResponse is the response for NotificationService.SendNotification.
+message SendNotificationResponse {
+  // The created notification ID.
+  int64 notification_id = 1 [json_name = "notification_id"];
+}
+
+// ListNotificationsRequest is the request for NotificationService.ListNotifications.
+message ListNotificationsRequest {
+  // The recipient user ID. If zero, uses current user.
+  int64 recipient_id = 1 [json_name = "recipient_id"];
+
+  // Filter by notification type.
+  optional api.v1.services.types.NotificationType type = 2 [json_name = "type"];
+
+  // Filter by read status.
+  optional bool is_read = 3 [json_name = "is_read"];
+
+  // Filter by channel.
+  optional api.v1.services.types.NotificationChannel channel = 4 [json_name = "channel"];
+
+  // Page number.
+  int32 page = 5 [json_name = "page"];
+
+  // Page size.
+  int32 page_size = 6 [json_name = "page_size"];
+}
+
+// ListNotificationsResponse is the response for NotificationService.ListNotifications.
+message ListNotificationsResponse {
+  // The list of notifications.
+  repeated api.v1.services.types.Notification notifications = 1 [json_name = "notifications"];
+
+  // Total count.
+  int32 total = 2 [json_name = "total"];
+
+  // Current page.
+  int32 page = 3 [json_name = "page"];
+
+  // Page size.
+  int32 page_size = 4 [json_name = "page_size"];
+}
+
+// MarkAsReadRequest is the request for NotificationService.MarkAsRead.
+message MarkAsReadRequest {
+  // The notification ID.
+  int64 notification_id = 1 [json_name = "notification_id", (validate.rules).int64 = {gt: 0}];
+}
+
+// CreateTemplateRequest is the request for NotificationService.CreateTemplate.
+message CreateTemplateRequest {
+  // The template to create.
+  api.v1.services.types.Template template = 1 [json_name = "template"];
+}
+
+// CreateTemplateResponse is the response for NotificationService.CreateTemplate.
+message CreateTemplateResponse {
+  // The created template.
+  api.v1.services.types.Template template = 1 [json_name = "template"];
+}
+
+// ListTemplatesRequest is the request for NotificationService.ListTemplates.
+message ListTemplatesRequest {
+  // Filter by channel.
+  optional api.v1.services.types.NotificationChannel channel = 1 [json_name = "channel"];
+
+  // Filter by active status.
+  optional bool is_active = 2 [json_name = "is_active"];
+
+  // Page number.
+  int32 page = 3 [json_name = "page"];
+
+  // Page size.
+  int32 page_size = 4 [json_name = "page_size"];
+}
+
+// ListTemplatesResponse is the response for NotificationService.ListTemplates.
+message ListTemplatesResponse {
+  // The list of templates.
+  repeated api.v1.services.types.Template templates = 1 [json_name = "templates"];
+
+  // Total count.
+  int32 total = 2 [json_name = "total"];
+
+  // Current page.
+  int32 page = 3 [json_name = "page"];
+
+  // Page size.
+  int32 page_size = 4 [json_name = "page_size"];
+}
+
+// UpdateTemplateRequest is the request for NotificationService.UpdateTemplate.
+message UpdateTemplateRequest {
+  // The template ID.
+  int64 template_id = 1 [json_name = "template_id", (validate.rules).int64 = {gt: 0}];
+
+  // The template to update.
+  api.v1.services.types.Template template = 2 [json_name = "template"];
+}
+
+// UpdateTemplateResponse is the response for NotificationService.UpdateTemplate.
+message UpdateTemplateResponse {
+  // The updated template.
+  api.v1.services.types.Template template = 1 [json_name = "template"];
+}
+
+// DeleteTemplateRequest is the request for NotificationService.DeleteTemplate.
+message DeleteTemplateRequest {
+  // The template ID.
+  int64 template_id = 1 [json_name = "template_id", (validate.rules).int64 = {gt: 0}];
+}

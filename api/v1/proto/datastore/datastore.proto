@@ -3,126 +3,227 @@ syntax = "proto3";
 package api.v1.services.datastore;
 
 import "google/api/annotations.proto";
-import "google/protobuf/any.proto";
 import "google/protobuf/empty.proto";
+import "google/protobuf/timestamp.proto";
 import "types/datastore.proto";
+import "validate/validate.proto";
+import "policy/v1/policy.proto";
 
 option go_package = "origadmin/application/admin/api/v1/services/datastore;datastore";
 option java_multiple_files = true;
 option java_outer_classname = "APIV1ServicesDatastoreProto";
 option java_package = "com.origadmin.api.v1.services.datastore";
 
-// The data service definition.
+// DatastoreService provides file storage and data management capabilities.
+// Note: This service is not yet implemented, proto definitions are prepared for future use.
 service DatastoreService {
-  rpc ListDatastore(ListDatastoreRequest) returns (ListDatastoreResponse) {
-    option (google.api.http) = {get: "/datastore"};
+  // UploadFile uploads a file to the datastore.
+  rpc UploadFile(UploadFileRequest) returns (UploadFileResponse) {
+    option (google.api.http) = {
+      post: "/ds/files/upload"
+      body: "*"
+    };
+    option (contrib.api.policy.v1.policy) = {name: "authenticated"};
   }
-  rpc GetDatastore(GetDatastoreRequest) returns (GetDatastoreResponse) {
-    option (google.api.http) = {get: "/datastore/{id}"};
+
+  // DownloadFile downloads a file from the datastore.
+  rpc DownloadFile(DownloadFileRequest) returns (DownloadFileResponse) {
+    option (google.api.http) = {
+      get: "/ds/files/{file_id}"
+    };
+    option (contrib.api.policy.v1.policy) = {name: "authenticated"};
   }
+
+  // ListFiles retrieves a list of files.
+  rpc ListFiles(ListFilesRequest) returns (ListFilesResponse) {
+    option (google.api.http) = {
+      get: "/ds/files"
+    };
+    option (contrib.api.policy.v1.policy) = {name: "authenticated"};
+  }
+
+  // GetFile retrieves a file by ID.
+  rpc GetFile(GetFileRequest) returns (GetFileResponse) {
+    option (google.api.http) = {
+      get: "/ds/files/{file_id}/info"
+    };
+    option (contrib.api.policy.v1.policy) = {name: "authenticated"};
+  }
+
+  // DeleteFile deletes a file from the datastore.
+  rpc DeleteFile(DeleteFileRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      delete: "/ds/files/{file_id}"
+    };
+    option (contrib.api.policy.v1.policy) = {name: "authenticated"};
+  }
+
+  // CreateDatastore creates a data object.
   rpc CreateDatastore(CreateDatastoreRequest) returns (CreateDatastoreResponse) {
     option (google.api.http) = {
-      post: "/datastore"
+      post: "/ds"
       body: "data"
     };
+    option (contrib.api.policy.v1.policy) = {name: "authenticated"};
   }
+
+  // GetDatastore retrieves a data object by ID.
+  rpc GetDatastore(GetDatastoreRequest) returns (GetDatastoreResponse) {
+    option (google.api.http) = {
+      get: "/ds/{id}"
+    };
+    option (contrib.api.policy.v1.policy) = {name: "authenticated"};
+  }
+
+  // UpdateDatastore updates a data object.
   rpc UpdateDatastore(UpdateDatastoreRequest) returns (UpdateDatastoreResponse) {
     option (google.api.http) = {
-      put: "/datastore/{data.id}"
+      put: "/ds/{data.id}"
       body: "data"
     };
+    option (contrib.api.policy.v1.policy) = {name: "authenticated"};
   }
-  rpc DeleteDatastore(DeleteDatastoreRequest) returns (DeleteDatastoreResponse) {
-    option (google.api.http) = {delete: "/datastore/{id}"};
+
+  // DeleteDatastore deletes a data object.
+  rpc DeleteDatastore(DeleteDatastoreRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      delete: "/ds/{id}"
+    };
+    option (contrib.api.policy.v1.policy) = {name: "authenticated"};
   }
 }
 
-// ListDatastoreRequest is the request for the DatastoreService.ListDatastore method.
-message ListDatastoreRequest {
-  // The parent data id, for example, "shelves/shelf1".
-  int64 id = 1 [json_name = "id"];
-  // The current page number.
-  int32 current = 2 [json_name = "current"];
-  // The maximum number of items to return.
-  int32 page_size = 3 [json_name = "page_size"];
-  // The next_page_token value returned from a previous List request, if any.
-  string page_token = 4 [json_name = "page_token"];
-  // The no_paging is used to disable pagination.
-  bool no_paging = 5 [json_name = "no_paging"];
-  // The only_count is the query parameter for set only to query the total number
-  bool only_count = 6 [json_name = "only_count"];
-  // data type
-  string type = 7 [json_name = "type"];
+// UploadFileRequest is the request for DatastoreService.UploadFile.
+message UploadFileRequest {
+  // The file name.
+  string filename = 1 [json_name = "filename", (validate.rules).string = {min_len: 1}];
+
+  // The file content type (MIME type).
+  string content_type = 2 [json_name = "content_type"];
+
+  // The file content as bytes.
+  bytes content = 3 [json_name = "content"];
+
+  // The owner ID.
+  optional int64 owner_id = 4 [json_name = "owner_id"];
+
+  // Additional metadata.
+  map<string, string> metadata = 5 [json_name = "metadata"];
 }
 
-// ListDatastoreResponse is the response for the DatastoreService.ListDatastore method.
-message ListDatastoreResponse {
-  // The total number of items in the list.
-  int32 total_size = 1 [json_name = "total_size"];
-  // The paging datastore
-  repeated api.v1.services.types.DataObject data = 2 [json_name = "data"];
-  // The current page number.
-  int32 current = 3 [json_name = "current"];
-  // The maximum number of items to return.
+// UploadFileResponse is the response for DatastoreService.UploadFile.
+message UploadFileResponse {
+  // The uploaded file info.
+  api.v1.services.types.File file = 1 [json_name = "file"];
+}
+
+// DownloadFileRequest is the request for DatastoreService.DownloadFile.
+message DownloadFileRequest {
+  // The file ID.
+  int64 file_id = 1 [json_name = "file_id", (validate.rules).int64 = {gt: 0}];
+}
+
+// DownloadFileResponse is the response for DatastoreService.DownloadFile.
+message DownloadFileResponse {
+  // The file content as bytes.
+  bytes content = 1 [json_name = "content"];
+
+  // The file content type.
+  string content_type = 2 [json_name = "content_type"];
+
+  // The file name.
+  string filename = 3 [json_name = "filename"];
+}
+
+// ListFilesRequest is the request for DatastoreService.ListFiles.
+message ListFilesRequest {
+  // Filter by owner ID.
+  optional int64 owner_id = 1 [json_name = "owner_id"];
+
+  // Filter by content type.
+  optional string content_type = 2 [json_name = "content_type"];
+
+  // Page number.
+  int32 page = 3 [json_name = "page"];
+
+  // Page size.
   int32 page_size = 4 [json_name = "page_size"];
-  // Token to retrieve the next page of results, or empty if there are no
-  // more results in the list.
-  string next_page_token = 5 [json_name = "next_page_token"];
-  // Additional information about this response.
-  // content to be added without destroying the current data format
-  optional google.protobuf.Any extra = 6 [json_name = "extra"];
 }
 
-// GetDatastoreRequest is the request for the DatastoreService.GetDatastore method.
-message GetDatastoreRequest {
-  // The field will contain id of the data requested, for example:
-  // "shelves/shelf1/datastore/data2"
-  int64 id = 1 [json_name = "id"];
+// ListFilesResponse is the response for DatastoreService.ListFiles.
+message ListFilesResponse {
+  // The list of files.
+  repeated api.v1.services.types.File files = 1 [json_name = "files"];
+
+  // Total count.
+  int32 total = 2 [json_name = "total"];
+
+  // Current page.
+  int32 page = 3 [json_name = "page"];
+
+  // Page size.
+  int32 page_size = 4 [json_name = "page_size"];
 }
 
-// GetDatastoreResponse is the response for the DatastoreService.GetDatastore method.
-message GetDatastoreResponse {
-  // The field id should match the Noun in the method id.
-  api.v1.services.types.DataObject data = 1 [json_name = "data"];
+// GetFileRequest is the request for DatastoreService.GetFile.
+message GetFileRequest {
+  // The file ID.
+  int64 file_id = 1 [json_name = "file_id", (validate.rules).int64 = {gt: 0}];
 }
 
-// CreateDatastoreRequest is the request for the DatastoreService.CreateDatastore method.
+// GetFileResponse is the response for DatastoreService.GetFile.
+message GetFileResponse {
+  // The file info.
+  api.v1.services.types.File file = 1 [json_name = "file"];
+}
+
+// DeleteFileRequest is the request for DatastoreService.DeleteFile.
+message DeleteFileRequest {
+  // The file ID.
+  int64 file_id = 1 [json_name = "file_id", (validate.rules).int64 = {gt: 0}];
+}
+
+// CreateDatastoreRequest is the request for DatastoreService.CreateDatastore.
 message CreateDatastoreRequest {
-  // The parent data id where the data is to be created.
-  string parent = 1 [json_name = "parent"];
-  // The data id to use for this data.
-  string data_id = 2 [json_name = "data_id"];
   // The data object to create.
-  api.v1.services.types.DataObject data = 3 [json_name = "data"];
-}
-
-// CreateDatastoreResponse is the response for the DatastoreService.CreateDatastore method.
-message CreateDatastoreResponse {
   api.v1.services.types.DataObject data = 1 [json_name = "data"];
 }
 
-// UpdateDatastoreRequest is the request for the DatastoreService.UpdateDatastore method.
+// CreateDatastoreResponse is the response for DatastoreService.CreateDatastore.
+message CreateDatastoreResponse {
+  // The created data object.
+  api.v1.services.types.DataObject data = 1 [json_name = "data"];
+}
+
+// GetDatastoreRequest is the request for DatastoreService.GetDatastore.
+message GetDatastoreRequest {
+  // The data ID.
+  string id = 1 [json_name = "id", (validate.rules).string = {min_len: 1}];
+}
+
+// GetDatastoreResponse is the response for DatastoreService.GetDatastore.
+message GetDatastoreResponse {
+  // The data object.
+  api.v1.services.types.DataObject data = 1 [json_name = "data"];
+}
+
+// UpdateDatastoreRequest is the request for DatastoreService.UpdateDatastore.
 message UpdateDatastoreRequest {
-  // The id of the data object to update.
-  int64 id = 1 [json_name = "id"];
-  // The data object which replaces the data on the server.
+  // The ID of the data object to update.
+  string id = 1 [json_name = "id", (validate.rules).string = {min_len: 1}];
+
+  // The data object to update.
   api.v1.services.types.DataObject data = 2 [json_name = "data"];
 }
 
-// UpdateDatastoreResponse is the response for the DatastoreService.UpdateDatastore method.
+// UpdateDatastoreResponse is the response for DatastoreService.UpdateDatastore.
 message UpdateDatastoreResponse {
+  // The updated data object.
   api.v1.services.types.DataObject data = 1 [json_name = "data"];
 }
 
-// DeleteDatastoreRequest is the request for the DatastoreService.DeleteDatastore method.
+// DeleteDatastoreRequest is the request for DatastoreService.DeleteDatastore.
 message DeleteDatastoreRequest {
-  // The data id of the data to be deleted, for example:
-  // "shelves/shelf1/datastore/data2"
-  int64 id = 1 [json_name = "id"];
-}
-
-// DeleteDatastoreResponse is the response for the DatastoreService.DeleteDatastore method.
-message DeleteDatastoreResponse {
-  // or Datastore data = 1; or google.protobuf.Empty empty = 1;
-  google.protobuf.Empty empty = 1;
+  // The ID of the data object to delete.
+  string id = 1 [json_name = "id", (validate.rules).string = {min_len: 1}];
 }

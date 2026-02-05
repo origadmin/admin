@@ -53,492 +53,492 @@ func IDLTE(id int) predicate.CasbinRule {
 	return predicate.CasbinRule(sql.FieldLTE(FieldID, id))
 }
 
-// Ptype applies equality check predicate on the "Ptype" field. It's identical to PtypeEQ.
+// Ptype applies equality check predicate on the "ptype" field. It's identical to PtypeEQ.
 func Ptype(v string) predicate.CasbinRule {
 	return predicate.CasbinRule(sql.FieldEQ(FieldPtype, v))
 }
 
-// V0 applies equality check predicate on the "V0" field. It's identical to V0EQ.
+// V0 applies equality check predicate on the "v0" field. It's identical to V0EQ.
 func V0(v string) predicate.CasbinRule {
 	return predicate.CasbinRule(sql.FieldEQ(FieldV0, v))
 }
 
-// V1 applies equality check predicate on the "V1" field. It's identical to V1EQ.
+// V1 applies equality check predicate on the "v1" field. It's identical to V1EQ.
 func V1(v string) predicate.CasbinRule {
 	return predicate.CasbinRule(sql.FieldEQ(FieldV1, v))
 }
 
-// V2 applies equality check predicate on the "V2" field. It's identical to V2EQ.
+// V2 applies equality check predicate on the "v2" field. It's identical to V2EQ.
 func V2(v string) predicate.CasbinRule {
 	return predicate.CasbinRule(sql.FieldEQ(FieldV2, v))
 }
 
-// V3 applies equality check predicate on the "V3" field. It's identical to V3EQ.
+// V3 applies equality check predicate on the "v3" field. It's identical to V3EQ.
 func V3(v string) predicate.CasbinRule {
 	return predicate.CasbinRule(sql.FieldEQ(FieldV3, v))
 }
 
-// V4 applies equality check predicate on the "V4" field. It's identical to V4EQ.
+// V4 applies equality check predicate on the "v4" field. It's identical to V4EQ.
 func V4(v string) predicate.CasbinRule {
 	return predicate.CasbinRule(sql.FieldEQ(FieldV4, v))
 }
 
-// V5 applies equality check predicate on the "V5" field. It's identical to V5EQ.
+// V5 applies equality check predicate on the "v5" field. It's identical to V5EQ.
 func V5(v string) predicate.CasbinRule {
 	return predicate.CasbinRule(sql.FieldEQ(FieldV5, v))
 }
 
-// PtypeEQ applies the EQ predicate on the "Ptype" field.
+// PtypeEQ applies the EQ predicate on the "ptype" field.
 func PtypeEQ(v string) predicate.CasbinRule {
 	return predicate.CasbinRule(sql.FieldEQ(FieldPtype, v))
 }
 
-// PtypeNEQ applies the NEQ predicate on the "Ptype" field.
+// PtypeNEQ applies the NEQ predicate on the "ptype" field.
 func PtypeNEQ(v string) predicate.CasbinRule {
 	return predicate.CasbinRule(sql.FieldNEQ(FieldPtype, v))
 }
 
-// PtypeIn applies the In predicate on the "Ptype" field.
+// PtypeIn applies the In predicate on the "ptype" field.
 func PtypeIn(vs ...string) predicate.CasbinRule {
 	return predicate.CasbinRule(sql.FieldIn(FieldPtype, vs...))
 }
 
-// PtypeNotIn applies the NotIn predicate on the "Ptype" field.
+// PtypeNotIn applies the NotIn predicate on the "ptype" field.
 func PtypeNotIn(vs ...string) predicate.CasbinRule {
 	return predicate.CasbinRule(sql.FieldNotIn(FieldPtype, vs...))
 }
 
-// PtypeGT applies the GT predicate on the "Ptype" field.
+// PtypeGT applies the GT predicate on the "ptype" field.
 func PtypeGT(v string) predicate.CasbinRule {
 	return predicate.CasbinRule(sql.FieldGT(FieldPtype, v))
 }
 
-// PtypeGTE applies the GTE predicate on the "Ptype" field.
+// PtypeGTE applies the GTE predicate on the "ptype" field.
 func PtypeGTE(v string) predicate.CasbinRule {
 	return predicate.CasbinRule(sql.FieldGTE(FieldPtype, v))
 }
 
-// PtypeLT applies the LT predicate on the "Ptype" field.
+// PtypeLT applies the LT predicate on the "ptype" field.
 func PtypeLT(v string) predicate.CasbinRule {
 	return predicate.CasbinRule(sql.FieldLT(FieldPtype, v))
 }
 
-// PtypeLTE applies the LTE predicate on the "Ptype" field.
+// PtypeLTE applies the LTE predicate on the "ptype" field.
 func PtypeLTE(v string) predicate.CasbinRule {
 	return predicate.CasbinRule(sql.FieldLTE(FieldPtype, v))
 }
 
-// PtypeContains applies the Contains predicate on the "Ptype" field.
+// PtypeContains applies the Contains predicate on the "ptype" field.
 func PtypeContains(v string) predicate.CasbinRule {
 	return predicate.CasbinRule(sql.FieldContains(FieldPtype, v))
 }
 
-// PtypeHasPrefix applies the HasPrefix predicate on the "Ptype" field.
+// PtypeHasPrefix applies the HasPrefix predicate on the "ptype" field.
 func PtypeHasPrefix(v string) predicate.CasbinRule {
 	return predicate.CasbinRule(sql.FieldHasPrefix(FieldPtype, v))
 }
 
-// PtypeHasSuffix applies the HasSuffix predicate on the "Ptype" field.
+// PtypeHasSuffix applies the HasSuffix predicate on the "ptype" field.
 func PtypeHasSuffix(v string) predicate.CasbinRule {
 	return predicate.CasbinRule(sql.FieldHasSuffix(FieldPtype, v))
 }
 
-// PtypeEqualFold applies the EqualFold predicate on the "Ptype" field.
+// PtypeEqualFold applies the EqualFold predicate on the "ptype" field.
 func PtypeEqualFold(v string) predicate.CasbinRule {
 	return predicate.CasbinRule(sql.FieldEqualFold(FieldPtype, v))
 }
 
-// PtypeContainsFold applies the ContainsFold predicate on the "Ptype" field.
+// PtypeContainsFold applies the ContainsFold predicate on the "ptype" field.
 func PtypeContainsFold(v string) predicate.CasbinRule {
 	return predicate.CasbinRule(sql.FieldContainsFold(FieldPtype, v))
 }
 
-// V0EQ applies the EQ predicate on the "V0" field.
+// V0EQ applies the EQ predicate on the "v0" field.
 func V0EQ(v string) predicate.CasbinRule {
 	return predicate.CasbinRule(sql.FieldEQ(FieldV0, v))
 }
 
-// V0NEQ applies the NEQ predicate on the "V0" field.
+// V0NEQ applies the NEQ predicate on the "v0" field.
 func V0NEQ(v string) predicate.CasbinRule {
 	return predicate.CasbinRule(sql.FieldNEQ(FieldV0, v))
 }
 
-// V0In applies the In predicate on the "V0" field.
+// V0In applies the In predicate on the "v0" field.
 func V0In(vs ...string) predicate.CasbinRule {
 	return predicate.CasbinRule(sql.FieldIn(FieldV0, vs...))
 }
 
-// V0NotIn applies the NotIn predicate on the "V0" field.
+// V0NotIn applies the NotIn predicate on the "v0" field.
 func V0NotIn(vs ...string) predicate.CasbinRule {
 	return predicate.CasbinRule(sql.FieldNotIn(FieldV0, vs...))
 }
 
-// V0GT applies the GT predicate on the "V0" field.
+// V0GT applies the GT predicate on the "v0" field.
 func V0GT(v string) predicate.CasbinRule {
 	return predicate.CasbinRule(sql.FieldGT(FieldV0, v))
 }
 
-// V0GTE applies the GTE predicate on the "V0" field.
+// V0GTE applies the GTE predicate on the "v0" field.
 func V0GTE(v string) predicate.CasbinRule {
 	return predicate.CasbinRule(sql.FieldGTE(FieldV0, v))
 }
 
-// V0LT applies the LT predicate on the "V0" field.
+// V0LT applies the LT predicate on the "v0" field.
 func V0LT(v string) predicate.CasbinRule {
 	return predicate.CasbinRule(sql.FieldLT(FieldV0, v))
 }
 
-// V0LTE applies the LTE predicate on the "V0" field.
+// V0LTE applies the LTE predicate on the "v0" field.
 func V0LTE(v string) predicate.CasbinRule {
 	return predicate.CasbinRule(sql.FieldLTE(FieldV0, v))
 }
 
-// V0Contains applies the Contains predicate on the "V0" field.
+// V0Contains applies the Contains predicate on the "v0" field.
 func V0Contains(v string) predicate.CasbinRule {
 	return predicate.CasbinRule(sql.FieldContains(FieldV0, v))
 }
 
-// V0HasPrefix applies the HasPrefix predicate on the "V0" field.
+// V0HasPrefix applies the HasPrefix predicate on the "v0" field.
 func V0HasPrefix(v string) predicate.CasbinRule {
 	return predicate.CasbinRule(sql.FieldHasPrefix(FieldV0, v))
 }
 
-// V0HasSuffix applies the HasSuffix predicate on the "V0" field.
+// V0HasSuffix applies the HasSuffix predicate on the "v0" field.
 func V0HasSuffix(v string) predicate.CasbinRule {
 	return predicate.CasbinRule(sql.FieldHasSuffix(FieldV0, v))
 }
 
-// V0EqualFold applies the EqualFold predicate on the "V0" field.
+// V0EqualFold applies the EqualFold predicate on the "v0" field.
 func V0EqualFold(v string) predicate.CasbinRule {
 	return predicate.CasbinRule(sql.FieldEqualFold(FieldV0, v))
 }
 
-// V0ContainsFold applies the ContainsFold predicate on the "V0" field.
+// V0ContainsFold applies the ContainsFold predicate on the "v0" field.
 func V0ContainsFold(v string) predicate.CasbinRule {
 	return predicate.CasbinRule(sql.FieldContainsFold(FieldV0, v))
 }
 
-// V1EQ applies the EQ predicate on the "V1" field.
+// V1EQ applies the EQ predicate on the "v1" field.
 func V1EQ(v string) predicate.CasbinRule {
 	return predicate.CasbinRule(sql.FieldEQ(FieldV1, v))
 }
 
-// V1NEQ applies the NEQ predicate on the "V1" field.
+// V1NEQ applies the NEQ predicate on the "v1" field.
 func V1NEQ(v string) predicate.CasbinRule {
 	return predicate.CasbinRule(sql.FieldNEQ(FieldV1, v))
 }
 
-// V1In applies the In predicate on the "V1" field.
+// V1In applies the In predicate on the "v1" field.
 func V1In(vs ...string) predicate.CasbinRule {
 	return predicate.CasbinRule(sql.FieldIn(FieldV1, vs...))
 }
 
-// V1NotIn applies the NotIn predicate on the "V1" field.
+// V1NotIn applies the NotIn predicate on the "v1" field.
 func V1NotIn(vs ...string) predicate.CasbinRule {
 	return predicate.CasbinRule(sql.FieldNotIn(FieldV1, vs...))
 }
 
-// V1GT applies the GT predicate on the "V1" field.
+// V1GT applies the GT predicate on the "v1" field.
 func V1GT(v string) predicate.CasbinRule {
 	return predicate.CasbinRule(sql.FieldGT(FieldV1, v))
 }
 
-// V1GTE applies the GTE predicate on the "V1" field.
+// V1GTE applies the GTE predicate on the "v1" field.
 func V1GTE(v string) predicate.CasbinRule {
 	return predicate.CasbinRule(sql.FieldGTE(FieldV1, v))
 }
 
-// V1LT applies the LT predicate on the "V1" field.
+// V1LT applies the LT predicate on the "v1" field.
 func V1LT(v string) predicate.CasbinRule {
 	return predicate.CasbinRule(sql.FieldLT(FieldV1, v))
 }
 
-// V1LTE applies the LTE predicate on the "V1" field.
+// V1LTE applies the LTE predicate on the "v1" field.
 func V1LTE(v string) predicate.CasbinRule {
 	return predicate.CasbinRule(sql.FieldLTE(FieldV1, v))
 }
 
-// V1Contains applies the Contains predicate on the "V1" field.
+// V1Contains applies the Contains predicate on the "v1" field.
 func V1Contains(v string) predicate.CasbinRule {
 	return predicate.CasbinRule(sql.FieldContains(FieldV1, v))
 }
 
-// V1HasPrefix applies the HasPrefix predicate on the "V1" field.
+// V1HasPrefix applies the HasPrefix predicate on the "v1" field.
 func V1HasPrefix(v string) predicate.CasbinRule {
 	return predicate.CasbinRule(sql.FieldHasPrefix(FieldV1, v))
 }
 
-// V1HasSuffix applies the HasSuffix predicate on the "V1" field.
+// V1HasSuffix applies the HasSuffix predicate on the "v1" field.
 func V1HasSuffix(v string) predicate.CasbinRule {
 	return predicate.CasbinRule(sql.FieldHasSuffix(FieldV1, v))
 }
 
-// V1EqualFold applies the EqualFold predicate on the "V1" field.
+// V1EqualFold applies the EqualFold predicate on the "v1" field.
 func V1EqualFold(v string) predicate.CasbinRule {
 	return predicate.CasbinRule(sql.FieldEqualFold(FieldV1, v))
 }
 
-// V1ContainsFold applies the ContainsFold predicate on the "V1" field.
+// V1ContainsFold applies the ContainsFold predicate on the "v1" field.
 func V1ContainsFold(v string) predicate.CasbinRule {
 	return predicate.CasbinRule(sql.FieldContainsFold(FieldV1, v))
 }
 
-// V2EQ applies the EQ predicate on the "V2" field.
+// V2EQ applies the EQ predicate on the "v2" field.
 func V2EQ(v string) predicate.CasbinRule {
 	return predicate.CasbinRule(sql.FieldEQ(FieldV2, v))
 }
 
-// V2NEQ applies the NEQ predicate on the "V2" field.
+// V2NEQ applies the NEQ predicate on the "v2" field.
 func V2NEQ(v string) predicate.CasbinRule {
 	return predicate.CasbinRule(sql.FieldNEQ(FieldV2, v))
 }
 
-// V2In applies the In predicate on the "V2" field.
+// V2In applies the In predicate on the "v2" field.
 func V2In(vs ...string) predicate.CasbinRule {
 	return predicate.CasbinRule(sql.FieldIn(FieldV2, vs...))
 }
 
-// V2NotIn applies the NotIn predicate on the "V2" field.
+// V2NotIn applies the NotIn predicate on the "v2" field.
 func V2NotIn(vs ...string) predicate.CasbinRule {
 	return predicate.CasbinRule(sql.FieldNotIn(FieldV2, vs...))
 }
 
-// V2GT applies the GT predicate on the "V2" field.
+// V2GT applies the GT predicate on the "v2" field.
 func V2GT(v string) predicate.CasbinRule {
 	return predicate.CasbinRule(sql.FieldGT(FieldV2, v))
 }
 
-// V2GTE applies the GTE predicate on the "V2" field.
+// V2GTE applies the GTE predicate on the "v2" field.
 func V2GTE(v string) predicate.CasbinRule {
 	return predicate.CasbinRule(sql.FieldGTE(FieldV2, v))
 }
 
-// V2LT applies the LT predicate on the "V2" field.
+// V2LT applies the LT predicate on the "v2" field.
 func V2LT(v string) predicate.CasbinRule {
 	return predicate.CasbinRule(sql.FieldLT(FieldV2, v))
 }
 
-// V2LTE applies the LTE predicate on the "V2" field.
+// V2LTE applies the LTE predicate on the "v2" field.
 func V2LTE(v string) predicate.CasbinRule {
 	return predicate.CasbinRule(sql.FieldLTE(FieldV2, v))
 }
 
-// V2Contains applies the Contains predicate on the "V2" field.
+// V2Contains applies the Contains predicate on the "v2" field.
 func V2Contains(v string) predicate.CasbinRule {
 	return predicate.CasbinRule(sql.FieldContains(FieldV2, v))
 }
 
-// V2HasPrefix applies the HasPrefix predicate on the "V2" field.
+// V2HasPrefix applies the HasPrefix predicate on the "v2" field.
 func V2HasPrefix(v string) predicate.CasbinRule {
 	return predicate.CasbinRule(sql.FieldHasPrefix(FieldV2, v))
 }
 
-// V2HasSuffix applies the HasSuffix predicate on the "V2" field.
+// V2HasSuffix applies the HasSuffix predicate on the "v2" field.
 func V2HasSuffix(v string) predicate.CasbinRule {
 	return predicate.CasbinRule(sql.FieldHasSuffix(FieldV2, v))
 }
 
-// V2EqualFold applies the EqualFold predicate on the "V2" field.
+// V2EqualFold applies the EqualFold predicate on the "v2" field.
 func V2EqualFold(v string) predicate.CasbinRule {
 	return predicate.CasbinRule(sql.FieldEqualFold(FieldV2, v))
 }
 
-// V2ContainsFold applies the ContainsFold predicate on the "V2" field.
+// V2ContainsFold applies the ContainsFold predicate on the "v2" field.
 func V2ContainsFold(v string) predicate.CasbinRule {
 	return predicate.CasbinRule(sql.FieldContainsFold(FieldV2, v))
 }
 
-// V3EQ applies the EQ predicate on the "V3" field.
+// V3EQ applies the EQ predicate on the "v3" field.
 func V3EQ(v string) predicate.CasbinRule {
 	return predicate.CasbinRule(sql.FieldEQ(FieldV3, v))
 }
 
-// V3NEQ applies the NEQ predicate on the "V3" field.
+// V3NEQ applies the NEQ predicate on the "v3" field.
 func V3NEQ(v string) predicate.CasbinRule {
 	return predicate.CasbinRule(sql.FieldNEQ(FieldV3, v))
 }
 
-// V3In applies the In predicate on the "V3" field.
+// V3In applies the In predicate on the "v3" field.
 func V3In(vs ...string) predicate.CasbinRule {
 	return predicate.CasbinRule(sql.FieldIn(FieldV3, vs...))
 }
 
-// V3NotIn applies the NotIn predicate on the "V3" field.
+// V3NotIn applies the NotIn predicate on the "v3" field.
 func V3NotIn(vs ...string) predicate.CasbinRule {
 	return predicate.CasbinRule(sql.FieldNotIn(FieldV3, vs...))
 }
 
-// V3GT applies the GT predicate on the "V3" field.
+// V3GT applies the GT predicate on the "v3" field.
 func V3GT(v string) predicate.CasbinRule {
 	return predicate.CasbinRule(sql.FieldGT(FieldV3, v))
 }
 
-// V3GTE applies the GTE predicate on the "V3" field.
+// V3GTE applies the GTE predicate on the "v3" field.
 func V3GTE(v string) predicate.CasbinRule {
 	return predicate.CasbinRule(sql.FieldGTE(FieldV3, v))
 }
 
-// V3LT applies the LT predicate on the "V3" field.
+// V3LT applies the LT predicate on the "v3" field.
 func V3LT(v string) predicate.CasbinRule {
 	return predicate.CasbinRule(sql.FieldLT(FieldV3, v))
 }
 
-// V3LTE applies the LTE predicate on the "V3" field.
+// V3LTE applies the LTE predicate on the "v3" field.
 func V3LTE(v string) predicate.CasbinRule {
 	return predicate.CasbinRule(sql.FieldLTE(FieldV3, v))
 }
 
-// V3Contains applies the Contains predicate on the "V3" field.
+// V3Contains applies the Contains predicate on the "v3" field.
 func V3Contains(v string) predicate.CasbinRule {
 	return predicate.CasbinRule(sql.FieldContains(FieldV3, v))
 }
 
-// V3HasPrefix applies the HasPrefix predicate on the "V3" field.
+// V3HasPrefix applies the HasPrefix predicate on the "v3" field.
 func V3HasPrefix(v string) predicate.CasbinRule {
 	return predicate.CasbinRule(sql.FieldHasPrefix(FieldV3, v))
 }
 
-// V3HasSuffix applies the HasSuffix predicate on the "V3" field.
+// V3HasSuffix applies the HasSuffix predicate on the "v3" field.
 func V3HasSuffix(v string) predicate.CasbinRule {
 	return predicate.CasbinRule(sql.FieldHasSuffix(FieldV3, v))
 }
 
-// V3EqualFold applies the EqualFold predicate on the "V3" field.
+// V3EqualFold applies the EqualFold predicate on the "v3" field.
 func V3EqualFold(v string) predicate.CasbinRule {
 	return predicate.CasbinRule(sql.FieldEqualFold(FieldV3, v))
 }
 
-// V3ContainsFold applies the ContainsFold predicate on the "V3" field.
+// V3ContainsFold applies the ContainsFold predicate on the "v3" field.
 func V3ContainsFold(v string) predicate.CasbinRule {
 	return predicate.CasbinRule(sql.FieldContainsFold(FieldV3, v))
 }
 
-// V4EQ applies the EQ predicate on the "V4" field.
+// V4EQ applies the EQ predicate on the "v4" field.
 func V4EQ(v string) predicate.CasbinRule {
 	return predicate.CasbinRule(sql.FieldEQ(FieldV4, v))
 }
 
-// V4NEQ applies the NEQ predicate on the "V4" field.
+// V4NEQ applies the NEQ predicate on the "v4" field.
 func V4NEQ(v string) predicate.CasbinRule {
 	return predicate.CasbinRule(sql.FieldNEQ(FieldV4, v))
 }
 
-// V4In applies the In predicate on the "V4" field.
+// V4In applies the In predicate on the "v4" field.
 func V4In(vs ...string) predicate.CasbinRule {
 	return predicate.CasbinRule(sql.FieldIn(FieldV4, vs...))
 }
 
-// V4NotIn applies the NotIn predicate on the "V4" field.
+// V4NotIn applies the NotIn predicate on the "v4" field.
 func V4NotIn(vs ...string) predicate.CasbinRule {
 	return predicate.CasbinRule(sql.FieldNotIn(FieldV4, vs...))
 }
 
-// V4GT applies the GT predicate on the "V4" field.
+// V4GT applies the GT predicate on the "v4" field.
 func V4GT(v string) predicate.CasbinRule {
 	return predicate.CasbinRule(sql.FieldGT(FieldV4, v))
 }
 
-// V4GTE applies the GTE predicate on the "V4" field.
+// V4GTE applies the GTE predicate on the "v4" field.
 func V4GTE(v string) predicate.CasbinRule {
 	return predicate.CasbinRule(sql.FieldGTE(FieldV4, v))
 }
 
-// V4LT applies the LT predicate on the "V4" field.
+// V4LT applies the LT predicate on the "v4" field.
 func V4LT(v string) predicate.CasbinRule {
 	return predicate.CasbinRule(sql.FieldLT(FieldV4, v))
 }
 
-// V4LTE applies the LTE predicate on the "V4" field.
+// V4LTE applies the LTE predicate on the "v4" field.
 func V4LTE(v string) predicate.CasbinRule {
 	return predicate.CasbinRule(sql.FieldLTE(FieldV4, v))
 }
 
-// V4Contains applies the Contains predicate on the "V4" field.
+// V4Contains applies the Contains predicate on the "v4" field.
 func V4Contains(v string) predicate.CasbinRule {
 	return predicate.CasbinRule(sql.FieldContains(FieldV4, v))
 }
 
-// V4HasPrefix applies the HasPrefix predicate on the "V4" field.
+// V4HasPrefix applies the HasPrefix predicate on the "v4" field.
 func V4HasPrefix(v string) predicate.CasbinRule {
 	return predicate.CasbinRule(sql.FieldHasPrefix(FieldV4, v))
 }
 
-// V4HasSuffix applies the HasSuffix predicate on the "V4" field.
+// V4HasSuffix applies the HasSuffix predicate on the "v4" field.
 func V4HasSuffix(v string) predicate.CasbinRule {
 	return predicate.CasbinRule(sql.FieldHasSuffix(FieldV4, v))
 }
 
-// V4EqualFold applies the EqualFold predicate on the "V4" field.
+// V4EqualFold applies the EqualFold predicate on the "v4" field.
 func V4EqualFold(v string) predicate.CasbinRule {
 	return predicate.CasbinRule(sql.FieldEqualFold(FieldV4, v))
 }
 
-// V4ContainsFold applies the ContainsFold predicate on the "V4" field.
+// V4ContainsFold applies the ContainsFold predicate on the "v4" field.
 func V4ContainsFold(v string) predicate.CasbinRule {
 	return predicate.CasbinRule(sql.FieldContainsFold(FieldV4, v))
 }
 
-// V5EQ applies the EQ predicate on the "V5" field.
+// V5EQ applies the EQ predicate on the "v5" field.
 func V5EQ(v string) predicate.CasbinRule {
 	return predicate.CasbinRule(sql.FieldEQ(FieldV5, v))
 }
 
-// V5NEQ applies the NEQ predicate on the "V5" field.
+// V5NEQ applies the NEQ predicate on the "v5" field.
 func V5NEQ(v string) predicate.CasbinRule {
 	return predicate.CasbinRule(sql.FieldNEQ(FieldV5, v))
 }
 
-// V5In applies the In predicate on the "V5" field.
+// V5In applies the In predicate on the "v5" field.
 func V5In(vs ...string) predicate.CasbinRule {
 	return predicate.CasbinRule(sql.FieldIn(FieldV5, vs...))
 }
 
-// V5NotIn applies the NotIn predicate on the "V5" field.
+// V5NotIn applies the NotIn predicate on the "v5" field.
 func V5NotIn(vs ...string) predicate.CasbinRule {
 	return predicate.CasbinRule(sql.FieldNotIn(FieldV5, vs...))
 }
 
-// V5GT applies the GT predicate on the "V5" field.
+// V5GT applies the GT predicate on the "v5" field.
 func V5GT(v string) predicate.CasbinRule {
 	return predicate.CasbinRule(sql.FieldGT(FieldV5, v))
 }
 
-// V5GTE applies the GTE predicate on the "V5" field.
+// V5GTE applies the GTE predicate on the "v5" field.
 func V5GTE(v string) predicate.CasbinRule {
 	return predicate.CasbinRule(sql.FieldGTE(FieldV5, v))
 }
 
-// V5LT applies the LT predicate on the "V5" field.
+// V5LT applies the LT predicate on the "v5" field.
 func V5LT(v string) predicate.CasbinRule {
 	return predicate.CasbinRule(sql.FieldLT(FieldV5, v))
 }
 
-// V5LTE applies the LTE predicate on the "V5" field.
+// V5LTE applies the LTE predicate on the "v5" field.
 func V5LTE(v string) predicate.CasbinRule {
 	return predicate.CasbinRule(sql.FieldLTE(FieldV5, v))
 }
 
-// V5Contains applies the Contains predicate on the "V5" field.
+// V5Contains applies the Contains predicate on the "v5" field.
 func V5Contains(v string) predicate.CasbinRule {
 	return predicate.CasbinRule(sql.FieldContains(FieldV5, v))
 }
 
-// V5HasPrefix applies the HasPrefix predicate on the "V5" field.
+// V5HasPrefix applies the HasPrefix predicate on the "v5" field.
 func V5HasPrefix(v string) predicate.CasbinRule {
 	return predicate.CasbinRule(sql.FieldHasPrefix(FieldV5, v))
 }
 
-// V5HasSuffix applies the HasSuffix predicate on the "V5" field.
+// V5HasSuffix applies the HasSuffix predicate on the "v5" field.
 func V5HasSuffix(v string) predicate.CasbinRule {
 	return predicate.CasbinRule(sql.FieldHasSuffix(FieldV5, v))
 }
 
-// V5EqualFold applies the EqualFold predicate on the "V5" field.
+// V5EqualFold applies the EqualFold predicate on the "v5" field.
 func V5EqualFold(v string) predicate.CasbinRule {
 	return predicate.CasbinRule(sql.FieldEqualFold(FieldV5, v))
 }
 
-// V5ContainsFold applies the ContainsFold predicate on the "V5" field.
+// V5ContainsFold applies the ContainsFold predicate on the "v5" field.
 func V5ContainsFold(v string) predicate.CasbinRule {
 	return predicate.CasbinRule(sql.FieldContainsFold(FieldV5, v))
 }

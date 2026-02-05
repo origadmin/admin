@@ -22,6 +22,181 @@ const (
 	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
 )
 
+// FileStatus represents the status of a file upload.
+type FileStatus int32
+
+const (
+	// Unspecified status.
+	FileStatus_FILE_STATUS_UNSPECIFIED FileStatus = 0
+	// File upload is pending.
+	FileStatus_FILE_STATUS_PENDING FileStatus = 1
+	// File upload completed successfully.
+	FileStatus_FILE_STATUS_COMPLETED FileStatus = 2
+	// File upload failed.
+	FileStatus_FILE_STATUS_FAILED FileStatus = 3
+)
+
+// Enum value maps for FileStatus.
+var (
+	FileStatus_name = map[int32]string{
+		0: "FILE_STATUS_UNSPECIFIED",
+		1: "FILE_STATUS_PENDING",
+		2: "FILE_STATUS_COMPLETED",
+		3: "FILE_STATUS_FAILED",
+	}
+	FileStatus_value = map[string]int32{
+		"FILE_STATUS_UNSPECIFIED": 0,
+		"FILE_STATUS_PENDING":     1,
+		"FILE_STATUS_COMPLETED":   2,
+		"FILE_STATUS_FAILED":      3,
+	}
+)
+
+func (x FileStatus) Enum() *FileStatus {
+	p := new(FileStatus)
+	*p = x
+	return p
+}
+
+func (x FileStatus) String() string {
+	return protoimpl.X.EnumStringOf(x.Descriptor(), protoreflect.EnumNumber(x))
+}
+
+func (FileStatus) Descriptor() protoreflect.EnumDescriptor {
+	return file_types_datastore_proto_enumTypes[0].Descriptor()
+}
+
+func (FileStatus) Type() protoreflect.EnumType {
+	return &file_types_datastore_proto_enumTypes[0]
+}
+
+func (x FileStatus) Number() protoreflect.EnumNumber {
+	return protoreflect.EnumNumber(x)
+}
+
+// Deprecated: Use FileStatus.Descriptor instead.
+func (FileStatus) EnumDescriptor() ([]byte, []int) {
+	return file_types_datastore_proto_rawDescGZIP(), []int{0}
+}
+
+// File represents a stored file.
+type File struct {
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// The file ID.
+	Id int64 `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
+	// The file name.
+	Name string `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`
+	// The file URL for download.
+	Url string `protobuf:"bytes,3,opt,name=url,proto3" json:"url,omitempty"`
+	// The file content type (MIME type).
+	ContentType string `protobuf:"bytes,4,opt,name=content_type,proto3" json:"content_type,omitempty"`
+	// The file size in bytes.
+	Size int64 `protobuf:"varint,5,opt,name=size,proto3" json:"size,omitempty"`
+	// The storage path.
+	StoragePath string `protobuf:"bytes,6,opt,name=storage_path,proto3" json:"storage_path,omitempty"`
+	// The owner user ID.
+	CreatedBy int64 `protobuf:"varint,7,opt,name=created_by,proto3" json:"created_by,omitempty"`
+	// The creation time.
+	CreatedAt *timestamppb.Timestamp `protobuf:"bytes,8,opt,name=created_at,proto3" json:"created_at,omitempty"`
+	// Additional metadata.
+	Metadata      map[string]string `protobuf:"bytes,9,rep,name=metadata,proto3" json:"metadata,omitempty" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *File) Reset() {
+	*x = File{}
+	mi := &file_types_datastore_proto_msgTypes[0]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *File) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*File) ProtoMessage() {}
+
+func (x *File) ProtoReflect() protoreflect.Message {
+	mi := &file_types_datastore_proto_msgTypes[0]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use File.ProtoReflect.Descriptor instead.
+func (*File) Descriptor() ([]byte, []int) {
+	return file_types_datastore_proto_rawDescGZIP(), []int{0}
+}
+
+func (x *File) GetId() int64 {
+	if x != nil {
+		return x.Id
+	}
+	return 0
+}
+
+func (x *File) GetName() string {
+	if x != nil {
+		return x.Name
+	}
+	return ""
+}
+
+func (x *File) GetUrl() string {
+	if x != nil {
+		return x.Url
+	}
+	return ""
+}
+
+func (x *File) GetContentType() string {
+	if x != nil {
+		return x.ContentType
+	}
+	return ""
+}
+
+func (x *File) GetSize() int64 {
+	if x != nil {
+		return x.Size
+	}
+	return 0
+}
+
+func (x *File) GetStoragePath() string {
+	if x != nil {
+		return x.StoragePath
+	}
+	return ""
+}
+
+func (x *File) GetCreatedBy() int64 {
+	if x != nil {
+		return x.CreatedBy
+	}
+	return 0
+}
+
+func (x *File) GetCreatedAt() *timestamppb.Timestamp {
+	if x != nil {
+		return x.CreatedAt
+	}
+	return nil
+}
+
+func (x *File) GetMetadata() map[string]string {
+	if x != nil {
+		return x.Metadata
+	}
+	return nil
+}
+
 // DataObject is the model entity for the DataObject schema.
 type DataObject struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
@@ -47,7 +222,7 @@ type DataObject struct {
 
 func (x *DataObject) Reset() {
 	*x = DataObject{}
-	mi := &file_types_datastore_proto_msgTypes[0]
+	mi := &file_types_datastore_proto_msgTypes[1]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -59,7 +234,7 @@ func (x *DataObject) String() string {
 func (*DataObject) ProtoMessage() {}
 
 func (x *DataObject) ProtoReflect() protoreflect.Message {
-	mi := &file_types_datastore_proto_msgTypes[0]
+	mi := &file_types_datastore_proto_msgTypes[1]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -72,7 +247,7 @@ func (x *DataObject) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use DataObject.ProtoReflect.Descriptor instead.
 func (*DataObject) Descriptor() ([]byte, []int) {
-	return file_types_datastore_proto_rawDescGZIP(), []int{0}
+	return file_types_datastore_proto_rawDescGZIP(), []int{1}
 }
 
 func (x *DataObject) GetId() string {
@@ -135,7 +310,24 @@ var File_types_datastore_proto protoreflect.FileDescriptor
 
 const file_types_datastore_proto_rawDesc = "" +
 	"\n" +
-	"\x15types/datastore.proto\x12\x15api.v1.services.types\x1a\x1fgoogle/protobuf/timestamp.proto\"\xb0\x03\n" +
+	"\x15types/datastore.proto\x12\x15api.v1.services.types\x1a\x1fgoogle/protobuf/timestamp.proto\"\xf8\x02\n" +
+	"\x04File\x12\x0e\n" +
+	"\x02id\x18\x01 \x01(\x03R\x02id\x12\x12\n" +
+	"\x04name\x18\x02 \x01(\tR\x04name\x12\x10\n" +
+	"\x03url\x18\x03 \x01(\tR\x03url\x12\"\n" +
+	"\fcontent_type\x18\x04 \x01(\tR\fcontent_type\x12\x12\n" +
+	"\x04size\x18\x05 \x01(\x03R\x04size\x12\"\n" +
+	"\fstorage_path\x18\x06 \x01(\tR\fstorage_path\x12\x1e\n" +
+	"\n" +
+	"created_by\x18\a \x01(\x03R\n" +
+	"created_by\x12:\n" +
+	"\n" +
+	"created_at\x18\b \x01(\v2\x1a.google.protobuf.TimestampR\n" +
+	"created_at\x12E\n" +
+	"\bmetadata\x18\t \x03(\v2).api.v1.services.types.File.MetadataEntryR\bmetadata\x1a;\n" +
+	"\rMetadataEntry\x12\x10\n" +
+	"\x03key\x18\x01 \x01(\tR\x03key\x12\x14\n" +
+	"\x05value\x18\x02 \x01(\tR\x05value:\x028\x01\"\xb0\x03\n" +
 	"\n" +
 	"DataObject\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\tR\x02id\x12<\n" +
@@ -148,7 +340,13 @@ const file_types_datastore_proto_rawDesc = "" +
 	"\apayload\x18\b \x01(\fR\apayload\x1a;\n" +
 	"\rMetadataEntry\x12\x10\n" +
 	"\x03key\x18\x01 \x01(\tR\x03key\x12\x14\n" +
-	"\x05value\x18\x02 \x01(\tR\x05value:\x028\x01B\xdc\x01\n" +
+	"\x05value\x18\x02 \x01(\tR\x05value:\x028\x01*u\n" +
+	"\n" +
+	"FileStatus\x12\x1b\n" +
+	"\x17FILE_STATUS_UNSPECIFIED\x10\x00\x12\x17\n" +
+	"\x13FILE_STATUS_PENDING\x10\x01\x12\x19\n" +
+	"\x15FILE_STATUS_COMPLETED\x10\x02\x12\x16\n" +
+	"\x12FILE_STATUS_FAILED\x10\x03B\xdc\x01\n" +
 	"\x19com.api.v1.services.typesB\x0eDatastoreProtoP\x01Z7origadmin/application/admin/api/v1/services/types;types\xa2\x02\x04AVST\xaa\x02\x15Api.V1.Services.Types\xca\x02\x15Api\\V1\\Services\\Types\xe2\x02!Api\\V1\\Services\\Types\\GPBMetadata\xea\x02\x18Api::V1::Services::Typesb\x06proto3"
 
 var (
@@ -163,22 +361,28 @@ func file_types_datastore_proto_rawDescGZIP() []byte {
 	return file_types_datastore_proto_rawDescData
 }
 
-var file_types_datastore_proto_msgTypes = make([]protoimpl.MessageInfo, 2)
+var file_types_datastore_proto_enumTypes = make([]protoimpl.EnumInfo, 1)
+var file_types_datastore_proto_msgTypes = make([]protoimpl.MessageInfo, 4)
 var file_types_datastore_proto_goTypes = []any{
-	(*DataObject)(nil),            // 0: api.v1.services.types.DataObject
-	nil,                           // 1: api.v1.services.types.DataObject.MetadataEntry
-	(*timestamppb.Timestamp)(nil), // 2: google.protobuf.Timestamp
+	(FileStatus)(0),               // 0: api.v1.services.types.FileStatus
+	(*File)(nil),                  // 1: api.v1.services.types.File
+	(*DataObject)(nil),            // 2: api.v1.services.types.DataObject
+	nil,                           // 3: api.v1.services.types.File.MetadataEntry
+	nil,                           // 4: api.v1.services.types.DataObject.MetadataEntry
+	(*timestamppb.Timestamp)(nil), // 5: google.protobuf.Timestamp
 }
 var file_types_datastore_proto_depIdxs = []int32{
-	2, // 0: api.v1.services.types.DataObject.create_time:type_name -> google.protobuf.Timestamp
-	2, // 1: api.v1.services.types.DataObject.update_time:type_name -> google.protobuf.Timestamp
-	2, // 2: api.v1.services.types.DataObject.delete_time:type_name -> google.protobuf.Timestamp
-	1, // 3: api.v1.services.types.DataObject.metadata:type_name -> api.v1.services.types.DataObject.MetadataEntry
-	4, // [4:4] is the sub-list for method output_type
-	4, // [4:4] is the sub-list for method input_type
-	4, // [4:4] is the sub-list for extension type_name
-	4, // [4:4] is the sub-list for extension extendee
-	0, // [0:4] is the sub-list for field type_name
+	5, // 0: api.v1.services.types.File.created_at:type_name -> google.protobuf.Timestamp
+	3, // 1: api.v1.services.types.File.metadata:type_name -> api.v1.services.types.File.MetadataEntry
+	5, // 2: api.v1.services.types.DataObject.create_time:type_name -> google.protobuf.Timestamp
+	5, // 3: api.v1.services.types.DataObject.update_time:type_name -> google.protobuf.Timestamp
+	5, // 4: api.v1.services.types.DataObject.delete_time:type_name -> google.protobuf.Timestamp
+	4, // 5: api.v1.services.types.DataObject.metadata:type_name -> api.v1.services.types.DataObject.MetadataEntry
+	6, // [6:6] is the sub-list for method output_type
+	6, // [6:6] is the sub-list for method input_type
+	6, // [6:6] is the sub-list for extension type_name
+	6, // [6:6] is the sub-list for extension extendee
+	0, // [0:6] is the sub-list for field type_name
 }
 
 func init() { file_types_datastore_proto_init() }
@@ -191,13 +395,14 @@ func file_types_datastore_proto_init() {
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_types_datastore_proto_rawDesc), len(file_types_datastore_proto_rawDesc)),
-			NumEnums:      0,
-			NumMessages:   2,
+			NumEnums:      1,
+			NumMessages:   4,
 			NumExtensions: 0,
 			NumServices:   0,
 		},
 		GoTypes:           file_types_datastore_proto_goTypes,
 		DependencyIndexes: file_types_datastore_proto_depIdxs,
+		EnumInfos:         file_types_datastore_proto_enumTypes,
 		MessageInfos:      file_types_datastore_proto_msgTypes,
 	}.Build()
 	File_types_datastore_proto = out.File

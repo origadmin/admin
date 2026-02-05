@@ -265,7 +265,7 @@ func (_q *CasbinRuleQuery) Clone() *CasbinRuleQuery {
 // Example:
 //
 //	var v []struct {
-//		Ptype string `json:"Ptype,omitempty"`
+//		Ptype string `json:"ptype,omitempty"`
 //		Count int `json:"count,omitempty"`
 //	}
 //
@@ -288,7 +288,7 @@ func (_q *CasbinRuleQuery) GroupBy(field string, fields ...string) *CasbinRuleGr
 // Example:
 //
 //	var v []struct {
-//		Ptype string `json:"Ptype,omitempty"`
+//		Ptype string `json:"ptype,omitempty"`
 //	}
 //
 //	client.CasbinRule.Query().
@@ -486,13 +486,13 @@ func (_q *CasbinRuleQuery) Modify(modifiers ...func(s *sql.Selector)) *CasbinRul
 // Example:
 //
 //	var v []struct {
-//	  Ptype string `json:"Ptype,omitempty"`
-//	  V0 string `json:"V0,omitempty"`
-//	  V1 string `json:"V1,omitempty"`
-//	  V2 string `json:"V2,omitempty"`
-//	  V3 string `json:"V3,omitempty"`
-//	  V4 string `json:"V4,omitempty"`
-//	  V5 string `json:"V5,omitempty"`
+//	  Ptype string `json:"ptype,omitempty"`
+//	  V0 string `json:"v0,omitempty"`
+//	  V1 string `json:"v1,omitempty"`
+//	  V2 string `json:"v2,omitempty"`
+//	  V3 string `json:"v3,omitempty"`
+//	  V4 string `json:"v4,omitempty"`
+//	  V5 string `json:"v5,omitempty"`
 //	}
 //
 //	client.CasbinRule.Query().

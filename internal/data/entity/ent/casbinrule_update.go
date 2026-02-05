@@ -28,13 +28,13 @@ func (_u *CasbinRuleUpdate) Where(ps ...predicate.CasbinRule) *CasbinRuleUpdate 
 	return _u
 }
 
-// SetPtype sets the "Ptype" field.
+// SetPtype sets the "ptype" field.
 func (_u *CasbinRuleUpdate) SetPtype(v string) *CasbinRuleUpdate {
 	_u.mutation.SetPtype(v)
 	return _u
 }
 
-// SetNillablePtype sets the "Ptype" field if the given value is not nil.
+// SetNillablePtype sets the "ptype" field if the given value is not nil.
 func (_u *CasbinRuleUpdate) SetNillablePtype(v *string) *CasbinRuleUpdate {
 	if v != nil {
 		_u.SetPtype(*v)
@@ -42,13 +42,13 @@ func (_u *CasbinRuleUpdate) SetNillablePtype(v *string) *CasbinRuleUpdate {
 	return _u
 }
 
-// SetV0 sets the "V0" field.
+// SetV0 sets the "v0" field.
 func (_u *CasbinRuleUpdate) SetV0(v string) *CasbinRuleUpdate {
 	_u.mutation.SetV0(v)
 	return _u
 }
 
-// SetNillableV0 sets the "V0" field if the given value is not nil.
+// SetNillableV0 sets the "v0" field if the given value is not nil.
 func (_u *CasbinRuleUpdate) SetNillableV0(v *string) *CasbinRuleUpdate {
 	if v != nil {
 		_u.SetV0(*v)
@@ -56,13 +56,13 @@ func (_u *CasbinRuleUpdate) SetNillableV0(v *string) *CasbinRuleUpdate {
 	return _u
 }
 
-// SetV1 sets the "V1" field.
+// SetV1 sets the "v1" field.
 func (_u *CasbinRuleUpdate) SetV1(v string) *CasbinRuleUpdate {
 	_u.mutation.SetV1(v)
 	return _u
 }
 
-// SetNillableV1 sets the "V1" field if the given value is not nil.
+// SetNillableV1 sets the "v1" field if the given value is not nil.
 func (_u *CasbinRuleUpdate) SetNillableV1(v *string) *CasbinRuleUpdate {
 	if v != nil {
 		_u.SetV1(*v)
@@ -70,13 +70,13 @@ func (_u *CasbinRuleUpdate) SetNillableV1(v *string) *CasbinRuleUpdate {
 	return _u
 }
 
-// SetV2 sets the "V2" field.
+// SetV2 sets the "v2" field.
 func (_u *CasbinRuleUpdate) SetV2(v string) *CasbinRuleUpdate {
 	_u.mutation.SetV2(v)
 	return _u
 }
 
-// SetNillableV2 sets the "V2" field if the given value is not nil.
+// SetNillableV2 sets the "v2" field if the given value is not nil.
 func (_u *CasbinRuleUpdate) SetNillableV2(v *string) *CasbinRuleUpdate {
 	if v != nil {
 		_u.SetV2(*v)
@@ -84,13 +84,13 @@ func (_u *CasbinRuleUpdate) SetNillableV2(v *string) *CasbinRuleUpdate {
 	return _u
 }
 
-// SetV3 sets the "V3" field.
+// SetV3 sets the "v3" field.
 func (_u *CasbinRuleUpdate) SetV3(v string) *CasbinRuleUpdate {
 	_u.mutation.SetV3(v)
 	return _u
 }
 
-// SetNillableV3 sets the "V3" field if the given value is not nil.
+// SetNillableV3 sets the "v3" field if the given value is not nil.
 func (_u *CasbinRuleUpdate) SetNillableV3(v *string) *CasbinRuleUpdate {
 	if v != nil {
 		_u.SetV3(*v)
@@ -98,13 +98,13 @@ func (_u *CasbinRuleUpdate) SetNillableV3(v *string) *CasbinRuleUpdate {
 	return _u
 }
 
-// SetV4 sets the "V4" field.
+// SetV4 sets the "v4" field.
 func (_u *CasbinRuleUpdate) SetV4(v string) *CasbinRuleUpdate {
 	_u.mutation.SetV4(v)
 	return _u
 }
 
-// SetNillableV4 sets the "V4" field if the given value is not nil.
+// SetNillableV4 sets the "v4" field if the given value is not nil.
 func (_u *CasbinRuleUpdate) SetNillableV4(v *string) *CasbinRuleUpdate {
 	if v != nil {
 		_u.SetV4(*v)
@@ -112,13 +112,13 @@ func (_u *CasbinRuleUpdate) SetNillableV4(v *string) *CasbinRuleUpdate {
 	return _u
 }
 
-// SetV5 sets the "V5" field.
+// SetV5 sets the "v5" field.
 func (_u *CasbinRuleUpdate) SetV5(v string) *CasbinRuleUpdate {
 	_u.mutation.SetV5(v)
 	return _u
 }
 
-// SetNillableV5 sets the "V5" field if the given value is not nil.
+// SetNillableV5 sets the "v5" field if the given value is not nil.
 func (_u *CasbinRuleUpdate) SetNillableV5(v *string) *CasbinRuleUpdate {
 	if v != nil {
 		_u.SetV5(*v)
@@ -216,13 +216,13 @@ type CasbinRuleUpdateOne struct {
 	modifiers []func(*sql.UpdateBuilder)
 }
 
-// SetPtype sets the "Ptype" field.
+// SetPtype sets the "ptype" field.
 func (_u *CasbinRuleUpdateOne) SetPtype(v string) *CasbinRuleUpdateOne {
 	_u.mutation.SetPtype(v)
 	return _u
 }
 
-// SetNillablePtype sets the "Ptype" field if the given value is not nil.
+// SetNillablePtype sets the "ptype" field if the given value is not nil.
 func (_u *CasbinRuleUpdateOne) SetNillablePtype(v *string) *CasbinRuleUpdateOne {
 	if v != nil {
 		_u.SetPtype(*v)
@@ -230,13 +230,13 @@ func (_u *CasbinRuleUpdateOne) SetNillablePtype(v *string) *CasbinRuleUpdateOne 
 	return _u
 }
 
-// SetV0 sets the "V0" field.
+// SetV0 sets the "v0" field.
 func (_u *CasbinRuleUpdateOne) SetV0(v string) *CasbinRuleUpdateOne {
 	_u.mutation.SetV0(v)
 	return _u
 }
 
-// SetNillableV0 sets the "V0" field if the given value is not nil.
+// SetNillableV0 sets the "v0" field if the given value is not nil.
 func (_u *CasbinRuleUpdateOne) SetNillableV0(v *string) *CasbinRuleUpdateOne {
 	if v != nil {
 		_u.SetV0(*v)
@@ -244,13 +244,13 @@ func (_u *CasbinRuleUpdateOne) SetNillableV0(v *string) *CasbinRuleUpdateOne {
 	return _u
 }
 
-// SetV1 sets the "V1" field.
+// SetV1 sets the "v1" field.
 func (_u *CasbinRuleUpdateOne) SetV1(v string) *CasbinRuleUpdateOne {
 	_u.mutation.SetV1(v)
 	return _u
 }
 
-// SetNillableV1 sets the "V1" field if the given value is not nil.
+// SetNillableV1 sets the "v1" field if the given value is not nil.
 func (_u *CasbinRuleUpdateOne) SetNillableV1(v *string) *CasbinRuleUpdateOne {
 	if v != nil {
 		_u.SetV1(*v)
@@ -258,13 +258,13 @@ func (_u *CasbinRuleUpdateOne) SetNillableV1(v *string) *CasbinRuleUpdateOne {
 	return _u
 }
 
-// SetV2 sets the "V2" field.
+// SetV2 sets the "v2" field.
 func (_u *CasbinRuleUpdateOne) SetV2(v string) *CasbinRuleUpdateOne {
 	_u.mutation.SetV2(v)
 	return _u
 }
 
-// SetNillableV2 sets the "V2" field if the given value is not nil.
+// SetNillableV2 sets the "v2" field if the given value is not nil.
 func (_u *CasbinRuleUpdateOne) SetNillableV2(v *string) *CasbinRuleUpdateOne {
 	if v != nil {
 		_u.SetV2(*v)
@@ -272,13 +272,13 @@ func (_u *CasbinRuleUpdateOne) SetNillableV2(v *string) *CasbinRuleUpdateOne {
 	return _u
 }
 
-// SetV3 sets the "V3" field.
+// SetV3 sets the "v3" field.
 func (_u *CasbinRuleUpdateOne) SetV3(v string) *CasbinRuleUpdateOne {
 	_u.mutation.SetV3(v)
 	return _u
 }
 
-// SetNillableV3 sets the "V3" field if the given value is not nil.
+// SetNillableV3 sets the "v3" field if the given value is not nil.
 func (_u *CasbinRuleUpdateOne) SetNillableV3(v *string) *CasbinRuleUpdateOne {
 	if v != nil {
 		_u.SetV3(*v)
@@ -286,13 +286,13 @@ func (_u *CasbinRuleUpdateOne) SetNillableV3(v *string) *CasbinRuleUpdateOne {
 	return _u
 }
 
-// SetV4 sets the "V4" field.
+// SetV4 sets the "v4" field.
 func (_u *CasbinRuleUpdateOne) SetV4(v string) *CasbinRuleUpdateOne {
 	_u.mutation.SetV4(v)
 	return _u
 }
 
-// SetNillableV4 sets the "V4" field if the given value is not nil.
+// SetNillableV4 sets the "v4" field if the given value is not nil.
 func (_u *CasbinRuleUpdateOne) SetNillableV4(v *string) *CasbinRuleUpdateOne {
 	if v != nil {
 		_u.SetV4(*v)
@@ -300,13 +300,13 @@ func (_u *CasbinRuleUpdateOne) SetNillableV4(v *string) *CasbinRuleUpdateOne {
 	return _u
 }
 
-// SetV5 sets the "V5" field.
+// SetV5 sets the "v5" field.
 func (_u *CasbinRuleUpdateOne) SetV5(v string) *CasbinRuleUpdateOne {
 	_u.mutation.SetV5(v)
 	return _u
 }
 
-// SetNillableV5 sets the "V5" field if the given value is not nil.
+// SetNillableV5 sets the "v5" field if the given value is not nil.
 func (_u *CasbinRuleUpdateOne) SetNillableV5(v *string) *CasbinRuleUpdateOne {
 	if v != nil {
 		_u.SetV5(*v)

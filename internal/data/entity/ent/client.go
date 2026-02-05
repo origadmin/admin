@@ -13,7 +13,7 @@ import (
 
 	"origadmin/application/admin/internal/data/entity/ent/casbinrule"
 	"origadmin/application/admin/internal/data/entity/ent/department"
-	"origadmin/application/admin/internal/data/entity/ent/notification"
+	"origadmin/application/admin/internal/data/entity/ent/message"
 	"origadmin/application/admin/internal/data/entity/ent/permission"
 	"origadmin/application/admin/internal/data/entity/ent/permissionresource"
 	"origadmin/application/admin/internal/data/entity/ent/position"
@@ -44,8 +44,8 @@ type Client struct {
 	CasbinRule *CasbinRuleClient
 	// Department is the client for interacting with the Department builders.
 	Department *DepartmentClient
-	// Notification is the client for interacting with the Notification builders.
-	Notification *NotificationClient
+	// Message is the client for interacting with the Message builders.
+	Message *MessageClient
 	// Permission is the client for interacting with the Permission builders.
 	Permission *PermissionClient
 	// PermissionResource is the client for interacting with the PermissionResource builders.
@@ -87,7 +87,7 @@ func (c *Client) init() {
 	c.Schema = migrate.NewSchema(c.driver)
 	c.CasbinRule = NewCasbinRuleClient(c.config)
 	c.Department = NewDepartmentClient(c.config)
-	c.Notification = NewNotificationClient(c.config)
+	c.Message = NewMessageClient(c.config)
 	c.Permission = NewPermissionClient(c.config)
 	c.PermissionResource = NewPermissionResourceClient(c.config)
 	c.Position = NewPositionClient(c.config)
@@ -196,7 +196,7 @@ func (c *Client) Tx(ctx context.Context) (*Tx, error) {
 		config:             cfg,
 		CasbinRule:         NewCasbinRuleClient(cfg),
 		Department:         NewDepartmentClient(cfg),
-		Notification:       NewNotificationClient(cfg),
+		Message:            NewMessageClient(cfg),
 		Permission:         NewPermissionClient(cfg),
 		PermissionResource: NewPermissionResourceClient(cfg),
 		Position:           NewPositionClient(cfg),
@@ -232,7 +232,7 @@ func (c *Client) BeginTx(ctx context.Context, opts *sql.TxOptions) (*Tx, error) 
 		config:             cfg,
 		CasbinRule:         NewCasbinRuleClient(cfg),
 		Department:         NewDepartmentClient(cfg),
-		Notification:       NewNotificationClient(cfg),
+		Message:            NewMessageClient(cfg),
 		Permission:         NewPermissionClient(cfg),
 		PermissionResource: NewPermissionResourceClient(cfg),
 		Position:           NewPositionClient(cfg),
@@ -276,7 +276,7 @@ func (c *Client) Close() error {
 // In order to add hooks to a specific client, call: `client.Node.Use(...)`.
 func (c *Client) Use(hooks ...Hook) {
 	for _, n := range []interface{ Use(...Hook) }{
-		c.CasbinRule, c.Department, c.Notification, c.Permission, c.PermissionResource,
+		c.CasbinRule, c.Department, c.Message, c.Permission, c.PermissionResource,
 		c.Position, c.PositionPermission, c.Resource, c.Role, c.RolePermission, c.User,
 		c.UserDepartment, c.UserPosition, c.UserRole, c.View, c.ViewPermission,
 		c.ViewResource,
@@ -289,7 +289,7 @@ func (c *Client) Use(hooks ...Hook) {
 // In order to add interceptors to a specific client, call: `client.Node.Intercept(...)`.
 func (c *Client) Intercept(interceptors ...Interceptor) {
 	for _, n := range []interface{ Intercept(...Interceptor) }{
-		c.CasbinRule, c.Department, c.Notification, c.Permission, c.PermissionResource,
+		c.CasbinRule, c.Department, c.Message, c.Permission, c.PermissionResource,
 		c.Position, c.PositionPermission, c.Resource, c.Role, c.RolePermission, c.User,
 		c.UserDepartment, c.UserPosition, c.UserRole, c.View, c.ViewPermission,
 		c.ViewResource,
@@ -305,8 +305,8 @@ func (c *Client) Mutate(ctx context.Context, m Mutation) (Value, error) {
 		return c.CasbinRule.mutate(ctx, m)
 	case *DepartmentMutation:
 		return c.Department.mutate(ctx, m)
-	case *NotificationMutation:
-		return c.Notification.mutate(ctx, m)
+	case *MessageMutation:
+		return c.Message.mutate(ctx, m)
 	case *PermissionMutation:
 		return c.Permission.mutate(ctx, m)
 	case *PermissionResourceMutation:
@@ -686,107 +686,107 @@ func (c *DepartmentClient) mutate(ctx context.Context, m *DepartmentMutation) (V
 	}
 }
 
-// NotificationClient is a client for the Notification schema.
-type NotificationClient struct {
+// MessageClient is a client for the Message schema.
+type MessageClient struct {
 	config
 }
 
-// NewNotificationClient returns a client for the Notification from the given config.
-func NewNotificationClient(c config) *NotificationClient {
-	return &NotificationClient{config: c}
+// NewMessageClient returns a client for the Message from the given config.
+func NewMessageClient(c config) *MessageClient {
+	return &MessageClient{config: c}
 }
 
 // Use adds a list of mutation hooks to the hooks stack.
-// A call to `Use(f, g, h)` equals to `notification.Hooks(f(g(h())))`.
-func (c *NotificationClient) Use(hooks ...Hook) {
-	c.hooks.Notification = append(c.hooks.Notification, hooks...)
+// A call to `Use(f, g, h)` equals to `message.Hooks(f(g(h())))`.
+func (c *MessageClient) Use(hooks ...Hook) {
+	c.hooks.Message = append(c.hooks.Message, hooks...)
 }
 
 // Intercept adds a list of query interceptors to the interceptors stack.
-// A call to `Intercept(f, g, h)` equals to `notification.Intercept(f(g(h())))`.
-func (c *NotificationClient) Intercept(interceptors ...Interceptor) {
-	c.inters.Notification = append(c.inters.Notification, interceptors...)
+// A call to `Intercept(f, g, h)` equals to `message.Intercept(f(g(h())))`.
+func (c *MessageClient) Intercept(interceptors ...Interceptor) {
+	c.inters.Message = append(c.inters.Message, interceptors...)
 }
 
-// Create returns a builder for creating a Notification entity.
-func (c *NotificationClient) Create() *NotificationCreate {
-	mutation := newNotificationMutation(c.config, OpCreate)
-	return &NotificationCreate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+// Create returns a builder for creating a Message entity.
+func (c *MessageClient) Create() *MessageCreate {
+	mutation := newMessageMutation(c.config, OpCreate)
+	return &MessageCreate{config: c.config, hooks: c.Hooks(), mutation: mutation}
 }
 
-// CreateBulk returns a builder for creating a bulk of Notification entities.
-func (c *NotificationClient) CreateBulk(builders ...*NotificationCreate) *NotificationCreateBulk {
-	return &NotificationCreateBulk{config: c.config, builders: builders}
+// CreateBulk returns a builder for creating a bulk of Message entities.
+func (c *MessageClient) CreateBulk(builders ...*MessageCreate) *MessageCreateBulk {
+	return &MessageCreateBulk{config: c.config, builders: builders}
 }
 
 // MapCreateBulk creates a bulk creation builder from the given slice. For each item in the slice, the function creates
 // a builder and applies setFunc on it.
-func (c *NotificationClient) MapCreateBulk(slice any, setFunc func(*NotificationCreate, int)) *NotificationCreateBulk {
+func (c *MessageClient) MapCreateBulk(slice any, setFunc func(*MessageCreate, int)) *MessageCreateBulk {
 	rv := reflect.ValueOf(slice)
 	if rv.Kind() != reflect.Slice {
-		return &NotificationCreateBulk{err: fmt.Errorf("calling to NotificationClient.MapCreateBulk with wrong type %T, need slice", slice)}
+		return &MessageCreateBulk{err: fmt.Errorf("calling to MessageClient.MapCreateBulk with wrong type %T, need slice", slice)}
 	}
-	builders := make([]*NotificationCreate, rv.Len())
+	builders := make([]*MessageCreate, rv.Len())
 	for i := 0; i < rv.Len(); i++ {
 		builders[i] = c.Create()
 		setFunc(builders[i], i)
 	}
-	return &NotificationCreateBulk{config: c.config, builders: builders}
+	return &MessageCreateBulk{config: c.config, builders: builders}
 }
 
-// Update returns an update builder for Notification.
-func (c *NotificationClient) Update() *NotificationUpdate {
-	mutation := newNotificationMutation(c.config, OpUpdate)
-	return &NotificationUpdate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+// Update returns an update builder for Message.
+func (c *MessageClient) Update() *MessageUpdate {
+	mutation := newMessageMutation(c.config, OpUpdate)
+	return &MessageUpdate{config: c.config, hooks: c.Hooks(), mutation: mutation}
 }
 
 // UpdateOne returns an update builder for the given entity.
-func (c *NotificationClient) UpdateOne(_m *Notification) *NotificationUpdateOne {
-	mutation := newNotificationMutation(c.config, OpUpdateOne, withNotification(_m))
-	return &NotificationUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+func (c *MessageClient) UpdateOne(_m *Message) *MessageUpdateOne {
+	mutation := newMessageMutation(c.config, OpUpdateOne, withMessage(_m))
+	return &MessageUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
 }
 
 // UpdateOneID returns an update builder for the given id.
-func (c *NotificationClient) UpdateOneID(id int64) *NotificationUpdateOne {
-	mutation := newNotificationMutation(c.config, OpUpdateOne, withNotificationID(id))
-	return &NotificationUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+func (c *MessageClient) UpdateOneID(id int64) *MessageUpdateOne {
+	mutation := newMessageMutation(c.config, OpUpdateOne, withMessageID(id))
+	return &MessageUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
 }
 
-// Delete returns a delete builder for Notification.
-func (c *NotificationClient) Delete() *NotificationDelete {
-	mutation := newNotificationMutation(c.config, OpDelete)
-	return &NotificationDelete{config: c.config, hooks: c.Hooks(), mutation: mutation}
+// Delete returns a delete builder for Message.
+func (c *MessageClient) Delete() *MessageDelete {
+	mutation := newMessageMutation(c.config, OpDelete)
+	return &MessageDelete{config: c.config, hooks: c.Hooks(), mutation: mutation}
 }
 
 // DeleteOne returns a builder for deleting the given entity.
-func (c *NotificationClient) DeleteOne(_m *Notification) *NotificationDeleteOne {
+func (c *MessageClient) DeleteOne(_m *Message) *MessageDeleteOne {
 	return c.DeleteOneID(_m.ID)
 }
 
 // DeleteOneID returns a builder for deleting the given entity by its id.
-func (c *NotificationClient) DeleteOneID(id int64) *NotificationDeleteOne {
-	builder := c.Delete().Where(notification.ID(id))
+func (c *MessageClient) DeleteOneID(id int64) *MessageDeleteOne {
+	builder := c.Delete().Where(message.ID(id))
 	builder.mutation.id = &id
 	builder.mutation.op = OpDeleteOne
-	return &NotificationDeleteOne{builder}
+	return &MessageDeleteOne{builder}
 }
 
-// Query returns a query builder for Notification.
-func (c *NotificationClient) Query() *NotificationQuery {
-	return &NotificationQuery{
+// Query returns a query builder for Message.
+func (c *MessageClient) Query() *MessageQuery {
+	return &MessageQuery{
 		config: c.config,
-		ctx:    &QueryContext{Type: TypeNotification},
+		ctx:    &QueryContext{Type: TypeMessage},
 		inters: c.Interceptors(),
 	}
 }
 
-// Get returns a Notification entity by its id.
-func (c *NotificationClient) Get(ctx context.Context, id int64) (*Notification, error) {
-	return c.Query().Where(notification.ID(id)).Only(ctx)
+// Get returns a Message entity by its id.
+func (c *MessageClient) Get(ctx context.Context, id int64) (*Message, error) {
+	return c.Query().Where(message.ID(id)).Only(ctx)
 }
 
 // GetX is like Get, but panics if an error occurs.
-func (c *NotificationClient) GetX(ctx context.Context, id int64) *Notification {
+func (c *MessageClient) GetX(ctx context.Context, id int64) *Message {
 	obj, err := c.Get(ctx, id)
 	if err != nil {
 		panic(err)
@@ -795,28 +795,28 @@ func (c *NotificationClient) GetX(ctx context.Context, id int64) *Notification {
 }
 
 // Hooks returns the client hooks.
-func (c *NotificationClient) Hooks() []Hook {
-	hooks := c.hooks.Notification
-	return append(hooks[:len(hooks):len(hooks)], notification.Hooks[:]...)
+func (c *MessageClient) Hooks() []Hook {
+	hooks := c.hooks.Message
+	return append(hooks[:len(hooks):len(hooks)], message.Hooks[:]...)
 }
 
 // Interceptors returns the client interceptors.
-func (c *NotificationClient) Interceptors() []Interceptor {
-	return c.inters.Notification
+func (c *MessageClient) Interceptors() []Interceptor {
+	return c.inters.Message
 }
 
-func (c *NotificationClient) mutate(ctx context.Context, m *NotificationMutation) (Value, error) {
+func (c *MessageClient) mutate(ctx context.Context, m *MessageMutation) (Value, error) {
 	switch m.Op() {
 	case OpCreate:
-		return (&NotificationCreate{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+		return (&MessageCreate{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
 	case OpUpdate:
-		return (&NotificationUpdate{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+		return (&MessageUpdate{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
 	case OpUpdateOne:
-		return (&NotificationUpdateOne{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+		return (&MessageUpdateOne{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
 	case OpDelete, OpDeleteOne:
-		return (&NotificationDelete{config: c.config, hooks: c.Hooks(), mutation: m}).Exec(ctx)
+		return (&MessageDelete{config: c.config, hooks: c.Hooks(), mutation: m}).Exec(ctx)
 	default:
-		return nil, fmt.Errorf("ent: unknown Notification mutation op: %q", m.Op())
+		return nil, fmt.Errorf("ent: unknown Message mutation op: %q", m.Op())
 	}
 }
 
@@ -3503,12 +3503,12 @@ func (c *ViewResourceClient) mutate(ctx context.Context, m *ViewResourceMutation
 // hooks and interceptors per client, for fast access.
 type (
 	hooks struct {
-		CasbinRule, Department, Notification, Permission, PermissionResource, Position,
+		CasbinRule, Department, Message, Permission, PermissionResource, Position,
 		PositionPermission, Resource, Role, RolePermission, User, UserDepartment,
 		UserPosition, UserRole, View, ViewPermission, ViewResource []ent.Hook
 	}
 	inters struct {
-		CasbinRule, Department, Notification, Permission, PermissionResource, Position,
+		CasbinRule, Department, Message, Permission, PermissionResource, Position,
 		PositionPermission, Resource, Role, RolePermission, User, UserDepartment,
 		UserPosition, UserRole, View, ViewPermission, ViewResource []ent.Interceptor
 	}

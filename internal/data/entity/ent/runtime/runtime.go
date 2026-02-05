@@ -5,7 +5,7 @@ package runtime
 import (
 	"origadmin/application/admin/internal/data/entity/ent/casbinrule"
 	"origadmin/application/admin/internal/data/entity/ent/department"
-	"origadmin/application/admin/internal/data/entity/ent/notification"
+	"origadmin/application/admin/internal/data/entity/ent/message"
 	"origadmin/application/admin/internal/data/entity/ent/permission"
 	"origadmin/application/admin/internal/data/entity/ent/permissionresource"
 	"origadmin/application/admin/internal/data/entity/ent/position"
@@ -31,33 +31,33 @@ import (
 func init() {
 	casbinruleFields := schema.CasbinRule{}.Fields()
 	_ = casbinruleFields
-	// casbinruleDescPtype is the schema descriptor for Ptype field.
+	// casbinruleDescPtype is the schema descriptor for ptype field.
 	casbinruleDescPtype := casbinruleFields[0].Descriptor()
-	// casbinrule.DefaultPtype holds the default value on creation for the Ptype field.
+	// casbinrule.DefaultPtype holds the default value on creation for the ptype field.
 	casbinrule.DefaultPtype = casbinruleDescPtype.Default.(string)
-	// casbinruleDescV0 is the schema descriptor for V0 field.
+	// casbinruleDescV0 is the schema descriptor for v0 field.
 	casbinruleDescV0 := casbinruleFields[1].Descriptor()
-	// casbinrule.DefaultV0 holds the default value on creation for the V0 field.
+	// casbinrule.DefaultV0 holds the default value on creation for the v0 field.
 	casbinrule.DefaultV0 = casbinruleDescV0.Default.(string)
-	// casbinruleDescV1 is the schema descriptor for V1 field.
+	// casbinruleDescV1 is the schema descriptor for v1 field.
 	casbinruleDescV1 := casbinruleFields[2].Descriptor()
-	// casbinrule.DefaultV1 holds the default value on creation for the V1 field.
+	// casbinrule.DefaultV1 holds the default value on creation for the v1 field.
 	casbinrule.DefaultV1 = casbinruleDescV1.Default.(string)
-	// casbinruleDescV2 is the schema descriptor for V2 field.
+	// casbinruleDescV2 is the schema descriptor for v2 field.
 	casbinruleDescV2 := casbinruleFields[3].Descriptor()
-	// casbinrule.DefaultV2 holds the default value on creation for the V2 field.
+	// casbinrule.DefaultV2 holds the default value on creation for the v2 field.
 	casbinrule.DefaultV2 = casbinruleDescV2.Default.(string)
-	// casbinruleDescV3 is the schema descriptor for V3 field.
+	// casbinruleDescV3 is the schema descriptor for v3 field.
 	casbinruleDescV3 := casbinruleFields[4].Descriptor()
-	// casbinrule.DefaultV3 holds the default value on creation for the V3 field.
+	// casbinrule.DefaultV3 holds the default value on creation for the v3 field.
 	casbinrule.DefaultV3 = casbinruleDescV3.Default.(string)
-	// casbinruleDescV4 is the schema descriptor for V4 field.
+	// casbinruleDescV4 is the schema descriptor for v4 field.
 	casbinruleDescV4 := casbinruleFields[5].Descriptor()
-	// casbinrule.DefaultV4 holds the default value on creation for the V4 field.
+	// casbinrule.DefaultV4 holds the default value on creation for the v4 field.
 	casbinrule.DefaultV4 = casbinruleDescV4.Default.(string)
-	// casbinruleDescV5 is the schema descriptor for V5 field.
+	// casbinruleDescV5 is the schema descriptor for v5 field.
 	casbinruleDescV5 := casbinruleFields[6].Descriptor()
-	// casbinrule.DefaultV5 holds the default value on creation for the V5 field.
+	// casbinrule.DefaultV5 holds the default value on creation for the v5 field.
 	casbinrule.DefaultV5 = casbinruleDescV5.Default.(string)
 	departmentMixin := schema.Department{}.Mixin()
 	departmentMixinFields0 := departmentMixin[0].Fields()
@@ -114,59 +114,59 @@ func init() {
 	department.DefaultID = departmentDescID.Default.(func() int64)
 	// department.IDValidator is a validator for the "id" field. It is called by the builders before save.
 	department.IDValidator = departmentDescID.Validators[0].(func(int64) error)
-	notificationMixin := schema.Notification{}.Mixin()
-	notificationMixinHooks1 := notificationMixin[1].Hooks()
-	notification.Hooks[0] = notificationMixinHooks1[0]
-	notificationMixinFields0 := notificationMixin[0].Fields()
-	_ = notificationMixinFields0
-	notificationMixinFields1 := notificationMixin[1].Fields()
-	_ = notificationMixinFields1
-	notificationMixinFields2 := notificationMixin[2].Fields()
-	_ = notificationMixinFields2
-	notificationMixinFields3 := notificationMixin[3].Fields()
-	_ = notificationMixinFields3
-	notificationFields := schema.Notification{}.Fields()
-	_ = notificationFields
-	// notificationDescCreateAuthor is the schema descriptor for create_author field.
-	notificationDescCreateAuthor := notificationMixinFields1[0].Descriptor()
-	// notification.DefaultCreateAuthor holds the default value on creation for the create_author field.
-	notification.DefaultCreateAuthor = notificationDescCreateAuthor.Default.(int64)
-	// notificationDescUpdateAuthor is the schema descriptor for update_author field.
-	notificationDescUpdateAuthor := notificationMixinFields1[1].Descriptor()
-	// notification.DefaultUpdateAuthor holds the default value on creation for the update_author field.
-	notification.DefaultUpdateAuthor = notificationDescUpdateAuthor.Default.(int64)
-	// notificationDescCreateTime is the schema descriptor for create_time field.
-	notificationDescCreateTime := notificationMixinFields2[0].Descriptor()
-	// notification.DefaultCreateTime holds the default value on creation for the create_time field.
-	notification.DefaultCreateTime = notificationDescCreateTime.Default.(func() time.Time)
-	// notificationDescUpdateTime is the schema descriptor for update_time field.
-	notificationDescUpdateTime := notificationMixinFields3[0].Descriptor()
-	// notification.DefaultUpdateTime holds the default value on creation for the update_time field.
-	notification.DefaultUpdateTime = notificationDescUpdateTime.Default.(func() time.Time)
-	// notification.UpdateDefaultUpdateTime holds the default value on update for the update_time field.
-	notification.UpdateDefaultUpdateTime = notificationDescUpdateTime.UpdateDefault.(func() time.Time)
-	// notificationDescSubject is the schema descriptor for subject field.
-	notificationDescSubject := notificationFields[0].Descriptor()
-	// notification.DefaultSubject holds the default value on creation for the subject field.
-	notification.DefaultSubject = notificationDescSubject.Default.(string)
-	// notificationDescContent is the schema descriptor for content field.
-	notificationDescContent := notificationFields[1].Descriptor()
-	// notification.DefaultContent holds the default value on creation for the content field.
-	notification.DefaultContent = notificationDescContent.Default.(string)
-	// notificationDescStatus is the schema descriptor for status field.
-	notificationDescStatus := notificationFields[2].Descriptor()
-	// notification.DefaultStatus holds the default value on creation for the status field.
-	notification.DefaultStatus = enums.Status(notificationDescStatus.Default.(int8))
-	// notificationDescCategoryID is the schema descriptor for category_id field.
-	notificationDescCategoryID := notificationFields[3].Descriptor()
-	// notification.CategoryIDValidator is a validator for the "category_id" field. It is called by the builders before save.
-	notification.CategoryIDValidator = notificationDescCategoryID.Validators[0].(func(int64) error)
-	// notificationDescID is the schema descriptor for id field.
-	notificationDescID := notificationMixinFields0[0].Descriptor()
-	// notification.DefaultID holds the default value on creation for the id field.
-	notification.DefaultID = notificationDescID.Default.(func() int64)
-	// notification.IDValidator is a validator for the "id" field. It is called by the builders before save.
-	notification.IDValidator = notificationDescID.Validators[0].(func(int64) error)
+	messageMixin := schema.Message{}.Mixin()
+	messageMixinHooks1 := messageMixin[1].Hooks()
+	message.Hooks[0] = messageMixinHooks1[0]
+	messageMixinFields0 := messageMixin[0].Fields()
+	_ = messageMixinFields0
+	messageMixinFields1 := messageMixin[1].Fields()
+	_ = messageMixinFields1
+	messageMixinFields2 := messageMixin[2].Fields()
+	_ = messageMixinFields2
+	messageMixinFields3 := messageMixin[3].Fields()
+	_ = messageMixinFields3
+	messageFields := schema.Message{}.Fields()
+	_ = messageFields
+	// messageDescCreateAuthor is the schema descriptor for create_author field.
+	messageDescCreateAuthor := messageMixinFields1[0].Descriptor()
+	// message.DefaultCreateAuthor holds the default value on creation for the create_author field.
+	message.DefaultCreateAuthor = messageDescCreateAuthor.Default.(int64)
+	// messageDescUpdateAuthor is the schema descriptor for update_author field.
+	messageDescUpdateAuthor := messageMixinFields1[1].Descriptor()
+	// message.DefaultUpdateAuthor holds the default value on creation for the update_author field.
+	message.DefaultUpdateAuthor = messageDescUpdateAuthor.Default.(int64)
+	// messageDescCreateTime is the schema descriptor for create_time field.
+	messageDescCreateTime := messageMixinFields2[0].Descriptor()
+	// message.DefaultCreateTime holds the default value on creation for the create_time field.
+	message.DefaultCreateTime = messageDescCreateTime.Default.(func() time.Time)
+	// messageDescUpdateTime is the schema descriptor for update_time field.
+	messageDescUpdateTime := messageMixinFields3[0].Descriptor()
+	// message.DefaultUpdateTime holds the default value on creation for the update_time field.
+	message.DefaultUpdateTime = messageDescUpdateTime.Default.(func() time.Time)
+	// message.UpdateDefaultUpdateTime holds the default value on update for the update_time field.
+	message.UpdateDefaultUpdateTime = messageDescUpdateTime.UpdateDefault.(func() time.Time)
+	// messageDescSubject is the schema descriptor for subject field.
+	messageDescSubject := messageFields[0].Descriptor()
+	// message.DefaultSubject holds the default value on creation for the subject field.
+	message.DefaultSubject = messageDescSubject.Default.(string)
+	// messageDescContent is the schema descriptor for content field.
+	messageDescContent := messageFields[1].Descriptor()
+	// message.DefaultContent holds the default value on creation for the content field.
+	message.DefaultContent = messageDescContent.Default.(string)
+	// messageDescStatus is the schema descriptor for status field.
+	messageDescStatus := messageFields[2].Descriptor()
+	// message.DefaultStatus holds the default value on creation for the status field.
+	message.DefaultStatus = enums.Status(messageDescStatus.Default.(int8))
+	// messageDescCategoryID is the schema descriptor for category_id field.
+	messageDescCategoryID := messageFields[3].Descriptor()
+	// message.CategoryIDValidator is a validator for the "category_id" field. It is called by the builders before save.
+	message.CategoryIDValidator = messageDescCategoryID.Validators[0].(func(int64) error)
+	// messageDescID is the schema descriptor for id field.
+	messageDescID := messageMixinFields0[0].Descriptor()
+	// message.DefaultID holds the default value on creation for the id field.
+	message.DefaultID = messageDescID.Default.(func() int64)
+	// message.IDValidator is a validator for the "id" field. It is called by the builders before save.
+	message.IDValidator = messageDescID.Validators[0].(func(int64) error)
 	permissionMixin := schema.Permission{}.Mixin()
 	permissionMixinFields0 := permissionMixin[0].Fields()
 	_ = permissionMixinFields0
