@@ -7,7 +7,8 @@ package biz
 
 import (
 	"github.com/google/wire"
-	authbiz "origadmin/application/admin/internal/features/auth/biz"
+
+	identitydto "origadmin/application/admin/internal/features/identity/dto"
 )
 
 // ProviderSet is biz providers.
@@ -18,5 +19,5 @@ var ProviderSet = wire.NewSet(
 	NewPermissionUseCase,
 	NewViewUseCase,
 	NewAuthorizationUseCase,
-	wire.Bind(new(authbiz.PolicyProvider), new(*AuthorizationUseCase)),
+	wire.Bind(new(identitydto.PolicyProvider), new(*AuthorizationUseCase)),
 )

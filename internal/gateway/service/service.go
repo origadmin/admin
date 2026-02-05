@@ -8,7 +8,7 @@ import (
 	"github.com/google/wire"
 
 	"github.com/origadmin/runtime/service/transport"
-	"origadmin/application/admin/api/v1/services/auth"
+	"origadmin/application/admin/api/v1/services/identity"
 	"origadmin/application/admin/api/v1/services/system"
 	"origadmin/application/admin/internal/gateway/client"
 )
@@ -21,16 +21,16 @@ var ProviderSet = wire.NewSet(NewGatewayService)
 // to forward requests to a specific downstream gRPC service.
 // This approach avoids implementing downstream service interfaces directly in the gateway.
 type GatewayService struct {
-	Auth   *client.AuthBridgeSet
-	System *client.SystemBridgeSet
+	Identity *client.IdentityBridgeSet
+	System   *client.SystemBridgeSet
 }
 
 // NewGatewayService creates a new GatewayService, aggregating the generated
 // bridge clients for all downstream services.
-func NewGatewayService(authClient *client.AuthBridgeSet, systemClient *client.SystemBridgeSet) (*GatewayService, error) {
+func NewGatewayService(identityClient *client.IdentityBridgeSet, systemClient *client.SystemBridgeSet) (*GatewayService, error) {
 	return &GatewayService{
-		Auth:   authClient,
-		System: systemClient,
+		Identity: identityClient,
+		System:   systemClient,
 	}, nil
 }
 
@@ -44,8 +44,8 @@ func (s *GatewayService) RegisterHTTPHandlers(srv *transport.HTTPServer) {
 	system.RegisterResourceServiceHTTPServer(srv, s.System.Resource)
 	system.RegisterViewServiceHTTPServer(srv, s.System.View)
 
-	// Register handlers for the 'auth' service
-	auth.RegisterAuthServiceHTTPServer(srv, s.Auth.Auth)
-	auth.RegisterMeServiceHTTPServer(srv, s.Auth.Me)
-	auth.RegisterAdminServiceHTTPServer(srv, s.Auth.Admin)
+	// Register handlers for the 'identity' service
+	identity.RegisterAuthServiceHTTPServer(srv, s.Identity.Auth)
+	identity.RegisterMeServiceHTTPServer(srv, s.Identity.Me)
+	identity.RegisterAdminServiceHTTPServer(srv, s.Identity.Admin)
 }

@@ -1,0 +1,64 @@
+services:
+  consul:
+    image: hashicorp/consul:1.22.2
+    container_name: backend_consul
+    command: "agent -server -bootstrap-expect=1 -client=0.0.0.0"
+    ports:
+      - "8500:8500" # HTTP API
+      - "8600:8600/tcp" # DNS API (TCP)
+      - "8600:8600/udp" # DNS API (UDP)
+    networks:
+      - tools-network
+
+  nats:
+    image: nats:2.12.3-alpine
+    container_name: backend_nats
+    command: "--config /etc/nats/nats.conf" # Use the mounted config file
+    ports:
+      - "4222:4222" # NATS client port
+      - "8222:8222" # NATS monitoring port
+    volumes:
+      - ./nats/nats.conf:/etc/nats/nats.conf # Mount the local config file
+    networks:
+      - tools-network
+
+  #  valkey:
+  #    image: ghcr.io/valkey-io/valkey:9.0.2-alpine
+  #    container_name: backend_valkey
+  #    ports:
+  #      - "6379:6379"
+  #    volumes:
+  #      - valkey_data:/data
+  #    networks:
+  #      - tools-network
+
+  redis:
+    image: redis:8.4.0-alpine
+    container_name: backend_redis
+    ports:
+      - "6379:6379"
+    networks:
+      - tools-network
+
+  postgres:
+    image: postgres:18.1-alpine
+    container_name: backend_postgres
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: origadmin
+    ports:
+      - "5432:5432" # PostgreSQL client port
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - tools-network
+
+volumes:
+  postgres_data:
+#  valkey_data:
+
+networks:
+  tools-network:
+    driver: bridge
+    name: dev-tools-network

@@ -1,6 +1,6 @@
 # logger.yaml
 logger:
   caller: true
-  format: dev
+  format: json
   level: debug
   output: stdout

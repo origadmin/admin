@@ -32,7 +32,7 @@ import (
 	"github.com/origadmin/toolkits/crypto/hash"
 	"github.com/origadmin/toolkits/crypto/hash/algorithms/bcrypt"
 	"github.com/origadmin/toolkits/crypto/hash/types"
-	_ "origadmin/application/admin/api/v1/services/auth"
+	_ "origadmin/application/admin/api/v1/services/identity"
 	_ "origadmin/application/admin/api/v1/services/system"
 	"origadmin/application/admin/internal/broker"
 	"origadmin/application/admin/internal/conf"

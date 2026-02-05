@@ -9,7 +9,6 @@ import (
 
 	"github.com/origadmin/runtime/log"
 	systemv1 "origadmin/application/admin/api/v1/services/system"
-	authbiz "origadmin/application/admin/internal/features/auth/biz"
 	"origadmin/application/admin/internal/features/system/dto"
 	"origadmin/application/admin/internal/helpers/idutil"
 )
@@ -136,4 +135,4 @@ func (uc *AuthorizationUseCase) ListPoliciesForRoles(ctx context.Context, roleKe
 	return accessRules, nil
 }
 
-var _ authbiz.PolicyProvider = (*AuthorizationUseCase)(nil)
+//var _ authbiz.PolicyProvider = (*AuthorizationUseCase)(nil)

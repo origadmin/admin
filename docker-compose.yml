@@ -1,39 +1,18 @@
 version: "3.8"
 
 #
-# OrigAdmin Backend - Default Docker Compose Configuration
+# OrigAdmin Backend - Clean Application Services Configuration
 #
-# This configuration uses:
-# - Consul (MPL 2.0): Service discovery and configuration
-# - NATS (Apache 2.0): Message queue
-#
-# License Notice:
-# Consul uses Mozilla Public License 2.0 (MPL 2.0).
-# MPL 2.0 is file-level copyleft: if you modify Consul's source code,
-# you must release those modifications. Using Consul as-is does NOT require
-# you to open source your application code.
-#
-# For a completely license-free alternative, consider using docker-compose.minimal.yml
-# which removes service discovery and uses direct networking.
+# This is the main application docker-compose configuration file
+# Contains only the project's own microservices, no third-party infrastructure
+# 
+# Usage Instructions:
+# 1. Infrastructure services (NATS, Consul, PostgreSQL, Redis, etc.) need separate deployment
+# 2. Infrastructure connection information can be specified via environment variables or config files
+# 3. For development environment, use resources/dev-tools/docker-compose.yml to quickly start infrastructure
 #
 
 services:
-  consul:
-    image: hashicorp/consul:1.22.2
-    container_name: consul
-    command: "agent -server -bootstrap-expect=1 -client=0.0.0.0"
-    ports:
-      - "8500:8500" # HTTP API
-      - "8600:8600/tcp" # DNS API (TCP)
-      - "8600:8600/udp" # DNS API (UDP)
-
-  nats:
-    image: nats:2.12.3
-    container_name: nats
-    ports:
-      - "4222:4222" # NATS client port
-      - "8222:8222" # NATS monitoring port
-
   gateway:
     build:
       context: .
@@ -41,18 +20,19 @@ services:
       args:
         SERVICE_NAME: gateway
     ports:
-      - "8000:8000" # Expose gateway's HTTP port
-      - "9000:9000" # Expose gateway's gRPC port
+      - "8000:8000" # HTTP port
+      - "9000:9000" # gRPC port
     volumes:
       - .:/app
-    depends_on:
-      - auth
-      - system
-      - nats
-      - consul
-    environment:
-      KRATOS_DISCOVERY_CONSUL_ADDRESS: consul:8500
-      NATS_SERVER_URL: nats://nats:4222
+      # Mount configuration file directory
+      - ./resources/configs:/app/resources/configs:ro
+    # Infrastructure connection configuration provided via environment variables or config files
+    # Example environment variables (adjust according to actual deployment):
+    # environment:
+    #   - NATS_SERVER_URL=nats://localhost:4222
+    #   - KRATOS_DISCOVERY_CONSUL_ADDRESS=localhost:8500
+    #   - POSTGRES_URL=postgresql://user:password@localhost:5432/origadmin
+    #   - REDIS_URL=redis://localhost:6379
 
   auth:
     build:
@@ -62,12 +42,9 @@ services:
         SERVICE_NAME: auth
     volumes:
       - .:/app
-    depends_on:
-      - nats
-      - consul
-    environment:
-      KRATOS_DISCOVERY_CONSUL_ADDRESS: consul:8500
-      NATS_SERVER_URL: nats://nats:4222
+      # Mount configuration file directory
+      - ./resources/configs:/app/resources/configs:ro
+    # Infrastructure connection configuration provided via environment variables or config files
 
   system:
     build:
@@ -77,9 +54,10 @@ services:
         SERVICE_NAME: system
     volumes:
       - .:/app
-    depends_on:
-      - nats
-      - consul
-    environment:
-      KRATOS_DISCOVERY_CONSUL_ADDRESS: consul:8500
-      NATS_SERVER_URL: nats://nats:4222
+      # Mount configuration file directory
+      - ./resources/configs:/app/resources/configs:ro
+    # Infrastructure connection configuration provided via environment variables or config files
+
+networks:
+  default:
+    name: origadmin-network

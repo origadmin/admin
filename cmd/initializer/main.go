@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"flag"
+	"os"
 
 	"github.com/joho/godotenv"
 	_ "github.com/lib/pq"
@@ -23,6 +24,8 @@ var (
 	Name = "origadmin.job.initializer"
 	// Version is the version of the compiled software.
 	Version = "v1.0.0"
+	// envPath is the path to the .env file.
+	envPath = "resources/.env.initializer"
 
 	// flagconf is the config flag.
 	flagconf string
@@ -33,7 +36,10 @@ func init() {
 }
 
 func main() {
-	_ = godotenv.Load("resources/.env.initializer")
+	if err := godotenv.Load(envPath); err != nil {
+		wd, _ := os.Getwd()
+		log.Warnf("godotenv: failed to load '%s' (PWD: %s): %v", envPath, wd, err)
+	}
 
 	flag.Parse()
 

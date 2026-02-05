@@ -1,23 +1,33 @@
 version: "3.8"
 
 #
-# ⚠️  IMPORTANT: This is an OPTIONAL configuration
+# ⚠️  WARNING: This configuration contains AGPL 3.0 licensed components with legal risks
 #
-# This docker-compose file integrates the Loki log collection system into the project.
-# Loki uses AGPL 3.0 license. Please evaluate legal risks before using in production.
-# For a fully open source and commercially friendly alternative, consider using OpenSearch.
+# This is an optional log collection configuration template for evaluation and testing purposes only
+# Contains the following AGPL 3.0 licensed software:
+# - Grafana Loki (log storage)
+# - Grafana Promtail (log collection)  
+# - Grafana (visualization)
 #
-# AGPL 3.0 Licensed Components:
-# - Grafana Loki: https://github.com/grafana/loki/blob/main/LICENSE
-# - Grafana Promtail: https://github.com/grafana/loki/blob/main/LICENSE
-# - Grafana: https://github.com/grafana/grafana/blob/main/LICENSE
+# 🚨 Legal Risk Warning:
+# AGPL 3.0 license requires that if you provide services to third parties over the network,
+# you must provide source code access to users.
+# 
+# ⚠️  Production Environment Recommendations:
+# - Use Apache 2.0 licensed alternatives (like OpenSearch)
+# - Use cloud provider managed logging services
+# - Purchase commercial licenses
 #
-# License Risk Warning:
-# If you provide services based on these components over the network to third parties,
-# you may be required to provide source code to users.
+# 📋  Usage Restrictions:
+# - For internal development and testing only
+# - Prohibited for public-facing production services
+# - Prohibited for SaaS products
+# - Users assume legal compliance responsibility
 #
-# Alternative (Apache 2.0):
-# - OpenSearch: Use docker-compose.opensearch.yml instead
+# 🔗  Alternative Solutions:
+# - resources/dev-tools/docker-compose.opensearch.yml (Apache 2.0)
+# - resources/dev-tools/docker-compose.elk.yml (Apache 2.0)
+# - Cloud provider managed logging services
 #
 
 services:

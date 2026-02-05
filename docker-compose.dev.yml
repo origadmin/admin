@@ -1,5 +1,13 @@
 version: '3.8'
 
+#
+# OrigAdmin Backend - Development Environment Configuration
+#
+# Docker-compose configuration for development environment
+# Uses Dockerfile.dev for hot-reload development
+# No service dependencies, each service starts independently
+#
+
 services:
   gateway:
     build:
@@ -9,13 +17,17 @@ services:
       - "8000:8000"
       - "9000:9000"
     volumes:
-      # Mount the entire project to allow air to watch for changes
+      # Mount entire project to support air hot-reload
       - .:/app
-    # The working_dir tells 'air' where to find its config
+      # Mount configuration file directory
+      - ./resources/configs:/app/resources/configs:ro
     working_dir: /app/cmd/gateway
-    depends_on:
-      - auth
-      - system
+    # Development environment infrastructure connection configuration
+    # environment:
+    #   - NATS_SERVER_URL=nats://localhost:4222
+    #   - KRATOS_DISCOVERY_CONSUL_ADDRESS=localhost:8500
+    #   - POSTGRES_URL=postgresql://user:password@localhost:5432/origadmin
+    #   - REDIS_URL=redis://localhost:6379
 
   auth:
     build:
@@ -23,6 +35,7 @@ services:
       dockerfile: Dockerfile.dev
     volumes:
       - .:/app
+      - ./resources/configs:/app/resources/configs:ro
     working_dir: /app/cmd/auth
 
   system:
@@ -31,4 +44,9 @@ services:
       dockerfile: Dockerfile.dev
     volumes:
       - .:/app
+      - ./resources/configs:/app/resources/configs:ro
     working_dir: /app/cmd/system
+
+networks:
+  default:
+    name: origadmin-dev-network

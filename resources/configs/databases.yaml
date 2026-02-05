@@ -2,6 +2,6 @@
 data:
   databases:
     default:
-      name: ${DATABASE_NAME:-test_db}
-      dialect: ${DATABASE_DIALECT:-sqlite3} # 从环境变量获取数据库方言，默认值为 sqlite3
-      source: ${DATABASE_SOURCE:-file:test.db?cache=shared&_foreign_keys=1} # 从环境变量获取连接字符串
+      name: ${DATABASE_NAME:test_db}
+      dialect: ${DATABASE_DIALECT:sqlite3} # 从环境变量获取数据库方言，默认值为 sqlite3
+      source: ${DATABASE_SOURCE:file:test.db?cache=shared&_foreign_keys=1} # 从环境变量获取连接字符串

@@ -1,20 +1,26 @@
 version: "3.8"
 
 #
-# OrigAdmin Backend - Minimal Docker Compose Configuration
+# OrigAdmin Backend - Recommended Minimal Configuration
 #
-# This is a PURE configuration that includes ONLY the project's own services.
-# No third-party infrastructure services are included.
+# This is the preferred docker-compose configuration file for the project
+# Contains only the project's own microservices, no third-party infrastructure
 #
-# This configuration is the SAFEST option from a licensing perspective.
+# ✅ Advantages:
+# - Completely avoids legal risks (no AGPL/SSPL or other restrictive license components)
+# - Clean and simple configuration
+# - Supports flexible deployment (cloud provider managed or self-hosted infrastructure)
+# 
+# 📋 Requirements:
+# - Infrastructure services need separate deployment
+# - Supports multiple deployment methods:
+#   * Development: Use resources/dev-tools/docker-compose.yml
+#   * Production: Use cloud provider managed services (AWS RDS, Google Cloud SQL, etc.)
+#   * Self-hosted: Independently deploy NATS, Consul, PostgreSQL, Redis
 #
-# Use this configuration if:
-# - You want to avoid ALL third-party infrastructure in docker-compose
-# - You will provide your own message queue/service discovery
-# - You are deploying to an environment where infrastructure is managed separately
-#
-# Note: This configuration requires external infrastructure to function properly.
-# Services need a message queue (e.g., NATS) and optional service discovery.
+# 🔧 Configuration Methods:
+# 1. Environment variables (recommended for containerized deployment)
+# 2. Configuration files (recommended for traditional deployment)
 #
 
 services:
@@ -25,13 +31,21 @@ services:
       args:
         SERVICE_NAME: gateway
     ports:
-      - "8000:8000" # Expose gateway's HTTP port
-      - "9000:9000" # Expose gateway's gRPC port
+      - "8000:8000" # HTTP port
+      - "9000:9000" # gRPC port
     volumes:
       - .:/app
-    # Configure external infrastructure via environment variables if needed:
-    # NATS_SERVER_URL: nats://your-nats-host:4222
-    # KRATOS_DISCOVERY_CONSUL_ADDRESS: your-consul-host:8500
+      - ./resources/configs:/app/resources/configs:ro
+    # Infrastructure connection configuration (adjust according to actual deployment)
+    # environment:
+    #   # NATS message queue
+    #   - NATS_SERVER_URL=nats://localhost:4222
+    #   # Consul service discovery
+    #   - KRATOS_DISCOVERY_CONSUL_ADDRESS=localhost:8500
+    #   # PostgreSQL database
+    #   - POSTGRES_URL=postgresql://user:password@localhost:5432/origadmin
+    #   # Redis cache
+    #   - REDIS_URL=redis://localhost:6379
 
   auth:
     build:
@@ -41,9 +55,13 @@ services:
         SERVICE_NAME: auth
     volumes:
       - .:/app
-    # Configure external infrastructure via environment variables if needed:
-    # NATS_SERVER_URL: nats://your-nats-host:4222
-    # KRATOS_DISCOVERY_CONSUL_ADDRESS: your-consul-host:8500
+      - ./resources/configs:/app/resources/configs:ro
+    # Infrastructure connection configuration
+    # environment:
+    #   - NATS_SERVER_URL=nats://localhost:4222
+    #   - KRATOS_DISCOVERY_CONSUL_ADDRESS=localhost:8500
+    #   - POSTGRES_URL=postgresql://user:password@localhost:5432/origadmin
+    #   - REDIS_URL=redis://localhost:6379
 
   system:
     build:
@@ -53,6 +71,14 @@ services:
         SERVICE_NAME: system
     volumes:
       - .:/app
-    # Configure external infrastructure via environment variables if needed:
-    # NATS_SERVER_URL: nats://your-nats-host:4222
-    # KRATOS_DISCOVERY_CONSUL_ADDRESS: your-consul-host:8500
+      - ./resources/configs:/app/resources/configs:ro
+    # Infrastructure connection configuration
+    # environment:
+    #   - NATS_SERVER_URL=nats://localhost:4222
+    #   - KRATOS_DISCOVERY_CONSUL_ADDRESS=localhost:8500
+    #   - POSTGRES_URL=postgresql://user:password@localhost:5432/origadmin
+    #   - REDIS_URL=redis://localhost:6379
+
+networks:
+  default:
+    name: origadmin-network

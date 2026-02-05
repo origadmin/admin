@@ -2,6 +2,8 @@
 package conf
 
 import (
+	"fmt"
+
 	brokerv1 "github.com/origadmin/runtime/api/gen/go/config/broker/v1"
 	datav1 "github.com/origadmin/runtime/api/gen/go/config/data/v1"
 	discoveryv1 "github.com/origadmin/runtime/api/gen/go/config/discovery/v1"
@@ -149,10 +151,7 @@ func (c *Config) Transform(config interfaces.ConfigLoader, sc interfaces.Structu
 	if err != nil {
 		return nil, err
 	}
-	//var debugMap map[string]any
-	//if err = config.Decode("", &debugMap); err != nil {
-	//	return nil, err
-	//}
+	fmt.Printf("database: %v\n", c.Databases())
 	return c, nil
 }
 

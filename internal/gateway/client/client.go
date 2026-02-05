@@ -10,7 +10,7 @@ import (
 
 	"github.com/origadmin/runtime"
 	"github.com/origadmin/runtime/container"
-	"origadmin/application/admin/api/v1/services/auth"
+	"origadmin/application/admin/api/v1/services/identity"
 	"origadmin/application/admin/api/v1/services/system"
 	"origadmin/application/admin/internal/conf"
 	"origadmin/application/admin/internal/helpers/grpcclient"
@@ -18,22 +18,22 @@ import (
 
 // ProviderSet is client providers.
 var ProviderSet = wire.NewSet(
-	NewAuthBridgeSet,
+	NewIdentityBridgeSet,
 	NewSystemBridgeSet,
 )
 
 const (
-	// ServiceNameAuth is the short name for the auth service.
-	ServiceNameAuth = "auth"
+	// ServiceNameIdentity is the short name for the auth service.
+	ServiceNameIdentity = "identity"
 	// ServiceNameSystem is the short name for the system service.
 	ServiceNameSystem = "system"
 )
 
-// AuthBridgeSet holds all the clients for the 'auth' service.
-type AuthBridgeSet struct {
-	Auth  auth.AuthServiceHTTPServer
-	Me    auth.MeServiceHTTPServer
-	Admin auth.AdminServiceHTTPServer
+// IdentityBridgeSet holds all the clients for the 'auth' service.
+type IdentityBridgeSet struct {
+	Auth  identity.AuthServiceHTTPServer
+	Me    identity.MeServiceHTTPServer
+	Admin identity.AdminServiceHTTPServer
 }
 
 // SystemBridgeSet holds all the clients for the 'system' service.
@@ -58,18 +58,18 @@ func NewGRPCConn(app *runtime.App, bootstrap *conf.Config, name string, middlewa
 	return conn.(*grpc.ClientConn), nil
 }
 
-// NewAuthBridgeSet creates a set of clients for the auth service.
-func NewAuthBridgeSet(app *runtime.App, bootstrap *conf.Config, middlewareProvider container.ClientMiddlewareProvider) (*AuthBridgeSet, error) {
+// NewIdentityBridgeSet creates a set of clients for the auth service.
+func NewIdentityBridgeSet(app *runtime.App, bootstrap *conf.Config, middlewareProvider container.ClientMiddlewareProvider) (*IdentityBridgeSet, error) {
 	// Use the application's root context. This ensures that the client's lifecycle
 	// is tied to the application's lifecycle.
-	conn, err := NewGRPCConn(app, bootstrap, ServiceNameAuth, middlewareProvider)
+	conn, err := NewGRPCConn(app, bootstrap, ServiceNameIdentity, middlewareProvider)
 	if err != nil {
 		return nil, err
 	}
-	return &AuthBridgeSet{
-		Auth:  auth.NewAuthServiceGRPC2HTTP(conn),
-		Me:    auth.NewMeServiceGRPC2HTTP(conn),
-		Admin: auth.NewAdminServiceGRPC2HTTP(conn),
+	return &IdentityBridgeSet{
+		Auth:  identity.NewAuthServiceGRPC2HTTP(conn),
+		Me:    identity.NewMeServiceGRPC2HTTP(conn),
+		Admin: identity.NewAdminServiceGRPC2HTTP(conn),
 	}, nil
 }
 

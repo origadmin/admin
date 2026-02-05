@@ -19,13 +19,13 @@ var _ = binding.EncodeURL
 
 const _ = http.SupportPackageIsVersion1
 
-const OperationIdentityServiceGetCaptcha = "/api.v1.services.identity.IdentityService/GetCaptcha"
-const OperationIdentityServiceLogin = "/api.v1.services.identity.IdentityService/Login"
-const OperationIdentityServiceLogout = "/api.v1.services.identity.IdentityService/Logout"
-const OperationIdentityServiceRefreshToken = "/api.v1.services.identity.IdentityService/RefreshToken"
-const OperationIdentityServiceRegister = "/api.v1.services.identity.IdentityService/Register"
+const OperationAuthServiceGetCaptcha = "/api.v1.services.identity.AuthService/GetCaptcha"
+const OperationAuthServiceLogin = "/api.v1.services.identity.AuthService/Login"
+const OperationAuthServiceLogout = "/api.v1.services.identity.AuthService/Logout"
+const OperationAuthServiceRefreshToken = "/api.v1.services.identity.AuthService/RefreshToken"
+const OperationAuthServiceRegister = "/api.v1.services.identity.AuthService/Register"
 
-type IdentityServiceHTTPServer interface {
+type AuthServiceHTTPServer interface {
 	// GetCaptcha GetCaptcha generates a new captcha.
 	GetCaptcha(context.Context, *GetCaptchaRequest) (*GetCaptchaResponse, error)
 	// Login Login authenticates a user and returns a token pair.
@@ -38,16 +38,16 @@ type IdentityServiceHTTPServer interface {
 	Register(context.Context, *RegisterRequest) (*RegisterResponse, error)
 }
 
-func RegisterIdentityServiceHTTPServer(s *http.Server, srv IdentityServiceHTTPServer) {
+func RegisterAuthServiceHTTPServer(s *http.Server, srv AuthServiceHTTPServer) {
 	r := s.Route("/")
-	r.POST("/auth/login", _IdentityService_Login0_HTTP_Handler(srv))
-	r.POST("/auth/register", _IdentityService_Register0_HTTP_Handler(srv))
-	r.POST("/auth/logout", _IdentityService_Logout0_HTTP_Handler(srv))
-	r.POST("/auth/refresh", _IdentityService_RefreshToken0_HTTP_Handler(srv))
-	r.GET("/auth/captcha", _IdentityService_GetCaptcha0_HTTP_Handler(srv))
+	r.POST("/auth/login", _AuthService_Login0_HTTP_Handler(srv))
+	r.POST("/auth/register", _AuthService_Register0_HTTP_Handler(srv))
+	r.POST("/auth/logout", _AuthService_Logout0_HTTP_Handler(srv))
+	r.POST("/auth/refresh", _AuthService_RefreshToken0_HTTP_Handler(srv))
+	r.GET("/auth/captcha", _AuthService_GetCaptcha0_HTTP_Handler(srv))
 }
 
-func _IdentityService_Login0_HTTP_Handler(srv IdentityServiceHTTPServer) func(ctx http.Context) error {
+func _AuthService_Login0_HTTP_Handler(srv AuthServiceHTTPServer) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
 		var in LoginRequest
 		if err := ctx.Bind(&in); err != nil {
@@ -56,7 +56,7 @@ func _IdentityService_Login0_HTTP_Handler(srv IdentityServiceHTTPServer) func(ct
 		if err := ctx.BindQuery(&in); err != nil {
 			return err
 		}
-		http.SetOperation(ctx, OperationIdentityServiceLogin)
+		http.SetOperation(ctx, OperationAuthServiceLogin)
 		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
 			return srv.Login(ctx, req.(*LoginRequest))
 		})
@@ -69,7 +69,7 @@ func _IdentityService_Login0_HTTP_Handler(srv IdentityServiceHTTPServer) func(ct
 	}
 }
 
-func _IdentityService_Register0_HTTP_Handler(srv IdentityServiceHTTPServer) func(ctx http.Context) error {
+func _AuthService_Register0_HTTP_Handler(srv AuthServiceHTTPServer) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
 		var in RegisterRequest
 		if err := ctx.Bind(&in); err != nil {
@@ -78,7 +78,7 @@ func _IdentityService_Register0_HTTP_Handler(srv IdentityServiceHTTPServer) func
 		if err := ctx.BindQuery(&in); err != nil {
 			return err
 		}
-		http.SetOperation(ctx, OperationIdentityServiceRegister)
+		http.SetOperation(ctx, OperationAuthServiceRegister)
 		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
 			return srv.Register(ctx, req.(*RegisterRequest))
 		})
@@ -91,7 +91,7 @@ func _IdentityService_Register0_HTTP_Handler(srv IdentityServiceHTTPServer) func
 	}
 }
 
-func _IdentityService_Logout0_HTTP_Handler(srv IdentityServiceHTTPServer) func(ctx http.Context) error {
+func _AuthService_Logout0_HTTP_Handler(srv AuthServiceHTTPServer) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
 		var in LogoutRequest
 		if err := ctx.Bind(&in); err != nil {
@@ -100,7 +100,7 @@ func _IdentityService_Logout0_HTTP_Handler(srv IdentityServiceHTTPServer) func(c
 		if err := ctx.BindQuery(&in); err != nil {
 			return err
 		}
-		http.SetOperation(ctx, OperationIdentityServiceLogout)
+		http.SetOperation(ctx, OperationAuthServiceLogout)
 		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
 			return srv.Logout(ctx, req.(*LogoutRequest))
 		})
@@ -113,7 +113,7 @@ func _IdentityService_Logout0_HTTP_Handler(srv IdentityServiceHTTPServer) func(c
 	}
 }
 
-func _IdentityService_RefreshToken0_HTTP_Handler(srv IdentityServiceHTTPServer) func(ctx http.Context) error {
+func _AuthService_RefreshToken0_HTTP_Handler(srv AuthServiceHTTPServer) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
 		var in RefreshTokenRequest
 		if err := ctx.Bind(&in); err != nil {
@@ -122,7 +122,7 @@ func _IdentityService_RefreshToken0_HTTP_Handler(srv IdentityServiceHTTPServer) 
 		if err := ctx.BindQuery(&in); err != nil {
 			return err
 		}
-		http.SetOperation(ctx, OperationIdentityServiceRefreshToken)
+		http.SetOperation(ctx, OperationAuthServiceRefreshToken)
 		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
 			return srv.RefreshToken(ctx, req.(*RefreshTokenRequest))
 		})
@@ -135,13 +135,13 @@ func _IdentityService_RefreshToken0_HTTP_Handler(srv IdentityServiceHTTPServer) 
 	}
 }
 
-func _IdentityService_GetCaptcha0_HTTP_Handler(srv IdentityServiceHTTPServer) func(ctx http.Context) error {
+func _AuthService_GetCaptcha0_HTTP_Handler(srv AuthServiceHTTPServer) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
 		var in GetCaptchaRequest
 		if err := ctx.BindQuery(&in); err != nil {
 			return err
 		}
-		http.SetOperation(ctx, OperationIdentityServiceGetCaptcha)
+		http.SetOperation(ctx, OperationAuthServiceGetCaptcha)
 		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
 			return srv.GetCaptcha(ctx, req.(*GetCaptchaRequest))
 		})
@@ -154,7 +154,7 @@ func _IdentityService_GetCaptcha0_HTTP_Handler(srv IdentityServiceHTTPServer) fu
 	}
 }
 
-type IdentityServiceHTTPClient interface {
+type AuthServiceHTTPClient interface {
 	// GetCaptcha GetCaptcha generates a new captcha.
 	GetCaptcha(ctx context.Context, req *GetCaptchaRequest, opts ...http.CallOption) (rsp *GetCaptchaResponse, err error)
 	// Login Login authenticates a user and returns a token pair.
@@ -167,20 +167,20 @@ type IdentityServiceHTTPClient interface {
 	Register(ctx context.Context, req *RegisterRequest, opts ...http.CallOption) (rsp *RegisterResponse, err error)
 }
 
-type IdentityServiceHTTPClientImpl struct {
+type AuthServiceHTTPClientImpl struct {
 	cc *http.Client
 }
 
-func NewIdentityServiceHTTPClient(client *http.Client) IdentityServiceHTTPClient {
-	return &IdentityServiceHTTPClientImpl{client}
+func NewAuthServiceHTTPClient(client *http.Client) AuthServiceHTTPClient {
+	return &AuthServiceHTTPClientImpl{client}
 }
 
 // GetCaptcha GetCaptcha generates a new captcha.
-func (c *IdentityServiceHTTPClientImpl) GetCaptcha(ctx context.Context, in *GetCaptchaRequest, opts ...http.CallOption) (*GetCaptchaResponse, error) {
+func (c *AuthServiceHTTPClientImpl) GetCaptcha(ctx context.Context, in *GetCaptchaRequest, opts ...http.CallOption) (*GetCaptchaResponse, error) {
 	var out GetCaptchaResponse
 	pattern := "/auth/captcha"
 	path := binding.EncodeURL(pattern, in, true)
-	opts = append(opts, http.Operation(OperationIdentityServiceGetCaptcha))
+	opts = append(opts, http.Operation(OperationAuthServiceGetCaptcha))
 	opts = append(opts, http.PathTemplate(pattern))
 	err := c.cc.Invoke(ctx, "GET", path, nil, &out, opts...)
 	if err != nil {
@@ -190,11 +190,11 @@ func (c *IdentityServiceHTTPClientImpl) GetCaptcha(ctx context.Context, in *GetC
 }
 
 // Login Login authenticates a user and returns a token pair.
-func (c *IdentityServiceHTTPClientImpl) Login(ctx context.Context, in *LoginRequest, opts ...http.CallOption) (*LoginResponse, error) {
+func (c *AuthServiceHTTPClientImpl) Login(ctx context.Context, in *LoginRequest, opts ...http.CallOption) (*LoginResponse, error) {
 	var out LoginResponse
 	pattern := "/auth/login"
 	path := binding.EncodeURL(pattern, in, false)
-	opts = append(opts, http.Operation(OperationIdentityServiceLogin))
+	opts = append(opts, http.Operation(OperationAuthServiceLogin))
 	opts = append(opts, http.PathTemplate(pattern))
 	err := c.cc.Invoke(ctx, "POST", path, in, &out, opts...)
 	if err != nil {
@@ -204,11 +204,11 @@ func (c *IdentityServiceHTTPClientImpl) Login(ctx context.Context, in *LoginRequ
 }
 
 // Logout Logout invalidates user's session.
-func (c *IdentityServiceHTTPClientImpl) Logout(ctx context.Context, in *LogoutRequest, opts ...http.CallOption) (*LogoutResponse, error) {
+func (c *AuthServiceHTTPClientImpl) Logout(ctx context.Context, in *LogoutRequest, opts ...http.CallOption) (*LogoutResponse, error) {
 	var out LogoutResponse
 	pattern := "/auth/logout"
 	path := binding.EncodeURL(pattern, in, false)
-	opts = append(opts, http.Operation(OperationIdentityServiceLogout))
+	opts = append(opts, http.Operation(OperationAuthServiceLogout))
 	opts = append(opts, http.PathTemplate(pattern))
 	err := c.cc.Invoke(ctx, "POST", path, in, &out, opts...)
 	if err != nil {
@@ -218,11 +218,11 @@ func (c *IdentityServiceHTTPClientImpl) Logout(ctx context.Context, in *LogoutRe
 }
 
 // RefreshToken RefreshToken provides a new access token.
-func (c *IdentityServiceHTTPClientImpl) RefreshToken(ctx context.Context, in *RefreshTokenRequest, opts ...http.CallOption) (*RefreshTokenResponse, error) {
+func (c *AuthServiceHTTPClientImpl) RefreshToken(ctx context.Context, in *RefreshTokenRequest, opts ...http.CallOption) (*RefreshTokenResponse, error) {
 	var out RefreshTokenResponse
 	pattern := "/auth/refresh"
 	path := binding.EncodeURL(pattern, in, false)
-	opts = append(opts, http.Operation(OperationIdentityServiceRefreshToken))
+	opts = append(opts, http.Operation(OperationAuthServiceRefreshToken))
 	opts = append(opts, http.PathTemplate(pattern))
 	err := c.cc.Invoke(ctx, "POST", path, in, &out, opts...)
 	if err != nil {
@@ -232,11 +232,11 @@ func (c *IdentityServiceHTTPClientImpl) RefreshToken(ctx context.Context, in *Re
 }
 
 // Register Register creates a new user account.
-func (c *IdentityServiceHTTPClientImpl) Register(ctx context.Context, in *RegisterRequest, opts ...http.CallOption) (*RegisterResponse, error) {
+func (c *AuthServiceHTTPClientImpl) Register(ctx context.Context, in *RegisterRequest, opts ...http.CallOption) (*RegisterResponse, error) {
 	var out RegisterResponse
 	pattern := "/auth/register"
 	path := binding.EncodeURL(pattern, in, false)
-	opts = append(opts, http.Operation(OperationIdentityServiceRegister))
+	opts = append(opts, http.Operation(OperationAuthServiceRegister))
 	opts = append(opts, http.PathTemplate(pattern))
 	err := c.cc.Invoke(ctx, "POST", path, in, &out, opts...)
 	if err != nil {

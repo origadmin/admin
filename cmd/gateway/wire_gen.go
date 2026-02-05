@@ -34,7 +34,7 @@ func wireApp(app *runtime.App, bootstrap *conf.Config) (*kratos.App, func(), err
 	if err != nil {
 		return nil, nil, err
 	}
-	authBridgeSet, err := client.NewAuthBridgeSet(app, bootstrap, clientMiddlewareProvider)
+	authBridgeSet, err := client.NewIdentityBridgeSet(app, bootstrap, clientMiddlewareProvider)
 	if err != nil {
 		return nil, nil, err
 	}

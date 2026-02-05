@@ -10,34 +10,34 @@ import (
 func init() {
 	policies := []security.Policy{
 		{
-			ServiceMethod: "/api.v1.services.identity.IdentityService/Login",
+			ServiceMethod: "/api.v1.services.identity.AuthService/Login",
 			GatewayPath:   "POST:/auth/login",
 			Name:          "public",
-			VersionID:     "07d4f2804ca823887eeac6f1036d7440bc477c99ebf6c5d9754580f60fb0a0e6",
+			VersionID:     "4c4cc8ac4cc4fc6c1fe27dc9f2b4071ca8c552d44d4a1be3958276c90a682b96",
 		},
 		{
-			ServiceMethod: "/api.v1.services.identity.IdentityService/Register",
+			ServiceMethod: "/api.v1.services.identity.AuthService/Register",
 			GatewayPath:   "POST:/auth/register",
 			Name:          "public",
-			VersionID:     "7be6bc5eb014e2777fe90a15094d867e3e2c052bbc47b7c7a7109cabbdff1ee2",
+			VersionID:     "4d86fba98aad3ae414d3d2612d6ac33ca7e433fb5513f083266142ce37bf72ae",
 		},
 		{
-			ServiceMethod: "/api.v1.services.identity.IdentityService/Logout",
+			ServiceMethod: "/api.v1.services.identity.AuthService/Logout",
 			GatewayPath:   "POST:/auth/logout",
 			Name:          "authn",
-			VersionID:     "88e438814715e2acf50366c68694fc5cb7c60f169ef59cda0a625df5012de0b9",
+			VersionID:     "eff78f487d4591b77e8a4c2d3f05cd0cf15afd6c57a4e10c6c146499a42b93e6",
 		},
 		{
-			ServiceMethod: "/api.v1.services.identity.IdentityService/RefreshToken",
+			ServiceMethod: "/api.v1.services.identity.AuthService/RefreshToken",
 			GatewayPath:   "POST:/auth/refresh",
 			Name:          "public",
-			VersionID:     "48898495f90c7b8238ed15ae942d0300717cb5eb183138682b6f3600dd045d86",
+			VersionID:     "343c08075f9dca1e71a1881692397d8aefa27fde75c60ed4dfef06be83ce3560",
 		},
 		{
-			ServiceMethod: "/api.v1.services.identity.IdentityService/GetCaptcha",
+			ServiceMethod: "/api.v1.services.identity.AuthService/GetCaptcha",
 			GatewayPath:   "GET:/auth/captcha",
 			Name:          "public",
-			VersionID:     "79b33f721800564f62549e28f16bed7ec1d14fef173991c27413acfcc8b24a07",
+			VersionID:     "b6d1aace38e932f052588c01f0676186c833a3a5bf2b3144f9c4add615bce46f",
 		},
 	}
 

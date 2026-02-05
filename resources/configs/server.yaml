@@ -25,7 +25,7 @@ servers:
           - authn
 
     # Auth Service gRPC Server
-    - name: "auth"
+    - name: "identity"
       protocol: "grpc"
       grpc:
         addr: "0.0.0.0:18011"
@@ -33,7 +33,7 @@ servers:
         middlewares:
           - "recovery"
           - "authz"
-    - name: "auth"
+    - name: "identity"
       protocol: "http"
       http:
         addr: "0.0.0.0:18012"
@@ -69,6 +69,10 @@ servers:
         broker:
           type: "nats"
           nats:
-            address: "localhost:4222"
+            address: "nats://backend_nats:4222"  # 使用容器网络名称
             jetstream_enabled: true
             jetstream_stream_name: "system_events"
+            # 添加连接超时配置
+            connect_timeout: 15s
+            reconnect_wait: 2s
+            max_reconnects: 10

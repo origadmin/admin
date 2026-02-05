@@ -101,9 +101,9 @@ paths:
     /auth/captcha:
         get:
             tags:
-              - IdentityService
+              - AuthService
             description: GetCaptcha generates a new captcha.
-            operationId: IdentityService_GetCaptcha
+            operationId: AuthService_GetCaptcha
             parameters:
                 - name: captcha_id
                   in: query
@@ -131,9 +131,9 @@ paths:
     /auth/login:
         post:
             tags:
-              - IdentityService
+              - AuthService
             description: Login authenticates a user and returns a token pair.
-            operationId: IdentityService_Login
+            operationId: AuthService_Login
             requestBody:
                 content:
                     application/json:
@@ -156,9 +156,9 @@ paths:
     /auth/logout:
         post:
             tags:
-              - IdentityService
+              - AuthService
             description: Logout invalidates user's session.
-            operationId: IdentityService_Logout
+            operationId: AuthService_Logout
             requestBody:
                 content:
                     application/json:
@@ -181,9 +181,9 @@ paths:
     /auth/refresh:
         post:
             tags:
-              - IdentityService
+              - AuthService
             description: RefreshToken provides a new access token.
-            operationId: IdentityService_RefreshToken
+            operationId: AuthService_RefreshToken
             requestBody:
                 content:
                     application/json:
@@ -206,9 +206,9 @@ paths:
     /auth/register:
         post:
             tags:
-              - IdentityService
+              - AuthService
             description: Register creates a new user account.
-            operationId: IdentityService_Register
+            operationId: AuthService_Register
             requestBody:
               content:
                 application/json:
@@ -4105,14 +4105,14 @@ tags:
     description: |-
       AdminService provides administrative and operational endpoints for identity service.
        These endpoints are intended for system administrators, operators, and for use in testing.
+  - name: AuthService
+    description: Service AuthService provides APIs for the identity lifecycle.
     - name: DatastoreService
       description: |-
         DatastoreService provides file storage and data management capabilities.
          Note: This service is not yet implemented, proto definitions are prepared for future use.
     - name: DepartmentService
       description: The organization department service definition.
-  - name: IdentityService
-    description: Service IdentityService provides APIs for the identity lifecycle.
     - name: MeService
       description: Service MeService provides APIs for currently authenticated user to manage their own profile and data.
   - name: NotificationService

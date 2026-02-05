@@ -78,8 +78,24 @@ architecture.
 3. Run the application
 
     ```bash
-    go run main.go start
+    # 默认安全部署（无法律风险）
+    docker-compose up -d
+    
+    # 或使用其他配置选项
+    docker-compose -f docker-compose.dev.yml up -d
+    
+    # 查看部署指南了解所有选项
+    more DEPLOYMENT_GUIDE.md
     ```
+
+## 📋 部署说明
+
+**默认配置**：`docker-compose.yml`（安全配置，仅包含 MIT 许可证组件）
+
+*其他配置：*
+
+- `docker-compose.dev.yml` - 更精简的配置
+- 分离式部署 - 基础设施与应用服务分开管理
 
 # SourceTree
 

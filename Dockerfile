@@ -3,7 +3,7 @@
 # Example: docker build -f projects/backend/Dockerfile --build-arg SERVICE_NAME=auth .
 
 # --- Builder Stage ---
-FROM golang:1.25.3-alpine AS builder
+FROM golang:1.25.5-alpine AS builder
 
 WORKDIR /build
 

@@ -6,6 +6,7 @@ package main
 
 import (
 	"flag"
+	"os"
 
 	"github.com/go-kratos/kratos/v2"
 	"github.com/go-kratos/kratos/v2/transport"
@@ -28,6 +29,8 @@ var (
 	Name = "origadmin.service.system"
 	// Version is the version of the compiled software.
 	Version = "v1.0.0"
+	// envPath is the path to the .env file.
+	envPath = "resources/.env.system"
 
 	// flagconf is the config flag.
 	flagconf string
@@ -45,9 +48,10 @@ func NewApp(app *runtime.App, servers []transport.Server) *kratos.App {
 }
 
 func main() {
-	// Load .env file for local development from resources directory.
-	// It's safe to ignore the error, as the file may not exist in production.
-	_ = godotenv.Load("resources/.env.system")
+	if err := godotenv.Load(envPath); err != nil {
+		wd, _ := os.Getwd()
+		log.Warnf("godotenv: failed to load '%s' (PWD: %s): %v", envPath, wd, err)
+	}
 
 	flag.Parse()
 

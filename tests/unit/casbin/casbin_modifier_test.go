@@ -18,7 +18,7 @@ import (
 	"origadmin/application/admin/internal/data"
 	"origadmin/application/admin/internal/data/entity/ent"
 	"origadmin/application/admin/internal/data/entity/ent/enttest"
-	"origadmin/application/admin/internal/features/auth/dal"
+	"origadmin/application/admin/internal/features/identity/dal"
 )
 
 // setupTest now provides a simpler setup without a watcher.

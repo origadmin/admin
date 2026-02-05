@@ -768,8 +768,8 @@ const file_identity_auth_proto_rawDesc = "" +
 	"\n" +
 	"authorized\x18\x01 \x01(\bR\n" +
 	"authorized\x12\x18\n" +
-	"\auser_id\x18\x02 \x01(\tR\auser_id2\xad\x06\n" +
-	"\x0fIdentityService\x12|\n" +
+	"\auser_id\x18\x02 \x01(\tR\auser_id2\xa9\x06\n" +
+	"\vAuthService\x12|\n" +
 	"\x05Login\x12&.api.v1.services.identity.LoginRequest\x1a'.api.v1.services.identity.LoginResponse\"\"\xea\xea\x1b\b\n" +
 	"\x06public\x82\xd3\xe4\x93\x02\x10:\x01*\"\v/auth/login\x12\x88\x01\n" +
 	"\bRegister\x12).api.v1.services.identity.RegisterRequest\x1a*.api.v1.services.identity.RegisterResponse\"%\xea\xea\x1b\b\n" +
@@ -812,18 +812,18 @@ var file_identity_auth_proto_goTypes = []any{
 	(*AuthenticateResponse)(nil), // 11: api.v1.services.identity.AuthenticateResponse
 }
 var file_identity_auth_proto_depIdxs = []int32{
-	0,  // 0: api.v1.services.identity.IdentityService.Login:input_type -> api.v1.services.identity.LoginRequest
-	2,  // 1: api.v1.services.identity.IdentityService.Register:input_type -> api.v1.services.identity.RegisterRequest
-	4,  // 2: api.v1.services.identity.IdentityService.Logout:input_type -> api.v1.services.identity.LogoutRequest
-	6,  // 3: api.v1.services.identity.IdentityService.RefreshToken:input_type -> api.v1.services.identity.RefreshTokenRequest
-	8,  // 4: api.v1.services.identity.IdentityService.GetCaptcha:input_type -> api.v1.services.identity.GetCaptchaRequest
-	10, // 5: api.v1.services.identity.IdentityService.Authenticate:input_type -> api.v1.services.identity.AuthenticateRequest
-	1,  // 6: api.v1.services.identity.IdentityService.Login:output_type -> api.v1.services.identity.LoginResponse
-	3,  // 7: api.v1.services.identity.IdentityService.Register:output_type -> api.v1.services.identity.RegisterResponse
-	5,  // 8: api.v1.services.identity.IdentityService.Logout:output_type -> api.v1.services.identity.LogoutResponse
-	7,  // 9: api.v1.services.identity.IdentityService.RefreshToken:output_type -> api.v1.services.identity.RefreshTokenResponse
-	9,  // 10: api.v1.services.identity.IdentityService.GetCaptcha:output_type -> api.v1.services.identity.GetCaptchaResponse
-	11, // 11: api.v1.services.identity.IdentityService.Authenticate:output_type -> api.v1.services.identity.AuthenticateResponse
+	0,  // 0: api.v1.services.identity.AuthService.Login:input_type -> api.v1.services.identity.LoginRequest
+	2,  // 1: api.v1.services.identity.AuthService.Register:input_type -> api.v1.services.identity.RegisterRequest
+	4,  // 2: api.v1.services.identity.AuthService.Logout:input_type -> api.v1.services.identity.LogoutRequest
+	6,  // 3: api.v1.services.identity.AuthService.RefreshToken:input_type -> api.v1.services.identity.RefreshTokenRequest
+	8,  // 4: api.v1.services.identity.AuthService.GetCaptcha:input_type -> api.v1.services.identity.GetCaptchaRequest
+	10, // 5: api.v1.services.identity.AuthService.Authenticate:input_type -> api.v1.services.identity.AuthenticateRequest
+	1,  // 6: api.v1.services.identity.AuthService.Login:output_type -> api.v1.services.identity.LoginResponse
+	3,  // 7: api.v1.services.identity.AuthService.Register:output_type -> api.v1.services.identity.RegisterResponse
+	5,  // 8: api.v1.services.identity.AuthService.Logout:output_type -> api.v1.services.identity.LogoutResponse
+	7,  // 9: api.v1.services.identity.AuthService.RefreshToken:output_type -> api.v1.services.identity.RefreshTokenResponse
+	9,  // 10: api.v1.services.identity.AuthService.GetCaptcha:output_type -> api.v1.services.identity.GetCaptchaResponse
+	11, // 11: api.v1.services.identity.AuthService.Authenticate:output_type -> api.v1.services.identity.AuthenticateResponse
 	6,  // [6:12] is the sub-list for method output_type
 	0,  // [0:6] is the sub-list for method input_type
 	0,  // [0:0] is the sub-list for extension type_name

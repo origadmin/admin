@@ -11,8 +11,8 @@ option java_multiple_files = true;
 option java_outer_classname = "APIServiceIdentityProto";
 option java_package = "com.origadmin.api.v1.services.identity";
 
-// Service IdentityService provides APIs for the identity lifecycle.
-service IdentityService {
+// Service AuthService provides APIs for the identity lifecycle.
+service AuthService {
   // --- Authentication ---
 
   // Login authenticates a user and returns a token pair.
