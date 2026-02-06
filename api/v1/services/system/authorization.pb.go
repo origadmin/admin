@@ -8,6 +8,8 @@ package system
 
 import (
 	_ "github.com/origadmin/contrib/api/gen/go/policy/v1"
+	v1 "github.com/origadmin/contrib/api/gen/go/security/authz/v1"
+	_ "google.golang.org/genproto/googleapis/api/annotations"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	reflect "reflect"
@@ -22,32 +24,51 @@ const (
 	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
 )
 
-// AccessRule represents a generic "Subject-Object-Action" policy.
-// This is implementation-agnostic. For Casbin, it maps to a 'p' rule.
-type AccessRule struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Subject       string                 `protobuf:"bytes,1,opt,name=subject,proto3" json:"subject,omitempty"` // The subject (e.g., "role:admin", "user:123")
-	Object        string                 `protobuf:"bytes,2,opt,name=object,proto3" json:"object,omitempty"`   // The object/resource (e.g., "/api/users")
-	Action        string                 `protobuf:"bytes,3,opt,name=action,proto3" json:"action,omitempty"`   // The action (e.g., "GET", "write")
-	Domain        string                 `protobuf:"bytes,4,opt,name=domain,proto3" json:"domain,omitempty"`   // Optional domain/tenant, defaults to "*"
+// ListPoliciesRequest specifies filter criteria for policy retrieval.
+// All fields are optional; omitted fields act as wildcards (match any value).
+type ListPoliciesRequest struct {
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// Filter by policy type (e.g., "p", "g", "opa:rego", "iam:statement")
+	Type *string `protobuf:"bytes,1,opt,name=type,proto3,oneof" json:"type,omitempty"`
+	// Filter by subject (e.g., "user:123", "role:admin")
+	Subject *string `protobuf:"bytes,2,opt,name=subject,proto3,oneof" json:"subject,omitempty"`
+	// Filter by actions (e.g., ["read", "write"])
+	Actions []string `protobuf:"bytes,3,rep,name=actions,proto3" json:"actions,omitempty"`
+	// Filter by resources (e.g., ["s3:*", "s3:bucket/*"])
+	Resources []string `protobuf:"bytes,4,rep,name=resources,proto3" json:"resources,omitempty"`
+	// Filter by effect (e.g., "allow", "deny")
+	Effect *string `protobuf:"bytes,5,opt,name=effect,proto3,oneof" json:"effect,omitempty"`
+	// Filter by domain/namespace
+	Domain *string `protobuf:"bytes,6,opt,name=domain,proto3,oneof" json:"domain,omitempty"`
+	// Filter by disabled status
+	Disabled *bool `protobuf:"varint,7,opt,name=disabled,proto3,oneof" json:"disabled,omitempty"`
+	// Standard pagination fields
+	Page       int32   `protobuf:"varint,10,opt,name=page,proto3" json:"page,omitempty"`
+	PageSize   int32   `protobuf:"varint,11,opt,name=page_size,proto3" json:"page_size,omitempty"`
+	PageToken  string  `protobuf:"bytes,12,opt,name=page_token,proto3" json:"page_token,omitempty"`
+	PagingMode *string `protobuf:"bytes,13,opt,name=paging_mode,proto3,oneof" json:"paging_mode,omitempty"`
+	OnlyCount  bool    `protobuf:"varint,14,opt,name=only_count,proto3" json:"only_count,omitempty"`
+	Keyword    string  `protobuf:"bytes,15,opt,name=keyword,proto3" json:"keyword,omitempty"`
+	// Sort criteria (e.g., ["type", "-created_at"])
+	Sorting       []string `protobuf:"bytes,20,rep,name=sorting,proto3" json:"sorting,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *AccessRule) Reset() {
-	*x = AccessRule{}
+func (x *ListPoliciesRequest) Reset() {
+	*x = ListPoliciesRequest{}
 	mi := &file_system_authorization_proto_msgTypes[0]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *AccessRule) String() string {
+func (x *ListPoliciesRequest) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*AccessRule) ProtoMessage() {}
+func (*ListPoliciesRequest) ProtoMessage() {}
 
-func (x *AccessRule) ProtoReflect() protoreflect.Message {
+func (x *ListPoliciesRequest) ProtoReflect() protoreflect.Message {
 	mi := &file_system_authorization_proto_msgTypes[0]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -59,64 +80,141 @@ func (x *AccessRule) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use AccessRule.ProtoReflect.Descriptor instead.
-func (*AccessRule) Descriptor() ([]byte, []int) {
+// Deprecated: Use ListPoliciesRequest.ProtoReflect.Descriptor instead.
+func (*ListPoliciesRequest) Descriptor() ([]byte, []int) {
 	return file_system_authorization_proto_rawDescGZIP(), []int{0}
 }
 
-func (x *AccessRule) GetSubject() string {
-	if x != nil {
-		return x.Subject
+func (x *ListPoliciesRequest) GetType() string {
+	if x != nil && x.Type != nil {
+		return *x.Type
 	}
 	return ""
 }
 
-func (x *AccessRule) GetObject() string {
-	if x != nil {
-		return x.Object
+func (x *ListPoliciesRequest) GetSubject() string {
+	if x != nil && x.Subject != nil {
+		return *x.Subject
 	}
 	return ""
 }
 
-func (x *AccessRule) GetAction() string {
+func (x *ListPoliciesRequest) GetActions() []string {
 	if x != nil {
-		return x.Action
+		return x.Actions
+	}
+	return nil
+}
+
+func (x *ListPoliciesRequest) GetResources() []string {
+	if x != nil {
+		return x.Resources
+	}
+	return nil
+}
+
+func (x *ListPoliciesRequest) GetEffect() string {
+	if x != nil && x.Effect != nil {
+		return *x.Effect
 	}
 	return ""
 }
 
-func (x *AccessRule) GetDomain() string {
-	if x != nil {
-		return x.Domain
+func (x *ListPoliciesRequest) GetDomain() string {
+	if x != nil && x.Domain != nil {
+		return *x.Domain
 	}
 	return ""
 }
 
-// GroupingRule represents a generic "User-in-Group" relationship.
-// This is implementation-agnostic. For Casbin, it maps to a 'g' rule.
-type GroupingRule struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	User          string                 `protobuf:"bytes,1,opt,name=user,proto3" json:"user,omitempty"`     // The user identifier (e.g., "user:123")
-	Group         string                 `protobuf:"bytes,2,opt,name=group,proto3" json:"group,omitempty"`   // The group/role identifier (e.g., "role:admin")
-	Domain        string                 `protobuf:"bytes,3,opt,name=domain,proto3" json:"domain,omitempty"` // Optional domain/tenant, defaults to "*"
+func (x *ListPoliciesRequest) GetDisabled() bool {
+	if x != nil && x.Disabled != nil {
+		return *x.Disabled
+	}
+	return false
+}
+
+func (x *ListPoliciesRequest) GetPage() int32 {
+	if x != nil {
+		return x.Page
+	}
+	return 0
+}
+
+func (x *ListPoliciesRequest) GetPageSize() int32 {
+	if x != nil {
+		return x.PageSize
+	}
+	return 0
+}
+
+func (x *ListPoliciesRequest) GetPageToken() string {
+	if x != nil {
+		return x.PageToken
+	}
+	return ""
+}
+
+func (x *ListPoliciesRequest) GetPagingMode() string {
+	if x != nil && x.PagingMode != nil {
+		return *x.PagingMode
+	}
+	return ""
+}
+
+func (x *ListPoliciesRequest) GetOnlyCount() bool {
+	if x != nil {
+		return x.OnlyCount
+	}
+	return false
+}
+
+func (x *ListPoliciesRequest) GetKeyword() string {
+	if x != nil {
+		return x.Keyword
+	}
+	return ""
+}
+
+func (x *ListPoliciesRequest) GetSorting() []string {
+	if x != nil {
+		return x.Sorting
+	}
+	return nil
+}
+
+// ListPoliciesResponse contains authorization policies from casbin_rule table.
+// The policies are converted from casbin_rule format to authz.PolicySpec format.
+type ListPoliciesResponse struct {
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// The list of policies in authz.PolicySpec format.
+	Policies []*v1.PolicySpec `protobuf:"bytes,1,rep,name=policies,proto3" json:"policies,omitempty"`
+	// The total number of policies matching the filter.
+	Total int32 `protobuf:"varint,2,opt,name=total,proto3" json:"total,omitempty"`
+	// The current page number.
+	Page int32 `protobuf:"varint,3,opt,name=page,proto3" json:"page,omitempty"`
+	// The number of items per page.
+	PageSize int32 `protobuf:"varint,4,opt,name=page_size,proto3" json:"page_size,omitempty"`
+	// Token to retrieve next page of results, or empty if there are no more results.
+	NextPageToken string `protobuf:"bytes,5,opt,name=next_page_token,proto3" json:"next_page_token,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *GroupingRule) Reset() {
-	*x = GroupingRule{}
+func (x *ListPoliciesResponse) Reset() {
+	*x = ListPoliciesResponse{}
 	mi := &file_system_authorization_proto_msgTypes[1]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *GroupingRule) String() string {
+func (x *ListPoliciesResponse) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*GroupingRule) ProtoMessage() {}
+func (*ListPoliciesResponse) ProtoMessage() {}
 
-func (x *GroupingRule) ProtoReflect() protoreflect.Message {
+func (x *ListPoliciesResponse) ProtoReflect() protoreflect.Message {
 	mi := &file_system_authorization_proto_msgTypes[1]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -128,236 +226,87 @@ func (x *GroupingRule) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use GroupingRule.ProtoReflect.Descriptor instead.
-func (*GroupingRule) Descriptor() ([]byte, []int) {
+// Deprecated: Use ListPoliciesResponse.ProtoReflect.Descriptor instead.
+func (*ListPoliciesResponse) Descriptor() ([]byte, []int) {
 	return file_system_authorization_proto_rawDescGZIP(), []int{1}
 }
 
-func (x *GroupingRule) GetUser() string {
+func (x *ListPoliciesResponse) GetPolicies() []*v1.PolicySpec {
 	if x != nil {
-		return x.User
+		return x.Policies
+	}
+	return nil
+}
+
+func (x *ListPoliciesResponse) GetTotal() int32 {
+	if x != nil {
+		return x.Total
+	}
+	return 0
+}
+
+func (x *ListPoliciesResponse) GetPage() int32 {
+	if x != nil {
+		return x.Page
+	}
+	return 0
+}
+
+func (x *ListPoliciesResponse) GetPageSize() int32 {
+	if x != nil {
+		return x.PageSize
+	}
+	return 0
+}
+
+func (x *ListPoliciesResponse) GetNextPageToken() string {
+	if x != nil {
+		return x.NextPageToken
 	}
 	return ""
-}
-
-func (x *GroupingRule) GetGroup() string {
-	if x != nil {
-		return x.Group
-	}
-	return ""
-}
-
-func (x *GroupingRule) GetDomain() string {
-	if x != nil {
-		return x.Domain
-	}
-	return ""
-}
-
-type ListAllPoliciesRequest struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *ListAllPoliciesRequest) Reset() {
-	*x = ListAllPoliciesRequest{}
-	mi := &file_system_authorization_proto_msgTypes[2]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *ListAllPoliciesRequest) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*ListAllPoliciesRequest) ProtoMessage() {}
-
-func (x *ListAllPoliciesRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_system_authorization_proto_msgTypes[2]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use ListAllPoliciesRequest.ProtoReflect.Descriptor instead.
-func (*ListAllPoliciesRequest) Descriptor() ([]byte, []int) {
-	return file_system_authorization_proto_rawDescGZIP(), []int{2}
-}
-
-type ListAllPoliciesResponse struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	AccessRules   []*AccessRule          `protobuf:"bytes,1,rep,name=access_rules,proto3" json:"access_rules,omitempty"`
-	GroupingRules []*GroupingRule        `protobuf:"bytes,2,rep,name=grouping_rules,proto3" json:"grouping_rules,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *ListAllPoliciesResponse) Reset() {
-	*x = ListAllPoliciesResponse{}
-	mi := &file_system_authorization_proto_msgTypes[3]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *ListAllPoliciesResponse) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*ListAllPoliciesResponse) ProtoMessage() {}
-
-func (x *ListAllPoliciesResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_system_authorization_proto_msgTypes[3]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use ListAllPoliciesResponse.ProtoReflect.Descriptor instead.
-func (*ListAllPoliciesResponse) Descriptor() ([]byte, []int) {
-	return file_system_authorization_proto_rawDescGZIP(), []int{3}
-}
-
-func (x *ListAllPoliciesResponse) GetAccessRules() []*AccessRule {
-	if x != nil {
-		return x.AccessRules
-	}
-	return nil
-}
-
-func (x *ListAllPoliciesResponse) GetGroupingRules() []*GroupingRule {
-	if x != nil {
-		return x.GroupingRules
-	}
-	return nil
-}
-
-type ListPoliciesForRolesRequest struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	RoleKeywords  []string               `protobuf:"bytes,1,rep,name=role_keywords,proto3" json:"role_keywords,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *ListPoliciesForRolesRequest) Reset() {
-	*x = ListPoliciesForRolesRequest{}
-	mi := &file_system_authorization_proto_msgTypes[4]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *ListPoliciesForRolesRequest) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*ListPoliciesForRolesRequest) ProtoMessage() {}
-
-func (x *ListPoliciesForRolesRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_system_authorization_proto_msgTypes[4]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use ListPoliciesForRolesRequest.ProtoReflect.Descriptor instead.
-func (*ListPoliciesForRolesRequest) Descriptor() ([]byte, []int) {
-	return file_system_authorization_proto_rawDescGZIP(), []int{4}
-}
-
-func (x *ListPoliciesForRolesRequest) GetRoleKeywords() []string {
-	if x != nil {
-		return x.RoleKeywords
-	}
-	return nil
-}
-
-type ListPoliciesForRolesResponse struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	AccessRules   []*AccessRule          `protobuf:"bytes,1,rep,name=access_rules,proto3" json:"access_rules,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *ListPoliciesForRolesResponse) Reset() {
-	*x = ListPoliciesForRolesResponse{}
-	mi := &file_system_authorization_proto_msgTypes[5]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *ListPoliciesForRolesResponse) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*ListPoliciesForRolesResponse) ProtoMessage() {}
-
-func (x *ListPoliciesForRolesResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_system_authorization_proto_msgTypes[5]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use ListPoliciesForRolesResponse.ProtoReflect.Descriptor instead.
-func (*ListPoliciesForRolesResponse) Descriptor() ([]byte, []int) {
-	return file_system_authorization_proto_rawDescGZIP(), []int{5}
-}
-
-func (x *ListPoliciesForRolesResponse) GetAccessRules() []*AccessRule {
-	if x != nil {
-		return x.AccessRules
-	}
-	return nil
 }
 
 var File_system_authorization_proto protoreflect.FileDescriptor
 
 const file_system_authorization_proto_rawDesc = "" +
 	"\n" +
-	"\x1asystem/authorization.proto\x12\x16api.v1.services.system\x1a\x16policy/v1/policy.proto\"n\n" +
+	"\x1asystem/authorization.proto\x12\x16api.v1.services.system\x1a\x1dsecurity/authz/v1/authz.proto\x1a\x16policy/v1/policy.proto\x1a\x1cgoogle/api/annotations.proto\"\xf5\x03\n" +
+	"\x13ListPoliciesRequest\x12\x17\n" +
+	"\x04type\x18\x01 \x01(\tH\x00R\x04type\x88\x01\x01\x12\x1d\n" +
+	"\asubject\x18\x02 \x01(\tH\x01R\asubject\x88\x01\x01\x12\x18\n" +
+	"\aactions\x18\x03 \x03(\tR\aactions\x12\x1c\n" +
+	"\tresources\x18\x04 \x03(\tR\tresources\x12\x1b\n" +
+	"\x06effect\x18\x05 \x01(\tH\x02R\x06effect\x88\x01\x01\x12\x1b\n" +
+	"\x06domain\x18\x06 \x01(\tH\x03R\x06domain\x88\x01\x01\x12\x1f\n" +
+	"\bdisabled\x18\a \x01(\bH\x04R\bdisabled\x88\x01\x01\x12\x12\n" +
+	"\x04page\x18\n" +
+	" \x01(\x05R\x04page\x12\x1c\n" +
+	"\tpage_size\x18\v \x01(\x05R\tpage_size\x12\x1e\n" +
 	"\n" +
-	"AccessRule\x12\x18\n" +
-	"\asubject\x18\x01 \x01(\tR\asubject\x12\x16\n" +
-	"\x06object\x18\x02 \x01(\tR\x06object\x12\x16\n" +
-	"\x06action\x18\x03 \x01(\tR\x06action\x12\x16\n" +
-	"\x06domain\x18\x04 \x01(\tR\x06domain\"P\n" +
-	"\fGroupingRule\x12\x12\n" +
-	"\x04user\x18\x01 \x01(\tR\x04user\x12\x14\n" +
-	"\x05group\x18\x02 \x01(\tR\x05group\x12\x16\n" +
-	"\x06domain\x18\x03 \x01(\tR\x06domain\"\x18\n" +
-	"\x16ListAllPoliciesRequest\"\xaf\x01\n" +
-	"\x17ListAllPoliciesResponse\x12F\n" +
-	"\faccess_rules\x18\x01 \x03(\v2\".api.v1.services.system.AccessRuleR\faccess_rules\x12L\n" +
-	"\x0egrouping_rules\x18\x02 \x03(\v2$.api.v1.services.system.GroupingRuleR\x0egrouping_rules\"C\n" +
-	"\x1bListPoliciesForRolesRequest\x12$\n" +
-	"\rrole_keywords\x18\x01 \x03(\tR\rrole_keywords\"f\n" +
-	"\x1cListPoliciesForRolesResponse\x12F\n" +
-	"\faccess_rules\x18\x01 \x03(\v2\".api.v1.services.system.AccessRuleR\faccess_rules2\xab\x02\n" +
-	"\x14AuthorizationService\x12\x80\x01\n" +
-	"\x0fListAllPolicies\x12..api.v1.services.system.ListAllPoliciesRequest\x1a/.api.v1.services.system.ListAllPoliciesResponse\"\f\xea\xea\x1b\b\n" +
-	"\x06public\x12\x8f\x01\n" +
-	"\x14ListPoliciesForRoles\x123.api.v1.services.system.ListPoliciesForRolesRequest\x1a4.api.v1.services.system.ListPoliciesForRolesResponse\"\f\xea\xea\x1b\b\n" +
-	"\x06publicB\xe7\x01\n" +
+	"page_token\x18\f \x01(\tR\n" +
+	"page_token\x12%\n" +
+	"\vpaging_mode\x18\r \x01(\tH\x05R\vpaging_mode\x88\x01\x01\x12\x1e\n" +
+	"\n" +
+	"only_count\x18\x0e \x01(\bR\n" +
+	"only_count\x12\x18\n" +
+	"\akeyword\x18\x0f \x01(\tR\akeyword\x12\x18\n" +
+	"\asorting\x18\x14 \x03(\tR\asortingB\a\n" +
+	"\x05_typeB\n" +
+	"\n" +
+	"\b_subjectB\t\n" +
+	"\a_effectB\t\n" +
+	"\a_domainB\v\n" +
+	"\t_disabledB\x0e\n" +
+	"\f_paging_mode\"\xcf\x01\n" +
+	"\x14ListPoliciesResponse\x12E\n" +
+	"\bpolicies\x18\x01 \x03(\v2).contrib.api.security.authz.v1.PolicySpecR\bpolicies\x12\x14\n" +
+	"\x05total\x18\x02 \x01(\x05R\x05total\x12\x12\n" +
+	"\x04page\x18\x03 \x01(\x05R\x04page\x12\x1c\n" +
+	"\tpage_size\x18\x04 \x01(\x05R\tpage_size\x12(\n" +
+	"\x0fnext_page_token\x18\x05 \x01(\tR\x0fnext_page_token2\xac\x01\n" +
+	"\x14AuthorizationService\x12\x93\x01\n" +
+	"\fListPolicies\x12+.api.v1.services.system.ListPoliciesRequest\x1a,.api.v1.services.system.ListPoliciesResponse\"(\xea\xea\x1b\a\n" +
+	"\x05authz\x82\xd3\xe4\x93\x02\x17:\x01*\"\x12/sys/policies/listB\xe7\x01\n" +
 	"\x1acom.api.v1.services.systemB\x12AuthorizationProtoP\x01Z9origadmin/application/admin/api/v1/services/system;system\xa2\x02\x04AVSS\xaa\x02\x16Api.V1.Services.System\xca\x02\x16Api\\V1\\Services\\System\xe2\x02\"Api\\V1\\Services\\System\\GPBMetadata\xea\x02\x19Api::V1::Services::Systemb\x06proto3"
 
 var (
@@ -372,28 +321,21 @@ func file_system_authorization_proto_rawDescGZIP() []byte {
 	return file_system_authorization_proto_rawDescData
 }
 
-var file_system_authorization_proto_msgTypes = make([]protoimpl.MessageInfo, 6)
+var file_system_authorization_proto_msgTypes = make([]protoimpl.MessageInfo, 2)
 var file_system_authorization_proto_goTypes = []any{
-	(*AccessRule)(nil),                   // 0: api.v1.services.system.AccessRule
-	(*GroupingRule)(nil),                 // 1: api.v1.services.system.GroupingRule
-	(*ListAllPoliciesRequest)(nil),       // 2: api.v1.services.system.ListAllPoliciesRequest
-	(*ListAllPoliciesResponse)(nil),      // 3: api.v1.services.system.ListAllPoliciesResponse
-	(*ListPoliciesForRolesRequest)(nil),  // 4: api.v1.services.system.ListPoliciesForRolesRequest
-	(*ListPoliciesForRolesResponse)(nil), // 5: api.v1.services.system.ListPoliciesForRolesResponse
+	(*ListPoliciesRequest)(nil),  // 0: api.v1.services.system.ListPoliciesRequest
+	(*ListPoliciesResponse)(nil), // 1: api.v1.services.system.ListPoliciesResponse
+	(*v1.PolicySpec)(nil),        // 2: contrib.api.security.authz.v1.PolicySpec
 }
 var file_system_authorization_proto_depIdxs = []int32{
-	0, // 0: api.v1.services.system.ListAllPoliciesResponse.access_rules:type_name -> api.v1.services.system.AccessRule
-	1, // 1: api.v1.services.system.ListAllPoliciesResponse.grouping_rules:type_name -> api.v1.services.system.GroupingRule
-	0, // 2: api.v1.services.system.ListPoliciesForRolesResponse.access_rules:type_name -> api.v1.services.system.AccessRule
-	2, // 3: api.v1.services.system.AuthorizationService.ListAllPolicies:input_type -> api.v1.services.system.ListAllPoliciesRequest
-	4, // 4: api.v1.services.system.AuthorizationService.ListPoliciesForRoles:input_type -> api.v1.services.system.ListPoliciesForRolesRequest
-	3, // 5: api.v1.services.system.AuthorizationService.ListAllPolicies:output_type -> api.v1.services.system.ListAllPoliciesResponse
-	5, // 6: api.v1.services.system.AuthorizationService.ListPoliciesForRoles:output_type -> api.v1.services.system.ListPoliciesForRolesResponse
-	5, // [5:7] is the sub-list for method output_type
-	3, // [3:5] is the sub-list for method input_type
-	3, // [3:3] is the sub-list for extension type_name
-	3, // [3:3] is the sub-list for extension extendee
-	0, // [0:3] is the sub-list for field type_name
+	2, // 0: api.v1.services.system.ListPoliciesResponse.policies:type_name -> contrib.api.security.authz.v1.PolicySpec
+	0, // 1: api.v1.services.system.AuthorizationService.ListPolicies:input_type -> api.v1.services.system.ListPoliciesRequest
+	1, // 2: api.v1.services.system.AuthorizationService.ListPolicies:output_type -> api.v1.services.system.ListPoliciesResponse
+	2, // [2:3] is the sub-list for method output_type
+	1, // [1:2] is the sub-list for method input_type
+	1, // [1:1] is the sub-list for extension type_name
+	1, // [1:1] is the sub-list for extension extendee
+	0, // [0:1] is the sub-list for field type_name
 }
 
 func init() { file_system_authorization_proto_init() }
@@ -401,13 +343,14 @@ func file_system_authorization_proto_init() {
 	if File_system_authorization_proto != nil {
 		return
 	}
+	file_system_authorization_proto_msgTypes[0].OneofWrappers = []any{}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_system_authorization_proto_rawDesc), len(file_system_authorization_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   6,
+			NumMessages:   2,
 			NumExtensions: 0,
 			NumServices:   1,
 		},

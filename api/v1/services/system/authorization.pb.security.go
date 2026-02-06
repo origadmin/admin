@@ -10,16 +10,10 @@ import (
 func init() {
 	policies := []security.Policy{
 		{
-			ServiceMethod: "/api.v1.services.system.AuthorizationService/ListAllPolicies",
-			GatewayPath:   "",
-			Name:          "public",
-			VersionID:     "d8c85cf903343096633f17ff30d97631417397a857b60bbff3eab15f9d620b42",
-		},
-		{
-			ServiceMethod: "/api.v1.services.system.AuthorizationService/ListPoliciesForRoles",
-			GatewayPath:   "",
-			Name:          "public",
-			VersionID:     "9688bec67d5fb98132cc7383b1b9acaab7b9be1479ea96e1f65b3af3f75863b7",
+			ServiceMethod: "/api.v1.services.system.AuthorizationService/ListPolicies",
+			GatewayPath:   "POST:/sys/policies/list",
+			Name:          "authz",
+			VersionID:     "37d9180285ebfd9a4b0a3ac6e4c6f9edcf2b267428116ffb3f9dccd5f2c05eca",
 		},
 	}
 

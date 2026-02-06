@@ -28,34 +28,56 @@ var (
 	_ = codes.Unimplemented
 )
 
-const AuthorizationServiceListAllPoliciesBridgeOperation = "/api.v1.services.system.AuthorizationService/ListAllPolicies"
-const AuthorizationServiceListPoliciesForRolesBridgeOperation = "/api.v1.services.system.AuthorizationService/ListPoliciesForRoles"
+const AuthorizationServiceListPoliciesBridgeOperation = "/api.v1.services.system.AuthorizationService/ListPolicies"
 
 type AuthorizationServiceBridgeServer interface {
-	// ListAllPolicies retrieves the entire set of policies, pre-processed into a generic,
-	// implementation-agnostic format.
-	// This RPC is intended for internal gRPC calls only and bypasses authn/authz checks.
-	ListAllPolicies(context.Context, *ListAllPoliciesRequest) (*ListAllPoliciesResponse, error)
-	// ListPoliciesForRoles retrieves access rules for a specific set of roles.
-	ListPoliciesForRoles(context.Context, *ListPoliciesForRolesRequest) (*ListPoliciesForRolesResponse, error)
+	// ListPolicies retrieves authorization policies from casbin_rule table.
+	// This is the ONLY data source interface for providing policy data to other services.
+	ListPolicies(context.Context, *ListPoliciesRequest) (*ListPoliciesResponse, error)
 }
 
 type AuthorizationServiceHooker interface {
-	AuthorizationServiceListAllPoliciesHooker
-	AuthorizationServiceListPoliciesForRolesHooker
+	AuthorizationServiceListPoliciesHooker
 }
 
 type AuthorizationServiceHookedBridger interface {
 	AuthorizationServiceHooker
 	AuthorizationServiceBridgeServer
 }
-type AuthorizationServiceListAllPoliciesHooker interface {
-	PrepareListAllPolicies(http.Context, *ListAllPoliciesRequest) (context.Context, error)
-	CompleteListAllPolicies(http.Context, *ListAllPoliciesRequest, *ListAllPoliciesResponse) error
+type AuthorizationServiceListPoliciesHooker interface {
+	PrepareListPolicies(http.Context, *ListPoliciesRequest) (context.Context, error)
+	CompleteListPolicies(http.Context, *ListPoliciesRequest, *ListPoliciesResponse) error
 }
-type AuthorizationServiceListPoliciesForRolesHooker interface {
-	PrepareListPoliciesForRoles(http.Context, *ListPoliciesForRolesRequest) (context.Context, error)
-	CompleteListPoliciesForRoles(http.Context, *ListPoliciesForRolesRequest, *ListPoliciesForRolesResponse) error
+
+func RegisterAuthorizationServiceBridgeServer(s *http.Server, srv AuthorizationServiceHookedBridger) {
+	r := s.Route("/")
+	r.POST("/sys/policies/list", _AuthorizationService_ListPolicies0_Bridge_Handler(srv))
+}
+
+func _AuthorizationService_ListPolicies0_Bridge_Handler(srv AuthorizationServiceHookedBridger) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in ListPoliciesRequest
+		if err := ctx.Bind(&in); err != nil {
+			return err
+		}
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationAuthorizationServiceListPolicies)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.ListPolicies(ctx, req.(*ListPoliciesRequest))
+		})
+
+		newctx, err := srv.PrepareListPolicies(ctx, &in)
+		if err != nil {
+			return err
+		}
+		out, err := h(newctx, &in)
+		if err != nil {
+			return err
+		}
+		return srv.CompleteListPolicies(ctx, &in, out.(*ListPoliciesResponse))
+	}
 }
 
 // UnimplementedAuthorizationServiceHooked must be embedded to have
@@ -65,19 +87,11 @@ type AuthorizationServiceListPoliciesForRolesHooker interface {
 // pointer dereference when methods are called.
 type UnimplementedAuthorizationServiceHooked struct{}
 
-func (UnimplementedAuthorizationServiceHooked) PrepareListAllPolicies(ctx http.Context, in *ListAllPoliciesRequest) (context.Context, error) {
+func (UnimplementedAuthorizationServiceHooked) PrepareListPolicies(ctx http.Context, in *ListPoliciesRequest) (context.Context, error) {
 	return ctx, nil
 }
 
-func (UnimplementedAuthorizationServiceHooked) CompleteListAllPolicies(ctx http.Context, in *ListAllPoliciesRequest, out *ListAllPoliciesResponse) error {
-	return ctx.Result(200, out)
-}
-
-func (UnimplementedAuthorizationServiceHooked) PrepareListPoliciesForRoles(ctx http.Context, in *ListPoliciesForRolesRequest) (context.Context, error) {
-	return ctx, nil
-}
-
-func (UnimplementedAuthorizationServiceHooked) CompleteListPoliciesForRoles(ctx http.Context, in *ListPoliciesForRolesRequest, out *ListPoliciesForRolesResponse) error {
+func (UnimplementedAuthorizationServiceHooked) CompleteListPolicies(ctx http.Context, in *ListPoliciesRequest, out *ListPoliciesResponse) error {
 	return ctx.Result(200, out)
 }
 
@@ -95,6 +109,18 @@ type AuthorizationServiceHookedBridge struct {
 	AuthorizationServiceHooker
 }
 
+type AuthorizationServiceHTTPBridgeImpl struct {
+	client AuthorizationServiceHTTPClient
+}
+
+func NewAuthorizationServiceHTTPBridge(client *http.Client) AuthorizationServiceHTTPServer {
+	return &AuthorizationServiceHTTPBridgeImpl{client: NewAuthorizationServiceHTTPClient(client)}
+}
+
+func (c *AuthorizationServiceHTTPBridgeImpl) ListPolicies(ctx context.Context, in *ListPoliciesRequest) (*ListPoliciesResponse, error) {
+	return c.client.ListPolicies(ctx, in)
+}
+
 type AuthorizationServiceBridgeImpl struct {
 	client AuthorizationServiceClient
 }
@@ -103,12 +129,35 @@ func NewAuthorizationServiceBridge(client grpc.ClientConnInterface) Authorizatio
 	return &AuthorizationServiceBridgeImpl{client: NewAuthorizationServiceClient(client)}
 }
 
-func (c *AuthorizationServiceBridgeImpl) ListAllPolicies(ctx context.Context, in *ListAllPoliciesRequest) (*ListAllPoliciesResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method ListAllPolicies not implemented")
-}
-
-func (c *AuthorizationServiceBridgeImpl) ListPoliciesForRoles(ctx context.Context, in *ListPoliciesForRolesRequest) (*ListPoliciesForRolesResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method ListPoliciesForRoles not implemented")
+func (c *AuthorizationServiceBridgeImpl) ListPolicies(ctx context.Context, in *ListPoliciesRequest) (*ListPoliciesResponse, error) {
+	return c.client.ListPolicies(ctx, in)
 }
 
 func (c *AuthorizationServiceBridgeImpl) mustEmbedUnimplementedAuthorizationServiceServer() {}
+
+type AuthorizationServiceGRPC2HTTPBridgeImpl struct {
+	client AuthorizationServiceClient
+}
+
+func NewAuthorizationServiceGRPC2HTTP(client grpc.ClientConnInterface) AuthorizationServiceHTTPServer {
+	return &AuthorizationServiceGRPC2HTTPBridgeImpl{client: NewAuthorizationServiceClient(client)}
+}
+
+func (c *AuthorizationServiceGRPC2HTTPBridgeImpl) ListPolicies(ctx context.Context, in *ListPoliciesRequest) (*ListPoliciesResponse, error) {
+	return c.client.ListPolicies(ctx, in)
+}
+
+type AuthorizationServiceHTTP2GRPCBridgeImpl struct {
+	client AuthorizationServiceHTTPClient
+}
+
+func NewAuthorizationServiceHTTP2GRPC(client *http.Client) AuthorizationServiceServer {
+	return &AuthorizationServiceHTTP2GRPCBridgeImpl{client: NewAuthorizationServiceHTTPClient(client)}
+}
+
+func (c *AuthorizationServiceHTTP2GRPCBridgeImpl) ListPolicies(ctx context.Context, in *ListPoliciesRequest) (*ListPoliciesResponse, error) {
+	return c.client.ListPolicies(ctx, in)
+}
+
+func (c *AuthorizationServiceHTTP2GRPCBridgeImpl) mustEmbedUnimplementedAuthorizationServiceServer() {
+}

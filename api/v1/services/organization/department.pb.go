@@ -568,7 +568,7 @@ var File_organization_department_proto protoreflect.FileDescriptor
 
 const file_organization_department_proto_rawDesc = "" +
 	"\n" +
-	"\x1dorganization/department.proto\x12\x1capi.v1.services.organization\x1a\x1cgoogle/api/annotations.proto\x1a\x19google/protobuf/any.proto\x1a\x1bgoogle/protobuf/empty.proto\x1a\x12types/system.proto\x1a\x16policy/v1/policy.proto\"\xdb\x01\n" +
+	"\x1dorganization/department.proto\x12\x1capi.v1.services.organization\x1a\x1cgoogle/api/annotations.proto\x1a\x19google/protobuf/any.proto\x1a\x1bgoogle/protobuf/empty.proto\x1a\x18types/organization.proto\x1a\x16policy/v1/policy.proto\"\xdb\x01\n" +
 	"\x16ListDepartmentsRequest\x12\x12\n" +
 	"\x04page\x18\x01 \x01(\x05R\x04page\x12\x1c\n" +
 	"\tpage_size\x18\x02 \x01(\x05R\tpage_size\x12\x1e\n" +

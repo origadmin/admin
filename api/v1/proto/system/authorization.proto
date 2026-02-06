@@ -2,7 +2,9 @@ syntax = "proto3";
 
 package api.v1.services.system;
 
+import "security/authz/v1/authz.proto";
 import "policy/v1/policy.proto";
+import "google/api/annotations.proto";
 
 option go_package = "origadmin/application/admin/api/v1/services/system;system";
 option java_multiple_files = true;
@@ -10,52 +12,71 @@ option java_outer_classname = "APIServiceAuthorizationProto";
 option java_package = "com.origadmin.api.v1.services.system";
 option objc_class_prefix = "APIServiceAuthorization";
 
-// AuthorizationService defines the contract for providing a complete set of authorization policies.
-// This service is consumed by other modules (like auth) to synchronize their state.
-// SECURITY: This is a foundational service and should NOT be exposed publicly.
-// Access must be restricted at the infrastructure level (e.g., firewall, internal network).
+// AuthorizationService provides read access to authorization policies from casbin_rule table.
+// This service is consumed by other modules (like auth) to query policy data.
 service AuthorizationService {
-  // ListAllPolicies retrieves the entire set of policies, pre-processed into a generic,
-  // implementation-agnostic format.
-  // This RPC is intended for internal gRPC calls only and bypasses authn/authz checks.
-  rpc ListAllPolicies(ListAllPoliciesRequest) returns (ListAllPoliciesResponse) {
-    option (contrib.api.policy.v1.policy) = {name: "public"};
-  }
-
-  // ListPoliciesForRoles retrieves access rules for a specific set of roles.
-  rpc ListPoliciesForRoles(ListPoliciesForRolesRequest) returns (ListPoliciesForRolesResponse) {
-    option (contrib.api.policy.v1.policy) = {name: "public"};
+  // ListPolicies retrieves authorization policies from casbin_rule table.
+  // This is the ONLY data source interface for providing policy data to other services.
+  rpc ListPolicies(ListPoliciesRequest) returns (ListPoliciesResponse) {
+    option (google.api.http) = {
+      post: "/sys/policies/list"
+      body: "*"
+    };
+    option (contrib.api.policy.v1.policy) = {name: "authz"};
   }
 }
 
-// AccessRule represents a generic "Subject-Object-Action" policy.
-// This is implementation-agnostic. For Casbin, it maps to a 'p' rule.
-message AccessRule {
-  string subject = 1 [json_name = "subject"]; // The subject (e.g., "role:admin", "user:123")
-  string object = 2 [json_name = "object"];  // The object/resource (e.g., "/api/users")
-  string action = 3 [json_name = "action"];  // The action (e.g., "GET", "write")
-  string domain = 4 [json_name = "domain"];  // Optional domain/tenant, defaults to "*"
+// ListPoliciesRequest specifies filter criteria for policy retrieval.
+// All fields are optional; omitted fields act as wildcards (match any value).
+message ListPoliciesRequest {
+  // Filter by policy type (e.g., "p", "g", "opa:rego", "iam:statement")
+  optional string type = 1 [json_name = "type"];
+
+  // Filter by subject (e.g., "user:123", "role:admin")
+  optional string subject = 2 [json_name = "subject"];
+
+  // Filter by actions (e.g., ["read", "write"])
+  repeated string actions = 3 [json_name = "actions"];
+
+  // Filter by resources (e.g., ["s3:*", "s3:bucket/*"])
+  repeated string resources = 4 [json_name = "resources"];
+
+  // Filter by effect (e.g., "allow", "deny")
+  optional string effect = 5 [json_name = "effect"];
+
+  // Filter by domain/namespace
+  optional string domain = 6 [json_name = "domain"];
+
+  // Filter by disabled status
+  optional bool disabled = 7 [json_name = "disabled"];
+
+  // Standard pagination fields
+  int32 page = 10 [json_name = "page"];
+  int32 page_size = 11 [json_name = "page_size"];
+  string page_token = 12 [json_name = "page_token"];
+  optional string paging_mode = 13 [json_name = "paging_mode"];
+  bool only_count = 14 [json_name = "only_count"];
+  string keyword = 15 [json_name = "keyword"];
+
+  // Sort criteria (e.g., ["type", "-created_at"])
+  repeated string sorting = 20 [json_name = "sorting"];
 }
 
-// GroupingRule represents a generic "User-in-Group" relationship.
-// This is implementation-agnostic. For Casbin, it maps to a 'g' rule.
-message GroupingRule {
-  string user = 1 [json_name = "user"];   // The user identifier (e.g., "user:123")
-  string group = 2 [json_name = "group"];  // The group/role identifier (e.g., "role:admin")
-  string domain = 3 [json_name = "domain"]; // Optional domain/tenant, defaults to "*"
-}
+// ListPoliciesResponse contains authorization policies from casbin_rule table.
+// The policies are converted from casbin_rule format to authz.PolicySpec format.
+message ListPoliciesResponse {
+  // The list of policies in authz.PolicySpec format.
+  repeated contrib.api.security.authz.v1.PolicySpec policies = 1 [json_name = "policies"];
 
-message ListAllPoliciesRequest {}
+  // The total number of policies matching the filter.
+  int32 total = 2 [json_name = "total"];
 
-message ListAllPoliciesResponse {
-  repeated AccessRule access_rules = 1 [json_name = "access_rules"];
-  repeated GroupingRule grouping_rules = 2 [json_name = "grouping_rules"];
-}
+  // The current page number.
+  int32 page = 3 [json_name = "page"];
 
-message ListPoliciesForRolesRequest {
-  repeated string role_keywords = 1 [json_name = "role_keywords"];
-}
+  // The number of items per page.
+  int32 page_size = 4 [json_name = "page_size"];
 
-message ListPoliciesForRolesResponse {
-  repeated AccessRule access_rules = 1 [json_name = "access_rules"];
+  // Token to retrieve next page of results, or empty if there are no more results.
+  string next_page_token = 5 [json_name = "next_page_token"];
 }

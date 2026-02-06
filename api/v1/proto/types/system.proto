@@ -217,71 +217,6 @@ message Resource {
   repeated Permission permissions = 103 [json_name = "permissions"];
 }
 
-// department.table.comment
-message Department {
-  // ID of the ent.
-  // field.primary_key.comment
-  int64 id = 1 [json_name = "id"];
-  // create_time.field.comment
-  google.protobuf.Timestamp create_time = 2 [json_name = "create_time"];
-  // update_time.field.comment
-  google.protobuf.Timestamp update_time = 3 [json_name = "update_time"];
-  // department.field.keyword
-  string keyword = 4 [json_name = "keyword"];
-  // department.field.name
-  string name = 5 [json_name = "name"];
-  // department.field.tree_path
-  string tree_path = 6 [json_name = "tree_path"];
-  // department.field.sequence
-  int32 sequence = 7 [json_name = "sequence"];
-  // department.field.status
-  int32 status = 8 [json_name = "status"];
-  // department.field.level
-  int32 level = 9 [json_name = "level"];
-  // department.field.description
-  string description = 10 [json_name = "description"];
-  // department.field.parent_id
-  int64 parent_id = 11 [json_name = "parent_id"];
-  // Children holds the value of the children edge.
-  repeated Department children = 100 [json_name = "children"];
-  // Parent holds the value of the parent edge.
-  Department parent = 101 [json_name = "parent"];
-}
-
-// user_department.table.comment
-message UserDepartment {
-  // ID of the ent.
-  // field.primary_key.comment
-  int64 id = 1 [json_name = "id"];
-  // field.foreign_key.comment
-  int64 user_id = 2 [json_name = "user_id"];
-  // field.foreign_key.comment
-  int64 department_id = 3 [json_name = "department_id"];
-  // User holds the value of the user edge.
-  User user = 100 [json_name = "user"];
-  // Department holds the value of the department edge.
-  Department department = 101 [json_name = "department"];
-}
-
-// position.table.comment
-message Position {
-  // ID of the ent.
-  // field.primary_key.comment
-  int64 id = 1 [json_name = "id"];
-  // create_time.field.comment
-  google.protobuf.Timestamp create_time = 2 [json_name = "create_time"];
-  // update_time.field.comment
-  google.protobuf.Timestamp update_time = 3 [json_name = "update_time"];
-  // position.field.name
-  string name = 4 [json_name = "name"];
-  // position.field.keyword
-  string keyword = 5 [json_name = "keyword"];
-  // position.field.description
-  string description = 6 [json_name = "description"];
-  // department.field.department_id
-  int64 department_id = 7 [json_name = "department_id"];
-}
-
 // permission.table.comment
 message Permission {
   // ID of the ent.
@@ -307,36 +242,6 @@ message Permission {
   repeated Resource resources = 100 [json_name = "resources"];
   // For responses: This field is populated with full view details.
   repeated View views = 101 [json_name = "views"];
-}
-
-// user_position.table.comment
-message UserPosition {
-  // ID of the ent.
-  // field.primary_key.comment
-  int64 id = 1 [json_name = "id"];
-  // field.foreign_key.comment
-  int64 user_id = 2 [json_name = "user_id"];
-  // field.foreign_key.comment
-  int64 position_id = 3 [json_name = "position_id"];
-  // User holds the value of the user edge.
-  User user = 100 [json_name = "user"];
-  // Position holds the value of the position edge.
-  Position position = 101 [json_name = "position"];
-}
-
-// position_permission.table.comment
-message PositionPermission {
-  // ID of the ent.
-  // field.primary_key.comment
-  int64 id = 1 [json_name = "id"];
-  // position_permission.field.position_id
-  int64 position_id = 2 [json_name = "position_id"];
-  // position_permission.field.permission_id
-  int64 permission_id = 3 [json_name = "permission_id"];
-  // Position holds the value of the position edge.
-  Position position = 100 [json_name = "position"];
-  // Permission holds the value of the permission edge.
-  Permission permission = 101 [json_name = "permission"];
 }
 
 // role_permission.table.comment

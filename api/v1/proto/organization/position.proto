@@ -5,7 +5,7 @@ package api.v1.services.organization;
 import "google/api/annotations.proto";
 import "google/protobuf/any.proto";
 import "google/protobuf/empty.proto";
-import "types/system.proto";
+import "types/organization.proto";
 import "policy/v1/policy.proto";
 
 option go_package = "origadmin/application/admin/api/v1/services/organization;organization";
