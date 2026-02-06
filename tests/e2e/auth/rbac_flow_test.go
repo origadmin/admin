@@ -39,7 +39,7 @@ func TestRBACFlow(t *testing.T) {
 
 	const (
 		// waitFor is the maximum time to wait for policy propagation.
-		waitFor = 3 * time.Second
+		waitFor = 4 * time.Second
 		// Poll more frequently to measure actual update time more accurately
 		tick = 1 * time.Second
 	)

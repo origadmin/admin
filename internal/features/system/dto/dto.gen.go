@@ -22,6 +22,10 @@ type (
 	DepartmentPB            = types.Department
 	Departments             = []*ent.Department
 	DepartmentsPB           = []*types.Department
+	Notification            = ent.Notification
+	NotificationChannelPB   = types.NotificationChannel
+	NotificationPB          = types.Notification
+	NotificationTypePB      = types.NotificationType
 	Permission              = ent.Permission
 	PermissionEdges         = ent.PermissionEdges
 	PermissionPB            = types.Permission
@@ -139,6 +143,32 @@ func ConvertDepartmentsToDepartmentsPB(froms Departments) DepartmentsPB {
 		tos[i] = ConvertDepartmentToDepartmentPB(f)
 	}
 	return tos
+}
+
+// ConvertNotificationPBToNotification converts NotificationPB to Notification.
+func ConvertNotificationPBToNotification(from *NotificationPB) *Notification {
+	if from == nil {
+		return nil
+	}
+
+	to := &Notification{
+		ID:      from.Id,
+		Content: from.Content,
+	}
+	return to
+}
+
+// ConvertNotificationToNotificationPB converts Notification to NotificationPB.
+func ConvertNotificationToNotificationPB(from *Notification) *NotificationPB {
+	if from == nil {
+		return nil
+	}
+
+	to := &NotificationPB{
+		Id:      from.ID,
+		Content: from.Content,
+	}
+	return to
 }
 
 // ConvertPermissionPBToPermission converts PermissionPB to Permission.

@@ -1362,6 +1362,33 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/google.rpc.Status'
+  /sys/policies/list:
+    post:
+      tags:
+        - AuthorizationService
+      description: |-
+        ListPolicies retrieves authorization policies from casbin_rule table.
+         This is the ONLY data source interface for providing policy data to other services.
+      operationId: AuthorizationService_ListPolicies
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/api.v1.services.system.ListPoliciesRequest'
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/api.v1.services.system.ListPoliciesResponse'
+        default:
+          description: Default error response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/google.rpc.Status'
     /sys/resources:
         get:
             tags:
@@ -3184,6 +3211,83 @@ components:
                     description: |-
                         Additional information about this response.
                          content to be added without destroying the page data format
+      api.v1.services.system.ListPoliciesRequest:
+        type: object
+        properties:
+          type:
+            type: string
+            description: Filter by policy type (e.g., "p", "g", "opa:rego", "iam:statement")
+          subject:
+            type: string
+            description: Filter by subject (e.g., "user:123", "role:admin")
+          actions:
+            type: array
+            items:
+              type: string
+            description: Filter by actions (e.g., ["read", "write"])
+          resources:
+            type: array
+            items:
+              type: string
+            description: Filter by resources (e.g., ["s3:*", "s3:bucket/*"])
+          effect:
+            type: string
+            description: Filter by effect (e.g., "allow", "deny")
+          domain:
+            type: string
+            description: Filter by domain/namespace
+          disabled:
+            type: boolean
+            description: Filter by disabled status
+          page:
+            type: integer
+            description: Standard pagination fields
+            format: int32
+          page_size:
+            type: integer
+            format: int32
+          page_token:
+            type: string
+          paging_mode:
+            type: string
+          only_count:
+            type: boolean
+          keyword:
+            type: string
+          sorting:
+            type: array
+            items:
+              type: string
+            description: Sort criteria (e.g., ["type", "-created_at"])
+        description: |-
+          ListPoliciesRequest specifies filter criteria for policy retrieval.
+           All fields are optional; omitted fields act as wildcards (match any value).
+      api.v1.services.system.ListPoliciesResponse:
+        type: object
+        properties:
+          policies:
+            type: array
+            items:
+              $ref: '#/components/schemas/contrib.api.security.authz.v1.PolicySpec'
+            description: The list of policies in authz.PolicySpec format.
+          total:
+            type: integer
+            description: The total number of policies matching the filter.
+            format: int32
+          page:
+            type: integer
+            description: The current page number.
+            format: int32
+          page_size:
+            type: integer
+            description: The number of items per page.
+            format: int32
+          next_page_token:
+            type: string
+            description: Token to retrieve next page of results, or empty if there are no more results.
+        description: |-
+          ListPoliciesResponse contains authorization policies from casbin_rule table.
+           The policies are converted from casbin_rule format to authz.PolicySpec format.
         api.v1.services.system.ListResourcesResponse:
             type: object
             properties:
@@ -3525,9 +3629,7 @@ components:
             properties:
                 id:
                     type: string
-                    description: |-
-                        ID of the ent.
-                         field.primary_key.comment
+                    description: "ID of the ent.\r\n field.primary_key.comment"
                 create_time:
                     type: string
                     description: create_time.field.comment
@@ -3696,9 +3798,7 @@ components:
             properties:
                 id:
                     type: string
-                    description: |-
-                        ID of the ent.
-                         field.primary_key.comment
+                    description: "ID of the ent.\r\n field.primary_key.comment"
                 create_time:
                     type: string
                     description: create_time.field.comment
@@ -4064,6 +4164,95 @@ components:
                         $ref: '#/components/schemas/api.v1.services.types.Role'
                     description: 'For responses: This field is populated with full role details.'
             description: View is the model entity for the View schema.
+      contrib.api.security.authz.v1.PolicySpec:
+        type: object
+        properties:
+          type:
+            type: string
+            description: |-
+              Policy type identifier.
+               For Casbin: "p" (policy/permission), "g" (grouping/role), "g2", "g3", etc.
+               For OPA: "opa:rego"
+               For IAM: "iam:statement"
+               For Zanzibar: "zanzibar:relation"
+          subject:
+            type: string
+            description: |-
+              The subject of this policy (who the policy applies to).
+               e.g., "user:123", "role:admin", "service:payment-service"
+               NOTE: During authorization checks, this field is ignored and replaced with Principal's identity.
+          actions:
+            type: array
+            items:
+              type: string
+            description: |-
+              Actions that this policy grants or restricts.
+               Used for type="p" (permission) policies.
+               Multiple actions can be specified (e.g., ["read", "write"] for IAM-style policies).
+          resources:
+            type: array
+            items:
+              type: string
+            description: |-
+              Resources that this policy applies to.
+               Used for type="p" (permission) policies.
+               Multiple resources can be specified (e.g., ["s3:*", "s3:bucket/*"] for IAM-style policies).
+          roles:
+            type: array
+            items:
+              type: string
+            description: |-
+              Roles that the subject is assigned to.
+               Used for type="g" (grouping/role) policies in RBAC.
+               Multiple roles can be specified (e.g., ["admin", "editor", "viewer"]).
+          effect:
+            type: string
+            description: |-
+              Effect of the policy (e.g., "allow", "deny").
+               Recommended values: "allow", "deny"
+          domain:
+            type: string
+            description: |-
+              Domain or namespace for this policy.
+               Used for multi-tenant isolation (Casbin) or resource namespacing (Zanzibar).
+          condition:
+            type: string
+            description: |-
+              Condition expression for the policy.
+               Supports multiple formats:
+               - Casbin: simple conditions (e.g., "r.sub == p.sub")
+               - OPA: Rego code (e.g., "allow { input.user == data.roles.admin }")
+               - IAM: JSON conditions (e.g., {"StringEquals": {"aws:UserAgent": "MyApp"}})
+          valid_from:
+            type: string
+            description: Valid from timestamp (Unix epoch in seconds).
+          expires_at:
+            type: string
+            description: Expires at timestamp (Unix epoch in seconds).
+          priority:
+            type: integer
+            description: |-
+              Priority of the policy.
+               Default is 0 (lowest priority). Higher numbers have higher priority.
+            format: int32
+          disabled:
+            type: boolean
+            description: |-
+              Whether the policy is disabled.
+               Default is false (policy is enabled).
+          metadata:
+            type: object
+            description: |-
+              Metadata for framework-specific extensions.
+               This field allows arbitrary key-value pairs for framework-specific data.
+               Examples:
+               - OPA: {"rego_package": "auth", "rego_entrypoint": "allow", "data": {...}}
+               - Zanzibar: {"namespace": "document", "object_id": "123", "relation": "viewer"}
+               - Custom: any additional fields needed by specific implementations
+        description: |-
+          PolicySpec is the data transfer object for a complete policy specification.
+           Unlike RuleSpec (used for authorization checks without subject),
+           PolicySpec includes subject and is used for storage and retrieval.
         google.protobuf.Any:
             type: object
             properties:
@@ -4099,14 +4288,18 @@ components:
 tags:
   - name: AdminService
     description: |-
-      AdminService provides administrative and operational endpoints.
-       Note: This service is a placeholder for future administrative features.
-  - name: AdminService
-    description: |-
       AdminService provides administrative and operational endpoints for identity service.
        These endpoints are intended for system administrators, operators, and for use in testing.
+  - name: AdminService
+    description: |-
+      AdminService provides administrative and operational endpoints.
+       Note: This service is a placeholder for future administrative features.
   - name: AuthService
     description: Service AuthService provides APIs for the identity lifecycle.
+  - name: AuthorizationService
+    description: |-
+      AuthorizationService provides read access to authorization policies from casbin_rule table.
+       This service is consumed by other modules (like auth) to query policy data.
     - name: DatastoreService
       description: |-
         DatastoreService provides file storage and data management capabilities.

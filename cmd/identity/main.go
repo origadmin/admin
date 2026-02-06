@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) 2024 OrigAdmin. All rights reserved.
+ */
+
 package main
 
 import (
@@ -17,7 +21,6 @@ import (
 	_ "github.com/sqlite3ent/sqlite3"
 	"origadmin/application/admin/internal/conf"
 	_ "origadmin/application/admin/internal/data/entity/ent/runtime"
-	identityservice "origadmin/application/admin/internal/features/identity/service"
 	confhelper "origadmin/application/admin/internal/helpers/conf"
 )
 
@@ -39,17 +42,9 @@ func init() {
 	flag.StringVar(&flagconf, "conf", "", "config path, eg: -conf bootstrap.yaml")
 }
 
-// NewBootstrapOptions creates Kratos options from the PolicyBootstrap.
-// This acts as a transformer for wire to inject the BeforeStart hook.
-func NewBootstrapOptions(bootstrap *identityservice.PolicyBootstrap) []kratos.Option {
-	return []kratos.Option{kratos.BeforeStart(bootstrap.Bootstrap)}
-}
-
-// NewApp creates a new Kratos application.
-func NewApp(app *runtime.App, servers []transport.Server, opts []kratos.Option) *kratos.App {
-	// Prepend the bootstrap options to any other options.
+func NewApp(app *runtime.App, servers []transport.Server) *kratos.App {
 	log.SetLogger(app.Logger())
-	return app.NewApp(servers, opts...)
+	return app.NewApp(servers)
 }
 
 func main() {
@@ -57,6 +52,7 @@ func main() {
 		wd, _ := os.Getwd()
 		log.Warnf("godotenv: failed to load '%s' (PWD: %s): %v", envPath, wd, err)
 	}
+
 	flag.Parse()
 
 	confPath := confhelper.FindConfPath(flagconf)
@@ -81,16 +77,15 @@ func main() {
 	if !ok {
 		log.Fatalf("failed to get bootstrap config")
 	}
-
-	// wireApp now builds the entire application, including options.
-	kratosApp, cleanupApp, err := wireApp(rt, bootstrapConfig)
+	// wireApp now takes the runtime instance and builds the kratos app.
+	app, cleanupApp, err := wireApp(rt, bootstrapConfig)
 	if err != nil {
 		log.Fatalf("failed to wire app: %v", err)
 	}
 	defer cleanupApp()
 
-	// Run the application. The BeforeStart hook is now injected via wire.
-	if err := kratosApp.Run(); err != nil {
+	// Run the application
+	if err := app.Run(); err != nil {
 		log.Fatalf("app run failed: %v", err)
 	}
 }

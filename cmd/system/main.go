@@ -5,6 +5,7 @@
 package main
 
 import (
+	"context"
 	"flag"
 	"os"
 
@@ -21,6 +22,7 @@ import (
 	_ "github.com/sqlite3ent/sqlite3"
 	"origadmin/application/admin/internal/conf"
 	_ "origadmin/application/admin/internal/data/entity/ent/runtime"
+	"origadmin/application/admin/internal/features/system/service"
 	confhelper "origadmin/application/admin/internal/helpers/conf"
 )
 
@@ -42,9 +44,18 @@ func init() {
 	flag.StringVar(&flagconf, "conf", "", "config path, eg: -conf bootstrap.yaml")
 }
 
-func NewApp(app *runtime.App, servers []transport.Server) *kratos.App {
+func NewApp(app *runtime.App, servers []transport.Server, kratosOpts ...kratos.Option) *kratos.App {
 	log.SetLogger(app.Logger())
-	return app.NewApp(servers)
+	return app.NewApp(servers, kratosOpts...)
+}
+
+// NewBootstrapOptions creates a new bootstrap options.
+func NewBootstrapOptions(bootstrap *service.PolicyBootstrap) []kratos.Option {
+	return []kratos.Option{
+		kratos.BeforeStart(func(ctx context.Context) error {
+			return bootstrap.Bootstrap(ctx)
+		}),
+	}
 }
 
 func main() {

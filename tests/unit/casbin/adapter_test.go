@@ -79,7 +79,7 @@ func arrayEqualsWithoutOrder(a [][]string, b [][]string) bool {
 	return true
 }
 
-func initPolicy(t *testing.T, a *data.CasbinAdapter) {
+func initPolicy(t *testing.T, a *data.Adapter) {
 	// Because the DB is empty at first,
 	// so we need to load the policy from the file adapter (.CSV) first.
 	e, err := casbin.NewEnforcer("../../fixtures/data/adapter/rbac_model.conf",
@@ -108,7 +108,7 @@ func initPolicy(t *testing.T, a *data.CasbinAdapter) {
 	testGetPolicy(t, e, [][]string{{"alice", "data1", "read"}, {"bob", "data2", "write"}, {"data2_admin", "data2", "read"}, {"data2_admin", "data2", "write"}})
 }
 
-func testSaveLoad(t *testing.T, a *data.CasbinAdapter) {
+func testSaveLoad(t *testing.T, a *data.Adapter) {
 	// Initialize some policy in DB.
 	initPolicy(t, a)
 	// Note: you don't need to look at the above code
@@ -122,7 +122,7 @@ func testSaveLoad(t *testing.T, a *data.CasbinAdapter) {
 	testGetPolicy(t, e, [][]string{{"alice", "data1", "read"}, {"bob", "data2", "write"}, {"data2_admin", "data2", "read"}, {"data2_admin", "data2", "write"}})
 }
 
-func initCasbinAdapter(t *testing.T, driverName string, dataSourceName string) *data.CasbinAdapter {
+func initCasbinAdapter(t *testing.T, driverName string, dataSourceName string) *data.Adapter {
 	// Create an adapter
 	ctx := context.Background()
 
@@ -145,7 +145,7 @@ func initCasbinAdapter(t *testing.T, driverName string, dataSourceName string) *
 	return adapter
 }
 
-func initCasbinAdapterWithClientInstance(t *testing.T, client *ent.Client) *data.CasbinAdapter {
+func initCasbinAdapterWithClientInstance(t *testing.T, client *ent.Client) *data.Adapter {
 	// Create an adapter
 	db := ent.NewDatabaseWithClient(client)
 	adapter, err := data.NewAdapter(context.Background(), db, runtimelog.DefaultLogger)
@@ -161,7 +161,7 @@ func initCasbinAdapterWithClientInstance(t *testing.T, client *ent.Client) *data
 	return adapter
 }
 
-func testAutoSave(t *testing.T, a *data.CasbinAdapter) {
+func testAutoSave(t *testing.T, a *data.Adapter) {
 
 	// NewEnforcer() will load the policy automatically.
 	e, _ := casbin.NewEnforcer("../../fixtures/data/adapter/rbac_model.conf", a)
@@ -204,11 +204,11 @@ func testAutoSave(t *testing.T, a *data.CasbinAdapter) {
 	testGetPolicy(t, e, [][]string{})
 }
 
-//func testFilteredPolicy(t *testing.T, a *data.CasbinAdapter) {
+//func testFilteredPolicy(t *testing.T, a *data.Adapter) {
 //	// NewEnforcer() without an adapter will not auto load the policy
 //	e, _ := casbin.NewEnforcer("../../fixtures/data/adapter/rbac_model.conf")
 //	// Now set the adapter
-//	e.Setdata.CasbinAdapter(a)
+//	e.Setdata.Adapter(a)
 //
 //	// Load only alice's policies
 //	assert.Nil(t, e.LoadFilteredPolicy(Filter{V0: []string{"alice"}}))
@@ -227,7 +227,7 @@ func testAutoSave(t *testing.T, a *data.CasbinAdapter) {
 //	testGetPolicy(t, e, [][]string{{"alice", "data1", "read"}, {"bob", "data2", "write"}})
 //}
 
-func testUpdatePolicy(t *testing.T, a *data.CasbinAdapter) {
+func testUpdatePolicy(t *testing.T, a *data.Adapter) {
 	// NewEnforcer() will load the policy automatically.
 	e, _ := casbin.NewEnforcer("../../fixtures/data/adapter/rbac_model.conf", a)
 
@@ -237,7 +237,7 @@ func testUpdatePolicy(t *testing.T, a *data.CasbinAdapter) {
 	testGetPolicy(t, e, [][]string{{"alice", "data1", "write"}, {"bob", "data2", "write"}, {"data2_admin", "data2", "read"}, {"data2_admin", "data2", "write"}})
 }
 
-func testUpdatePolicies(t *testing.T, a *data.CasbinAdapter) {
+func testUpdatePolicies(t *testing.T, a *data.Adapter) {
 	// NewEnforcer() will load the policy automatically.
 	e, _ := casbin.NewEnforcer("../../fixtures/data/adapter/rbac_model.conf", a)
 
@@ -247,7 +247,7 @@ func testUpdatePolicies(t *testing.T, a *data.CasbinAdapter) {
 	testGetPolicyWithoutOrder(t, e, [][]string{{"alice", "data1", "read"}, {"bob", "data2", "read"}, {"data2_admin", "data2", "read"}, {"data2_admin", "data2", "write"}})
 }
 
-func testUpdateFilteredPolicies(t *testing.T, a *data.CasbinAdapter) {
+func testUpdateFilteredPolicies(t *testing.T, a *data.Adapter) {
 	// NewEnforcer() will load the policy automatically.
 	e, _ := casbin.NewEnforcer("../../fixtures/data/adapter/rbac_model.conf", a)
 
@@ -258,7 +258,7 @@ func testUpdateFilteredPolicies(t *testing.T, a *data.CasbinAdapter) {
 	testGetPolicyWithoutOrder(t, e, [][]string{{"alice", "data1", "write"}, {"data2_admin", "data2", "read"}, {"data2_admin", "data2", "write"}, {"bob", "data2", "read"}})
 }
 
-func testFilteredPolicy(t *testing.T, a *data.CasbinAdapter) {
+func testFilteredPolicy(t *testing.T, a *data.Adapter) {
 	// NewEnforcer() without an adapter will not auto load the policy
 	e, _ := casbin.NewEnforcer("../../fixtures/data/adapter/rbac_model.conf", "../../fixtures/data/adapter/rbac_policy.csv")
 
@@ -268,19 +268,19 @@ func testFilteredPolicy(t *testing.T, a *data.CasbinAdapter) {
 	assert.Nil(t, e.SavePolicy())
 
 	// Load only alice's policies
-	assert.Nil(t, e.LoadFilteredPolicy(data.Filter{V0: []string{"alice"}}))
+	assert.Nil(t, e.LoadFilteredPolicy(data.Filter{G: []string{"alice"}}))
 	testGetPolicy(t, e, [][]string{{"alice", "data1", "read"}})
 
 	// Load only bob's policies
-	assert.Nil(t, e.LoadFilteredPolicy(data.Filter{V0: []string{"bob"}}))
+	assert.Nil(t, e.LoadFilteredPolicy(data.Filter{G: []string{"bob"}}))
 	testGetPolicy(t, e, [][]string{{"bob", "data2", "write"}})
 
 	// Load policies for data2_admin
-	assert.Nil(t, e.LoadFilteredPolicy(data.Filter{V0: []string{"data2_admin"}}))
+	assert.Nil(t, e.LoadFilteredPolicy(data.Filter{G: []string{"data2_admin"}}))
 	testGetPolicy(t, e, [][]string{{"data2_admin", "data2", "read"}, {"data2_admin", "data2", "write"}})
 
 	// Load policies for alice and bob
-	assert.Nil(t, e.LoadFilteredPolicy(data.Filter{V0: []string{"alice", "bob"}}))
+	assert.Nil(t, e.LoadFilteredPolicy(data.Filter{G: []string{"alice", "bob"}}))
 	testGetPolicy(t, e, [][]string{{"alice", "data1", "read"}, {"bob", "data2", "write"}})
 }
 
@@ -289,11 +289,11 @@ func TestCasbinAdapters(t *testing.T) {
 	testAutoSave(t, a)
 	testSaveLoad(t, a)
 
-	//a = initdata.CasbinAdapter(t, "mysql", "root:@tcp(127.0.0.1:3306)/casbin")
+	//a = initdata.Adapter(t, "mysql", "root:@tcp(127.0.0.1:3306)/casbin")
 	//testAutoSave(t, a)
 	//testSaveLoad(t, a)
 
-	//a = initdata.CasbinAdapter(t, "postgres", "user=postgres password=postgres host=127.0.0.1 port=5432 sslmode=disable dbname=casbin")
+	//a = initdata.Adapter(t, "postgres", "user=postgres password=postgres host=127.0.0.1 port=5432 sslmode=disable dbname=casbin")
 	//testAutoSave(t, a)
 	//testSaveLoad(t, a)
 
@@ -326,12 +326,12 @@ func TestCasbinAdapters(t *testing.T) {
 	testUpdatePolicies(t, a)
 	testUpdateFilteredPolicies(t, a)
 
-	//a = initdata.CasbinAdapter(t, "mysql", "root:@tcp(127.0.0.1:3306)/casbin")
+	//a = initdata.Adapter(t, "mysql", "root:@tcp(127.0.0.1:3306)/casbin")
 	//testUpdatePolicy(t, a)
 	//testUpdatePolicies(t, a)
 	//testUpdateFilteredPolicies(t, a)
 
-	//a = initdata.CasbinAdapter(t, "postgres", "user=postgres password=postgres host=127.0.0.1 port=5432 sslmode=disable dbname=casbin")
+	//a = initdata.Adapter(t, "postgres", "user=postgres password=postgres host=127.0.0.1 port=5432 sslmode=disable dbname=casbin")
 	//testUpdatePolicy(t, a)
 	//testUpdatePolicies(t, a)
 	//testUpdateFilteredPolicies(t, a)

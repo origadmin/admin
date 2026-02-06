@@ -8,10 +8,9 @@ import (
 	"github.com/google/wire"
 )
 
-// ProviderSet is biz providers.
+// ProviderSet is dal providers.
 var ProviderSet = wire.NewSet(
 	NewAuthUseCase,
 	NewMeUseCase,
 	NewCaptchaUseCase,
-	NewPolicySyncer,
 )

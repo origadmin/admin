@@ -2,26 +2,27 @@
  * Copyright (c) 2024 OrigAdmin. All rights reserved.
  */
 
+// Package dal implements the data access layer for the module.
 package dal
 
 import (
 	"github.com/google/wire"
+	"github.com/origadmin/contrib/security/authz"
 )
 
-// ProviderSet is dal providers for shared database mode.
-// Use this when identity and system services share the same database.
+// ProviderSet is dal providers.
 var ProviderSet = wire.NewSet(
 	NewAuthRepo,
 	NewMeRepo,
-	NewPolicyDBProvider, // DB implementation for PolicyProvider
-	NewCasbinModifier,
-)
 
-// ProviderSetWithGRPC is dal providers for separate database mode.
-// It provides gRPC-based implementations for the data access interfaces.
-// The required gRPC clients are expected to be provided by the client package.
-var ProviderSetWithGRPC = wire.NewSet(
-	NewAuthRepo,           // AuthRepo might still use the DB for local identity state.
-	NewMeGRPCRepo,         // gRPC implementation for MeRepo
-	NewPolicyGRPCProvider, // gRPC implementation for PolicyProvider
+	// Provide authz.PolicyReader with either the DB or gRPC implementation.
+	// Use only one of the following blocks.
+	//
+	// For direct database access:
+	wire.Bind(new(authz.PolicyReader), new(*policyDBProvider)),
+	NewPolicyDBProvider,
+	//
+	// For gRPC-based access:
+	// wire.Bind(new(authz.PolicyReader), new(*policyGRPCProvider)),
+	// NewPolicyGRPCProvider,
 )

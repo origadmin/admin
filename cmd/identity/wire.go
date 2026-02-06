@@ -1,6 +1,11 @@
 //go:build wireinject
 // +build wireinject
 
+/*
+ * Copyright (c) 2024 OrigAdmin. All rights reserved.
+ */
+
+// The build tag makes sure the stub is not built in the final build.
 package main
 
 import (
@@ -21,23 +26,16 @@ import (
 // wireApp init kratos application.
 func wireApp(app *runtime.App, bootstrap *conf.Config) (*kratos.App, func(), error) {
 	panic(wire.Build(
-		// General backend providers
+		// Shared infrastructure providers
 		providers.ProviderBackendSet,
-
-		// Data layer provider
+		// Service-specific providers
 		data.ProviderSet,
-
-		// Client provider for gRPC calls
-		//identityclient.ProviderSet,
 
 		// Auth feature module providers
 		identitydal.ProviderSet,
 		identitybiz.ProviderSet,
 		identityservice.ProviderSet,
 		identityserver.ProviderSet,
-
-		// Bootstrap options provider
-		NewBootstrapOptions,
 
 		NewApp,
 	))

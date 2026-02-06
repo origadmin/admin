@@ -15,7 +15,7 @@ import (
 )
 
 // SetupTestCasbin creates a test Casbin Enforcer
-func SetupTestCasbin(t *testing.T, adapter *data.CasbinAdapter, modelPath string) *casbin.Enforcer {
+func SetupTestCasbin(t *testing.T, adapter *data.Adapter, modelPath string) *casbin.Enforcer {
 	t.Helper()
 	enforcer, err := casbin.NewEnforcer(modelPath, adapter)
 	require.NoError(t, err, "Failed to create enforcer")

@@ -13,6 +13,4 @@ var ProviderSet = wire.NewSet(
 	NewAuthService,
 	NewMeService,
 	NewAdminService,
-	NewPolicyBootstrap,
-	NewPolicySyncService,
 )

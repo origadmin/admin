@@ -33,6 +33,10 @@ func wireApp(app *runtime.App, bootstrap *conf.Config) (*kratos.App, func(), err
 		biz.ProviderSet,
 		service.ProviderSet,
 		server.ProviderSet,
+
+		// Bootstrap options provider
+		NewBootstrapOptions,
+
 		NewApp,
 	))
 }

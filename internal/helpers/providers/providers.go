@@ -206,7 +206,7 @@ func ProvideGatewaySkipper(app *runtime.App, _ *conf.Config) contribsecurity.Ski
 }
 
 // ProvideAuthorizer creates the Casbin authorizer.
-func ProvideAuthorizer(app *runtime.App, c *conf.Config, adapter *data.CasbinAdapter,
+func ProvideAuthorizer(app *runtime.App, c *conf.Config, adapter *data.Adapter,
 	w persist.Watcher) (*casbin.Authorizer, error) {
 	securityConfig := c.GetBootstrap().GetSecurity()
 	if securityConfig == nil {
@@ -255,7 +255,7 @@ func ProvideAuthorizer(app *runtime.App, c *conf.Config, adapter *data.CasbinAda
 	//		callbackHelper := log.NewHelper(log.With(app.Logger(), "module", "casbin.watcher.callback"))
 	//		callbackHelper.Infof("Stage 2: Policy update notification received: %s. Reloading policies from database...", msg)
 	//		if err := enforcer.LoadPolicy(); err != nil {
-	//			callbackHelper.Errorf("Stage 2 failed: Failed to reload policy after watcher update: %v", err)
+	//			callbackHelper.Errorf("Stage2 failed: Failed to reload policy after watcher update: %v", err)
 	//		} else {
 	//			callbackHelper.Info("Stage 2 completed: Policy reloaded successfully from database to memory.")
 	//		}

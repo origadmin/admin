@@ -75,3 +75,16 @@ func ConvertStringToType(from string) view.Type {
 func ConvertTypeToString(from view.Type) string {
 	return ViewTypeName(from)
 }
+
+// NonNilStr returns the value of the string pointer if it is not nil, otherwise returns an empty string.
+func NonNilStr(s *string) string {
+	if s == nil {
+		return ""
+	}
+	return *s
+}
+
+// StrPtr returns a pointer to the given string.
+func StrPtr(s string) *string {
+	return &s
+}

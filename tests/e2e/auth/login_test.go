@@ -9,7 +9,7 @@ import (
 	"github.com/stretchr/testify/require"
 	"google.golang.org/protobuf/encoding/protojson"
 
-	v1 "origadmin/application/admin/api/v1/services/auth"
+	v1 "origadmin/application/admin/api/v1/services/identity"
 	"origadmin/application/admin/tests/e2e"
 )
 

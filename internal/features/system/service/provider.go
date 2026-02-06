@@ -7,10 +7,11 @@ package service
 
 import (
 	"github.com/google/wire"
+
 	systemv1 "origadmin/application/admin/api/v1/services/system"
 )
 
-// ProviderSet is service providers.
+// ProviderSet is dal providers.
 var ProviderSet = wire.NewSet(
 	NewUserService,
 	NewRoleService,
@@ -19,6 +20,8 @@ var ProviderSet = wire.NewSet(
 	NewViewService,
 	NewSystemService,
 	NewAuthorizationService,
+	NewPolicyBootstrap,
+	NewPolicyService,
 
 	// Bind the concrete implementation to the proto-defined interface.
 	wire.Bind(new(systemv1.AuthorizationServiceServer), new(*AuthorizationService)),

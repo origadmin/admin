@@ -15,7 +15,7 @@ import (
 	"google.golang.org/protobuf/encoding/protojson"
 	"google.golang.org/protobuf/proto"
 
-	authv1 "origadmin/application/admin/api/v1/services/auth"
+	identityv1 "origadmin/application/admin/api/v1/services/identity"
 	systemv1 "origadmin/application/admin/api/v1/services/system"
 	typesv1 "origadmin/application/admin/api/v1/services/types"
 )
@@ -158,7 +158,7 @@ func (c *TestHTTPClient) GetPrefix() string {
 // Login performs login request and returns token
 func (c *TestHTTPClient) Login(t *testing.T, username, password string) string {
 	t.Helper()
-	reqBody := &authv1.LoginRequest{
+	reqBody := &identityv1.LoginRequest{
 		Username: username,
 		Password: password,
 	}
@@ -171,7 +171,7 @@ func (c *TestHTTPClient) Login(t *testing.T, username, password string) string {
 	bodyBytes, err := io.ReadAll(resp.Body)
 	require.NoError(t, err, "Failed to read login response body")
 
-	var loginResp authv1.LoginResponse
+	var loginResp identityv1.LoginResponse
 	err = protojson.Unmarshal(bodyBytes, &loginResp)
 	require.NoError(t, err, "Failed to unmarshal login response")
 	require.NotEmpty(t, loginResp.AccessToken, "Access token should not be empty")
