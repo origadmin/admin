@@ -10,6 +10,11 @@ PROTO_TOOLKITS_PATH=toolkits
 PROTO_API_PATH=api
 OPENAPI_DOCS_PATH=resources/api-docs/openapi
 
+# Configurable DTO directories for convert functions
+DTO_DIRS=internal/features
+# Configurable DTO subdirectory name
+DTO_SUBDIR_NAME=dto
+
 # Path to the web UI submodule, relative to this Makefile
 WEBUI_PATH=./webui
 
@@ -107,13 +112,6 @@ openapi:
 	--openapi_out=output_mode=merge,naming=proto,fq_schema_naming=true,default_response=false:${OPENAPI_DOCS_PATH} \
 	$(API_PROTO_FILES)
 
-.PHONY: ent
-# generate ent proto or use ./toolkits/generate.go
-ent:
-	protoc --proto_path=. \
-		--proto_path=./third_party \
-		--ent_out=./database/ent/schema \
-		api/v1/proto/secondworld/greeter.proto
 
 .PHONY: build-ui
 # build the web UI from the submodule
@@ -153,27 +151,29 @@ release-all: build-ui
 #client:
 #	kratos proto client ./api
 
-.PHONY: gen
-#gen
-#go mod tidy
-#buf dep update
-#buf build
-#buf generate # generate proto files
-#go generate ./internal/features/system/dal/entity/generate.go #generate dal entity
-#go generate ./cmd/system #generate system module
-#go generate ./cmd/internal/start #generate main module start
-gen:
+.PHONY: api-protos
+# generate API protobuf files
+api-protos:
 	@echo "Generating Protobuf service api..."
 	@buf dep update
 	@buf build
 	@buf generate
 
+.PHONY: config-protos
+# generate config protobuf files
+config-protos:
 	@echo "Generating Protobuf code for conf/pb..."
 	@protoc -I. -I./third_party --go_out=paths=source_relative:. --validate_out=paths=source_relative,lang=go:. ./internal/conf/pb/*.proto
 
+.PHONY: ent
+# generate Ent data
+ent:
 	@echo "Generating Ent data..."
 	@go generate ./internal/data/entity/ent/generate.go
 
+.PHONY: wire
+# generate wire dependency injection
+wire:
 	@echo "Generating main wire..."
 ifeq ($(GOHOSTOS), windows)
 	@powershell -Command "$$dirs = Get-ChildItem -Path 'cmd' -Directory; foreach ($$dir in $$dirs) { $$wireFile = Join-Path $$dir.FullName 'wire.work.go'; if (Test-Path $$wireFile) { Write-Host ('Generating wire for {0}...' -f $$dir.Name); go generate $$wireFile } }"
@@ -186,9 +186,28 @@ else
 	done
 endif
 
+.PHONY: convert
+# generate convert functions with auto-discovery
+convert:
 	@echo "Generating dto data convert functions ..."
-	@go generate ./internal/features/system/dto
-	@go generate ./internal/features/auth/dto
+ifeq ($(GOHOSTOS), windows)
+	@powershell -Command "$$dirs = '$(DTO_DIRS)'.Split(' '); foreach ($$dir in $$dirs) { if (Test-Path $$dir) { Get-ChildItem -Path $$dir -Directory | ForEach-Object { $$dtoDir = Join-Path $$_FullName '$(DTO_SUBDIR_NAME)'; if (Test-Path $$dtoDir) { Write-Host ('Generating convert functions for {0}...' -f $$_Name); go generate $$dtoDir } } } }"
+else
+	@for dir in $(DTO_DIRS); do \
+		if [ -d "$$dir" ]; then \
+			for subdir in $$dir/*; do \
+				if [ -d "$$subdir/$(DTO_SUBDIR_NAME)" ]; then \
+					echo "Generating convert functions for $$subdir..."; \
+					go generate $$subdir/$(DTO_SUBDIR_NAME); \
+				fi \
+			done \
+		fi \
+	done
+endif
+
+.PHONY: gen
+# generate all code components
+gen: api-protos config-protos ent wire convert
 
 .PHONY: all
 # generate all
