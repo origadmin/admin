@@ -92,13 +92,13 @@ func (m *CasbinRuleMapper) Encode(policy *authzv1.PolicySpec) (string, []string)
 	if config.RoleIndex >= 0 && len(policy.Roles) > 0 {
 		rule[config.RoleIndex] = policy.Roles[0]
 	}
-	if config.EffectIndex >= 0 {
-		if policy.Effect != nil {
-			rule[config.EffectIndex] = *policy.Effect
-		} else {
-			rule[config.EffectIndex] = "allow"
-		}
-	}
+	//if config.EffectIndex >= 0 {
+	//	if policy.Effect != nil {
+	//		rule[config.EffectIndex] = *policy.Effect
+	//	} else {
+	//		rule[config.EffectIndex] = "allow"
+	//	}
+	//}
 
 	return ptype, rule
 }
@@ -140,15 +140,15 @@ func (m *CasbinRuleMapper) Decode(rule *ent.CasbinRule) *authzv1.PolicySpec {
 			policy.Roles = []string{val}
 		}
 	}
-	if config.EffectIndex >= 0 {
-		val := m.getRuleValue(rule, config.EffectIndex)
-		if val != "" {
-			policy.Effect = &val
-		}
-	} else {
-		// Default effect if not mapped
-		policy.Effect = dto.StrPtr("allow")
-	}
+	//if config.EffectIndex >= 0 {
+	//	val := m.getRuleValue(rule, config.EffectIndex)
+	//	if val != "" {
+	//		policy.Effect = &val
+	//	}
+	//} else {
+	//	// Default effect if not mapped
+	//	policy.Effect = dto.StrPtr("allow")
+	//}
 
 	return policy
 }

@@ -110,13 +110,6 @@ func WithPagination(page, pageSize int) PolicyOption {
 	}
 }
 
-// AuthorizationRepo defines the read-only repository interface for policy management.
-type AuthorizationRepo interface {
-	// ListPolicies queries policies based on filter conditions.
-	// The type argument is mandatory to distinguish between access policies ('p') and grouping policies ('g').
-	ListPolicies(ctx context.Context, policyType PolicyType, opts ...PolicyOption) ([]*Policy, int, error)
-}
-
 // PolicyUseCase is responsible for synchronizing policies from a PolicyProvider to a PolicyModifier.
 type PolicyUseCase struct {
 	repo      dto.AuthorizationRepo
@@ -199,9 +192,12 @@ func (s *PolicyUseCase) ScheduleSync() {
 	s.debouncer.Schedule(s.syncAndReload)
 }
 
-// ForceSync triggers an immediate full policy synchronization.
-func (s *PolicyUseCase) ForceSync(ctx context.Context) error {
-	s.log.Info("Force triggering policy sync (manual request)")
+// SyncNow triggers an immediate policy synchronization without debounce delay.
+// Use this for:
+// - Application startup initialization
+// - Manual trigger from admin panel
+func (s *PolicyUseCase) SyncNow(ctx context.Context) error {
+	s.log.Info("Executing immediate policy sync")
 	s.debouncer.Cancel()
 	s.syncAndReload()
 	return nil
@@ -285,6 +281,7 @@ func (s *PolicyUseCase) sync(ctx context.Context) error {
 	// Apply new Access Policies (p-rules)
 	if len(rolePerms) > 0 {
 		s.log.WithContext(ctx).Info("Applying new access policies...")
+		var policies []*authzv1.PolicySpec
 		for _, rp := range rolePerms {
 			if rp.Role == nil || rp.Permission == nil {
 				continue
@@ -300,18 +297,19 @@ func (s *PolicyUseCase) sync(ctx context.Context) error {
 					Domain:    dto.StrPtr("*"),
 					Resources: []string{resource.Operation},
 					Actions:   []string{"ANY"},
-					Effect:    dto.StrPtr("allow"),
 				}
-				if _, err := s.modifier.AddPolicies(ctx, spec); err != nil {
-					s.log.WithContext(ctx).Errorf("Failed to add permission for subject '%s': %v", rp.Role.Keyword, err)
-				}
+				policies = append(policies, spec)
 			}
+		}
+		if _, err := s.modifier.AddPolicies(ctx, policies...); err != nil {
+			s.log.WithContext(ctx).Errorf("Failed to add access policies: %v", err)
 		}
 	}
 
 	// Apply new Grouping Policies (g-rules)
 	if len(userRoles) > 0 {
 		s.log.WithContext(ctx).Info("Applying new grouping policies...")
+		var policies []*authzv1.PolicySpec
 		for _, ur := range userRoles {
 			if ur.User == nil || ur.Role == nil {
 				continue
@@ -323,12 +321,11 @@ func (s *PolicyUseCase) sync(ctx context.Context) error {
 				Subject: user,
 				Domain:  dto.StrPtr("*"),
 				Roles:   []string{ur.Role.Keyword},
-				Effect:  dto.StrPtr("allow"),
 			}
-
-			if _, err := s.modifier.AddPolicies(ctx, spec); err != nil {
-				s.log.WithContext(ctx).Errorf("Failed to add user '%s' to group '%s': %v", user, ur.Role.Keyword, err)
-			}
+			policies = append(policies, spec)
+		}
+		if _, err := s.modifier.AddPolicies(ctx, policies...); err != nil {
+			s.log.WithContext(ctx).Errorf("Failed to add grouping policies: %v", err)
 		}
 	}
 

@@ -63,13 +63,13 @@ servers:
           - "recovery"
           - "authz"
     # Auth Service Watermill Server (for event consumption)
-    - name: "auth"
+    - name: "system"
       protocol: "watermill"
       watermill:
         broker:
           type: "nats"
           nats:
-            address: "nats://backend_nats:4222"  # 使用容器网络名称
+            address: "nats://localhost:4222"  # 使用容器网络名称
             jetstream_enabled: true
             jetstream_stream_name: "system_events"
             # 添加连接超时配置

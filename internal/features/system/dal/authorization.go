@@ -13,8 +13,8 @@ import (
 	"origadmin/application/admin/api/v1/services/types"
 	"origadmin/application/admin/internal/data/entity/ent"
 	"origadmin/application/admin/internal/data/entity/ent/casbinrule"
-	"origadmin/application/admin/internal/data/entity/ent/predicate"
 	"origadmin/application/admin/internal/data/entity/ent/permission"
+	"origadmin/application/admin/internal/data/entity/ent/predicate"
 	"origadmin/application/admin/internal/data/entity/ent/role"
 	"origadmin/application/admin/internal/data/entity/ent/rolepermission"
 	"origadmin/application/admin/internal/features/system/dto"
@@ -272,8 +272,8 @@ func (r *authorizationRepo) casbinRuleToPolicySpec(rule *ent.CasbinRule) *authzv
 		if rule.V3 != "" {
 			policy.Actions = []string{rule.V3}
 		}
-		effect := "allow"
-		policy.Effect = &effect
+		//effect := "allow"
+		//policy.Effect = &effect
 	case "g":
 		// Grouping/Role rule: subject, role, domain
 		if rule.V1 != "" {
@@ -282,8 +282,8 @@ func (r *authorizationRepo) casbinRuleToPolicySpec(rule *ent.CasbinRule) *authzv
 		if rule.V2 != "" {
 			policy.Domain = &rule.V2
 		}
-		effect := "allow"
-		policy.Effect = &effect
+		//effect := "allow"
+		//policy.Effect = &effect
 	}
 
 	return policy

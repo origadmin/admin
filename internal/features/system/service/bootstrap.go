@@ -47,8 +47,8 @@ func (b *PolicyBootstrap) Bootstrap(ctx context.Context) error {
 
 	var lastErr error
 	for i := 0; i < maxRetries; i++ {
-		// Use ForceSync to ensure immediate execution without debounce delay during startup
-		err := b.syncer.ForceSync(ctx)
+		// Use SyncNow to ensure immediate execution without debounce delay during startup
+		err := b.syncer.SyncNow(ctx)
 		if err == nil {
 			b.log.WithContext(ctx).Info("Authorization policy bootstrap completed successfully.")
 			return nil
