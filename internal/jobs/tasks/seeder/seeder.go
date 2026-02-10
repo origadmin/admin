@@ -121,7 +121,6 @@ func (s *Seeder) createRootUser() error {
 
 	newUser := &types.User{
 		Username: username,
-		Nickname: s.rootUserCfg.GetNickname(),
 		Email:    s.rootUserCfg.GetEmail(),
 	}
 

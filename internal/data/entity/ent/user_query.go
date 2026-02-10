@@ -1178,11 +1178,11 @@ func (_q *UserQuery) Modify(modifiers ...func(s *sql.Selector)) *UserSelect {
 //	  UUID string `json:"uuid,omitempty"`
 //	  AllowedIP string `json:"allowed_ip,omitempty"`
 //	  Username string `json:"username,omitempty"`
+//	  Nickname string `json:"nickname,omitempty"`
 //	  EncryptedPassword string `json:"encrypted_password,omitempty"`
-//	  Salt string `json:"salt,omitempty"`
 //	  Phone string `json:"phone,omitempty"`
 //	  Email string `json:"email,omitempty"`
-//	  Token string `json:"token,omitempty"`
+//	  SessionID string `json:"session_id,omitempty"`
 //	  Status enums.Status `json:"status,omitempty"`
 //	  IsSystem bool `json:"is_system,omitempty"`
 //	  LastLoginIP string `json:"last_login_ip,omitempty"`
@@ -1202,11 +1202,11 @@ func (_q *UserQuery) Modify(modifiers ...func(s *sql.Selector)) *UserSelect {
 //	  user.FieldUUID,
 //	  user.FieldAllowedIP,
 //	  user.FieldUsername,
+//	  user.FieldNickname,
 //	  user.FieldEncryptedPassword,
-//	  user.FieldSalt,
 //	  user.FieldPhone,
 //	  user.FieldEmail,
-//	  user.FieldToken,
+//	  user.FieldSessionID,
 //	  user.FieldStatus,
 //	  user.FieldIsSystem,
 //	  user.FieldLastLoginIP,

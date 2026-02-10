@@ -1221,7 +1221,6 @@ func (_q *PermissionQuery) Modify(modifiers ...func(s *sql.Selector)) *Permissio
 //	  DataScope string `json:"data_scope,omitempty"`
 //	  DataRules map[string]string `json:"data_rules,omitempty"`
 //	  Status enums.Status `json:"status,omitempty"`
-//	  Actions permission.Actions `json:"actions,omitempty"`
 //	}
 //
 //	client.Permission.Query().
@@ -1236,7 +1235,6 @@ func (_q *PermissionQuery) Modify(modifiers ...func(s *sql.Selector)) *Permissio
 //	  permission.FieldDataScope,
 //	  permission.FieldDataRules,
 //	  permission.FieldStatus,
-//	  permission.FieldActions,
 //	  ).
 //	  Scan(ctx, &v)
 func (pq *PermissionQuery) Omit(fields ...string) *PermissionSelect {

@@ -77,6 +77,32 @@ func (s *UserService) ListUserResources(ctx context.Context, req *system.ListUse
 	}, nil
 }
 
+func (s *UserService) ListUserViews(ctx context.Context, req *system.ListUserViewsRequest) (*system.ListUserViewsResponse, error) {
+	views, err := s.uc.ListUserViews(ctx, req.GetId())
+	if err != nil {
+		if ent.IsNotFound(err) {
+			return nil, errors.NotFound("USER_NOT_FOUND", "User not found")
+		}
+		return nil, err
+	}
+	return &system.ListUserViewsResponse{
+		Views: views,
+	}, nil
+}
+
+func (s *UserService) ListUserPermissions(ctx context.Context, req *system.ListUserPermissionsRequest) (*system.ListUserPermissionsResponse, error) {
+	permissions, err := s.uc.ListUserPermissions(ctx, req.GetId())
+	if err != nil {
+		if ent.IsNotFound(err) {
+			return nil, errors.NotFound("USER_NOT_FOUND", "User not found")
+		}
+		return nil, err
+	}
+	return &system.ListUserPermissionsResponse{
+		Permissions: permissions,
+	}, nil
+}
+
 func (s *UserService) UpdateUserRoles(ctx context.Context, req *system.UpdateUserRolesRequest) (*system.UpdateUserRolesResponse, error) {
 	_, err := s.uc.UpdateUserRoles(ctx, req.GetId(), req.GetRoleIds())
 	if err != nil {

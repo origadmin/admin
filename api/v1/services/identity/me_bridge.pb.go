@@ -34,8 +34,10 @@ const MeServiceUpdateProfileBridgeOperation = "/api.v1.services.identity.MeServi
 const MeServiceUpdatePasswordBridgeOperation = "/api.v1.services.identity.MeService/UpdatePassword"
 const MeServiceGetUserResourcesBridgeOperation = "/api.v1.services.identity.MeService/GetUserResources"
 const MeServiceGetUserRolesBridgeOperation = "/api.v1.services.identity.MeService/GetUserRoles"
-const MeServiceUpdatePreferencesBridgeOperation = "/api.v1.services.identity.MeService/UpdatePreferences"
 const MeServiceGetUserSettingsBridgeOperation = "/api.v1.services.identity.MeService/GetUserSettings"
+const MeServiceUpdateSettingsBridgeOperation = "/api.v1.services.identity.MeService/UpdateSettings"
+const MeServiceGetUserPreferencesBridgeOperation = "/api.v1.services.identity.MeService/GetUserPreferences"
+const MeServiceUpdatePreferencesBridgeOperation = "/api.v1.services.identity.MeService/UpdatePreferences"
 
 type MeServiceBridgeServer interface {
 	// ListMyViews retrieves entire view tree available to currently authenticated user.
@@ -50,10 +52,14 @@ type MeServiceBridgeServer interface {
 	GetUserResources(context.Context, *GetUserResourcesRequest) (*GetUserResourcesResponse, error)
 	// GetUserRoles retrieves role list for current user.
 	GetUserRoles(context.Context, *GetUserRolesRequest) (*GetUserRolesResponse, error)
-	// UpdatePreferences updates user preferences (P2).
-	UpdatePreferences(context.Context, *UpdatePreferencesRequest) (*UpdatePreferencesResponse, error)
 	// GetUserSettings retrieves user settings (P2).
 	GetUserSettings(context.Context, *GetUserSettingsRequest) (*GetUserSettingsResponse, error)
+	// UpdateSettings updates user settings (P2).
+	UpdateSettings(context.Context, *UpdateSettingsRequest) (*UpdateSettingsResponse, error)
+	// GetUserPreferences retrieves user preferences (P2).
+	GetUserPreferences(context.Context, *GetUserPreferencesRequest) (*GetUserPreferencesResponse, error)
+	// UpdatePreferences updates user preferences (P2).
+	UpdatePreferences(context.Context, *UpdatePreferencesRequest) (*UpdatePreferencesResponse, error)
 }
 
 type MeServiceHooker interface {
@@ -63,8 +69,10 @@ type MeServiceHooker interface {
 	MeServiceUpdatePasswordHooker
 	MeServiceGetUserResourcesHooker
 	MeServiceGetUserRolesHooker
-	MeServiceUpdatePreferencesHooker
 	MeServiceGetUserSettingsHooker
+	MeServiceUpdateSettingsHooker
+	MeServiceGetUserPreferencesHooker
+	MeServiceUpdatePreferencesHooker
 }
 
 type MeServiceHookedBridger interface {
@@ -95,13 +103,21 @@ type MeServiceGetUserRolesHooker interface {
 	PrepareGetUserRoles(http.Context, *GetUserRolesRequest) (context.Context, error)
 	CompleteGetUserRoles(http.Context, *GetUserRolesRequest, *GetUserRolesResponse) error
 }
-type MeServiceUpdatePreferencesHooker interface {
-	PrepareUpdatePreferences(http.Context, *UpdatePreferencesRequest) (context.Context, error)
-	CompleteUpdatePreferences(http.Context, *UpdatePreferencesRequest, *UpdatePreferencesResponse) error
-}
 type MeServiceGetUserSettingsHooker interface {
 	PrepareGetUserSettings(http.Context, *GetUserSettingsRequest) (context.Context, error)
 	CompleteGetUserSettings(http.Context, *GetUserSettingsRequest, *GetUserSettingsResponse) error
+}
+type MeServiceUpdateSettingsHooker interface {
+	PrepareUpdateSettings(http.Context, *UpdateSettingsRequest) (context.Context, error)
+	CompleteUpdateSettings(http.Context, *UpdateSettingsRequest, *UpdateSettingsResponse) error
+}
+type MeServiceGetUserPreferencesHooker interface {
+	PrepareGetUserPreferences(http.Context, *GetUserPreferencesRequest) (context.Context, error)
+	CompleteGetUserPreferences(http.Context, *GetUserPreferencesRequest, *GetUserPreferencesResponse) error
+}
+type MeServiceUpdatePreferencesHooker interface {
+	PrepareUpdatePreferences(http.Context, *UpdatePreferencesRequest) (context.Context, error)
+	CompleteUpdatePreferences(http.Context, *UpdatePreferencesRequest, *UpdatePreferencesResponse) error
 }
 
 func RegisterMeServiceBridgeServer(s *http.Server, srv MeServiceHookedBridger) {
@@ -112,8 +128,10 @@ func RegisterMeServiceBridgeServer(s *http.Server, srv MeServiceHookedBridger) {
 	r.PUT("/me/password", _MeService_UpdatePassword0_Bridge_Handler(srv))
 	r.GET("/me/resources", _MeService_GetUserResources0_Bridge_Handler(srv))
 	r.GET("/me/roles", _MeService_GetUserRoles0_Bridge_Handler(srv))
-	r.PUT("/me/preferences", _MeService_UpdatePreferences0_Bridge_Handler(srv))
 	r.GET("/me/settings", _MeService_GetUserSettings0_Bridge_Handler(srv))
+	r.PUT("/me/settings", _MeService_UpdateSettings0_Bridge_Handler(srv))
+	r.GET("/me/preferences", _MeService_GetUserPreferences0_Bridge_Handler(srv))
+	r.PUT("/me/preferences", _MeService_UpdatePreferences0_Bridge_Handler(srv))
 }
 
 func _MeService_ListMyViews0_Bridge_Handler(srv MeServiceHookedBridger) func(ctx http.Context) error {
@@ -260,6 +278,78 @@ func _MeService_GetUserRoles0_Bridge_Handler(srv MeServiceHookedBridger) func(ct
 	}
 }
 
+func _MeService_GetUserSettings0_Bridge_Handler(srv MeServiceHookedBridger) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in GetUserSettingsRequest
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationMeServiceGetUserSettings)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.GetUserSettings(ctx, req.(*GetUserSettingsRequest))
+		})
+
+		newctx, err := srv.PrepareGetUserSettings(ctx, &in)
+		if err != nil {
+			return err
+		}
+		out, err := h(newctx, &in)
+		if err != nil {
+			return err
+		}
+		return srv.CompleteGetUserSettings(ctx, &in, out.(*GetUserSettingsResponse))
+	}
+}
+
+func _MeService_UpdateSettings0_Bridge_Handler(srv MeServiceHookedBridger) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in UpdateSettingsRequest
+		if err := ctx.Bind(&in); err != nil {
+			return err
+		}
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationMeServiceUpdateSettings)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.UpdateSettings(ctx, req.(*UpdateSettingsRequest))
+		})
+
+		newctx, err := srv.PrepareUpdateSettings(ctx, &in)
+		if err != nil {
+			return err
+		}
+		out, err := h(newctx, &in)
+		if err != nil {
+			return err
+		}
+		return srv.CompleteUpdateSettings(ctx, &in, out.(*UpdateSettingsResponse))
+	}
+}
+
+func _MeService_GetUserPreferences0_Bridge_Handler(srv MeServiceHookedBridger) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in GetUserPreferencesRequest
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationMeServiceGetUserPreferences)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.GetUserPreferences(ctx, req.(*GetUserPreferencesRequest))
+		})
+
+		newctx, err := srv.PrepareGetUserPreferences(ctx, &in)
+		if err != nil {
+			return err
+		}
+		out, err := h(newctx, &in)
+		if err != nil {
+			return err
+		}
+		return srv.CompleteGetUserPreferences(ctx, &in, out.(*GetUserPreferencesResponse))
+	}
+}
+
 func _MeService_UpdatePreferences0_Bridge_Handler(srv MeServiceHookedBridger) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
 		var in UpdatePreferencesRequest
@@ -283,29 +373,6 @@ func _MeService_UpdatePreferences0_Bridge_Handler(srv MeServiceHookedBridger) fu
 			return err
 		}
 		return srv.CompleteUpdatePreferences(ctx, &in, out.(*UpdatePreferencesResponse))
-	}
-}
-
-func _MeService_GetUserSettings0_Bridge_Handler(srv MeServiceHookedBridger) func(ctx http.Context) error {
-	return func(ctx http.Context) error {
-		var in GetUserSettingsRequest
-		if err := ctx.BindQuery(&in); err != nil {
-			return err
-		}
-		http.SetOperation(ctx, OperationMeServiceGetUserSettings)
-		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
-			return srv.GetUserSettings(ctx, req.(*GetUserSettingsRequest))
-		})
-
-		newctx, err := srv.PrepareGetUserSettings(ctx, &in)
-		if err != nil {
-			return err
-		}
-		out, err := h(newctx, &in)
-		if err != nil {
-			return err
-		}
-		return srv.CompleteGetUserSettings(ctx, &in, out.(*GetUserSettingsResponse))
 	}
 }
 
@@ -364,19 +431,35 @@ func (UnimplementedMeServiceHooked) CompleteGetUserRoles(ctx http.Context, in *G
 	return ctx.Result(200, out)
 }
 
-func (UnimplementedMeServiceHooked) PrepareUpdatePreferences(ctx http.Context, in *UpdatePreferencesRequest) (context.Context, error) {
-	return ctx, nil
-}
-
-func (UnimplementedMeServiceHooked) CompleteUpdatePreferences(ctx http.Context, in *UpdatePreferencesRequest, out *UpdatePreferencesResponse) error {
-	return ctx.Result(200, out)
-}
-
 func (UnimplementedMeServiceHooked) PrepareGetUserSettings(ctx http.Context, in *GetUserSettingsRequest) (context.Context, error) {
 	return ctx, nil
 }
 
 func (UnimplementedMeServiceHooked) CompleteGetUserSettings(ctx http.Context, in *GetUserSettingsRequest, out *GetUserSettingsResponse) error {
+	return ctx.Result(200, out)
+}
+
+func (UnimplementedMeServiceHooked) PrepareUpdateSettings(ctx http.Context, in *UpdateSettingsRequest) (context.Context, error) {
+	return ctx, nil
+}
+
+func (UnimplementedMeServiceHooked) CompleteUpdateSettings(ctx http.Context, in *UpdateSettingsRequest, out *UpdateSettingsResponse) error {
+	return ctx.Result(200, out)
+}
+
+func (UnimplementedMeServiceHooked) PrepareGetUserPreferences(ctx http.Context, in *GetUserPreferencesRequest) (context.Context, error) {
+	return ctx, nil
+}
+
+func (UnimplementedMeServiceHooked) CompleteGetUserPreferences(ctx http.Context, in *GetUserPreferencesRequest, out *GetUserPreferencesResponse) error {
+	return ctx.Result(200, out)
+}
+
+func (UnimplementedMeServiceHooked) PrepareUpdatePreferences(ctx http.Context, in *UpdatePreferencesRequest) (context.Context, error) {
+	return ctx, nil
+}
+
+func (UnimplementedMeServiceHooked) CompleteUpdatePreferences(ctx http.Context, in *UpdatePreferencesRequest, out *UpdatePreferencesResponse) error {
 	return ctx.Result(200, out)
 }
 
@@ -426,12 +509,20 @@ func (c *MeServiceHTTPBridgeImpl) GetUserRoles(ctx context.Context, in *GetUserR
 	return c.client.GetUserRoles(ctx, in)
 }
 
-func (c *MeServiceHTTPBridgeImpl) UpdatePreferences(ctx context.Context, in *UpdatePreferencesRequest) (*UpdatePreferencesResponse, error) {
-	return c.client.UpdatePreferences(ctx, in)
-}
-
 func (c *MeServiceHTTPBridgeImpl) GetUserSettings(ctx context.Context, in *GetUserSettingsRequest) (*GetUserSettingsResponse, error) {
 	return c.client.GetUserSettings(ctx, in)
+}
+
+func (c *MeServiceHTTPBridgeImpl) UpdateSettings(ctx context.Context, in *UpdateSettingsRequest) (*UpdateSettingsResponse, error) {
+	return c.client.UpdateSettings(ctx, in)
+}
+
+func (c *MeServiceHTTPBridgeImpl) GetUserPreferences(ctx context.Context, in *GetUserPreferencesRequest) (*GetUserPreferencesResponse, error) {
+	return c.client.GetUserPreferences(ctx, in)
+}
+
+func (c *MeServiceHTTPBridgeImpl) UpdatePreferences(ctx context.Context, in *UpdatePreferencesRequest) (*UpdatePreferencesResponse, error) {
+	return c.client.UpdatePreferences(ctx, in)
 }
 
 type MeServiceBridgeImpl struct {
@@ -466,12 +557,20 @@ func (c *MeServiceBridgeImpl) GetUserRoles(ctx context.Context, in *GetUserRoles
 	return c.client.GetUserRoles(ctx, in)
 }
 
-func (c *MeServiceBridgeImpl) UpdatePreferences(ctx context.Context, in *UpdatePreferencesRequest) (*UpdatePreferencesResponse, error) {
-	return c.client.UpdatePreferences(ctx, in)
-}
-
 func (c *MeServiceBridgeImpl) GetUserSettings(ctx context.Context, in *GetUserSettingsRequest) (*GetUserSettingsResponse, error) {
 	return c.client.GetUserSettings(ctx, in)
+}
+
+func (c *MeServiceBridgeImpl) UpdateSettings(ctx context.Context, in *UpdateSettingsRequest) (*UpdateSettingsResponse, error) {
+	return c.client.UpdateSettings(ctx, in)
+}
+
+func (c *MeServiceBridgeImpl) GetUserPreferences(ctx context.Context, in *GetUserPreferencesRequest) (*GetUserPreferencesResponse, error) {
+	return c.client.GetUserPreferences(ctx, in)
+}
+
+func (c *MeServiceBridgeImpl) UpdatePreferences(ctx context.Context, in *UpdatePreferencesRequest) (*UpdatePreferencesResponse, error) {
+	return c.client.UpdatePreferences(ctx, in)
 }
 
 func (c *MeServiceBridgeImpl) mustEmbedUnimplementedMeServiceServer() {}
@@ -508,12 +607,20 @@ func (c *MeServiceGRPC2HTTPBridgeImpl) GetUserRoles(ctx context.Context, in *Get
 	return c.client.GetUserRoles(ctx, in)
 }
 
-func (c *MeServiceGRPC2HTTPBridgeImpl) UpdatePreferences(ctx context.Context, in *UpdatePreferencesRequest) (*UpdatePreferencesResponse, error) {
-	return c.client.UpdatePreferences(ctx, in)
-}
-
 func (c *MeServiceGRPC2HTTPBridgeImpl) GetUserSettings(ctx context.Context, in *GetUserSettingsRequest) (*GetUserSettingsResponse, error) {
 	return c.client.GetUserSettings(ctx, in)
+}
+
+func (c *MeServiceGRPC2HTTPBridgeImpl) UpdateSettings(ctx context.Context, in *UpdateSettingsRequest) (*UpdateSettingsResponse, error) {
+	return c.client.UpdateSettings(ctx, in)
+}
+
+func (c *MeServiceGRPC2HTTPBridgeImpl) GetUserPreferences(ctx context.Context, in *GetUserPreferencesRequest) (*GetUserPreferencesResponse, error) {
+	return c.client.GetUserPreferences(ctx, in)
+}
+
+func (c *MeServiceGRPC2HTTPBridgeImpl) UpdatePreferences(ctx context.Context, in *UpdatePreferencesRequest) (*UpdatePreferencesResponse, error) {
+	return c.client.UpdatePreferences(ctx, in)
 }
 
 type MeServiceHTTP2GRPCBridgeImpl struct {
@@ -548,12 +655,20 @@ func (c *MeServiceHTTP2GRPCBridgeImpl) GetUserRoles(ctx context.Context, in *Get
 	return c.client.GetUserRoles(ctx, in)
 }
 
-func (c *MeServiceHTTP2GRPCBridgeImpl) UpdatePreferences(ctx context.Context, in *UpdatePreferencesRequest) (*UpdatePreferencesResponse, error) {
-	return c.client.UpdatePreferences(ctx, in)
-}
-
 func (c *MeServiceHTTP2GRPCBridgeImpl) GetUserSettings(ctx context.Context, in *GetUserSettingsRequest) (*GetUserSettingsResponse, error) {
 	return c.client.GetUserSettings(ctx, in)
+}
+
+func (c *MeServiceHTTP2GRPCBridgeImpl) UpdateSettings(ctx context.Context, in *UpdateSettingsRequest) (*UpdateSettingsResponse, error) {
+	return c.client.UpdateSettings(ctx, in)
+}
+
+func (c *MeServiceHTTP2GRPCBridgeImpl) GetUserPreferences(ctx context.Context, in *GetUserPreferencesRequest) (*GetUserPreferencesResponse, error) {
+	return c.client.GetUserPreferences(ctx, in)
+}
+
+func (c *MeServiceHTTP2GRPCBridgeImpl) UpdatePreferences(ctx context.Context, in *UpdatePreferencesRequest) (*UpdatePreferencesResponse, error) {
+	return c.client.UpdatePreferences(ctx, in)
 }
 
 func (c *MeServiceHTTP2GRPCBridgeImpl) mustEmbedUnimplementedMeServiceServer() {}

@@ -46,16 +46,28 @@ func init() {
 			VersionID:     "fde45c90aeadf1a078fbc34a62c59de18764d736bbb40f8b8ab66bb4cb665321",
 		},
 		{
-			ServiceMethod: "/api.v1.services.identity.MeService/UpdatePreferences",
-			GatewayPath:   "PUT:/me/preferences",
-			Name:          "authn",
-			VersionID:     "048501ffb00d32ae56b4942ba2a16e5583336d2ceaf4a2ac5aef3ff66f2d3a77",
-		},
-		{
 			ServiceMethod: "/api.v1.services.identity.MeService/GetUserSettings",
 			GatewayPath:   "GET:/me/settings",
 			Name:          "authn",
 			VersionID:     "344a855aa5489c133372de68ade1924a4dc22a3e75c3e417e3d26675a7949156",
+		},
+		{
+			ServiceMethod: "/api.v1.services.identity.MeService/UpdateSettings",
+			GatewayPath:   "PUT:/me/settings",
+			Name:          "authn",
+			VersionID:     "5479c6b690745ccb33a5ba26ca685aaff0f4a7d9a59a9f20d9e2498b064f7ad7",
+		},
+		{
+			ServiceMethod: "/api.v1.services.identity.MeService/GetUserPreferences",
+			GatewayPath:   "GET:/me/preferences",
+			Name:          "authn",
+			VersionID:     "fa3dc07959ba10a4e8195af42c92ca59722561237d16becebdc2d8fa03e80660",
+		},
+		{
+			ServiceMethod: "/api.v1.services.identity.MeService/UpdatePreferences",
+			GatewayPath:   "PUT:/me/preferences",
+			Name:          "authn",
+			VersionID:     "048501ffb00d32ae56b4942ba2a16e5583336d2ceaf4a2ac5aef3ff66f2d3a77",
 		},
 	}
 

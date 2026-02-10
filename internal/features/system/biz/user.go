@@ -40,6 +40,14 @@ func (uc *UserUseCase) ListUserResources(ctx context.Context, id int64) ([]*type
 	return uc.repo.ListResourceByUserID(ctx, id)
 }
 
+func (uc *UserUseCase) ListUserViews(ctx context.Context, id int64) ([]*types.View, error) {
+	return uc.repo.ListViewByUserID(ctx, id)
+}
+
+func (uc *UserUseCase) ListUserPermissions(ctx context.Context, id int64) ([]*types.Permission, error) {
+	return uc.repo.ListPermissionByUserID(ctx, id)
+}
+
 func (uc *UserUseCase) UpdateUserRoles(ctx context.Context, id int64, roleIDs []int64) ([]*types.Role, error) {
 	return uc.repo.AddRoleIDs(ctx, id, roleIDs)
 }

@@ -40,15 +40,14 @@ func (User) Fields() []ent.Field {
 		field.String("username").
 			MaxLen(32).
 			Comment(i18n.Text("entity.user.field.username")), // login username of user
+		field.String("nickname").
+			MaxLen(64).
+			Default("").
+			Comment(i18n.Text("entity.user_profile.field.nickname")), // Nickname display name of user
 		field.String("encrypted_password").
 			MaxLen(256).
 			Default("").
 			Comment(i18n.Text("entity.user.field.encrypted_password")),
-		field.String("salt").
-			MaxLen(64).
-			Default("").
-			Deprecated("toolkits/crypto includes salt management").
-			Comment(i18n.Text("entity.user.field.salt")),
 		field.String("phone").
 			MaxLen(32).
 			Default("").
@@ -57,10 +56,10 @@ func (User) Fields() []ent.Field {
 			MaxLen(64).
 			Default("").
 			Comment(i18n.Text("entity.user.field.email")), // login email of user
-		field.String("token").
+		field.String("session_id").
 			MaxLen(512).
 			Default("").
-			Comment(i18n.Text("entity.user.field.token")), // Token for login
+			Comment(i18n.Text("entity.user.field.session_id")), // Current session ID for single login
 		field.Int8("status").
 			GoType(enums.Status(0)).
 			Default(int8(enums.StatusActive)).

@@ -2,3 +2,17 @@
 // More info: https://github.com/origadmin/abgen
 
 package dto
+
+// ConvertStringToObjectMapToStringToStringMap is a custom conversion function stub.
+// Please implement this function to complete the conversion.
+func ConvertStringToObjectMapToStringToStringMap(from map[string]any) map[string]string {
+	// TODO: Implement this custom conversion
+	panic("stub! not implemented")
+}
+
+// ConvertStringToStringMapToStringToObjectMap is a custom conversion function stub.
+// Please implement this function to complete the conversion.
+func ConvertStringToStringMapToStringToObjectMap(from map[string]string) map[string]any {
+	// TODO: Implement this custom conversion
+	panic("stub! not implemented")
+}

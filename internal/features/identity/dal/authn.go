@@ -12,8 +12,7 @@ import (
 
 	"origadmin/application/admin/internal/data/entity/ent"
 	"origadmin/application/admin/internal/data/entity/ent/user"
-	"origadmin/application/admin/internal/features/identity/dto"
-	systemDto "origadmin/application/admin/internal/features/system/dto"
+	identitydto "origadmin/application/admin/internal/features/identity/dto"
 )
 
 // AuthnRepo implements the dto.AuthnRepo interface.
@@ -23,21 +22,30 @@ type AuthnRepo struct {
 }
 
 // NewAuthnRepo creates a new AuthnRepo.
-func NewAuthnRepo(db *ent.Database, logger log.Logger) dto.AuthnRepo {
+func NewAuthnRepo(db *ent.Database, logger log.Logger) identitydto.AuthnRepo {
 	return &AuthnRepo{
 		db:  db,
 		log: log.NewHelper(logger),
 	}
 }
 
-// GetUserByUsername retrieves a user's identity-specific data by their username.
-func (r *AuthnRepo) GetUserByUsername(ctx context.Context, username string) (*dto.AuthedUser, error) {
-	u, err := r.db.User(ctx).Query().Where(user.UsernameEQ(username)).WithRoles().Only(ctx)
+// GetUserByCredential retrieves a user's identity-specific data by username, phone, or email.
+func (r *AuthnRepo) GetUserByCredential(ctx context.Context, credential string) (*identitydto.AuthedUser, error) {
+	u, err := r.db.User(ctx).Query().
+		Where(
+			user.Or(
+				user.Username(credential),
+				user.Phone(credential),
+				user.Email(credential),
+			),
+		).
+		WithRoles().
+		Only(ctx)
 	if err != nil {
 		return nil, err
 	}
-	return &dto.AuthedUser{
-		User:              systemDto.ConvertUserToUserPB(u),
+	return &identitydto.AuthedUser{
+		User:              identitydto.ConvertUserToUserPB(u),
 		EncryptedPassword: u.EncryptedPassword,
 	}, nil
 }

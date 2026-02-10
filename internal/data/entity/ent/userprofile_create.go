@@ -91,20 +91,6 @@ func (_c *UserProfileCreate) SetNillableDeleteTime(v *time.Time) *UserProfileCre
 	return _c
 }
 
-// SetNickname sets the "nickname" field.
-func (_c *UserProfileCreate) SetNickname(v string) *UserProfileCreate {
-	_c.mutation.SetNickname(v)
-	return _c
-}
-
-// SetNillableNickname sets the "nickname" field if the given value is not nil.
-func (_c *UserProfileCreate) SetNillableNickname(v *string) *UserProfileCreate {
-	if v != nil {
-		_c.SetNickname(*v)
-	}
-	return _c
-}
-
 // SetAvatar sets the "avatar" field.
 func (_c *UserProfileCreate) SetAvatar(v string) *UserProfileCreate {
 	_c.mutation.SetAvatar(v)
@@ -251,10 +237,6 @@ func (_c *UserProfileCreate) defaults() error {
 		v := userprofile.DefaultUpdateTime()
 		_c.mutation.SetUpdateTime(v)
 	}
-	if _, ok := _c.mutation.Nickname(); !ok {
-		v := userprofile.DefaultNickname
-		_c.mutation.SetNickname(v)
-	}
 	if _, ok := _c.mutation.Avatar(); !ok {
 		v := userprofile.DefaultAvatar
 		_c.mutation.SetAvatar(v)
@@ -292,14 +274,6 @@ func (_c *UserProfileCreate) check() error {
 	}
 	if _, ok := _c.mutation.UpdateTime(); !ok {
 		return &ValidationError{Name: "update_time", err: errors.New(`ent: missing required field "UserProfile.update_time"`)}
-	}
-	if _, ok := _c.mutation.Nickname(); !ok {
-		return &ValidationError{Name: "nickname", err: errors.New(`ent: missing required field "UserProfile.nickname"`)}
-	}
-	if v, ok := _c.mutation.Nickname(); ok {
-		if err := userprofile.NicknameValidator(v); err != nil {
-			return &ValidationError{Name: "nickname", err: fmt.Errorf(`ent: validator failed for field "UserProfile.nickname": %w`, err)}
-		}
 	}
 	if _, ok := _c.mutation.Avatar(); !ok {
 		return &ValidationError{Name: "avatar", err: errors.New(`ent: missing required field "UserProfile.avatar"`)}
@@ -400,10 +374,6 @@ func (_c *UserProfileCreate) createSpec() (*UserProfile, *sqlgraph.CreateSpec) {
 	if value, ok := _c.mutation.DeleteTime(); ok {
 		_spec.SetField(userprofile.FieldDeleteTime, field.TypeTime, value)
 		_node.DeleteTime = &value
-	}
-	if value, ok := _c.mutation.Nickname(); ok {
-		_spec.SetField(userprofile.FieldNickname, field.TypeString, value)
-		_node.Nickname = value
 	}
 	if value, ok := _c.mutation.Avatar(); ok {
 		_spec.SetField(userprofile.FieldAvatar, field.TypeString, value)

@@ -32,16 +32,16 @@ const (
 	FieldAllowedIP = "allowed_ip"
 	// FieldUsername holds the string denoting the username field in the database.
 	FieldUsername = "username"
+	// FieldNickname holds the string denoting the nickname field in the database.
+	FieldNickname = "nickname"
 	// FieldEncryptedPassword holds the string denoting the encrypted_password field in the database.
 	FieldEncryptedPassword = "encrypted_password"
-	// FieldSalt holds the string denoting the salt field in the database.
-	FieldSalt = "salt"
 	// FieldPhone holds the string denoting the phone field in the database.
 	FieldPhone = "phone"
 	// FieldEmail holds the string denoting the email field in the database.
 	FieldEmail = "email"
-	// FieldToken holds the string denoting the token field in the database.
-	FieldToken = "token"
+	// FieldSessionID holds the string denoting the session_id field in the database.
+	FieldSessionID = "session_id"
 	// FieldStatus holds the string denoting the status field in the database.
 	FieldStatus = "status"
 	// FieldIsSystem holds the string denoting the is_system field in the database.
@@ -137,10 +137,11 @@ var Columns = []string{
 	FieldUUID,
 	FieldAllowedIP,
 	FieldUsername,
+	FieldNickname,
 	FieldEncryptedPassword,
 	FieldPhone,
 	FieldEmail,
-	FieldToken,
+	FieldSessionID,
 	FieldStatus,
 	FieldIsSystem,
 	FieldLastLoginIP,
@@ -169,11 +170,6 @@ func ValidColumn(column string) bool {
 			return true
 		}
 	}
-	for _, f := range [...]string{FieldSalt} {
-		if column == f {
-			return true
-		}
-	}
 	return false
 }
 
@@ -197,14 +193,14 @@ var (
 	DefaultAllowedIP string
 	// UsernameValidator is a validator for the "username" field. It is called by the builders before save.
 	UsernameValidator func(string) error
+	// DefaultNickname holds the default value on creation for the "nickname" field.
+	DefaultNickname string
+	// NicknameValidator is a validator for the "nickname" field. It is called by the builders before save.
+	NicknameValidator func(string) error
 	// DefaultEncryptedPassword holds the default value on creation for the "encrypted_password" field.
 	DefaultEncryptedPassword string
 	// EncryptedPasswordValidator is a validator for the "encrypted_password" field. It is called by the builders before save.
 	EncryptedPasswordValidator func(string) error
-	// DefaultSalt holds the default value on creation for the "salt" field.
-	DefaultSalt string
-	// SaltValidator is a validator for the "salt" field. It is called by the builders before save.
-	SaltValidator func(string) error
 	// DefaultPhone holds the default value on creation for the "phone" field.
 	DefaultPhone string
 	// PhoneValidator is a validator for the "phone" field. It is called by the builders before save.
@@ -213,10 +209,10 @@ var (
 	DefaultEmail string
 	// EmailValidator is a validator for the "email" field. It is called by the builders before save.
 	EmailValidator func(string) error
-	// DefaultToken holds the default value on creation for the "token" field.
-	DefaultToken string
-	// TokenValidator is a validator for the "token" field. It is called by the builders before save.
-	TokenValidator func(string) error
+	// DefaultSessionID holds the default value on creation for the "session_id" field.
+	DefaultSessionID string
+	// SessionIDValidator is a validator for the "session_id" field. It is called by the builders before save.
+	SessionIDValidator func(string) error
 	// DefaultStatus holds the default value on creation for the "status" field.
 	DefaultStatus enums.Status
 	// DefaultIsSystem holds the default value on creation for the "is_system" field.
@@ -287,14 +283,14 @@ func ByUsername(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldUsername, opts...).ToFunc()
 }
 
+// ByNickname orders the results by the nickname field.
+func ByNickname(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldNickname, opts...).ToFunc()
+}
+
 // ByEncryptedPassword orders the results by the encrypted_password field.
 func ByEncryptedPassword(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldEncryptedPassword, opts...).ToFunc()
-}
-
-// BySalt orders the results by the salt field.
-func BySalt(opts ...sql.OrderTermOption) OrderOption {
-	return sql.OrderByField(FieldSalt, opts...).ToFunc()
 }
 
 // ByPhone orders the results by the phone field.
@@ -307,9 +303,9 @@ func ByEmail(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldEmail, opts...).ToFunc()
 }
 
-// ByToken orders the results by the token field.
-func ByToken(opts ...sql.OrderTermOption) OrderOption {
-	return sql.OrderByField(FieldToken, opts...).ToFunc()
+// BySessionID orders the results by the session_id field.
+func BySessionID(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldSessionID, opts...).ToFunc()
 }
 
 // ByStatus orders the results by the status field.

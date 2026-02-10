@@ -29,8 +29,6 @@ type UserProfile struct {
 	UpdateTime time.Time `json:"update_time,omitempty"`
 	// delete_time.field.comment
 	DeleteTime *time.Time `json:"delete_time,omitempty"`
-	// entity.user_profile.field.nickname
-	Nickname string `json:"nickname,omitempty"`
 	// entity.user_profile.field.avatar
 	Avatar string `json:"avatar,omitempty"`
 	// entity.user_profile.field.name
@@ -75,7 +73,7 @@ func (*UserProfile) scanValues(columns []string) ([]any, error) {
 		switch columns[i] {
 		case userprofile.FieldID, userprofile.FieldCreateAuthor, userprofile.FieldUpdateAuthor:
 			values[i] = new(sql.NullInt64)
-		case userprofile.FieldNickname, userprofile.FieldAvatar, userprofile.FieldName, userprofile.FieldGender, userprofile.FieldDepartment, userprofile.FieldRemark:
+		case userprofile.FieldAvatar, userprofile.FieldName, userprofile.FieldGender, userprofile.FieldDepartment, userprofile.FieldRemark:
 			values[i] = new(sql.NullString)
 		case userprofile.FieldCreateTime, userprofile.FieldUpdateTime, userprofile.FieldDeleteTime:
 			values[i] = new(sql.NullTime)
@@ -132,12 +130,6 @@ func (_m *UserProfile) assignValues(columns []string, values []any) error {
 			} else if value.Valid {
 				_m.DeleteTime = new(time.Time)
 				*_m.DeleteTime = value.Time
-			}
-		case userprofile.FieldNickname:
-			if value, ok := values[i].(*sql.NullString); !ok {
-				return fmt.Errorf("unexpected type %T for field nickname", values[i])
-			} else if value.Valid {
-				_m.Nickname = value.String
 			}
 		case userprofile.FieldAvatar:
 			if value, ok := values[i].(*sql.NullString); !ok {
@@ -233,9 +225,6 @@ func (_m *UserProfile) String() string {
 		builder.WriteString("delete_time=")
 		builder.WriteString(v.Format(time.ANSIC))
 	}
-	builder.WriteString(", ")
-	builder.WriteString("nickname=")
-	builder.WriteString(_m.Nickname)
 	builder.WriteString(", ")
 	builder.WriteString("avatar=")
 	builder.WriteString(_m.Avatar)

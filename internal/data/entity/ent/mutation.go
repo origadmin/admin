@@ -3165,7 +3165,6 @@ type PermissionMutation struct {
 	data_rules                  *map[string]string
 	status                      *enums.Status
 	addstatus                   *enums.Status
-	actions                     *permission.Actions
 	clearedFields               map[string]struct{}
 	roles                       map[int64]struct{}
 	removedroles                map[int64]struct{}
@@ -3761,42 +3760,6 @@ func (m *PermissionMutation) ResetStatus() {
 	m.addstatus = nil
 }
 
-// SetActions sets the "actions" field.
-func (m *PermissionMutation) SetActions(pe permission.Actions) {
-	m.actions = &pe
-}
-
-// Actions returns the value of the "actions" field in the mutation.
-func (m *PermissionMutation) Actions() (r permission.Actions, exists bool) {
-	v := m.actions
-	if v == nil {
-		return
-	}
-	return *v, true
-}
-
-// OldActions returns the old "actions" field's value of the Permission entity.
-// If the Permission object wasn't provided to the builder, the object is fetched from the database.
-// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *PermissionMutation) OldActions(ctx context.Context) (v permission.Actions, err error) {
-	if !m.op.Is(OpUpdateOne) {
-		return v, errors.New("OldActions is only allowed on UpdateOne operations")
-	}
-	if m.id == nil || m.oldValue == nil {
-		return v, errors.New("OldActions requires an ID field in the mutation")
-	}
-	oldValue, err := m.oldValue(ctx)
-	if err != nil {
-		return v, fmt.Errorf("querying old value for OldActions: %w", err)
-	}
-	return oldValue.Actions, nil
-}
-
-// ResetActions resets all changes to the "actions" field.
-func (m *PermissionMutation) ResetActions() {
-	m.actions = nil
-}
-
 // AddRoleIDs adds the "roles" edge to the Role entity by ids.
 func (m *PermissionMutation) AddRoleIDs(ids ...int64) {
 	if m.roles == nil {
@@ -4263,7 +4226,7 @@ func (m *PermissionMutation) Type() string {
 // order to get all numeric fields that were incremented/decremented, call
 // AddedFields().
 func (m *PermissionMutation) Fields() []string {
-	fields := make([]string, 0, 11)
+	fields := make([]string, 0, 10)
 	if m.create_author != nil {
 		fields = append(fields, permission.FieldCreateAuthor)
 	}
@@ -4294,9 +4257,6 @@ func (m *PermissionMutation) Fields() []string {
 	if m.status != nil {
 		fields = append(fields, permission.FieldStatus)
 	}
-	if m.actions != nil {
-		fields = append(fields, permission.FieldActions)
-	}
 	return fields
 }
 
@@ -4325,8 +4285,6 @@ func (m *PermissionMutation) Field(name string) (ent.Value, bool) {
 		return m.DataRules()
 	case permission.FieldStatus:
 		return m.Status()
-	case permission.FieldActions:
-		return m.Actions()
 	}
 	return nil, false
 }
@@ -4356,8 +4314,6 @@ func (m *PermissionMutation) OldField(ctx context.Context, name string) (ent.Val
 		return m.OldDataRules(ctx)
 	case permission.FieldStatus:
 		return m.OldStatus(ctx)
-	case permission.FieldActions:
-		return m.OldActions(ctx)
 	}
 	return nil, fmt.Errorf("unknown Permission field %s", name)
 }
@@ -4436,13 +4392,6 @@ func (m *PermissionMutation) SetField(name string, value ent.Value) error {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.SetStatus(v)
-		return nil
-	case permission.FieldActions:
-		v, ok := value.(permission.Actions)
-		if !ok {
-			return fmt.Errorf("unexpected type %T for field %s", value, name)
-		}
-		m.SetActions(v)
 		return nil
 	}
 	return fmt.Errorf("unknown Permission field %s", name)
@@ -4582,9 +4531,6 @@ func (m *PermissionMutation) ResetField(name string) error {
 		return nil
 	case permission.FieldStatus:
 		m.ResetStatus()
-		return nil
-	case permission.FieldActions:
-		m.ResetActions()
 		return nil
 	}
 	return fmt.Errorf("unknown Permission field %s", name)
@@ -11036,11 +10982,11 @@ type UserMutation struct {
 	uuid                    *string
 	allowed_ip              *string
 	username                *string
+	nickname                *string
 	encrypted_password      *string
-	salt                    *string
 	phone                   *string
 	email                   *string
-	token                   *string
+	session_id              *string
 	status                  *enums.Status
 	addstatus               *enums.Status
 	is_system               *bool
@@ -11550,6 +11496,42 @@ func (m *UserMutation) ResetUsername() {
 	m.username = nil
 }
 
+// SetNickname sets the "nickname" field.
+func (m *UserMutation) SetNickname(s string) {
+	m.nickname = &s
+}
+
+// Nickname returns the value of the "nickname" field in the mutation.
+func (m *UserMutation) Nickname() (r string, exists bool) {
+	v := m.nickname
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldNickname returns the old "nickname" field's value of the User entity.
+// If the User object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *UserMutation) OldNickname(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldNickname is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldNickname requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldNickname: %w", err)
+	}
+	return oldValue.Nickname, nil
+}
+
+// ResetNickname resets all changes to the "nickname" field.
+func (m *UserMutation) ResetNickname() {
+	m.nickname = nil
+}
+
 // SetEncryptedPassword sets the "encrypted_password" field.
 func (m *UserMutation) SetEncryptedPassword(s string) {
 	m.encrypted_password = &s
@@ -11584,42 +11566,6 @@ func (m *UserMutation) OldEncryptedPassword(ctx context.Context) (v string, err 
 // ResetEncryptedPassword resets all changes to the "encrypted_password" field.
 func (m *UserMutation) ResetEncryptedPassword() {
 	m.encrypted_password = nil
-}
-
-// SetSalt sets the "salt" field.
-func (m *UserMutation) SetSalt(s string) {
-	m.salt = &s
-}
-
-// Salt returns the value of the "salt" field in the mutation.
-func (m *UserMutation) Salt() (r string, exists bool) {
-	v := m.salt
-	if v == nil {
-		return
-	}
-	return *v, true
-}
-
-// OldSalt returns the old "salt" field's value of the User entity.
-// If the User object wasn't provided to the builder, the object is fetched from the database.
-// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *UserMutation) OldSalt(ctx context.Context) (v string, err error) {
-	if !m.op.Is(OpUpdateOne) {
-		return v, errors.New("OldSalt is only allowed on UpdateOne operations")
-	}
-	if m.id == nil || m.oldValue == nil {
-		return v, errors.New("OldSalt requires an ID field in the mutation")
-	}
-	oldValue, err := m.oldValue(ctx)
-	if err != nil {
-		return v, fmt.Errorf("querying old value for OldSalt: %w", err)
-	}
-	return oldValue.Salt, nil
-}
-
-// ResetSalt resets all changes to the "salt" field.
-func (m *UserMutation) ResetSalt() {
-	m.salt = nil
 }
 
 // SetPhone sets the "phone" field.
@@ -11694,40 +11640,40 @@ func (m *UserMutation) ResetEmail() {
 	m.email = nil
 }
 
-// SetToken sets the "token" field.
-func (m *UserMutation) SetToken(s string) {
-	m.token = &s
+// SetSessionID sets the "session_id" field.
+func (m *UserMutation) SetSessionID(s string) {
+	m.session_id = &s
 }
 
-// Token returns the value of the "token" field in the mutation.
-func (m *UserMutation) Token() (r string, exists bool) {
-	v := m.token
+// SessionID returns the value of the "session_id" field in the mutation.
+func (m *UserMutation) SessionID() (r string, exists bool) {
+	v := m.session_id
 	if v == nil {
 		return
 	}
 	return *v, true
 }
 
-// OldToken returns the old "token" field's value of the User entity.
+// OldSessionID returns the old "session_id" field's value of the User entity.
 // If the User object wasn't provided to the builder, the object is fetched from the database.
 // An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *UserMutation) OldToken(ctx context.Context) (v string, err error) {
+func (m *UserMutation) OldSessionID(ctx context.Context) (v string, err error) {
 	if !m.op.Is(OpUpdateOne) {
-		return v, errors.New("OldToken is only allowed on UpdateOne operations")
+		return v, errors.New("OldSessionID is only allowed on UpdateOne operations")
 	}
 	if m.id == nil || m.oldValue == nil {
-		return v, errors.New("OldToken requires an ID field in the mutation")
+		return v, errors.New("OldSessionID requires an ID field in the mutation")
 	}
 	oldValue, err := m.oldValue(ctx)
 	if err != nil {
-		return v, fmt.Errorf("querying old value for OldToken: %w", err)
+		return v, fmt.Errorf("querying old value for OldSessionID: %w", err)
 	}
-	return oldValue.Token, nil
+	return oldValue.SessionID, nil
 }
 
-// ResetToken resets all changes to the "token" field.
-func (m *UserMutation) ResetToken() {
-	m.token = nil
+// ResetSessionID resets all changes to the "session_id" field.
+func (m *UserMutation) ResetSessionID() {
+	m.session_id = nil
 }
 
 // SetStatus sets the "status" field.
@@ -12476,11 +12422,11 @@ func (m *UserMutation) Fields() []string {
 	if m.username != nil {
 		fields = append(fields, user.FieldUsername)
 	}
+	if m.nickname != nil {
+		fields = append(fields, user.FieldNickname)
+	}
 	if m.encrypted_password != nil {
 		fields = append(fields, user.FieldEncryptedPassword)
-	}
-	if m.salt != nil {
-		fields = append(fields, user.FieldSalt)
 	}
 	if m.phone != nil {
 		fields = append(fields, user.FieldPhone)
@@ -12488,8 +12434,8 @@ func (m *UserMutation) Fields() []string {
 	if m.email != nil {
 		fields = append(fields, user.FieldEmail)
 	}
-	if m.token != nil {
-		fields = append(fields, user.FieldToken)
+	if m.session_id != nil {
+		fields = append(fields, user.FieldSessionID)
 	}
 	if m.status != nil {
 		fields = append(fields, user.FieldStatus)
@@ -12536,16 +12482,16 @@ func (m *UserMutation) Field(name string) (ent.Value, bool) {
 		return m.AllowedIP()
 	case user.FieldUsername:
 		return m.Username()
+	case user.FieldNickname:
+		return m.Nickname()
 	case user.FieldEncryptedPassword:
 		return m.EncryptedPassword()
-	case user.FieldSalt:
-		return m.Salt()
 	case user.FieldPhone:
 		return m.Phone()
 	case user.FieldEmail:
 		return m.Email()
-	case user.FieldToken:
-		return m.Token()
+	case user.FieldSessionID:
+		return m.SessionID()
 	case user.FieldStatus:
 		return m.Status()
 	case user.FieldIsSystem:
@@ -12585,16 +12531,16 @@ func (m *UserMutation) OldField(ctx context.Context, name string) (ent.Value, er
 		return m.OldAllowedIP(ctx)
 	case user.FieldUsername:
 		return m.OldUsername(ctx)
+	case user.FieldNickname:
+		return m.OldNickname(ctx)
 	case user.FieldEncryptedPassword:
 		return m.OldEncryptedPassword(ctx)
-	case user.FieldSalt:
-		return m.OldSalt(ctx)
 	case user.FieldPhone:
 		return m.OldPhone(ctx)
 	case user.FieldEmail:
 		return m.OldEmail(ctx)
-	case user.FieldToken:
-		return m.OldToken(ctx)
+	case user.FieldSessionID:
+		return m.OldSessionID(ctx)
 	case user.FieldStatus:
 		return m.OldStatus(ctx)
 	case user.FieldIsSystem:
@@ -12674,19 +12620,19 @@ func (m *UserMutation) SetField(name string, value ent.Value) error {
 		}
 		m.SetUsername(v)
 		return nil
+	case user.FieldNickname:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetNickname(v)
+		return nil
 	case user.FieldEncryptedPassword:
 		v, ok := value.(string)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.SetEncryptedPassword(v)
-		return nil
-	case user.FieldSalt:
-		v, ok := value.(string)
-		if !ok {
-			return fmt.Errorf("unexpected type %T for field %s", value, name)
-		}
-		m.SetSalt(v)
 		return nil
 	case user.FieldPhone:
 		v, ok := value.(string)
@@ -12702,12 +12648,12 @@ func (m *UserMutation) SetField(name string, value ent.Value) error {
 		}
 		m.SetEmail(v)
 		return nil
-	case user.FieldToken:
+	case user.FieldSessionID:
 		v, ok := value.(string)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
-		m.SetToken(v)
+		m.SetSessionID(v)
 		return nil
 	case user.FieldStatus:
 		v, ok := value.(enums.Status)
@@ -12897,11 +12843,11 @@ func (m *UserMutation) ResetField(name string) error {
 	case user.FieldUsername:
 		m.ResetUsername()
 		return nil
+	case user.FieldNickname:
+		m.ResetNickname()
+		return nil
 	case user.FieldEncryptedPassword:
 		m.ResetEncryptedPassword()
-		return nil
-	case user.FieldSalt:
-		m.ResetSalt()
 		return nil
 	case user.FieldPhone:
 		m.ResetPhone()
@@ -12909,8 +12855,8 @@ func (m *UserMutation) ResetField(name string) error {
 	case user.FieldEmail:
 		m.ResetEmail()
 		return nil
-	case user.FieldToken:
-		m.ResetToken()
+	case user.FieldSessionID:
+		m.ResetSessionID()
 		return nil
 	case user.FieldStatus:
 		m.ResetStatus()
@@ -14166,7 +14112,6 @@ type UserProfileMutation struct {
 	create_time      *time.Time
 	update_time      *time.Time
 	delete_time      *time.Time
-	nickname         *string
 	avatar           *string
 	name             *string
 	gender           *userprofile.Gender
@@ -14545,42 +14490,6 @@ func (m *UserProfileMutation) ResetDeleteTime() {
 	delete(m.clearedFields, userprofile.FieldDeleteTime)
 }
 
-// SetNickname sets the "nickname" field.
-func (m *UserProfileMutation) SetNickname(s string) {
-	m.nickname = &s
-}
-
-// Nickname returns the value of the "nickname" field in the mutation.
-func (m *UserProfileMutation) Nickname() (r string, exists bool) {
-	v := m.nickname
-	if v == nil {
-		return
-	}
-	return *v, true
-}
-
-// OldNickname returns the old "nickname" field's value of the UserProfile entity.
-// If the UserProfile object wasn't provided to the builder, the object is fetched from the database.
-// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *UserProfileMutation) OldNickname(ctx context.Context) (v string, err error) {
-	if !m.op.Is(OpUpdateOne) {
-		return v, errors.New("OldNickname is only allowed on UpdateOne operations")
-	}
-	if m.id == nil || m.oldValue == nil {
-		return v, errors.New("OldNickname requires an ID field in the mutation")
-	}
-	oldValue, err := m.oldValue(ctx)
-	if err != nil {
-		return v, fmt.Errorf("querying old value for OldNickname: %w", err)
-	}
-	return oldValue.Nickname, nil
-}
-
-// ResetNickname resets all changes to the "nickname" field.
-func (m *UserProfileMutation) ResetNickname() {
-	m.nickname = nil
-}
-
 // SetAvatar sets the "avatar" field.
 func (m *UserProfileMutation) SetAvatar(s string) {
 	m.avatar = &s
@@ -14834,7 +14743,7 @@ func (m *UserProfileMutation) Type() string {
 // order to get all numeric fields that were incremented/decremented, call
 // AddedFields().
 func (m *UserProfileMutation) Fields() []string {
-	fields := make([]string, 0, 11)
+	fields := make([]string, 0, 10)
 	if m.create_author != nil {
 		fields = append(fields, userprofile.FieldCreateAuthor)
 	}
@@ -14849,9 +14758,6 @@ func (m *UserProfileMutation) Fields() []string {
 	}
 	if m.delete_time != nil {
 		fields = append(fields, userprofile.FieldDeleteTime)
-	}
-	if m.nickname != nil {
-		fields = append(fields, userprofile.FieldNickname)
 	}
 	if m.avatar != nil {
 		fields = append(fields, userprofile.FieldAvatar)
@@ -14886,8 +14792,6 @@ func (m *UserProfileMutation) Field(name string) (ent.Value, bool) {
 		return m.UpdateTime()
 	case userprofile.FieldDeleteTime:
 		return m.DeleteTime()
-	case userprofile.FieldNickname:
-		return m.Nickname()
 	case userprofile.FieldAvatar:
 		return m.Avatar()
 	case userprofile.FieldName:
@@ -14917,8 +14821,6 @@ func (m *UserProfileMutation) OldField(ctx context.Context, name string) (ent.Va
 		return m.OldUpdateTime(ctx)
 	case userprofile.FieldDeleteTime:
 		return m.OldDeleteTime(ctx)
-	case userprofile.FieldNickname:
-		return m.OldNickname(ctx)
 	case userprofile.FieldAvatar:
 		return m.OldAvatar(ctx)
 	case userprofile.FieldName:
@@ -14972,13 +14874,6 @@ func (m *UserProfileMutation) SetField(name string, value ent.Value) error {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.SetDeleteTime(v)
-		return nil
-	case userprofile.FieldNickname:
-		v, ok := value.(string)
-		if !ok {
-			return fmt.Errorf("unexpected type %T for field %s", value, name)
-		}
-		m.SetNickname(v)
 		return nil
 	case userprofile.FieldAvatar:
 		v, ok := value.(string)
@@ -15126,9 +15021,6 @@ func (m *UserProfileMutation) ResetField(name string) error {
 		return nil
 	case userprofile.FieldDeleteTime:
 		m.ResetDeleteTime()
-		return nil
-	case userprofile.FieldNickname:
-		m.ResetNickname()
 		return nil
 	case userprofile.FieldAvatar:
 		m.ResetAvatar()

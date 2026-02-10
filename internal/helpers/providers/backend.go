@@ -1,0 +1,209 @@
+package providers
+
+import (
+	"context"
+	"errors"
+	"fmt"
+	"strconv"
+	"strings"
+
+	"github.com/ThreeDotsLabs/watermill"
+	"github.com/ThreeDotsLabs/watermill-nats/v2/pkg/nats"
+	"github.com/casbin/casbin/v3/persist"
+	"github.com/google/wire"
+
+	watcher "github.com/origadmin/casbin-watcher/v3"
+	_ "github.com/origadmin/casbin-watcher/v3/drivers/nats"
+	contribsecurity "github.com/origadmin/contrib/security"
+	"github.com/origadmin/contrib/security/authn/jwt"
+	"github.com/origadmin/contrib/security/authz"
+	"github.com/origadmin/contrib/security/authz/casbin"
+	"github.com/origadmin/contrib/security/credential"
+	securitymiddleware "github.com/origadmin/contrib/security/middleware"
+	authzmiddleware "github.com/origadmin/contrib/security/middleware/authz"
+	"github.com/origadmin/contrib/security/skip"
+	"github.com/origadmin/runtime"
+	"github.com/origadmin/runtime/container"
+	"github.com/origadmin/runtime/extensions/configutil"
+	"github.com/origadmin/runtime/log"
+	"github.com/origadmin/runtime/middleware"
+	"github.com/origadmin/runtime/security"
+	"origadmin/application/admin/internal/broker"
+	"origadmin/application/admin/internal/conf"
+	"origadmin/application/admin/internal/data"
+	"origadmin/application/admin/internal/helpers/pubsub"
+)
+
+const (
+	// policyNamePublic defines the policy name for publicly accessible endpoints.
+	policyNamePublic = "public"
+	// policyNameAuthN defines the policy name for endpoints that require JWT authentication only.
+	policyNameAuthN = "authn"
+)
+
+var (
+	factory        = securitymiddleware.NewFactory()
+	gatewaySkipMap = make(map[string]struct{})
+	backendSkipMap = make(map[string]struct{})
+)
+
+func init() {
+	// Pre-filter policies at startup to create fast lookup maps for skippers,
+	// using locally defined constants for correctness.
+	ps := security.RegisteredPolicies()
+	for _, p := range ps {
+		if p.Name == policyNamePublic {
+			gatewaySkipMap[p.ServiceMethod] = struct{}{}
+			backendSkipMap[p.ServiceMethod] = struct{}{}
+		} else if p.Name == policyNameAuthN {
+			backendSkipMap[p.ServiceMethod] = struct{}{}
+		}
+	}
+}
+
+// ProviderBackendSet provides backend-specific dependencies.
+var ProviderBackendSet = wire.NewSet(
+	ProviderCommonSet,
+	NewDebounceExecutor,
+	ProvideAuthorizer,
+	wire.Bind(new(authz.Authorizer), new(*casbin.Authorizer)), // Bind Authorizer to Reloader interface
+	ProvideWatcher,
+	ProvideAuthenticator,                                        // Provides *jwt.Authenticator
+	wire.Bind(new(credential.Creator), new(*jwt.Authenticator)), // Binds the interface
+	ProvideServiceMiddlewares,
+	ProvideClientMiddlewares,
+	ProvideSkipper,
+	ProvidePublisher,
+	pubsub.NewWatermillLogger,
+	//wire.Bind(new(broker.Publisher), new(*nats.Publisher)), // Binds the interface
+)
+
+// ProvideAuthorizer creates the Casbin authorizer.
+func ProvideAuthorizer(app *runtime.App, c *conf.Config, adapter *data.Adapter,
+	w persist.Watcher) (*casbin.Authorizer, error) {
+	securityConfig := c.GetBootstrap().GetSecurity()
+	if securityConfig == nil {
+		return nil, errors.New("security configuration not found")
+	}
+	authzConfig := securityConfig.GetAuthz()
+	if authzConfig == nil {
+		return nil, errors.New("authz configuration not found")
+	}
+
+	casbinConfig, _, err := configutil.Normalize(authzConfig.GetActive(), authzConfig.GetDefault(), authzConfig.GetConfigs())
+	if err != nil {
+		return nil, fmt.Errorf("failed to normalize Casbin authorizer configuration: %w", err)
+	}
+	if casbinConfig == nil || casbinConfig.GetCasbin() == nil || casbinConfig.GetType() != "casbin" {
+		return nil, errors.New("casbin authorizer configuration not found")
+	}
+	// We remove WithWatcher(w) from here to handle it manually and explicitly.
+	opts, err := casbin.NewOptions(casbinConfig, casbin.WithPolicyAdapter(adapter), casbin.WithLogger(app.Logger()), casbin.WithWatcher(w))
+	if err != nil {
+		return nil, err
+	}
+
+	authorizer, err := casbin.New(opts, app.Logger())
+	if err != nil {
+		return nil, err
+	}
+
+	return authorizer, nil
+}
+
+// ProvideWatcher creates a new casbin watcher.
+func ProvideWatcher(app *runtime.App, c *conf.Config) (persist.Watcher, error) {
+	var w persist.Watcher
+	brokerConfig := c.GetBrokers()
+	if brokerConfig == nil {
+		return w, nil
+	}
+
+	brokerUrl := brokerConfig.GetDefault().GetUrl()
+	if brokerUrl == "" {
+		return w, nil
+	}
+
+	return watcher.NewWatcher(app.Context(), brokerUrl)
+}
+
+func ruleSpec(ctx context.Context, p contribsecurity.Principal, req contribsecurity.Request) authz.RuleSpec {
+	return authz.RuleSpec{
+		Domain:   p.GetDomain(),
+		Resource: req.GetOperation(),
+		Action:   "ANY",
+	}
+}
+
+// ProvideServiceMiddlewares creates backend-specific middlewares.
+func ProvideServiceMiddlewares(app *runtime.App, authorizer *casbin.Authorizer, skip contribsecurity.Skipper) (container.ServerMiddlewareProvider, error) {
+	provider, err := app.MiddlewareProvider()
+	if err != nil {
+		return nil, err
+	}
+	m := factory.NewBackend(authorizer, skip, log.WithLogger(app.Logger()), authzmiddleware.WithRuleSpec(ruleSpec))
+	provider.RegisterServerMiddleware("authz", m)
+	provider.RegisterClientMiddleware("authz", middleware.Noop())
+	log.NewHelper(app.Logger()).Infof("registered %+v middlewares", provider.Names())
+	return provider, nil
+}
+
+// ProvideSkipper creates a skipper for the backend.
+func ProvideSkipper(app *runtime.App, _ *conf.Config) contribsecurity.Skipper {
+	adminSkipper := skip.Principal(func(principal contribsecurity.Principal) bool {
+		helper := log.NewHelper(log.With(app.Logger()))
+		pid := strconv.Itoa(int(data.SystemUserID))
+		if principal.GetID() == pid {
+			helper.Infof("skip admin checker: %s", pid)
+			return true
+		}
+		return false
+	})
+	pathSkipper := func(ctx context.Context, req contribsecurity.Request) bool {
+		helper := log.NewHelper(log.With(app.Logger(), "kind", req.Kind(), "operation", req.GetOperation(), "method", req.GetMethod(), "path", req.GetRouteTemplate()))
+		// Use the pre-filtered map for a fast lookup.
+		if _, ok := backendSkipMap[req.GetOperation()]; ok {
+			helper.Infof("skip checker: %s", req.GetOperation())
+			return true
+		}
+		return false
+	}
+	return skip.Composite(adminSkipper, pathSkipper)
+}
+
+// ProvidePublisher creates a Watermill message.Publisher based on broker configuration.
+func ProvidePublisher(c *conf.Config, wmLogger watermill.LoggerAdapter) (broker.Publisher, error) {
+	brokerConfig := c.GetBrokers()
+	if brokerConfig == nil {
+		return nil, errors.New("broker configuration not found")
+	}
+
+	brokerUrl := brokerConfig.GetDefault().GetUrl()
+	if brokerUrl == "" {
+		return nil, errors.New("broker url not found")
+	}
+
+	// Parse broker URL to check for JetStream configuration
+	// The URL format should be: nats://host:port?jetstream=true
+	// or nats://host:port/topic?jetstream=true (topic is ignored for publisher)
+	publisherConfig := nats.PublisherConfig{
+		URL: brokerUrl,
+	}
+
+	// Check if JetStream is enabled in the URL
+	if brokerConfig.GetDefault().GetType() == "nats" {
+		// Use same JetStream configuration as watermill server
+		// This ensures publisher and subscriber are compatible
+		if strings.Contains(brokerUrl, "jetstream=true") {
+			publisherConfig.JetStream = nats.JetStreamConfig{
+				Disabled: false,
+			}
+		}
+	}
+
+	publisher, err := pubsub.NewPublisher(publisherConfig, wmLogger)
+	if err != nil {
+		return nil, fmt.Errorf("failed to create NATS publisher: %w", err)
+	}
+	return publisher, nil
+}

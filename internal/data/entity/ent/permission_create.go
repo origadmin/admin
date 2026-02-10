@@ -153,20 +153,6 @@ func (_c *PermissionCreate) SetNillableStatus(v *enums.Status) *PermissionCreate
 	return _c
 }
 
-// SetActions sets the "actions" field.
-func (_c *PermissionCreate) SetActions(v permission.Actions) *PermissionCreate {
-	_c.mutation.SetActions(v)
-	return _c
-}
-
-// SetNillableActions sets the "actions" field if the given value is not nil.
-func (_c *PermissionCreate) SetNillableActions(v *permission.Actions) *PermissionCreate {
-	if v != nil {
-		_c.SetActions(*v)
-	}
-	return _c
-}
-
 // SetID sets the "id" field.
 func (_c *PermissionCreate) SetID(v int64) *PermissionCreate {
 	_c.mutation.SetID(v)
@@ -368,10 +354,6 @@ func (_c *PermissionCreate) defaults() error {
 		v := permission.DefaultStatus
 		_c.mutation.SetStatus(v)
 	}
-	if _, ok := _c.mutation.Actions(); !ok {
-		v := permission.DefaultActions
-		_c.mutation.SetActions(v)
-	}
 	if _, ok := _c.mutation.ID(); !ok {
 		if permission.DefaultID == nil {
 			return fmt.Errorf("ent: uninitialized permission.DefaultID (forgotten import ent/runtime?)")
@@ -419,14 +401,6 @@ func (_c *PermissionCreate) check() error {
 	}
 	if _, ok := _c.mutation.Status(); !ok {
 		return &ValidationError{Name: "status", err: errors.New(`ent: missing required field "Permission.status"`)}
-	}
-	if _, ok := _c.mutation.Actions(); !ok {
-		return &ValidationError{Name: "actions", err: errors.New(`ent: missing required field "Permission.actions"`)}
-	}
-	if v, ok := _c.mutation.Actions(); ok {
-		if err := permission.ActionsValidator(v); err != nil {
-			return &ValidationError{Name: "actions", err: fmt.Errorf(`ent: validator failed for field "Permission.actions": %w`, err)}
-		}
 	}
 	if v, ok := _c.mutation.ID(); ok {
 		if err := permission.IDValidator(v); err != nil {
@@ -504,10 +478,6 @@ func (_c *PermissionCreate) createSpec() (*Permission, *sqlgraph.CreateSpec) {
 	if value, ok := _c.mutation.Status(); ok {
 		_spec.SetField(permission.FieldStatus, field.TypeInt8, value)
 		_node.Status = value
-	}
-	if value, ok := _c.mutation.Actions(); ok {
-		_spec.SetField(permission.FieldActions, field.TypeEnum, value)
-		_node.Actions = value
 	}
 	if nodes := _c.mutation.RolesIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{

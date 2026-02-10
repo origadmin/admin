@@ -151,10 +151,9 @@ var (
 		{Name: "name", Type: field.TypeString, Size: 64, Comment: "entity.permission.field.name", Default: ""},
 		{Name: "keyword", Type: field.TypeString, Unique: true, Size: 255, Comment: "entity.permission.field.keyword"},
 		{Name: "description", Type: field.TypeString, Size: 1024, Comment: "entity.permission.field.description", Default: ""},
-		{Name: "data_scope", Type: field.TypeString, Comment: "entity.permission.field.data_scope", Default: "self"},
+		{Name: "data_scope", Type: field.TypeString, Comment: "entity.permission.field.data_scope", Default: "SELF"},
 		{Name: "data_rules", Type: field.TypeJSON, Nullable: true, Comment: "entity.permission.field.data_rules"},
 		{Name: "status", Type: field.TypeInt8, Comment: "entity.permission.field.status", Default: 1},
-		{Name: "actions", Type: field.TypeEnum, Comment: "entity.permission.field.actions", Enums: []string{"read", "write", "delete", "manage"}, Default: "read"},
 	}
 	// SysPermissionsTable holds the schema information for the "sys_permissions" table.
 	SysPermissionsTable = &schema.Table{
@@ -473,11 +472,11 @@ var (
 		{Name: "uuid", Type: field.TypeString, Size: 36, Comment: "entity.user.field.uuid"},
 		{Name: "allowed_ip", Type: field.TypeString, Comment: "entity.user.field.allowed_ip", Default: "0.0.0.0"},
 		{Name: "username", Type: field.TypeString, Size: 32, Comment: "entity.user.field.username"},
+		{Name: "nickname", Type: field.TypeString, Size: 64, Comment: "entity.user_profile.field.nickname", Default: ""},
 		{Name: "encrypted_password", Type: field.TypeString, Size: 256, Comment: "entity.user.field.encrypted_password", Default: ""},
-		{Name: "salt", Type: field.TypeString, Size: 64, Comment: "entity.user.field.salt", Default: ""},
 		{Name: "phone", Type: field.TypeString, Size: 32, Comment: "entity.user.field.phone", Default: ""},
 		{Name: "email", Type: field.TypeString, Size: 64, Comment: "entity.user.field.email", Default: ""},
-		{Name: "token", Type: field.TypeString, Size: 512, Comment: "entity.user.field.token", Default: ""},
+		{Name: "session_id", Type: field.TypeString, Size: 512, Comment: "entity.user.field.session_id", Default: ""},
 		{Name: "status", Type: field.TypeInt8, Comment: "entity.user.field.status", Default: 1},
 		{Name: "is_system", Type: field.TypeBool, Comment: "entity.user.field.is_system", Default: false},
 		{Name: "last_login_ip", Type: field.TypeString, Size: 32, Comment: "entity.user.field.last_login_ip", Default: ""},
@@ -620,7 +619,6 @@ var (
 		{Name: "create_time", Type: field.TypeTime, Comment: "create_time.field.comment"},
 		{Name: "update_time", Type: field.TypeTime, Comment: "update_time.field.comment"},
 		{Name: "delete_time", Type: field.TypeTime, Nullable: true, Comment: "delete_time.field.comment"},
-		{Name: "nickname", Type: field.TypeString, Size: 64, Comment: "entity.user_profile.field.nickname", Default: ""},
 		{Name: "avatar", Type: field.TypeString, Size: 256, Comment: "entity.user_profile.field.avatar", Default: ""},
 		{Name: "name", Type: field.TypeString, Size: 64, Comment: "entity.user_profile.field.name", Default: ""},
 		{Name: "gender", Type: field.TypeEnum, Comment: "entity.user_profile.field.gender", Enums: []string{"male", "female", "unknown"}, Default: "unknown"},
@@ -637,7 +635,7 @@ var (
 		ForeignKeys: []*schema.ForeignKey{
 			{
 				Symbol:     "sys_user_profiles_sys_users_profile",
-				Columns:    []*schema.Column{SysUserProfilesColumns[12]},
+				Columns:    []*schema.Column{SysUserProfilesColumns[11]},
 				RefColumns: []*schema.Column{SysUsersColumns[0]},
 				OnDelete:   schema.NoAction,
 			},

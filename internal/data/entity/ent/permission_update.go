@@ -160,20 +160,6 @@ func (_u *PermissionUpdate) AddStatus(v enums.Status) *PermissionUpdate {
 	return _u
 }
 
-// SetActions sets the "actions" field.
-func (_u *PermissionUpdate) SetActions(v permission.Actions) *PermissionUpdate {
-	_u.mutation.SetActions(v)
-	return _u
-}
-
-// SetNillableActions sets the "actions" field if the given value is not nil.
-func (_u *PermissionUpdate) SetNillableActions(v *permission.Actions) *PermissionUpdate {
-	if v != nil {
-		_u.SetActions(*v)
-	}
-	return _u
-}
-
 // AddRoleIDs adds the "roles" edge to the Role entity by IDs.
 func (_u *PermissionUpdate) AddRoleIDs(ids ...int64) *PermissionUpdate {
 	_u.mutation.AddRoleIDs(ids...)
@@ -526,11 +512,6 @@ func (_u *PermissionUpdate) check() error {
 			return &ValidationError{Name: "description", err: fmt.Errorf(`ent: validator failed for field "Permission.description": %w`, err)}
 		}
 	}
-	if v, ok := _u.mutation.Actions(); ok {
-		if err := permission.ActionsValidator(v); err != nil {
-			return &ValidationError{Name: "actions", err: fmt.Errorf(`ent: validator failed for field "Permission.actions": %w`, err)}
-		}
-	}
 	return nil
 }
 
@@ -590,9 +571,6 @@ func (_u *PermissionUpdate) sqlSave(ctx context.Context) (_node int, err error) 
 	}
 	if value, ok := _u.mutation.AddedStatus(); ok {
 		_spec.AddField(permission.FieldStatus, field.TypeInt8, value)
-	}
-	if value, ok := _u.mutation.Actions(); ok {
-		_spec.SetField(permission.FieldActions, field.TypeEnum, value)
 	}
 	if _u.mutation.RolesCleared() {
 		edge := &sqlgraph.EdgeSpec{
@@ -1098,20 +1076,6 @@ func (_u *PermissionUpdateOne) AddStatus(v enums.Status) *PermissionUpdateOne {
 	return _u
 }
 
-// SetActions sets the "actions" field.
-func (_u *PermissionUpdateOne) SetActions(v permission.Actions) *PermissionUpdateOne {
-	_u.mutation.SetActions(v)
-	return _u
-}
-
-// SetNillableActions sets the "actions" field if the given value is not nil.
-func (_u *PermissionUpdateOne) SetNillableActions(v *permission.Actions) *PermissionUpdateOne {
-	if v != nil {
-		_u.SetActions(*v)
-	}
-	return _u
-}
-
 // AddRoleIDs adds the "roles" edge to the Role entity by IDs.
 func (_u *PermissionUpdateOne) AddRoleIDs(ids ...int64) *PermissionUpdateOne {
 	_u.mutation.AddRoleIDs(ids...)
@@ -1477,11 +1441,6 @@ func (_u *PermissionUpdateOne) check() error {
 			return &ValidationError{Name: "description", err: fmt.Errorf(`ent: validator failed for field "Permission.description": %w`, err)}
 		}
 	}
-	if v, ok := _u.mutation.Actions(); ok {
-		if err := permission.ActionsValidator(v); err != nil {
-			return &ValidationError{Name: "actions", err: fmt.Errorf(`ent: validator failed for field "Permission.actions": %w`, err)}
-		}
-	}
 	return nil
 }
 
@@ -1558,9 +1517,6 @@ func (_u *PermissionUpdateOne) sqlSave(ctx context.Context) (_node *Permission, 
 	}
 	if value, ok := _u.mutation.AddedStatus(); ok {
 		_spec.AddField(permission.FieldStatus, field.TypeInt8, value)
-	}
-	if value, ok := _u.mutation.Actions(); ok {
-		_spec.SetField(permission.FieldActions, field.TypeEnum, value)
 	}
 	if _u.mutation.RolesCleared() {
 		edge := &sqlgraph.EdgeSpec{

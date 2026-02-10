@@ -606,26 +606,6 @@ func StatusLTE(v enums.Status) predicate.Permission {
 	return predicate.Permission(sql.FieldLTE(FieldStatus, vc))
 }
 
-// ActionsEQ applies the EQ predicate on the "actions" field.
-func ActionsEQ(v Actions) predicate.Permission {
-	return predicate.Permission(sql.FieldEQ(FieldActions, v))
-}
-
-// ActionsNEQ applies the NEQ predicate on the "actions" field.
-func ActionsNEQ(v Actions) predicate.Permission {
-	return predicate.Permission(sql.FieldNEQ(FieldActions, v))
-}
-
-// ActionsIn applies the In predicate on the "actions" field.
-func ActionsIn(vs ...Actions) predicate.Permission {
-	return predicate.Permission(sql.FieldIn(FieldActions, vs...))
-}
-
-// ActionsNotIn applies the NotIn predicate on the "actions" field.
-func ActionsNotIn(vs ...Actions) predicate.Permission {
-	return predicate.Permission(sql.FieldNotIn(FieldActions, vs...))
-}
-
 // HasRoles applies the HasEdge predicate on the "roles" edge.
 func HasRoles() predicate.Permission {
 	return predicate.Permission(func(s *sql.Selector) {

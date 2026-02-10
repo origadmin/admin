@@ -83,20 +83,6 @@ func (_u *UserProfileUpdate) ClearDeleteTime() *UserProfileUpdate {
 	return _u
 }
 
-// SetNickname sets the "nickname" field.
-func (_u *UserProfileUpdate) SetNickname(v string) *UserProfileUpdate {
-	_u.mutation.SetNickname(v)
-	return _u
-}
-
-// SetNillableNickname sets the "nickname" field if the given value is not nil.
-func (_u *UserProfileUpdate) SetNillableNickname(v *string) *UserProfileUpdate {
-	if v != nil {
-		_u.SetNickname(*v)
-	}
-	return _u
-}
-
 // SetAvatar sets the "avatar" field.
 func (_u *UserProfileUpdate) SetAvatar(v string) *UserProfileUpdate {
 	_u.mutation.SetAvatar(v)
@@ -233,11 +219,6 @@ func (_u *UserProfileUpdate) defaults() error {
 
 // check runs all checks and user-defined validators on the builder.
 func (_u *UserProfileUpdate) check() error {
-	if v, ok := _u.mutation.Nickname(); ok {
-		if err := userprofile.NicknameValidator(v); err != nil {
-			return &ValidationError{Name: "nickname", err: fmt.Errorf(`ent: validator failed for field "UserProfile.nickname": %w`, err)}
-		}
-	}
 	if v, ok := _u.mutation.Avatar(); ok {
 		if err := userprofile.AvatarValidator(v); err != nil {
 			return &ValidationError{Name: "avatar", err: fmt.Errorf(`ent: validator failed for field "UserProfile.avatar": %w`, err)}
@@ -307,9 +288,6 @@ func (_u *UserProfileUpdate) sqlSave(ctx context.Context) (_node int, err error)
 	}
 	if _u.mutation.DeleteTimeCleared() {
 		_spec.ClearField(userprofile.FieldDeleteTime, field.TypeTime)
-	}
-	if value, ok := _u.mutation.Nickname(); ok {
-		_spec.SetField(userprofile.FieldNickname, field.TypeString, value)
 	}
 	if value, ok := _u.mutation.Avatar(); ok {
 		_spec.SetField(userprofile.FieldAvatar, field.TypeString, value)
@@ -427,20 +405,6 @@ func (_u *UserProfileUpdateOne) SetNillableDeleteTime(v *time.Time) *UserProfile
 // ClearDeleteTime clears the value of the "delete_time" field.
 func (_u *UserProfileUpdateOne) ClearDeleteTime() *UserProfileUpdateOne {
 	_u.mutation.ClearDeleteTime()
-	return _u
-}
-
-// SetNickname sets the "nickname" field.
-func (_u *UserProfileUpdateOne) SetNickname(v string) *UserProfileUpdateOne {
-	_u.mutation.SetNickname(v)
-	return _u
-}
-
-// SetNillableNickname sets the "nickname" field if the given value is not nil.
-func (_u *UserProfileUpdateOne) SetNillableNickname(v *string) *UserProfileUpdateOne {
-	if v != nil {
-		_u.SetNickname(*v)
-	}
 	return _u
 }
 
@@ -593,11 +557,6 @@ func (_u *UserProfileUpdateOne) defaults() error {
 
 // check runs all checks and user-defined validators on the builder.
 func (_u *UserProfileUpdateOne) check() error {
-	if v, ok := _u.mutation.Nickname(); ok {
-		if err := userprofile.NicknameValidator(v); err != nil {
-			return &ValidationError{Name: "nickname", err: fmt.Errorf(`ent: validator failed for field "UserProfile.nickname": %w`, err)}
-		}
-	}
 	if v, ok := _u.mutation.Avatar(); ok {
 		if err := userprofile.AvatarValidator(v); err != nil {
 			return &ValidationError{Name: "avatar", err: fmt.Errorf(`ent: validator failed for field "UserProfile.avatar": %w`, err)}
@@ -684,9 +643,6 @@ func (_u *UserProfileUpdateOne) sqlSave(ctx context.Context) (_node *UserProfile
 	}
 	if _u.mutation.DeleteTimeCleared() {
 		_spec.ClearField(userprofile.FieldDeleteTime, field.TypeTime)
-	}
-	if value, ok := _u.mutation.Nickname(); ok {
-		_spec.SetField(userprofile.FieldNickname, field.TypeString, value)
 	}
 	if value, ok := _u.mutation.Avatar(); ok {
 		_spec.SetField(userprofile.FieldAvatar, field.TypeString, value)

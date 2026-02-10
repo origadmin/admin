@@ -494,18 +494,18 @@ func init() {
 	userDescUsername := userFields[2].Descriptor()
 	// user.UsernameValidator is a validator for the "username" field. It is called by the builders before save.
 	user.UsernameValidator = userDescUsername.Validators[0].(func(string) error)
+	// userDescNickname is the schema descriptor for nickname field.
+	userDescNickname := userFields[3].Descriptor()
+	// user.DefaultNickname holds the default value on creation for the nickname field.
+	user.DefaultNickname = userDescNickname.Default.(string)
+	// user.NicknameValidator is a validator for the "nickname" field. It is called by the builders before save.
+	user.NicknameValidator = userDescNickname.Validators[0].(func(string) error)
 	// userDescEncryptedPassword is the schema descriptor for encrypted_password field.
-	userDescEncryptedPassword := userFields[3].Descriptor()
+	userDescEncryptedPassword := userFields[4].Descriptor()
 	// user.DefaultEncryptedPassword holds the default value on creation for the encrypted_password field.
 	user.DefaultEncryptedPassword = userDescEncryptedPassword.Default.(string)
 	// user.EncryptedPasswordValidator is a validator for the "encrypted_password" field. It is called by the builders before save.
 	user.EncryptedPasswordValidator = userDescEncryptedPassword.Validators[0].(func(string) error)
-	// userDescSalt is the schema descriptor for salt field.
-	userDescSalt := userFields[4].Descriptor()
-	// user.DefaultSalt holds the default value on creation for the salt field.
-	user.DefaultSalt = userDescSalt.Default.(string)
-	// user.SaltValidator is a validator for the "salt" field. It is called by the builders before save.
-	user.SaltValidator = userDescSalt.Validators[0].(func(string) error)
 	// userDescPhone is the schema descriptor for phone field.
 	userDescPhone := userFields[5].Descriptor()
 	// user.DefaultPhone holds the default value on creation for the phone field.
@@ -518,12 +518,12 @@ func init() {
 	user.DefaultEmail = userDescEmail.Default.(string)
 	// user.EmailValidator is a validator for the "email" field. It is called by the builders before save.
 	user.EmailValidator = userDescEmail.Validators[0].(func(string) error)
-	// userDescToken is the schema descriptor for token field.
-	userDescToken := userFields[7].Descriptor()
-	// user.DefaultToken holds the default value on creation for the token field.
-	user.DefaultToken = userDescToken.Default.(string)
-	// user.TokenValidator is a validator for the "token" field. It is called by the builders before save.
-	user.TokenValidator = userDescToken.Validators[0].(func(string) error)
+	// userDescSessionID is the schema descriptor for session_id field.
+	userDescSessionID := userFields[7].Descriptor()
+	// user.DefaultSessionID holds the default value on creation for the session_id field.
+	user.DefaultSessionID = userDescSessionID.Default.(string)
+	// user.SessionIDValidator is a validator for the "session_id" field. It is called by the builders before save.
+	user.SessionIDValidator = userDescSessionID.Validators[0].(func(string) error)
 	// userDescStatus is the schema descriptor for status field.
 	userDescStatus := userFields[8].Descriptor()
 	// user.DefaultStatus holds the default value on creation for the status field.
@@ -603,32 +603,26 @@ func init() {
 	userprofile.DefaultUpdateTime = userprofileDescUpdateTime.Default.(func() time.Time)
 	// userprofile.UpdateDefaultUpdateTime holds the default value on update for the update_time field.
 	userprofile.UpdateDefaultUpdateTime = userprofileDescUpdateTime.UpdateDefault.(func() time.Time)
-	// userprofileDescNickname is the schema descriptor for nickname field.
-	userprofileDescNickname := userprofileFields[0].Descriptor()
-	// userprofile.DefaultNickname holds the default value on creation for the nickname field.
-	userprofile.DefaultNickname = userprofileDescNickname.Default.(string)
-	// userprofile.NicknameValidator is a validator for the "nickname" field. It is called by the builders before save.
-	userprofile.NicknameValidator = userprofileDescNickname.Validators[0].(func(string) error)
 	// userprofileDescAvatar is the schema descriptor for avatar field.
-	userprofileDescAvatar := userprofileFields[1].Descriptor()
+	userprofileDescAvatar := userprofileFields[0].Descriptor()
 	// userprofile.DefaultAvatar holds the default value on creation for the avatar field.
 	userprofile.DefaultAvatar = userprofileDescAvatar.Default.(string)
 	// userprofile.AvatarValidator is a validator for the "avatar" field. It is called by the builders before save.
 	userprofile.AvatarValidator = userprofileDescAvatar.Validators[0].(func(string) error)
 	// userprofileDescName is the schema descriptor for name field.
-	userprofileDescName := userprofileFields[2].Descriptor()
+	userprofileDescName := userprofileFields[1].Descriptor()
 	// userprofile.DefaultName holds the default value on creation for the name field.
 	userprofile.DefaultName = userprofileDescName.Default.(string)
 	// userprofile.NameValidator is a validator for the "name" field. It is called by the builders before save.
 	userprofile.NameValidator = userprofileDescName.Validators[0].(func(string) error)
 	// userprofileDescDepartment is the schema descriptor for department field.
-	userprofileDescDepartment := userprofileFields[4].Descriptor()
+	userprofileDescDepartment := userprofileFields[3].Descriptor()
 	// userprofile.DefaultDepartment holds the default value on creation for the department field.
 	userprofile.DefaultDepartment = userprofileDescDepartment.Default.(string)
 	// userprofile.DepartmentValidator is a validator for the "department" field. It is called by the builders before save.
 	userprofile.DepartmentValidator = userprofileDescDepartment.Validators[0].(func(string) error)
 	// userprofileDescRemark is the schema descriptor for remark field.
-	userprofileDescRemark := userprofileFields[5].Descriptor()
+	userprofileDescRemark := userprofileFields[4].Descriptor()
 	// userprofile.DefaultRemark holds the default value on creation for the remark field.
 	userprofile.DefaultRemark = userprofileDescRemark.Default.(string)
 	// userprofile.RemarkValidator is a validator for the "remark" field. It is called by the builders before save.

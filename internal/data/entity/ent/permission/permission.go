@@ -3,7 +3,6 @@
 package permission
 
 import (
-	"fmt"
 	"origadmin/application/admin/internal/data/enums"
 	"time"
 
@@ -37,8 +36,6 @@ const (
 	FieldDataRules = "data_rules"
 	// FieldStatus holds the string denoting the status field in the database.
 	FieldStatus = "status"
-	// FieldActions holds the string denoting the actions field in the database.
-	FieldActions = "actions"
 	// EdgeRoles holds the string denoting the roles edge name in mutations.
 	EdgeRoles = "roles"
 	// EdgePositions holds the string denoting the positions edge name in mutations.
@@ -120,7 +117,6 @@ var Columns = []string{
 	FieldDataScope,
 	FieldDataRules,
 	FieldStatus,
-	FieldActions,
 }
 
 var (
@@ -181,34 +177,6 @@ var (
 	IDValidator func(int64) error
 )
 
-// Actions defines the type for the "actions" enum field.
-type Actions string
-
-// ActionsRead is the default value of the Actions enum.
-const DefaultActions = ActionsRead
-
-// Actions values.
-const (
-	ActionsRead   Actions = "read"
-	ActionsWrite  Actions = "write"
-	ActionsDelete Actions = "delete"
-	ActionsManage Actions = "manage"
-)
-
-func (a Actions) String() string {
-	return string(a)
-}
-
-// ActionsValidator is a validator for the "actions" field enum values. It is called by the builders before save.
-func ActionsValidator(a Actions) error {
-	switch a {
-	case ActionsRead, ActionsWrite, ActionsDelete, ActionsManage:
-		return nil
-	default:
-		return fmt.Errorf("permission: invalid enum value for actions field: %q", a)
-	}
-}
-
 // OrderOption defines the ordering options for the Permission queries.
 type OrderOption func(*sql.Selector)
 
@@ -260,11 +228,6 @@ func ByDataScope(opts ...sql.OrderTermOption) OrderOption {
 // ByStatus orders the results by the status field.
 func ByStatus(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldStatus, opts...).ToFunc()
-}
-
-// ByActions orders the results by the actions field.
-func ByActions(opts ...sql.OrderTermOption) OrderOption {
-	return sql.OrderByField(FieldActions, opts...).ToFunc()
 }
 
 // ByRolesCount orders the results by roles count.

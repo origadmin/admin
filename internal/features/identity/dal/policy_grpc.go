@@ -32,22 +32,37 @@ func NewPolicyGRPCProvider(client systemv1.PolicyQueryServiceClient, logger log.
 func (p *policyGRPCProvider) ListPolicies(ctx context.Context, base *authzv1.PolicySpec, opts ...authz.PolicyFilterOption) ([]*authzv1.PolicySpec, error) {
 	p.log.WithContext(ctx).Info("Listing policies via gRPC from system service")
 
-	// Note: The current implementation of the gRPC client for AuthorizationService
-	// does not support filtering policies with PolicyFilterOption.
-	// The 'base' parameter is used to construct the request.
-	// The 'opts' are ignored.
-	// This may need to be updated if the service's capabilities are extended.
+	// Apply filter options to build a complete filter
+	filter := authz.BuildPolicyFilter(base, opts...)
 
-	req := &systemv1.ListPoliciesRequest{
-		// Assuming the ListPoliciesRequest can be built from the 'base' PolicySpec.
-		// This part needs to be aligned with the actual definition of ListPoliciesRequest.
-		// For example:
-		// Page:     1,
-		// PageSize: 100,
-		// Type:     base.GetType(),
-		// Subject:  base.GetSubject(),
-		// Domain:   base.GetDomain(),
+	// Build the gRPC request from the filter
+	req := &systemv1.ListPoliciesRequest{}
+	if filter.Type != nil {
+		req.Type = filter.Type
 	}
+	if filter.Subject != nil {
+		req.Subject = filter.Subject
+	}
+	if len(filter.Actions) > 0 {
+		req.Actions = filter.Actions
+	}
+	if len(filter.Resources) > 0 {
+		req.Resources = filter.Resources
+	}
+	if filter.Effect != nil {
+		req.Effect = filter.Effect
+	}
+	if filter.Domain != nil {
+		req.Domain = filter.Domain
+	}
+	if filter.Disabled != nil {
+		req.Disabled = filter.Disabled
+	}
+
+	// Default pagination values (can be overridden by options if needed)
+	// Note: PolicyFilter does not have Page/PageSize fields, so we use defaults
+	req.Page = 1
+	req.PageSize = 1000 // Use a large default to get all results
 
 	resp, err := p.client.ListPolicies(ctx, req)
 	if err != nil {

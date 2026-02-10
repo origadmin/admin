@@ -77,11 +77,15 @@ message LoginRequest {
 }
 
 // The response message for the Login RPC.
-message LoginResponse {
+message Token {
   string access_token = 1 [json_name = "access_token"];
   string refresh_token = 2 [json_name = "refresh_token"];
   string token_type = 3 [json_name = "token_type"];
   int64 expires_in = 4 [json_name = "expires_in"];
+}
+
+message LoginResponse {
+  Token token = 1 [json_name = "token"];
 }
 
 // The request message for the Register RPC.

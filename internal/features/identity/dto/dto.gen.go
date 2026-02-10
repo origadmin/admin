@@ -531,9 +531,10 @@ func ConvertUserPBToUser(from *UserPB) *User {
 		UUID:          from.Uuid,
 		AllowedIP:     from.AllowedIp,
 		Username:      from.Username,
+		Nickname:      from.Nickname,
 		Phone:         from.Phone,
 		Email:         from.Email,
-		Token:         from.Token,
+		SessionID:     from.SessionId,
 		Status:        enums.Status(from.Status),
 		LastLoginIP:   from.LastLoginIp,
 		LoginIP:       from.LoginIp,
@@ -581,7 +582,6 @@ func ConvertUserProfilePBToUserProfile(from *UserProfilePB) *UserProfile {
 	}
 
 	to := &UserProfile{
-		Nickname:   from.Nickname,
 		Avatar:     from.Avatar,
 		Name:       from.Name,
 		Gender:     ConvertStringToGender(from.Gender),
@@ -598,7 +598,6 @@ func ConvertUserProfileToUserProfilePB(from *UserProfile) *UserProfilePB {
 	}
 
 	to := &UserProfilePB{
-		Nickname:   from.Nickname,
 		Avatar:     from.Avatar,
 		Gender:     ConvertGenderToString(from.Gender),
 		Name:       from.Name,
@@ -683,9 +682,10 @@ func ConvertUserToUserPB(from *User) *UserPB {
 		Uuid:          from.UUID,
 		AllowedIp:     from.AllowedIP,
 		Username:      from.Username,
+		Nickname:      from.Nickname,
 		Phone:         from.Phone,
 		Email:         from.Email,
-		Token:         from.Token,
+		SessionId:     from.SessionID,
 		Status:        int32(from.Status),
 		LastLoginIp:   from.LastLoginIP,
 		LoginIp:       from.LoginIP,

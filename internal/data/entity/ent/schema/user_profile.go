@@ -24,10 +24,6 @@ type UserProfile struct {
 // Fields of the UserProfile.
 func (UserProfile) Fields() []ent.Field {
 	return []ent.Field{
-		field.String("nickname").
-			MaxLen(64).
-			Default("").
-			Comment(i18n.Text("entity.user_profile.field.nickname")), // Nickname display name of user
 		field.String("avatar").
 			MaxLen(256).
 			Default("").

@@ -57,8 +57,6 @@ func (m *UserProfile) validate(all bool) error {
 
 	var errors []error
 
-	// no validation rules for Nickname
-
 	// no validation rules for Avatar
 
 	// no validation rules for Gender
@@ -967,11 +965,13 @@ func (m *User) validate(all bool) error {
 
 	// no validation rules for Username
 
+	// no validation rules for Nickname
+
 	// no validation rules for Phone
 
 	// no validation rules for Email
 
-	// no validation rules for Token
+	// no validation rules for SessionId
 
 	// no validation rules for Status
 

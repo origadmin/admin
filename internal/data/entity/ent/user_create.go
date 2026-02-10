@@ -125,6 +125,20 @@ func (_c *UserCreate) SetUsername(v string) *UserCreate {
 	return _c
 }
 
+// SetNickname sets the "nickname" field.
+func (_c *UserCreate) SetNickname(v string) *UserCreate {
+	_c.mutation.SetNickname(v)
+	return _c
+}
+
+// SetNillableNickname sets the "nickname" field if the given value is not nil.
+func (_c *UserCreate) SetNillableNickname(v *string) *UserCreate {
+	if v != nil {
+		_c.SetNickname(*v)
+	}
+	return _c
+}
+
 // SetEncryptedPassword sets the "encrypted_password" field.
 func (_c *UserCreate) SetEncryptedPassword(v string) *UserCreate {
 	_c.mutation.SetEncryptedPassword(v)
@@ -135,20 +149,6 @@ func (_c *UserCreate) SetEncryptedPassword(v string) *UserCreate {
 func (_c *UserCreate) SetNillableEncryptedPassword(v *string) *UserCreate {
 	if v != nil {
 		_c.SetEncryptedPassword(*v)
-	}
-	return _c
-}
-
-// SetSalt sets the "salt" field.
-func (_c *UserCreate) SetSalt(v string) *UserCreate {
-	_c.mutation.SetSalt(v)
-	return _c
-}
-
-// SetNillableSalt sets the "salt" field if the given value is not nil.
-func (_c *UserCreate) SetNillableSalt(v *string) *UserCreate {
-	if v != nil {
-		_c.SetSalt(*v)
 	}
 	return _c
 }
@@ -181,16 +181,16 @@ func (_c *UserCreate) SetNillableEmail(v *string) *UserCreate {
 	return _c
 }
 
-// SetToken sets the "token" field.
-func (_c *UserCreate) SetToken(v string) *UserCreate {
-	_c.mutation.SetToken(v)
+// SetSessionID sets the "session_id" field.
+func (_c *UserCreate) SetSessionID(v string) *UserCreate {
+	_c.mutation.SetSessionID(v)
 	return _c
 }
 
-// SetNillableToken sets the "token" field if the given value is not nil.
-func (_c *UserCreate) SetNillableToken(v *string) *UserCreate {
+// SetNillableSessionID sets the "session_id" field if the given value is not nil.
+func (_c *UserCreate) SetNillableSessionID(v *string) *UserCreate {
 	if v != nil {
-		_c.SetToken(*v)
+		_c.SetSessionID(*v)
 	}
 	return _c
 }
@@ -490,13 +490,13 @@ func (_c *UserCreate) defaults() error {
 		v := user.DefaultAllowedIP
 		_c.mutation.SetAllowedIP(v)
 	}
+	if _, ok := _c.mutation.Nickname(); !ok {
+		v := user.DefaultNickname
+		_c.mutation.SetNickname(v)
+	}
 	if _, ok := _c.mutation.EncryptedPassword(); !ok {
 		v := user.DefaultEncryptedPassword
 		_c.mutation.SetEncryptedPassword(v)
-	}
-	if _, ok := _c.mutation.Salt(); !ok {
-		v := user.DefaultSalt
-		_c.mutation.SetSalt(v)
 	}
 	if _, ok := _c.mutation.Phone(); !ok {
 		v := user.DefaultPhone
@@ -506,9 +506,9 @@ func (_c *UserCreate) defaults() error {
 		v := user.DefaultEmail
 		_c.mutation.SetEmail(v)
 	}
-	if _, ok := _c.mutation.Token(); !ok {
-		v := user.DefaultToken
-		_c.mutation.SetToken(v)
+	if _, ok := _c.mutation.SessionID(); !ok {
+		v := user.DefaultSessionID
+		_c.mutation.SetSessionID(v)
 	}
 	if _, ok := _c.mutation.Status(); !ok {
 		v := user.DefaultStatus
@@ -577,20 +577,20 @@ func (_c *UserCreate) check() error {
 			return &ValidationError{Name: "username", err: fmt.Errorf(`ent: validator failed for field "User.username": %w`, err)}
 		}
 	}
+	if _, ok := _c.mutation.Nickname(); !ok {
+		return &ValidationError{Name: "nickname", err: errors.New(`ent: missing required field "User.nickname"`)}
+	}
+	if v, ok := _c.mutation.Nickname(); ok {
+		if err := user.NicknameValidator(v); err != nil {
+			return &ValidationError{Name: "nickname", err: fmt.Errorf(`ent: validator failed for field "User.nickname": %w`, err)}
+		}
+	}
 	if _, ok := _c.mutation.EncryptedPassword(); !ok {
 		return &ValidationError{Name: "encrypted_password", err: errors.New(`ent: missing required field "User.encrypted_password"`)}
 	}
 	if v, ok := _c.mutation.EncryptedPassword(); ok {
 		if err := user.EncryptedPasswordValidator(v); err != nil {
 			return &ValidationError{Name: "encrypted_password", err: fmt.Errorf(`ent: validator failed for field "User.encrypted_password": %w`, err)}
-		}
-	}
-	if _, ok := _c.mutation.Salt(); !ok {
-		return &ValidationError{Name: "salt", err: errors.New(`ent: missing required field "User.salt"`)}
-	}
-	if v, ok := _c.mutation.Salt(); ok {
-		if err := user.SaltValidator(v); err != nil {
-			return &ValidationError{Name: "salt", err: fmt.Errorf(`ent: validator failed for field "User.salt": %w`, err)}
 		}
 	}
 	if _, ok := _c.mutation.Phone(); !ok {
@@ -609,12 +609,12 @@ func (_c *UserCreate) check() error {
 			return &ValidationError{Name: "email", err: fmt.Errorf(`ent: validator failed for field "User.email": %w`, err)}
 		}
 	}
-	if _, ok := _c.mutation.Token(); !ok {
-		return &ValidationError{Name: "token", err: errors.New(`ent: missing required field "User.token"`)}
+	if _, ok := _c.mutation.SessionID(); !ok {
+		return &ValidationError{Name: "session_id", err: errors.New(`ent: missing required field "User.session_id"`)}
 	}
-	if v, ok := _c.mutation.Token(); ok {
-		if err := user.TokenValidator(v); err != nil {
-			return &ValidationError{Name: "token", err: fmt.Errorf(`ent: validator failed for field "User.token": %w`, err)}
+	if v, ok := _c.mutation.SessionID(); ok {
+		if err := user.SessionIDValidator(v); err != nil {
+			return &ValidationError{Name: "session_id", err: fmt.Errorf(`ent: validator failed for field "User.session_id": %w`, err)}
 		}
 	}
 	if _, ok := _c.mutation.Status(); !ok {
@@ -714,13 +714,13 @@ func (_c *UserCreate) createSpec() (*User, *sqlgraph.CreateSpec) {
 		_spec.SetField(user.FieldUsername, field.TypeString, value)
 		_node.Username = value
 	}
+	if value, ok := _c.mutation.Nickname(); ok {
+		_spec.SetField(user.FieldNickname, field.TypeString, value)
+		_node.Nickname = value
+	}
 	if value, ok := _c.mutation.EncryptedPassword(); ok {
 		_spec.SetField(user.FieldEncryptedPassword, field.TypeString, value)
 		_node.EncryptedPassword = value
-	}
-	if value, ok := _c.mutation.Salt(); ok {
-		_spec.SetField(user.FieldSalt, field.TypeString, value)
-		_node.Salt = value
 	}
 	if value, ok := _c.mutation.Phone(); ok {
 		_spec.SetField(user.FieldPhone, field.TypeString, value)
@@ -730,9 +730,9 @@ func (_c *UserCreate) createSpec() (*User, *sqlgraph.CreateSpec) {
 		_spec.SetField(user.FieldEmail, field.TypeString, value)
 		_node.Email = value
 	}
-	if value, ok := _c.mutation.Token(); ok {
-		_spec.SetField(user.FieldToken, field.TypeString, value)
-		_node.Token = value
+	if value, ok := _c.mutation.SessionID(); ok {
+		_spec.SetField(user.FieldSessionID, field.TypeString, value)
+		_node.SessionID = value
 	}
 	if value, ok := _c.mutation.Status(); ok {
 		_spec.SetField(user.FieldStatus, field.TypeInt8, value)

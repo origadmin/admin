@@ -191,7 +191,7 @@ endif
 convert:
 	@echo "Generating dto data convert functions ..."
 ifeq ($(GOHOSTOS), windows)
-	@powershell -Command "$$dirs = '$(DTO_DIRS)'.Split(' '); foreach ($$dir in $$dirs) { if (Test-Path $$dir) { Get-ChildItem -Path $$dir -Directory | ForEach-Object { $$dtoDir = Join-Path $$_FullName '$(DTO_SUBDIR_NAME)'; if (Test-Path $$dtoDir) { Write-Host ('Generating convert functions for {0}...' -f $$_Name); go generate $$dtoDir } } } }"
+	@powershell -Command "$$dirs = '$(DTO_DIRS)'.Split(' '); foreach ($$dir in $$dirs) { if (Test-Path $$dir) { Get-ChildItem -Path $$dir -Directory | ForEach-Object { $$dtoDir = Join-Path $$_.FullName '$(DTO_SUBDIR_NAME)'; if (Test-Path $$dtoDir) { Write-Host ('Generating convert functions for {0}...' -f $$_.Name); go generate $$dtoDir } } } }"
 else
 	@for dir in $(DTO_DIRS); do \
 		if [ -d "$$dir" ]; then \

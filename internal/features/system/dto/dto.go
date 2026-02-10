@@ -3,7 +3,7 @@ package dto
 import (
 	"encoding/json"
 
-	"origadmin/application/admin/internal/data/entity/ent/user"
+	"origadmin/application/admin/internal/data/entity/ent/userprofile"
 	"origadmin/application/admin/internal/data/entity/ent/view"
 )
 
@@ -44,9 +44,9 @@ func ConvertStringToStringToStringMap(from string) map[string]string {
 
 // ConvertGenderToString is a custom conversion function stub.
 // Please implement this function to complete the conversion.
-func ConvertGenderToString(from user.Gender) string {
+func ConvertGenderToString(from userprofile.Gender) string {
 	switch from {
-	case user.GenderFemale:
+	case userprofile.GenderFemale:
 		return "female"
 	default:
 		return "male"
@@ -55,12 +55,12 @@ func ConvertGenderToString(from user.Gender) string {
 
 // ConvertStringToGender is a custom conversion function stub.
 // Please implement this function to complete the conversion.
-func ConvertStringToGender(from string) user.Gender {
+func ConvertStringToGender(from string) userprofile.Gender {
 	switch from {
 	case "female":
-		return user.GenderFemale
+		return userprofile.GenderFemale
 	default:
-		return user.GenderMale
+		return userprofile.GenderMale
 	}
 }
 

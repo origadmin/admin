@@ -40,8 +40,6 @@ type Permission struct {
 	DataRules map[string]string `json:"data_rules,omitempty"`
 	// entity.permission.field.status
 	Status enums.Status `json:"status,omitempty"`
-	// entity.permission.field.actions
-	Actions permission.Actions `json:"actions,omitempty"`
 	// Edges holds the relations/edges for other nodes in the graph.
 	// The values are being populated by the PermissionQuery when eager-loading is set.
 	Edges        PermissionEdges `json:"edges"`
@@ -152,7 +150,7 @@ func (*Permission) scanValues(columns []string) ([]any, error) {
 			values[i] = new([]byte)
 		case permission.FieldID, permission.FieldCreateAuthor, permission.FieldUpdateAuthor, permission.FieldStatus:
 			values[i] = new(sql.NullInt64)
-		case permission.FieldName, permission.FieldKeyword, permission.FieldDescription, permission.FieldDataScope, permission.FieldActions:
+		case permission.FieldName, permission.FieldKeyword, permission.FieldDescription, permission.FieldDataScope:
 			values[i] = new(sql.NullString)
 		case permission.FieldCreateTime, permission.FieldUpdateTime:
 			values[i] = new(sql.NullTime)
@@ -238,12 +236,6 @@ func (_m *Permission) assignValues(columns []string, values []any) error {
 				return fmt.Errorf("unexpected type %T for field status", values[i])
 			} else if value.Valid {
 				_m.Status = enums.Status(value.Int64)
-			}
-		case permission.FieldActions:
-			if value, ok := values[i].(*sql.NullString); !ok {
-				return fmt.Errorf("unexpected type %T for field actions", values[i])
-			} else if value.Valid {
-				_m.Actions = permission.Actions(value.String)
 			}
 		default:
 			_m.selectValues.Set(columns[i], values[i])
@@ -350,9 +342,6 @@ func (_m *Permission) String() string {
 	builder.WriteString(", ")
 	builder.WriteString("status=")
 	builder.WriteString(fmt.Sprintf("%v", _m.Status))
-	builder.WriteString(", ")
-	builder.WriteString("actions=")
-	builder.WriteString(fmt.Sprintf("%v", _m.Actions))
 	builder.WriteByte(')')
 	return builder.String()
 }

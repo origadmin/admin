@@ -24,10 +24,10 @@ type Permission struct {
 
 // DataScope 数据范围
 const (
-	DataScopeSelf string = "self" // 仅本人数据
-	DataScopeDept string = "dept" // 部门数据
-	DataScopeRole string = "role" // 角色数据
-	DataScopeAll  string = "all"  // 所有数据
+	DataScopeSelf string = "SELF" // 仅本人数据
+	DataScopeDept string = "DEPT" // 部门数据
+	DataScopeRole string = "ROLE" // 角色数据
+	DataScopeAll  string = "ALL"  // 所有数据
 )
 
 // Fields of the Permission.
@@ -55,10 +55,6 @@ func (Permission) Fields() []ent.Field {
 			GoType(enums.Status(0)).
 			Default(int8(enums.StatusActive)).
 			Comment(i18n.Text("entity.permission.field.status")),
-		field.Enum("actions").
-			Values("read", "write", "delete", "manage").
-			Default("read").
-			Comment(i18n.Text("entity.permission.field.actions")),
 	}
 }
 

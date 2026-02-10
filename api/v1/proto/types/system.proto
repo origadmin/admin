@@ -12,7 +12,6 @@ option objc_class_prefix = "APIServiceType";
 
 // UserProfile holds the profile information of a user.
 message UserProfile {
-  string nickname = 1 [json_name = "nickname"];
   string avatar = 2 [json_name = "avatar"];
   string gender = 3 [json_name = "gender"];
   string name = 4 [json_name = "name"];
@@ -124,12 +123,14 @@ message User {
   string allowed_ip = 7 [json_name = "allowed_ip"];
   // user.field.username
   string username = 8 [json_name = "username"];
+  // user.field.nickname
+  string nickname = 9 [json_name = "nickname"];
   // user.field.phone
   string phone = 13 [json_name = "phone"];
   // user.field.email
   string email = 14 [json_name = "email"];
-  // user.field.token
-  string token = 16 [json_name = "token"];
+  // user.field.session_id
+  string session_id = 16 [json_name = "session_id"];
   // user.field.status
   int32 status = 17 [json_name = "status"];
   // user.field.last_login_ip

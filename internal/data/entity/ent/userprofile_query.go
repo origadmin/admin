@@ -578,7 +578,6 @@ func (_q *UserProfileQuery) Modify(modifiers ...func(s *sql.Selector)) *UserProf
 //	  CreateTime time.Time `json:"create_time,omitempty"`
 //	  UpdateTime time.Time `json:"update_time,omitempty"`
 //	  DeleteTime time.Time `json:"delete_time,omitempty"`
-//	  Nickname string `json:"nickname,omitempty"`
 //	  Avatar string `json:"avatar,omitempty"`
 //	  Name string `json:"name,omitempty"`
 //	  Gender userprofile.Gender `json:"gender,omitempty"`
@@ -593,7 +592,6 @@ func (_q *UserProfileQuery) Modify(modifiers ...func(s *sql.Selector)) *UserProf
 //	  userprofile.FieldCreateTime,
 //	  userprofile.FieldUpdateTime,
 //	  userprofile.FieldDeleteTime,
-//	  userprofile.FieldNickname,
 //	  userprofile.FieldAvatar,
 //	  userprofile.FieldName,
 //	  userprofile.FieldGender,

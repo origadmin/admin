@@ -41,13 +41,13 @@ func wireApp(app *runtime.App, bootstrap *conf.Config) (*kratos.App, func(), err
 	if err != nil {
 		return nil, nil, err
 	}
-	authRepo := dal.NewAuthnRepo(database, v)
+	authnRepo := dal.NewAuthnRepo(database, v)
 	crypto, err := providers.ProvideHasher()
 	if err != nil {
 		cleanup()
 		return nil, nil, err
 	}
-	authUseCase := biz.NewAuthUseCase(authRepo, crypto, v)
+	authUseCase := biz.NewAuthUseCase(authnRepo, crypto, v)
 	cacheProvider, err := providers.ProvideCache(app)
 	if err != nil {
 		cleanup()
@@ -66,7 +66,8 @@ func wireApp(app *runtime.App, bootstrap *conf.Config) (*kratos.App, func(), err
 	}
 	authService := service.NewAuthService(authUseCase, captchaUseCase, authenticator, v)
 	meRepo := dal.NewMeRepo(database, v)
-	meUseCase := biz.NewMeUseCase(meRepo, v)
+	authzRepo := dal.NewAuthzRepo(database, v)
+	meUseCase := biz.NewMeUseCase(meRepo, authzRepo, crypto, v)
 	meService := service.NewMeService(meUseCase, v)
 	adapter, err := data.NewAdapterFromApp(app, database)
 	if err != nil {

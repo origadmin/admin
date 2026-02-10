@@ -6,180 +6,136 @@ package dal
 
 import (
 	"context"
-	"sort"
-	"strconv"
 
 	"github.com/go-kratos/kratos/v2/errors"
 	"google.golang.org/protobuf/types/known/fieldmaskpb"
 
 	"github.com/origadmin/runtime/log"
 	systemv1 "origadmin/application/admin/api/v1/services/system"
-	"origadmin/application/admin/api/v1/services/types"
-	"origadmin/application/admin/internal/data/enums"
 	"origadmin/application/admin/internal/features/identity/dto"
 )
 
-// meGRPCRepo implements the MeRepo interface using gRPC calls to the system service.
+// meGRPCRepo implements dto.MeRepo interface using gRPC calls to system service.
 type meGRPCRepo struct {
 	userClient systemv1.UserServiceClient
-	viewClient systemv1.ViewServiceClient
 	log        *log.Helper
 }
 
-// NewMeGRPCRepo creates a new MeRepo that communicates with the system service via gRPC.
+// NewMeGRPCRepo creates a new MeRepo that communicates with system service via gRPC.
 func NewMeGRPCRepo(
 	userClient systemv1.UserServiceClient,
-	viewClient systemv1.ViewServiceClient,
 	logger log.Logger,
 ) dto.MeRepo {
 	return &meGRPCRepo{
 		userClient: userClient,
-		viewClient: viewClient,
 		log:        log.NewHelper(log.With(logger, "module", "dal.me_grpc")),
 	}
 }
 
-// GetProfile retrieves user profile information via a gRPC call to the UserService.
-func (r *meGRPCRepo) GetProfile(ctx context.Context, userID int64) (*types.User, error) {
+// GetProfile retrieves user profile information via a gRPC call to UserService.
+func (r *meGRPCRepo) GetProfile(ctx context.Context, userID int64) (dto.UserProfilePB, error) {
 	r.log.WithContext(ctx).Debugf("Fetching profile for user ID %d via gRPC", userID)
-	resp, err := r.userClient.GetUser(ctx, &systemv1.GetUserRequest{Id: userID})
+	resp, err := r.userClient.GetUser(ctx, &systemv1.GetUserRequest{Id: userID, WithProfile: true})
 	if err != nil {
 		return nil, err
 	}
-	return resp.GetUser(), nil
-}
-
-// ListActiveViews retrieves all active views via a gRPC call to the ViewService.
-// It performs client-side filtering and sorting to match the behavior of the database implementation.
-func (r *meGRPCRepo) ListActiveViews(ctx context.Context) ([]*types.View, error) {
-	r.log.WithContext(ctx).Debug("Listing all views via gRPC and filtering for active ones")
-
-	// 1. Fetch all views, as the gRPC endpoint does not support filtering by status.
-	resp, err := r.viewClient.ListViews(ctx, &systemv1.ListViewsRequest{
-		// Request all items to ensure we can filter and sort correctly.
-		PageSize: -1, // Assuming -1 or a large number fetches all items.
-	})
-	if err != nil {
-		return nil, err
-	}
-
-	allViews := resp.GetViews()
-	activeViews := make([]*types.View, 0, len(allViews))
-
-	// 2. Filter for active views on the client-side.
-	for _, view := range allViews {
-		if view.Status == int32(enums.StatusActive) {
-			activeViews = append(activeViews, view)
-		}
-	}
-
-	// 3. Sort the active views by sequence to match the database implementation's behavior.
-	sort.Slice(activeViews, func(i, j int) bool {
-		return activeViews[i].Sequence < activeViews[j].Sequence
-	})
-
-	return activeViews, nil
-}
-
-// GetPermissionKeywordsByUserID retrieves user permission keywords via a gRPC call to the UserService.
-func (r *meGRPCRepo) GetPermissionKeywordsByUserID(ctx context.Context, userID string) ([]string, error) {
-	r.log.WithContext(ctx).Debugf("Fetching permission keywords for user ID %s via gRPC", userID)
-	id, err := strconv.ParseInt(userID, 10, 64)
-	if err != nil {
-		return nil, err
-	}
-
-	// The ListUserResources method is the correct one to get permissions.
-	resp, err := r.userClient.ListUserResources(ctx, &systemv1.ListUserResourcesRequest{Id: id})
-	if err != nil {
-		return nil, err
-	}
-
-	// Extract unique permission keywords from the resources.
-	keywordSet := make(map[string]struct{})
-	for _, resource := range resp.GetResources() {
-		// A resource might not have an associated permission.
-		if len(resource.Permissions) > 0 {
-			for _, permission := range resource.Permissions {
-				if permission.Keyword != "" {
-					keywordSet[permission.Keyword] = struct{}{}
-				}
-			}
-		}
-	}
-
-	keywords := make([]string, 0, len(keywordSet))
-	for k := range keywordSet {
-		keywords = append(keywords, k)
-	}
-
-	return keywords, nil
-}
-
-// HasSystemRole checks for system role membership via a gRPC call to the UserService.
-func (r *meGRPCRepo) HasSystemRole(ctx context.Context, userID int64) (bool, error) {
-	r.log.WithContext(ctx).Debugf("Checking system role for user ID %d via gRPC", userID)
-	resp, err := r.userClient.GetUser(ctx, &systemv1.GetUserRequest{Id: userID, WithRoles: true})
-	if err != nil {
-		return false, err
-	}
-
 	user := resp.GetUser()
-	if user == nil {
-		return false, nil
+	if user == nil || user.Profile == nil {
+		return nil, errors.NotFound("USER_NOT_FOUND", "User profile not found")
 	}
-
-	for _, role := range user.GetRoles() {
-		// The type of role.Type is int32, so we compare it with the int32 value of the enum.
-		if role.Type == int32(enums.RoleTypeSystem) {
-			return true, nil
-		}
-	}
-
-	return false, nil
+	return user.Profile, nil
 }
 
-// UpdateProfile updates the user's profile information via a gRPC call to the UserService.
-func (r *meGRPCRepo) UpdateProfile(ctx context.Context, userID int64, user *types.User) error {
-	// The UpdateUser RPC in systemv1.UserServiceClient can be used to update user profiles.
-	// We need to construct a FieldMask to specify which fields are being updated.
+// GetSettings retrieves user settings via gRPC.
+func (r *meGRPCRepo) GetSettings(ctx context.Context, userID int64) (dto.UserSettingPB, error) {
+	r.log.WithContext(ctx).Debugf("Fetching settings for user ID %d via gRPC", userID)
+	resp, err := r.userClient.GetUser(ctx, &systemv1.GetUserRequest{Id: userID, WithSetting: true})
+	if err != nil {
+		return nil, err
+	}
+	user := resp.GetUser()
+	if user == nil || user.Setting == nil {
+		return nil, errors.NotFound("USER_NOT_FOUND", "User settings not found")
+	}
+	return user.Setting, nil
+}
+
+// UpdateProfile updates user's profile information via a gRPC call to UserService.
+func (r *meGRPCRepo) UpdateProfile(ctx context.Context, userID int64, profileData dto.UserProfilePB) error {
+	r.log.WithContext(ctx).Debugf("Updating profile for user ID %d via gRPC", userID)
 	_, err := r.userClient.UpdateUser(ctx, &systemv1.UpdateUserRequest{
-		User: &types.User{
-			Id:       userID,
-			Nickname: user.Nickname,
-			Avatar:   user.Avatar,
-			Gender:   user.Gender,
-			Email:    user.Email,
-			Phone:    user.Phone,
+		User: &dto.User{
+			Id:      userID,
+			Profile: profileData,
 		},
 		UpdateMask: &fieldmaskpb.FieldMask{
-			Paths: []string{"nickname", "avatar", "gender", "email", "phone"},
+			Paths: []string{"profile.nickname", "profile.avatar", "profile.gender", "profile.name", "profile.department", "profile.remark"},
 		},
 	})
 	return err
 }
 
-// ChangePassword changes the user's password.
-// This method cannot be implemented securely via gRPC with the current UserService API,
-// as there's no RPC to verify the old password or update the password directly for the current user.
-// ResetUserPassword is an admin-level operation.
+// UpdateSettings updates user's settings via gRPC.
+func (r *meGRPCRepo) UpdateSettings(ctx context.Context, userID int64, settingsData dto.UserSettingPB) error {
+	r.log.WithContext(ctx).Debugf("Updating settings for user ID %d via gRPC", userID)
+	_, err := r.userClient.UpdateUser(ctx, &systemv1.UpdateUserRequest{
+		User: &dto.User{
+			Id:      userID,
+			Setting: settingsData,
+		},
+		UpdateMask: &fieldmaskpb.FieldMask{
+			Paths: []string{"setting.theme", "setting.language", "setting.timezone", "setting.preferences"},
+		},
+	})
+	return err
+}
+
+// UpdatePreferences updates user preferences via gRPC.
+func (r *meGRPCRepo) UpdatePreferences(ctx context.Context, userID int64, preferences map[string]string) error {
+	r.log.WithContext(ctx).Debugf("Updating preferences for user ID %d via gRPC", userID)
+
+	// Get current settings first
+	resp, err := r.userClient.GetUser(ctx, &systemv1.GetUserRequest{Id: userID, WithSetting: true})
+	if err != nil {
+		return err
+	}
+	user := resp.GetUser()
+	if user == nil || user.Setting == nil {
+		return errors.NotFound("USER_NOT_FOUND", "User not found")
+	}
+
+	// Merge preferences
+	currentPreferences := user.Setting.Preferences
+	if currentPreferences == nil {
+		currentPreferences = make(map[string]string)
+	}
+	for k, v := range preferences {
+		currentPreferences[k] = v
+	}
+
+	// Update settings
+	_, err = r.userClient.UpdateUser(ctx, &systemv1.UpdateUserRequest{
+		User: &dto.User{
+			Id: userID,
+			Setting: &dto.UserSetting{
+				Theme:       user.Setting.Theme,
+				Language:    user.Setting.Language,
+				Timezone:    user.Setting.Timezone,
+				Preferences: currentPreferences,
+			},
+		},
+		UpdateMask: &fieldmaskpb.FieldMask{
+			Paths: []string{"setting.preferences"},
+		},
+	})
+	return err
+}
+
+// ChangePassword changes user's password.
+// This method cannot be implemented securely via gRPC with current UserService API.
 func (r *meGRPCRepo) ChangePassword(ctx context.Context, userID int64, oldPassword, newPassword string) error {
 	r.log.WithContext(ctx).Warnf("ChangePassword for user ID %d is not implemented via gRPC due to API limitations.", userID)
 	return errors.ServiceUnavailable("CHANGE_PASSWORD_UNIMPLEMENTED", "Change password is not implemented via gRPC for current user due to UserService API limitations.")
-}
-
-// UpdatePreferences updates user preferences via gRPC (P2).
-func (r *meGRPCRepo) UpdatePreferences(ctx context.Context, userID int64, preferences map[string]string) error {
-	r.log.WithContext(ctx).Debugf("UpdatePreferences for user ID %d via gRPC is not implemented", userID)
-	// This would require a dedicated preferences service or UserService extension
-	return errors.ServiceUnavailable("UPDATE_PREFERENCES_UNIMPLEMENTED", "Update preferences is not implemented via gRPC yet.")
-}
-
-// GetUserSettings retrieves user settings via gRPC (P2).
-func (r *meGRPCRepo) GetUserSettings(ctx context.Context, userID int64) (map[string]string, error) {
-	r.log.WithContext(ctx).Debugf("GetUserSettings for user ID %d via gRPC is not implemented", userID)
-	// This would require a dedicated settings service or UserService extension
-	return nil, errors.ServiceUnavailable("GET_USER_SETTINGS_UNIMPLEMENTED", "Get user settings is not implemented via gRPC yet.")
 }
 
 var _ dto.MeRepo = (*meGRPCRepo)(nil)

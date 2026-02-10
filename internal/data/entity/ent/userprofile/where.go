@@ -80,11 +80,6 @@ func DeleteTime(v time.Time) predicate.UserProfile {
 	return predicate.UserProfile(sql.FieldEQ(FieldDeleteTime, v))
 }
 
-// Nickname applies equality check predicate on the "nickname" field. It's identical to NicknameEQ.
-func Nickname(v string) predicate.UserProfile {
-	return predicate.UserProfile(sql.FieldEQ(FieldNickname, v))
-}
-
 // Avatar applies equality check predicate on the "avatar" field. It's identical to AvatarEQ.
 func Avatar(v string) predicate.UserProfile {
 	return predicate.UserProfile(sql.FieldEQ(FieldAvatar, v))
@@ -333,71 +328,6 @@ func DeleteTimeIsNil() predicate.UserProfile {
 // DeleteTimeNotNil applies the NotNil predicate on the "delete_time" field.
 func DeleteTimeNotNil() predicate.UserProfile {
 	return predicate.UserProfile(sql.FieldNotNull(FieldDeleteTime))
-}
-
-// NicknameEQ applies the EQ predicate on the "nickname" field.
-func NicknameEQ(v string) predicate.UserProfile {
-	return predicate.UserProfile(sql.FieldEQ(FieldNickname, v))
-}
-
-// NicknameNEQ applies the NEQ predicate on the "nickname" field.
-func NicknameNEQ(v string) predicate.UserProfile {
-	return predicate.UserProfile(sql.FieldNEQ(FieldNickname, v))
-}
-
-// NicknameIn applies the In predicate on the "nickname" field.
-func NicknameIn(vs ...string) predicate.UserProfile {
-	return predicate.UserProfile(sql.FieldIn(FieldNickname, vs...))
-}
-
-// NicknameNotIn applies the NotIn predicate on the "nickname" field.
-func NicknameNotIn(vs ...string) predicate.UserProfile {
-	return predicate.UserProfile(sql.FieldNotIn(FieldNickname, vs...))
-}
-
-// NicknameGT applies the GT predicate on the "nickname" field.
-func NicknameGT(v string) predicate.UserProfile {
-	return predicate.UserProfile(sql.FieldGT(FieldNickname, v))
-}
-
-// NicknameGTE applies the GTE predicate on the "nickname" field.
-func NicknameGTE(v string) predicate.UserProfile {
-	return predicate.UserProfile(sql.FieldGTE(FieldNickname, v))
-}
-
-// NicknameLT applies the LT predicate on the "nickname" field.
-func NicknameLT(v string) predicate.UserProfile {
-	return predicate.UserProfile(sql.FieldLT(FieldNickname, v))
-}
-
-// NicknameLTE applies the LTE predicate on the "nickname" field.
-func NicknameLTE(v string) predicate.UserProfile {
-	return predicate.UserProfile(sql.FieldLTE(FieldNickname, v))
-}
-
-// NicknameContains applies the Contains predicate on the "nickname" field.
-func NicknameContains(v string) predicate.UserProfile {
-	return predicate.UserProfile(sql.FieldContains(FieldNickname, v))
-}
-
-// NicknameHasPrefix applies the HasPrefix predicate on the "nickname" field.
-func NicknameHasPrefix(v string) predicate.UserProfile {
-	return predicate.UserProfile(sql.FieldHasPrefix(FieldNickname, v))
-}
-
-// NicknameHasSuffix applies the HasSuffix predicate on the "nickname" field.
-func NicknameHasSuffix(v string) predicate.UserProfile {
-	return predicate.UserProfile(sql.FieldHasSuffix(FieldNickname, v))
-}
-
-// NicknameEqualFold applies the EqualFold predicate on the "nickname" field.
-func NicknameEqualFold(v string) predicate.UserProfile {
-	return predicate.UserProfile(sql.FieldEqualFold(FieldNickname, v))
-}
-
-// NicknameContainsFold applies the ContainsFold predicate on the "nickname" field.
-func NicknameContainsFold(v string) predicate.UserProfile {
-	return predicate.UserProfile(sql.FieldContainsFold(FieldNickname, v))
 }
 
 // AvatarEQ applies the EQ predicate on the "avatar" field.

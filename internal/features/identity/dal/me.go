@@ -9,13 +9,12 @@ import (
 
 	"github.com/go-kratos/kratos/v2/errors"
 	"github.com/go-kratos/kratos/v2/log"
-	"golang.org/x/crypto/bcrypt"
 
 	"origadmin/application/admin/internal/data/entity/ent"
 	"origadmin/application/admin/internal/data/entity/ent/user"
 	"origadmin/application/admin/internal/data/entity/ent/userprofile"
 	"origadmin/application/admin/internal/data/entity/ent/usersetting"
-	"origadmin/application/admin/internal/features/identity/dto"
+	identitydto "origadmin/application/admin/internal/features/identity/dto"
 )
 
 // MeRepo implements the dto.MeRepo interface for handling "me" (current user) related data operations.
@@ -25,35 +24,61 @@ type MeRepo struct {
 }
 
 // NewMeRepo creates a new MeRepo with the given database client and logger.
-func NewMeRepo(db *ent.Database, logger log.Logger) dto.MeRepo {
+func NewMeRepo(db *ent.Database, logger log.Logger) identitydto.MeRepo {
 	return &MeRepo{
 		db:  db,
 		log: log.NewHelper(log.With(logger, "module", "dal/me")),
 	}
 }
 
-// GetUserWithRelations retrieves a user by ID along with their profile and settings.
-func (r *MeRepo) GetUserWithRelations(ctx context.Context, userID int64) (*ent.User, error) {
-	u, err := r.db.User(ctx).Query().
-		Where(user.ID(userID)).
-		WithProfile().
-		WithSetting().
-		Only(ctx)
+// GetUserByID retrieves a user by their ID.
+func (r *MeRepo) GetUserByID(ctx context.Context, userID int64) (*identitydto.User, error) {
+	u, err := r.db.User(ctx).Query().Where(user.ID(userID)).Only(ctx)
 	if err != nil {
 		if ent.IsNotFound(err) {
 			return nil, errors.NotFound("USER_NOT_FOUND", "User not found")
 		}
-		r.log.WithContext(ctx).Errorf("failed to get user with relations for user_id %d: %v", userID, err)
-		return nil, errors.InternalServer("DATABASE_ERROR", "failed to retrieve user data")
+		r.log.WithContext(ctx).Errorf("failed to find user, user_id %d: %v", userID, err)
+		return nil, errors.InternalServer("DATABASE_ERROR", "failed to retrieve user")
 	}
-	return u, nil
+	return identitydto.ConvertUserEntToUser(u), nil
+}
+
+// GetProfile retrieves the user's profile by ID.
+func (r *MeRepo) GetProfile(ctx context.Context, userID int64) (*identitydto.UserProfilePB, error) {
+	profile, err := r.db.User(ctx).Query().
+		Where(user.ID(userID)).
+		QueryProfile().
+		Only(ctx)
+	if err != nil {
+		if ent.IsNotFound(err) {
+			return nil, errors.NotFound("USER_PROFILE_NOT_FOUND", "User profile not found")
+		}
+		r.log.WithContext(ctx).Errorf("failed to get profile for user_id %d: %v", userID, err)
+		return nil, errors.InternalServer("DATABASE_ERROR", "failed to retrieve user profile")
+	}
+	return identitydto.ConvertUserProfileToUserProfilePB(profile), nil
+}
+
+// GetSettings retrieves the user's settings by ID.
+func (r *MeRepo) GetSettings(ctx context.Context, userID int64) (*identitydto.UserSettingPB, error) {
+	setting, err := r.db.User(ctx).Query().
+		Where(user.ID(userID)).
+		QuerySetting().
+		Only(ctx)
+	if err != nil {
+		if ent.IsNotFound(err) {
+			return nil, errors.NotFound("USER_SETTINGS_NOT_FOUND", "User settings not found")
+		}
+		r.log.WithContext(ctx).Errorf("failed to get settings for user_id %d: %v", userID, err)
+		return nil, errors.InternalServer("DATABASE_ERROR", "failed to retrieve user settings")
+	}
+	return identitydto.ConvertUserSettingToUserSettingPB(setting), nil
 }
 
 // UpdateProfile updates the user's profile information within a transaction.
-func (r *MeRepo) UpdateProfile(ctx context.Context, userID int64, profileData *dto.UpdateProfileRequest) (*ent.User, error) {
-	// Use the project's custom transaction wrapper for consistency with other DAL implementations like user.go.
-	err := r.db.Tx(ctx, func(tx context.Context) error {
-		// The query must start from the transactional client, which is obtained by passing the tx context.
+func (r *MeRepo) UpdateProfile(ctx context.Context, userID int64, profileData *identitydto.UserProfilePB) error {
+	return r.db.Tx(ctx, func(tx context.Context) error {
 		profile, err := r.db.User(tx).Query().Where(user.ID(userID)).QueryProfile().Only(ctx)
 		if err != nil {
 			if ent.IsNotFound(err) {
@@ -63,49 +88,35 @@ func (r *MeRepo) UpdateProfile(ctx context.Context, userID int64, profileData *d
 			return errors.InternalServer("DATABASE_ERROR", "failed to query user profile")
 		}
 		profileUpdate := profile.Update()
-		if profileData.Nickname != nil {
-			profileUpdate.SetNickname(*profileData.Nickname)
+		if profileData.Nickname != "" {
+			profileUpdate.SetNickname(profileData.Nickname)
 		}
-		if profileData.Avatar != nil {
-			profileUpdate.SetAvatar(*profileData.Avatar)
+		if profileData.Avatar != "" {
+			profileUpdate.SetAvatar(profileData.Avatar)
 		}
-		if profileData.Gender != nil {
-			profileUpdate.SetGender(userprofile.Gender(*profileData.Gender))
+		if profileData.Gender != "" {
+			profileUpdate.SetGender(userprofile.Gender(profileData.Gender))
 		}
-		// The update builder is derived from `profile` which was queried in the transaction, so it's transactional.
-		// The context passed to Exec is for cancellation/deadlines.
+		if profileData.Name != "" {
+			profileUpdate.SetName(profileData.Name)
+		}
+		if profileData.Department != "" {
+			profileUpdate.SetDepartment(profileData.Department)
+		}
+		if profileData.Remark != "" {
+			profileUpdate.SetRemark(profileData.Remark)
+		}
 		if err := profileUpdate.Exec(ctx); err != nil {
 			r.log.WithContext(ctx).Errorf("failed to update profile for user_id %d: %v", userID, err)
 			return errors.InternalServer("PROFILE_UPDATE_FAILED", "failed to update profile")
 		}
 		return nil
 	})
-
-	if err != nil {
-		return nil, err
-	}
-	return r.GetUserWithRelations(ctx, userID)
 }
 
-// ChangePassword verifies the old password and updates it to the new one.
-func (r *MeRepo) ChangePassword(ctx context.Context, userID int64, oldPassword, newPassword string) (err error) {
-	u, err := r.db.User(ctx).Query().Where(user.ID(userID)).Only(ctx)
-	if err != nil {
-		if ent.IsNotFound(err) {
-			return errors.NotFound("USER_NOT_FOUND", "User not found")
-		}
-		r.log.WithContext(ctx).Errorf("failed to find user for password change, user_id %d: %v", userID, err)
-		return errors.InternalServer("DATABASE_ERROR", "failed to retrieve user")
-	}
-	if err := bcrypt.CompareHashAndPassword([]byte(u.EncryptedPassword), []byte(oldPassword)); err != nil {
-		return errors.BadRequest("INVALID_PASSWORD", "Invalid old password")
-	}
-	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(newPassword), bcrypt.DefaultCost)
-	if err != nil {
-		r.log.WithContext(ctx).Errorf("failed to hash new password for user_id %d: %v", userID, err)
-		return errors.InternalServer("PASSWORD_HASH_FAILED", "Failed to process new password")
-	}
-	err = r.db.User(ctx).UpdateOneID(userID).SetEncryptedPassword(string(hashedPassword)).Exec(ctx)
+// UpdatePassword updates the user's encrypted password in the database.
+func (r *MeRepo) UpdatePassword(ctx context.Context, userID int64, hashedPassword string) error {
+	err := r.db.User(ctx).UpdateOneID(userID).SetEncryptedPassword(hashedPassword).Exec(ctx)
 	if err != nil {
 		r.log.WithContext(ctx).Errorf("failed to update password for user_id %d: %v", userID, err)
 		return errors.InternalServer("DATABASE_ERROR", "failed to update password")
@@ -114,32 +125,58 @@ func (r *MeRepo) ChangePassword(ctx context.Context, userID int64, oldPassword, 
 }
 
 // UpdateSettings updates the user's application settings.
-func (r *MeRepo) UpdateSettings(ctx context.Context, userID int64, settingsData *dto.UpdateSettingsRequest) (*ent.UserSetting, error) {
-	// Query the setting directly for clarity and efficiency.
+func (r *MeRepo) UpdateSettings(ctx context.Context, userID int64, settingsData *identitydto.UserSettingPB) error {
 	setting, err := r.db.UserSetting(ctx).Query().
 		Where(usersetting.HasUserWith(user.ID(userID))).
 		Only(ctx)
 	if err != nil {
 		if ent.IsNotFound(err) {
-			return nil, errors.NotFound("USER_SETTINGS_NOT_FOUND", "User settings not found")
+			return errors.NotFound("USER_SETTINGS_NOT_FOUND", "User settings not found")
 		}
 		r.log.WithContext(ctx).Errorf("failed to retrieve settings for user_id %d: %v", userID, err)
-		return nil, errors.InternalServer("DATABASE_ERROR", "failed to retrieve user settings")
+		return errors.InternalServer("DATABASE_ERROR", "failed to retrieve user settings")
 	}
 	update := setting.Update()
-	if settingsData.Theme != nil {
-		update.SetTheme(*settingsData.Theme)
+	if settingsData.Theme != "" {
+		update.SetTheme(settingsData.Theme)
 	}
-	if settingsData.Language != nil {
-		update.SetLanguage(*settingsData.Language)
+	if settingsData.Language != "" {
+		update.SetLanguage(settingsData.Language)
 	}
-	if settingsData.Timezone != nil {
-		update.SetTimezone(*settingsData.Timezone)
+	if settingsData.Timezone != "" {
+		update.SetTimezone(settingsData.Timezone)
 	}
-	updatedSetting, err := update.Save(ctx)
-	if err != nil {
-		r.log.WithContext(ctx).Errorf("failed to update settings for user_id %d: %v", userID, err)
-		return nil, errors.InternalServer("DATABASE_ERROR", "failed to update settings")
+	if settingsData.Preferences != nil && len(settingsData.Preferences) > 0 {
+		// Convert map[string]string to map[string]interface{} for JSON field
+		preferencesMap := make(map[string]interface{}, len(settingsData.Preferences))
+		for k, v := range settingsData.Preferences {
+			preferencesMap[k] = v
+		}
+		update.SetPreferences(preferencesMap)
 	}
-	return updatedSetting, nil
+	return update.Exec(ctx)
+}
+
+// UpdatePreferences updates the user's preferences.
+func (r *MeRepo) UpdatePreferences(ctx context.Context, userID int64, preferences map[string]string) error {
+	return r.db.Tx(ctx, func(tx context.Context) error {
+		setting, err := r.db.UserSetting(tx).Query().
+			Where(usersetting.HasUserWith(user.ID(userID))).
+			Only(ctx)
+		if err != nil {
+			if ent.IsNotFound(err) {
+				return errors.NotFound("USER_SETTINGS_NOT_FOUND", "User settings not found")
+			}
+			r.log.WithContext(ctx).Errorf("failed to retrieve settings for user_id %d: %v", userID, err)
+			return errors.InternalServer("DATABASE_ERROR", "failed to retrieve user settings")
+		}
+
+		// Convert map[string]string to map[string]interface{} for JSON field
+		preferencesMap := make(map[string]interface{}, len(preferences))
+		for k, v := range preferences {
+			preferencesMap[k] = v
+		}
+
+		return setting.Update().SetPreferences(preferencesMap).Exec(ctx)
+	})
 }

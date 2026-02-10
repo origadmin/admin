@@ -29,16 +29,16 @@ func NewAuthUseCase(repo dto.AuthnRepo, hasher hash.Crypto, logger log.Logger) *
 }
 
 // VerifyUser verifies the user's credentials and returns the secure DTO if successful.
-func (uc *AuthUseCase) VerifyUser(ctx context.Context, username, password string) (*types.User, error) {
+func (uc *AuthUseCase) VerifyUser(ctx context.Context, credential, password string) (*types.User, error) {
 	// 1. Get the internal AuthedUser DTO from the AuthRepo.
-	identityedUser, err := uc.repo.GetUserByUsername(ctx, username)
+	identityedUser, err := uc.repo.GetUserByCredential(ctx, credential)
 	if err != nil {
 		return nil, err
 	}
 
 	// 2. Compare the provided password with the stored hash.
 	if err := uc.hasher.Verify(identityedUser.EncryptedPassword, password); err != nil {
-		return nil, errors.New("invalid username or password")
+		return nil, errors.New("invalid credential or password")
 	}
 
 	// 3. On successful verification, return the safe User object from the DTO.

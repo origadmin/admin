@@ -19,14 +19,16 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	MeService_ListMyViews_FullMethodName       = "/api.v1.services.identity.MeService/ListMyViews"
-	MeService_GetProfile_FullMethodName        = "/api.v1.services.identity.MeService/GetProfile"
-	MeService_UpdateProfile_FullMethodName     = "/api.v1.services.identity.MeService/UpdateProfile"
-	MeService_UpdatePassword_FullMethodName    = "/api.v1.services.identity.MeService/UpdatePassword"
-	MeService_GetUserResources_FullMethodName  = "/api.v1.services.identity.MeService/GetUserResources"
-	MeService_GetUserRoles_FullMethodName      = "/api.v1.services.identity.MeService/GetUserRoles"
-	MeService_UpdatePreferences_FullMethodName = "/api.v1.services.identity.MeService/UpdatePreferences"
-	MeService_GetUserSettings_FullMethodName   = "/api.v1.services.identity.MeService/GetUserSettings"
+	MeService_ListMyViews_FullMethodName        = "/api.v1.services.identity.MeService/ListMyViews"
+	MeService_GetProfile_FullMethodName         = "/api.v1.services.identity.MeService/GetProfile"
+	MeService_UpdateProfile_FullMethodName      = "/api.v1.services.identity.MeService/UpdateProfile"
+	MeService_UpdatePassword_FullMethodName     = "/api.v1.services.identity.MeService/UpdatePassword"
+	MeService_GetUserResources_FullMethodName   = "/api.v1.services.identity.MeService/GetUserResources"
+	MeService_GetUserRoles_FullMethodName       = "/api.v1.services.identity.MeService/GetUserRoles"
+	MeService_GetUserSettings_FullMethodName    = "/api.v1.services.identity.MeService/GetUserSettings"
+	MeService_UpdateSettings_FullMethodName     = "/api.v1.services.identity.MeService/UpdateSettings"
+	MeService_GetUserPreferences_FullMethodName = "/api.v1.services.identity.MeService/GetUserPreferences"
+	MeService_UpdatePreferences_FullMethodName  = "/api.v1.services.identity.MeService/UpdatePreferences"
 )
 
 // MeServiceClient is the client API for MeService service.
@@ -47,10 +49,14 @@ type MeServiceClient interface {
 	GetUserResources(ctx context.Context, in *GetUserResourcesRequest, opts ...grpc.CallOption) (*GetUserResourcesResponse, error)
 	// GetUserRoles retrieves role list for current user.
 	GetUserRoles(ctx context.Context, in *GetUserRolesRequest, opts ...grpc.CallOption) (*GetUserRolesResponse, error)
-	// UpdatePreferences updates user preferences (P2).
-	UpdatePreferences(ctx context.Context, in *UpdatePreferencesRequest, opts ...grpc.CallOption) (*UpdatePreferencesResponse, error)
 	// GetUserSettings retrieves user settings (P2).
 	GetUserSettings(ctx context.Context, in *GetUserSettingsRequest, opts ...grpc.CallOption) (*GetUserSettingsResponse, error)
+	// UpdateSettings updates user settings (P2).
+	UpdateSettings(ctx context.Context, in *UpdateSettingsRequest, opts ...grpc.CallOption) (*UpdateSettingsResponse, error)
+	// GetUserPreferences retrieves user preferences (P2).
+	GetUserPreferences(ctx context.Context, in *GetUserPreferencesRequest, opts ...grpc.CallOption) (*GetUserPreferencesResponse, error)
+	// UpdatePreferences updates user preferences (P2).
+	UpdatePreferences(ctx context.Context, in *UpdatePreferencesRequest, opts ...grpc.CallOption) (*UpdatePreferencesResponse, error)
 }
 
 type meServiceClient struct {
@@ -121,20 +127,40 @@ func (c *meServiceClient) GetUserRoles(ctx context.Context, in *GetUserRolesRequ
 	return out, nil
 }
 
-func (c *meServiceClient) UpdatePreferences(ctx context.Context, in *UpdatePreferencesRequest, opts ...grpc.CallOption) (*UpdatePreferencesResponse, error) {
+func (c *meServiceClient) GetUserSettings(ctx context.Context, in *GetUserSettingsRequest, opts ...grpc.CallOption) (*GetUserSettingsResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(UpdatePreferencesResponse)
-	err := c.cc.Invoke(ctx, MeService_UpdatePreferences_FullMethodName, in, out, cOpts...)
+	out := new(GetUserSettingsResponse)
+	err := c.cc.Invoke(ctx, MeService_GetUserSettings_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *meServiceClient) GetUserSettings(ctx context.Context, in *GetUserSettingsRequest, opts ...grpc.CallOption) (*GetUserSettingsResponse, error) {
+func (c *meServiceClient) UpdateSettings(ctx context.Context, in *UpdateSettingsRequest, opts ...grpc.CallOption) (*UpdateSettingsResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(GetUserSettingsResponse)
-	err := c.cc.Invoke(ctx, MeService_GetUserSettings_FullMethodName, in, out, cOpts...)
+	out := new(UpdateSettingsResponse)
+	err := c.cc.Invoke(ctx, MeService_UpdateSettings_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *meServiceClient) GetUserPreferences(ctx context.Context, in *GetUserPreferencesRequest, opts ...grpc.CallOption) (*GetUserPreferencesResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(GetUserPreferencesResponse)
+	err := c.cc.Invoke(ctx, MeService_GetUserPreferences_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *meServiceClient) UpdatePreferences(ctx context.Context, in *UpdatePreferencesRequest, opts ...grpc.CallOption) (*UpdatePreferencesResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(UpdatePreferencesResponse)
+	err := c.cc.Invoke(ctx, MeService_UpdatePreferences_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -159,10 +185,14 @@ type MeServiceServer interface {
 	GetUserResources(context.Context, *GetUserResourcesRequest) (*GetUserResourcesResponse, error)
 	// GetUserRoles retrieves role list for current user.
 	GetUserRoles(context.Context, *GetUserRolesRequest) (*GetUserRolesResponse, error)
-	// UpdatePreferences updates user preferences (P2).
-	UpdatePreferences(context.Context, *UpdatePreferencesRequest) (*UpdatePreferencesResponse, error)
 	// GetUserSettings retrieves user settings (P2).
 	GetUserSettings(context.Context, *GetUserSettingsRequest) (*GetUserSettingsResponse, error)
+	// UpdateSettings updates user settings (P2).
+	UpdateSettings(context.Context, *UpdateSettingsRequest) (*UpdateSettingsResponse, error)
+	// GetUserPreferences retrieves user preferences (P2).
+	GetUserPreferences(context.Context, *GetUserPreferencesRequest) (*GetUserPreferencesResponse, error)
+	// UpdatePreferences updates user preferences (P2).
+	UpdatePreferences(context.Context, *UpdatePreferencesRequest) (*UpdatePreferencesResponse, error)
 	mustEmbedUnimplementedMeServiceServer()
 }
 
@@ -191,11 +221,17 @@ func (UnimplementedMeServiceServer) GetUserResources(context.Context, *GetUserRe
 func (UnimplementedMeServiceServer) GetUserRoles(context.Context, *GetUserRolesRequest) (*GetUserRolesResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetUserRoles not implemented")
 }
-func (UnimplementedMeServiceServer) UpdatePreferences(context.Context, *UpdatePreferencesRequest) (*UpdatePreferencesResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method UpdatePreferences not implemented")
-}
 func (UnimplementedMeServiceServer) GetUserSettings(context.Context, *GetUserSettingsRequest) (*GetUserSettingsResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetUserSettings not implemented")
+}
+func (UnimplementedMeServiceServer) UpdateSettings(context.Context, *UpdateSettingsRequest) (*UpdateSettingsResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpdateSettings not implemented")
+}
+func (UnimplementedMeServiceServer) GetUserPreferences(context.Context, *GetUserPreferencesRequest) (*GetUserPreferencesResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetUserPreferences not implemented")
+}
+func (UnimplementedMeServiceServer) UpdatePreferences(context.Context, *UpdatePreferencesRequest) (*UpdatePreferencesResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpdatePreferences not implemented")
 }
 func (UnimplementedMeServiceServer) mustEmbedUnimplementedMeServiceServer() {}
 func (UnimplementedMeServiceServer) testEmbeddedByValue()                   {}
@@ -326,24 +362,6 @@ func _MeService_GetUserRoles_Handler(srv interface{}, ctx context.Context, dec f
 	return interceptor(ctx, in, info, handler)
 }
 
-func _MeService_UpdatePreferences_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(UpdatePreferencesRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(MeServiceServer).UpdatePreferences(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: MeService_UpdatePreferences_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(MeServiceServer).UpdatePreferences(ctx, req.(*UpdatePreferencesRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
 func _MeService_GetUserSettings_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(GetUserSettingsRequest)
 	if err := dec(in); err != nil {
@@ -358,6 +376,60 @@ func _MeService_GetUserSettings_Handler(srv interface{}, ctx context.Context, de
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(MeServiceServer).GetUserSettings(ctx, req.(*GetUserSettingsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _MeService_UpdateSettings_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UpdateSettingsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MeServiceServer).UpdateSettings(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: MeService_UpdateSettings_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MeServiceServer).UpdateSettings(ctx, req.(*UpdateSettingsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _MeService_GetUserPreferences_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetUserPreferencesRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MeServiceServer).GetUserPreferences(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: MeService_GetUserPreferences_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MeServiceServer).GetUserPreferences(ctx, req.(*GetUserPreferencesRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _MeService_UpdatePreferences_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UpdatePreferencesRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MeServiceServer).UpdatePreferences(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: MeService_UpdatePreferences_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MeServiceServer).UpdatePreferences(ctx, req.(*UpdatePreferencesRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -394,12 +466,20 @@ var MeService_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _MeService_GetUserRoles_Handler,
 		},
 		{
-			MethodName: "UpdatePreferences",
-			Handler:    _MeService_UpdatePreferences_Handler,
-		},
-		{
 			MethodName: "GetUserSettings",
 			Handler:    _MeService_GetUserSettings_Handler,
+		},
+		{
+			MethodName: "UpdateSettings",
+			Handler:    _MeService_UpdateSettings_Handler,
+		},
+		{
+			MethodName: "GetUserPreferences",
+			Handler:    _MeService_GetUserPreferences_Handler,
+		},
+		{
+			MethodName: "UpdatePreferences",
+			Handler:    _MeService_UpdatePreferences_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

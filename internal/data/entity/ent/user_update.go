@@ -133,6 +133,20 @@ func (_u *UserUpdate) SetNillableUsername(v *string) *UserUpdate {
 	return _u
 }
 
+// SetNickname sets the "nickname" field.
+func (_u *UserUpdate) SetNickname(v string) *UserUpdate {
+	_u.mutation.SetNickname(v)
+	return _u
+}
+
+// SetNillableNickname sets the "nickname" field if the given value is not nil.
+func (_u *UserUpdate) SetNillableNickname(v *string) *UserUpdate {
+	if v != nil {
+		_u.SetNickname(*v)
+	}
+	return _u
+}
+
 // SetEncryptedPassword sets the "encrypted_password" field.
 func (_u *UserUpdate) SetEncryptedPassword(v string) *UserUpdate {
 	_u.mutation.SetEncryptedPassword(v)
@@ -143,20 +157,6 @@ func (_u *UserUpdate) SetEncryptedPassword(v string) *UserUpdate {
 func (_u *UserUpdate) SetNillableEncryptedPassword(v *string) *UserUpdate {
 	if v != nil {
 		_u.SetEncryptedPassword(*v)
-	}
-	return _u
-}
-
-// SetSalt sets the "salt" field.
-func (_u *UserUpdate) SetSalt(v string) *UserUpdate {
-	_u.mutation.SetSalt(v)
-	return _u
-}
-
-// SetNillableSalt sets the "salt" field if the given value is not nil.
-func (_u *UserUpdate) SetNillableSalt(v *string) *UserUpdate {
-	if v != nil {
-		_u.SetSalt(*v)
 	}
 	return _u
 }
@@ -189,16 +189,16 @@ func (_u *UserUpdate) SetNillableEmail(v *string) *UserUpdate {
 	return _u
 }
 
-// SetToken sets the "token" field.
-func (_u *UserUpdate) SetToken(v string) *UserUpdate {
-	_u.mutation.SetToken(v)
+// SetSessionID sets the "session_id" field.
+func (_u *UserUpdate) SetSessionID(v string) *UserUpdate {
+	_u.mutation.SetSessionID(v)
 	return _u
 }
 
-// SetNillableToken sets the "token" field if the given value is not nil.
-func (_u *UserUpdate) SetNillableToken(v *string) *UserUpdate {
+// SetNillableSessionID sets the "session_id" field if the given value is not nil.
+func (_u *UserUpdate) SetNillableSessionID(v *string) *UserUpdate {
 	if v != nil {
-		_u.SetToken(*v)
+		_u.SetSessionID(*v)
 	}
 	return _u
 }
@@ -639,14 +639,14 @@ func (_u *UserUpdate) check() error {
 			return &ValidationError{Name: "username", err: fmt.Errorf(`ent: validator failed for field "User.username": %w`, err)}
 		}
 	}
+	if v, ok := _u.mutation.Nickname(); ok {
+		if err := user.NicknameValidator(v); err != nil {
+			return &ValidationError{Name: "nickname", err: fmt.Errorf(`ent: validator failed for field "User.nickname": %w`, err)}
+		}
+	}
 	if v, ok := _u.mutation.EncryptedPassword(); ok {
 		if err := user.EncryptedPasswordValidator(v); err != nil {
 			return &ValidationError{Name: "encrypted_password", err: fmt.Errorf(`ent: validator failed for field "User.encrypted_password": %w`, err)}
-		}
-	}
-	if v, ok := _u.mutation.Salt(); ok {
-		if err := user.SaltValidator(v); err != nil {
-			return &ValidationError{Name: "salt", err: fmt.Errorf(`ent: validator failed for field "User.salt": %w`, err)}
 		}
 	}
 	if v, ok := _u.mutation.Phone(); ok {
@@ -659,9 +659,9 @@ func (_u *UserUpdate) check() error {
 			return &ValidationError{Name: "email", err: fmt.Errorf(`ent: validator failed for field "User.email": %w`, err)}
 		}
 	}
-	if v, ok := _u.mutation.Token(); ok {
-		if err := user.TokenValidator(v); err != nil {
-			return &ValidationError{Name: "token", err: fmt.Errorf(`ent: validator failed for field "User.token": %w`, err)}
+	if v, ok := _u.mutation.SessionID(); ok {
+		if err := user.SessionIDValidator(v); err != nil {
+			return &ValidationError{Name: "session_id", err: fmt.Errorf(`ent: validator failed for field "User.session_id": %w`, err)}
 		}
 	}
 	if v, ok := _u.mutation.LastLoginIP(); ok {
@@ -725,11 +725,11 @@ func (_u *UserUpdate) sqlSave(ctx context.Context) (_node int, err error) {
 	if value, ok := _u.mutation.Username(); ok {
 		_spec.SetField(user.FieldUsername, field.TypeString, value)
 	}
+	if value, ok := _u.mutation.Nickname(); ok {
+		_spec.SetField(user.FieldNickname, field.TypeString, value)
+	}
 	if value, ok := _u.mutation.EncryptedPassword(); ok {
 		_spec.SetField(user.FieldEncryptedPassword, field.TypeString, value)
-	}
-	if value, ok := _u.mutation.Salt(); ok {
-		_spec.SetField(user.FieldSalt, field.TypeString, value)
 	}
 	if value, ok := _u.mutation.Phone(); ok {
 		_spec.SetField(user.FieldPhone, field.TypeString, value)
@@ -737,8 +737,8 @@ func (_u *UserUpdate) sqlSave(ctx context.Context) (_node int, err error) {
 	if value, ok := _u.mutation.Email(); ok {
 		_spec.SetField(user.FieldEmail, field.TypeString, value)
 	}
-	if value, ok := _u.mutation.Token(); ok {
-		_spec.SetField(user.FieldToken, field.TypeString, value)
+	if value, ok := _u.mutation.SessionID(); ok {
+		_spec.SetField(user.FieldSessionID, field.TypeString, value)
 	}
 	if value, ok := _u.mutation.Status(); ok {
 		_spec.SetField(user.FieldStatus, field.TypeInt8, value)
@@ -1212,6 +1212,20 @@ func (_u *UserUpdateOne) SetNillableUsername(v *string) *UserUpdateOne {
 	return _u
 }
 
+// SetNickname sets the "nickname" field.
+func (_u *UserUpdateOne) SetNickname(v string) *UserUpdateOne {
+	_u.mutation.SetNickname(v)
+	return _u
+}
+
+// SetNillableNickname sets the "nickname" field if the given value is not nil.
+func (_u *UserUpdateOne) SetNillableNickname(v *string) *UserUpdateOne {
+	if v != nil {
+		_u.SetNickname(*v)
+	}
+	return _u
+}
+
 // SetEncryptedPassword sets the "encrypted_password" field.
 func (_u *UserUpdateOne) SetEncryptedPassword(v string) *UserUpdateOne {
 	_u.mutation.SetEncryptedPassword(v)
@@ -1222,20 +1236,6 @@ func (_u *UserUpdateOne) SetEncryptedPassword(v string) *UserUpdateOne {
 func (_u *UserUpdateOne) SetNillableEncryptedPassword(v *string) *UserUpdateOne {
 	if v != nil {
 		_u.SetEncryptedPassword(*v)
-	}
-	return _u
-}
-
-// SetSalt sets the "salt" field.
-func (_u *UserUpdateOne) SetSalt(v string) *UserUpdateOne {
-	_u.mutation.SetSalt(v)
-	return _u
-}
-
-// SetNillableSalt sets the "salt" field if the given value is not nil.
-func (_u *UserUpdateOne) SetNillableSalt(v *string) *UserUpdateOne {
-	if v != nil {
-		_u.SetSalt(*v)
 	}
 	return _u
 }
@@ -1268,16 +1268,16 @@ func (_u *UserUpdateOne) SetNillableEmail(v *string) *UserUpdateOne {
 	return _u
 }
 
-// SetToken sets the "token" field.
-func (_u *UserUpdateOne) SetToken(v string) *UserUpdateOne {
-	_u.mutation.SetToken(v)
+// SetSessionID sets the "session_id" field.
+func (_u *UserUpdateOne) SetSessionID(v string) *UserUpdateOne {
+	_u.mutation.SetSessionID(v)
 	return _u
 }
 
-// SetNillableToken sets the "token" field if the given value is not nil.
-func (_u *UserUpdateOne) SetNillableToken(v *string) *UserUpdateOne {
+// SetNillableSessionID sets the "session_id" field if the given value is not nil.
+func (_u *UserUpdateOne) SetNillableSessionID(v *string) *UserUpdateOne {
 	if v != nil {
-		_u.SetToken(*v)
+		_u.SetSessionID(*v)
 	}
 	return _u
 }
@@ -1731,14 +1731,14 @@ func (_u *UserUpdateOne) check() error {
 			return &ValidationError{Name: "username", err: fmt.Errorf(`ent: validator failed for field "User.username": %w`, err)}
 		}
 	}
+	if v, ok := _u.mutation.Nickname(); ok {
+		if err := user.NicknameValidator(v); err != nil {
+			return &ValidationError{Name: "nickname", err: fmt.Errorf(`ent: validator failed for field "User.nickname": %w`, err)}
+		}
+	}
 	if v, ok := _u.mutation.EncryptedPassword(); ok {
 		if err := user.EncryptedPasswordValidator(v); err != nil {
 			return &ValidationError{Name: "encrypted_password", err: fmt.Errorf(`ent: validator failed for field "User.encrypted_password": %w`, err)}
-		}
-	}
-	if v, ok := _u.mutation.Salt(); ok {
-		if err := user.SaltValidator(v); err != nil {
-			return &ValidationError{Name: "salt", err: fmt.Errorf(`ent: validator failed for field "User.salt": %w`, err)}
 		}
 	}
 	if v, ok := _u.mutation.Phone(); ok {
@@ -1751,9 +1751,9 @@ func (_u *UserUpdateOne) check() error {
 			return &ValidationError{Name: "email", err: fmt.Errorf(`ent: validator failed for field "User.email": %w`, err)}
 		}
 	}
-	if v, ok := _u.mutation.Token(); ok {
-		if err := user.TokenValidator(v); err != nil {
-			return &ValidationError{Name: "token", err: fmt.Errorf(`ent: validator failed for field "User.token": %w`, err)}
+	if v, ok := _u.mutation.SessionID(); ok {
+		if err := user.SessionIDValidator(v); err != nil {
+			return &ValidationError{Name: "session_id", err: fmt.Errorf(`ent: validator failed for field "User.session_id": %w`, err)}
 		}
 	}
 	if v, ok := _u.mutation.LastLoginIP(); ok {
@@ -1834,11 +1834,11 @@ func (_u *UserUpdateOne) sqlSave(ctx context.Context) (_node *User, err error) {
 	if value, ok := _u.mutation.Username(); ok {
 		_spec.SetField(user.FieldUsername, field.TypeString, value)
 	}
+	if value, ok := _u.mutation.Nickname(); ok {
+		_spec.SetField(user.FieldNickname, field.TypeString, value)
+	}
 	if value, ok := _u.mutation.EncryptedPassword(); ok {
 		_spec.SetField(user.FieldEncryptedPassword, field.TypeString, value)
-	}
-	if value, ok := _u.mutation.Salt(); ok {
-		_spec.SetField(user.FieldSalt, field.TypeString, value)
 	}
 	if value, ok := _u.mutation.Phone(); ok {
 		_spec.SetField(user.FieldPhone, field.TypeString, value)
@@ -1846,8 +1846,8 @@ func (_u *UserUpdateOne) sqlSave(ctx context.Context) (_node *User, err error) {
 	if value, ok := _u.mutation.Email(); ok {
 		_spec.SetField(user.FieldEmail, field.TypeString, value)
 	}
-	if value, ok := _u.mutation.Token(); ok {
-		_spec.SetField(user.FieldToken, field.TypeString, value)
+	if value, ok := _u.mutation.SessionID(); ok {
+		_spec.SetField(user.FieldSessionID, field.TypeString, value)
 	}
 	if value, ok := _u.mutation.Status(); ok {
 		_spec.SetField(user.FieldStatus, field.TypeInt8, value)

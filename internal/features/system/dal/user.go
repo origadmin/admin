@@ -204,6 +204,28 @@ func (r *userRepo) ListResourceByUserID(ctx context.Context, id int64) ([]*types
 	return dto.ConvertResourcesToResourcesPB(resources), nil
 }
 
+func (r *userRepo) ListViewByUserID(ctx context.Context, id int64) ([]*types.View, error) {
+	views, err := r.db.User(ctx).Query().Where(user.ID(id)).QueryRoles().QueryPermissions().QueryViews().All(ctx)
+	if err != nil {
+		return nil, err
+	}
+	return dto.ConvertViewsToViewsPB(views), nil
+}
+
+func (r *userRepo) ListPermissionByUserID(ctx context.Context, id int64) ([]*types.Permission, error) {
+	permissions, err := r.db.User(ctx).Query().
+		Where(user.ID(id)).
+		QueryRoles().
+		QueryPermissions().
+		WithResources().
+		WithViews().
+		All(ctx)
+	if err != nil {
+		return nil, err
+	}
+	return dto.ConvertPermissionsToPermissionsPB(permissions), nil
+}
+
 func (r *userRepo) UpdateUserStatus(ctx context.Context, id int64, status int8) error {
 	return r.db.User(ctx).UpdateOneID(id).SetStatus(enums.Status(status)).Exec(ctx)
 }

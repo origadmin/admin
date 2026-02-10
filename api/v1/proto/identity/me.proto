@@ -64,19 +64,36 @@ service MeService {
     option (contrib.api.policy.v1.policy) = {name: "authn"};
   }
 
-  // UpdatePreferences updates user preferences (P2).
-  rpc UpdatePreferences(UpdatePreferencesRequest) returns (UpdatePreferencesResponse) {
+  // GetUserSettings retrieves user settings (P2).
+  rpc GetUserSettings(GetUserSettingsRequest) returns (GetUserSettingsResponse) {
     option (google.api.http) = {
-      put: "/me/preferences"
+      get: "/me/settings"
+    };
+    option (contrib.api.policy.v1.policy) = {name: "authn"};
+  }
+
+  // UpdateSettings updates user settings (P2).
+  rpc UpdateSettings(UpdateSettingsRequest) returns (UpdateSettingsResponse) {
+    option (google.api.http) = {
+      put: "/me/settings"
       body: "*"
     };
     option (contrib.api.policy.v1.policy) = {name: "authn"};
   }
 
-  // GetUserSettings retrieves user settings (P2).
-  rpc GetUserSettings(GetUserSettingsRequest) returns (GetUserSettingsResponse) {
+  // GetUserPreferences retrieves user preferences (P2).
+  rpc GetUserPreferences(GetUserPreferencesRequest) returns (GetUserPreferencesResponse) {
     option (google.api.http) = {
-      get: "/me/settings"
+      get: "/me/preferences"
+    };
+    option (contrib.api.policy.v1.policy) = {name: "authn"};
+  }
+
+  // UpdatePreferences updates user preferences (P2).
+  rpc UpdatePreferences(UpdatePreferencesRequest) returns (UpdatePreferencesResponse) {
+    option (google.api.http) = {
+      put: "/me/preferences"
+      body: "*"
     };
     option (contrib.api.policy.v1.policy) = {name: "authn"};
   }
@@ -95,13 +112,13 @@ message GetProfileRequest {}
 
 // The response message for the GetProfile RPC.
 message GetProfileResponse {
-  api.v1.services.types.User user = 1;
+  api.v1.services.types.UserProfile profile = 1;
 }
 
 // The request message for the UpdateProfile RPC.
 message UpdateProfileRequest {
   // The fields to update.
-  api.v1.services.types.User user = 1;
+  api.v1.services.types.UserProfile profile = 1;
 }
 
 // The response message for the UpdateProfile RPC.
@@ -132,6 +149,30 @@ message GetUserRolesResponse {
   repeated api.v1.services.types.Role roles = 1;
 }
 
+// The request message for the GetUserSettings RPC (P2).
+message GetUserSettingsRequest {}
+
+// The response message for the GetUserSettings RPC (P2).
+message GetUserSettingsResponse {
+  api.v1.services.types.UserSetting setting = 1;
+}
+
+// The request message for the UpdateSettings RPC (P2).
+message UpdateSettingsRequest {
+  api.v1.services.types.UserSetting setting = 1;
+}
+
+// The response message for the UpdateSettings RPC (P2).
+message UpdateSettingsResponse {}
+
+// The request message for the GetUserPreferences RPC (P2).
+message GetUserPreferencesRequest {}
+
+// The response message for the GetUserPreferences RPC (P2).
+message GetUserPreferencesResponse {
+  map<string, string> preferences = 1;
+}
+
 // The request message for the UpdatePreferences RPC (P2).
 message UpdatePreferencesRequest {
   map<string, string> preferences = 1;
@@ -139,11 +180,3 @@ message UpdatePreferencesRequest {
 
 // The response message for the UpdatePreferences RPC (P2).
 message UpdatePreferencesResponse {}
-
-// The request message for the GetUserSettings RPC (P2).
-message GetUserSettingsRequest {}
-
-// The response message for the GetUserSettings RPC (P2).
-message GetUserSettingsResponse {
-  map<string, string> settings = 1;
-}

@@ -25,7 +25,6 @@ const (
 // UserProfile holds the profile information of a user.
 type UserProfile struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Nickname      string                 `protobuf:"bytes,1,opt,name=nickname,proto3" json:"nickname,omitempty"`
 	Avatar        string                 `protobuf:"bytes,2,opt,name=avatar,proto3" json:"avatar,omitempty"`
 	Gender        string                 `protobuf:"bytes,3,opt,name=gender,proto3" json:"gender,omitempty"`
 	Name          string                 `protobuf:"bytes,4,opt,name=name,proto3" json:"name,omitempty"`
@@ -63,13 +62,6 @@ func (x *UserProfile) ProtoReflect() protoreflect.Message {
 // Deprecated: Use UserProfile.ProtoReflect.Descriptor instead.
 func (*UserProfile) Descriptor() ([]byte, []int) {
 	return file_types_system_proto_rawDescGZIP(), []int{0}
-}
-
-func (x *UserProfile) GetNickname() string {
-	if x != nil {
-		return x.Nickname
-	}
-	return ""
 }
 
 func (x *UserProfile) GetAvatar() string {
@@ -577,12 +569,14 @@ type User struct {
 	AllowedIp string `protobuf:"bytes,7,opt,name=allowed_ip,proto3" json:"allowed_ip,omitempty"`
 	// user.field.username
 	Username string `protobuf:"bytes,8,opt,name=username,proto3" json:"username,omitempty"`
+	// user.field.nickname
+	Nickname string `protobuf:"bytes,9,opt,name=nickname,proto3" json:"nickname,omitempty"`
 	// user.field.phone
 	Phone string `protobuf:"bytes,13,opt,name=phone,proto3" json:"phone,omitempty"`
 	// user.field.email
 	Email string `protobuf:"bytes,14,opt,name=email,proto3" json:"email,omitempty"`
-	// user.field.token
-	Token string `protobuf:"bytes,16,opt,name=token,proto3" json:"token,omitempty"`
+	// user.field.session_id
+	SessionId string `protobuf:"bytes,16,opt,name=session_id,proto3" json:"session_id,omitempty"`
 	// user.field.status
 	Status int32 `protobuf:"varint,17,opt,name=status,proto3" json:"status,omitempty"`
 	// user.field.last_login_ip
@@ -691,6 +685,13 @@ func (x *User) GetUsername() string {
 	return ""
 }
 
+func (x *User) GetNickname() string {
+	if x != nil {
+		return x.Nickname
+	}
+	return ""
+}
+
 func (x *User) GetPhone() string {
 	if x != nil {
 		return x.Phone
@@ -705,9 +706,9 @@ func (x *User) GetEmail() string {
 	return ""
 }
 
-func (x *User) GetToken() string {
+func (x *User) GetSessionId() string {
 	if x != nil {
-		return x.Token
+		return x.SessionId
 	}
 	return ""
 }
@@ -1491,9 +1492,8 @@ var File_types_system_proto protoreflect.FileDescriptor
 
 const file_types_system_proto_rawDesc = "" +
 	"\n" +
-	"\x12types/system.proto\x12\x15api.v1.services.types\x1a\x1fgoogle/protobuf/timestamp.proto\"\xa5\x01\n" +
-	"\vUserProfile\x12\x1a\n" +
-	"\bnickname\x18\x01 \x01(\tR\bnickname\x12\x16\n" +
+	"\x12types/system.proto\x12\x15api.v1.services.types\x1a\x1fgoogle/protobuf/timestamp.proto\"\x89\x01\n" +
+	"\vUserProfile\x12\x16\n" +
 	"\x06avatar\x18\x02 \x01(\tR\x06avatar\x12\x16\n" +
 	"\x06gender\x18\x03 \x01(\tR\x06gender\x12\x12\n" +
 	"\x04name\x18\x04 \x01(\tR\x04name\x12\x1e\n" +
@@ -1547,7 +1547,7 @@ const file_types_system_proto_rawDesc = "" +
 	"\x05views\x18d \x03(\v2\x1b.api.v1.services.types.ViewR\x05views\x121\n" +
 	"\x05users\x18e \x03(\v2\x1b.api.v1.services.types.UserR\x05users\x12=\n" +
 	"\tresources\x18f \x03(\v2\x1f.api.v1.services.types.ResourceR\tresources\x12C\n" +
-	"\vpermissions\x18h \x03(\v2!.api.v1.services.types.PermissionR\vpermissions\"\xd4\x06\n" +
+	"\vpermissions\x18h \x03(\v2!.api.v1.services.types.PermissionR\vpermissions\"\xfa\x06\n" +
 	"\x04User\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\x03R\x02id\x12$\n" +
 	"\rcreate_author\x18\x02 \x01(\x03R\rcreate_author\x12$\n" +
@@ -1558,10 +1558,13 @@ const file_types_system_proto_rawDesc = "" +
 	"\n" +
 	"allowed_ip\x18\a \x01(\tR\n" +
 	"allowed_ip\x12\x1a\n" +
-	"\busername\x18\b \x01(\tR\busername\x12\x14\n" +
+	"\busername\x18\b \x01(\tR\busername\x12\x1a\n" +
+	"\bnickname\x18\t \x01(\tR\bnickname\x12\x14\n" +
 	"\x05phone\x18\r \x01(\tR\x05phone\x12\x14\n" +
-	"\x05email\x18\x0e \x01(\tR\x05email\x12\x14\n" +
-	"\x05token\x18\x10 \x01(\tR\x05token\x12\x16\n" +
+	"\x05email\x18\x0e \x01(\tR\x05email\x12\x1e\n" +
+	"\n" +
+	"session_id\x18\x10 \x01(\tR\n" +
+	"session_id\x12\x16\n" +
 	"\x06status\x18\x11 \x01(\x05R\x06status\x12$\n" +
 	"\rlast_login_ip\x18\x12 \x01(\tR\rlast_login_ip\x12\x1a\n" +
 	"\blogin_ip\x18\x13 \x01(\tR\blogin_ip\x12D\n" +

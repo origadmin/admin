@@ -332,8 +332,6 @@ func (m *PermissionMutation) SetFields(input *Permission, fields ...string) erro
 			m.SetDataRules(input.DataRules)
 		case permission.FieldStatus:
 			m.SetStatus(input.Status)
-		case permission.FieldActions:
-			m.SetActions(input.Actions)
 		case permission.FieldID:
 			m.SetID(input.ID)
 		default:
@@ -395,12 +393,6 @@ func (m *PermissionMutation) SetFieldsSkipZero(input *Permission, fields ...stri
 			// check enums.Status with sql.NullInt64 if it is zero
 			if input.Status != 0 {
 				m.SetStatus(input.Status)
-			}
-		case permission.FieldActions:
-			var zero permission.Actions
-			// check permission.Actions with sql.NullString if it is empty
-			if input.Actions != zero {
-				m.SetActions(input.Actions)
 			}
 		case permission.FieldID:
 			// check int64 with sql.NullInt64 if it is zero
@@ -940,16 +932,16 @@ func (m *UserMutation) SetFields(input *User, fields ...string) error {
 			m.SetAllowedIP(input.AllowedIP)
 		case user.FieldUsername:
 			m.SetUsername(input.Username)
+		case user.FieldNickname:
+			m.SetNickname(input.Nickname)
 		case user.FieldEncryptedPassword:
 			m.SetEncryptedPassword(input.EncryptedPassword)
-		case user.FieldSalt:
-			m.SetSalt(input.Salt)
 		case user.FieldPhone:
 			m.SetPhone(input.Phone)
 		case user.FieldEmail:
 			m.SetEmail(input.Email)
-		case user.FieldToken:
-			m.SetToken(input.Token)
+		case user.FieldSessionID:
+			m.SetSessionID(input.SessionID)
 		case user.FieldStatus:
 			m.SetStatus(input.Status)
 		case user.FieldIsSystem:
@@ -1018,15 +1010,15 @@ func (m *UserMutation) SetFieldsSkipZero(input *User, fields ...string) error {
 			if input.Username != "" {
 				m.SetUsername(input.Username)
 			}
+		case user.FieldNickname:
+			// check string with sql.NullString if it is empty
+			if input.Nickname != "" {
+				m.SetNickname(input.Nickname)
+			}
 		case user.FieldEncryptedPassword:
 			// check string with sql.NullString if it is empty
 			if input.EncryptedPassword != "" {
 				m.SetEncryptedPassword(input.EncryptedPassword)
-			}
-		case user.FieldSalt:
-			// check string with sql.NullString if it is empty
-			if input.Salt != "" {
-				m.SetSalt(input.Salt)
 			}
 		case user.FieldPhone:
 			// check string with sql.NullString if it is empty
@@ -1038,10 +1030,10 @@ func (m *UserMutation) SetFieldsSkipZero(input *User, fields ...string) error {
 			if input.Email != "" {
 				m.SetEmail(input.Email)
 			}
-		case user.FieldToken:
+		case user.FieldSessionID:
 			// check string with sql.NullString if it is empty
-			if input.Token != "" {
-				m.SetToken(input.Token)
+			if input.SessionID != "" {
+				m.SetSessionID(input.SessionID)
 			}
 		case user.FieldStatus:
 			// check enums.Status with sql.NullInt64 if it is zero
@@ -1189,8 +1181,6 @@ func (m *UserProfileMutation) SetFields(input *UserProfile, fields ...string) er
 			} else {
 				m.ResetDeleteTime()
 			}
-		case userprofile.FieldNickname:
-			m.SetNickname(input.Nickname)
 		case userprofile.FieldAvatar:
 			m.SetAvatar(input.Avatar)
 		case userprofile.FieldName:
@@ -1239,11 +1229,6 @@ func (m *UserProfileMutation) SetFieldsSkipZero(input *UserProfile, fields ...st
 				m.SetDeleteTime(*input.DeleteTime)
 			} else {
 				m.ResetDeleteTime()
-			}
-		case userprofile.FieldNickname:
-			// check string with sql.NullString if it is empty
-			if input.Nickname != "" {
-				m.SetNickname(input.Nickname)
 			}
 		case userprofile.FieldAvatar:
 			// check string with sql.NullString if it is empty

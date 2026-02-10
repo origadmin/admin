@@ -37,18 +37,16 @@ type User struct {
 	AllowedIP string `json:"allowed_ip,omitempty"`
 	// entity.user.field.username
 	Username string `json:"username,omitempty"`
+	// entity.user_profile.field.nickname
+	Nickname string `json:"nickname,omitempty"`
 	// entity.user.field.encrypted_password
 	EncryptedPassword string `json:"encrypted_password,omitempty"`
-	// entity.user.field.salt
-	//
-	// Deprecated: toolkits/crypto includes salt management
-	Salt string `json:"salt,omitempty"`
 	// entity.user.field.phone
 	Phone string `json:"phone,omitempty"`
 	// entity.user.field.email
 	Email string `json:"email,omitempty"`
-	// entity.user.field.token
-	Token string `json:"token,omitempty"`
+	// entity.user.field.session_id
+	SessionID string `json:"session_id,omitempty"`
 	// entity.user.field.status
 	Status enums.Status `json:"status,omitempty"`
 	// entity.user.field.is_system
@@ -177,7 +175,7 @@ func (*User) scanValues(columns []string) ([]any, error) {
 			values[i] = new(sql.NullBool)
 		case user.FieldID, user.FieldCreateAuthor, user.FieldUpdateAuthor, user.FieldStatus:
 			values[i] = new(sql.NullInt64)
-		case user.FieldUUID, user.FieldAllowedIP, user.FieldUsername, user.FieldEncryptedPassword, user.FieldSalt, user.FieldPhone, user.FieldEmail, user.FieldToken, user.FieldLastLoginIP, user.FieldLoginIP:
+		case user.FieldUUID, user.FieldAllowedIP, user.FieldUsername, user.FieldNickname, user.FieldEncryptedPassword, user.FieldPhone, user.FieldEmail, user.FieldSessionID, user.FieldLastLoginIP, user.FieldLoginIP:
 			values[i] = new(sql.NullString)
 		case user.FieldCreateTime, user.FieldUpdateTime, user.FieldDeleteTime, user.FieldLastLoginTime, user.FieldLoginTime, user.FieldSanctionDate:
 			values[i] = new(sql.NullTime)
@@ -251,17 +249,17 @@ func (_m *User) assignValues(columns []string, values []any) error {
 			} else if value.Valid {
 				_m.Username = value.String
 			}
+		case user.FieldNickname:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field nickname", values[i])
+			} else if value.Valid {
+				_m.Nickname = value.String
+			}
 		case user.FieldEncryptedPassword:
 			if value, ok := values[i].(*sql.NullString); !ok {
 				return fmt.Errorf("unexpected type %T for field encrypted_password", values[i])
 			} else if value.Valid {
 				_m.EncryptedPassword = value.String
-			}
-		case user.FieldSalt:
-			if value, ok := values[i].(*sql.NullString); !ok {
-				return fmt.Errorf("unexpected type %T for field salt", values[i])
-			} else if value.Valid {
-				_m.Salt = value.String
 			}
 		case user.FieldPhone:
 			if value, ok := values[i].(*sql.NullString); !ok {
@@ -275,11 +273,11 @@ func (_m *User) assignValues(columns []string, values []any) error {
 			} else if value.Valid {
 				_m.Email = value.String
 			}
-		case user.FieldToken:
+		case user.FieldSessionID:
 			if value, ok := values[i].(*sql.NullString); !ok {
-				return fmt.Errorf("unexpected type %T for field token", values[i])
+				return fmt.Errorf("unexpected type %T for field session_id", values[i])
 			} else if value.Valid {
-				_m.Token = value.String
+				_m.SessionID = value.String
 			}
 		case user.FieldStatus:
 			if value, ok := values[i].(*sql.NullInt64); !ok {
@@ -425,11 +423,11 @@ func (_m *User) String() string {
 	builder.WriteString("username=")
 	builder.WriteString(_m.Username)
 	builder.WriteString(", ")
+	builder.WriteString("nickname=")
+	builder.WriteString(_m.Nickname)
+	builder.WriteString(", ")
 	builder.WriteString("encrypted_password=")
 	builder.WriteString(_m.EncryptedPassword)
-	builder.WriteString(", ")
-	builder.WriteString("salt=")
-	builder.WriteString(_m.Salt)
 	builder.WriteString(", ")
 	builder.WriteString("phone=")
 	builder.WriteString(_m.Phone)
@@ -437,8 +435,8 @@ func (_m *User) String() string {
 	builder.WriteString("email=")
 	builder.WriteString(_m.Email)
 	builder.WriteString(", ")
-	builder.WriteString("token=")
-	builder.WriteString(_m.Token)
+	builder.WriteString("session_id=")
+	builder.WriteString(_m.SessionID)
 	builder.WriteString(", ")
 	builder.WriteString("status=")
 	builder.WriteString(fmt.Sprintf("%v", _m.Status))

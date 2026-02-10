@@ -26,6 +26,8 @@ type UserRepo interface {
 	GetByUsername(context.Context, string) (*types.User, error)
 	GetRoleIDs(context.Context, int64) ([]int64, error)
 	ListResourceByUserID(context.Context, int64) ([]*types.Resource, error)
+	ListViewByUserID(context.Context, int64) ([]*types.View, error)
+	ListPermissionByUserID(context.Context, int64) ([]*types.Permission, error)
 	UpdateUserStatus(ctx context.Context, id int64, status int8) error
 }
 
