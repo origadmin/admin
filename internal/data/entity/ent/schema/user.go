@@ -39,7 +39,6 @@ func (User) Fields() []ent.Field {
 			Comment(i18n.Text("entity.user.field.allowed_ip")),
 		field.String("username").
 			MaxLen(32).
-			Unique().
 			Comment(i18n.Text("entity.user.field.username")), // login username of user
 		field.String("nickname").
 			MaxLen(64).
@@ -119,9 +118,24 @@ func (User) Mixin() []ent.Mixin {
 // Indexes of the User.
 func (User) Indexes() []ent.Index {
 	return []ent.Index{
-		index.Fields("username"),
-		index.Fields("phone"),
-		index.Fields("email"),
+		index.Fields("username").
+			Unique().
+			StorageKey("idx_username_unique_not_deleted").
+			Annotations(
+				entsql.IndexWhere("deleted_at IS NULL"),
+			),
+		index.Fields("phone").
+			Unique().
+			StorageKey("idx_phone_unique_not_deleted").
+			Annotations(
+				entsql.IndexWhere("deleted_at IS NULL"),
+			),
+		index.Fields("email").
+			Unique().
+			StorageKey("idx_email_unique_not_deleted").
+			Annotations(
+				entsql.IndexWhere("deleted_at IS NULL"),
+			),
 		index.Fields("status"),
 	}
 }

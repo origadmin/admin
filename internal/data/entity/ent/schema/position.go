@@ -42,7 +42,7 @@ func (Position) Fields() []ent.Field {
 
 // Mixin of the Position.
 func (Position) Mixin() []ent.Mixin {
-	return mixin.ModelMixin
+	return mixin.AuditModelMixin
 }
 
 // Annotations of the Position.

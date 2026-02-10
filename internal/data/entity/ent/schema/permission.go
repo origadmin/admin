@@ -73,7 +73,7 @@ func (Permission) Annotations() []schema.Annotation {
 
 // Mixin of the Permission.
 func (Permission) Mixin() []ent.Mixin {
-	return mixin.ModelMixin
+	return mixin.AuditModelMixin
 }
 
 // Edges of the Permission.
