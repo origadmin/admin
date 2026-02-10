@@ -16,6 +16,9 @@ import (
 	"origadmin/application/admin/internal/helpers/i18n"
 )
 
+// SoftDeleteField holds the name of the soft delete field.
+const SoftDeleteField = "delete_time"
+
 type softDeleteKey struct{}
 
 // SkipSoftDelete returns a new context that skips the soft-delete interceptor/mutators.
@@ -38,7 +41,7 @@ type SoftDeleteMixin struct {
 // Fields of the SoftDeleteMixin.
 func (SoftDeleteMixin) Fields() []ent.Field {
 	return []ent.Field{
-		field.Time("delete_time").
+		field.Time(SoftDeleteField).
 			Comment(i18n.Text("delete_time.field.comment")).
 			Optional().
 			Nillable(),
@@ -96,7 +99,7 @@ type P interface {
 // P adds a storage-level predicate to the queries and mutations.
 func (d SoftDeleteMixin) P(w P) {
 	w.WhereP(
-		sql.FieldIsNull("delete_time"),
+		sql.FieldIsNull(SoftDeleteField),
 	)
 }
 

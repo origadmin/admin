@@ -7,7 +7,6 @@ package dal
 import (
 	"context"
 	"fmt"
-	"strings"
 
 	authzv1 "github.com/origadmin/contrib/api/gen/go/security/authz/v1"
 	"github.com/origadmin/contrib/security/authz"
@@ -18,191 +17,96 @@ import (
 	"origadmin/application/admin/internal/features/system/dto"
 )
 
-// CasbinRuleConfig defines the configuration for mapping PolicySpec fields to Casbin rule columns (V0-V5).
-type CasbinRuleConfig struct {
-	SubjectIndex  int
-	DomainIndex   int
-	ResourceIndex int
-	ActionIndex   int
-	RoleIndex     int
-	EffectIndex   int
-}
-
-// DefaultAccessRuleConfig defines the default mapping for access policies (p-rules).
-var DefaultAccessRuleConfig = CasbinRuleConfig{
-	SubjectIndex:  0,
-	DomainIndex:   1,
-	ResourceIndex: 2,
-	ActionIndex:   3,
-	EffectIndex:   4,
-	RoleIndex:     -1,
-}
-
-// DefaultGroupingRuleConfig defines the default mapping for grouping policies (g-rules).
-var DefaultGroupingRuleConfig = CasbinRuleConfig{
-	SubjectIndex:  0,
-	RoleIndex:     1,
-	DomainIndex:   2,
-	ResourceIndex: -1,
-	ActionIndex:   -1,
-	EffectIndex:   -1,
-}
-
-// CasbinRuleMapper handles encoding and decoding between PolicySpec and Casbin rules.
-type CasbinRuleMapper struct {
-	accessConfig   CasbinRuleConfig
-	groupingConfig CasbinRuleConfig
-}
-
-// NewCasbinRuleMapper creates a new CasbinRuleMapper.
-func NewCasbinRuleMapper(access, grouping CasbinRuleConfig) *CasbinRuleMapper {
-	return &CasbinRuleMapper{
-		accessConfig:   access,
-		groupingConfig: grouping,
-	}
-}
-
-// GetConfig returns the configuration for the given ptype.
-func (m *CasbinRuleMapper) GetConfig(ptype string) CasbinRuleConfig {
-	if ptype == "g" {
-		return m.groupingConfig
-	}
-	return m.accessConfig
-}
-
-// Encode converts a PolicySpec to a Casbin rule (ptype, rule slice).
-func (m *CasbinRuleMapper) Encode(policy *authzv1.PolicySpec) (string, []string) {
-	ptype := policy.Type
-	config := m.GetConfig(ptype)
-	rule := make([]string, 6) // V0-V5
-
-	// Map fields based on configuration
-	if config.SubjectIndex >= 0 {
-		rule[config.SubjectIndex] = policy.Subject
-	}
-	if config.DomainIndex >= 0 && policy.Domain != nil {
-		rule[config.DomainIndex] = *policy.Domain
-	}
-	if config.ResourceIndex >= 0 && len(policy.Resources) > 0 {
-		rule[config.ResourceIndex] = policy.Resources[0]
-	}
-	if config.ActionIndex >= 0 && len(policy.Actions) > 0 {
-		rule[config.ActionIndex] = policy.Actions[0]
-	}
-	if config.RoleIndex >= 0 && len(policy.Roles) > 0 {
-		rule[config.RoleIndex] = policy.Roles[0]
-	}
-	//if config.EffectIndex >= 0 {
-	//	if policy.Effect != nil {
-	//		rule[config.EffectIndex] = *policy.Effect
-	//	} else {
-	//		rule[config.EffectIndex] = "allow"
-	//	}
-	//}
-
-	return ptype, rule
-}
-
-// Decode converts a Casbin rule to a PolicySpec.
-func (m *CasbinRuleMapper) Decode(rule *ent.CasbinRule) *authzv1.PolicySpec {
-	ptype := rule.Ptype
-	config := m.GetConfig(ptype)
-
-	policy := &authzv1.PolicySpec{
-		Type: ptype,
-	}
-
-	// Map fields based on configuration
-	if config.SubjectIndex >= 0 {
-		policy.Subject = m.getRuleValue(rule, config.SubjectIndex)
-	}
-	if config.DomainIndex >= 0 {
-		val := m.getRuleValue(rule, config.DomainIndex)
-		if val != "" {
-			policy.Domain = &val
-		}
-	}
-	if config.ResourceIndex >= 0 {
-		val := m.getRuleValue(rule, config.ResourceIndex)
-		if val != "" {
-			policy.Resources = []string{val}
-		}
-	}
-	if config.ActionIndex >= 0 {
-		val := m.getRuleValue(rule, config.ActionIndex)
-		if val != "" {
-			policy.Actions = []string{val}
-		}
-	}
-	if config.RoleIndex >= 0 {
-		val := m.getRuleValue(rule, config.RoleIndex)
-		if val != "" {
-			policy.Roles = []string{val}
-		}
-	}
-	//if config.EffectIndex >= 0 {
-	//	val := m.getRuleValue(rule, config.EffectIndex)
-	//	if val != "" {
-	//		policy.Effect = &val
-	//	}
-	//} else {
-	//	// Default effect if not mapped
-	//	policy.Effect = dto.StrPtr("allow")
-	//}
-
-	return policy
-}
-
-func (m *CasbinRuleMapper) getRuleValue(rule *ent.CasbinRule, index int) string {
-	switch index {
-	case 0:
-		return rule.V0
-	case 1:
-		return rule.V1
-	case 2:
-		return rule.V2
-	case 3:
-		return rule.V3
-	case 4:
-		return rule.V4
-	case 5:
-		return rule.V5
-	default:
-		return ""
-	}
-}
-
-// GetDomainIndex returns the domain index for the given ptype.
-func (m *CasbinRuleMapper) GetDomainIndex(ptype string) int {
-	return m.GetConfig(ptype).DomainIndex
-}
-
 // casbinPolicyModifier implements the authz.PolicyModifier interface for Casbin.
 type casbinPolicyModifier struct {
-	db     *ent.Database
-	log    *log.Helper
-	mapper *CasbinRuleMapper
+	db  *ent.Database
+	log *log.Helper
 }
 
 // NewCasbinModifier creates a new Casbin PolicyModifier.
 func NewCasbinModifier(db *ent.Database, logger log.Logger) (authz.PolicyModifier, error) {
 	return &casbinPolicyModifier{
-		db:     db,
-		log:    log.NewHelper(log.With(logger, "module", "system.dal.casbin_policy_modifier")),
-		mapper: NewCasbinRuleMapper(DefaultAccessRuleConfig, DefaultGroupingRuleConfig),
+		db:  db,
+		log: log.NewHelper(log.With(logger, "module", "system.dal.casbin_policy_modifier")),
 	}, nil
 }
 
-// WithAccessRuleConfig sets the configuration for access rules.
-func (m *casbinPolicyModifier) WithAccessRuleConfig(config CasbinRuleConfig) *casbinPolicyModifier {
-	m.mapper.accessConfig = config
-	return m
+// encode converts a PolicySpec to a full Casbin rule row (ptype + v0-v5).
+// Returns a slice of size 7: [ptype, v0, v1, v2, v3, v4, v5]
+// Standard mapping:
+// p: ptype, sub, dom, obj, act
+// g: ptype, user, role, dom
+func (m *casbinPolicyModifier) encode(policy *authzv1.PolicySpec) []string {
+	rule := make([]string, 7) // Ptype + V0-V5
+	rule[0] = policy.Type     // Ptype
+
+	switch policy.Type {
+	case "p":
+		rule[1] = policy.Subject // V0
+		if policy.Domain != nil {
+			rule[2] = *policy.Domain // V1
+		}
+		if len(policy.Resources) > 0 {
+			rule[3] = policy.Resources[0] // V2
+		}
+		if len(policy.Actions) > 0 {
+			rule[4] = policy.Actions[0] // V3
+		}
+	case "g":
+		rule[1] = policy.Subject // V0
+		if len(policy.Roles) > 0 {
+			rule[2] = policy.Roles[0] // V1
+		}
+		if policy.Domain != nil {
+			rule[3] = *policy.Domain // V2
+		}
+	default:
+		// Default fallback mapping
+		rule[1] = policy.Subject // V0
+	}
+
+	return rule
 }
 
-// WithGroupingRuleConfig sets the configuration for grouping rules.
-func (m *casbinPolicyModifier) WithGroupingRuleConfig(config CasbinRuleConfig) *casbinPolicyModifier {
-	m.mapper.groupingConfig = config
-	return m
+// decode converts a Casbin rule to a PolicySpec.
+func (m *casbinPolicyModifier) decode(rule *ent.CasbinRule) *authzv1.PolicySpec {
+	policy := &authzv1.PolicySpec{
+		Type: rule.Ptype,
+	}
+
+	switch rule.Ptype {
+	case "p":
+		policy.Subject = rule.V0
+		if rule.V1 != "" {
+			policy.Domain = &rule.V1
+		}
+		if rule.V2 != "" {
+			policy.Resources = []string{rule.V2}
+		}
+		if rule.V3 != "" {
+			policy.Actions = []string{rule.V3}
+		}
+	case "g":
+		policy.Subject = rule.V0
+		if rule.V1 != "" {
+			policy.Roles = []string{rule.V1}
+		}
+		if rule.V2 != "" {
+			policy.Domain = &rule.V2
+		}
+	default:
+		policy.Subject = rule.V0
+	}
+
+	return policy
+}
+
+// getDomainIndex returns the domain index for the given ptype.
+func (m *casbinPolicyModifier) getDomainIndex(ptype string) int {
+	if ptype == "g" {
+		return 2
+	}
+	return 1
 }
 
 // ListPolicies queries policies matching the filter criteria.
@@ -241,18 +145,12 @@ func (m *casbinPolicyModifier) listPoliciesByPType(ctx context.Context, ptype st
 	}
 
 	if filter.Domain != nil {
-		domainIndex := m.mapper.GetDomainIndex(ptype)
+		domainIndex := m.getDomainIndex(ptype)
 		switch domainIndex {
 		case 1:
 			preds = append(preds, casbinrule.V1EQ(*filter.Domain))
 		case 2:
 			preds = append(preds, casbinrule.V2EQ(*filter.Domain))
-		case 3:
-			preds = append(preds, casbinrule.V3EQ(*filter.Domain))
-		case 4:
-			preds = append(preds, casbinrule.V4EQ(*filter.Domain))
-		case 5:
-			preds = append(preds, casbinrule.V5EQ(*filter.Domain))
 		}
 	}
 
@@ -263,7 +161,7 @@ func (m *casbinPolicyModifier) listPoliciesByPType(ctx context.Context, ptype st
 
 	policies := make([]*authzv1.PolicySpec, 0, len(rules))
 	for _, rule := range rules {
-		policy := m.mapper.Decode(rule)
+		policy := m.decode(rule)
 		if m.policyMatchesFilter(policy, filter) {
 			policies = append(policies, policy)
 		}
@@ -272,58 +170,59 @@ func (m *casbinPolicyModifier) listPoliciesByPType(ctx context.Context, ptype st
 	return policies, nil
 }
 
-// AddPolicies adds one or more policies.
+// AddPolicies adds one or more policies using a "query then insert" strategy to handle duplicates.
 func (m *casbinPolicyModifier) AddPolicies(ctx context.Context, policies ...*authzv1.PolicySpec) (bool, error) {
 	if len(policies) == 0 {
 		return false, nil
 	}
 	m.log.WithContext(ctx).Debugf("Adding %d policies", len(policies))
 
-	creates := make([]*ent.CasbinRuleCreate, 0, len(policies))
-	for _, policy := range policies {
-		ptype, rule := m.mapper.Encode(policy)
-		cr := m.db.CasbinRule(ctx).Create().
-			SetPtype(ptype).
-			SetV0(rule[0])
-		if len(rule) > 1 {
-			cr.SetV1(rule[1])
-		}
-		if len(rule) > 2 {
-			cr.SetV2(rule[2])
-		}
-		if len(rule) > 3 {
-			cr.SetV3(rule[3])
-		}
-		if len(rule) > 4 {
-			cr.SetV4(rule[4])
-		}
-		if len(rule) > 5 {
-			cr.SetV5(rule[5])
-		}
-		creates = append(creates, cr)
-	}
-
-	var changed bool
+	var anyPolicyAdded bool
 	err := m.db.Tx(ctx, func(ctx context.Context) error {
-		for _, create := range creates {
-			_, err := create.Save(ctx)
+		for _, policy := range policies {
+			rule := m.encode(policy)
+			// Check if the policy already exists.
+			exists, err := m.db.CasbinRule(ctx).Query().Where(
+				casbinrule.PtypeEQ(rule[0]),
+				casbinrule.V0EQ(rule[1]),
+				casbinrule.V1EQ(rule[2]),
+				casbinrule.V2EQ(rule[3]),
+				casbinrule.V3EQ(rule[4]),
+				casbinrule.V4EQ(rule[5]),
+				casbinrule.V5EQ(rule[6]),
+			).Exist(ctx)
 			if err != nil {
-				if strings.Contains(err.Error(), "duplicate") ||
-					strings.Contains(err.Error(), "UNIQUE") {
-					continue
-				}
 				return err
 			}
-			changed = true
+			if exists {
+				m.log.WithContext(ctx).Debugf("Skipping duplicate policy (already exists): %v", policy)
+				continue
+			}
+
+			// Policy does not exist, create it.
+			create := m.db.CasbinRule(ctx).Create().
+				SetPtype(rule[0]).
+				SetV0(rule[1]).
+				SetV1(rule[2]).
+				SetV2(rule[3]).
+				SetV3(rule[4]).
+				SetV4(rule[5]).
+				SetV5(rule[6])
+
+			err = create.Exec(ctx)
+			if err != nil {
+				return err
+			}
+			anyPolicyAdded = true
 		}
 		return nil
 	})
 
 	if err != nil {
 		m.log.WithContext(ctx).Errorf("Failed to add policies: %v", err)
-		return changed, err
+		return anyPolicyAdded, err
 	}
-	return changed, nil
+	return anyPolicyAdded, nil
 }
 
 // UpdatePolicies updates policies in batch.
@@ -339,21 +238,28 @@ func (m *casbinPolicyModifier) UpdatePolicies(ctx context.Context, oldPolicies [
 
 	err := m.db.Tx(ctx, func(ctx context.Context) error {
 		for i := 0; i < len(oldPolicies); i++ {
-			oldPtype, oldRule := m.mapper.Encode(oldPolicies[i])
-			newPtype, newRule := m.mapper.Encode(newPolicies[i])
+			oldRule := m.encode(oldPolicies[i])
+			newRule := m.encode(newPolicies[i])
 
-			if oldPtype != newPtype {
-				err := fmt.Errorf("cannot change policy type from %s to %s", oldPtype, newPtype)
+			if oldRule[0] != newRule[0] {
+				err := fmt.Errorf("cannot change policy type from %s to %s", oldRule[0], newRule[0])
 				if firstErr == nil {
 					firstErr = err
 				}
 				continue
 			}
 
+			// Find the specific rule to update based on its old values
 			rule, err := m.db.CasbinRule(ctx).Query().
-				Where(casbinrule.PtypeEQ(oldPtype)).
-				Where(casbinrule.V0EQ(oldRule[0])).
-				Only(ctx)
+				Where(
+					casbinrule.PtypeEQ(oldRule[0]),
+					casbinrule.V0EQ(oldRule[1]),
+					casbinrule.V1EQ(oldRule[2]),
+					casbinrule.V2EQ(oldRule[3]),
+					casbinrule.V3EQ(oldRule[4]),
+					casbinrule.V4EQ(oldRule[5]),
+					casbinrule.V5EQ(oldRule[6]),
+				).Only(ctx)
 			if err != nil {
 				if firstErr == nil {
 					firstErr = err
@@ -361,13 +267,14 @@ func (m *casbinPolicyModifier) UpdatePolicies(ctx context.Context, oldPolicies [
 				continue
 			}
 
+			// Update the found rule with the new values
 			_, err = m.db.CasbinRule(ctx).UpdateOneID(rule.ID).
-				SetV0(newRule[0]).
-				SetV1(newRule[1]).
-				SetV2(newRule[2]).
-				SetV3(newRule[3]).
-				SetV4(newRule[4]).
-				SetV5(newRule[5]).
+				SetV0(newRule[1]).
+				SetV1(newRule[2]).
+				SetV2(newRule[3]).
+				SetV3(newRule[4]).
+				SetV4(newRule[5]).
+				SetV5(newRule[6]).
 				Save(ctx)
 			if err != nil {
 				if firstErr == nil {
@@ -431,18 +338,12 @@ func (m *casbinPolicyModifier) removePoliciesByPType(ctx context.Context, ptype 
 	}
 
 	if filter.Domain != nil {
-		domainIndex := m.mapper.GetDomainIndex(ptype)
+		domainIndex := m.getDomainIndex(ptype)
 		switch domainIndex {
 		case 1:
 			preds = append(preds, casbinrule.V1EQ(*filter.Domain))
 		case 2:
 			preds = append(preds, casbinrule.V2EQ(*filter.Domain))
-		case 3:
-			preds = append(preds, casbinrule.V3EQ(*filter.Domain))
-		case 4:
-			preds = append(preds, casbinrule.V4EQ(*filter.Domain))
-		case 5:
-			preds = append(preds, casbinrule.V5EQ(*filter.Domain))
 		}
 	}
 
@@ -457,7 +358,7 @@ func (m *casbinPolicyModifier) removePoliciesByPType(ctx context.Context, ptype 
 
 	changed := false
 	for _, rule := range rules {
-		policy := m.mapper.Decode(rule)
+		policy := m.decode(rule)
 		if !m.policyMatchesFilter(policy, filter) {
 			continue
 		}
@@ -551,154 +452,4 @@ func (m *casbinPolicyModifier) policyMatchesFilter(policy *authzv1.PolicySpec, f
 		}
 	}
 	return true
-}
-
-// AddRoles adds roles for a subject.
-// Deprecated: Use AddPolicies instead.
-func (m *casbinPolicyModifier) AddRoles(ctx context.Context, subject string, roles ...authz.RoleSpec) (bool, error) {
-	m.log.WithContext(ctx).Warn("AddRoles is deprecated, use AddPolicies with PolicySpec instead")
-	if len(roles) == 0 {
-		return false, nil
-	}
-	policies := make([]*authzv1.PolicySpec, len(roles))
-	for i, r := range roles {
-		policies[i] = &authzv1.PolicySpec{
-			Type:    "g",
-			Subject: subject,
-			Domain:  dto.StrPtr(r.Domain),
-			Roles:   []string{r.Role},
-			Effect:  dto.StrPtr("allow"),
-		}
-	}
-	return m.AddPolicies(ctx, policies...)
-}
-
-// RemoveRoles removes roles for a subject.
-// Deprecated: Use RemovePolicies instead.
-func (m *casbinPolicyModifier) RemoveRoles(ctx context.Context, subject string, roles ...authz.RoleSpec) (bool, error) {
-	m.log.WithContext(ctx).Warn("RemoveRoles is deprecated, use RemovePolicies with PolicySpec instead")
-	if len(roles) == 0 {
-		return m.RemovePolicies(ctx, &authzv1.PolicySpec{
-			Type:    "g",
-			Subject: subject,
-		})
-	}
-	changed := false
-	var firstErr error
-	for _, r := range roles {
-		c, err := m.RemovePolicies(ctx, &authzv1.PolicySpec{
-			Type:    "g",
-			Subject: subject,
-			Domain:  dto.StrPtr(r.Domain),
-			Roles:   []string{r.Role},
-		})
-		if err != nil && firstErr == nil {
-			firstErr = err
-		}
-		if c {
-			changed = true
-		}
-	}
-	if firstErr != nil {
-		return changed, firstErr
-	}
-	return changed, nil
-}
-
-// UpdateRole updates a role for a subject.
-// Deprecated: Use UpdatePolicies instead.
-func (m *casbinPolicyModifier) UpdateRole(ctx context.Context, subject string, oldRole authz.RoleSpec, newRole authz.RoleSpec) (bool, error) {
-	m.log.WithContext(ctx).Warn("UpdateRole is deprecated, use UpdatePolicies with PolicySpec instead")
-	oldPolicy := &authzv1.PolicySpec{
-		Type:    "g",
-		Subject: subject,
-		Domain:  dto.StrPtr(oldRole.Domain),
-		Roles:   []string{oldRole.Role},
-		Effect:  dto.StrPtr("allow"),
-	}
-	newPolicy := &authzv1.PolicySpec{
-		Type:    "g",
-		Subject: subject,
-		Domain:  dto.StrPtr(newRole.Domain),
-		Roles:   []string{newRole.Role},
-		Effect:  dto.StrPtr("allow"),
-	}
-	return m.UpdatePolicies(ctx, []*authzv1.PolicySpec{oldPolicy}, []*authzv1.PolicySpec{newPolicy})
-}
-
-// AddPermissions adds permissions for a subject.
-// Deprecated: Use AddPolicies instead.
-func (m *casbinPolicyModifier) AddPermissions(ctx context.Context, subject string, permissions ...authz.RuleSpec) (bool, error) {
-	m.log.WithContext(ctx).Warn("AddPermissions is deprecated, use AddPolicies with PolicySpec instead")
-	if len(permissions) == 0 {
-		return false, nil
-	}
-	policies := make([]*authzv1.PolicySpec, len(permissions))
-	for i, p := range permissions {
-		policies[i] = &authzv1.PolicySpec{
-			Type:      "p",
-			Subject:   subject,
-			Domain:    dto.StrPtr(p.Domain),
-			Resources: []string{p.Resource},
-			Actions:   []string{p.Action},
-			Effect:    dto.StrPtr("allow"),
-		}
-	}
-	return m.AddPolicies(ctx, policies...)
-}
-
-// RemovePermissions removes permissions for a subject.
-// Deprecated: Use RemovePolicies instead.
-func (m *casbinPolicyModifier) RemovePermissions(ctx context.Context, subject string, permissions ...authz.RuleSpec) (bool, error) {
-	m.log.WithContext(ctx).Warn("RemovePermissions is deprecated, use RemovePolicies with PolicySpec instead")
-	if len(permissions) == 0 {
-		return m.RemovePolicies(ctx, &authzv1.PolicySpec{
-			Type:    "p",
-			Subject: subject,
-		})
-	}
-	changed := false
-	var firstErr error
-	for _, p := range permissions {
-		c, err := m.RemovePolicies(ctx, &authzv1.PolicySpec{
-			Type:      "p",
-			Subject:   subject,
-			Domain:    dto.StrPtr(p.Domain),
-			Resources: []string{p.Resource},
-			Actions:   []string{p.Action},
-		})
-		if err != nil && firstErr == nil {
-			firstErr = err
-		}
-		if c {
-			changed = true
-		}
-	}
-	if firstErr != nil {
-		return changed, firstErr
-	}
-	return changed, nil
-}
-
-// UpdatePermission updates a permission for a subject.
-// Deprecated: Use UpdatePolicies instead.
-func (m *casbinPolicyModifier) UpdatePermission(ctx context.Context, subject string, oldPerm authz.RuleSpec, newPerm authz.RuleSpec) (bool, error) {
-	m.log.WithContext(ctx).Warn("UpdatePermission is deprecated, use UpdatePolicies with PolicySpec instead")
-	oldPolicy := &authzv1.PolicySpec{
-		Type:      "p",
-		Subject:   subject,
-		Domain:    dto.StrPtr(oldPerm.Domain),
-		Resources: []string{oldPerm.Resource},
-		Actions:   []string{oldPerm.Action},
-		Effect:    dto.StrPtr("allow"),
-	}
-	newPolicy := &authzv1.PolicySpec{
-		Type:      "p",
-		Subject:   subject,
-		Domain:    dto.StrPtr(newPerm.Domain),
-		Resources: []string{newPerm.Resource},
-		Actions:   []string{newPerm.Action},
-		Effect:    dto.StrPtr("allow"),
-	}
-	return m.UpdatePolicies(ctx, []*authzv1.PolicySpec{oldPolicy}, []*authzv1.PolicySpec{newPolicy})
 }

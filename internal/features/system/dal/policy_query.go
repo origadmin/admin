@@ -20,22 +20,22 @@ import (
 	"origadmin/application/admin/internal/features/system/dto"
 )
 
-// authorizationRepo implements the dto.AuthorizationRepo interface.
-type authorizationRepo struct {
+// policyQueryRepo implements the dto.PolicyQueryRepo interface.
+type policyQueryRepo struct {
 	db  *ent.Database
 	log *log.Helper
 }
 
-// NewAuthorizationRepo creates a new authorization repository.
-func NewAuthorizationRepo(database *ent.Database, logger log.Logger) dto.AuthorizationRepo {
-	return &authorizationRepo{
+// NewPolicyQueryRepo creates a new policyQuery repository.
+func NewPolicyQueryRepo(database *ent.Database, logger log.Logger) dto.PolicyRepo {
+	return &policyQueryRepo{
 		db:  database,
-		log: log.NewHelper(log.With(logger, "module", "dal.authorization")),
+		log: log.NewHelper(log.With(logger, "module", "dal.policy_query")),
 	}
 }
 
 // ListRolePermissions queries the role_permissions join table, converts entities to PB types, and returns them.
-func (r *authorizationRepo) ListRolePermissions(ctx context.Context) ([]*types.RolePermission, error) {
+func (r *policyQueryRepo) ListRolePermissions(ctx context.Context) ([]*types.RolePermission, error) {
 	// Query the explicit join table entity `RolePermission`.
 	// We need to eager-load Role, and Permission with its Resources.
 	rolePerms, err := r.db.RolePermission(ctx).Query().
@@ -68,7 +68,7 @@ func (r *authorizationRepo) ListRolePermissions(ctx context.Context) ([]*types.R
 }
 
 // ListRolePermissionsByRoleKeywords queries role-permission relations for a specific set of role keywords.
-func (r *authorizationRepo) ListRolePermissionsByRoleKeywords(ctx context.Context, roleKeywords ...string) ([]*types.RolePermission, error) {
+func (r *policyQueryRepo) ListRolePermissionsByRoleKeywords(ctx context.Context, roleKeywords ...string) ([]*types.RolePermission, error) {
 	r.log.WithContext(ctx).Infof("DAL: Querying role_permissions for keywords: %v", roleKeywords)
 	rolePerms, err := r.db.RolePermission(ctx).Query().
 		Where(rolepermission.HasRoleWith(role.KeywordIn(roleKeywords...))).
@@ -96,7 +96,7 @@ func (r *authorizationRepo) ListRolePermissionsByRoleKeywords(ctx context.Contex
 }
 
 // ListPermissions queries all permissions, converts entities to PB types, and returns them.
-func (r *authorizationRepo) ListPermissions(ctx context.Context) ([]*types.Permission, error) {
+func (r *policyQueryRepo) ListPermissions(ctx context.Context) ([]*types.Permission, error) {
 	// Eager-load resources as they contain the actual service/method info.
 	permissions, err := r.db.Permission(ctx).Query().WithResources().All(ctx)
 	if err != nil {
@@ -109,7 +109,7 @@ func (r *authorizationRepo) ListPermissions(ctx context.Context) ([]*types.Permi
 }
 
 // ListRolesByIDs queries roles by their IDs.
-func (r *authorizationRepo) ListRolesByIDs(ctx context.Context, ids ...int64) ([]*types.Role, error) {
+func (r *policyQueryRepo) ListRolesByIDs(ctx context.Context, ids ...int64) ([]*types.Role, error) {
 	if len(ids) == 0 {
 		return nil, nil
 	}
@@ -126,7 +126,7 @@ func (r *authorizationRepo) ListRolesByIDs(ctx context.Context, ids ...int64) ([
 }
 
 // ListPermissionsByIDs queries permissions by their IDs.
-func (r *authorizationRepo) ListPermissionsByIDs(ctx context.Context, ids ...int64) ([]*types.Permission, error) {
+func (r *policyQueryRepo) ListPermissionsByIDs(ctx context.Context, ids ...int64) ([]*types.Permission, error) {
 	if len(ids) == 0 {
 		return nil, nil
 	}
@@ -142,7 +142,7 @@ func (r *authorizationRepo) ListPermissionsByIDs(ctx context.Context, ids ...int
 }
 
 // ListUserRoles queries the user_roles join table, converts entities to PB types, and returns them.
-func (r *authorizationRepo) ListUserRoles(ctx context.Context) ([]*types.UserRole, error) {
+func (r *policyQueryRepo) ListUserRoles(ctx context.Context) ([]*types.UserRole, error) {
 	// Query the explicit join table entity `UserRole`.
 	userRoles, err := r.db.UserRole(ctx).Query().
 		WithUser(). // Eager-load the associated User.
@@ -163,7 +163,7 @@ func (r *authorizationRepo) ListUserRoles(ctx context.Context) ([]*types.UserRol
 }
 
 // ListAllPolicies retrieves all role permissions and user roles in a single, atomic operation.
-func (r *authorizationRepo) ListAllPolicies(ctx context.Context) ([]*types.RolePermission, []*types.UserRole, error) {
+func (r *policyQueryRepo) ListAllPolicies(ctx context.Context) ([]*types.RolePermission, []*types.UserRole, error) {
 	var rolePerms []*types.RolePermission
 	var userRoles []*types.UserRole
 
@@ -194,8 +194,8 @@ func (r *authorizationRepo) ListAllPolicies(ctx context.Context) ([]*types.RoleP
 }
 
 // ListPolicies queries policies from casbin_rule table and converts them to authzv1.PolicySpec format.
-// This implements the dto.AuthorizationRepo interface for providing policy data to other services.
-func (r *authorizationRepo) ListPolicies(ctx context.Context, req *system.ListPoliciesRequest) ([]*authzv1.PolicySpec, int32, error) {
+// This implements the dto.PolicyQueryRepo interface for providing policy data to other services.
+func (r *policyQueryRepo) ListPolicies(ctx context.Context, req *system.ListPoliciesRequest) ([]*authzv1.PolicySpec, int32, error) {
 	r.log.WithContext(ctx).Info("DAL: Listing policies from casbin_rule table")
 
 	// Build filter predicates
@@ -253,7 +253,7 @@ func (r *authorizationRepo) ListPolicies(ctx context.Context, req *system.ListPo
 }
 
 // casbinRuleToPolicySpec converts a Casbin rule to a PolicySpec.
-func (r *authorizationRepo) casbinRuleToPolicySpec(rule *ent.CasbinRule) *authzv1.PolicySpec {
+func (r *policyQueryRepo) casbinRuleToPolicySpec(rule *ent.CasbinRule) *authzv1.PolicySpec {
 	policy := &authzv1.PolicySpec{
 		Type:    rule.Ptype, // Directly use ptype: "p" or "g"
 		Subject: rule.V0,
@@ -290,7 +290,7 @@ func (r *authorizationRepo) casbinRuleToPolicySpec(rule *ent.CasbinRule) *authzv
 }
 
 // ListUserRolePermissions retrieves all role permissions and user roles in a single, atomic operation.
-func (r *authorizationRepo) ListUserRolePermissions(ctx context.Context) ([]*types.RolePermission, []*types.UserRole, error) {
+func (r *policyQueryRepo) ListUserRolePermissions(ctx context.Context) ([]*types.RolePermission, []*types.UserRole, error) {
 	var rolePerms []*types.RolePermission
 	var userRoles []*types.UserRole
 

@@ -122,19 +122,19 @@ func (User) Indexes() []ent.Index {
 			Unique().
 			StorageKey("idx_username_unique_not_deleted").
 			Annotations(
-				entsql.IndexWhere("deleted_at IS NULL"),
+				entsql.IndexWhere(fmt.Sprintf("%s IS NULL", mixin.SoftDeleteField)),
 			),
 		index.Fields("phone").
 			Unique().
 			StorageKey("idx_phone_unique_not_deleted").
 			Annotations(
-				entsql.IndexWhere("deleted_at IS NULL"),
+				entsql.IndexWhere(fmt.Sprintf("%s IS NULL", mixin.SoftDeleteField)),
 			),
 		index.Fields("email").
 			Unique().
 			StorageKey("idx_email_unique_not_deleted").
 			Annotations(
-				entsql.IndexWhere("deleted_at IS NULL"),
+				entsql.IndexWhere(fmt.Sprintf("%s IS NULL", mixin.SoftDeleteField)),
 			),
 		index.Fields("status"),
 	}

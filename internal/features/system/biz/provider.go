@@ -16,6 +16,6 @@ var ProviderSet = wire.NewSet(
 	NewUserUseCase,
 	NewPermissionUseCase,
 	NewViewUseCase,
-	NewAuthorizationUseCase,
-	NewPolicyUseCase,
+	NewPolicyQueryUseCase,
+	NewPolicySyncUseCase,
 )

@@ -19,7 +19,6 @@ var ProviderSet = wire.NewSet(
 	// Use only one of the following blocks.
 	//
 	// For direct database access:
-	wire.Bind(new(authz.PolicyReader), new(*policyDBProvider)),
 	NewPolicyDBProvider,
 	//
 	// For gRPC-based access:

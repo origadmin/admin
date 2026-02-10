@@ -8,13 +8,13 @@ import "security/authz/v1/authz.proto";
 
 option go_package = "origadmin/application/admin/api/v1/services/system;system";
 option java_multiple_files = true;
-option java_outer_classname = "APIServiceAuthorizationProto";
+option java_outer_classname = "APIServicePolicyQueryProto";
 option java_package = "com.origadmin.api.v1.services.system";
-option objc_class_prefix = "APIServiceAuthorization";
+option objc_class_prefix = "APIServicePolicyQuery";
 
-// AuthorizationService provides read access to authorization policies from casbin_rule table.
+// PolicyQueryService provides read access to authorization policies from casbin_rule table.
 // This service is consumed by other modules (like auth) to query policy data.
-service AuthorizationService {
+service PolicyQueryService {
   // ListPolicies retrieves authorization policies from casbin_rule table.
   // This is the ONLY data source interface for providing policy data to other services.
   rpc ListPolicies(ListPoliciesRequest) returns (ListPoliciesResponse) {

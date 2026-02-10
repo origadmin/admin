@@ -1365,11 +1365,9 @@ paths:
   /sys/policies/list:
     post:
       tags:
-        - AuthorizationService
-      description: |-
-        ListPolicies retrieves authorization policies from casbin_rule table.
-         This is the ONLY data source interface for providing policy data to other services.
-      operationId: AuthorizationService_ListPolicies
+        - PolicyQueryService
+      description: "ListPolicies retrieves authorization policies from casbin_rule table.\r\n This is the ONLY data source interface for providing policy data to other services."
+      operationId: PolicyQueryService_ListPolicies
       requestBody:
         content:
           application/json:
@@ -3259,9 +3257,7 @@ components:
             items:
               type: string
             description: Sort criteria (e.g., ["type", "-created_at"])
-        description: |-
-          ListPoliciesRequest specifies filter criteria for policy retrieval.
-           All fields are optional; omitted fields act as wildcards (match any value).
+        description: "ListPoliciesRequest specifies filter criteria for policy retrieval.\r\n All fields are optional; omitted fields act as wildcards (match any value)."
       api.v1.services.system.ListPoliciesResponse:
         type: object
         properties:
@@ -3285,9 +3281,7 @@ components:
           next_page_token:
             type: string
             description: Token to retrieve next page of results, or empty if there are no more results.
-        description: |-
-          ListPoliciesResponse contains authorization policies from casbin_rule table.
-           The policies are converted from casbin_rule format to authz.PolicySpec format.
+        description: "ListPoliciesResponse contains authorization policies from casbin_rule table.\r\n The policies are converted from casbin_rule format to authz.PolicySpec format."
         api.v1.services.system.ListResourcesResponse:
             type: object
             properties:
@@ -4288,18 +4282,14 @@ components:
 tags:
   - name: AdminService
     description: |-
-      AdminService provides administrative and operational endpoints for identity service.
-       These endpoints are intended for system administrators, operators, and for use in testing.
-  - name: AdminService
-    description: |-
       AdminService provides administrative and operational endpoints.
        Note: This service is a placeholder for future administrative features.
+  - name: AdminService
+    description: |-
+      AdminService provides administrative and operational endpoints for identity service.
+       These endpoints are intended for system administrators, operators, and for use in testing.
   - name: AuthService
     description: Service AuthService provides APIs for the identity lifecycle.
-  - name: AuthorizationService
-    description: |-
-      AuthorizationService provides read access to authorization policies from casbin_rule table.
-       This service is consumed by other modules (like auth) to query policy data.
     - name: DatastoreService
       description: |-
         DatastoreService provides file storage and data management capabilities.
@@ -4312,6 +4302,8 @@ tags:
     description: "NotificationService provides notification capabilities.\r\n Note: This service is not yet implemented, proto definitions are prepared for future use."
     - name: PermissionService
       description: The login service definition.
+  - name: PolicyQueryService
+    description: "PolicyQueryService provides read access to authorization policies from casbin_rule table.\r\n This service is consumed by other modules (like auth) to query policy data."
     - name: PositionService
       description: The organization position service definition.
     - name: ResourceService

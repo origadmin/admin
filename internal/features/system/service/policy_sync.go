@@ -13,31 +13,31 @@ import (
 	"origadmin/application/admin/internal/features/system/biz"
 )
 
-// PolicyService is an event handler that triggers policy synchronization.
+// PolicySyncHandler is an event handler that triggers policy synchronization.
 // It acts as a simple adapter between the messaging system and the business logic syncer.
 //
 // Policy Update Process:
 // 1. User permission tables are updated (users, roles, permissions, resources)
 // 2. Update notification is sent via message queue (NATS)
-// 3. PolicyService receives the notification
-// 4. PolicyService schedules a debounced policy sync
+// 3. PolicySyncHandler receives the notification
+// 4. PolicySyncHandler schedules a debounced policy sync
 // 5. PolicySyncer fetches data from URPR and writes to casbin_rule
 // 6. Watcher notifies other instances of policy changes
-type PolicyService struct {
-	syncer *biz.PolicyUseCase
+type PolicySyncHandler struct {
+	syncer *biz.PolicySyncUseCase
 	log    *log.Helper
 }
 
-// NewPolicyService creates a new PolicyService.
-func NewPolicyService(syncer *biz.PolicyUseCase, logger log.Logger) *PolicyService {
-	return &PolicyService{
+// NewPolicySyncHandler creates a new PolicySyncHandler.
+func NewPolicySyncHandler(syncer *biz.PolicySyncUseCase, logger log.Logger) *PolicySyncHandler {
+	return &PolicySyncHandler{
 		syncer: syncer,
 		log:    log.NewHelper(log.With(logger, "module", "system.service.policy_sync")),
 	}
 }
 
 // HandleUserRoleAssigned receives a notification and schedules a policy synchronization.
-func (s *PolicyService) HandleUserRoleAssigned(msg *message.Message) error {
+func (s *PolicySyncHandler) HandleUserRoleAssigned(msg *message.Message) error {
 	var event types.UserRoleAssignedEvent
 	if err := proto.Unmarshal(msg.Payload, &event); err != nil {
 		s.log.Errorf("Failed to unmarshal UserRoleAssignedEvent: %v", err)
@@ -50,7 +50,7 @@ func (s *PolicyService) HandleUserRoleAssigned(msg *message.Message) error {
 }
 
 // HandleRolePolicyChanged receives a notification and schedules a policy synchronization.
-func (s *PolicyService) HandleRolePolicyChanged(msg *message.Message) error {
+func (s *PolicySyncHandler) HandleRolePolicyChanged(msg *message.Message) error {
 	var event types.RolePolicyChangedEvent
 	if err := proto.Unmarshal(msg.Payload, &event); err != nil {
 		s.log.Errorf("Failed to unmarshal RolePolicyChangedEvent: %v", err)

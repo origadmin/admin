@@ -4,12 +4,26 @@
 
 package dto
 
-// PolicyRepo defines the interface for retrieving authorization policies.
-// This abstraction allows switching between different implementations:
-// - Direct database access (when databases are shared)
-// - gRPC calls to system service (when databases are separated)
-//
-// PolicyRepo is used by PolicySyncer to fetch source data
-// for synchronizing the casbin_rule database with URPR data.
+import (
+	"context"
+
+	authzv1 "github.com/origadmin/contrib/api/gen/go/security/authz/v1"
+	"origadmin/application/admin/api/v1/services/system"
+	"origadmin/application/admin/api/v1/services/types"
+)
+
+// PolicyRepo defines the data access interface for authorization policies.
+// It provides methods to read policies from casbin_rule table and convert them to PolicySpec format.
 type PolicyRepo interface {
+	// ListPolicies queries policies from casbin_rule table with filter criteria.
+	// Returns policies in authzv1.PolicySpec format converted from casbin_rule.
+	ListPolicies(ctx context.Context, req *system.ListPoliciesRequest) ([]*authzv1.PolicySpec, int32, error)
+
+	ListRolePermissions(ctx context.Context) ([]*types.RolePermission, error)
+	ListRolePermissionsByRoleKeywords(ctx context.Context, roleKeywords ...string) ([]*types.RolePermission, error)
+	ListPermissions(ctx context.Context) ([]*types.Permission, error)
+	ListRolesByIDs(ctx context.Context, ids ...int64) ([]*types.Role, error)
+	ListPermissionsByIDs(ctx context.Context, ids ...int64) ([]*types.Permission, error)
+	ListUserRoles(ctx context.Context) ([]*types.UserRole, error)
+	ListUserRolePermissions(ctx context.Context) ([]*types.RolePermission, []*types.UserRole, error)
 }

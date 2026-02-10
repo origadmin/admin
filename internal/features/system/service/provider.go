@@ -19,10 +19,10 @@ var ProviderSet = wire.NewSet(
 	NewPermissionService,
 	NewViewService,
 	NewSystemService,
-	NewAuthorizationService,
 	NewPolicyBootstrap,
-	NewPolicyService,
+	NewPolicySyncHandler,  // This is for the event handler
+	NewPolicyQueryService, // This is for the API service
 
 	// Bind the concrete implementation to the proto-defined interface.
-	wire.Bind(new(systemv1.AuthorizationServiceServer), new(*AuthorizationService)),
+	wire.Bind(new(systemv1.PolicyQueryServiceServer), new(*PolicyQueryService)),
 )

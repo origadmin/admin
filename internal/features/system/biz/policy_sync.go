@@ -110,9 +110,9 @@ func WithPagination(page, pageSize int) PolicyOption {
 	}
 }
 
-// PolicyUseCase is responsible for synchronizing policies from a PolicyProvider to a PolicyModifier.
-type PolicyUseCase struct {
-	repo      dto.AuthorizationRepo
+// PolicySyncUseCase is responsible for synchronizing policies from a PolicyProvider to a PolicyModifier.
+type PolicySyncUseCase struct {
+	repo      dto.PolicyRepo
 	modifier  authz.PolicyModifier
 	reloader  authz.Reloader
 	log       *log.Helper
@@ -126,9 +126,9 @@ type PolicyUseCase struct {
 	failedSyncs      atomic.Int64
 }
 
-// NewPolicyUseCase creates a new PolicyUseCase.
-func NewPolicyUseCase(repo dto.AuthorizationRepo, modifier authz.PolicyModifier, authorizer authz.Authorizer, watcher persist.Watcher, debouncer debounce.Executor, logger log.Logger) *PolicyUseCase {
-	logHelper := log.NewHelper(log.With(logger, "module", "system.biz.policy_syncer"))
+// NewPolicySyncUseCase creates a new PolicySyncUseCase.
+func NewPolicySyncUseCase(repo dto.PolicyRepo, modifier authz.PolicyModifier, authorizer authz.Authorizer, watcher persist.Watcher, debouncer debounce.Executor, logger log.Logger) *PolicySyncUseCase {
+	logHelper := log.NewHelper(log.With(logger, "module", "system.biz.policy_sync"))
 
 	var reloader authz.Reloader
 
@@ -150,7 +150,7 @@ func NewPolicyUseCase(repo dto.AuthorizationRepo, modifier authz.PolicyModifier,
 		reloader = directReloader
 	}
 
-	return &PolicyUseCase{
+	return &PolicySyncUseCase{
 		repo:      repo,
 		modifier:  modifier,
 		reloader:  reloader,
@@ -186,7 +186,7 @@ type noopReloader struct{}
 func (r noopReloader) Reload(force bool) error { return nil }
 
 // ScheduleSync schedules a delayed full synchronization with debounce logic.
-func (s *PolicyUseCase) ScheduleSync() {
+func (s *PolicySyncUseCase) ScheduleSync() {
 	s.totalEvents.Add(1)
 	s.log.Debugf("Policy sync event received, scheduling execution.")
 	s.debouncer.Schedule(s.syncAndReload)
@@ -196,7 +196,7 @@ func (s *PolicyUseCase) ScheduleSync() {
 // Use this for:
 // - Application startup initialization
 // - Manual trigger from admin panel
-func (s *PolicyUseCase) SyncNow(ctx context.Context) error {
+func (s *PolicySyncUseCase) SyncNow(ctx context.Context) error {
 	s.log.Info("Executing immediate policy sync")
 	s.debouncer.Cancel()
 	s.syncAndReload()
@@ -204,7 +204,7 @@ func (s *PolicyUseCase) SyncNow(ctx context.Context) error {
 }
 
 // syncAndReload performs a full synchronization and then triggers a reload.
-func (s *PolicyUseCase) syncAndReload() {
+func (s *PolicySyncUseCase) syncAndReload() {
 	s.log.Info("Executing full policy synchronization and reload...")
 	start := time.Now()
 	ctx := context.Background()
@@ -229,7 +229,7 @@ func (s *PolicyUseCase) syncAndReload() {
 }
 
 // GetMetrics returns the current status and metrics of the syncer.
-func (s *PolicyUseCase) GetMetrics() *identityv1.PolicySyncStatusResponse {
+func (s *PolicySyncUseCase) GetMetrics() *identityv1.PolicySyncStatusResponse {
 	pending := s.debouncer.IsPending()
 	lastTime, _ := s.lastSyncTime.Load().(time.Time)
 	var lastTimeProto *timestamppb.Timestamp
@@ -259,7 +259,7 @@ func (s *PolicyUseCase) GetMetrics() *identityv1.PolicySyncStatusResponse {
 }
 
 // sync performs a full, destructive synchronization of policies.
-func (s *PolicyUseCase) sync(ctx context.Context) error {
+func (s *PolicySyncUseCase) sync(ctx context.Context) error {
 	s.log.WithContext(ctx).Info("Starting full policy database synchronization...")
 
 	// Fetch all policies from the repository (URPR tables)

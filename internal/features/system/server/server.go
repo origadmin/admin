@@ -34,7 +34,7 @@ func NewServers(
 	app *runtime.App,
 	cfg *transportv1.Servers,
 	svc *service.SystemService,
-	policySyncSvc *service.PolicyService,
+	policySyncHdl *service.PolicySyncHandler,
 	middlewareProvider container.ServerMiddlewareProvider,
 ) ([]transport.Server, error) {
 	if cfg == nil {
@@ -60,7 +60,7 @@ func NewServers(
 			}
 			transportServers = append(transportServers, srv)
 		case "watermill":
-			srv, err := NewWatermillServer(app, serverCfg.GetWatermill(), policySyncSvc)
+			srv, err := NewWatermillServer(app, serverCfg.GetWatermill(), policySyncHdl)
 			if err != nil {
 				return nil, err
 			}
@@ -131,7 +131,7 @@ func NewGRPCServer(_ *runtime.App, cfg *grpcv1.Server, svc *service.SystemServic
 	systemv1.RegisterPermissionServiceServer(srv, svc.Permission)
 	systemv1.RegisterResourceServiceServer(srv, svc.Resource)
 	systemv1.RegisterViewServiceServer(srv, svc.View)
-	systemv1.RegisterAuthorizationServiceServer(srv, svc.Authorization)
+	systemv1.RegisterPolicyQueryServiceServer(srv, svc.PolicyQuery)
 
 	return srv, nil
 }
@@ -140,7 +140,7 @@ func NewGRPCServer(_ *runtime.App, cfg *grpcv1.Server, svc *service.SystemServic
 func NewWatermillServer(
 	app *runtime.App,
 	cfg *watermillv1.Watermill,
-	policySyncSvc *service.PolicyService,
+	policySyncHdl *service.PolicySyncHandler,
 ) (transport.Server, error) {
 	if cfg == nil {
 		return nil, errors.New("watermill config is nil")
@@ -156,14 +156,14 @@ func NewWatermillServer(
 	srv.AddConsumerHandler(
 		"PolicySyncUserRoleChanged",
 		broker.UserRoleAssignedTopic,
-		policySyncSvc.HandleUserRoleAssigned,
+		policySyncHdl.HandleUserRoleAssigned,
 	)
 
 	// Register the policy sync handler for role-permission changes.
 	srv.AddConsumerHandler(
 		"PolicySyncRolePolicyChanged",
 		broker.RolePolicyChangedTopic,
-		policySyncSvc.HandleRolePolicyChanged,
+		policySyncHdl.HandleRolePolicyChanged,
 	)
 
 	logger.Info("System Watermill server and policy sync handlers initialized.")

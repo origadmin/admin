@@ -16,12 +16,12 @@ import (
 // policyGRPCProvider implements authz.PolicyReader using gRPC calls to the system service.
 // This is used when identity and system services have separate databases.
 type policyGRPCProvider struct {
-	client systemv1.AuthorizationServiceClient
+	client systemv1.PolicyQueryServiceClient
 	log    *log.Helper
 }
 
 // NewPolicyGRPCProvider creates a PolicyReader that uses gRPC calls to the system service.
-func NewPolicyGRPCProvider(client systemv1.AuthorizationServiceClient, logger log.Logger) authz.PolicyReader {
+func NewPolicyGRPCProvider(client systemv1.PolicyQueryServiceClient, logger log.Logger) authz.PolicyReader {
 	return &policyGRPCProvider{
 		client: client,
 		log:    log.NewHelper(log.With(logger, "module", "dal.policy_grpc")),

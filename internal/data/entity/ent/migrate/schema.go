@@ -524,7 +524,7 @@ var (
 				Unique:  true,
 				Columns: []*schema.Column{SysUsersColumns[8]},
 				Annotation: &entsql.IndexAnnotation{
-					Where: "deleted_at IS NULL",
+					Where: "delete_time IS NULL",
 				},
 			},
 			{
@@ -532,7 +532,7 @@ var (
 				Unique:  true,
 				Columns: []*schema.Column{SysUsersColumns[15]},
 				Annotation: &entsql.IndexAnnotation{
-					Where: "deleted_at IS NULL",
+					Where: "delete_time IS NULL",
 				},
 			},
 			{
@@ -540,7 +540,7 @@ var (
 				Unique:  true,
 				Columns: []*schema.Column{SysUsersColumns[16]},
 				Annotation: &entsql.IndexAnnotation{
-					Where: "deleted_at IS NULL",
+					Where: "delete_time IS NULL",
 				},
 			},
 			{

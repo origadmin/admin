@@ -12,23 +12,23 @@ import (
 	"origadmin/application/admin/internal/features/system/dto"
 )
 
-// AuthorizationUseCase is the use case for authorization policy management.
-type AuthorizationUseCase struct {
-	repo dto.AuthorizationRepo
+// PolicyQueryUseCase is the use case for querying authorization policies.
+type PolicyQueryUseCase struct {
+	repo dto.PolicyRepo
 	log  *log.Helper
 }
 
-// NewAuthorizationUseCase creates a new AuthorizationUseCase.
-func NewAuthorizationUseCase(repo dto.AuthorizationRepo, logger log.Logger) *AuthorizationUseCase {
-	return &AuthorizationUseCase{
+// NewPolicyQueryUseCase creates a new PolicyQueryUseCase.
+func NewPolicyQueryUseCase(repo dto.PolicyRepo, logger log.Logger) *PolicyQueryUseCase {
+	return &PolicyQueryUseCase{
 		repo: repo,
-		log:  log.NewHelper(log.With(logger, "module", "biz.authorization")),
+		log:  log.NewHelper(log.With(logger, "module", "biz.policy_query")),
 	}
 }
 
 // ListPolicies fetches, processes, and returns authorization policies from casbin_rule table.
-func (uc *AuthorizationUseCase) ListPolicies(ctx context.Context, req *systemv1.ListPoliciesRequest) (*systemv1.ListPoliciesResponse, error) {
-	uc.log.WithContext(ctx).Info("Listing policies from casbin_rule")
+func (uc *PolicyQueryUseCase) ListPolicies(ctx context.Context, req *systemv1.ListPoliciesRequest) (*systemv1.ListPoliciesResponse, error) {
+	uc.log.WithContext(ctx).Info("Querying policies from casbin_rule")
 
 	policies, total, err := uc.repo.ListPolicies(ctx, req)
 	if err != nil {

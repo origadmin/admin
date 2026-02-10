@@ -22,12 +22,12 @@ const (
 
 // PolicyBootstrap is responsible for bootstrapping authorization policies at service startup.
 type PolicyBootstrap struct {
-	syncer *biz.PolicyUseCase
+	syncer *biz.PolicySyncUseCase
 	log    *log.Helper
 }
 
 // NewPolicyBootstrap creates a new PolicyBootstrap instance.
-func NewPolicyBootstrap(syncer *biz.PolicyUseCase, logger log.Logger) *PolicyBootstrap {
+func NewPolicyBootstrap(syncer *biz.PolicySyncUseCase, logger log.Logger) *PolicyBootstrap {
 	return &PolicyBootstrap{
 		syncer: syncer,
 		log:    log.NewHelper(log.With(logger, "module", "system.service.policy_bootstrap")),
