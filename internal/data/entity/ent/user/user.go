@@ -3,7 +3,6 @@
 package user
 
 import (
-	"fmt"
 	"origadmin/application/admin/internal/data/enums"
 	"time"
 
@@ -33,14 +32,6 @@ const (
 	FieldAllowedIP = "allowed_ip"
 	// FieldUsername holds the string denoting the username field in the database.
 	FieldUsername = "username"
-	// FieldNickname holds the string denoting the nickname field in the database.
-	FieldNickname = "nickname"
-	// FieldAvatar holds the string denoting the avatar field in the database.
-	FieldAvatar = "avatar"
-	// FieldName holds the string denoting the name field in the database.
-	FieldName = "name"
-	// FieldGender holds the string denoting the gender field in the database.
-	FieldGender = "gender"
 	// FieldEncryptedPassword holds the string denoting the encrypted_password field in the database.
 	FieldEncryptedPassword = "encrypted_password"
 	// FieldSalt holds the string denoting the salt field in the database.
@@ -49,10 +40,6 @@ const (
 	FieldPhone = "phone"
 	// FieldEmail holds the string denoting the email field in the database.
 	FieldEmail = "email"
-	// FieldDepartment holds the string denoting the department field in the database.
-	FieldDepartment = "department"
-	// FieldRemark holds the string denoting the remark field in the database.
-	FieldRemark = "remark"
 	// FieldToken holds the string denoting the token field in the database.
 	FieldToken = "token"
 	// FieldStatus holds the string denoting the status field in the database.
@@ -69,6 +56,10 @@ const (
 	FieldLoginTime = "login_time"
 	// FieldSanctionDate holds the string denoting the sanction_date field in the database.
 	FieldSanctionDate = "sanction_date"
+	// EdgeProfile holds the string denoting the profile edge name in mutations.
+	EdgeProfile = "profile"
+	// EdgeSetting holds the string denoting the setting edge name in mutations.
+	EdgeSetting = "setting"
 	// EdgeRoles holds the string denoting the roles edge name in mutations.
 	EdgeRoles = "roles"
 	// EdgePositions holds the string denoting the positions edge name in mutations.
@@ -83,6 +74,20 @@ const (
 	EdgeUserDepartments = "user_departments"
 	// Table holds the table name of the user in the database.
 	Table = "sys_users"
+	// ProfileTable is the table that holds the profile relation/edge.
+	ProfileTable = "sys_user_profiles"
+	// ProfileInverseTable is the table name for the UserProfile entity.
+	// It exists in this package in order to avoid circular dependency with the "userprofile" package.
+	ProfileInverseTable = "sys_user_profiles"
+	// ProfileColumn is the table column denoting the profile relation/edge.
+	ProfileColumn = "user_profile"
+	// SettingTable is the table that holds the setting relation/edge.
+	SettingTable = "sys_user_settings"
+	// SettingInverseTable is the table name for the UserSetting entity.
+	// It exists in this package in order to avoid circular dependency with the "usersetting" package.
+	SettingInverseTable = "sys_user_settings"
+	// SettingColumn is the table column denoting the setting relation/edge.
+	SettingColumn = "user_setting"
 	// RolesTable is the table that holds the roles relation/edge. The primary key declared below.
 	RolesTable = "sys_user_roles"
 	// RolesInverseTable is the table name for the Role entity.
@@ -132,15 +137,9 @@ var Columns = []string{
 	FieldUUID,
 	FieldAllowedIP,
 	FieldUsername,
-	FieldNickname,
-	FieldAvatar,
-	FieldName,
-	FieldGender,
 	FieldEncryptedPassword,
 	FieldPhone,
 	FieldEmail,
-	FieldDepartment,
-	FieldRemark,
 	FieldToken,
 	FieldStatus,
 	FieldIsSystem,
@@ -198,18 +197,6 @@ var (
 	DefaultAllowedIP string
 	// UsernameValidator is a validator for the "username" field. It is called by the builders before save.
 	UsernameValidator func(string) error
-	// DefaultNickname holds the default value on creation for the "nickname" field.
-	DefaultNickname string
-	// NicknameValidator is a validator for the "nickname" field. It is called by the builders before save.
-	NicknameValidator func(string) error
-	// DefaultAvatar holds the default value on creation for the "avatar" field.
-	DefaultAvatar string
-	// AvatarValidator is a validator for the "avatar" field. It is called by the builders before save.
-	AvatarValidator func(string) error
-	// DefaultName holds the default value on creation for the "name" field.
-	DefaultName string
-	// NameValidator is a validator for the "name" field. It is called by the builders before save.
-	NameValidator func(string) error
 	// DefaultEncryptedPassword holds the default value on creation for the "encrypted_password" field.
 	DefaultEncryptedPassword string
 	// EncryptedPasswordValidator is a validator for the "encrypted_password" field. It is called by the builders before save.
@@ -226,14 +213,6 @@ var (
 	DefaultEmail string
 	// EmailValidator is a validator for the "email" field. It is called by the builders before save.
 	EmailValidator func(string) error
-	// DefaultDepartment holds the default value on creation for the "department" field.
-	DefaultDepartment string
-	// DepartmentValidator is a validator for the "department" field. It is called by the builders before save.
-	DepartmentValidator func(string) error
-	// DefaultRemark holds the default value on creation for the "remark" field.
-	DefaultRemark string
-	// RemarkValidator is a validator for the "remark" field. It is called by the builders before save.
-	RemarkValidator func(string) error
 	// DefaultToken holds the default value on creation for the "token" field.
 	DefaultToken string
 	// TokenValidator is a validator for the "token" field. It is called by the builders before save.
@@ -259,33 +238,6 @@ var (
 	// IDValidator is a validator for the "id" field. It is called by the builders before save.
 	IDValidator func(int64) error
 )
-
-// Gender defines the type for the "gender" enum field.
-type Gender string
-
-// GenderUnknown is the default value of the Gender enum.
-const DefaultGender = GenderUnknown
-
-// Gender values.
-const (
-	GenderMale    Gender = "male"
-	GenderFemale  Gender = "female"
-	GenderUnknown Gender = "unknown"
-)
-
-func (ge Gender) String() string {
-	return string(ge)
-}
-
-// GenderValidator is a validator for the "gender" field enum values. It is called by the builders before save.
-func GenderValidator(ge Gender) error {
-	switch ge {
-	case GenderMale, GenderFemale, GenderUnknown:
-		return nil
-	default:
-		return fmt.Errorf("user: invalid enum value for gender field: %q", ge)
-	}
-}
 
 // OrderOption defines the ordering options for the User queries.
 type OrderOption func(*sql.Selector)
@@ -335,26 +287,6 @@ func ByUsername(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldUsername, opts...).ToFunc()
 }
 
-// ByNickname orders the results by the nickname field.
-func ByNickname(opts ...sql.OrderTermOption) OrderOption {
-	return sql.OrderByField(FieldNickname, opts...).ToFunc()
-}
-
-// ByAvatar orders the results by the avatar field.
-func ByAvatar(opts ...sql.OrderTermOption) OrderOption {
-	return sql.OrderByField(FieldAvatar, opts...).ToFunc()
-}
-
-// ByName orders the results by the name field.
-func ByName(opts ...sql.OrderTermOption) OrderOption {
-	return sql.OrderByField(FieldName, opts...).ToFunc()
-}
-
-// ByGender orders the results by the gender field.
-func ByGender(opts ...sql.OrderTermOption) OrderOption {
-	return sql.OrderByField(FieldGender, opts...).ToFunc()
-}
-
 // ByEncryptedPassword orders the results by the encrypted_password field.
 func ByEncryptedPassword(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldEncryptedPassword, opts...).ToFunc()
@@ -373,16 +305,6 @@ func ByPhone(opts ...sql.OrderTermOption) OrderOption {
 // ByEmail orders the results by the email field.
 func ByEmail(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldEmail, opts...).ToFunc()
-}
-
-// ByDepartment orders the results by the department field.
-func ByDepartment(opts ...sql.OrderTermOption) OrderOption {
-	return sql.OrderByField(FieldDepartment, opts...).ToFunc()
-}
-
-// ByRemark orders the results by the remark field.
-func ByRemark(opts ...sql.OrderTermOption) OrderOption {
-	return sql.OrderByField(FieldRemark, opts...).ToFunc()
 }
 
 // ByToken orders the results by the token field.
@@ -423,6 +345,20 @@ func ByLoginTime(opts ...sql.OrderTermOption) OrderOption {
 // BySanctionDate orders the results by the sanction_date field.
 func BySanctionDate(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldSanctionDate, opts...).ToFunc()
+}
+
+// ByProfileField orders the results by profile field.
+func ByProfileField(field string, opts ...sql.OrderTermOption) OrderOption {
+	return func(s *sql.Selector) {
+		sqlgraph.OrderByNeighborTerms(s, newProfileStep(), sql.OrderByField(field, opts...))
+	}
+}
+
+// BySettingField orders the results by setting field.
+func BySettingField(field string, opts ...sql.OrderTermOption) OrderOption {
+	return func(s *sql.Selector) {
+		sqlgraph.OrderByNeighborTerms(s, newSettingStep(), sql.OrderByField(field, opts...))
+	}
 }
 
 // ByRolesCount orders the results by roles count.
@@ -507,6 +443,20 @@ func ByUserDepartments(term sql.OrderTerm, terms ...sql.OrderTerm) OrderOption {
 	return func(s *sql.Selector) {
 		sqlgraph.OrderByNeighborTerms(s, newUserDepartmentsStep(), append([]sql.OrderTerm{term}, terms...)...)
 	}
+}
+func newProfileStep() *sqlgraph.Step {
+	return sqlgraph.NewStep(
+		sqlgraph.From(Table, FieldID),
+		sqlgraph.To(ProfileInverseTable, FieldID),
+		sqlgraph.Edge(sqlgraph.O2O, false, ProfileTable, ProfileColumn),
+	)
+}
+func newSettingStep() *sqlgraph.Step {
+	return sqlgraph.NewStep(
+		sqlgraph.From(Table, FieldID),
+		sqlgraph.To(SettingInverseTable, FieldID),
+		sqlgraph.Edge(sqlgraph.O2O, false, SettingTable, SettingColumn),
+	)
 }
 func newRolesStep() *sqlgraph.Step {
 	return sqlgraph.NewStep(

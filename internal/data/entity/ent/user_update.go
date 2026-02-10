@@ -13,7 +13,9 @@ import (
 	"origadmin/application/admin/internal/data/entity/ent/user"
 	"origadmin/application/admin/internal/data/entity/ent/userdepartment"
 	"origadmin/application/admin/internal/data/entity/ent/userposition"
+	"origadmin/application/admin/internal/data/entity/ent/userprofile"
 	"origadmin/application/admin/internal/data/entity/ent/userrole"
+	"origadmin/application/admin/internal/data/entity/ent/usersetting"
 	"origadmin/application/admin/internal/data/enums"
 	"time"
 
@@ -131,62 +133,6 @@ func (_u *UserUpdate) SetNillableUsername(v *string) *UserUpdate {
 	return _u
 }
 
-// SetNickname sets the "nickname" field.
-func (_u *UserUpdate) SetNickname(v string) *UserUpdate {
-	_u.mutation.SetNickname(v)
-	return _u
-}
-
-// SetNillableNickname sets the "nickname" field if the given value is not nil.
-func (_u *UserUpdate) SetNillableNickname(v *string) *UserUpdate {
-	if v != nil {
-		_u.SetNickname(*v)
-	}
-	return _u
-}
-
-// SetAvatar sets the "avatar" field.
-func (_u *UserUpdate) SetAvatar(v string) *UserUpdate {
-	_u.mutation.SetAvatar(v)
-	return _u
-}
-
-// SetNillableAvatar sets the "avatar" field if the given value is not nil.
-func (_u *UserUpdate) SetNillableAvatar(v *string) *UserUpdate {
-	if v != nil {
-		_u.SetAvatar(*v)
-	}
-	return _u
-}
-
-// SetName sets the "name" field.
-func (_u *UserUpdate) SetName(v string) *UserUpdate {
-	_u.mutation.SetName(v)
-	return _u
-}
-
-// SetNillableName sets the "name" field if the given value is not nil.
-func (_u *UserUpdate) SetNillableName(v *string) *UserUpdate {
-	if v != nil {
-		_u.SetName(*v)
-	}
-	return _u
-}
-
-// SetGender sets the "gender" field.
-func (_u *UserUpdate) SetGender(v user.Gender) *UserUpdate {
-	_u.mutation.SetGender(v)
-	return _u
-}
-
-// SetNillableGender sets the "gender" field if the given value is not nil.
-func (_u *UserUpdate) SetNillableGender(v *user.Gender) *UserUpdate {
-	if v != nil {
-		_u.SetGender(*v)
-	}
-	return _u
-}
-
 // SetEncryptedPassword sets the "encrypted_password" field.
 func (_u *UserUpdate) SetEncryptedPassword(v string) *UserUpdate {
 	_u.mutation.SetEncryptedPassword(v)
@@ -239,34 +185,6 @@ func (_u *UserUpdate) SetEmail(v string) *UserUpdate {
 func (_u *UserUpdate) SetNillableEmail(v *string) *UserUpdate {
 	if v != nil {
 		_u.SetEmail(*v)
-	}
-	return _u
-}
-
-// SetDepartment sets the "department" field.
-func (_u *UserUpdate) SetDepartment(v string) *UserUpdate {
-	_u.mutation.SetDepartment(v)
-	return _u
-}
-
-// SetNillableDepartment sets the "department" field if the given value is not nil.
-func (_u *UserUpdate) SetNillableDepartment(v *string) *UserUpdate {
-	if v != nil {
-		_u.SetDepartment(*v)
-	}
-	return _u
-}
-
-// SetRemark sets the "remark" field.
-func (_u *UserUpdate) SetRemark(v string) *UserUpdate {
-	_u.mutation.SetRemark(v)
-	return _u
-}
-
-// SetNillableRemark sets the "remark" field if the given value is not nil.
-func (_u *UserUpdate) SetNillableRemark(v *string) *UserUpdate {
-	if v != nil {
-		_u.SetRemark(*v)
 	}
 	return _u
 }
@@ -396,6 +314,44 @@ func (_u *UserUpdate) ClearSanctionDate() *UserUpdate {
 	return _u
 }
 
+// SetProfileID sets the "profile" edge to the UserProfile entity by ID.
+func (_u *UserUpdate) SetProfileID(id int64) *UserUpdate {
+	_u.mutation.SetProfileID(id)
+	return _u
+}
+
+// SetNillableProfileID sets the "profile" edge to the UserProfile entity by ID if the given value is not nil.
+func (_u *UserUpdate) SetNillableProfileID(id *int64) *UserUpdate {
+	if id != nil {
+		_u = _u.SetProfileID(*id)
+	}
+	return _u
+}
+
+// SetProfile sets the "profile" edge to the UserProfile entity.
+func (_u *UserUpdate) SetProfile(v *UserProfile) *UserUpdate {
+	return _u.SetProfileID(v.ID)
+}
+
+// SetSettingID sets the "setting" edge to the UserSetting entity by ID.
+func (_u *UserUpdate) SetSettingID(id int64) *UserUpdate {
+	_u.mutation.SetSettingID(id)
+	return _u
+}
+
+// SetNillableSettingID sets the "setting" edge to the UserSetting entity by ID if the given value is not nil.
+func (_u *UserUpdate) SetNillableSettingID(id *int64) *UserUpdate {
+	if id != nil {
+		_u = _u.SetSettingID(*id)
+	}
+	return _u
+}
+
+// SetSetting sets the "setting" edge to the UserSetting entity.
+func (_u *UserUpdate) SetSetting(v *UserSetting) *UserUpdate {
+	return _u.SetSettingID(v.ID)
+}
+
 // AddRoleIDs adds the "roles" edge to the Role entity by IDs.
 func (_u *UserUpdate) AddRoleIDs(ids ...int64) *UserUpdate {
 	_u.mutation.AddRoleIDs(ids...)
@@ -489,6 +445,18 @@ func (_u *UserUpdate) AddUserDepartments(v ...*UserDepartment) *UserUpdate {
 // Mutation returns the UserMutation object of the builder.
 func (_u *UserUpdate) Mutation() *UserMutation {
 	return _u.mutation
+}
+
+// ClearProfile clears the "profile" edge to the UserProfile entity.
+func (_u *UserUpdate) ClearProfile() *UserUpdate {
+	_u.mutation.ClearProfile()
+	return _u
+}
+
+// ClearSetting clears the "setting" edge to the UserSetting entity.
+func (_u *UserUpdate) ClearSetting() *UserUpdate {
+	_u.mutation.ClearSetting()
+	return _u
 }
 
 // ClearRoles clears all "roles" edges to the Role entity.
@@ -671,26 +639,6 @@ func (_u *UserUpdate) check() error {
 			return &ValidationError{Name: "username", err: fmt.Errorf(`ent: validator failed for field "User.username": %w`, err)}
 		}
 	}
-	if v, ok := _u.mutation.Nickname(); ok {
-		if err := user.NicknameValidator(v); err != nil {
-			return &ValidationError{Name: "nickname", err: fmt.Errorf(`ent: validator failed for field "User.nickname": %w`, err)}
-		}
-	}
-	if v, ok := _u.mutation.Avatar(); ok {
-		if err := user.AvatarValidator(v); err != nil {
-			return &ValidationError{Name: "avatar", err: fmt.Errorf(`ent: validator failed for field "User.avatar": %w`, err)}
-		}
-	}
-	if v, ok := _u.mutation.Name(); ok {
-		if err := user.NameValidator(v); err != nil {
-			return &ValidationError{Name: "name", err: fmt.Errorf(`ent: validator failed for field "User.name": %w`, err)}
-		}
-	}
-	if v, ok := _u.mutation.Gender(); ok {
-		if err := user.GenderValidator(v); err != nil {
-			return &ValidationError{Name: "gender", err: fmt.Errorf(`ent: validator failed for field "User.gender": %w`, err)}
-		}
-	}
 	if v, ok := _u.mutation.EncryptedPassword(); ok {
 		if err := user.EncryptedPasswordValidator(v); err != nil {
 			return &ValidationError{Name: "encrypted_password", err: fmt.Errorf(`ent: validator failed for field "User.encrypted_password": %w`, err)}
@@ -709,16 +657,6 @@ func (_u *UserUpdate) check() error {
 	if v, ok := _u.mutation.Email(); ok {
 		if err := user.EmailValidator(v); err != nil {
 			return &ValidationError{Name: "email", err: fmt.Errorf(`ent: validator failed for field "User.email": %w`, err)}
-		}
-	}
-	if v, ok := _u.mutation.Department(); ok {
-		if err := user.DepartmentValidator(v); err != nil {
-			return &ValidationError{Name: "department", err: fmt.Errorf(`ent: validator failed for field "User.department": %w`, err)}
-		}
-	}
-	if v, ok := _u.mutation.Remark(); ok {
-		if err := user.RemarkValidator(v); err != nil {
-			return &ValidationError{Name: "remark", err: fmt.Errorf(`ent: validator failed for field "User.remark": %w`, err)}
 		}
 	}
 	if v, ok := _u.mutation.Token(); ok {
@@ -787,18 +725,6 @@ func (_u *UserUpdate) sqlSave(ctx context.Context) (_node int, err error) {
 	if value, ok := _u.mutation.Username(); ok {
 		_spec.SetField(user.FieldUsername, field.TypeString, value)
 	}
-	if value, ok := _u.mutation.Nickname(); ok {
-		_spec.SetField(user.FieldNickname, field.TypeString, value)
-	}
-	if value, ok := _u.mutation.Avatar(); ok {
-		_spec.SetField(user.FieldAvatar, field.TypeString, value)
-	}
-	if value, ok := _u.mutation.Name(); ok {
-		_spec.SetField(user.FieldName, field.TypeString, value)
-	}
-	if value, ok := _u.mutation.Gender(); ok {
-		_spec.SetField(user.FieldGender, field.TypeEnum, value)
-	}
 	if value, ok := _u.mutation.EncryptedPassword(); ok {
 		_spec.SetField(user.FieldEncryptedPassword, field.TypeString, value)
 	}
@@ -810,12 +736,6 @@ func (_u *UserUpdate) sqlSave(ctx context.Context) (_node int, err error) {
 	}
 	if value, ok := _u.mutation.Email(); ok {
 		_spec.SetField(user.FieldEmail, field.TypeString, value)
-	}
-	if value, ok := _u.mutation.Department(); ok {
-		_spec.SetField(user.FieldDepartment, field.TypeString, value)
-	}
-	if value, ok := _u.mutation.Remark(); ok {
-		_spec.SetField(user.FieldRemark, field.TypeString, value)
 	}
 	if value, ok := _u.mutation.Token(); ok {
 		_spec.SetField(user.FieldToken, field.TypeString, value)
@@ -846,6 +766,64 @@ func (_u *UserUpdate) sqlSave(ctx context.Context) (_node int, err error) {
 	}
 	if _u.mutation.SanctionDateCleared() {
 		_spec.ClearField(user.FieldSanctionDate, field.TypeTime)
+	}
+	if _u.mutation.ProfileCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2O,
+			Inverse: false,
+			Table:   user.ProfileTable,
+			Columns: []string{user.ProfileColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(userprofile.FieldID, field.TypeInt64),
+			},
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := _u.mutation.ProfileIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2O,
+			Inverse: false,
+			Table:   user.ProfileTable,
+			Columns: []string{user.ProfileColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(userprofile.FieldID, field.TypeInt64),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
+	}
+	if _u.mutation.SettingCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2O,
+			Inverse: false,
+			Table:   user.SettingTable,
+			Columns: []string{user.SettingColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(usersetting.FieldID, field.TypeInt64),
+			},
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := _u.mutation.SettingIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2O,
+			Inverse: false,
+			Table:   user.SettingTable,
+			Columns: []string{user.SettingColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(usersetting.FieldID, field.TypeInt64),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
 	if _u.mutation.RolesCleared() {
 		edge := &sqlgraph.EdgeSpec{
@@ -1234,62 +1212,6 @@ func (_u *UserUpdateOne) SetNillableUsername(v *string) *UserUpdateOne {
 	return _u
 }
 
-// SetNickname sets the "nickname" field.
-func (_u *UserUpdateOne) SetNickname(v string) *UserUpdateOne {
-	_u.mutation.SetNickname(v)
-	return _u
-}
-
-// SetNillableNickname sets the "nickname" field if the given value is not nil.
-func (_u *UserUpdateOne) SetNillableNickname(v *string) *UserUpdateOne {
-	if v != nil {
-		_u.SetNickname(*v)
-	}
-	return _u
-}
-
-// SetAvatar sets the "avatar" field.
-func (_u *UserUpdateOne) SetAvatar(v string) *UserUpdateOne {
-	_u.mutation.SetAvatar(v)
-	return _u
-}
-
-// SetNillableAvatar sets the "avatar" field if the given value is not nil.
-func (_u *UserUpdateOne) SetNillableAvatar(v *string) *UserUpdateOne {
-	if v != nil {
-		_u.SetAvatar(*v)
-	}
-	return _u
-}
-
-// SetName sets the "name" field.
-func (_u *UserUpdateOne) SetName(v string) *UserUpdateOne {
-	_u.mutation.SetName(v)
-	return _u
-}
-
-// SetNillableName sets the "name" field if the given value is not nil.
-func (_u *UserUpdateOne) SetNillableName(v *string) *UserUpdateOne {
-	if v != nil {
-		_u.SetName(*v)
-	}
-	return _u
-}
-
-// SetGender sets the "gender" field.
-func (_u *UserUpdateOne) SetGender(v user.Gender) *UserUpdateOne {
-	_u.mutation.SetGender(v)
-	return _u
-}
-
-// SetNillableGender sets the "gender" field if the given value is not nil.
-func (_u *UserUpdateOne) SetNillableGender(v *user.Gender) *UserUpdateOne {
-	if v != nil {
-		_u.SetGender(*v)
-	}
-	return _u
-}
-
 // SetEncryptedPassword sets the "encrypted_password" field.
 func (_u *UserUpdateOne) SetEncryptedPassword(v string) *UserUpdateOne {
 	_u.mutation.SetEncryptedPassword(v)
@@ -1342,34 +1264,6 @@ func (_u *UserUpdateOne) SetEmail(v string) *UserUpdateOne {
 func (_u *UserUpdateOne) SetNillableEmail(v *string) *UserUpdateOne {
 	if v != nil {
 		_u.SetEmail(*v)
-	}
-	return _u
-}
-
-// SetDepartment sets the "department" field.
-func (_u *UserUpdateOne) SetDepartment(v string) *UserUpdateOne {
-	_u.mutation.SetDepartment(v)
-	return _u
-}
-
-// SetNillableDepartment sets the "department" field if the given value is not nil.
-func (_u *UserUpdateOne) SetNillableDepartment(v *string) *UserUpdateOne {
-	if v != nil {
-		_u.SetDepartment(*v)
-	}
-	return _u
-}
-
-// SetRemark sets the "remark" field.
-func (_u *UserUpdateOne) SetRemark(v string) *UserUpdateOne {
-	_u.mutation.SetRemark(v)
-	return _u
-}
-
-// SetNillableRemark sets the "remark" field if the given value is not nil.
-func (_u *UserUpdateOne) SetNillableRemark(v *string) *UserUpdateOne {
-	if v != nil {
-		_u.SetRemark(*v)
 	}
 	return _u
 }
@@ -1499,6 +1393,44 @@ func (_u *UserUpdateOne) ClearSanctionDate() *UserUpdateOne {
 	return _u
 }
 
+// SetProfileID sets the "profile" edge to the UserProfile entity by ID.
+func (_u *UserUpdateOne) SetProfileID(id int64) *UserUpdateOne {
+	_u.mutation.SetProfileID(id)
+	return _u
+}
+
+// SetNillableProfileID sets the "profile" edge to the UserProfile entity by ID if the given value is not nil.
+func (_u *UserUpdateOne) SetNillableProfileID(id *int64) *UserUpdateOne {
+	if id != nil {
+		_u = _u.SetProfileID(*id)
+	}
+	return _u
+}
+
+// SetProfile sets the "profile" edge to the UserProfile entity.
+func (_u *UserUpdateOne) SetProfile(v *UserProfile) *UserUpdateOne {
+	return _u.SetProfileID(v.ID)
+}
+
+// SetSettingID sets the "setting" edge to the UserSetting entity by ID.
+func (_u *UserUpdateOne) SetSettingID(id int64) *UserUpdateOne {
+	_u.mutation.SetSettingID(id)
+	return _u
+}
+
+// SetNillableSettingID sets the "setting" edge to the UserSetting entity by ID if the given value is not nil.
+func (_u *UserUpdateOne) SetNillableSettingID(id *int64) *UserUpdateOne {
+	if id != nil {
+		_u = _u.SetSettingID(*id)
+	}
+	return _u
+}
+
+// SetSetting sets the "setting" edge to the UserSetting entity.
+func (_u *UserUpdateOne) SetSetting(v *UserSetting) *UserUpdateOne {
+	return _u.SetSettingID(v.ID)
+}
+
 // AddRoleIDs adds the "roles" edge to the Role entity by IDs.
 func (_u *UserUpdateOne) AddRoleIDs(ids ...int64) *UserUpdateOne {
 	_u.mutation.AddRoleIDs(ids...)
@@ -1592,6 +1524,18 @@ func (_u *UserUpdateOne) AddUserDepartments(v ...*UserDepartment) *UserUpdateOne
 // Mutation returns the UserMutation object of the builder.
 func (_u *UserUpdateOne) Mutation() *UserMutation {
 	return _u.mutation
+}
+
+// ClearProfile clears the "profile" edge to the UserProfile entity.
+func (_u *UserUpdateOne) ClearProfile() *UserUpdateOne {
+	_u.mutation.ClearProfile()
+	return _u
+}
+
+// ClearSetting clears the "setting" edge to the UserSetting entity.
+func (_u *UserUpdateOne) ClearSetting() *UserUpdateOne {
+	_u.mutation.ClearSetting()
+	return _u
 }
 
 // ClearRoles clears all "roles" edges to the Role entity.
@@ -1787,26 +1731,6 @@ func (_u *UserUpdateOne) check() error {
 			return &ValidationError{Name: "username", err: fmt.Errorf(`ent: validator failed for field "User.username": %w`, err)}
 		}
 	}
-	if v, ok := _u.mutation.Nickname(); ok {
-		if err := user.NicknameValidator(v); err != nil {
-			return &ValidationError{Name: "nickname", err: fmt.Errorf(`ent: validator failed for field "User.nickname": %w`, err)}
-		}
-	}
-	if v, ok := _u.mutation.Avatar(); ok {
-		if err := user.AvatarValidator(v); err != nil {
-			return &ValidationError{Name: "avatar", err: fmt.Errorf(`ent: validator failed for field "User.avatar": %w`, err)}
-		}
-	}
-	if v, ok := _u.mutation.Name(); ok {
-		if err := user.NameValidator(v); err != nil {
-			return &ValidationError{Name: "name", err: fmt.Errorf(`ent: validator failed for field "User.name": %w`, err)}
-		}
-	}
-	if v, ok := _u.mutation.Gender(); ok {
-		if err := user.GenderValidator(v); err != nil {
-			return &ValidationError{Name: "gender", err: fmt.Errorf(`ent: validator failed for field "User.gender": %w`, err)}
-		}
-	}
 	if v, ok := _u.mutation.EncryptedPassword(); ok {
 		if err := user.EncryptedPasswordValidator(v); err != nil {
 			return &ValidationError{Name: "encrypted_password", err: fmt.Errorf(`ent: validator failed for field "User.encrypted_password": %w`, err)}
@@ -1825,16 +1749,6 @@ func (_u *UserUpdateOne) check() error {
 	if v, ok := _u.mutation.Email(); ok {
 		if err := user.EmailValidator(v); err != nil {
 			return &ValidationError{Name: "email", err: fmt.Errorf(`ent: validator failed for field "User.email": %w`, err)}
-		}
-	}
-	if v, ok := _u.mutation.Department(); ok {
-		if err := user.DepartmentValidator(v); err != nil {
-			return &ValidationError{Name: "department", err: fmt.Errorf(`ent: validator failed for field "User.department": %w`, err)}
-		}
-	}
-	if v, ok := _u.mutation.Remark(); ok {
-		if err := user.RemarkValidator(v); err != nil {
-			return &ValidationError{Name: "remark", err: fmt.Errorf(`ent: validator failed for field "User.remark": %w`, err)}
 		}
 	}
 	if v, ok := _u.mutation.Token(); ok {
@@ -1920,18 +1834,6 @@ func (_u *UserUpdateOne) sqlSave(ctx context.Context) (_node *User, err error) {
 	if value, ok := _u.mutation.Username(); ok {
 		_spec.SetField(user.FieldUsername, field.TypeString, value)
 	}
-	if value, ok := _u.mutation.Nickname(); ok {
-		_spec.SetField(user.FieldNickname, field.TypeString, value)
-	}
-	if value, ok := _u.mutation.Avatar(); ok {
-		_spec.SetField(user.FieldAvatar, field.TypeString, value)
-	}
-	if value, ok := _u.mutation.Name(); ok {
-		_spec.SetField(user.FieldName, field.TypeString, value)
-	}
-	if value, ok := _u.mutation.Gender(); ok {
-		_spec.SetField(user.FieldGender, field.TypeEnum, value)
-	}
 	if value, ok := _u.mutation.EncryptedPassword(); ok {
 		_spec.SetField(user.FieldEncryptedPassword, field.TypeString, value)
 	}
@@ -1943,12 +1845,6 @@ func (_u *UserUpdateOne) sqlSave(ctx context.Context) (_node *User, err error) {
 	}
 	if value, ok := _u.mutation.Email(); ok {
 		_spec.SetField(user.FieldEmail, field.TypeString, value)
-	}
-	if value, ok := _u.mutation.Department(); ok {
-		_spec.SetField(user.FieldDepartment, field.TypeString, value)
-	}
-	if value, ok := _u.mutation.Remark(); ok {
-		_spec.SetField(user.FieldRemark, field.TypeString, value)
 	}
 	if value, ok := _u.mutation.Token(); ok {
 		_spec.SetField(user.FieldToken, field.TypeString, value)
@@ -1979,6 +1875,64 @@ func (_u *UserUpdateOne) sqlSave(ctx context.Context) (_node *User, err error) {
 	}
 	if _u.mutation.SanctionDateCleared() {
 		_spec.ClearField(user.FieldSanctionDate, field.TypeTime)
+	}
+	if _u.mutation.ProfileCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2O,
+			Inverse: false,
+			Table:   user.ProfileTable,
+			Columns: []string{user.ProfileColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(userprofile.FieldID, field.TypeInt64),
+			},
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := _u.mutation.ProfileIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2O,
+			Inverse: false,
+			Table:   user.ProfileTable,
+			Columns: []string{user.ProfileColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(userprofile.FieldID, field.TypeInt64),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
+	}
+	if _u.mutation.SettingCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2O,
+			Inverse: false,
+			Table:   user.SettingTable,
+			Columns: []string{user.SettingColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(usersetting.FieldID, field.TypeInt64),
+			},
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := _u.mutation.SettingIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2O,
+			Inverse: false,
+			Table:   user.SettingTable,
+			Columns: []string{user.SettingColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(usersetting.FieldID, field.TypeInt64),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
 	if _u.mutation.RolesCleared() {
 		edge := &sqlgraph.EdgeSpec{

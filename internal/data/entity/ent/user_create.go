@@ -12,7 +12,9 @@ import (
 	"origadmin/application/admin/internal/data/entity/ent/user"
 	"origadmin/application/admin/internal/data/entity/ent/userdepartment"
 	"origadmin/application/admin/internal/data/entity/ent/userposition"
+	"origadmin/application/admin/internal/data/entity/ent/userprofile"
 	"origadmin/application/admin/internal/data/entity/ent/userrole"
+	"origadmin/application/admin/internal/data/entity/ent/usersetting"
 	"origadmin/application/admin/internal/data/enums"
 	"time"
 
@@ -123,62 +125,6 @@ func (_c *UserCreate) SetUsername(v string) *UserCreate {
 	return _c
 }
 
-// SetNickname sets the "nickname" field.
-func (_c *UserCreate) SetNickname(v string) *UserCreate {
-	_c.mutation.SetNickname(v)
-	return _c
-}
-
-// SetNillableNickname sets the "nickname" field if the given value is not nil.
-func (_c *UserCreate) SetNillableNickname(v *string) *UserCreate {
-	if v != nil {
-		_c.SetNickname(*v)
-	}
-	return _c
-}
-
-// SetAvatar sets the "avatar" field.
-func (_c *UserCreate) SetAvatar(v string) *UserCreate {
-	_c.mutation.SetAvatar(v)
-	return _c
-}
-
-// SetNillableAvatar sets the "avatar" field if the given value is not nil.
-func (_c *UserCreate) SetNillableAvatar(v *string) *UserCreate {
-	if v != nil {
-		_c.SetAvatar(*v)
-	}
-	return _c
-}
-
-// SetName sets the "name" field.
-func (_c *UserCreate) SetName(v string) *UserCreate {
-	_c.mutation.SetName(v)
-	return _c
-}
-
-// SetNillableName sets the "name" field if the given value is not nil.
-func (_c *UserCreate) SetNillableName(v *string) *UserCreate {
-	if v != nil {
-		_c.SetName(*v)
-	}
-	return _c
-}
-
-// SetGender sets the "gender" field.
-func (_c *UserCreate) SetGender(v user.Gender) *UserCreate {
-	_c.mutation.SetGender(v)
-	return _c
-}
-
-// SetNillableGender sets the "gender" field if the given value is not nil.
-func (_c *UserCreate) SetNillableGender(v *user.Gender) *UserCreate {
-	if v != nil {
-		_c.SetGender(*v)
-	}
-	return _c
-}
-
 // SetEncryptedPassword sets the "encrypted_password" field.
 func (_c *UserCreate) SetEncryptedPassword(v string) *UserCreate {
 	_c.mutation.SetEncryptedPassword(v)
@@ -231,34 +177,6 @@ func (_c *UserCreate) SetEmail(v string) *UserCreate {
 func (_c *UserCreate) SetNillableEmail(v *string) *UserCreate {
 	if v != nil {
 		_c.SetEmail(*v)
-	}
-	return _c
-}
-
-// SetDepartment sets the "department" field.
-func (_c *UserCreate) SetDepartment(v string) *UserCreate {
-	_c.mutation.SetDepartment(v)
-	return _c
-}
-
-// SetNillableDepartment sets the "department" field if the given value is not nil.
-func (_c *UserCreate) SetNillableDepartment(v *string) *UserCreate {
-	if v != nil {
-		_c.SetDepartment(*v)
-	}
-	return _c
-}
-
-// SetRemark sets the "remark" field.
-func (_c *UserCreate) SetRemark(v string) *UserCreate {
-	_c.mutation.SetRemark(v)
-	return _c
-}
-
-// SetNillableRemark sets the "remark" field if the given value is not nil.
-func (_c *UserCreate) SetNillableRemark(v *string) *UserCreate {
-	if v != nil {
-		_c.SetRemark(*v)
 	}
 	return _c
 }
@@ -387,6 +305,44 @@ func (_c *UserCreate) SetNillableID(v *int64) *UserCreate {
 		_c.SetID(*v)
 	}
 	return _c
+}
+
+// SetProfileID sets the "profile" edge to the UserProfile entity by ID.
+func (_c *UserCreate) SetProfileID(id int64) *UserCreate {
+	_c.mutation.SetProfileID(id)
+	return _c
+}
+
+// SetNillableProfileID sets the "profile" edge to the UserProfile entity by ID if the given value is not nil.
+func (_c *UserCreate) SetNillableProfileID(id *int64) *UserCreate {
+	if id != nil {
+		_c = _c.SetProfileID(*id)
+	}
+	return _c
+}
+
+// SetProfile sets the "profile" edge to the UserProfile entity.
+func (_c *UserCreate) SetProfile(v *UserProfile) *UserCreate {
+	return _c.SetProfileID(v.ID)
+}
+
+// SetSettingID sets the "setting" edge to the UserSetting entity by ID.
+func (_c *UserCreate) SetSettingID(id int64) *UserCreate {
+	_c.mutation.SetSettingID(id)
+	return _c
+}
+
+// SetNillableSettingID sets the "setting" edge to the UserSetting entity by ID if the given value is not nil.
+func (_c *UserCreate) SetNillableSettingID(id *int64) *UserCreate {
+	if id != nil {
+		_c = _c.SetSettingID(*id)
+	}
+	return _c
+}
+
+// SetSetting sets the "setting" edge to the UserSetting entity.
+func (_c *UserCreate) SetSetting(v *UserSetting) *UserCreate {
+	return _c.SetSettingID(v.ID)
 }
 
 // AddRoleIDs adds the "roles" edge to the Role entity by IDs.
@@ -534,22 +490,6 @@ func (_c *UserCreate) defaults() error {
 		v := user.DefaultAllowedIP
 		_c.mutation.SetAllowedIP(v)
 	}
-	if _, ok := _c.mutation.Nickname(); !ok {
-		v := user.DefaultNickname
-		_c.mutation.SetNickname(v)
-	}
-	if _, ok := _c.mutation.Avatar(); !ok {
-		v := user.DefaultAvatar
-		_c.mutation.SetAvatar(v)
-	}
-	if _, ok := _c.mutation.Name(); !ok {
-		v := user.DefaultName
-		_c.mutation.SetName(v)
-	}
-	if _, ok := _c.mutation.Gender(); !ok {
-		v := user.DefaultGender
-		_c.mutation.SetGender(v)
-	}
 	if _, ok := _c.mutation.EncryptedPassword(); !ok {
 		v := user.DefaultEncryptedPassword
 		_c.mutation.SetEncryptedPassword(v)
@@ -565,14 +505,6 @@ func (_c *UserCreate) defaults() error {
 	if _, ok := _c.mutation.Email(); !ok {
 		v := user.DefaultEmail
 		_c.mutation.SetEmail(v)
-	}
-	if _, ok := _c.mutation.Department(); !ok {
-		v := user.DefaultDepartment
-		_c.mutation.SetDepartment(v)
-	}
-	if _, ok := _c.mutation.Remark(); !ok {
-		v := user.DefaultRemark
-		_c.mutation.SetRemark(v)
 	}
 	if _, ok := _c.mutation.Token(); !ok {
 		v := user.DefaultToken
@@ -645,38 +577,6 @@ func (_c *UserCreate) check() error {
 			return &ValidationError{Name: "username", err: fmt.Errorf(`ent: validator failed for field "User.username": %w`, err)}
 		}
 	}
-	if _, ok := _c.mutation.Nickname(); !ok {
-		return &ValidationError{Name: "nickname", err: errors.New(`ent: missing required field "User.nickname"`)}
-	}
-	if v, ok := _c.mutation.Nickname(); ok {
-		if err := user.NicknameValidator(v); err != nil {
-			return &ValidationError{Name: "nickname", err: fmt.Errorf(`ent: validator failed for field "User.nickname": %w`, err)}
-		}
-	}
-	if _, ok := _c.mutation.Avatar(); !ok {
-		return &ValidationError{Name: "avatar", err: errors.New(`ent: missing required field "User.avatar"`)}
-	}
-	if v, ok := _c.mutation.Avatar(); ok {
-		if err := user.AvatarValidator(v); err != nil {
-			return &ValidationError{Name: "avatar", err: fmt.Errorf(`ent: validator failed for field "User.avatar": %w`, err)}
-		}
-	}
-	if _, ok := _c.mutation.Name(); !ok {
-		return &ValidationError{Name: "name", err: errors.New(`ent: missing required field "User.name"`)}
-	}
-	if v, ok := _c.mutation.Name(); ok {
-		if err := user.NameValidator(v); err != nil {
-			return &ValidationError{Name: "name", err: fmt.Errorf(`ent: validator failed for field "User.name": %w`, err)}
-		}
-	}
-	if _, ok := _c.mutation.Gender(); !ok {
-		return &ValidationError{Name: "gender", err: errors.New(`ent: missing required field "User.gender"`)}
-	}
-	if v, ok := _c.mutation.Gender(); ok {
-		if err := user.GenderValidator(v); err != nil {
-			return &ValidationError{Name: "gender", err: fmt.Errorf(`ent: validator failed for field "User.gender": %w`, err)}
-		}
-	}
 	if _, ok := _c.mutation.EncryptedPassword(); !ok {
 		return &ValidationError{Name: "encrypted_password", err: errors.New(`ent: missing required field "User.encrypted_password"`)}
 	}
@@ -707,22 +607,6 @@ func (_c *UserCreate) check() error {
 	if v, ok := _c.mutation.Email(); ok {
 		if err := user.EmailValidator(v); err != nil {
 			return &ValidationError{Name: "email", err: fmt.Errorf(`ent: validator failed for field "User.email": %w`, err)}
-		}
-	}
-	if _, ok := _c.mutation.Department(); !ok {
-		return &ValidationError{Name: "department", err: errors.New(`ent: missing required field "User.department"`)}
-	}
-	if v, ok := _c.mutation.Department(); ok {
-		if err := user.DepartmentValidator(v); err != nil {
-			return &ValidationError{Name: "department", err: fmt.Errorf(`ent: validator failed for field "User.department": %w`, err)}
-		}
-	}
-	if _, ok := _c.mutation.Remark(); !ok {
-		return &ValidationError{Name: "remark", err: errors.New(`ent: missing required field "User.remark"`)}
-	}
-	if v, ok := _c.mutation.Remark(); ok {
-		if err := user.RemarkValidator(v); err != nil {
-			return &ValidationError{Name: "remark", err: fmt.Errorf(`ent: validator failed for field "User.remark": %w`, err)}
 		}
 	}
 	if _, ok := _c.mutation.Token(); !ok {
@@ -830,22 +714,6 @@ func (_c *UserCreate) createSpec() (*User, *sqlgraph.CreateSpec) {
 		_spec.SetField(user.FieldUsername, field.TypeString, value)
 		_node.Username = value
 	}
-	if value, ok := _c.mutation.Nickname(); ok {
-		_spec.SetField(user.FieldNickname, field.TypeString, value)
-		_node.Nickname = value
-	}
-	if value, ok := _c.mutation.Avatar(); ok {
-		_spec.SetField(user.FieldAvatar, field.TypeString, value)
-		_node.Avatar = value
-	}
-	if value, ok := _c.mutation.Name(); ok {
-		_spec.SetField(user.FieldName, field.TypeString, value)
-		_node.Name = value
-	}
-	if value, ok := _c.mutation.Gender(); ok {
-		_spec.SetField(user.FieldGender, field.TypeEnum, value)
-		_node.Gender = value
-	}
 	if value, ok := _c.mutation.EncryptedPassword(); ok {
 		_spec.SetField(user.FieldEncryptedPassword, field.TypeString, value)
 		_node.EncryptedPassword = value
@@ -861,14 +729,6 @@ func (_c *UserCreate) createSpec() (*User, *sqlgraph.CreateSpec) {
 	if value, ok := _c.mutation.Email(); ok {
 		_spec.SetField(user.FieldEmail, field.TypeString, value)
 		_node.Email = value
-	}
-	if value, ok := _c.mutation.Department(); ok {
-		_spec.SetField(user.FieldDepartment, field.TypeString, value)
-		_node.Department = value
-	}
-	if value, ok := _c.mutation.Remark(); ok {
-		_spec.SetField(user.FieldRemark, field.TypeString, value)
-		_node.Remark = value
 	}
 	if value, ok := _c.mutation.Token(); ok {
 		_spec.SetField(user.FieldToken, field.TypeString, value)
@@ -901,6 +761,38 @@ func (_c *UserCreate) createSpec() (*User, *sqlgraph.CreateSpec) {
 	if value, ok := _c.mutation.SanctionDate(); ok {
 		_spec.SetField(user.FieldSanctionDate, field.TypeTime, value)
 		_node.SanctionDate = value
+	}
+	if nodes := _c.mutation.ProfileIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2O,
+			Inverse: false,
+			Table:   user.ProfileTable,
+			Columns: []string{user.ProfileColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(userprofile.FieldID, field.TypeInt64),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges = append(_spec.Edges, edge)
+	}
+	if nodes := _c.mutation.SettingIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2O,
+			Inverse: false,
+			Table:   user.SettingTable,
+			Columns: []string{user.SettingColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(usersetting.FieldID, field.TypeInt64),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges = append(_spec.Edges, edge)
 	}
 	if nodes := _c.mutation.RolesIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{

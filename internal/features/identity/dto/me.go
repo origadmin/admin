@@ -2,32 +2,35 @@ package dto
 
 import (
 	"context"
-	"origadmin/application/admin/api/v1/services/types"
+
+	"origadmin/application/admin/internal/data/entity/ent"
 )
 
-// MeRepo defines the data access methods for the currently identityenticated user's profile and context.
+// MeRepo defines the interface for the current authenticated user's data access.
 type MeRepo interface {
-	// GetProfile retrieves the basic profile information for the user.
-	GetProfile(ctx context.Context, userID int64) (*types.User, error)
+	// GetUserWithRelations retrieves the current user and their profile and settings by ID.
+	GetUserWithRelations(ctx context.Context, userID int64) (*ent.User, error)
 
-	// ListActiveViews retrieves all active views from the database.
-	ListActiveViews(ctx context.Context) ([]*types.View, error)
+	// UpdateProfile updates the current user's profile information.
+	UpdateProfile(ctx context.Context, userID int64, profileData *UpdateProfileRequest) (*ent.User, error)
 
-	// GetPermissionKeywordsByUserID retrieves all permission keywords associated with a specific user ID.
-	GetPermissionKeywordsByUserID(ctx context.Context, userID string) ([]string, error)
-
-	// HasSystemRole checks if the user is assigned any role of type 'system'.
-	HasSystemRole(ctx context.Context, userID int64) (bool, error)
-
-	// UpdateProfile updates the user's profile information.
-	UpdateProfile(ctx context.Context, userID int64, user *types.User) error
-
-	// ChangePassword changes the user's password.
+	// ChangePassword changes the current user's password.
 	ChangePassword(ctx context.Context, userID int64, oldPassword, newPassword string) error
 
-	// UpdatePreferences updates user preferences (P2).
-	UpdatePreferences(ctx context.Context, userID int64, preferences map[string]string) error
+	// UpdateSettings updates the current user's settings.
+	UpdateSettings(ctx context.Context, userID int64, settingsData *UpdateSettingsRequest) (*ent.UserSetting, error)
+}
 
-	// GetUserSettings retrieves user settings (P2).
-	GetUserSettings(ctx context.Context, userID int64) (map[string]string, error)
+// UpdateProfileRequest represents the data for updating a user's profile.
+type UpdateProfileRequest struct {
+	Nickname *string
+	Avatar   *string
+	Gender   *string
+}
+
+// UpdateSettingsRequest represents the data for updating user settings.
+type UpdateSettingsRequest struct {
+	Theme    *string
+	Language *string
+	Timezone *string
 }

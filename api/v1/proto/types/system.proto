@@ -10,6 +10,25 @@ option java_outer_classname = "APIServiceTypeSystemProto";
 option java_package = "com.origadmin.api.v1.services.types";
 option objc_class_prefix = "APIServiceType";
 
+// UserProfile holds the profile information of a user.
+message UserProfile {
+  string nickname = 1 [json_name = "nickname"];
+  string avatar = 2 [json_name = "avatar"];
+  string gender = 3 [json_name = "gender"];
+  string name = 4 [json_name = "name"];
+  string department = 5 [json_name = "department"];
+  string remark = 6 [json_name = "remark"];
+}
+
+// UserSetting holds the personalized settings of a user.
+message UserSetting {
+  string theme = 1 [json_name = "theme"];
+  string language = 2 [json_name = "language"];
+  string timezone = 3 [json_name = "timezone"];
+  // Flexible JSON field for various settings
+  map<string, string> preferences = 4 [json_name = "preferences"];
+}
+
 // View is the model entity for the View schema.
 message View {
   // ID of the ent.
@@ -90,7 +109,6 @@ message Role {
 // User is the model entity for the User schema.
 message User {
   // ID of the ent.
-  // field.primary_key.comment
   int64 id = 1 [json_name = "id"];
   // create_author.field.comment
   int64 create_author = 2 [json_name = "create_author"];
@@ -106,20 +124,10 @@ message User {
   string allowed_ip = 7 [json_name = "allowed_ip"];
   // user.field.username
   string username = 8 [json_name = "username"];
-  // user.field.nickname
-  string nickname = 9 [json_name = "nickname"];
-  // user.field.avatar
-  string avatar = 10 [json_name = "avatar"];
-  // user.field.nickname
-  string name = 11 [json_name = "name"];
-  // user.field.gender
-  string gender = 12 [json_name = "gender"];
   // user.field.phone
   string phone = 13 [json_name = "phone"];
   // user.field.email
   string email = 14 [json_name = "email"];
-  // user.field.remark
-  string remark = 15 [json_name = "remark"];
   // user.field.token
   string token = 16 [json_name = "token"];
   // user.field.status
@@ -134,8 +142,12 @@ message User {
   google.protobuf.Timestamp login_time = 21 [json_name = "login_time"];
   // user.field.sanction_date
   optional google.protobuf.Timestamp sanction_date = 22 [json_name = "sanction_date"];
-  // user.field.department
-  string department = 23 [json_name = "department"];
+
+  // The user's profile information.
+  UserProfile profile = 50 [json_name = "profile"];
+  // The user's settings.
+  UserSetting setting = 51 [json_name = "setting"];
+
   // For responses: This field is populated with full role details.
   repeated Role roles = 100 [json_name = "roles"];
 }

@@ -13,23 +13,23 @@ import (
 	"origadmin/application/admin/internal/data/entity/ent"
 )
 
-// policyDBProvider implements authz.PolicyReader interface using direct database access.
+// policyProvider implements authz.PolicyReader interface using direct database access.
 // It reads policy data directly from the 'casbin_rule' table.
-type policyDBProvider struct {
+type policyProvider struct {
 	db  *ent.Database
 	log *log.Helper
 }
 
-// NewPolicyDBProvider creates a new PolicyReader that uses direct database access.
-func NewPolicyDBProvider(db *ent.Database, logger log.Logger) authz.PolicyReader {
-	return &policyDBProvider{
+// NewPolicyProvider creates a new PolicyReader that uses direct database access.
+func NewPolicyProvider(db *ent.Database, logger log.Logger) authz.PolicyReader {
+	return &policyProvider{
 		db:  db,
 		log: log.NewHelper(log.With(logger, "module", "dal.policy_db")),
 	}
 }
 
 // ListPolicies fetches all authorization policies directly from the casbin_rule table.
-func (p *policyDBProvider) ListPolicies(ctx context.Context, base *authzv1.PolicySpec, opts ...authz.PolicyFilterOption) ([]*authzv1.PolicySpec, error) {
+func (p *policyProvider) ListPolicies(ctx context.Context, base *authzv1.PolicySpec, opts ...authz.PolicyFilterOption) ([]*authzv1.PolicySpec, error) {
 	p.log.WithContext(ctx).Info("Listing all policies from casbin_rule table")
 
 	// 1. Fetch all rules from the casbin_rule table.
@@ -56,4 +56,4 @@ func (p *policyDBProvider) ListPolicies(ctx context.Context, base *authzv1.Polic
 	return policies, nil
 }
 
-var _ authz.PolicyReader = (*policyDBProvider)(nil)
+var _ authz.PolicyReader = (*policyProvider)(nil)

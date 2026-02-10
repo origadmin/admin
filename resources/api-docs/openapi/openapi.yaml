@@ -3999,9 +3999,7 @@ components:
             properties:
                 id:
                     type: string
-                    description: |-
-                        ID of the ent.
-                         field.primary_key.comment
+                    description: ID of the ent.
                 create_author:
                     type: string
                     description: create_author.field.comment
@@ -4025,27 +4023,12 @@ components:
                 username:
                     type: string
                     description: user.field.username
-                nickname:
-                    type: string
-                    description: user.field.nickname
-                avatar:
-                    type: string
-                    description: user.field.avatar
-                name:
-                    type: string
-                    description: user.field.nickname
-                gender:
-                    type: string
-                    description: user.field.gender
                 phone:
                     type: string
                     description: user.field.phone
                 email:
                     type: string
                     description: user.field.email
-                remark:
-                    type: string
-                    description: user.field.remark
                 token:
                     type: string
                     description: user.field.token
@@ -4071,15 +4054,51 @@ components:
                     type: string
                     description: user.field.sanction_date
                     format: date-time
-                department:
-                    type: string
-                    description: user.field.department
+                profile:
+                  allOf:
+                    - $ref: '#/components/schemas/api.v1.services.types.UserProfile'
+                  description: The user's profile information.
+                setting:
+                  allOf:
+                    - $ref: '#/components/schemas/api.v1.services.types.UserSetting'
+                  description: The user's settings.
                 roles:
                     type: array
                     items:
                         $ref: '#/components/schemas/api.v1.services.types.Role'
                     description: 'For responses: This field is populated with full role details.'
             description: User is the model entity for the User schema.
+      api.v1.services.types.UserProfile:
+        type: object
+        properties:
+          nickname:
+            type: string
+          avatar:
+            type: string
+          gender:
+            type: string
+          name:
+            type: string
+          department:
+            type: string
+          remark:
+            type: string
+        description: UserProfile holds the profile information of a user.
+      api.v1.services.types.UserSetting:
+        type: object
+        properties:
+          theme:
+            type: string
+          language:
+            type: string
+          timezone:
+            type: string
+          preferences:
+            type: object
+            additionalProperties:
+              type: string
+            description: Flexible JSON field for various settings
+        description: UserSetting holds the personalized settings of a user.
         api.v1.services.types.View:
             type: object
             properties:

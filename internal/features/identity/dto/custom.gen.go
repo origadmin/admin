@@ -3,16 +3,16 @@
 
 package dto
 
-// ConvertStringToStringMapToString is a custom conversion function stub.
+// ConvertStringToObjectMapToStringToStringMap is a custom conversion function stub.
 // Please implement this function to complete the conversion.
-func ConvertStringToStringMapToString(from map[string]string) string {
+func ConvertStringToObjectMapToStringToStringMap(from map[string]any) map[string]string {
 	// TODO: Implement this custom conversion
 	panic("stub! not implemented")
 }
 
-// ConvertStringToStringToStringMap is a custom conversion function stub.
+// ConvertStringToStringMapToStringToObjectMap is a custom conversion function stub.
 // Please implement this function to complete the conversion.
-func ConvertStringToStringToStringMap(from string) map[string]string {
+func ConvertStringToStringMapToStringToObjectMap(from map[string]string) map[string]any {
 	// TODO: Implement this custom conversion
 	panic("stub! not implemented")
 }

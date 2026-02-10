@@ -18,15 +18,17 @@ import (
 
 // MeUseCase is the use case for managing the current user's profile.
 type MeUseCase struct {
-	repo dto.MeRepo
-	log  *log.Helper
+	meRepo    dto.MeRepo
+	authzRepo dto.AuthzRepo
+	log       *log.Helper
 }
 
 // NewMeUseCase creates a new MeUseCase.
-func NewMeUseCase(repo dto.MeRepo, logger log.Logger) *MeUseCase {
+func NewMeUseCase(meRepo dto.MeRepo, authzRepo dto.AuthzRepo, logger log.Logger) *MeUseCase {
 	return &MeUseCase{
-		repo: repo,
-		log:  log.NewHelper(log.With(logger, "module", "biz.me")),
+		meRepo:    meRepo,
+		authzRepo: authzRepo,
+		log:       log.NewHelper(log.With(logger, "module", "biz.me")),
 	}
 }
 
@@ -38,22 +40,41 @@ func (uc *MeUseCase) GetProfile(ctx context.Context) (*types.User, error) {
 	}
 	userID, err := strconv.ParseInt(principal.GetID(), 10, 64)
 	if err != nil {
+		return nil, errors.InternalServer("INVALID_USER_ID", "Invalid user ID in token")
+	}
+
+	userEntity, err := uc.meRepo.GetUserWithRelations(ctx, userID)
+	if err != nil {
 		return nil, err
 	}
-	return uc.repo.GetProfile(ctx, userID)
+
+	return dto.ConvertUserToUserPB(userEntity), nil
 }
 
 // UpdateProfile updates the current user's profile.
-func (uc *MeUseCase) UpdateProfile(ctx context.Context, user *types.User) error {
+func (uc *MeUseCase) UpdateProfile(ctx context.Context, req *types.UpdateProfileRequest) (*types.User, error) {
 	principal, ok := security.FromContext(ctx)
 	if !ok {
-		return errors.Unauthorized("UNAUTHORIZED", "User not authenticated")
+		return nil, errors.Unauthorized("UNAUTHORIZED", "User not authenticated")
 	}
 	userID, err := strconv.ParseInt(principal.GetID(), 10, 64)
 	if err != nil {
-		return err
+		return nil, errors.Internal("INVALID_USER_ID", "Invalid user ID in token")
 	}
-	return uc.repo.UpdateProfile(ctx, userID, user)
+
+	// Convert from PB request to DTO request
+	dtoReq := &dto.UpdateProfileRequest{
+		Nickname: &req.Nickname,
+		Avatar:   &req.Avatar,
+		Gender:   &req.Gender,
+	}
+
+	updatedUser, err := uc.meRepo.UpdateProfile(ctx, userID, dtoReq)
+	if err != nil {
+		return nil, err
+	}
+
+	return dto.ConvertUserEntityToPB(updatedUser), nil
 }
 
 // ChangePassword changes the current user's password.
@@ -64,33 +85,41 @@ func (uc *MeUseCase) ChangePassword(ctx context.Context, oldPassword, newPasswor
 	}
 	userID, err := strconv.ParseInt(principal.GetID(), 10, 64)
 	if err != nil {
-		return err
+		return errors.Internal("INVALID_USER_ID", "Invalid user ID in token")
 	}
-	return uc.repo.ChangePassword(ctx, userID, oldPassword, newPassword)
+	return uc.meRepo.ChangePassword(ctx, userID, oldPassword, newPassword)
 }
 
-// UpdatePreferences updates the current user's preferences (P2).
-func (uc *MeUseCase) UpdatePreferences(ctx context.Context, preferences map[string]string) error {
+// UpdateSettings updates the current user's settings.
+func (uc *MeUseCase) UpdateSettings(ctx context.Context, req *types.UpdateSettingsRequest) error {
 	principal, ok := security.FromContext(ctx)
 	if !ok {
 		return errors.Unauthorized("UNAUTHORIZED", "User not authenticated")
 	}
 	userID, err := strconv.ParseInt(principal.GetID(), 10, 64)
 	if err != nil {
-		return err
+		return errors.Internal("INVALID_USER_ID", "Invalid user ID in token")
 	}
-	return uc.repo.UpdatePreferences(ctx, userID, preferences)
+
+	dtoReq := &dto.UpdateSettingsRequest{
+		Theme:    &req.Theme,
+		Language: &req.Language,
+		Timezone: &req.Timezone,
+	}
+
+	_, err = uc.meRepo.UpdateSettings(ctx, userID, dtoReq)
+	return err
 }
 
-// GetUserSettings retrieves the current user's settings (P2).
-func (uc *MeUseCase) GetUserSettings(ctx context.Context) (map[string]string, error) {
+// GetPermissions retrieves the current user's permission keywords.
+func (uc *MeUseCase) GetPermissions(ctx context.Context) ([]string, error) {
 	principal, ok := security.FromContext(ctx)
 	if !ok {
 		return nil, errors.Unauthorized("UNAUTHORIZED", "User not authenticated")
 	}
 	userID, err := strconv.ParseInt(principal.GetID(), 10, 64)
 	if err != nil {
-		return nil, err
+		return nil, errors.Internal("INVALID_USER_ID", "Invalid user ID in token")
 	}
-	return uc.repo.GetUserSettings(ctx, userID)
+	return uc.authzRepo.GetPermissionKeywordsByUserID(ctx, userID)
 }

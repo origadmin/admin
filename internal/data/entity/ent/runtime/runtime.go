@@ -17,7 +17,9 @@ import (
 	"origadmin/application/admin/internal/data/entity/ent/user"
 	"origadmin/application/admin/internal/data/entity/ent/userdepartment"
 	"origadmin/application/admin/internal/data/entity/ent/userposition"
+	"origadmin/application/admin/internal/data/entity/ent/userprofile"
 	"origadmin/application/admin/internal/data/entity/ent/userrole"
+	"origadmin/application/admin/internal/data/entity/ent/usersetting"
 	"origadmin/application/admin/internal/data/entity/ent/view"
 	"origadmin/application/admin/internal/data/entity/ent/viewpermission"
 	"origadmin/application/admin/internal/data/entity/ent/viewresource"
@@ -492,92 +494,62 @@ func init() {
 	userDescUsername := userFields[2].Descriptor()
 	// user.UsernameValidator is a validator for the "username" field. It is called by the builders before save.
 	user.UsernameValidator = userDescUsername.Validators[0].(func(string) error)
-	// userDescNickname is the schema descriptor for nickname field.
-	userDescNickname := userFields[3].Descriptor()
-	// user.DefaultNickname holds the default value on creation for the nickname field.
-	user.DefaultNickname = userDescNickname.Default.(string)
-	// user.NicknameValidator is a validator for the "nickname" field. It is called by the builders before save.
-	user.NicknameValidator = userDescNickname.Validators[0].(func(string) error)
-	// userDescAvatar is the schema descriptor for avatar field.
-	userDescAvatar := userFields[4].Descriptor()
-	// user.DefaultAvatar holds the default value on creation for the avatar field.
-	user.DefaultAvatar = userDescAvatar.Default.(string)
-	// user.AvatarValidator is a validator for the "avatar" field. It is called by the builders before save.
-	user.AvatarValidator = userDescAvatar.Validators[0].(func(string) error)
-	// userDescName is the schema descriptor for name field.
-	userDescName := userFields[5].Descriptor()
-	// user.DefaultName holds the default value on creation for the name field.
-	user.DefaultName = userDescName.Default.(string)
-	// user.NameValidator is a validator for the "name" field. It is called by the builders before save.
-	user.NameValidator = userDescName.Validators[0].(func(string) error)
 	// userDescEncryptedPassword is the schema descriptor for encrypted_password field.
-	userDescEncryptedPassword := userFields[7].Descriptor()
+	userDescEncryptedPassword := userFields[3].Descriptor()
 	// user.DefaultEncryptedPassword holds the default value on creation for the encrypted_password field.
 	user.DefaultEncryptedPassword = userDescEncryptedPassword.Default.(string)
 	// user.EncryptedPasswordValidator is a validator for the "encrypted_password" field. It is called by the builders before save.
 	user.EncryptedPasswordValidator = userDescEncryptedPassword.Validators[0].(func(string) error)
 	// userDescSalt is the schema descriptor for salt field.
-	userDescSalt := userFields[8].Descriptor()
+	userDescSalt := userFields[4].Descriptor()
 	// user.DefaultSalt holds the default value on creation for the salt field.
 	user.DefaultSalt = userDescSalt.Default.(string)
 	// user.SaltValidator is a validator for the "salt" field. It is called by the builders before save.
 	user.SaltValidator = userDescSalt.Validators[0].(func(string) error)
 	// userDescPhone is the schema descriptor for phone field.
-	userDescPhone := userFields[9].Descriptor()
+	userDescPhone := userFields[5].Descriptor()
 	// user.DefaultPhone holds the default value on creation for the phone field.
 	user.DefaultPhone = userDescPhone.Default.(string)
 	// user.PhoneValidator is a validator for the "phone" field. It is called by the builders before save.
 	user.PhoneValidator = userDescPhone.Validators[0].(func(string) error)
 	// userDescEmail is the schema descriptor for email field.
-	userDescEmail := userFields[10].Descriptor()
+	userDescEmail := userFields[6].Descriptor()
 	// user.DefaultEmail holds the default value on creation for the email field.
 	user.DefaultEmail = userDescEmail.Default.(string)
 	// user.EmailValidator is a validator for the "email" field. It is called by the builders before save.
 	user.EmailValidator = userDescEmail.Validators[0].(func(string) error)
-	// userDescDepartment is the schema descriptor for department field.
-	userDescDepartment := userFields[11].Descriptor()
-	// user.DefaultDepartment holds the default value on creation for the department field.
-	user.DefaultDepartment = userDescDepartment.Default.(string)
-	// user.DepartmentValidator is a validator for the "department" field. It is called by the builders before save.
-	user.DepartmentValidator = userDescDepartment.Validators[0].(func(string) error)
-	// userDescRemark is the schema descriptor for remark field.
-	userDescRemark := userFields[12].Descriptor()
-	// user.DefaultRemark holds the default value on creation for the remark field.
-	user.DefaultRemark = userDescRemark.Default.(string)
-	// user.RemarkValidator is a validator for the "remark" field. It is called by the builders before save.
-	user.RemarkValidator = userDescRemark.Validators[0].(func(string) error)
 	// userDescToken is the schema descriptor for token field.
-	userDescToken := userFields[13].Descriptor()
+	userDescToken := userFields[7].Descriptor()
 	// user.DefaultToken holds the default value on creation for the token field.
 	user.DefaultToken = userDescToken.Default.(string)
 	// user.TokenValidator is a validator for the "token" field. It is called by the builders before save.
 	user.TokenValidator = userDescToken.Validators[0].(func(string) error)
 	// userDescStatus is the schema descriptor for status field.
-	userDescStatus := userFields[14].Descriptor()
+	userDescStatus := userFields[8].Descriptor()
 	// user.DefaultStatus holds the default value on creation for the status field.
 	user.DefaultStatus = enums.Status(userDescStatus.Default.(int8))
 	// userDescIsSystem is the schema descriptor for is_system field.
-	userDescIsSystem := userFields[15].Descriptor()
+	userDescIsSystem := userFields[9].Descriptor()
 	// user.DefaultIsSystem holds the default value on creation for the is_system field.
 	user.DefaultIsSystem = userDescIsSystem.Default.(bool)
 	// userDescLastLoginIP is the schema descriptor for last_login_ip field.
-	userDescLastLoginIP := userFields[16].Descriptor()
+	userDescLastLoginIP := userFields[10].Descriptor()
 	// user.DefaultLastLoginIP holds the default value on creation for the last_login_ip field.
 	user.DefaultLastLoginIP = userDescLastLoginIP.Default.(string)
 	// user.LastLoginIPValidator is a validator for the "last_login_ip" field. It is called by the builders before save.
 	user.LastLoginIPValidator = userDescLastLoginIP.Validators[0].(func(string) error)
 	// userDescLoginIP is the schema descriptor for login_ip field.
-	userDescLoginIP := userFields[17].Descriptor()
+	userDescLoginIP := userFields[11].Descriptor()
 	// user.DefaultLoginIP holds the default value on creation for the login_ip field.
 	user.DefaultLoginIP = userDescLoginIP.Default.(string)
 	// user.LoginIPValidator is a validator for the "login_ip" field. It is called by the builders before save.
 	user.LoginIPValidator = userDescLoginIP.Validators[0].(func(string) error)
 	// userDescLastLoginTime is the schema descriptor for last_login_time field.
-	userDescLastLoginTime := userFields[18].Descriptor()
+	userDescLastLoginTime := userFields[12].Descriptor()
 	// user.DefaultLastLoginTime holds the default value on creation for the last_login_time field.
 	user.DefaultLastLoginTime = userDescLastLoginTime.Default.(func() time.Time)
 	// userDescLoginTime is the schema descriptor for login_time field.
-	userDescLoginTime := userFields[19].Descriptor()
+	userDescLoginTime := userFields[13].Descriptor()
 	// user.DefaultLoginTime holds the default value on creation for the login_time field.
 	user.DefaultLoginTime = userDescLoginTime.Default.(func() time.Time)
 	// userDescID is the schema descriptor for id field.
@@ -606,6 +578,67 @@ func init() {
 	userpositionDescPositionID := userpositionFields[1].Descriptor()
 	// userposition.PositionIDValidator is a validator for the "position_id" field. It is called by the builders before save.
 	userposition.PositionIDValidator = userpositionDescPositionID.Validators[0].(func(int64) error)
+	userprofileMixin := schema.UserProfile{}.Mixin()
+	userprofileMixinHooks1 := userprofileMixin[1].Hooks()
+	userprofileMixinHooks4 := userprofileMixin[4].Hooks()
+	userprofile.Hooks[0] = userprofileMixinHooks1[0]
+	userprofile.Hooks[1] = userprofileMixinHooks4[0]
+	userprofileMixinInters4 := userprofileMixin[4].Interceptors()
+	userprofile.Interceptors[0] = userprofileMixinInters4[0]
+	userprofileMixinFields0 := userprofileMixin[0].Fields()
+	_ = userprofileMixinFields0
+	userprofileMixinFields2 := userprofileMixin[2].Fields()
+	_ = userprofileMixinFields2
+	userprofileMixinFields3 := userprofileMixin[3].Fields()
+	_ = userprofileMixinFields3
+	userprofileFields := schema.UserProfile{}.Fields()
+	_ = userprofileFields
+	// userprofileDescCreateTime is the schema descriptor for create_time field.
+	userprofileDescCreateTime := userprofileMixinFields2[0].Descriptor()
+	// userprofile.DefaultCreateTime holds the default value on creation for the create_time field.
+	userprofile.DefaultCreateTime = userprofileDescCreateTime.Default.(func() time.Time)
+	// userprofileDescUpdateTime is the schema descriptor for update_time field.
+	userprofileDescUpdateTime := userprofileMixinFields3[0].Descriptor()
+	// userprofile.DefaultUpdateTime holds the default value on creation for the update_time field.
+	userprofile.DefaultUpdateTime = userprofileDescUpdateTime.Default.(func() time.Time)
+	// userprofile.UpdateDefaultUpdateTime holds the default value on update for the update_time field.
+	userprofile.UpdateDefaultUpdateTime = userprofileDescUpdateTime.UpdateDefault.(func() time.Time)
+	// userprofileDescNickname is the schema descriptor for nickname field.
+	userprofileDescNickname := userprofileFields[0].Descriptor()
+	// userprofile.DefaultNickname holds the default value on creation for the nickname field.
+	userprofile.DefaultNickname = userprofileDescNickname.Default.(string)
+	// userprofile.NicknameValidator is a validator for the "nickname" field. It is called by the builders before save.
+	userprofile.NicknameValidator = userprofileDescNickname.Validators[0].(func(string) error)
+	// userprofileDescAvatar is the schema descriptor for avatar field.
+	userprofileDescAvatar := userprofileFields[1].Descriptor()
+	// userprofile.DefaultAvatar holds the default value on creation for the avatar field.
+	userprofile.DefaultAvatar = userprofileDescAvatar.Default.(string)
+	// userprofile.AvatarValidator is a validator for the "avatar" field. It is called by the builders before save.
+	userprofile.AvatarValidator = userprofileDescAvatar.Validators[0].(func(string) error)
+	// userprofileDescName is the schema descriptor for name field.
+	userprofileDescName := userprofileFields[2].Descriptor()
+	// userprofile.DefaultName holds the default value on creation for the name field.
+	userprofile.DefaultName = userprofileDescName.Default.(string)
+	// userprofile.NameValidator is a validator for the "name" field. It is called by the builders before save.
+	userprofile.NameValidator = userprofileDescName.Validators[0].(func(string) error)
+	// userprofileDescDepartment is the schema descriptor for department field.
+	userprofileDescDepartment := userprofileFields[4].Descriptor()
+	// userprofile.DefaultDepartment holds the default value on creation for the department field.
+	userprofile.DefaultDepartment = userprofileDescDepartment.Default.(string)
+	// userprofile.DepartmentValidator is a validator for the "department" field. It is called by the builders before save.
+	userprofile.DepartmentValidator = userprofileDescDepartment.Validators[0].(func(string) error)
+	// userprofileDescRemark is the schema descriptor for remark field.
+	userprofileDescRemark := userprofileFields[5].Descriptor()
+	// userprofile.DefaultRemark holds the default value on creation for the remark field.
+	userprofile.DefaultRemark = userprofileDescRemark.Default.(string)
+	// userprofile.RemarkValidator is a validator for the "remark" field. It is called by the builders before save.
+	userprofile.RemarkValidator = userprofileDescRemark.Validators[0].(func(string) error)
+	// userprofileDescID is the schema descriptor for id field.
+	userprofileDescID := userprofileMixinFields0[0].Descriptor()
+	// userprofile.DefaultID holds the default value on creation for the id field.
+	userprofile.DefaultID = userprofileDescID.Default.(func() int64)
+	// userprofile.IDValidator is a validator for the "id" field. It is called by the builders before save.
+	userprofile.IDValidator = userprofileDescID.Validators[0].(func(int64) error)
 	userroleFields := schema.UserRole{}.Fields()
 	_ = userroleFields
 	// userroleDescUserID is the schema descriptor for user_id field.
@@ -616,6 +649,49 @@ func init() {
 	userroleDescRoleID := userroleFields[1].Descriptor()
 	// userrole.RoleIDValidator is a validator for the "role_id" field. It is called by the builders before save.
 	userrole.RoleIDValidator = userroleDescRoleID.Validators[0].(func(int64) error)
+	usersettingMixin := schema.UserSetting{}.Mixin()
+	usersettingMixinHooks1 := usersettingMixin[1].Hooks()
+	usersettingMixinHooks4 := usersettingMixin[4].Hooks()
+	usersetting.Hooks[0] = usersettingMixinHooks1[0]
+	usersetting.Hooks[1] = usersettingMixinHooks4[0]
+	usersettingMixinInters4 := usersettingMixin[4].Interceptors()
+	usersetting.Interceptors[0] = usersettingMixinInters4[0]
+	usersettingMixinFields0 := usersettingMixin[0].Fields()
+	_ = usersettingMixinFields0
+	usersettingMixinFields2 := usersettingMixin[2].Fields()
+	_ = usersettingMixinFields2
+	usersettingMixinFields3 := usersettingMixin[3].Fields()
+	_ = usersettingMixinFields3
+	usersettingFields := schema.UserSetting{}.Fields()
+	_ = usersettingFields
+	// usersettingDescCreateTime is the schema descriptor for create_time field.
+	usersettingDescCreateTime := usersettingMixinFields2[0].Descriptor()
+	// usersetting.DefaultCreateTime holds the default value on creation for the create_time field.
+	usersetting.DefaultCreateTime = usersettingDescCreateTime.Default.(func() time.Time)
+	// usersettingDescUpdateTime is the schema descriptor for update_time field.
+	usersettingDescUpdateTime := usersettingMixinFields3[0].Descriptor()
+	// usersetting.DefaultUpdateTime holds the default value on creation for the update_time field.
+	usersetting.DefaultUpdateTime = usersettingDescUpdateTime.Default.(func() time.Time)
+	// usersetting.UpdateDefaultUpdateTime holds the default value on update for the update_time field.
+	usersetting.UpdateDefaultUpdateTime = usersettingDescUpdateTime.UpdateDefault.(func() time.Time)
+	// usersettingDescTheme is the schema descriptor for theme field.
+	usersettingDescTheme := usersettingFields[0].Descriptor()
+	// usersetting.DefaultTheme holds the default value on creation for the theme field.
+	usersetting.DefaultTheme = usersettingDescTheme.Default.(string)
+	// usersettingDescLanguage is the schema descriptor for language field.
+	usersettingDescLanguage := usersettingFields[1].Descriptor()
+	// usersetting.DefaultLanguage holds the default value on creation for the language field.
+	usersetting.DefaultLanguage = usersettingDescLanguage.Default.(string)
+	// usersettingDescTimezone is the schema descriptor for timezone field.
+	usersettingDescTimezone := usersettingFields[2].Descriptor()
+	// usersetting.DefaultTimezone holds the default value on creation for the timezone field.
+	usersetting.DefaultTimezone = usersettingDescTimezone.Default.(string)
+	// usersettingDescID is the schema descriptor for id field.
+	usersettingDescID := usersettingMixinFields0[0].Descriptor()
+	// usersetting.DefaultID holds the default value on creation for the id field.
+	usersetting.DefaultID = usersettingDescID.Default.(func() int64)
+	// usersetting.IDValidator is a validator for the "id" field. It is called by the builders before save.
+	usersetting.IDValidator = usersettingDescID.Validators[0].(func(int64) error)
 	viewMixin := schema.View{}.Mixin()
 	viewMixinFields0 := viewMixin[0].Fields()
 	_ = viewMixinFields0

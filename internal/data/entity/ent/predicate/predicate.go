@@ -45,8 +45,14 @@ type UserDepartment func(*sql.Selector)
 // UserPosition is the predicate function for userposition builders.
 type UserPosition func(*sql.Selector)
 
+// UserProfile is the predicate function for userprofile builders.
+type UserProfile func(*sql.Selector)
+
 // UserRole is the predicate function for userrole builders.
 type UserRole func(*sql.Selector)
+
+// UserSetting is the predicate function for usersetting builders.
+type UserSetting func(*sql.Selector)
 
 // View is the predicate function for view builders.
 type View func(*sql.Selector)

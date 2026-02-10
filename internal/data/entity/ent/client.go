@@ -24,7 +24,9 @@ import (
 	"origadmin/application/admin/internal/data/entity/ent/user"
 	"origadmin/application/admin/internal/data/entity/ent/userdepartment"
 	"origadmin/application/admin/internal/data/entity/ent/userposition"
+	"origadmin/application/admin/internal/data/entity/ent/userprofile"
 	"origadmin/application/admin/internal/data/entity/ent/userrole"
+	"origadmin/application/admin/internal/data/entity/ent/usersetting"
 	"origadmin/application/admin/internal/data/entity/ent/view"
 	"origadmin/application/admin/internal/data/entity/ent/viewpermission"
 	"origadmin/application/admin/internal/data/entity/ent/viewresource"
@@ -66,8 +68,12 @@ type Client struct {
 	UserDepartment *UserDepartmentClient
 	// UserPosition is the client for interacting with the UserPosition builders.
 	UserPosition *UserPositionClient
+	// UserProfile is the client for interacting with the UserProfile builders.
+	UserProfile *UserProfileClient
 	// UserRole is the client for interacting with the UserRole builders.
 	UserRole *UserRoleClient
+	// UserSetting is the client for interacting with the UserSetting builders.
+	UserSetting *UserSettingClient
 	// View is the client for interacting with the View builders.
 	View *ViewClient
 	// ViewPermission is the client for interacting with the ViewPermission builders.
@@ -98,7 +104,9 @@ func (c *Client) init() {
 	c.User = NewUserClient(c.config)
 	c.UserDepartment = NewUserDepartmentClient(c.config)
 	c.UserPosition = NewUserPositionClient(c.config)
+	c.UserProfile = NewUserProfileClient(c.config)
 	c.UserRole = NewUserRoleClient(c.config)
+	c.UserSetting = NewUserSettingClient(c.config)
 	c.View = NewViewClient(c.config)
 	c.ViewPermission = NewViewPermissionClient(c.config)
 	c.ViewResource = NewViewResourceClient(c.config)
@@ -207,7 +215,9 @@ func (c *Client) Tx(ctx context.Context) (*Tx, error) {
 		User:               NewUserClient(cfg),
 		UserDepartment:     NewUserDepartmentClient(cfg),
 		UserPosition:       NewUserPositionClient(cfg),
+		UserProfile:        NewUserProfileClient(cfg),
 		UserRole:           NewUserRoleClient(cfg),
+		UserSetting:        NewUserSettingClient(cfg),
 		View:               NewViewClient(cfg),
 		ViewPermission:     NewViewPermissionClient(cfg),
 		ViewResource:       NewViewResourceClient(cfg),
@@ -243,7 +253,9 @@ func (c *Client) BeginTx(ctx context.Context, opts *sql.TxOptions) (*Tx, error) 
 		User:               NewUserClient(cfg),
 		UserDepartment:     NewUserDepartmentClient(cfg),
 		UserPosition:       NewUserPositionClient(cfg),
+		UserProfile:        NewUserProfileClient(cfg),
 		UserRole:           NewUserRoleClient(cfg),
+		UserSetting:        NewUserSettingClient(cfg),
 		View:               NewViewClient(cfg),
 		ViewPermission:     NewViewPermissionClient(cfg),
 		ViewResource:       NewViewResourceClient(cfg),
@@ -278,8 +290,8 @@ func (c *Client) Use(hooks ...Hook) {
 	for _, n := range []interface{ Use(...Hook) }{
 		c.CasbinRule, c.Department, c.Notification, c.Permission, c.PermissionResource,
 		c.Position, c.PositionPermission, c.Resource, c.Role, c.RolePermission, c.User,
-		c.UserDepartment, c.UserPosition, c.UserRole, c.View, c.ViewPermission,
-		c.ViewResource,
+		c.UserDepartment, c.UserPosition, c.UserProfile, c.UserRole, c.UserSetting,
+		c.View, c.ViewPermission, c.ViewResource,
 	} {
 		n.Use(hooks...)
 	}
@@ -291,8 +303,8 @@ func (c *Client) Intercept(interceptors ...Interceptor) {
 	for _, n := range []interface{ Intercept(...Interceptor) }{
 		c.CasbinRule, c.Department, c.Notification, c.Permission, c.PermissionResource,
 		c.Position, c.PositionPermission, c.Resource, c.Role, c.RolePermission, c.User,
-		c.UserDepartment, c.UserPosition, c.UserRole, c.View, c.ViewPermission,
-		c.ViewResource,
+		c.UserDepartment, c.UserPosition, c.UserProfile, c.UserRole, c.UserSetting,
+		c.View, c.ViewPermission, c.ViewResource,
 	} {
 		n.Intercept(interceptors...)
 	}
@@ -327,8 +339,12 @@ func (c *Client) Mutate(ctx context.Context, m Mutation) (Value, error) {
 		return c.UserDepartment.mutate(ctx, m)
 	case *UserPositionMutation:
 		return c.UserPosition.mutate(ctx, m)
+	case *UserProfileMutation:
+		return c.UserProfile.mutate(ctx, m)
 	case *UserRoleMutation:
 		return c.UserRole.mutate(ctx, m)
+	case *UserSettingMutation:
+		return c.UserSetting.mutate(ctx, m)
 	case *ViewMutation:
 		return c.View.mutate(ctx, m)
 	case *ViewPermissionMutation:
@@ -2328,6 +2344,38 @@ func (c *UserClient) GetX(ctx context.Context, id int64) *User {
 	return obj
 }
 
+// QueryProfile queries the profile edge of a User.
+func (c *UserClient) QueryProfile(_m *User) *UserProfileQuery {
+	query := (&UserProfileClient{config: c.config}).Query()
+	query.path = func(context.Context) (fromV *sql.Selector, _ error) {
+		id := _m.ID
+		step := sqlgraph.NewStep(
+			sqlgraph.From(user.Table, user.FieldID, id),
+			sqlgraph.To(userprofile.Table, userprofile.FieldID),
+			sqlgraph.Edge(sqlgraph.O2O, false, user.ProfileTable, user.ProfileColumn),
+		)
+		fromV = sqlgraph.Neighbors(_m.driver.Dialect(), step)
+		return fromV, nil
+	}
+	return query
+}
+
+// QuerySetting queries the setting edge of a User.
+func (c *UserClient) QuerySetting(_m *User) *UserSettingQuery {
+	query := (&UserSettingClient{config: c.config}).Query()
+	query.path = func(context.Context) (fromV *sql.Selector, _ error) {
+		id := _m.ID
+		step := sqlgraph.NewStep(
+			sqlgraph.From(user.Table, user.FieldID, id),
+			sqlgraph.To(usersetting.Table, usersetting.FieldID),
+			sqlgraph.Edge(sqlgraph.O2O, false, user.SettingTable, user.SettingColumn),
+		)
+		fromV = sqlgraph.Neighbors(_m.driver.Dialect(), step)
+		return fromV, nil
+	}
+	return query
+}
+
 // QueryRoles queries the roles edge of a User.
 func (c *UserClient) QueryRoles(_m *User) *RoleQuery {
 	query := (&RoleClient{config: c.config}).Query()
@@ -2781,6 +2829,157 @@ func (c *UserPositionClient) mutate(ctx context.Context, m *UserPositionMutation
 	}
 }
 
+// UserProfileClient is a client for the UserProfile schema.
+type UserProfileClient struct {
+	config
+}
+
+// NewUserProfileClient returns a client for the UserProfile from the given config.
+func NewUserProfileClient(c config) *UserProfileClient {
+	return &UserProfileClient{config: c}
+}
+
+// Use adds a list of mutation hooks to the hooks stack.
+// A call to `Use(f, g, h)` equals to `userprofile.Hooks(f(g(h())))`.
+func (c *UserProfileClient) Use(hooks ...Hook) {
+	c.hooks.UserProfile = append(c.hooks.UserProfile, hooks...)
+}
+
+// Intercept adds a list of query interceptors to the interceptors stack.
+// A call to `Intercept(f, g, h)` equals to `userprofile.Intercept(f(g(h())))`.
+func (c *UserProfileClient) Intercept(interceptors ...Interceptor) {
+	c.inters.UserProfile = append(c.inters.UserProfile, interceptors...)
+}
+
+// Create returns a builder for creating a UserProfile entity.
+func (c *UserProfileClient) Create() *UserProfileCreate {
+	mutation := newUserProfileMutation(c.config, OpCreate)
+	return &UserProfileCreate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// CreateBulk returns a builder for creating a bulk of UserProfile entities.
+func (c *UserProfileClient) CreateBulk(builders ...*UserProfileCreate) *UserProfileCreateBulk {
+	return &UserProfileCreateBulk{config: c.config, builders: builders}
+}
+
+// MapCreateBulk creates a bulk creation builder from the given slice. For each item in the slice, the function creates
+// a builder and applies setFunc on it.
+func (c *UserProfileClient) MapCreateBulk(slice any, setFunc func(*UserProfileCreate, int)) *UserProfileCreateBulk {
+	rv := reflect.ValueOf(slice)
+	if rv.Kind() != reflect.Slice {
+		return &UserProfileCreateBulk{err: fmt.Errorf("calling to UserProfileClient.MapCreateBulk with wrong type %T, need slice", slice)}
+	}
+	builders := make([]*UserProfileCreate, rv.Len())
+	for i := 0; i < rv.Len(); i++ {
+		builders[i] = c.Create()
+		setFunc(builders[i], i)
+	}
+	return &UserProfileCreateBulk{config: c.config, builders: builders}
+}
+
+// Update returns an update builder for UserProfile.
+func (c *UserProfileClient) Update() *UserProfileUpdate {
+	mutation := newUserProfileMutation(c.config, OpUpdate)
+	return &UserProfileUpdate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOne returns an update builder for the given entity.
+func (c *UserProfileClient) UpdateOne(_m *UserProfile) *UserProfileUpdateOne {
+	mutation := newUserProfileMutation(c.config, OpUpdateOne, withUserProfile(_m))
+	return &UserProfileUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOneID returns an update builder for the given id.
+func (c *UserProfileClient) UpdateOneID(id int64) *UserProfileUpdateOne {
+	mutation := newUserProfileMutation(c.config, OpUpdateOne, withUserProfileID(id))
+	return &UserProfileUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// Delete returns a delete builder for UserProfile.
+func (c *UserProfileClient) Delete() *UserProfileDelete {
+	mutation := newUserProfileMutation(c.config, OpDelete)
+	return &UserProfileDelete{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// DeleteOne returns a builder for deleting the given entity.
+func (c *UserProfileClient) DeleteOne(_m *UserProfile) *UserProfileDeleteOne {
+	return c.DeleteOneID(_m.ID)
+}
+
+// DeleteOneID returns a builder for deleting the given entity by its id.
+func (c *UserProfileClient) DeleteOneID(id int64) *UserProfileDeleteOne {
+	builder := c.Delete().Where(userprofile.ID(id))
+	builder.mutation.id = &id
+	builder.mutation.op = OpDeleteOne
+	return &UserProfileDeleteOne{builder}
+}
+
+// Query returns a query builder for UserProfile.
+func (c *UserProfileClient) Query() *UserProfileQuery {
+	return &UserProfileQuery{
+		config: c.config,
+		ctx:    &QueryContext{Type: TypeUserProfile},
+		inters: c.Interceptors(),
+	}
+}
+
+// Get returns a UserProfile entity by its id.
+func (c *UserProfileClient) Get(ctx context.Context, id int64) (*UserProfile, error) {
+	return c.Query().Where(userprofile.ID(id)).Only(ctx)
+}
+
+// GetX is like Get, but panics if an error occurs.
+func (c *UserProfileClient) GetX(ctx context.Context, id int64) *UserProfile {
+	obj, err := c.Get(ctx, id)
+	if err != nil {
+		panic(err)
+	}
+	return obj
+}
+
+// QueryUser queries the user edge of a UserProfile.
+func (c *UserProfileClient) QueryUser(_m *UserProfile) *UserQuery {
+	query := (&UserClient{config: c.config}).Query()
+	query.path = func(context.Context) (fromV *sql.Selector, _ error) {
+		id := _m.ID
+		step := sqlgraph.NewStep(
+			sqlgraph.From(userprofile.Table, userprofile.FieldID, id),
+			sqlgraph.To(user.Table, user.FieldID),
+			sqlgraph.Edge(sqlgraph.O2O, true, userprofile.UserTable, userprofile.UserColumn),
+		)
+		fromV = sqlgraph.Neighbors(_m.driver.Dialect(), step)
+		return fromV, nil
+	}
+	return query
+}
+
+// Hooks returns the client hooks.
+func (c *UserProfileClient) Hooks() []Hook {
+	hooks := c.hooks.UserProfile
+	return append(hooks[:len(hooks):len(hooks)], userprofile.Hooks[:]...)
+}
+
+// Interceptors returns the client interceptors.
+func (c *UserProfileClient) Interceptors() []Interceptor {
+	inters := c.inters.UserProfile
+	return append(inters[:len(inters):len(inters)], userprofile.Interceptors[:]...)
+}
+
+func (c *UserProfileClient) mutate(ctx context.Context, m *UserProfileMutation) (Value, error) {
+	switch m.Op() {
+	case OpCreate:
+		return (&UserProfileCreate{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+	case OpUpdate:
+		return (&UserProfileUpdate{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+	case OpUpdateOne:
+		return (&UserProfileUpdateOne{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+	case OpDelete, OpDeleteOne:
+		return (&UserProfileDelete{config: c.config, hooks: c.Hooks(), mutation: m}).Exec(ctx)
+	default:
+		return nil, fmt.Errorf("ent: unknown UserProfile mutation op: %q", m.Op())
+	}
+}
+
 // UserRoleClient is a client for the UserRole schema.
 type UserRoleClient struct {
 	config
@@ -2943,6 +3142,157 @@ func (c *UserRoleClient) mutate(ctx context.Context, m *UserRoleMutation) (Value
 		return (&UserRoleDelete{config: c.config, hooks: c.Hooks(), mutation: m}).Exec(ctx)
 	default:
 		return nil, fmt.Errorf("ent: unknown UserRole mutation op: %q", m.Op())
+	}
+}
+
+// UserSettingClient is a client for the UserSetting schema.
+type UserSettingClient struct {
+	config
+}
+
+// NewUserSettingClient returns a client for the UserSetting from the given config.
+func NewUserSettingClient(c config) *UserSettingClient {
+	return &UserSettingClient{config: c}
+}
+
+// Use adds a list of mutation hooks to the hooks stack.
+// A call to `Use(f, g, h)` equals to `usersetting.Hooks(f(g(h())))`.
+func (c *UserSettingClient) Use(hooks ...Hook) {
+	c.hooks.UserSetting = append(c.hooks.UserSetting, hooks...)
+}
+
+// Intercept adds a list of query interceptors to the interceptors stack.
+// A call to `Intercept(f, g, h)` equals to `usersetting.Intercept(f(g(h())))`.
+func (c *UserSettingClient) Intercept(interceptors ...Interceptor) {
+	c.inters.UserSetting = append(c.inters.UserSetting, interceptors...)
+}
+
+// Create returns a builder for creating a UserSetting entity.
+func (c *UserSettingClient) Create() *UserSettingCreate {
+	mutation := newUserSettingMutation(c.config, OpCreate)
+	return &UserSettingCreate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// CreateBulk returns a builder for creating a bulk of UserSetting entities.
+func (c *UserSettingClient) CreateBulk(builders ...*UserSettingCreate) *UserSettingCreateBulk {
+	return &UserSettingCreateBulk{config: c.config, builders: builders}
+}
+
+// MapCreateBulk creates a bulk creation builder from the given slice. For each item in the slice, the function creates
+// a builder and applies setFunc on it.
+func (c *UserSettingClient) MapCreateBulk(slice any, setFunc func(*UserSettingCreate, int)) *UserSettingCreateBulk {
+	rv := reflect.ValueOf(slice)
+	if rv.Kind() != reflect.Slice {
+		return &UserSettingCreateBulk{err: fmt.Errorf("calling to UserSettingClient.MapCreateBulk with wrong type %T, need slice", slice)}
+	}
+	builders := make([]*UserSettingCreate, rv.Len())
+	for i := 0; i < rv.Len(); i++ {
+		builders[i] = c.Create()
+		setFunc(builders[i], i)
+	}
+	return &UserSettingCreateBulk{config: c.config, builders: builders}
+}
+
+// Update returns an update builder for UserSetting.
+func (c *UserSettingClient) Update() *UserSettingUpdate {
+	mutation := newUserSettingMutation(c.config, OpUpdate)
+	return &UserSettingUpdate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOne returns an update builder for the given entity.
+func (c *UserSettingClient) UpdateOne(_m *UserSetting) *UserSettingUpdateOne {
+	mutation := newUserSettingMutation(c.config, OpUpdateOne, withUserSetting(_m))
+	return &UserSettingUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOneID returns an update builder for the given id.
+func (c *UserSettingClient) UpdateOneID(id int64) *UserSettingUpdateOne {
+	mutation := newUserSettingMutation(c.config, OpUpdateOne, withUserSettingID(id))
+	return &UserSettingUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// Delete returns a delete builder for UserSetting.
+func (c *UserSettingClient) Delete() *UserSettingDelete {
+	mutation := newUserSettingMutation(c.config, OpDelete)
+	return &UserSettingDelete{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// DeleteOne returns a builder for deleting the given entity.
+func (c *UserSettingClient) DeleteOne(_m *UserSetting) *UserSettingDeleteOne {
+	return c.DeleteOneID(_m.ID)
+}
+
+// DeleteOneID returns a builder for deleting the given entity by its id.
+func (c *UserSettingClient) DeleteOneID(id int64) *UserSettingDeleteOne {
+	builder := c.Delete().Where(usersetting.ID(id))
+	builder.mutation.id = &id
+	builder.mutation.op = OpDeleteOne
+	return &UserSettingDeleteOne{builder}
+}
+
+// Query returns a query builder for UserSetting.
+func (c *UserSettingClient) Query() *UserSettingQuery {
+	return &UserSettingQuery{
+		config: c.config,
+		ctx:    &QueryContext{Type: TypeUserSetting},
+		inters: c.Interceptors(),
+	}
+}
+
+// Get returns a UserSetting entity by its id.
+func (c *UserSettingClient) Get(ctx context.Context, id int64) (*UserSetting, error) {
+	return c.Query().Where(usersetting.ID(id)).Only(ctx)
+}
+
+// GetX is like Get, but panics if an error occurs.
+func (c *UserSettingClient) GetX(ctx context.Context, id int64) *UserSetting {
+	obj, err := c.Get(ctx, id)
+	if err != nil {
+		panic(err)
+	}
+	return obj
+}
+
+// QueryUser queries the user edge of a UserSetting.
+func (c *UserSettingClient) QueryUser(_m *UserSetting) *UserQuery {
+	query := (&UserClient{config: c.config}).Query()
+	query.path = func(context.Context) (fromV *sql.Selector, _ error) {
+		id := _m.ID
+		step := sqlgraph.NewStep(
+			sqlgraph.From(usersetting.Table, usersetting.FieldID, id),
+			sqlgraph.To(user.Table, user.FieldID),
+			sqlgraph.Edge(sqlgraph.O2O, true, usersetting.UserTable, usersetting.UserColumn),
+		)
+		fromV = sqlgraph.Neighbors(_m.driver.Dialect(), step)
+		return fromV, nil
+	}
+	return query
+}
+
+// Hooks returns the client hooks.
+func (c *UserSettingClient) Hooks() []Hook {
+	hooks := c.hooks.UserSetting
+	return append(hooks[:len(hooks):len(hooks)], usersetting.Hooks[:]...)
+}
+
+// Interceptors returns the client interceptors.
+func (c *UserSettingClient) Interceptors() []Interceptor {
+	inters := c.inters.UserSetting
+	return append(inters[:len(inters):len(inters)], usersetting.Interceptors[:]...)
+}
+
+func (c *UserSettingClient) mutate(ctx context.Context, m *UserSettingMutation) (Value, error) {
+	switch m.Op() {
+	case OpCreate:
+		return (&UserSettingCreate{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+	case OpUpdate:
+		return (&UserSettingUpdate{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+	case OpUpdateOne:
+		return (&UserSettingUpdateOne{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+	case OpDelete, OpDeleteOne:
+		return (&UserSettingDelete{config: c.config, hooks: c.Hooks(), mutation: m}).Exec(ctx)
+	default:
+		return nil, fmt.Errorf("ent: unknown UserSetting mutation op: %q", m.Op())
 	}
 }
 
@@ -3510,11 +3860,13 @@ type (
 	hooks struct {
 		CasbinRule, Department, Notification, Permission, PermissionResource, Position,
 		PositionPermission, Resource, Role, RolePermission, User, UserDepartment,
-		UserPosition, UserRole, View, ViewPermission, ViewResource []ent.Hook
+		UserPosition, UserProfile, UserRole, UserSetting, View, ViewPermission,
+		ViewResource []ent.Hook
 	}
 	inters struct {
 		CasbinRule, Department, Notification, Permission, PermissionResource, Position,
 		PositionPermission, Resource, Role, RolePermission, User, UserDepartment,
-		UserPosition, UserRole, View, ViewPermission, ViewResource []ent.Interceptor
+		UserPosition, UserProfile, UserRole, UserSetting, View, ViewPermission,
+		ViewResource []ent.Interceptor
 	}
 )

@@ -19,7 +19,9 @@ import (
 	"origadmin/application/admin/internal/data/entity/ent/user"
 	"origadmin/application/admin/internal/data/entity/ent/userdepartment"
 	"origadmin/application/admin/internal/data/entity/ent/userposition"
+	"origadmin/application/admin/internal/data/entity/ent/userprofile"
 	"origadmin/application/admin/internal/data/entity/ent/userrole"
+	"origadmin/application/admin/internal/data/entity/ent/usersetting"
 	"origadmin/application/admin/internal/data/entity/ent/view"
 	"origadmin/application/admin/internal/data/entity/ent/viewpermission"
 	"origadmin/application/admin/internal/data/entity/ent/viewresource"
@@ -102,7 +104,9 @@ func checkColumn(t, c string) error {
 			user.Table:               user.ValidColumn,
 			userdepartment.Table:     userdepartment.ValidColumn,
 			userposition.Table:       userposition.ValidColumn,
+			userprofile.Table:        userprofile.ValidColumn,
 			userrole.Table:           userrole.ValidColumn,
+			usersetting.Table:        usersetting.ValidColumn,
 			view.Table:               view.ValidColumn,
 			viewpermission.Table:     viewpermission.ValidColumn,
 			viewresource.Table:       viewresource.ValidColumn,

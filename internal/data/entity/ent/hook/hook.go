@@ -164,6 +164,18 @@ func (f UserPositionFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value
 	return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.UserPositionMutation", m)
 }
 
+// The UserProfileFunc type is an adapter to allow the use of ordinary
+// function as UserProfile mutator.
+type UserProfileFunc func(context.Context, *ent.UserProfileMutation) (ent.Value, error)
+
+// Mutate calls f(ctx, m).
+func (f UserProfileFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, error) {
+	if mv, ok := m.(*ent.UserProfileMutation); ok {
+		return f(ctx, mv)
+	}
+	return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.UserProfileMutation", m)
+}
+
 // The UserRoleFunc type is an adapter to allow the use of ordinary
 // function as UserRole mutator.
 type UserRoleFunc func(context.Context, *ent.UserRoleMutation) (ent.Value, error)
@@ -174,6 +186,18 @@ func (f UserRoleFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, er
 		return f(ctx, mv)
 	}
 	return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.UserRoleMutation", m)
+}
+
+// The UserSettingFunc type is an adapter to allow the use of ordinary
+// function as UserSetting mutator.
+type UserSettingFunc func(context.Context, *ent.UserSettingMutation) (ent.Value, error)
+
+// Mutate calls f(ctx, m).
+func (f UserSettingFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, error) {
+	if mv, ok := m.(*ent.UserSettingMutation); ok {
+		return f(ctx, mv)
+	}
+	return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.UserSettingMutation", m)
 }
 
 // The ViewFunc type is an adapter to allow the use of ordinary

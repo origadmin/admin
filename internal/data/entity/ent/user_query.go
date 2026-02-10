@@ -14,7 +14,9 @@ import (
 	"origadmin/application/admin/internal/data/entity/ent/user"
 	"origadmin/application/admin/internal/data/entity/ent/userdepartment"
 	"origadmin/application/admin/internal/data/entity/ent/userposition"
+	"origadmin/application/admin/internal/data/entity/ent/userprofile"
 	"origadmin/application/admin/internal/data/entity/ent/userrole"
+	"origadmin/application/admin/internal/data/entity/ent/usersetting"
 
 	"entgo.io/ent"
 	"entgo.io/ent/dialect"
@@ -30,6 +32,8 @@ type UserQuery struct {
 	order               []user.OrderOption
 	inters              []Interceptor
 	predicates          []predicate.User
+	withProfile         *UserProfileQuery
+	withSetting         *UserSettingQuery
 	withRoles           *RoleQuery
 	withPositions       *PositionQuery
 	withDepartments     *DepartmentQuery
@@ -71,6 +75,50 @@ func (_q *UserQuery) Unique(unique bool) *UserQuery {
 func (_q *UserQuery) Order(o ...user.OrderOption) *UserQuery {
 	_q.order = append(_q.order, o...)
 	return _q
+}
+
+// QueryProfile chains the current query on the "profile" edge.
+func (_q *UserQuery) QueryProfile() *UserProfileQuery {
+	query := (&UserProfileClient{config: _q.config}).Query()
+	query.path = func(ctx context.Context) (fromU *sql.Selector, err error) {
+		if err := _q.prepareQuery(ctx); err != nil {
+			return nil, err
+		}
+		selector := _q.sqlQuery(ctx)
+		if err := selector.Err(); err != nil {
+			return nil, err
+		}
+		step := sqlgraph.NewStep(
+			sqlgraph.From(user.Table, user.FieldID, selector),
+			sqlgraph.To(userprofile.Table, userprofile.FieldID),
+			sqlgraph.Edge(sqlgraph.O2O, false, user.ProfileTable, user.ProfileColumn),
+		)
+		fromU = sqlgraph.SetNeighbors(_q.driver.Dialect(), step)
+		return fromU, nil
+	}
+	return query
+}
+
+// QuerySetting chains the current query on the "setting" edge.
+func (_q *UserQuery) QuerySetting() *UserSettingQuery {
+	query := (&UserSettingClient{config: _q.config}).Query()
+	query.path = func(ctx context.Context) (fromU *sql.Selector, err error) {
+		if err := _q.prepareQuery(ctx); err != nil {
+			return nil, err
+		}
+		selector := _q.sqlQuery(ctx)
+		if err := selector.Err(); err != nil {
+			return nil, err
+		}
+		step := sqlgraph.NewStep(
+			sqlgraph.From(user.Table, user.FieldID, selector),
+			sqlgraph.To(usersetting.Table, usersetting.FieldID),
+			sqlgraph.Edge(sqlgraph.O2O, false, user.SettingTable, user.SettingColumn),
+		)
+		fromU = sqlgraph.SetNeighbors(_q.driver.Dialect(), step)
+		return fromU, nil
+	}
+	return query
 }
 
 // QueryRoles chains the current query on the "roles" edge.
@@ -397,6 +445,8 @@ func (_q *UserQuery) Clone() *UserQuery {
 		order:               append([]user.OrderOption{}, _q.order...),
 		inters:              append([]Interceptor{}, _q.inters...),
 		predicates:          append([]predicate.User{}, _q.predicates...),
+		withProfile:         _q.withProfile.Clone(),
+		withSetting:         _q.withSetting.Clone(),
 		withRoles:           _q.withRoles.Clone(),
 		withPositions:       _q.withPositions.Clone(),
 		withDepartments:     _q.withDepartments.Clone(),
@@ -408,6 +458,28 @@ func (_q *UserQuery) Clone() *UserQuery {
 		path:      _q.path,
 		modifiers: append([]func(*sql.Selector){}, _q.modifiers...),
 	}
+}
+
+// WithProfile tells the query-builder to eager-load the nodes that are connected to
+// the "profile" edge. The optional arguments are used to configure the query builder of the edge.
+func (_q *UserQuery) WithProfile(opts ...func(*UserProfileQuery)) *UserQuery {
+	query := (&UserProfileClient{config: _q.config}).Query()
+	for _, opt := range opts {
+		opt(query)
+	}
+	_q.withProfile = query
+	return _q
+}
+
+// WithSetting tells the query-builder to eager-load the nodes that are connected to
+// the "setting" edge. The optional arguments are used to configure the query builder of the edge.
+func (_q *UserQuery) WithSetting(opts ...func(*UserSettingQuery)) *UserQuery {
+	query := (&UserSettingClient{config: _q.config}).Query()
+	for _, opt := range opts {
+		opt(query)
+	}
+	_q.withSetting = query
+	return _q
 }
 
 // WithRoles tells the query-builder to eager-load the nodes that are connected to
@@ -554,7 +626,9 @@ func (_q *UserQuery) sqlAll(ctx context.Context, hooks ...queryHook) ([]*User, e
 	var (
 		nodes       = []*User{}
 		_spec       = _q.querySpec()
-		loadedTypes = [6]bool{
+		loadedTypes = [8]bool{
+			_q.withProfile != nil,
+			_q.withSetting != nil,
 			_q.withRoles != nil,
 			_q.withPositions != nil,
 			_q.withDepartments != nil,
@@ -583,6 +657,18 @@ func (_q *UserQuery) sqlAll(ctx context.Context, hooks ...queryHook) ([]*User, e
 	}
 	if len(nodes) == 0 {
 		return nodes, nil
+	}
+	if query := _q.withProfile; query != nil {
+		if err := _q.loadProfile(ctx, query, nodes, nil,
+			func(n *User, e *UserProfile) { n.Edges.Profile = e }); err != nil {
+			return nil, err
+		}
+	}
+	if query := _q.withSetting; query != nil {
+		if err := _q.loadSetting(ctx, query, nodes, nil,
+			func(n *User, e *UserSetting) { n.Edges.Setting = e }); err != nil {
+			return nil, err
+		}
 	}
 	if query := _q.withRoles; query != nil {
 		if err := _q.loadRoles(ctx, query, nodes,
@@ -629,6 +715,62 @@ func (_q *UserQuery) sqlAll(ctx context.Context, hooks ...queryHook) ([]*User, e
 	return nodes, nil
 }
 
+func (_q *UserQuery) loadProfile(ctx context.Context, query *UserProfileQuery, nodes []*User, init func(*User), assign func(*User, *UserProfile)) error {
+	fks := make([]driver.Value, 0, len(nodes))
+	nodeids := make(map[int64]*User)
+	for i := range nodes {
+		fks = append(fks, nodes[i].ID)
+		nodeids[nodes[i].ID] = nodes[i]
+	}
+	query.withFKs = true
+	query.Where(predicate.UserProfile(func(s *sql.Selector) {
+		s.Where(sql.InValues(s.C(user.ProfileColumn), fks...))
+	}))
+	neighbors, err := query.All(ctx)
+	if err != nil {
+		return err
+	}
+	for _, n := range neighbors {
+		fk := n.user_profile
+		if fk == nil {
+			return fmt.Errorf(`foreign-key "user_profile" is nil for node %v`, n.ID)
+		}
+		node, ok := nodeids[*fk]
+		if !ok {
+			return fmt.Errorf(`unexpected referenced foreign-key "user_profile" returned %v for node %v`, *fk, n.ID)
+		}
+		assign(node, n)
+	}
+	return nil
+}
+func (_q *UserQuery) loadSetting(ctx context.Context, query *UserSettingQuery, nodes []*User, init func(*User), assign func(*User, *UserSetting)) error {
+	fks := make([]driver.Value, 0, len(nodes))
+	nodeids := make(map[int64]*User)
+	for i := range nodes {
+		fks = append(fks, nodes[i].ID)
+		nodeids[nodes[i].ID] = nodes[i]
+	}
+	query.withFKs = true
+	query.Where(predicate.UserSetting(func(s *sql.Selector) {
+		s.Where(sql.InValues(s.C(user.SettingColumn), fks...))
+	}))
+	neighbors, err := query.All(ctx)
+	if err != nil {
+		return err
+	}
+	for _, n := range neighbors {
+		fk := n.user_setting
+		if fk == nil {
+			return fmt.Errorf(`foreign-key "user_setting" is nil for node %v`, n.ID)
+		}
+		node, ok := nodeids[*fk]
+		if !ok {
+			return fmt.Errorf(`unexpected referenced foreign-key "user_setting" returned %v for node %v`, *fk, n.ID)
+		}
+		assign(node, n)
+	}
+	return nil
+}
 func (_q *UserQuery) loadRoles(ctx context.Context, query *RoleQuery, nodes []*User, init func(*User), assign func(*User, *Role)) error {
 	edgeIDs := make([]driver.Value, len(nodes))
 	byID := make(map[int64]*User)
@@ -1036,16 +1178,10 @@ func (_q *UserQuery) Modify(modifiers ...func(s *sql.Selector)) *UserSelect {
 //	  UUID string `json:"uuid,omitempty"`
 //	  AllowedIP string `json:"allowed_ip,omitempty"`
 //	  Username string `json:"username,omitempty"`
-//	  Nickname string `json:"nickname,omitempty"`
-//	  Avatar string `json:"avatar,omitempty"`
-//	  Name string `json:"name,omitempty"`
-//	  Gender user.Gender `json:"gender,omitempty"`
 //	  EncryptedPassword string `json:"encrypted_password,omitempty"`
 //	  Salt string `json:"salt,omitempty"`
 //	  Phone string `json:"phone,omitempty"`
 //	  Email string `json:"email,omitempty"`
-//	  Department string `json:"department,omitempty"`
-//	  Remark string `json:"remark,omitempty"`
 //	  Token string `json:"token,omitempty"`
 //	  Status enums.Status `json:"status,omitempty"`
 //	  IsSystem bool `json:"is_system,omitempty"`
@@ -1066,16 +1202,10 @@ func (_q *UserQuery) Modify(modifiers ...func(s *sql.Selector)) *UserSelect {
 //	  user.FieldUUID,
 //	  user.FieldAllowedIP,
 //	  user.FieldUsername,
-//	  user.FieldNickname,
-//	  user.FieldAvatar,
-//	  user.FieldName,
-//	  user.FieldGender,
 //	  user.FieldEncryptedPassword,
 //	  user.FieldSalt,
 //	  user.FieldPhone,
 //	  user.FieldEmail,
-//	  user.FieldDepartment,
-//	  user.FieldRemark,
 //	  user.FieldToken,
 //	  user.FieldStatus,
 //	  user.FieldIsSystem,

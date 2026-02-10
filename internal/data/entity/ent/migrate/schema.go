@@ -473,16 +473,10 @@ var (
 		{Name: "uuid", Type: field.TypeString, Size: 36, Comment: "entity.user.field.uuid"},
 		{Name: "allowed_ip", Type: field.TypeString, Comment: "entity.user.field.allowed_ip", Default: "0.0.0.0"},
 		{Name: "username", Type: field.TypeString, Size: 32, Comment: "entity.user.field.username"},
-		{Name: "nickname", Type: field.TypeString, Size: 64, Comment: "entity.user.field.nickname", Default: ""},
-		{Name: "avatar", Type: field.TypeString, Size: 256, Comment: "entity.user.field.avatar", Default: ""},
-		{Name: "name", Type: field.TypeString, Size: 64, Comment: "entity.user.field.nickname", Default: ""},
-		{Name: "gender", Type: field.TypeEnum, Comment: "entity.user.field.gender", Enums: []string{"male", "female", "unknown"}, Default: "unknown"},
 		{Name: "encrypted_password", Type: field.TypeString, Size: 256, Comment: "entity.user.field.encrypted_password", Default: ""},
 		{Name: "salt", Type: field.TypeString, Size: 64, Comment: "entity.user.field.salt", Default: ""},
 		{Name: "phone", Type: field.TypeString, Size: 32, Comment: "entity.user.field.phone", Default: ""},
 		{Name: "email", Type: field.TypeString, Size: 64, Comment: "entity.user.field.email", Default: ""},
-		{Name: "department", Type: field.TypeString, Size: 64, Comment: "entity.user.field.department", Default: ""},
-		{Name: "remark", Type: field.TypeString, Size: 1024, Comment: "entity.user.field.remark", Default: ""},
 		{Name: "token", Type: field.TypeString, Size: 512, Comment: "entity.user.field.token", Default: ""},
 		{Name: "status", Type: field.TypeInt8, Comment: "entity.user.field.status", Default: 1},
 		{Name: "is_system", Type: field.TypeBool, Comment: "entity.user.field.is_system", Default: false},
@@ -530,7 +524,7 @@ var (
 			{
 				Name:    "idx_phone_unique_not_deleted",
 				Unique:  true,
-				Columns: []*schema.Column{SysUsersColumns[15]},
+				Columns: []*schema.Column{SysUsersColumns[11]},
 				Annotation: &entsql.IndexAnnotation{
 					Where: "delete_time IS NULL",
 				},
@@ -538,7 +532,7 @@ var (
 			{
 				Name:    "idx_email_unique_not_deleted",
 				Unique:  true,
-				Columns: []*schema.Column{SysUsersColumns[16]},
+				Columns: []*schema.Column{SysUsersColumns[12]},
 				Annotation: &entsql.IndexAnnotation{
 					Where: "delete_time IS NULL",
 				},
@@ -546,7 +540,7 @@ var (
 			{
 				Name:    "user_status",
 				Unique:  false,
-				Columns: []*schema.Column{SysUsersColumns[20]},
+				Columns: []*schema.Column{SysUsersColumns[14]},
 			},
 		},
 	}
@@ -618,6 +612,59 @@ var (
 			},
 		},
 	}
+	// SysUserProfilesColumns holds the columns for the "sys_user_profiles" table.
+	SysUserProfilesColumns = []*schema.Column{
+		{Name: "id", Type: field.TypeInt64, Comment: "field.primary_key.comment"},
+		{Name: "create_author", Type: field.TypeInt64, Nullable: true, Comment: "create_author.field.comment"},
+		{Name: "update_author", Type: field.TypeInt64, Nullable: true, Comment: "update_author.field.comment"},
+		{Name: "create_time", Type: field.TypeTime, Comment: "create_time.field.comment"},
+		{Name: "update_time", Type: field.TypeTime, Comment: "update_time.field.comment"},
+		{Name: "delete_time", Type: field.TypeTime, Nullable: true, Comment: "delete_time.field.comment"},
+		{Name: "nickname", Type: field.TypeString, Size: 64, Comment: "entity.user_profile.field.nickname", Default: ""},
+		{Name: "avatar", Type: field.TypeString, Size: 256, Comment: "entity.user_profile.field.avatar", Default: ""},
+		{Name: "name", Type: field.TypeString, Size: 64, Comment: "entity.user_profile.field.name", Default: ""},
+		{Name: "gender", Type: field.TypeEnum, Comment: "entity.user_profile.field.gender", Enums: []string{"male", "female", "unknown"}, Default: "unknown"},
+		{Name: "department", Type: field.TypeString, Size: 64, Comment: "entity.user_profile.field.department", Default: ""},
+		{Name: "remark", Type: field.TypeString, Size: 1024, Comment: "entity.user_profile.field.remark", Default: ""},
+		{Name: "user_profile", Type: field.TypeInt64, Unique: true},
+	}
+	// SysUserProfilesTable holds the schema information for the "sys_user_profiles" table.
+	SysUserProfilesTable = &schema.Table{
+		Name:       "sys_user_profiles",
+		Comment:    "entity.user_profile.table.comment",
+		Columns:    SysUserProfilesColumns,
+		PrimaryKey: []*schema.Column{SysUserProfilesColumns[0]},
+		ForeignKeys: []*schema.ForeignKey{
+			{
+				Symbol:     "sys_user_profiles_sys_users_profile",
+				Columns:    []*schema.Column{SysUserProfilesColumns[12]},
+				RefColumns: []*schema.Column{SysUsersColumns[0]},
+				OnDelete:   schema.NoAction,
+			},
+		},
+		Indexes: []*schema.Index{
+			{
+				Name:    "userprofile_create_author",
+				Unique:  false,
+				Columns: []*schema.Column{SysUserProfilesColumns[1]},
+			},
+			{
+				Name:    "userprofile_update_author",
+				Unique:  false,
+				Columns: []*schema.Column{SysUserProfilesColumns[2]},
+			},
+			{
+				Name:    "userprofile_create_time",
+				Unique:  false,
+				Columns: []*schema.Column{SysUserProfilesColumns[3]},
+			},
+			{
+				Name:    "userprofile_update_time",
+				Unique:  false,
+				Columns: []*schema.Column{SysUserProfilesColumns[4]},
+			},
+		},
+	}
 	// SysUserRolesColumns holds the columns for the "sys_user_roles" table.
 	SysUserRolesColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeInt, Increment: true},
@@ -649,6 +696,57 @@ var (
 				Name:    "userrole_user_id_role_id",
 				Unique:  true,
 				Columns: []*schema.Column{SysUserRolesColumns[1], SysUserRolesColumns[2]},
+			},
+		},
+	}
+	// SysUserSettingsColumns holds the columns for the "sys_user_settings" table.
+	SysUserSettingsColumns = []*schema.Column{
+		{Name: "id", Type: field.TypeInt64, Comment: "field.primary_key.comment"},
+		{Name: "create_author", Type: field.TypeInt64, Nullable: true, Comment: "create_author.field.comment"},
+		{Name: "update_author", Type: field.TypeInt64, Nullable: true, Comment: "update_author.field.comment"},
+		{Name: "create_time", Type: field.TypeTime, Comment: "create_time.field.comment"},
+		{Name: "update_time", Type: field.TypeTime, Comment: "update_time.field.comment"},
+		{Name: "delete_time", Type: field.TypeTime, Nullable: true, Comment: "delete_time.field.comment"},
+		{Name: "theme", Type: field.TypeString, Comment: "entity.user_setting.field.theme", Default: "light"},
+		{Name: "language", Type: field.TypeString, Comment: "entity.user_setting.field.language", Default: "en-US"},
+		{Name: "timezone", Type: field.TypeString, Comment: "entity.user_setting.field.timezone", Default: "UTC"},
+		{Name: "preferences", Type: field.TypeJSON, Nullable: true, Comment: "entity.user_setting.field.preferences"},
+		{Name: "user_setting", Type: field.TypeInt64, Unique: true},
+	}
+	// SysUserSettingsTable holds the schema information for the "sys_user_settings" table.
+	SysUserSettingsTable = &schema.Table{
+		Name:       "sys_user_settings",
+		Comment:    "entity.user_setting.table.comment",
+		Columns:    SysUserSettingsColumns,
+		PrimaryKey: []*schema.Column{SysUserSettingsColumns[0]},
+		ForeignKeys: []*schema.ForeignKey{
+			{
+				Symbol:     "sys_user_settings_sys_users_setting",
+				Columns:    []*schema.Column{SysUserSettingsColumns[10]},
+				RefColumns: []*schema.Column{SysUsersColumns[0]},
+				OnDelete:   schema.NoAction,
+			},
+		},
+		Indexes: []*schema.Index{
+			{
+				Name:    "usersetting_create_author",
+				Unique:  false,
+				Columns: []*schema.Column{SysUserSettingsColumns[1]},
+			},
+			{
+				Name:    "usersetting_update_author",
+				Unique:  false,
+				Columns: []*schema.Column{SysUserSettingsColumns[2]},
+			},
+			{
+				Name:    "usersetting_create_time",
+				Unique:  false,
+				Columns: []*schema.Column{SysUserSettingsColumns[3]},
+			},
+			{
+				Name:    "usersetting_update_time",
+				Unique:  false,
+				Columns: []*schema.Column{SysUserSettingsColumns[4]},
 			},
 		},
 	}
@@ -787,7 +885,9 @@ var (
 		SysUsersTable,
 		OrgUserDepartmentsTable,
 		OrgUserPositionsTable,
+		SysUserProfilesTable,
 		SysUserRolesTable,
+		SysUserSettingsTable,
 		SysViewsTable,
 		SysViewPermissionsTable,
 		SysViewResourcesTable,
@@ -847,10 +947,18 @@ func init() {
 	OrgUserPositionsTable.Annotation = &entsql.Annotation{
 		Table: "org_user_positions",
 	}
+	SysUserProfilesTable.ForeignKeys[0].RefTable = SysUsersTable
+	SysUserProfilesTable.Annotation = &entsql.Annotation{
+		Table: "sys_user_profiles",
+	}
 	SysUserRolesTable.ForeignKeys[0].RefTable = SysUsersTable
 	SysUserRolesTable.ForeignKeys[1].RefTable = SysRolesTable
 	SysUserRolesTable.Annotation = &entsql.Annotation{
 		Table: "sys_user_roles",
+	}
+	SysUserSettingsTable.ForeignKeys[0].RefTable = SysUsersTable
+	SysUserSettingsTable.Annotation = &entsql.Annotation{
+		Table: "sys_user_settings",
 	}
 	SysViewsTable.ForeignKeys[0].RefTable = SysViewsTable
 	SysViewsTable.Annotation = &entsql.Annotation{

@@ -41,7 +41,7 @@ func wireApp(app *runtime.App, bootstrap *conf.Config) (*kratos.App, func(), err
 	if err != nil {
 		return nil, nil, err
 	}
-	authRepo := dal.NewAuthRepo(database, v)
+	authRepo := dal.NewAuthnRepo(database, v)
 	crypto, err := providers.ProvideHasher()
 	if err != nil {
 		cleanup()

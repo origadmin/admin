@@ -17,7 +17,9 @@ import (
 	"origadmin/application/admin/internal/data/entity/ent/user"
 	"origadmin/application/admin/internal/data/entity/ent/userdepartment"
 	"origadmin/application/admin/internal/data/entity/ent/userposition"
+	"origadmin/application/admin/internal/data/entity/ent/userprofile"
 	"origadmin/application/admin/internal/data/entity/ent/userrole"
+	"origadmin/application/admin/internal/data/entity/ent/usersetting"
 	"origadmin/application/admin/internal/data/entity/ent/view"
 	"origadmin/application/admin/internal/data/entity/ent/viewpermission"
 	"origadmin/application/admin/internal/data/entity/ent/viewresource"
@@ -938,14 +940,6 @@ func (m *UserMutation) SetFields(input *User, fields ...string) error {
 			m.SetAllowedIP(input.AllowedIP)
 		case user.FieldUsername:
 			m.SetUsername(input.Username)
-		case user.FieldNickname:
-			m.SetNickname(input.Nickname)
-		case user.FieldAvatar:
-			m.SetAvatar(input.Avatar)
-		case user.FieldName:
-			m.SetName(input.Name)
-		case user.FieldGender:
-			m.SetGender(input.Gender)
 		case user.FieldEncryptedPassword:
 			m.SetEncryptedPassword(input.EncryptedPassword)
 		case user.FieldSalt:
@@ -954,10 +948,6 @@ func (m *UserMutation) SetFields(input *User, fields ...string) error {
 			m.SetPhone(input.Phone)
 		case user.FieldEmail:
 			m.SetEmail(input.Email)
-		case user.FieldDepartment:
-			m.SetDepartment(input.Department)
-		case user.FieldRemark:
-			m.SetRemark(input.Remark)
 		case user.FieldToken:
 			m.SetToken(input.Token)
 		case user.FieldStatus:
@@ -1028,27 +1018,6 @@ func (m *UserMutation) SetFieldsSkipZero(input *User, fields ...string) error {
 			if input.Username != "" {
 				m.SetUsername(input.Username)
 			}
-		case user.FieldNickname:
-			// check string with sql.NullString if it is empty
-			if input.Nickname != "" {
-				m.SetNickname(input.Nickname)
-			}
-		case user.FieldAvatar:
-			// check string with sql.NullString if it is empty
-			if input.Avatar != "" {
-				m.SetAvatar(input.Avatar)
-			}
-		case user.FieldName:
-			// check string with sql.NullString if it is empty
-			if input.Name != "" {
-				m.SetName(input.Name)
-			}
-		case user.FieldGender:
-			var zero user.Gender
-			// check user.Gender with sql.NullString if it is empty
-			if input.Gender != zero {
-				m.SetGender(input.Gender)
-			}
 		case user.FieldEncryptedPassword:
 			// check string with sql.NullString if it is empty
 			if input.EncryptedPassword != "" {
@@ -1068,16 +1037,6 @@ func (m *UserMutation) SetFieldsSkipZero(input *User, fields ...string) error {
 			// check string with sql.NullString if it is empty
 			if input.Email != "" {
 				m.SetEmail(input.Email)
-			}
-		case user.FieldDepartment:
-			// check string with sql.NullString if it is empty
-			if input.Department != "" {
-				m.SetDepartment(input.Department)
-			}
-		case user.FieldRemark:
-			// check string with sql.NullString if it is empty
-			if input.Remark != "" {
-				m.SetRemark(input.Remark)
 			}
 		case user.FieldToken:
 			// check string with sql.NullString if it is empty
@@ -1213,6 +1172,121 @@ func (m *UserPositionMutation) SetFieldsSkipZero(input *UserPosition, fields ...
 // It returns an error if the field is not defined in the schema,
 // or if the type mismatches the field type.
 // Zero values are included in the update.
+func (m *UserProfileMutation) SetFields(input *UserProfile, fields ...string) error {
+	for i := range fields {
+		switch fields[i] {
+		case userprofile.FieldCreateAuthor:
+			m.SetCreateAuthor(input.CreateAuthor)
+		case userprofile.FieldUpdateAuthor:
+			m.SetUpdateAuthor(input.UpdateAuthor)
+		case userprofile.FieldCreateTime:
+			m.SetCreateTime(input.CreateTime)
+		case userprofile.FieldUpdateTime:
+			m.SetUpdateTime(input.UpdateTime)
+		case userprofile.FieldDeleteTime:
+			if input.DeleteTime != nil {
+				m.SetDeleteTime(*input.DeleteTime)
+			} else {
+				m.ResetDeleteTime()
+			}
+		case userprofile.FieldNickname:
+			m.SetNickname(input.Nickname)
+		case userprofile.FieldAvatar:
+			m.SetAvatar(input.Avatar)
+		case userprofile.FieldName:
+			m.SetName(input.Name)
+		case userprofile.FieldGender:
+			m.SetGender(input.Gender)
+		case userprofile.FieldDepartment:
+			m.SetDepartment(input.Department)
+		case userprofile.FieldRemark:
+			m.SetRemark(input.Remark)
+		case userprofile.FieldID:
+			m.SetID(input.ID)
+		default:
+			return fmt.Errorf("unknown %s field %s", "UserProfile", fields[i])
+		}
+	}
+	return nil
+}
+
+// SetFieldsSkipZero sets the values of the fields with the given names, skipping zero values.
+// It returns an error if the field is not defined in the schema,
+// or if the type mismatches the field type.
+func (m *UserProfileMutation) SetFieldsSkipZero(input *UserProfile, fields ...string) error {
+	for i := range fields {
+		switch fields[i] {
+		case userprofile.FieldCreateAuthor:
+			// check int64 with sql.NullInt64 if it is zero
+			if input.CreateAuthor != 0 {
+				m.SetCreateAuthor(input.CreateAuthor)
+			}
+		case userprofile.FieldUpdateAuthor:
+			// check int64 with sql.NullInt64 if it is zero
+			if input.UpdateAuthor != 0 {
+				m.SetUpdateAuthor(input.UpdateAuthor)
+			}
+		case userprofile.FieldCreateTime:
+			if !input.CreateTime.IsZero() {
+				m.SetCreateTime(input.CreateTime)
+			}
+		case userprofile.FieldUpdateTime:
+			if !input.UpdateTime.IsZero() {
+				m.SetUpdateTime(input.UpdateTime)
+			}
+		case userprofile.FieldDeleteTime:
+			if input.DeleteTime != nil {
+				m.SetDeleteTime(*input.DeleteTime)
+			} else {
+				m.ResetDeleteTime()
+			}
+		case userprofile.FieldNickname:
+			// check string with sql.NullString if it is empty
+			if input.Nickname != "" {
+				m.SetNickname(input.Nickname)
+			}
+		case userprofile.FieldAvatar:
+			// check string with sql.NullString if it is empty
+			if input.Avatar != "" {
+				m.SetAvatar(input.Avatar)
+			}
+		case userprofile.FieldName:
+			// check string with sql.NullString if it is empty
+			if input.Name != "" {
+				m.SetName(input.Name)
+			}
+		case userprofile.FieldGender:
+			var zero userprofile.Gender
+			// check userprofile.Gender with sql.NullString if it is empty
+			if input.Gender != zero {
+				m.SetGender(input.Gender)
+			}
+		case userprofile.FieldDepartment:
+			// check string with sql.NullString if it is empty
+			if input.Department != "" {
+				m.SetDepartment(input.Department)
+			}
+		case userprofile.FieldRemark:
+			// check string with sql.NullString if it is empty
+			if input.Remark != "" {
+				m.SetRemark(input.Remark)
+			}
+		case userprofile.FieldID:
+			// check int64 with sql.NullInt64 if it is zero
+			if input.ID != 0 {
+				m.SetID(input.ID)
+			}
+		default:
+			return fmt.Errorf("unknown %s field %s", "UserProfile", fields[i])
+		}
+	}
+	return nil
+}
+
+// SetFields sets the values of the fields with the given names.
+// It returns an error if the field is not defined in the schema,
+// or if the type mismatches the field type.
+// Zero values are included in the update.
 func (m *UserRoleMutation) SetFields(input *UserRole, fields ...string) error {
 	for i := range fields {
 		switch fields[i] {
@@ -1245,6 +1319,105 @@ func (m *UserRoleMutation) SetFieldsSkipZero(input *UserRole, fields ...string) 
 			}
 		default:
 			return fmt.Errorf("unknown %s field %s", "UserRole", fields[i])
+		}
+	}
+	return nil
+}
+
+// SetFields sets the values of the fields with the given names.
+// It returns an error if the field is not defined in the schema,
+// or if the type mismatches the field type.
+// Zero values are included in the update.
+func (m *UserSettingMutation) SetFields(input *UserSetting, fields ...string) error {
+	for i := range fields {
+		switch fields[i] {
+		case usersetting.FieldCreateAuthor:
+			m.SetCreateAuthor(input.CreateAuthor)
+		case usersetting.FieldUpdateAuthor:
+			m.SetUpdateAuthor(input.UpdateAuthor)
+		case usersetting.FieldCreateTime:
+			m.SetCreateTime(input.CreateTime)
+		case usersetting.FieldUpdateTime:
+			m.SetUpdateTime(input.UpdateTime)
+		case usersetting.FieldDeleteTime:
+			if input.DeleteTime != nil {
+				m.SetDeleteTime(*input.DeleteTime)
+			} else {
+				m.ResetDeleteTime()
+			}
+		case usersetting.FieldTheme:
+			m.SetTheme(input.Theme)
+		case usersetting.FieldLanguage:
+			m.SetLanguage(input.Language)
+		case usersetting.FieldTimezone:
+			m.SetTimezone(input.Timezone)
+		case usersetting.FieldPreferences:
+			m.SetPreferences(input.Preferences)
+		case usersetting.FieldID:
+			m.SetID(input.ID)
+		default:
+			return fmt.Errorf("unknown %s field %s", "UserSetting", fields[i])
+		}
+	}
+	return nil
+}
+
+// SetFieldsSkipZero sets the values of the fields with the given names, skipping zero values.
+// It returns an error if the field is not defined in the schema,
+// or if the type mismatches the field type.
+func (m *UserSettingMutation) SetFieldsSkipZero(input *UserSetting, fields ...string) error {
+	for i := range fields {
+		switch fields[i] {
+		case usersetting.FieldCreateAuthor:
+			// check int64 with sql.NullInt64 if it is zero
+			if input.CreateAuthor != 0 {
+				m.SetCreateAuthor(input.CreateAuthor)
+			}
+		case usersetting.FieldUpdateAuthor:
+			// check int64 with sql.NullInt64 if it is zero
+			if input.UpdateAuthor != 0 {
+				m.SetUpdateAuthor(input.UpdateAuthor)
+			}
+		case usersetting.FieldCreateTime:
+			if !input.CreateTime.IsZero() {
+				m.SetCreateTime(input.CreateTime)
+			}
+		case usersetting.FieldUpdateTime:
+			if !input.UpdateTime.IsZero() {
+				m.SetUpdateTime(input.UpdateTime)
+			}
+		case usersetting.FieldDeleteTime:
+			if input.DeleteTime != nil {
+				m.SetDeleteTime(*input.DeleteTime)
+			} else {
+				m.ResetDeleteTime()
+			}
+		case usersetting.FieldTheme:
+			// check string with sql.NullString if it is empty
+			if input.Theme != "" {
+				m.SetTheme(input.Theme)
+			}
+		case usersetting.FieldLanguage:
+			// check string with sql.NullString if it is empty
+			if input.Language != "" {
+				m.SetLanguage(input.Language)
+			}
+		case usersetting.FieldTimezone:
+			// check string with sql.NullString if it is empty
+			if input.Timezone != "" {
+				m.SetTimezone(input.Timezone)
+			}
+		case usersetting.FieldPreferences:
+			if len(input.Preferences) > 0 {
+				m.SetPreferences(input.Preferences)
+			}
+		case usersetting.FieldID:
+			// check int64 with sql.NullInt64 if it is zero
+			if input.ID != 0 {
+				m.SetID(input.ID)
+			}
+		default:
+			return fmt.Errorf("unknown %s field %s", "UserSetting", fields[i])
 		}
 	}
 	return nil

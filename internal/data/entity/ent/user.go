@@ -5,6 +5,8 @@ package ent
 import (
 	"fmt"
 	"origadmin/application/admin/internal/data/entity/ent/user"
+	"origadmin/application/admin/internal/data/entity/ent/userprofile"
+	"origadmin/application/admin/internal/data/entity/ent/usersetting"
 	"origadmin/application/admin/internal/data/enums"
 	"strings"
 	"time"
@@ -35,14 +37,6 @@ type User struct {
 	AllowedIP string `json:"allowed_ip,omitempty"`
 	// entity.user.field.username
 	Username string `json:"username,omitempty"`
-	// entity.user.field.nickname
-	Nickname string `json:"nickname,omitempty"`
-	// entity.user.field.avatar
-	Avatar string `json:"avatar,omitempty"`
-	// entity.user.field.nickname
-	Name string `json:"name,omitempty"`
-	// entity.user.field.gender
-	Gender user.Gender `json:"gender,omitempty"`
 	// entity.user.field.encrypted_password
 	EncryptedPassword string `json:"encrypted_password,omitempty"`
 	// entity.user.field.salt
@@ -53,10 +47,6 @@ type User struct {
 	Phone string `json:"phone,omitempty"`
 	// entity.user.field.email
 	Email string `json:"email,omitempty"`
-	// entity.user.field.department
-	Department string `json:"department,omitempty"`
-	// entity.user.field.remark
-	Remark string `json:"remark,omitempty"`
 	// entity.user.field.token
 	Token string `json:"token,omitempty"`
 	// entity.user.field.status
@@ -81,6 +71,10 @@ type User struct {
 
 // UserEdges holds the relations/edges for other nodes in the graph.
 type UserEdges struct {
+	// Profile holds the value of the profile edge.
+	Profile *UserProfile `json:"profile,omitempty"`
+	// Setting holds the value of the setting edge.
+	Setting *UserSetting `json:"setting,omitempty"`
 	// Roles holds the value of the roles edge.
 	Roles []*Role `json:"roles,omitempty"`
 	// Positions holds the value of the positions edge.
@@ -95,13 +89,35 @@ type UserEdges struct {
 	UserDepartments []*UserDepartment `json:"user_departments,omitempty"`
 	// loadedTypes holds the information for reporting if a
 	// type was loaded (or requested) in eager-loading or not.
-	loadedTypes [6]bool
+	loadedTypes [8]bool
+}
+
+// ProfileOrErr returns the Profile value or an error if the edge
+// was not loaded in eager-loading, or loaded but was not found.
+func (e UserEdges) ProfileOrErr() (*UserProfile, error) {
+	if e.Profile != nil {
+		return e.Profile, nil
+	} else if e.loadedTypes[0] {
+		return nil, &NotFoundError{label: userprofile.Label}
+	}
+	return nil, &NotLoadedError{edge: "profile"}
+}
+
+// SettingOrErr returns the Setting value or an error if the edge
+// was not loaded in eager-loading, or loaded but was not found.
+func (e UserEdges) SettingOrErr() (*UserSetting, error) {
+	if e.Setting != nil {
+		return e.Setting, nil
+	} else if e.loadedTypes[1] {
+		return nil, &NotFoundError{label: usersetting.Label}
+	}
+	return nil, &NotLoadedError{edge: "setting"}
 }
 
 // RolesOrErr returns the Roles value or an error if the edge
 // was not loaded in eager-loading.
 func (e UserEdges) RolesOrErr() ([]*Role, error) {
-	if e.loadedTypes[0] {
+	if e.loadedTypes[2] {
 		return e.Roles, nil
 	}
 	return nil, &NotLoadedError{edge: "roles"}
@@ -110,7 +126,7 @@ func (e UserEdges) RolesOrErr() ([]*Role, error) {
 // PositionsOrErr returns the Positions value or an error if the edge
 // was not loaded in eager-loading.
 func (e UserEdges) PositionsOrErr() ([]*Position, error) {
-	if e.loadedTypes[1] {
+	if e.loadedTypes[3] {
 		return e.Positions, nil
 	}
 	return nil, &NotLoadedError{edge: "positions"}
@@ -119,7 +135,7 @@ func (e UserEdges) PositionsOrErr() ([]*Position, error) {
 // DepartmentsOrErr returns the Departments value or an error if the edge
 // was not loaded in eager-loading.
 func (e UserEdges) DepartmentsOrErr() ([]*Department, error) {
-	if e.loadedTypes[2] {
+	if e.loadedTypes[4] {
 		return e.Departments, nil
 	}
 	return nil, &NotLoadedError{edge: "departments"}
@@ -128,7 +144,7 @@ func (e UserEdges) DepartmentsOrErr() ([]*Department, error) {
 // UserRolesOrErr returns the UserRoles value or an error if the edge
 // was not loaded in eager-loading.
 func (e UserEdges) UserRolesOrErr() ([]*UserRole, error) {
-	if e.loadedTypes[3] {
+	if e.loadedTypes[5] {
 		return e.UserRoles, nil
 	}
 	return nil, &NotLoadedError{edge: "user_roles"}
@@ -137,7 +153,7 @@ func (e UserEdges) UserRolesOrErr() ([]*UserRole, error) {
 // UserPositionsOrErr returns the UserPositions value or an error if the edge
 // was not loaded in eager-loading.
 func (e UserEdges) UserPositionsOrErr() ([]*UserPosition, error) {
-	if e.loadedTypes[4] {
+	if e.loadedTypes[6] {
 		return e.UserPositions, nil
 	}
 	return nil, &NotLoadedError{edge: "user_positions"}
@@ -146,7 +162,7 @@ func (e UserEdges) UserPositionsOrErr() ([]*UserPosition, error) {
 // UserDepartmentsOrErr returns the UserDepartments value or an error if the edge
 // was not loaded in eager-loading.
 func (e UserEdges) UserDepartmentsOrErr() ([]*UserDepartment, error) {
-	if e.loadedTypes[5] {
+	if e.loadedTypes[7] {
 		return e.UserDepartments, nil
 	}
 	return nil, &NotLoadedError{edge: "user_departments"}
@@ -161,7 +177,7 @@ func (*User) scanValues(columns []string) ([]any, error) {
 			values[i] = new(sql.NullBool)
 		case user.FieldID, user.FieldCreateAuthor, user.FieldUpdateAuthor, user.FieldStatus:
 			values[i] = new(sql.NullInt64)
-		case user.FieldUUID, user.FieldAllowedIP, user.FieldUsername, user.FieldNickname, user.FieldAvatar, user.FieldName, user.FieldGender, user.FieldEncryptedPassword, user.FieldSalt, user.FieldPhone, user.FieldEmail, user.FieldDepartment, user.FieldRemark, user.FieldToken, user.FieldLastLoginIP, user.FieldLoginIP:
+		case user.FieldUUID, user.FieldAllowedIP, user.FieldUsername, user.FieldEncryptedPassword, user.FieldSalt, user.FieldPhone, user.FieldEmail, user.FieldToken, user.FieldLastLoginIP, user.FieldLoginIP:
 			values[i] = new(sql.NullString)
 		case user.FieldCreateTime, user.FieldUpdateTime, user.FieldDeleteTime, user.FieldLastLoginTime, user.FieldLoginTime, user.FieldSanctionDate:
 			values[i] = new(sql.NullTime)
@@ -235,30 +251,6 @@ func (_m *User) assignValues(columns []string, values []any) error {
 			} else if value.Valid {
 				_m.Username = value.String
 			}
-		case user.FieldNickname:
-			if value, ok := values[i].(*sql.NullString); !ok {
-				return fmt.Errorf("unexpected type %T for field nickname", values[i])
-			} else if value.Valid {
-				_m.Nickname = value.String
-			}
-		case user.FieldAvatar:
-			if value, ok := values[i].(*sql.NullString); !ok {
-				return fmt.Errorf("unexpected type %T for field avatar", values[i])
-			} else if value.Valid {
-				_m.Avatar = value.String
-			}
-		case user.FieldName:
-			if value, ok := values[i].(*sql.NullString); !ok {
-				return fmt.Errorf("unexpected type %T for field name", values[i])
-			} else if value.Valid {
-				_m.Name = value.String
-			}
-		case user.FieldGender:
-			if value, ok := values[i].(*sql.NullString); !ok {
-				return fmt.Errorf("unexpected type %T for field gender", values[i])
-			} else if value.Valid {
-				_m.Gender = user.Gender(value.String)
-			}
 		case user.FieldEncryptedPassword:
 			if value, ok := values[i].(*sql.NullString); !ok {
 				return fmt.Errorf("unexpected type %T for field encrypted_password", values[i])
@@ -282,18 +274,6 @@ func (_m *User) assignValues(columns []string, values []any) error {
 				return fmt.Errorf("unexpected type %T for field email", values[i])
 			} else if value.Valid {
 				_m.Email = value.String
-			}
-		case user.FieldDepartment:
-			if value, ok := values[i].(*sql.NullString); !ok {
-				return fmt.Errorf("unexpected type %T for field department", values[i])
-			} else if value.Valid {
-				_m.Department = value.String
-			}
-		case user.FieldRemark:
-			if value, ok := values[i].(*sql.NullString); !ok {
-				return fmt.Errorf("unexpected type %T for field remark", values[i])
-			} else if value.Valid {
-				_m.Remark = value.String
 			}
 		case user.FieldToken:
 			if value, ok := values[i].(*sql.NullString); !ok {
@@ -354,6 +334,16 @@ func (_m *User) assignValues(columns []string, values []any) error {
 // This includes values selected through modifiers, order, etc.
 func (_m *User) Value(name string) (ent.Value, error) {
 	return _m.selectValues.Get(name)
+}
+
+// QueryProfile queries the "profile" edge of the User entity.
+func (_m *User) QueryProfile() *UserProfileQuery {
+	return NewUserClient(_m.config).QueryProfile(_m)
+}
+
+// QuerySetting queries the "setting" edge of the User entity.
+func (_m *User) QuerySetting() *UserSettingQuery {
+	return NewUserClient(_m.config).QuerySetting(_m)
 }
 
 // QueryRoles queries the "roles" edge of the User entity.
@@ -435,18 +425,6 @@ func (_m *User) String() string {
 	builder.WriteString("username=")
 	builder.WriteString(_m.Username)
 	builder.WriteString(", ")
-	builder.WriteString("nickname=")
-	builder.WriteString(_m.Nickname)
-	builder.WriteString(", ")
-	builder.WriteString("avatar=")
-	builder.WriteString(_m.Avatar)
-	builder.WriteString(", ")
-	builder.WriteString("name=")
-	builder.WriteString(_m.Name)
-	builder.WriteString(", ")
-	builder.WriteString("gender=")
-	builder.WriteString(fmt.Sprintf("%v", _m.Gender))
-	builder.WriteString(", ")
 	builder.WriteString("encrypted_password=")
 	builder.WriteString(_m.EncryptedPassword)
 	builder.WriteString(", ")
@@ -458,12 +436,6 @@ func (_m *User) String() string {
 	builder.WriteString(", ")
 	builder.WriteString("email=")
 	builder.WriteString(_m.Email)
-	builder.WriteString(", ")
-	builder.WriteString("department=")
-	builder.WriteString(_m.Department)
-	builder.WriteString(", ")
-	builder.WriteString("remark=")
-	builder.WriteString(_m.Remark)
 	builder.WriteString(", ")
 	builder.WriteString("token=")
 	builder.WriteString(_m.Token)

@@ -178,9 +178,19 @@ func (db *Database) UserPosition(ctx context.Context) *UserPositionClient {
 	return db.Client(ctx).UserPosition
 }
 
+// UserProfile is the client for interacting with the UserProfile builders.
+func (db *Database) UserProfile(ctx context.Context) *UserProfileClient {
+	return db.Client(ctx).UserProfile
+}
+
 // UserRole is the client for interacting with the UserRole builders.
 func (db *Database) UserRole(ctx context.Context) *UserRoleClient {
 	return db.Client(ctx).UserRole
+}
+
+// UserSetting is the client for interacting with the UserSetting builders.
+func (db *Database) UserSetting(ctx context.Context) *UserSettingClient {
+	return db.Client(ctx).UserSetting
 }
 
 // View is the client for interacting with the View builders.

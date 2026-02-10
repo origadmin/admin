@@ -40,26 +40,6 @@ func (User) Fields() []ent.Field {
 		field.String("username").
 			MaxLen(32).
 			Comment(i18n.Text("entity.user.field.username")), // login username of user
-		field.String("nickname").
-			MaxLen(64).
-			Default("").
-			Comment(i18n.Text("entity.user.field.nickname")), // Nickname display name of user
-		field.String("avatar").
-			MaxLen(256).
-			Default("").
-			Comment("entity.user.field.avatar"), // Avatar display avatar of user
-		field.String("name").
-			MaxLen(64).
-			Default("").
-			Comment(i18n.Text("entity.user.field.nickname")), // Name of user
-		field.Enum("gender").
-			Values(
-				string(enums.GenderMale),
-				string(enums.GenderFemale),
-				string(enums.GenderUnknown),
-			).
-			Default(string(enums.GenderUnknown)).
-			Comment(i18n.Text("entity.user.field.gender")), // Gender of user
 		field.String("encrypted_password").
 			MaxLen(256).
 			Default("").
@@ -77,14 +57,6 @@ func (User) Fields() []ent.Field {
 			MaxLen(64).
 			Default("").
 			Comment(i18n.Text("entity.user.field.email")), // login email of user
-		field.String("department").
-			MaxLen(64).
-			Default("").
-			Comment(i18n.Text("entity.user.field.department")), // Department of user
-		field.String("remark").
-			MaxLen(1024).
-			Default("").
-			Comment(i18n.Text("entity.user.field.remark")), // Remark of user
 		field.String("token").
 			MaxLen(512).
 			Default("").
@@ -152,6 +124,10 @@ func (User) Annotations() []schema.Annotation {
 // Edges of the User.
 func (User) Edges() []ent.Edge {
 	return []ent.Edge{
+		edge.To("profile", UserProfile.Type).
+			Unique(),
+		edge.To("setting", UserSetting.Type).
+			Unique(),
 		edge.To("roles", Role.Type).
 			Through("user_roles", UserRole.Type),
 		edge.To("positions", Position.Type).

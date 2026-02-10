@@ -22,6 +22,10 @@ type (
 	DepartmentPB            = types.Department
 	Departments             = []*ent.Department
 	DepartmentsPB           = []*types.Department
+	Notification            = ent.Notification
+	NotificationChannelPB   = types.NotificationChannel
+	NotificationPB          = types.Notification
+	NotificationTypePB      = types.NotificationType
 	Permission              = ent.Permission
 	PermissionEdges         = ent.PermissionEdges
 	PermissionPB            = types.Permission
@@ -64,10 +68,16 @@ type (
 	UserPositionEdges       = ent.UserPositionEdges
 	UserPositionPB          = types.UserPosition
 	UserPositions           = []*ent.UserPosition
+	UserProfile             = ent.UserProfile
+	UserProfileEdges        = ent.UserProfileEdges
+	UserProfilePB           = types.UserProfile
 	UserRole                = ent.UserRole
 	UserRoleEdges           = ent.UserRoleEdges
 	UserRolePB              = types.UserRole
 	UserRoles               = []*ent.UserRole
+	UserSetting             = ent.UserSetting
+	UserSettingEdges        = ent.UserSettingEdges
+	UserSettingPB           = types.UserSetting
 	Users                   = []*ent.User
 	UsersPB                 = []*types.User
 	View                    = ent.View
@@ -139,6 +149,32 @@ func ConvertDepartmentsToDepartmentsPB(froms Departments) DepartmentsPB {
 		tos[i] = ConvertDepartmentToDepartmentPB(f)
 	}
 	return tos
+}
+
+// ConvertNotificationPBToNotification converts NotificationPB to Notification.
+func ConvertNotificationPBToNotification(from *NotificationPB) *Notification {
+	if from == nil {
+		return nil
+	}
+
+	to := &Notification{
+		ID:      from.Id,
+		Content: from.Content,
+	}
+	return to
+}
+
+// ConvertNotificationToNotificationPB converts Notification to NotificationPB.
+func ConvertNotificationToNotificationPB(from *Notification) *NotificationPB {
+	if from == nil {
+		return nil
+	}
+
+	to := &NotificationPB{
+		Id:      from.ID,
+		Content: from.Content,
+	}
+	return to
 }
 
 // ConvertPermissionPBToPermission converts PermissionPB to Permission.
@@ -495,14 +531,8 @@ func ConvertUserPBToUser(from *UserPB) *User {
 		UUID:          from.Uuid,
 		AllowedIP:     from.AllowedIp,
 		Username:      from.Username,
-		Nickname:      from.Nickname,
-		Avatar:        from.Avatar,
-		Name:          from.Name,
-		Gender:        ConvertStringToGender(from.Gender),
 		Phone:         from.Phone,
 		Email:         from.Email,
-		Department:    from.Department,
-		Remark:        from.Remark,
 		Token:         from.Token,
 		Status:        enums.Status(from.Status),
 		LastLoginIP:   from.LastLoginIp,
@@ -544,6 +574,40 @@ func ConvertUserPositionToUserPositionPB(from *UserPosition) *UserPositionPB {
 	return to
 }
 
+// ConvertUserProfilePBToUserProfile converts UserProfilePB to UserProfile.
+func ConvertUserProfilePBToUserProfile(from *UserProfilePB) *UserProfile {
+	if from == nil {
+		return nil
+	}
+
+	to := &UserProfile{
+		Nickname:   from.Nickname,
+		Avatar:     from.Avatar,
+		Name:       from.Name,
+		Gender:     ConvertStringToGender(from.Gender),
+		Department: from.Department,
+		Remark:     from.Remark,
+	}
+	return to
+}
+
+// ConvertUserProfileToUserProfilePB converts UserProfile to UserProfilePB.
+func ConvertUserProfileToUserProfilePB(from *UserProfile) *UserProfilePB {
+	if from == nil {
+		return nil
+	}
+
+	to := &UserProfilePB{
+		Nickname:   from.Nickname,
+		Avatar:     from.Avatar,
+		Gender:     ConvertGenderToString(from.Gender),
+		Name:       from.Name,
+		Department: from.Department,
+		Remark:     from.Remark,
+	}
+	return to
+}
+
 // ConvertUserRolePBToUserRole converts UserRolePB to UserRole.
 func ConvertUserRolePBToUserRole(from *UserRolePB) *UserRole {
 	if from == nil {
@@ -574,6 +638,36 @@ func ConvertUserRoleToUserRolePB(from *UserRole) *UserRolePB {
 	return to
 }
 
+// ConvertUserSettingPBToUserSetting converts UserSettingPB to UserSetting.
+func ConvertUserSettingPBToUserSetting(from *UserSettingPB) *UserSetting {
+	if from == nil {
+		return nil
+	}
+
+	to := &UserSetting{
+		Theme:       from.Theme,
+		Language:    from.Language,
+		Timezone:    from.Timezone,
+		Preferences: ConvertStringToStringMapToStringToObjectMap(from.Preferences),
+	}
+	return to
+}
+
+// ConvertUserSettingToUserSettingPB converts UserSetting to UserSettingPB.
+func ConvertUserSettingToUserSettingPB(from *UserSetting) *UserSettingPB {
+	if from == nil {
+		return nil
+	}
+
+	to := &UserSettingPB{
+		Theme:       from.Theme,
+		Language:    from.Language,
+		Timezone:    from.Timezone,
+		Preferences: ConvertStringToObjectMapToStringToStringMap(from.Preferences),
+	}
+	return to
+}
+
 // ConvertUserToUserPB converts User to UserPB.
 func ConvertUserToUserPB(from *User) *UserPB {
 	if from == nil {
@@ -589,13 +683,8 @@ func ConvertUserToUserPB(from *User) *UserPB {
 		Uuid:          from.UUID,
 		AllowedIp:     from.AllowedIP,
 		Username:      from.Username,
-		Nickname:      from.Nickname,
-		Avatar:        from.Avatar,
-		Name:          from.Name,
-		Gender:        ConvertGenderToString(from.Gender),
 		Phone:         from.Phone,
 		Email:         from.Email,
-		Remark:        from.Remark,
 		Token:         from.Token,
 		Status:        int32(from.Status),
 		LastLoginIp:   from.LastLoginIP,
@@ -603,7 +692,8 @@ func ConvertUserToUserPB(from *User) *UserPB {
 		LastLoginTime: ConvertTimeToTimestamp(from.LastLoginTime),
 		LoginTime:     ConvertTimeToTimestamp(from.LoginTime),
 		SanctionDate:  ConvertTimeToTimestamp(from.SanctionDate),
-		Department:    from.Department,
+		Profile:       ConvertUserProfileToUserProfilePB(from.Edges.Profile),
+		Setting:       ConvertUserSettingToUserSettingPB(from.Edges.Setting),
 		Roles:         ConvertRolesToRolesPB(from.Edges.Roles),
 	}
 	return to

@@ -6,183 +6,140 @@ package dal
 
 import (
 	"context"
-	"strconv"
 
 	"github.com/go-kratos/kratos/v2/errors"
 	"github.com/go-kratos/kratos/v2/log"
 	"golang.org/x/crypto/bcrypt"
 
-	"origadmin/application/admin/api/v1/services/types"
 	"origadmin/application/admin/internal/data/entity/ent"
-	"origadmin/application/admin/internal/data/entity/ent/role"
 	"origadmin/application/admin/internal/data/entity/ent/user"
-	"origadmin/application/admin/internal/data/entity/ent/view"
-	"origadmin/application/admin/internal/data/enums"
+	"origadmin/application/admin/internal/data/entity/ent/userprofile"
+	"origadmin/application/admin/internal/data/entity/ent/usersetting"
 	"origadmin/application/admin/internal/features/identity/dto"
-	systemDto "origadmin/application/admin/internal/features/system/dto"
 )
 
+// MeRepo implements the dto.MeRepo interface for handling "me" (current user) related data operations.
 type MeRepo struct {
 	db  *ent.Database
 	log *log.Helper
 }
 
-// NewMeRepo .
+// NewMeRepo creates a new MeRepo with the given database client and logger.
 func NewMeRepo(db *ent.Database, logger log.Logger) dto.MeRepo {
 	return &MeRepo{
 		db:  db,
-		log: log.NewHelper(logger),
+		log: log.NewHelper(log.With(logger, "module", "dal/me")),
 	}
 }
 
-func (r *MeRepo) GetProfile(ctx context.Context, userID int64) (*types.User, error) {
-	u, err := r.db.User(ctx).Query().Where(user.ID(userID)).Only(ctx)
+// GetUserWithRelations retrieves a user by ID along with their profile and settings.
+func (r *MeRepo) GetUserWithRelations(ctx context.Context, userID int64) (*ent.User, error) {
+	u, err := r.db.User(ctx).Query().
+		Where(user.ID(userID)).
+		WithProfile().
+		WithSetting().
+		Only(ctx)
 	if err != nil {
 		if ent.IsNotFound(err) {
 			return nil, errors.NotFound("USER_NOT_FOUND", "User not found")
 		}
-		return nil, err
+		r.log.WithContext(ctx).Errorf("failed to get user with relations for user_id %d: %v", userID, err)
+		return nil, errors.InternalServer("DATABASE_ERROR", "failed to retrieve user data")
 	}
-	return systemDto.ConvertUserToUserPB(u), nil
+	return u, nil
 }
 
-// ListActiveViews retrieves all active views, ordered by sequence.
-func (r *MeRepo) ListActiveViews(ctx context.Context) ([]*types.View, error) {
-	views, err := r.db.View(ctx).Query().
-		Where(view.StatusEQ(enums.StatusActive)).
-		Order(ent.Asc(view.FieldSequence)).
-		All(ctx)
-	if err != nil {
-		return nil, err
-	}
-	return systemDto.ConvertViewsToViewsPB(views), nil
-}
-
-// GetPermissionKeywordsByUserID retrieves all permission keywords for a user.
-func (r *MeRepo) GetPermissionKeywordsByUserID(ctx context.Context, userID string) ([]string, error) {
-	id, err := strconv.ParseInt(userID, 10, 64)
-	if err != nil {
-		return nil, err
-	}
-
-	permissions, err := r.db.User(ctx).Query().
-		Where(user.ID(id)).
-		QueryRoles().
-		QueryPermissions().
-		All(ctx)
-	if err != nil {
-		return nil, err
-	}
-
-	keywords := make([]string, len(permissions))
-	for i, p := range permissions {
-		keywords[i] = p.Keyword
-	}
-	return keywords, nil
-}
-
-// HasSystemRole checks if the user has a role with the 'system' type.
-func (r *MeRepo) HasSystemRole(ctx context.Context, userID int64) (bool, error) {
-	return r.db.User(ctx).
-		Query().
-		Where(user.ID(userID)).
-		QueryRoles().
-		Where(role.TypeEQ(enums.RoleTypeSystem)).
-		Exist(ctx)
-}
-
-// UpdateProfile updates the user's profile information in the database.
-func (r *MeRepo) UpdateProfile(ctx context.Context, userID int64, u *types.User) error {
-	// Convert string gender to user.Gender enum
-	var gender *user.Gender
-	if u.Gender != "" {
-		g := user.GenderMale // default
-		if u.Gender == "female" {
-			g = user.GenderFemale
+// UpdateProfile updates the user's profile information within a transaction.
+func (r *MeRepo) UpdateProfile(ctx context.Context, userID int64, profileData *dto.UpdateProfileRequest) (*ent.User, error) {
+	// Use the project's custom transaction wrapper for consistency with other DAL implementations like user.go.
+	err := r.db.Tx(ctx, func(tx context.Context) error {
+		// The query must start from the transactional client, which is obtained by passing the tx context.
+		profile, err := r.db.User(tx).Query().Where(user.ID(userID)).QueryProfile().Only(ctx)
+		if err != nil {
+			if ent.IsNotFound(err) {
+				return errors.NotFound("USER_PROFILE_NOT_FOUND", "User profile not found")
+			}
+			r.log.WithContext(ctx).Errorf("failed to query profile for user_id %d: %v", userID, err)
+			return errors.InternalServer("DATABASE_ERROR", "failed to query user profile")
 		}
-		gender = &g
-	}
+		profileUpdate := profile.Update()
+		if profileData.Nickname != nil {
+			profileUpdate.SetNickname(*profileData.Nickname)
+		}
+		if profileData.Avatar != nil {
+			profileUpdate.SetAvatar(*profileData.Avatar)
+		}
+		if profileData.Gender != nil {
+			profileUpdate.SetGender(userprofile.Gender(*profileData.Gender))
+		}
+		// The update builder is derived from `profile` which was queried in the transaction, so it's transactional.
+		// The context passed to Exec is for cancellation/deadlines.
+		if err := profileUpdate.Exec(ctx); err != nil {
+			r.log.WithContext(ctx).Errorf("failed to update profile for user_id %d: %v", userID, err)
+			return errors.InternalServer("PROFILE_UPDATE_FAILED", "failed to update profile")
+		}
+		return nil
+	})
 
-	update := r.db.User(ctx).UpdateOneID(userID)
-	if u.Nickname != "" {
-		update.SetNickname(u.Nickname)
+	if err != nil {
+		return nil, err
 	}
-	if u.Avatar != "" {
-		update.SetAvatar(u.Avatar)
-	}
-	if gender != nil {
-		update.SetGender(*gender)
-	}
-	if u.Email != "" {
-		update.SetEmail(u.Email)
-	}
-	if u.Phone != "" {
-		update.SetPhone(u.Phone)
-	}
-	return update.Exec(ctx)
+	return r.GetUserWithRelations(ctx, userID)
 }
 
-// ChangePassword changes the user's password in the database.
-func (r *MeRepo) ChangePassword(ctx context.Context, userID int64, oldPassword, newPassword string) error {
+// ChangePassword verifies the old password and updates it to the new one.
+func (r *MeRepo) ChangePassword(ctx context.Context, userID int64, oldPassword, newPassword string) (err error) {
 	u, err := r.db.User(ctx).Query().Where(user.ID(userID)).Only(ctx)
 	if err != nil {
 		if ent.IsNotFound(err) {
 			return errors.NotFound("USER_NOT_FOUND", "User not found")
 		}
-		return err
+		r.log.WithContext(ctx).Errorf("failed to find user for password change, user_id %d: %v", userID, err)
+		return errors.InternalServer("DATABASE_ERROR", "failed to retrieve user")
 	}
-
-	// Check old password
 	if err := bcrypt.CompareHashAndPassword([]byte(u.EncryptedPassword), []byte(oldPassword)); err != nil {
 		return errors.BadRequest("INVALID_PASSWORD", "Invalid old password")
 	}
-
-	// Hash new password
 	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(newPassword), bcrypt.DefaultCost)
 	if err != nil {
-		return err
+		r.log.WithContext(ctx).Errorf("failed to hash new password for user_id %d: %v", userID, err)
+		return errors.InternalServer("PASSWORD_HASH_FAILED", "Failed to process new password")
 	}
-
-	return r.db.User(ctx).UpdateOneID(userID).SetEncryptedPassword(string(hashedPassword)).Exec(ctx)
+	err = r.db.User(ctx).UpdateOneID(userID).SetEncryptedPassword(string(hashedPassword)).Exec(ctx)
+	if err != nil {
+		r.log.WithContext(ctx).Errorf("failed to update password for user_id %d: %v", userID, err)
+		return errors.InternalServer("DATABASE_ERROR", "failed to update password")
+	}
+	return nil
 }
 
-// UpdatePreferences updates user preferences in the remark field (P2).
-func (r *MeRepo) UpdatePreferences(ctx context.Context, userID int64, preferences map[string]string) error {
-	_, err := r.db.User(ctx).Query().Where(user.ID(userID)).Only(ctx)
+// UpdateSettings updates the user's application settings.
+func (r *MeRepo) UpdateSettings(ctx context.Context, userID int64, settingsData *dto.UpdateSettingsRequest) (*ent.UserSetting, error) {
+	// Query the setting directly for clarity and efficiency.
+	setting, err := r.db.UserSetting(ctx).Query().
+		Where(usersetting.HasUserWith(user.ID(userID))).
+		Only(ctx)
 	if err != nil {
 		if ent.IsNotFound(err) {
-			return errors.NotFound("USER_NOT_FOUND", "User not found")
+			return nil, errors.NotFound("USER_SETTINGS_NOT_FOUND", "User settings not found")
 		}
-		return err
+		r.log.WithContext(ctx).Errorf("failed to retrieve settings for user_id %d: %v", userID, err)
+		return nil, errors.InternalServer("DATABASE_ERROR", "failed to retrieve user settings")
 	}
-
-	// For now, store preferences as JSON in the remark field
-	// In production, you might want a dedicated preferences table or JSON field
-	// This is a stub implementation - actual implementation would serialize preferences to JSON
-	return r.db.User(ctx).UpdateOneID(userID).SetRemark("").Exec(ctx)
-}
-
-// GetUserSettings retrieves user settings (P2).
-// For now, this returns basic user information as settings
-func (r *MeRepo) GetUserSettings(ctx context.Context, userID int64) (map[string]string, error) {
-	_, err := r.db.User(ctx).Query().Where(user.ID(userID)).Only(ctx)
+	update := setting.Update()
+	if settingsData.Theme != nil {
+		update.SetTheme(*settingsData.Theme)
+	}
+	if settingsData.Language != nil {
+		update.SetLanguage(*settingsData.Language)
+	}
+	if settingsData.Timezone != nil {
+		update.SetTimezone(*settingsData.Timezone)
+	}
+	updatedSetting, err := update.Save(ctx)
 	if err != nil {
-		if ent.IsNotFound(err) {
-			return nil, errors.NotFound("USER_NOT_FOUND", "User not found")
-		}
-		return nil, err
+		r.log.WithContext(ctx).Errorf("failed to update settings for user_id %d: %v", userID, err)
+		return nil, errors.InternalServer("DATABASE_ERROR", "failed to update settings")
 	}
-
-	// Return user settings as a map
-	// In production, these would be stored in a dedicated table or JSON field
-	settings := map[string]string{
-		"theme":        "light",
-		"language":     "en",
-		"timezone":     "UTC",
-		"date_format":  "YYYY-MM-DD",
-		"time_format":  "HH:mm:ss",
-		"notification": "enabled",
-	}
-
-	return settings, nil
+	return updatedSetting, nil
 }

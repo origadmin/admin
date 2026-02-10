@@ -14,13 +14,13 @@ import (
 
 // AuthUseCase is a identityentication use case.
 type AuthUseCase struct {
-	repo   dto.AuthRepo
+	repo   dto.AuthnRepo
 	hasher hash.Crypto
 	log    *log.Helper
 }
 
 // NewAuthUseCase new a identityentication use case.
-func NewAuthUseCase(repo dto.AuthRepo, hasher hash.Crypto, logger log.Logger) *AuthUseCase {
+func NewAuthUseCase(repo dto.AuthnRepo, hasher hash.Crypto, logger log.Logger) *AuthUseCase {
 	return &AuthUseCase{
 		repo:   repo,
 		hasher: hasher,

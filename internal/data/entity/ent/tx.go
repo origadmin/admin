@@ -38,8 +38,12 @@ type Tx struct {
 	UserDepartment *UserDepartmentClient
 	// UserPosition is the client for interacting with the UserPosition builders.
 	UserPosition *UserPositionClient
+	// UserProfile is the client for interacting with the UserProfile builders.
+	UserProfile *UserProfileClient
 	// UserRole is the client for interacting with the UserRole builders.
 	UserRole *UserRoleClient
+	// UserSetting is the client for interacting with the UserSetting builders.
+	UserSetting *UserSettingClient
 	// View is the client for interacting with the View builders.
 	View *ViewClient
 	// ViewPermission is the client for interacting with the ViewPermission builders.
@@ -190,7 +194,9 @@ func (tx *Tx) init() {
 	tx.User = NewUserClient(tx.config)
 	tx.UserDepartment = NewUserDepartmentClient(tx.config)
 	tx.UserPosition = NewUserPositionClient(tx.config)
+	tx.UserProfile = NewUserProfileClient(tx.config)
 	tx.UserRole = NewUserRoleClient(tx.config)
+	tx.UserSetting = NewUserSettingClient(tx.config)
 	tx.View = NewViewClient(tx.config)
 	tx.ViewPermission = NewViewPermissionClient(tx.config)
 	tx.ViewResource = NewViewResourceClient(tx.config)

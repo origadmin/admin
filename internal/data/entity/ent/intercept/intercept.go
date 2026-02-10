@@ -21,7 +21,9 @@ import (
 	"origadmin/application/admin/internal/data/entity/ent/user"
 	"origadmin/application/admin/internal/data/entity/ent/userdepartment"
 	"origadmin/application/admin/internal/data/entity/ent/userposition"
+	"origadmin/application/admin/internal/data/entity/ent/userprofile"
 	"origadmin/application/admin/internal/data/entity/ent/userrole"
+	"origadmin/application/admin/internal/data/entity/ent/usersetting"
 	"origadmin/application/admin/internal/data/entity/ent/view"
 	"origadmin/application/admin/internal/data/entity/ent/viewpermission"
 	"origadmin/application/admin/internal/data/entity/ent/viewresource"
@@ -436,6 +438,33 @@ func (f TraverseUserPosition) Traverse(ctx context.Context, q ent.Query) error {
 	return fmt.Errorf("unexpected query type %T. expect *ent.UserPositionQuery", q)
 }
 
+// The UserProfileFunc type is an adapter to allow the use of ordinary function as a Querier.
+type UserProfileFunc func(context.Context, *ent.UserProfileQuery) (ent.Value, error)
+
+// Query calls f(ctx, q).
+func (f UserProfileFunc) Query(ctx context.Context, q ent.Query) (ent.Value, error) {
+	if q, ok := q.(*ent.UserProfileQuery); ok {
+		return f(ctx, q)
+	}
+	return nil, fmt.Errorf("unexpected query type %T. expect *ent.UserProfileQuery", q)
+}
+
+// The TraverseUserProfile type is an adapter to allow the use of ordinary function as Traverser.
+type TraverseUserProfile func(context.Context, *ent.UserProfileQuery) error
+
+// Intercept is a dummy implementation of Intercept that returns the next Querier in the pipeline.
+func (f TraverseUserProfile) Intercept(next ent.Querier) ent.Querier {
+	return next
+}
+
+// Traverse calls f(ctx, q).
+func (f TraverseUserProfile) Traverse(ctx context.Context, q ent.Query) error {
+	if q, ok := q.(*ent.UserProfileQuery); ok {
+		return f(ctx, q)
+	}
+	return fmt.Errorf("unexpected query type %T. expect *ent.UserProfileQuery", q)
+}
+
 // The UserRoleFunc type is an adapter to allow the use of ordinary function as a Querier.
 type UserRoleFunc func(context.Context, *ent.UserRoleQuery) (ent.Value, error)
 
@@ -461,6 +490,33 @@ func (f TraverseUserRole) Traverse(ctx context.Context, q ent.Query) error {
 		return f(ctx, q)
 	}
 	return fmt.Errorf("unexpected query type %T. expect *ent.UserRoleQuery", q)
+}
+
+// The UserSettingFunc type is an adapter to allow the use of ordinary function as a Querier.
+type UserSettingFunc func(context.Context, *ent.UserSettingQuery) (ent.Value, error)
+
+// Query calls f(ctx, q).
+func (f UserSettingFunc) Query(ctx context.Context, q ent.Query) (ent.Value, error) {
+	if q, ok := q.(*ent.UserSettingQuery); ok {
+		return f(ctx, q)
+	}
+	return nil, fmt.Errorf("unexpected query type %T. expect *ent.UserSettingQuery", q)
+}
+
+// The TraverseUserSetting type is an adapter to allow the use of ordinary function as Traverser.
+type TraverseUserSetting func(context.Context, *ent.UserSettingQuery) error
+
+// Intercept is a dummy implementation of Intercept that returns the next Querier in the pipeline.
+func (f TraverseUserSetting) Intercept(next ent.Querier) ent.Querier {
+	return next
+}
+
+// Traverse calls f(ctx, q).
+func (f TraverseUserSetting) Traverse(ctx context.Context, q ent.Query) error {
+	if q, ok := q.(*ent.UserSettingQuery); ok {
+		return f(ctx, q)
+	}
+	return fmt.Errorf("unexpected query type %T. expect *ent.UserSettingQuery", q)
 }
 
 // The ViewFunc type is an adapter to allow the use of ordinary function as a Querier.
@@ -573,8 +629,12 @@ func NewQuery(q ent.Query) (Query, error) {
 		return &query[*ent.UserDepartmentQuery, predicate.UserDepartment, userdepartment.OrderOption]{typ: ent.TypeUserDepartment, tq: q}, nil
 	case *ent.UserPositionQuery:
 		return &query[*ent.UserPositionQuery, predicate.UserPosition, userposition.OrderOption]{typ: ent.TypeUserPosition, tq: q}, nil
+	case *ent.UserProfileQuery:
+		return &query[*ent.UserProfileQuery, predicate.UserProfile, userprofile.OrderOption]{typ: ent.TypeUserProfile, tq: q}, nil
 	case *ent.UserRoleQuery:
 		return &query[*ent.UserRoleQuery, predicate.UserRole, userrole.OrderOption]{typ: ent.TypeUserRole, tq: q}, nil
+	case *ent.UserSettingQuery:
+		return &query[*ent.UserSettingQuery, predicate.UserSetting, usersetting.OrderOption]{typ: ent.TypeUserSetting, tq: q}, nil
 	case *ent.ViewQuery:
 		return &query[*ent.ViewQuery, predicate.View, view.OrderOption]{typ: ent.TypeView, tq: q}, nil
 	case *ent.ViewPermissionQuery:

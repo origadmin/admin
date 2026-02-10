@@ -7,19 +7,19 @@ package dal
 
 import (
 	"github.com/google/wire"
-	"github.com/origadmin/contrib/security/authz"
 )
 
 // ProviderSet is dal providers.
 var ProviderSet = wire.NewSet(
-	NewAuthRepo,
+	NewAuthnRepo,
+	NewAuthzRepo,
 	NewMeRepo,
 
 	// Provide authz.PolicyReader with either the DB or gRPC implementation.
 	// Use only one of the following blocks.
 	//
 	// For direct database access:
-	NewPolicyDBProvider,
+	NewPolicyProvider,
 	//
 	// For gRPC-based access:
 	// wire.Bind(new(authz.PolicyReader), new(*policyGRPCProvider)),
