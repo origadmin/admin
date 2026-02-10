@@ -60,20 +60,22 @@ func init() {
 	// casbinrule.DefaultV5 holds the default value on creation for the v5 field.
 	casbinrule.DefaultV5 = casbinruleDescV5.Default.(string)
 	departmentMixin := schema.Department{}.Mixin()
+	departmentMixinHooks1 := departmentMixin[1].Hooks()
+	department.Hooks[0] = departmentMixinHooks1[0]
 	departmentMixinFields0 := departmentMixin[0].Fields()
 	_ = departmentMixinFields0
-	departmentMixinFields1 := departmentMixin[1].Fields()
-	_ = departmentMixinFields1
 	departmentMixinFields2 := departmentMixin[2].Fields()
 	_ = departmentMixinFields2
+	departmentMixinFields3 := departmentMixin[3].Fields()
+	_ = departmentMixinFields3
 	departmentFields := schema.Department{}.Fields()
 	_ = departmentFields
 	// departmentDescCreateTime is the schema descriptor for create_time field.
-	departmentDescCreateTime := departmentMixinFields1[0].Descriptor()
+	departmentDescCreateTime := departmentMixinFields2[0].Descriptor()
 	// department.DefaultCreateTime holds the default value on creation for the create_time field.
 	department.DefaultCreateTime = departmentDescCreateTime.Default.(func() time.Time)
 	// departmentDescUpdateTime is the schema descriptor for update_time field.
-	departmentDescUpdateTime := departmentMixinFields2[0].Descriptor()
+	departmentDescUpdateTime := departmentMixinFields3[0].Descriptor()
 	// department.DefaultUpdateTime holds the default value on creation for the update_time field.
 	department.DefaultUpdateTime = departmentDescUpdateTime.Default.(func() time.Time)
 	// department.UpdateDefaultUpdateTime holds the default value on update for the update_time field.
@@ -119,22 +121,12 @@ func init() {
 	notification.Hooks[0] = notificationMixinHooks1[0]
 	notificationMixinFields0 := notificationMixin[0].Fields()
 	_ = notificationMixinFields0
-	notificationMixinFields1 := notificationMixin[1].Fields()
-	_ = notificationMixinFields1
 	notificationMixinFields2 := notificationMixin[2].Fields()
 	_ = notificationMixinFields2
 	notificationMixinFields3 := notificationMixin[3].Fields()
 	_ = notificationMixinFields3
 	notificationFields := schema.Notification{}.Fields()
 	_ = notificationFields
-	// notificationDescCreateAuthor is the schema descriptor for create_author field.
-	notificationDescCreateAuthor := notificationMixinFields1[0].Descriptor()
-	// notification.DefaultCreateAuthor holds the default value on creation for the create_author field.
-	notification.DefaultCreateAuthor = notificationDescCreateAuthor.Default.(int64)
-	// notificationDescUpdateAuthor is the schema descriptor for update_author field.
-	notificationDescUpdateAuthor := notificationMixinFields1[1].Descriptor()
-	// notification.DefaultUpdateAuthor holds the default value on creation for the update_author field.
-	notification.DefaultUpdateAuthor = notificationDescUpdateAuthor.Default.(int64)
 	// notificationDescCreateTime is the schema descriptor for create_time field.
 	notificationDescCreateTime := notificationMixinFields2[0].Descriptor()
 	// notification.DefaultCreateTime holds the default value on creation for the create_time field.
@@ -168,20 +160,22 @@ func init() {
 	// notification.IDValidator is a validator for the "id" field. It is called by the builders before save.
 	notification.IDValidator = notificationDescID.Validators[0].(func(int64) error)
 	permissionMixin := schema.Permission{}.Mixin()
+	permissionMixinHooks1 := permissionMixin[1].Hooks()
+	permission.Hooks[0] = permissionMixinHooks1[0]
 	permissionMixinFields0 := permissionMixin[0].Fields()
 	_ = permissionMixinFields0
-	permissionMixinFields1 := permissionMixin[1].Fields()
-	_ = permissionMixinFields1
 	permissionMixinFields2 := permissionMixin[2].Fields()
 	_ = permissionMixinFields2
+	permissionMixinFields3 := permissionMixin[3].Fields()
+	_ = permissionMixinFields3
 	permissionFields := schema.Permission{}.Fields()
 	_ = permissionFields
 	// permissionDescCreateTime is the schema descriptor for create_time field.
-	permissionDescCreateTime := permissionMixinFields1[0].Descriptor()
+	permissionDescCreateTime := permissionMixinFields2[0].Descriptor()
 	// permission.DefaultCreateTime holds the default value on creation for the create_time field.
 	permission.DefaultCreateTime = permissionDescCreateTime.Default.(func() time.Time)
 	// permissionDescUpdateTime is the schema descriptor for update_time field.
-	permissionDescUpdateTime := permissionMixinFields2[0].Descriptor()
+	permissionDescUpdateTime := permissionMixinFields3[0].Descriptor()
 	// permission.DefaultUpdateTime holds the default value on creation for the update_time field.
 	permission.DefaultUpdateTime = permissionDescUpdateTime.Default.(func() time.Time)
 	// permission.UpdateDefaultUpdateTime holds the default value on update for the update_time field.
@@ -227,20 +221,22 @@ func init() {
 	// permissionresource.ResourceIDValidator is a validator for the "resource_id" field. It is called by the builders before save.
 	permissionresource.ResourceIDValidator = permissionresourceDescResourceID.Validators[0].(func(int64) error)
 	positionMixin := schema.Position{}.Mixin()
+	positionMixinHooks1 := positionMixin[1].Hooks()
+	position.Hooks[0] = positionMixinHooks1[0]
 	positionMixinFields0 := positionMixin[0].Fields()
 	_ = positionMixinFields0
-	positionMixinFields1 := positionMixin[1].Fields()
-	_ = positionMixinFields1
 	positionMixinFields2 := positionMixin[2].Fields()
 	_ = positionMixinFields2
+	positionMixinFields3 := positionMixin[3].Fields()
+	_ = positionMixinFields3
 	positionFields := schema.Position{}.Fields()
 	_ = positionFields
 	// positionDescCreateTime is the schema descriptor for create_time field.
-	positionDescCreateTime := positionMixinFields1[0].Descriptor()
+	positionDescCreateTime := positionMixinFields2[0].Descriptor()
 	// position.DefaultCreateTime holds the default value on creation for the create_time field.
 	position.DefaultCreateTime = positionDescCreateTime.Default.(func() time.Time)
 	// positionDescUpdateTime is the schema descriptor for update_time field.
-	positionDescUpdateTime := positionMixinFields2[0].Descriptor()
+	positionDescUpdateTime := positionMixinFields3[0].Descriptor()
 	// position.DefaultUpdateTime holds the default value on creation for the update_time field.
 	position.DefaultUpdateTime = positionDescUpdateTime.Default.(func() time.Time)
 	// position.UpdateDefaultUpdateTime holds the default value on update for the update_time field.
@@ -280,20 +276,22 @@ func init() {
 	// positionpermission.PermissionIDValidator is a validator for the "permission_id" field. It is called by the builders before save.
 	positionpermission.PermissionIDValidator = positionpermissionDescPermissionID.Validators[0].(func(int64) error)
 	resourceMixin := schema.Resource{}.Mixin()
+	resourceMixinHooks1 := resourceMixin[1].Hooks()
+	resource.Hooks[0] = resourceMixinHooks1[0]
 	resourceMixinFields0 := resourceMixin[0].Fields()
 	_ = resourceMixinFields0
-	resourceMixinFields1 := resourceMixin[1].Fields()
-	_ = resourceMixinFields1
 	resourceMixinFields2 := resourceMixin[2].Fields()
 	_ = resourceMixinFields2
+	resourceMixinFields3 := resourceMixin[3].Fields()
+	_ = resourceMixinFields3
 	resourceFields := schema.Resource{}.Fields()
 	_ = resourceFields
 	// resourceDescCreateTime is the schema descriptor for create_time field.
-	resourceDescCreateTime := resourceMixinFields1[0].Descriptor()
+	resourceDescCreateTime := resourceMixinFields2[0].Descriptor()
 	// resource.DefaultCreateTime holds the default value on creation for the create_time field.
 	resource.DefaultCreateTime = resourceDescCreateTime.Default.(func() time.Time)
 	// resourceDescUpdateTime is the schema descriptor for update_time field.
-	resourceDescUpdateTime := resourceMixinFields2[0].Descriptor()
+	resourceDescUpdateTime := resourceMixinFields3[0].Descriptor()
 	// resource.DefaultUpdateTime holds the default value on creation for the update_time field.
 	resource.DefaultUpdateTime = resourceDescUpdateTime.Default.(func() time.Time)
 	// resource.UpdateDefaultUpdateTime holds the default value on update for the update_time field.
@@ -387,20 +385,22 @@ func init() {
 	// resource.IDValidator is a validator for the "id" field. It is called by the builders before save.
 	resource.IDValidator = resourceDescID.Validators[0].(func(int64) error)
 	roleMixin := schema.Role{}.Mixin()
+	roleMixinHooks1 := roleMixin[1].Hooks()
+	role.Hooks[0] = roleMixinHooks1[0]
 	roleMixinFields0 := roleMixin[0].Fields()
 	_ = roleMixinFields0
-	roleMixinFields1 := roleMixin[1].Fields()
-	_ = roleMixinFields1
 	roleMixinFields2 := roleMixin[2].Fields()
 	_ = roleMixinFields2
+	roleMixinFields3 := roleMixin[3].Fields()
+	_ = roleMixinFields3
 	roleFields := schema.Role{}.Fields()
 	_ = roleFields
 	// roleDescCreateTime is the schema descriptor for create_time field.
-	roleDescCreateTime := roleMixinFields1[0].Descriptor()
+	roleDescCreateTime := roleMixinFields2[0].Descriptor()
 	// role.DefaultCreateTime holds the default value on creation for the create_time field.
 	role.DefaultCreateTime = roleDescCreateTime.Default.(func() time.Time)
 	// roleDescUpdateTime is the schema descriptor for update_time field.
-	roleDescUpdateTime := roleMixinFields2[0].Descriptor()
+	roleDescUpdateTime := roleMixinFields3[0].Descriptor()
 	// role.DefaultUpdateTime holds the default value on creation for the update_time field.
 	role.DefaultUpdateTime = roleDescUpdateTime.Default.(func() time.Time)
 	// role.UpdateDefaultUpdateTime holds the default value on update for the update_time field.
@@ -464,22 +464,12 @@ func init() {
 	user.Interceptors[1] = userInters[0]
 	userMixinFields0 := userMixin[0].Fields()
 	_ = userMixinFields0
-	userMixinFields1 := userMixin[1].Fields()
-	_ = userMixinFields1
 	userMixinFields2 := userMixin[2].Fields()
 	_ = userMixinFields2
 	userMixinFields3 := userMixin[3].Fields()
 	_ = userMixinFields3
 	userFields := schema.User{}.Fields()
 	_ = userFields
-	// userDescCreateAuthor is the schema descriptor for create_author field.
-	userDescCreateAuthor := userMixinFields1[0].Descriptor()
-	// user.DefaultCreateAuthor holds the default value on creation for the create_author field.
-	user.DefaultCreateAuthor = userDescCreateAuthor.Default.(int64)
-	// userDescUpdateAuthor is the schema descriptor for update_author field.
-	userDescUpdateAuthor := userMixinFields1[1].Descriptor()
-	// user.DefaultUpdateAuthor holds the default value on creation for the update_author field.
-	user.DefaultUpdateAuthor = userDescUpdateAuthor.Default.(int64)
 	// userDescCreateTime is the schema descriptor for create_time field.
 	userDescCreateTime := userMixinFields2[0].Descriptor()
 	// user.DefaultCreateTime holds the default value on creation for the create_time field.

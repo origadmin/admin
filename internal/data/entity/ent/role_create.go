@@ -25,6 +25,34 @@ type RoleCreate struct {
 	hooks    []Hook
 }
 
+// SetCreateAuthor sets the "create_author" field.
+func (_c *RoleCreate) SetCreateAuthor(v int64) *RoleCreate {
+	_c.mutation.SetCreateAuthor(v)
+	return _c
+}
+
+// SetNillableCreateAuthor sets the "create_author" field if the given value is not nil.
+func (_c *RoleCreate) SetNillableCreateAuthor(v *int64) *RoleCreate {
+	if v != nil {
+		_c.SetCreateAuthor(*v)
+	}
+	return _c
+}
+
+// SetUpdateAuthor sets the "update_author" field.
+func (_c *RoleCreate) SetUpdateAuthor(v int64) *RoleCreate {
+	_c.mutation.SetUpdateAuthor(v)
+	return _c
+}
+
+// SetNillableUpdateAuthor sets the "update_author" field if the given value is not nil.
+func (_c *RoleCreate) SetNillableUpdateAuthor(v *int64) *RoleCreate {
+	if v != nil {
+		_c.SetUpdateAuthor(*v)
+	}
+	return _c
+}
+
 // SetCreateTime sets the "create_time" field.
 func (_c *RoleCreate) SetCreateTime(v time.Time) *RoleCreate {
 	_c.mutation.SetCreateTime(v)
@@ -210,7 +238,9 @@ func (_c *RoleCreate) Mutation() *RoleMutation {
 
 // Save creates the Role in the database.
 func (_c *RoleCreate) Save(ctx context.Context) (*Role, error) {
-	_c.defaults()
+	if err := _c.defaults(); err != nil {
+		return nil, err
+	}
 	return withHooks(ctx, _c.sqlSave, _c.mutation, _c.hooks)
 }
 
@@ -237,12 +267,18 @@ func (_c *RoleCreate) ExecX(ctx context.Context) {
 }
 
 // defaults sets the default values of the builder before save.
-func (_c *RoleCreate) defaults() {
+func (_c *RoleCreate) defaults() error {
 	if _, ok := _c.mutation.CreateTime(); !ok {
+		if role.DefaultCreateTime == nil {
+			return fmt.Errorf("ent: uninitialized role.DefaultCreateTime (forgotten import ent/runtime?)")
+		}
 		v := role.DefaultCreateTime()
 		_c.mutation.SetCreateTime(v)
 	}
 	if _, ok := _c.mutation.UpdateTime(); !ok {
+		if role.DefaultUpdateTime == nil {
+			return fmt.Errorf("ent: uninitialized role.DefaultUpdateTime (forgotten import ent/runtime?)")
+		}
 		v := role.DefaultUpdateTime()
 		_c.mutation.SetUpdateTime(v)
 	}
@@ -267,9 +303,13 @@ func (_c *RoleCreate) defaults() {
 		_c.mutation.SetStatus(v)
 	}
 	if _, ok := _c.mutation.ID(); !ok {
+		if role.DefaultID == nil {
+			return fmt.Errorf("ent: uninitialized role.DefaultID (forgotten import ent/runtime?)")
+		}
 		v := role.DefaultID()
 		_c.mutation.SetID(v)
 	}
+	return nil
 }
 
 // check runs all checks and user-defined validators on the builder.
@@ -349,6 +389,14 @@ func (_c *RoleCreate) createSpec() (*Role, *sqlgraph.CreateSpec) {
 	if id, ok := _c.mutation.ID(); ok {
 		_node.ID = id
 		_spec.ID.Value = id
+	}
+	if value, ok := _c.mutation.CreateAuthor(); ok {
+		_spec.SetField(role.FieldCreateAuthor, field.TypeInt64, value)
+		_node.CreateAuthor = value
+	}
+	if value, ok := _c.mutation.UpdateAuthor(); ok {
+		_spec.SetField(role.FieldUpdateAuthor, field.TypeInt64, value)
+		_node.UpdateAuthor = value
 	}
 	if value, ok := _c.mutation.CreateTime(); ok {
 		_spec.SetField(role.FieldCreateTime, field.TypeTime, value)

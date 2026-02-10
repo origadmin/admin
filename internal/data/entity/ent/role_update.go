@@ -34,6 +34,33 @@ func (_u *RoleUpdate) Where(ps ...predicate.Role) *RoleUpdate {
 	return _u
 }
 
+// SetUpdateAuthor sets the "update_author" field.
+func (_u *RoleUpdate) SetUpdateAuthor(v int64) *RoleUpdate {
+	_u.mutation.ResetUpdateAuthor()
+	_u.mutation.SetUpdateAuthor(v)
+	return _u
+}
+
+// SetNillableUpdateAuthor sets the "update_author" field if the given value is not nil.
+func (_u *RoleUpdate) SetNillableUpdateAuthor(v *int64) *RoleUpdate {
+	if v != nil {
+		_u.SetUpdateAuthor(*v)
+	}
+	return _u
+}
+
+// AddUpdateAuthor adds value to the "update_author" field.
+func (_u *RoleUpdate) AddUpdateAuthor(v int64) *RoleUpdate {
+	_u.mutation.AddUpdateAuthor(v)
+	return _u
+}
+
+// ClearUpdateAuthor clears the value of the "update_author" field.
+func (_u *RoleUpdate) ClearUpdateAuthor() *RoleUpdate {
+	_u.mutation.ClearUpdateAuthor()
+	return _u
+}
+
 // SetUpdateTime sets the "update_time" field.
 func (_u *RoleUpdate) SetUpdateTime(v time.Time) *RoleUpdate {
 	_u.mutation.SetUpdateTime(v)
@@ -296,7 +323,9 @@ func (_u *RoleUpdate) RemoveRolePermissions(v ...*RolePermission) *RoleUpdate {
 
 // Save executes the query and returns the number of nodes affected by the update operation.
 func (_u *RoleUpdate) Save(ctx context.Context) (int, error) {
-	_u.defaults()
+	if err := _u.defaults(); err != nil {
+		return 0, err
+	}
 	return withHooks(ctx, _u.sqlSave, _u.mutation, _u.hooks)
 }
 
@@ -323,11 +352,15 @@ func (_u *RoleUpdate) ExecX(ctx context.Context) {
 }
 
 // defaults sets the default values of the builder before save.
-func (_u *RoleUpdate) defaults() {
+func (_u *RoleUpdate) defaults() error {
 	if _, ok := _u.mutation.UpdateTime(); !ok {
+		if role.UpdateDefaultUpdateTime == nil {
+			return fmt.Errorf("ent: uninitialized role.UpdateDefaultUpdateTime (forgotten import ent/runtime?)")
+		}
 		v := role.UpdateDefaultUpdateTime()
 		_u.mutation.SetUpdateTime(v)
 	}
+	return nil
 }
 
 // check runs all checks and user-defined validators on the builder.
@@ -367,6 +400,18 @@ func (_u *RoleUpdate) sqlSave(ctx context.Context) (_node int, err error) {
 				ps[i](selector)
 			}
 		}
+	}
+	if _u.mutation.CreateAuthorCleared() {
+		_spec.ClearField(role.FieldCreateAuthor, field.TypeInt64)
+	}
+	if value, ok := _u.mutation.UpdateAuthor(); ok {
+		_spec.SetField(role.FieldUpdateAuthor, field.TypeInt64, value)
+	}
+	if value, ok := _u.mutation.AddedUpdateAuthor(); ok {
+		_spec.AddField(role.FieldUpdateAuthor, field.TypeInt64, value)
+	}
+	if _u.mutation.UpdateAuthorCleared() {
+		_spec.ClearField(role.FieldUpdateAuthor, field.TypeInt64)
 	}
 	if value, ok := _u.mutation.UpdateTime(); ok {
 		_spec.SetField(role.FieldUpdateTime, field.TypeTime, value)
@@ -598,6 +643,33 @@ type RoleUpdateOne struct {
 	hooks     []Hook
 	mutation  *RoleMutation
 	modifiers []func(*sql.UpdateBuilder)
+}
+
+// SetUpdateAuthor sets the "update_author" field.
+func (_u *RoleUpdateOne) SetUpdateAuthor(v int64) *RoleUpdateOne {
+	_u.mutation.ResetUpdateAuthor()
+	_u.mutation.SetUpdateAuthor(v)
+	return _u
+}
+
+// SetNillableUpdateAuthor sets the "update_author" field if the given value is not nil.
+func (_u *RoleUpdateOne) SetNillableUpdateAuthor(v *int64) *RoleUpdateOne {
+	if v != nil {
+		_u.SetUpdateAuthor(*v)
+	}
+	return _u
+}
+
+// AddUpdateAuthor adds value to the "update_author" field.
+func (_u *RoleUpdateOne) AddUpdateAuthor(v int64) *RoleUpdateOne {
+	_u.mutation.AddUpdateAuthor(v)
+	return _u
+}
+
+// ClearUpdateAuthor clears the value of the "update_author" field.
+func (_u *RoleUpdateOne) ClearUpdateAuthor() *RoleUpdateOne {
+	_u.mutation.ClearUpdateAuthor()
+	return _u
 }
 
 // SetUpdateTime sets the "update_time" field.
@@ -875,7 +947,9 @@ func (_u *RoleUpdateOne) Select(field string, fields ...string) *RoleUpdateOne {
 
 // Save executes the query and returns the updated Role entity.
 func (_u *RoleUpdateOne) Save(ctx context.Context) (*Role, error) {
-	_u.defaults()
+	if err := _u.defaults(); err != nil {
+		return nil, err
+	}
 	return withHooks(ctx, _u.sqlSave, _u.mutation, _u.hooks)
 }
 
@@ -902,11 +976,15 @@ func (_u *RoleUpdateOne) ExecX(ctx context.Context) {
 }
 
 // defaults sets the default values of the builder before save.
-func (_u *RoleUpdateOne) defaults() {
+func (_u *RoleUpdateOne) defaults() error {
 	if _, ok := _u.mutation.UpdateTime(); !ok {
+		if role.UpdateDefaultUpdateTime == nil {
+			return fmt.Errorf("ent: uninitialized role.UpdateDefaultUpdateTime (forgotten import ent/runtime?)")
+		}
 		v := role.UpdateDefaultUpdateTime()
 		_u.mutation.SetUpdateTime(v)
 	}
+	return nil
 }
 
 // check runs all checks and user-defined validators on the builder.
@@ -963,6 +1041,18 @@ func (_u *RoleUpdateOne) sqlSave(ctx context.Context) (_node *Role, err error) {
 				ps[i](selector)
 			}
 		}
+	}
+	if _u.mutation.CreateAuthorCleared() {
+		_spec.ClearField(role.FieldCreateAuthor, field.TypeInt64)
+	}
+	if value, ok := _u.mutation.UpdateAuthor(); ok {
+		_spec.SetField(role.FieldUpdateAuthor, field.TypeInt64, value)
+	}
+	if value, ok := _u.mutation.AddedUpdateAuthor(); ok {
+		_spec.AddField(role.FieldUpdateAuthor, field.TypeInt64, value)
+	}
+	if _u.mutation.UpdateAuthorCleared() {
+		_spec.ClearField(role.FieldUpdateAuthor, field.TypeInt64)
 	}
 	if value, ok := _u.mutation.UpdateTime(); ok {
 		_spec.SetField(role.FieldUpdateTime, field.TypeTime, value)

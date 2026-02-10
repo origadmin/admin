@@ -32,6 +32,33 @@ func (_u *DepartmentUpdate) Where(ps ...predicate.Department) *DepartmentUpdate 
 	return _u
 }
 
+// SetUpdateAuthor sets the "update_author" field.
+func (_u *DepartmentUpdate) SetUpdateAuthor(v int64) *DepartmentUpdate {
+	_u.mutation.ResetUpdateAuthor()
+	_u.mutation.SetUpdateAuthor(v)
+	return _u
+}
+
+// SetNillableUpdateAuthor sets the "update_author" field if the given value is not nil.
+func (_u *DepartmentUpdate) SetNillableUpdateAuthor(v *int64) *DepartmentUpdate {
+	if v != nil {
+		_u.SetUpdateAuthor(*v)
+	}
+	return _u
+}
+
+// AddUpdateAuthor adds value to the "update_author" field.
+func (_u *DepartmentUpdate) AddUpdateAuthor(v int64) *DepartmentUpdate {
+	_u.mutation.AddUpdateAuthor(v)
+	return _u
+}
+
+// ClearUpdateAuthor clears the value of the "update_author" field.
+func (_u *DepartmentUpdate) ClearUpdateAuthor() *DepartmentUpdate {
+	_u.mutation.ClearUpdateAuthor()
+	return _u
+}
+
 // SetUpdateTime sets the "update_time" field.
 func (_u *DepartmentUpdate) SetUpdateTime(v time.Time) *DepartmentUpdate {
 	_u.mutation.SetUpdateTime(v)
@@ -339,7 +366,9 @@ func (_u *DepartmentUpdate) RemoveUserDepartments(v ...*UserDepartment) *Departm
 
 // Save executes the query and returns the number of nodes affected by the update operation.
 func (_u *DepartmentUpdate) Save(ctx context.Context) (int, error) {
-	_u.defaults()
+	if err := _u.defaults(); err != nil {
+		return 0, err
+	}
 	return withHooks(ctx, _u.sqlSave, _u.mutation, _u.hooks)
 }
 
@@ -366,11 +395,15 @@ func (_u *DepartmentUpdate) ExecX(ctx context.Context) {
 }
 
 // defaults sets the default values of the builder before save.
-func (_u *DepartmentUpdate) defaults() {
+func (_u *DepartmentUpdate) defaults() error {
 	if _, ok := _u.mutation.UpdateTime(); !ok {
+		if department.UpdateDefaultUpdateTime == nil {
+			return fmt.Errorf("ent: uninitialized department.UpdateDefaultUpdateTime (forgotten import ent/runtime?)")
+		}
 		v := department.UpdateDefaultUpdateTime()
 		_u.mutation.SetUpdateTime(v)
 	}
+	return nil
 }
 
 // check runs all checks and user-defined validators on the builder.
@@ -415,6 +448,18 @@ func (_u *DepartmentUpdate) sqlSave(ctx context.Context) (_node int, err error) 
 				ps[i](selector)
 			}
 		}
+	}
+	if _u.mutation.CreateAuthorCleared() {
+		_spec.ClearField(department.FieldCreateAuthor, field.TypeInt64)
+	}
+	if value, ok := _u.mutation.UpdateAuthor(); ok {
+		_spec.SetField(department.FieldUpdateAuthor, field.TypeInt64, value)
+	}
+	if value, ok := _u.mutation.AddedUpdateAuthor(); ok {
+		_spec.AddField(department.FieldUpdateAuthor, field.TypeInt64, value)
+	}
+	if _u.mutation.UpdateAuthorCleared() {
+		_spec.ClearField(department.FieldUpdateAuthor, field.TypeInt64)
 	}
 	if value, ok := _u.mutation.UpdateTime(); ok {
 		_spec.SetField(department.FieldUpdateTime, field.TypeTime, value)
@@ -678,6 +723,33 @@ type DepartmentUpdateOne struct {
 	hooks     []Hook
 	mutation  *DepartmentMutation
 	modifiers []func(*sql.UpdateBuilder)
+}
+
+// SetUpdateAuthor sets the "update_author" field.
+func (_u *DepartmentUpdateOne) SetUpdateAuthor(v int64) *DepartmentUpdateOne {
+	_u.mutation.ResetUpdateAuthor()
+	_u.mutation.SetUpdateAuthor(v)
+	return _u
+}
+
+// SetNillableUpdateAuthor sets the "update_author" field if the given value is not nil.
+func (_u *DepartmentUpdateOne) SetNillableUpdateAuthor(v *int64) *DepartmentUpdateOne {
+	if v != nil {
+		_u.SetUpdateAuthor(*v)
+	}
+	return _u
+}
+
+// AddUpdateAuthor adds value to the "update_author" field.
+func (_u *DepartmentUpdateOne) AddUpdateAuthor(v int64) *DepartmentUpdateOne {
+	_u.mutation.AddUpdateAuthor(v)
+	return _u
+}
+
+// ClearUpdateAuthor clears the value of the "update_author" field.
+func (_u *DepartmentUpdateOne) ClearUpdateAuthor() *DepartmentUpdateOne {
+	_u.mutation.ClearUpdateAuthor()
+	return _u
 }
 
 // SetUpdateTime sets the "update_time" field.
@@ -1000,7 +1072,9 @@ func (_u *DepartmentUpdateOne) Select(field string, fields ...string) *Departmen
 
 // Save executes the query and returns the updated Department entity.
 func (_u *DepartmentUpdateOne) Save(ctx context.Context) (*Department, error) {
-	_u.defaults()
+	if err := _u.defaults(); err != nil {
+		return nil, err
+	}
 	return withHooks(ctx, _u.sqlSave, _u.mutation, _u.hooks)
 }
 
@@ -1027,11 +1101,15 @@ func (_u *DepartmentUpdateOne) ExecX(ctx context.Context) {
 }
 
 // defaults sets the default values of the builder before save.
-func (_u *DepartmentUpdateOne) defaults() {
+func (_u *DepartmentUpdateOne) defaults() error {
 	if _, ok := _u.mutation.UpdateTime(); !ok {
+		if department.UpdateDefaultUpdateTime == nil {
+			return fmt.Errorf("ent: uninitialized department.UpdateDefaultUpdateTime (forgotten import ent/runtime?)")
+		}
 		v := department.UpdateDefaultUpdateTime()
 		_u.mutation.SetUpdateTime(v)
 	}
+	return nil
 }
 
 // check runs all checks and user-defined validators on the builder.
@@ -1093,6 +1171,18 @@ func (_u *DepartmentUpdateOne) sqlSave(ctx context.Context) (_node *Department, 
 				ps[i](selector)
 			}
 		}
+	}
+	if _u.mutation.CreateAuthorCleared() {
+		_spec.ClearField(department.FieldCreateAuthor, field.TypeInt64)
+	}
+	if value, ok := _u.mutation.UpdateAuthor(); ok {
+		_spec.SetField(department.FieldUpdateAuthor, field.TypeInt64, value)
+	}
+	if value, ok := _u.mutation.AddedUpdateAuthor(); ok {
+		_spec.AddField(department.FieldUpdateAuthor, field.TypeInt64, value)
+	}
+	if _u.mutation.UpdateAuthorCleared() {
+		_spec.ClearField(department.FieldUpdateAuthor, field.TypeInt64)
 	}
 	if value, ok := _u.mutation.UpdateTime(); ok {
 		_spec.SetField(department.FieldUpdateTime, field.TypeTime, value)

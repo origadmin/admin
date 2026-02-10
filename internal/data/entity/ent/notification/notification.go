@@ -65,10 +65,6 @@ func ValidColumn(column string) bool {
 //	import _ "origadmin/application/admin/internal/data/entity/ent/runtime"
 var (
 	Hooks [1]ent.Hook
-	// DefaultCreateAuthor holds the default value on creation for the "create_author" field.
-	DefaultCreateAuthor int64
-	// DefaultUpdateAuthor holds the default value on creation for the "update_author" field.
-	DefaultUpdateAuthor int64
 	// DefaultCreateTime holds the default value on creation for the "create_time" field.
 	DefaultCreateTime func() time.Time
 	// DefaultUpdateTime holds the default value on creation for the "update_time" field.

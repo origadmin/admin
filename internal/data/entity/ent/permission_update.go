@@ -38,6 +38,33 @@ func (_u *PermissionUpdate) Where(ps ...predicate.Permission) *PermissionUpdate 
 	return _u
 }
 
+// SetUpdateAuthor sets the "update_author" field.
+func (_u *PermissionUpdate) SetUpdateAuthor(v int64) *PermissionUpdate {
+	_u.mutation.ResetUpdateAuthor()
+	_u.mutation.SetUpdateAuthor(v)
+	return _u
+}
+
+// SetNillableUpdateAuthor sets the "update_author" field if the given value is not nil.
+func (_u *PermissionUpdate) SetNillableUpdateAuthor(v *int64) *PermissionUpdate {
+	if v != nil {
+		_u.SetUpdateAuthor(*v)
+	}
+	return _u
+}
+
+// AddUpdateAuthor adds value to the "update_author" field.
+func (_u *PermissionUpdate) AddUpdateAuthor(v int64) *PermissionUpdate {
+	_u.mutation.AddUpdateAuthor(v)
+	return _u
+}
+
+// ClearUpdateAuthor clears the value of the "update_author" field.
+func (_u *PermissionUpdate) ClearUpdateAuthor() *PermissionUpdate {
+	_u.mutation.ClearUpdateAuthor()
+	return _u
+}
+
 // SetUpdateTime sets the "update_time" field.
 func (_u *PermissionUpdate) SetUpdateTime(v time.Time) *PermissionUpdate {
 	_u.mutation.SetUpdateTime(v)
@@ -442,7 +469,9 @@ func (_u *PermissionUpdate) RemoveViewPermissions(v ...*ViewPermission) *Permiss
 
 // Save executes the query and returns the number of nodes affected by the update operation.
 func (_u *PermissionUpdate) Save(ctx context.Context) (int, error) {
-	_u.defaults()
+	if err := _u.defaults(); err != nil {
+		return 0, err
+	}
 	return withHooks(ctx, _u.sqlSave, _u.mutation, _u.hooks)
 }
 
@@ -469,11 +498,15 @@ func (_u *PermissionUpdate) ExecX(ctx context.Context) {
 }
 
 // defaults sets the default values of the builder before save.
-func (_u *PermissionUpdate) defaults() {
+func (_u *PermissionUpdate) defaults() error {
 	if _, ok := _u.mutation.UpdateTime(); !ok {
+		if permission.UpdateDefaultUpdateTime == nil {
+			return fmt.Errorf("ent: uninitialized permission.UpdateDefaultUpdateTime (forgotten import ent/runtime?)")
+		}
 		v := permission.UpdateDefaultUpdateTime()
 		_u.mutation.SetUpdateTime(v)
 	}
+	return nil
 }
 
 // check runs all checks and user-defined validators on the builder.
@@ -518,6 +551,18 @@ func (_u *PermissionUpdate) sqlSave(ctx context.Context) (_node int, err error) 
 				ps[i](selector)
 			}
 		}
+	}
+	if _u.mutation.CreateAuthorCleared() {
+		_spec.ClearField(permission.FieldCreateAuthor, field.TypeInt64)
+	}
+	if value, ok := _u.mutation.UpdateAuthor(); ok {
+		_spec.SetField(permission.FieldUpdateAuthor, field.TypeInt64, value)
+	}
+	if value, ok := _u.mutation.AddedUpdateAuthor(); ok {
+		_spec.AddField(permission.FieldUpdateAuthor, field.TypeInt64, value)
+	}
+	if _u.mutation.UpdateAuthorCleared() {
+		_spec.ClearField(permission.FieldUpdateAuthor, field.TypeInt64)
 	}
 	if value, ok := _u.mutation.UpdateTime(); ok {
 		_spec.SetField(permission.FieldUpdateTime, field.TypeTime, value)
@@ -929,6 +974,33 @@ type PermissionUpdateOne struct {
 	hooks     []Hook
 	mutation  *PermissionMutation
 	modifiers []func(*sql.UpdateBuilder)
+}
+
+// SetUpdateAuthor sets the "update_author" field.
+func (_u *PermissionUpdateOne) SetUpdateAuthor(v int64) *PermissionUpdateOne {
+	_u.mutation.ResetUpdateAuthor()
+	_u.mutation.SetUpdateAuthor(v)
+	return _u
+}
+
+// SetNillableUpdateAuthor sets the "update_author" field if the given value is not nil.
+func (_u *PermissionUpdateOne) SetNillableUpdateAuthor(v *int64) *PermissionUpdateOne {
+	if v != nil {
+		_u.SetUpdateAuthor(*v)
+	}
+	return _u
+}
+
+// AddUpdateAuthor adds value to the "update_author" field.
+func (_u *PermissionUpdateOne) AddUpdateAuthor(v int64) *PermissionUpdateOne {
+	_u.mutation.AddUpdateAuthor(v)
+	return _u
+}
+
+// ClearUpdateAuthor clears the value of the "update_author" field.
+func (_u *PermissionUpdateOne) ClearUpdateAuthor() *PermissionUpdateOne {
+	_u.mutation.ClearUpdateAuthor()
+	return _u
 }
 
 // SetUpdateTime sets the "update_time" field.
@@ -1348,7 +1420,9 @@ func (_u *PermissionUpdateOne) Select(field string, fields ...string) *Permissio
 
 // Save executes the query and returns the updated Permission entity.
 func (_u *PermissionUpdateOne) Save(ctx context.Context) (*Permission, error) {
-	_u.defaults()
+	if err := _u.defaults(); err != nil {
+		return nil, err
+	}
 	return withHooks(ctx, _u.sqlSave, _u.mutation, _u.hooks)
 }
 
@@ -1375,11 +1449,15 @@ func (_u *PermissionUpdateOne) ExecX(ctx context.Context) {
 }
 
 // defaults sets the default values of the builder before save.
-func (_u *PermissionUpdateOne) defaults() {
+func (_u *PermissionUpdateOne) defaults() error {
 	if _, ok := _u.mutation.UpdateTime(); !ok {
+		if permission.UpdateDefaultUpdateTime == nil {
+			return fmt.Errorf("ent: uninitialized permission.UpdateDefaultUpdateTime (forgotten import ent/runtime?)")
+		}
 		v := permission.UpdateDefaultUpdateTime()
 		_u.mutation.SetUpdateTime(v)
 	}
+	return nil
 }
 
 // check runs all checks and user-defined validators on the builder.
@@ -1441,6 +1519,18 @@ func (_u *PermissionUpdateOne) sqlSave(ctx context.Context) (_node *Permission, 
 				ps[i](selector)
 			}
 		}
+	}
+	if _u.mutation.CreateAuthorCleared() {
+		_spec.ClearField(permission.FieldCreateAuthor, field.TypeInt64)
+	}
+	if value, ok := _u.mutation.UpdateAuthor(); ok {
+		_spec.SetField(permission.FieldUpdateAuthor, field.TypeInt64, value)
+	}
+	if value, ok := _u.mutation.AddedUpdateAuthor(); ok {
+		_spec.AddField(permission.FieldUpdateAuthor, field.TypeInt64, value)
+	}
+	if _u.mutation.UpdateAuthorCleared() {
+		_spec.ClearField(permission.FieldUpdateAuthor, field.TypeInt64)
 	}
 	if value, ok := _u.mutation.UpdateTime(); ok {
 		_spec.SetField(permission.FieldUpdateTime, field.TypeTime, value)

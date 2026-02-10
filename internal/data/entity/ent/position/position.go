@@ -5,6 +5,7 @@ package position
 import (
 	"time"
 
+	"entgo.io/ent"
 	"entgo.io/ent/dialect/sql"
 	"entgo.io/ent/dialect/sql/sqlgraph"
 )
@@ -14,6 +15,10 @@ const (
 	Label = "position"
 	// FieldID holds the string denoting the id field in the database.
 	FieldID = "id"
+	// FieldCreateAuthor holds the string denoting the create_author field in the database.
+	FieldCreateAuthor = "create_author"
+	// FieldUpdateAuthor holds the string denoting the update_author field in the database.
+	FieldUpdateAuthor = "update_author"
 	// FieldCreateTime holds the string denoting the create_time field in the database.
 	FieldCreateTime = "create_time"
 	// FieldUpdateTime holds the string denoting the update_time field in the database.
@@ -74,6 +79,8 @@ const (
 // Columns holds all SQL columns for position fields.
 var Columns = []string{
 	FieldID,
+	FieldCreateAuthor,
+	FieldUpdateAuthor,
 	FieldCreateTime,
 	FieldUpdateTime,
 	FieldName,
@@ -101,7 +108,13 @@ func ValidColumn(column string) bool {
 	return false
 }
 
+// Note that the variables below are initialized by the runtime
+// package on the initialization of the application. Therefore,
+// it should be imported in the main as follows:
+//
+//	import _ "origadmin/application/admin/internal/data/entity/ent/runtime"
 var (
+	Hooks [1]ent.Hook
 	// DefaultCreateTime holds the default value on creation for the "create_time" field.
 	DefaultCreateTime func() time.Time
 	// DefaultUpdateTime holds the default value on creation for the "update_time" field.
@@ -130,6 +143,16 @@ type OrderOption func(*sql.Selector)
 // ByID orders the results by the id field.
 func ByID(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldID, opts...).ToFunc()
+}
+
+// ByCreateAuthor orders the results by the create_author field.
+func ByCreateAuthor(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldCreateAuthor, opts...).ToFunc()
+}
+
+// ByUpdateAuthor orders the results by the update_author field.
+func ByUpdateAuthor(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldUpdateAuthor, opts...).ToFunc()
 }
 
 // ByCreateTime orders the results by the create_time field.

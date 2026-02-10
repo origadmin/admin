@@ -106,6 +106,10 @@ func (m *CasbinRuleMutation) SetFieldsSkipZero(input *CasbinRule, fields ...stri
 func (m *DepartmentMutation) SetFields(input *Department, fields ...string) error {
 	for i := range fields {
 		switch fields[i] {
+		case department.FieldCreateAuthor:
+			m.SetCreateAuthor(input.CreateAuthor)
+		case department.FieldUpdateAuthor:
+			m.SetUpdateAuthor(input.UpdateAuthor)
 		case department.FieldCreateTime:
 			m.SetCreateTime(input.CreateTime)
 		case department.FieldUpdateTime:
@@ -141,6 +145,16 @@ func (m *DepartmentMutation) SetFields(input *Department, fields ...string) erro
 func (m *DepartmentMutation) SetFieldsSkipZero(input *Department, fields ...string) error {
 	for i := range fields {
 		switch fields[i] {
+		case department.FieldCreateAuthor:
+			// check int64 with sql.NullInt64 if it is zero
+			if input.CreateAuthor != 0 {
+				m.SetCreateAuthor(input.CreateAuthor)
+			}
+		case department.FieldUpdateAuthor:
+			// check int64 with sql.NullInt64 if it is zero
+			if input.UpdateAuthor != 0 {
+				m.SetUpdateAuthor(input.UpdateAuthor)
+			}
 		case department.FieldCreateTime:
 			if !input.CreateTime.IsZero() {
 				m.SetCreateTime(input.CreateTime)
@@ -296,6 +310,10 @@ func (m *NotificationMutation) SetFieldsSkipZero(input *Notification, fields ...
 func (m *PermissionMutation) SetFields(input *Permission, fields ...string) error {
 	for i := range fields {
 		switch fields[i] {
+		case permission.FieldCreateAuthor:
+			m.SetCreateAuthor(input.CreateAuthor)
+		case permission.FieldUpdateAuthor:
+			m.SetUpdateAuthor(input.UpdateAuthor)
 		case permission.FieldCreateTime:
 			m.SetCreateTime(input.CreateTime)
 		case permission.FieldUpdateTime:
@@ -329,6 +347,16 @@ func (m *PermissionMutation) SetFields(input *Permission, fields ...string) erro
 func (m *PermissionMutation) SetFieldsSkipZero(input *Permission, fields ...string) error {
 	for i := range fields {
 		switch fields[i] {
+		case permission.FieldCreateAuthor:
+			// check int64 with sql.NullInt64 if it is zero
+			if input.CreateAuthor != 0 {
+				m.SetCreateAuthor(input.CreateAuthor)
+			}
+		case permission.FieldUpdateAuthor:
+			// check int64 with sql.NullInt64 if it is zero
+			if input.UpdateAuthor != 0 {
+				m.SetUpdateAuthor(input.UpdateAuthor)
+			}
 		case permission.FieldCreateTime:
 			if !input.CreateTime.IsZero() {
 				m.SetCreateTime(input.CreateTime)
@@ -432,6 +460,10 @@ func (m *PermissionResourceMutation) SetFieldsSkipZero(input *PermissionResource
 func (m *PositionMutation) SetFields(input *Position, fields ...string) error {
 	for i := range fields {
 		switch fields[i] {
+		case position.FieldCreateAuthor:
+			m.SetCreateAuthor(input.CreateAuthor)
+		case position.FieldUpdateAuthor:
+			m.SetUpdateAuthor(input.UpdateAuthor)
 		case position.FieldCreateTime:
 			m.SetCreateTime(input.CreateTime)
 		case position.FieldUpdateTime:
@@ -459,6 +491,16 @@ func (m *PositionMutation) SetFields(input *Position, fields ...string) error {
 func (m *PositionMutation) SetFieldsSkipZero(input *Position, fields ...string) error {
 	for i := range fields {
 		switch fields[i] {
+		case position.FieldCreateAuthor:
+			// check int64 with sql.NullInt64 if it is zero
+			if input.CreateAuthor != 0 {
+				m.SetCreateAuthor(input.CreateAuthor)
+			}
+		case position.FieldUpdateAuthor:
+			// check int64 with sql.NullInt64 if it is zero
+			if input.UpdateAuthor != 0 {
+				m.SetUpdateAuthor(input.UpdateAuthor)
+			}
 		case position.FieldCreateTime:
 			if !input.CreateTime.IsZero() {
 				m.SetCreateTime(input.CreateTime)
@@ -547,6 +589,10 @@ func (m *PositionPermissionMutation) SetFieldsSkipZero(input *PositionPermission
 func (m *ResourceMutation) SetFields(input *Resource, fields ...string) error {
 	for i := range fields {
 		switch fields[i] {
+		case resource.FieldCreateAuthor:
+			m.SetCreateAuthor(input.CreateAuthor)
+		case resource.FieldUpdateAuthor:
+			m.SetUpdateAuthor(input.UpdateAuthor)
 		case resource.FieldCreateTime:
 			m.SetCreateTime(input.CreateTime)
 		case resource.FieldUpdateTime:
@@ -602,6 +648,16 @@ func (m *ResourceMutation) SetFields(input *Resource, fields ...string) error {
 func (m *ResourceMutation) SetFieldsSkipZero(input *Resource, fields ...string) error {
 	for i := range fields {
 		switch fields[i] {
+		case resource.FieldCreateAuthor:
+			// check int64 with sql.NullInt64 if it is zero
+			if input.CreateAuthor != 0 {
+				m.SetCreateAuthor(input.CreateAuthor)
+			}
+		case resource.FieldUpdateAuthor:
+			// check int64 with sql.NullInt64 if it is zero
+			if input.UpdateAuthor != 0 {
+				m.SetUpdateAuthor(input.UpdateAuthor)
+			}
 		case resource.FieldCreateTime:
 			if !input.CreateTime.IsZero() {
 				m.SetCreateTime(input.CreateTime)
@@ -719,6 +775,10 @@ func (m *ResourceMutation) SetFieldsSkipZero(input *Resource, fields ...string) 
 func (m *RoleMutation) SetFields(input *Role, fields ...string) error {
 	for i := range fields {
 		switch fields[i] {
+		case role.FieldCreateAuthor:
+			m.SetCreateAuthor(input.CreateAuthor)
+		case role.FieldUpdateAuthor:
+			m.SetUpdateAuthor(input.UpdateAuthor)
 		case role.FieldCreateTime:
 			m.SetCreateTime(input.CreateTime)
 		case role.FieldUpdateTime:
@@ -750,6 +810,16 @@ func (m *RoleMutation) SetFields(input *Role, fields ...string) error {
 func (m *RoleMutation) SetFieldsSkipZero(input *Role, fields ...string) error {
 	for i := range fields {
 		switch fields[i] {
+		case role.FieldCreateAuthor:
+			// check int64 with sql.NullInt64 if it is zero
+			if input.CreateAuthor != 0 {
+				m.SetCreateAuthor(input.CreateAuthor)
+			}
+		case role.FieldUpdateAuthor:
+			// check int64 with sql.NullInt64 if it is zero
+			if input.UpdateAuthor != 0 {
+				m.SetUpdateAuthor(input.UpdateAuthor)
+			}
 		case role.FieldCreateTime:
 			if !input.CreateTime.IsZero() {
 				m.SetCreateTime(input.CreateTime)

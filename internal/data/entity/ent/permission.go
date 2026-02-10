@@ -20,6 +20,10 @@ type Permission struct {
 	// ID of the ent.
 	// field.primary_key.comment
 	ID int64 `json:"id,omitempty"`
+	// create_author.field.comment
+	CreateAuthor int64 `json:"create_author,omitempty"`
+	// update_author.field.comment
+	UpdateAuthor int64 `json:"update_author,omitempty"`
 	// create_time.field.comment
 	CreateTime time.Time `json:"create_time,omitempty"`
 	// update_time.field.comment
@@ -146,7 +150,7 @@ func (*Permission) scanValues(columns []string) ([]any, error) {
 		switch columns[i] {
 		case permission.FieldDataRules:
 			values[i] = new([]byte)
-		case permission.FieldID, permission.FieldStatus:
+		case permission.FieldID, permission.FieldCreateAuthor, permission.FieldUpdateAuthor, permission.FieldStatus:
 			values[i] = new(sql.NullInt64)
 		case permission.FieldName, permission.FieldKeyword, permission.FieldDescription, permission.FieldDataScope, permission.FieldActions:
 			values[i] = new(sql.NullString)
@@ -173,6 +177,18 @@ func (_m *Permission) assignValues(columns []string, values []any) error {
 				return fmt.Errorf("unexpected type %T for field id", value)
 			}
 			_m.ID = int64(value.Int64)
+		case permission.FieldCreateAuthor:
+			if value, ok := values[i].(*sql.NullInt64); !ok {
+				return fmt.Errorf("unexpected type %T for field create_author", values[i])
+			} else if value.Valid {
+				_m.CreateAuthor = value.Int64
+			}
+		case permission.FieldUpdateAuthor:
+			if value, ok := values[i].(*sql.NullInt64); !ok {
+				return fmt.Errorf("unexpected type %T for field update_author", values[i])
+			} else if value.Valid {
+				_m.UpdateAuthor = value.Int64
+			}
 		case permission.FieldCreateTime:
 			if value, ok := values[i].(*sql.NullTime); !ok {
 				return fmt.Errorf("unexpected type %T for field create_time", values[i])
@@ -305,6 +321,12 @@ func (_m *Permission) String() string {
 	var builder strings.Builder
 	builder.WriteString("Permission(")
 	builder.WriteString(fmt.Sprintf("id=%v, ", _m.ID))
+	builder.WriteString("create_author=")
+	builder.WriteString(fmt.Sprintf("%v", _m.CreateAuthor))
+	builder.WriteString(", ")
+	builder.WriteString("update_author=")
+	builder.WriteString(fmt.Sprintf("%v", _m.UpdateAuthor))
+	builder.WriteString(", ")
 	builder.WriteString("create_time=")
 	builder.WriteString(_m.CreateTime.Format(time.ANSIC))
 	builder.WriteString(", ")

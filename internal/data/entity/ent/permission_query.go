@@ -554,12 +554,12 @@ func (_q *PermissionQuery) WithViewPermissions(opts ...func(*ViewPermissionQuery
 // Example:
 //
 //	var v []struct {
-//		CreateTime time.Time `json:"create_time,omitempty"`
+//		CreateAuthor int64 `json:"create_author,omitempty"`
 //		Count int `json:"count,omitempty"`
 //	}
 //
 //	client.Permission.Query().
-//		GroupBy(permission.FieldCreateTime).
+//		GroupBy(permission.FieldCreateAuthor).
 //		Aggregate(ent.Count()).
 //		Scan(ctx, &v)
 func (_q *PermissionQuery) GroupBy(field string, fields ...string) *PermissionGroupBy {
@@ -577,11 +577,11 @@ func (_q *PermissionQuery) GroupBy(field string, fields ...string) *PermissionGr
 // Example:
 //
 //	var v []struct {
-//		CreateTime time.Time `json:"create_time,omitempty"`
+//		CreateAuthor int64 `json:"create_author,omitempty"`
 //	}
 //
 //	client.Permission.Query().
-//		Select(permission.FieldCreateTime).
+//		Select(permission.FieldCreateAuthor).
 //		Scan(ctx, &v)
 func (_q *PermissionQuery) Select(fields ...string) *PermissionSelect {
 	_q.ctx.Fields = append(_q.ctx.Fields, fields...)
@@ -1211,6 +1211,8 @@ func (_q *PermissionQuery) Modify(modifiers ...func(s *sql.Selector)) *Permissio
 // Example:
 //
 //	var v []struct {
+//	  CreateAuthor int64 `json:"create_author,omitempty"`
+//	  UpdateAuthor int64 `json:"update_author,omitempty"`
 //	  CreateTime time.Time `json:"create_time,omitempty"`
 //	  UpdateTime time.Time `json:"update_time,omitempty"`
 //	  Name string `json:"name,omitempty"`
@@ -1224,6 +1226,8 @@ func (_q *PermissionQuery) Modify(modifiers ...func(s *sql.Selector)) *Permissio
 //
 //	client.Permission.Query().
 //	  Omit(
+//	  permission.FieldCreateAuthor,
+//	  permission.FieldUpdateAuthor,
 //	  permission.FieldCreateTime,
 //	  permission.FieldUpdateTime,
 //	  permission.FieldName,

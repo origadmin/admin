@@ -410,12 +410,12 @@ func (_q *RoleQuery) WithRolePermissions(opts ...func(*RolePermissionQuery)) *Ro
 // Example:
 //
 //	var v []struct {
-//		CreateTime time.Time `json:"create_time,omitempty"`
+//		CreateAuthor int64 `json:"create_author,omitempty"`
 //		Count int `json:"count,omitempty"`
 //	}
 //
 //	client.Role.Query().
-//		GroupBy(role.FieldCreateTime).
+//		GroupBy(role.FieldCreateAuthor).
 //		Aggregate(ent.Count()).
 //		Scan(ctx, &v)
 func (_q *RoleQuery) GroupBy(field string, fields ...string) *RoleGroupBy {
@@ -433,11 +433,11 @@ func (_q *RoleQuery) GroupBy(field string, fields ...string) *RoleGroupBy {
 // Example:
 //
 //	var v []struct {
-//		CreateTime time.Time `json:"create_time,omitempty"`
+//		CreateAuthor int64 `json:"create_author,omitempty"`
 //	}
 //
 //	client.Role.Query().
-//		Select(role.FieldCreateTime).
+//		Select(role.FieldCreateAuthor).
 //		Scan(ctx, &v)
 func (_q *RoleQuery) Select(fields ...string) *RoleSelect {
 	_q.ctx.Fields = append(_q.ctx.Fields, fields...)
@@ -849,6 +849,8 @@ func (_q *RoleQuery) Modify(modifiers ...func(s *sql.Selector)) *RoleSelect {
 // Example:
 //
 //	var v []struct {
+//	  CreateAuthor int64 `json:"create_author,omitempty"`
+//	  UpdateAuthor int64 `json:"update_author,omitempty"`
 //	  CreateTime time.Time `json:"create_time,omitempty"`
 //	  UpdateTime time.Time `json:"update_time,omitempty"`
 //	  Keyword string `json:"keyword,omitempty"`
@@ -861,6 +863,8 @@ func (_q *RoleQuery) Modify(modifiers ...func(s *sql.Selector)) *RoleSelect {
 //
 //	client.Role.Query().
 //	  Omit(
+//	  role.FieldCreateAuthor,
+//	  role.FieldUpdateAuthor,
 //	  role.FieldCreateTime,
 //	  role.FieldUpdateTime,
 //	  role.FieldKeyword,

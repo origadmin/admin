@@ -34,6 +34,33 @@ func (_u *ResourceUpdate) Where(ps ...predicate.Resource) *ResourceUpdate {
 	return _u
 }
 
+// SetUpdateAuthor sets the "update_author" field.
+func (_u *ResourceUpdate) SetUpdateAuthor(v int64) *ResourceUpdate {
+	_u.mutation.ResetUpdateAuthor()
+	_u.mutation.SetUpdateAuthor(v)
+	return _u
+}
+
+// SetNillableUpdateAuthor sets the "update_author" field if the given value is not nil.
+func (_u *ResourceUpdate) SetNillableUpdateAuthor(v *int64) *ResourceUpdate {
+	if v != nil {
+		_u.SetUpdateAuthor(*v)
+	}
+	return _u
+}
+
+// AddUpdateAuthor adds value to the "update_author" field.
+func (_u *ResourceUpdate) AddUpdateAuthor(v int64) *ResourceUpdate {
+	_u.mutation.AddUpdateAuthor(v)
+	return _u
+}
+
+// ClearUpdateAuthor clears the value of the "update_author" field.
+func (_u *ResourceUpdate) ClearUpdateAuthor() *ResourceUpdate {
+	_u.mutation.ClearUpdateAuthor()
+	return _u
+}
+
 // SetUpdateTime sets the "update_time" field.
 func (_u *ResourceUpdate) SetUpdateTime(v time.Time) *ResourceUpdate {
 	_u.mutation.SetUpdateTime(v)
@@ -510,7 +537,9 @@ func (_u *ResourceUpdate) RemovePermissionResources(v ...*PermissionResource) *R
 
 // Save executes the query and returns the number of nodes affected by the update operation.
 func (_u *ResourceUpdate) Save(ctx context.Context) (int, error) {
-	_u.defaults()
+	if err := _u.defaults(); err != nil {
+		return 0, err
+	}
 	return withHooks(ctx, _u.sqlSave, _u.mutation, _u.hooks)
 }
 
@@ -537,11 +566,15 @@ func (_u *ResourceUpdate) ExecX(ctx context.Context) {
 }
 
 // defaults sets the default values of the builder before save.
-func (_u *ResourceUpdate) defaults() {
+func (_u *ResourceUpdate) defaults() error {
 	if _, ok := _u.mutation.UpdateTime(); !ok {
+		if resource.UpdateDefaultUpdateTime == nil {
+			return fmt.Errorf("ent: uninitialized resource.UpdateDefaultUpdateTime (forgotten import ent/runtime?)")
+		}
 		v := resource.UpdateDefaultUpdateTime()
 		_u.mutation.SetUpdateTime(v)
 	}
+	return nil
 }
 
 // check runs all checks and user-defined validators on the builder.
@@ -571,6 +604,18 @@ func (_u *ResourceUpdate) sqlSave(ctx context.Context) (_node int, err error) {
 				ps[i](selector)
 			}
 		}
+	}
+	if _u.mutation.CreateAuthorCleared() {
+		_spec.ClearField(resource.FieldCreateAuthor, field.TypeInt64)
+	}
+	if value, ok := _u.mutation.UpdateAuthor(); ok {
+		_spec.SetField(resource.FieldUpdateAuthor, field.TypeInt64, value)
+	}
+	if value, ok := _u.mutation.AddedUpdateAuthor(); ok {
+		_spec.AddField(resource.FieldUpdateAuthor, field.TypeInt64, value)
+	}
+	if _u.mutation.UpdateAuthorCleared() {
+		_spec.ClearField(resource.FieldUpdateAuthor, field.TypeInt64)
 	}
 	if value, ok := _u.mutation.UpdateTime(); ok {
 		_spec.SetField(resource.FieldUpdateTime, field.TypeTime, value)
@@ -906,6 +951,33 @@ type ResourceUpdateOne struct {
 	hooks     []Hook
 	mutation  *ResourceMutation
 	modifiers []func(*sql.UpdateBuilder)
+}
+
+// SetUpdateAuthor sets the "update_author" field.
+func (_u *ResourceUpdateOne) SetUpdateAuthor(v int64) *ResourceUpdateOne {
+	_u.mutation.ResetUpdateAuthor()
+	_u.mutation.SetUpdateAuthor(v)
+	return _u
+}
+
+// SetNillableUpdateAuthor sets the "update_author" field if the given value is not nil.
+func (_u *ResourceUpdateOne) SetNillableUpdateAuthor(v *int64) *ResourceUpdateOne {
+	if v != nil {
+		_u.SetUpdateAuthor(*v)
+	}
+	return _u
+}
+
+// AddUpdateAuthor adds value to the "update_author" field.
+func (_u *ResourceUpdateOne) AddUpdateAuthor(v int64) *ResourceUpdateOne {
+	_u.mutation.AddUpdateAuthor(v)
+	return _u
+}
+
+// ClearUpdateAuthor clears the value of the "update_author" field.
+func (_u *ResourceUpdateOne) ClearUpdateAuthor() *ResourceUpdateOne {
+	_u.mutation.ClearUpdateAuthor()
+	return _u
 }
 
 // SetUpdateTime sets the "update_time" field.
@@ -1397,7 +1469,9 @@ func (_u *ResourceUpdateOne) Select(field string, fields ...string) *ResourceUpd
 
 // Save executes the query and returns the updated Resource entity.
 func (_u *ResourceUpdateOne) Save(ctx context.Context) (*Resource, error) {
-	_u.defaults()
+	if err := _u.defaults(); err != nil {
+		return nil, err
+	}
 	return withHooks(ctx, _u.sqlSave, _u.mutation, _u.hooks)
 }
 
@@ -1424,11 +1498,15 @@ func (_u *ResourceUpdateOne) ExecX(ctx context.Context) {
 }
 
 // defaults sets the default values of the builder before save.
-func (_u *ResourceUpdateOne) defaults() {
+func (_u *ResourceUpdateOne) defaults() error {
 	if _, ok := _u.mutation.UpdateTime(); !ok {
+		if resource.UpdateDefaultUpdateTime == nil {
+			return fmt.Errorf("ent: uninitialized resource.UpdateDefaultUpdateTime (forgotten import ent/runtime?)")
+		}
 		v := resource.UpdateDefaultUpdateTime()
 		_u.mutation.SetUpdateTime(v)
 	}
+	return nil
 }
 
 // check runs all checks and user-defined validators on the builder.
@@ -1475,6 +1553,18 @@ func (_u *ResourceUpdateOne) sqlSave(ctx context.Context) (_node *Resource, err 
 				ps[i](selector)
 			}
 		}
+	}
+	if _u.mutation.CreateAuthorCleared() {
+		_spec.ClearField(resource.FieldCreateAuthor, field.TypeInt64)
+	}
+	if value, ok := _u.mutation.UpdateAuthor(); ok {
+		_spec.SetField(resource.FieldUpdateAuthor, field.TypeInt64, value)
+	}
+	if value, ok := _u.mutation.AddedUpdateAuthor(); ok {
+		_spec.AddField(resource.FieldUpdateAuthor, field.TypeInt64, value)
+	}
+	if _u.mutation.UpdateAuthorCleared() {
+		_spec.ClearField(resource.FieldUpdateAuthor, field.TypeInt64)
 	}
 	if value, ok := _u.mutation.UpdateTime(); ok {
 		_spec.SetField(resource.FieldUpdateTime, field.TypeTime, value)

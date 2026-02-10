@@ -18,6 +18,10 @@ type Department struct {
 	// ID of the ent.
 	// field.primary_key.comment
 	ID int64 `json:"id,omitempty"`
+	// create_author.field.comment
+	CreateAuthor int64 `json:"create_author,omitempty"`
+	// update_author.field.comment
+	UpdateAuthor int64 `json:"update_author,omitempty"`
 	// create_time.field.comment
 	CreateTime time.Time `json:"create_time,omitempty"`
 	// update_time.field.comment
@@ -113,7 +117,7 @@ func (*Department) scanValues(columns []string) ([]any, error) {
 	values := make([]any, len(columns))
 	for i := range columns {
 		switch columns[i] {
-		case department.FieldID, department.FieldSequence, department.FieldStatus, department.FieldLevel, department.FieldParentID:
+		case department.FieldID, department.FieldCreateAuthor, department.FieldUpdateAuthor, department.FieldSequence, department.FieldStatus, department.FieldLevel, department.FieldParentID:
 			values[i] = new(sql.NullInt64)
 		case department.FieldKeyword, department.FieldName, department.FieldTreePath, department.FieldDescription:
 			values[i] = new(sql.NullString)
@@ -140,6 +144,18 @@ func (_m *Department) assignValues(columns []string, values []any) error {
 				return fmt.Errorf("unexpected type %T for field id", value)
 			}
 			_m.ID = int64(value.Int64)
+		case department.FieldCreateAuthor:
+			if value, ok := values[i].(*sql.NullInt64); !ok {
+				return fmt.Errorf("unexpected type %T for field create_author", values[i])
+			} else if value.Valid {
+				_m.CreateAuthor = value.Int64
+			}
+		case department.FieldUpdateAuthor:
+			if value, ok := values[i].(*sql.NullInt64); !ok {
+				return fmt.Errorf("unexpected type %T for field update_author", values[i])
+			} else if value.Valid {
+				_m.UpdateAuthor = value.Int64
+			}
 		case department.FieldCreateTime:
 			if value, ok := values[i].(*sql.NullTime); !ok {
 				return fmt.Errorf("unexpected type %T for field create_time", values[i])
@@ -261,6 +277,12 @@ func (_m *Department) String() string {
 	var builder strings.Builder
 	builder.WriteString("Department(")
 	builder.WriteString(fmt.Sprintf("id=%v, ", _m.ID))
+	builder.WriteString("create_author=")
+	builder.WriteString(fmt.Sprintf("%v", _m.CreateAuthor))
+	builder.WriteString(", ")
+	builder.WriteString("update_author=")
+	builder.WriteString(fmt.Sprintf("%v", _m.UpdateAuthor))
+	builder.WriteString(", ")
 	builder.WriteString("create_time=")
 	builder.WriteString(_m.CreateTime.Format(time.ANSIC))
 	builder.WriteString(", ")

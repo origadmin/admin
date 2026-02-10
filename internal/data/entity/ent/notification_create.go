@@ -176,14 +176,6 @@ func (_c *NotificationCreate) ExecX(ctx context.Context) {
 
 // defaults sets the default values of the builder before save.
 func (_c *NotificationCreate) defaults() error {
-	if _, ok := _c.mutation.CreateAuthor(); !ok {
-		v := notification.DefaultCreateAuthor
-		_c.mutation.SetCreateAuthor(v)
-	}
-	if _, ok := _c.mutation.UpdateAuthor(); !ok {
-		v := notification.DefaultUpdateAuthor
-		_c.mutation.SetUpdateAuthor(v)
-	}
 	if _, ok := _c.mutation.CreateTime(); !ok {
 		if notification.DefaultCreateTime == nil {
 			return fmt.Errorf("ent: uninitialized notification.DefaultCreateTime (forgotten import ent/runtime?)")

@@ -446,12 +446,12 @@ func (_q *PositionQuery) WithPositionPermissions(opts ...func(*PositionPermissio
 // Example:
 //
 //	var v []struct {
-//		CreateTime time.Time `json:"create_time,omitempty"`
+//		CreateAuthor int64 `json:"create_author,omitempty"`
 //		Count int `json:"count,omitempty"`
 //	}
 //
 //	client.Position.Query().
-//		GroupBy(position.FieldCreateTime).
+//		GroupBy(position.FieldCreateAuthor).
 //		Aggregate(ent.Count()).
 //		Scan(ctx, &v)
 func (_q *PositionQuery) GroupBy(field string, fields ...string) *PositionGroupBy {
@@ -469,11 +469,11 @@ func (_q *PositionQuery) GroupBy(field string, fields ...string) *PositionGroupB
 // Example:
 //
 //	var v []struct {
-//		CreateTime time.Time `json:"create_time,omitempty"`
+//		CreateAuthor int64 `json:"create_author,omitempty"`
 //	}
 //
 //	client.Position.Query().
-//		Select(position.FieldCreateTime).
+//		Select(position.FieldCreateAuthor).
 //		Scan(ctx, &v)
 func (_q *PositionQuery) Select(fields ...string) *PositionSelect {
 	_q.ctx.Fields = append(_q.ctx.Fields, fields...)
@@ -926,6 +926,8 @@ func (_q *PositionQuery) Modify(modifiers ...func(s *sql.Selector)) *PositionSel
 // Example:
 //
 //	var v []struct {
+//	  CreateAuthor int64 `json:"create_author,omitempty"`
+//	  UpdateAuthor int64 `json:"update_author,omitempty"`
 //	  CreateTime time.Time `json:"create_time,omitempty"`
 //	  UpdateTime time.Time `json:"update_time,omitempty"`
 //	  Name string `json:"name,omitempty"`
@@ -936,6 +938,8 @@ func (_q *PositionQuery) Modify(modifiers ...func(s *sql.Selector)) *PositionSel
 //
 //	client.Position.Query().
 //	  Omit(
+//	  position.FieldCreateAuthor,
+//	  position.FieldUpdateAuthor,
 //	  position.FieldCreateTime,
 //	  position.FieldUpdateTime,
 //	  position.FieldName,

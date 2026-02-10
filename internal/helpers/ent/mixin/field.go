@@ -10,29 +10,37 @@ import (
 
 	"entgo.io/ent"
 	"entgo.io/ent/schema/field"
-
-	"origadmin/application/admin/internal/helpers/i18n"
 )
 
 // ZeroTime represents the zero value for time.Time.
 var ZeroTime = time.Time{}
-var innerID = ID{}
 
-func Comment(key string) IDGenerator {
-	return innerID.Comment(key)
+// innerID is the default ID builder instance.
+// It is initialized using the NewIDBuilder factory function.
+var innerID = NewIDBuilder()
+
+// Comment sets a direct comment string.
+func Comment(text string) IDBuilder {
+	return innerID.Comment(text)
 }
 
-func I18nComment(key string) IDGenerator {
-	return innerID.Comment(i18n.Text(key))
+// CommentKey sets a key for i18n translation.
+// Replaces the old I18nComment function logic but keeps the intent clearer.
+func CommentKey(key string) IDBuilder {
+	return innerID.CommentKey(key)
 }
 
+// PK sets the field as a primary key.
 func PK(name string, comment ...string) ent.Field {
 	if len(comment) == 0 {
 		return innerID.PK(name)
 	}
+	// Assuming shortcut functions provide direct comments.
+	// If i18n key is needed, use NewIDBuilder().CommentKey(...).PK(...)
 	return innerID.Comment(comment[0]).PK(name)
 }
 
+// FK sets the field as a foreign key.
 func FK(name string, comment ...string) ent.Field {
 	if len(comment) == 0 {
 		return innerID.FK(name)
@@ -40,6 +48,7 @@ func FK(name string, comment ...string) ent.Field {
 	return innerID.Comment(comment[0]).FK(name)
 }
 
+// OptionalFK sets the field as an optional foreign key.
 func OptionalFK(name string, comment ...string) ent.Field {
 	if len(comment) == 0 {
 		return innerID.OptionalFK(name)
@@ -77,42 +86,45 @@ func FieldIndex(name string) ent.Field {
 	return field.Int(name).Unique()
 
 }
+
+// FieldPK returns an ID field with a maximum length of 36 characters.
 func FieldPK(name string) ent.Field {
-	return ID{}.PK(name)
+	return NewIDBuilder().PK(name)
 }
 
+// FieldFK returns an ID field with a maximum length of 36 characters.
 func FieldFK(name string) ent.Field {
-	return ID{}.FK(name)
+	return NewIDBuilder().FK(name)
 }
 
 // FieldOptional returns an optional string field with a maximum length of 36 characters.
 func FieldOptional(name string) ent.Field {
 	// Create an optional string field with the given name and maximum length.
-	return ID{}.OptionalFK(name)
+	return NewIDBuilder().OptionalFK(name)
 }
 
+// FieldUUIDPK returns an UUID field with a maximum length of 36 characters.
 func FieldUUIDPK(name string, comment ...string) ent.Field {
 	if len(comment) == 0 {
-		return UUID{}.PK(name)
+		return NewUUIDBuilder().PK(name)
 	}
-	// Create an optional string field with the given name and maximum length.
-	return UUID{}.Comment(comment[0]).PK(name)
+	return NewUUIDBuilder().Comment(comment[0]).PK(name)
 }
 
+// FieldUUIDFK returns an UUID field with a maximum length of 36 characters.
 func FieldUUIDFK(name string, comment ...string) ent.Field {
 	if len(comment) == 0 {
-		return UUID{}.FK(name)
+		return NewUUIDBuilder().FK(name)
 	}
-	// Create an optional string field with the given name and maximum length.
-	return UUID{}.Comment(comment[0]).FK(name)
+	return NewUUIDBuilder().Comment(comment[0]).FK(name)
 }
 
+// FieldUUIDOptional returns an optional UUID field with a maximum length of 36 characters.
 func FieldUUIDOptional(name string, comment ...string) ent.Field {
 	if len(comment) == 0 {
-		return UUID{}.OptionalFK(name)
+		return NewUUIDBuilder().OptionalFK(name)
 	}
-	// Create an optional string field with the given name and maximum length.
-	return UUID{}.Comment(comment[0]).OptionalFK(name)
+	return NewUUIDBuilder().Comment(comment[0]).OptionalFK(name)
 }
 
 // FieldTime returns a time field with a default value of ZeroTime.

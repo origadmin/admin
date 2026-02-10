@@ -34,6 +34,33 @@ func (_u *PositionUpdate) Where(ps ...predicate.Position) *PositionUpdate {
 	return _u
 }
 
+// SetUpdateAuthor sets the "update_author" field.
+func (_u *PositionUpdate) SetUpdateAuthor(v int64) *PositionUpdate {
+	_u.mutation.ResetUpdateAuthor()
+	_u.mutation.SetUpdateAuthor(v)
+	return _u
+}
+
+// SetNillableUpdateAuthor sets the "update_author" field if the given value is not nil.
+func (_u *PositionUpdate) SetNillableUpdateAuthor(v *int64) *PositionUpdate {
+	if v != nil {
+		_u.SetUpdateAuthor(*v)
+	}
+	return _u
+}
+
+// AddUpdateAuthor adds value to the "update_author" field.
+func (_u *PositionUpdate) AddUpdateAuthor(v int64) *PositionUpdate {
+	_u.mutation.AddUpdateAuthor(v)
+	return _u
+}
+
+// ClearUpdateAuthor clears the value of the "update_author" field.
+func (_u *PositionUpdate) ClearUpdateAuthor() *PositionUpdate {
+	_u.mutation.ClearUpdateAuthor()
+	return _u
+}
+
 // SetUpdateTime sets the "update_time" field.
 func (_u *PositionUpdate) SetUpdateTime(v time.Time) *PositionUpdate {
 	_u.mutation.SetUpdateTime(v)
@@ -258,7 +285,9 @@ func (_u *PositionUpdate) RemovePositionPermissions(v ...*PositionPermission) *P
 
 // Save executes the query and returns the number of nodes affected by the update operation.
 func (_u *PositionUpdate) Save(ctx context.Context) (int, error) {
-	_u.defaults()
+	if err := _u.defaults(); err != nil {
+		return 0, err
+	}
 	return withHooks(ctx, _u.sqlSave, _u.mutation, _u.hooks)
 }
 
@@ -285,11 +314,15 @@ func (_u *PositionUpdate) ExecX(ctx context.Context) {
 }
 
 // defaults sets the default values of the builder before save.
-func (_u *PositionUpdate) defaults() {
+func (_u *PositionUpdate) defaults() error {
 	if _, ok := _u.mutation.UpdateTime(); !ok {
+		if position.UpdateDefaultUpdateTime == nil {
+			return fmt.Errorf("ent: uninitialized position.UpdateDefaultUpdateTime (forgotten import ent/runtime?)")
+		}
 		v := position.UpdateDefaultUpdateTime()
 		_u.mutation.SetUpdateTime(v)
 	}
+	return nil
 }
 
 // check runs all checks and user-defined validators on the builder.
@@ -337,6 +370,18 @@ func (_u *PositionUpdate) sqlSave(ctx context.Context) (_node int, err error) {
 				ps[i](selector)
 			}
 		}
+	}
+	if _u.mutation.CreateAuthorCleared() {
+		_spec.ClearField(position.FieldCreateAuthor, field.TypeInt64)
+	}
+	if value, ok := _u.mutation.UpdateAuthor(); ok {
+		_spec.SetField(position.FieldUpdateAuthor, field.TypeInt64, value)
+	}
+	if value, ok := _u.mutation.AddedUpdateAuthor(); ok {
+		_spec.AddField(position.FieldUpdateAuthor, field.TypeInt64, value)
+	}
+	if _u.mutation.UpdateAuthorCleared() {
+		_spec.ClearField(position.FieldUpdateAuthor, field.TypeInt64)
 	}
 	if value, ok := _u.mutation.UpdateTime(); ok {
 		_spec.SetField(position.FieldUpdateTime, field.TypeTime, value)
@@ -581,6 +626,33 @@ type PositionUpdateOne struct {
 	modifiers []func(*sql.UpdateBuilder)
 }
 
+// SetUpdateAuthor sets the "update_author" field.
+func (_u *PositionUpdateOne) SetUpdateAuthor(v int64) *PositionUpdateOne {
+	_u.mutation.ResetUpdateAuthor()
+	_u.mutation.SetUpdateAuthor(v)
+	return _u
+}
+
+// SetNillableUpdateAuthor sets the "update_author" field if the given value is not nil.
+func (_u *PositionUpdateOne) SetNillableUpdateAuthor(v *int64) *PositionUpdateOne {
+	if v != nil {
+		_u.SetUpdateAuthor(*v)
+	}
+	return _u
+}
+
+// AddUpdateAuthor adds value to the "update_author" field.
+func (_u *PositionUpdateOne) AddUpdateAuthor(v int64) *PositionUpdateOne {
+	_u.mutation.AddUpdateAuthor(v)
+	return _u
+}
+
+// ClearUpdateAuthor clears the value of the "update_author" field.
+func (_u *PositionUpdateOne) ClearUpdateAuthor() *PositionUpdateOne {
+	_u.mutation.ClearUpdateAuthor()
+	return _u
+}
+
 // SetUpdateTime sets the "update_time" field.
 func (_u *PositionUpdateOne) SetUpdateTime(v time.Time) *PositionUpdateOne {
 	_u.mutation.SetUpdateTime(v)
@@ -818,7 +890,9 @@ func (_u *PositionUpdateOne) Select(field string, fields ...string) *PositionUpd
 
 // Save executes the query and returns the updated Position entity.
 func (_u *PositionUpdateOne) Save(ctx context.Context) (*Position, error) {
-	_u.defaults()
+	if err := _u.defaults(); err != nil {
+		return nil, err
+	}
 	return withHooks(ctx, _u.sqlSave, _u.mutation, _u.hooks)
 }
 
@@ -845,11 +919,15 @@ func (_u *PositionUpdateOne) ExecX(ctx context.Context) {
 }
 
 // defaults sets the default values of the builder before save.
-func (_u *PositionUpdateOne) defaults() {
+func (_u *PositionUpdateOne) defaults() error {
 	if _, ok := _u.mutation.UpdateTime(); !ok {
+		if position.UpdateDefaultUpdateTime == nil {
+			return fmt.Errorf("ent: uninitialized position.UpdateDefaultUpdateTime (forgotten import ent/runtime?)")
+		}
 		v := position.UpdateDefaultUpdateTime()
 		_u.mutation.SetUpdateTime(v)
 	}
+	return nil
 }
 
 // check runs all checks and user-defined validators on the builder.
@@ -914,6 +992,18 @@ func (_u *PositionUpdateOne) sqlSave(ctx context.Context) (_node *Position, err 
 				ps[i](selector)
 			}
 		}
+	}
+	if _u.mutation.CreateAuthorCleared() {
+		_spec.ClearField(position.FieldCreateAuthor, field.TypeInt64)
+	}
+	if value, ok := _u.mutation.UpdateAuthor(); ok {
+		_spec.SetField(position.FieldUpdateAuthor, field.TypeInt64, value)
+	}
+	if value, ok := _u.mutation.AddedUpdateAuthor(); ok {
+		_spec.AddField(position.FieldUpdateAuthor, field.TypeInt64, value)
+	}
+	if _u.mutation.UpdateAuthorCleared() {
+		_spec.ClearField(position.FieldUpdateAuthor, field.TypeInt64)
 	}
 	if value, ok := _u.mutation.UpdateTime(); ok {
 		_spec.SetField(position.FieldUpdateTime, field.TypeTime, value)

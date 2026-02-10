@@ -30,33 +30,6 @@ func (_u *NotificationUpdate) Where(ps ...predicate.Notification) *NotificationU
 	return _u
 }
 
-// SetCreateAuthor sets the "create_author" field.
-func (_u *NotificationUpdate) SetCreateAuthor(v int64) *NotificationUpdate {
-	_u.mutation.ResetCreateAuthor()
-	_u.mutation.SetCreateAuthor(v)
-	return _u
-}
-
-// SetNillableCreateAuthor sets the "create_author" field if the given value is not nil.
-func (_u *NotificationUpdate) SetNillableCreateAuthor(v *int64) *NotificationUpdate {
-	if v != nil {
-		_u.SetCreateAuthor(*v)
-	}
-	return _u
-}
-
-// AddCreateAuthor adds value to the "create_author" field.
-func (_u *NotificationUpdate) AddCreateAuthor(v int64) *NotificationUpdate {
-	_u.mutation.AddCreateAuthor(v)
-	return _u
-}
-
-// ClearCreateAuthor clears the value of the "create_author" field.
-func (_u *NotificationUpdate) ClearCreateAuthor() *NotificationUpdate {
-	_u.mutation.ClearCreateAuthor()
-	return _u
-}
-
 // SetUpdateAuthor sets the "update_author" field.
 func (_u *NotificationUpdate) SetUpdateAuthor(v int64) *NotificationUpdate {
 	_u.mutation.ResetUpdateAuthor()
@@ -235,12 +208,6 @@ func (_u *NotificationUpdate) sqlSave(ctx context.Context) (_node int, err error
 			}
 		}
 	}
-	if value, ok := _u.mutation.CreateAuthor(); ok {
-		_spec.SetField(notification.FieldCreateAuthor, field.TypeInt64, value)
-	}
-	if value, ok := _u.mutation.AddedCreateAuthor(); ok {
-		_spec.AddField(notification.FieldCreateAuthor, field.TypeInt64, value)
-	}
 	if _u.mutation.CreateAuthorCleared() {
 		_spec.ClearField(notification.FieldCreateAuthor, field.TypeInt64)
 	}
@@ -294,33 +261,6 @@ type NotificationUpdateOne struct {
 	hooks     []Hook
 	mutation  *NotificationMutation
 	modifiers []func(*sql.UpdateBuilder)
-}
-
-// SetCreateAuthor sets the "create_author" field.
-func (_u *NotificationUpdateOne) SetCreateAuthor(v int64) *NotificationUpdateOne {
-	_u.mutation.ResetCreateAuthor()
-	_u.mutation.SetCreateAuthor(v)
-	return _u
-}
-
-// SetNillableCreateAuthor sets the "create_author" field if the given value is not nil.
-func (_u *NotificationUpdateOne) SetNillableCreateAuthor(v *int64) *NotificationUpdateOne {
-	if v != nil {
-		_u.SetCreateAuthor(*v)
-	}
-	return _u
-}
-
-// AddCreateAuthor adds value to the "create_author" field.
-func (_u *NotificationUpdateOne) AddCreateAuthor(v int64) *NotificationUpdateOne {
-	_u.mutation.AddCreateAuthor(v)
-	return _u
-}
-
-// ClearCreateAuthor clears the value of the "create_author" field.
-func (_u *NotificationUpdateOne) ClearCreateAuthor() *NotificationUpdateOne {
-	_u.mutation.ClearCreateAuthor()
-	return _u
 }
 
 // SetUpdateAuthor sets the "update_author" field.
@@ -530,12 +470,6 @@ func (_u *NotificationUpdateOne) sqlSave(ctx context.Context) (_node *Notificati
 				ps[i](selector)
 			}
 		}
-	}
-	if value, ok := _u.mutation.CreateAuthor(); ok {
-		_spec.SetField(notification.FieldCreateAuthor, field.TypeInt64, value)
-	}
-	if value, ok := _u.mutation.AddedCreateAuthor(); ok {
-		_spec.AddField(notification.FieldCreateAuthor, field.TypeInt64, value)
 	}
 	if _u.mutation.CreateAuthorCleared() {
 		_spec.ClearField(notification.FieldCreateAuthor, field.TypeInt64)

@@ -516,14 +516,6 @@ func (_c *UserCreate) ExecX(ctx context.Context) {
 
 // defaults sets the default values of the builder before save.
 func (_c *UserCreate) defaults() error {
-	if _, ok := _c.mutation.CreateAuthor(); !ok {
-		v := user.DefaultCreateAuthor
-		_c.mutation.SetCreateAuthor(v)
-	}
-	if _, ok := _c.mutation.UpdateAuthor(); !ok {
-		v := user.DefaultUpdateAuthor
-		_c.mutation.SetUpdateAuthor(v)
-	}
 	if _, ok := _c.mutation.CreateTime(); !ok {
 		if user.DefaultCreateTime == nil {
 			return fmt.Errorf("ent: uninitialized user.DefaultCreateTime (forgotten import ent/runtime?)")

@@ -56,6 +56,16 @@ func IDLTE(id int64) predicate.Resource {
 	return predicate.Resource(sql.FieldLTE(FieldID, id))
 }
 
+// CreateAuthor applies equality check predicate on the "create_author" field. It's identical to CreateAuthorEQ.
+func CreateAuthor(v int64) predicate.Resource {
+	return predicate.Resource(sql.FieldEQ(FieldCreateAuthor, v))
+}
+
+// UpdateAuthor applies equality check predicate on the "update_author" field. It's identical to UpdateAuthorEQ.
+func UpdateAuthor(v int64) predicate.Resource {
+	return predicate.Resource(sql.FieldEQ(FieldUpdateAuthor, v))
+}
+
 // CreateTime applies equality check predicate on the "create_time" field. It's identical to CreateTimeEQ.
 func CreateTime(v time.Time) predicate.Resource {
 	return predicate.Resource(sql.FieldEQ(FieldCreateTime, v))
@@ -150,6 +160,106 @@ func Properties(v string) predicate.Resource {
 // Description applies equality check predicate on the "description" field. It's identical to DescriptionEQ.
 func Description(v string) predicate.Resource {
 	return predicate.Resource(sql.FieldEQ(FieldDescription, v))
+}
+
+// CreateAuthorEQ applies the EQ predicate on the "create_author" field.
+func CreateAuthorEQ(v int64) predicate.Resource {
+	return predicate.Resource(sql.FieldEQ(FieldCreateAuthor, v))
+}
+
+// CreateAuthorNEQ applies the NEQ predicate on the "create_author" field.
+func CreateAuthorNEQ(v int64) predicate.Resource {
+	return predicate.Resource(sql.FieldNEQ(FieldCreateAuthor, v))
+}
+
+// CreateAuthorIn applies the In predicate on the "create_author" field.
+func CreateAuthorIn(vs ...int64) predicate.Resource {
+	return predicate.Resource(sql.FieldIn(FieldCreateAuthor, vs...))
+}
+
+// CreateAuthorNotIn applies the NotIn predicate on the "create_author" field.
+func CreateAuthorNotIn(vs ...int64) predicate.Resource {
+	return predicate.Resource(sql.FieldNotIn(FieldCreateAuthor, vs...))
+}
+
+// CreateAuthorGT applies the GT predicate on the "create_author" field.
+func CreateAuthorGT(v int64) predicate.Resource {
+	return predicate.Resource(sql.FieldGT(FieldCreateAuthor, v))
+}
+
+// CreateAuthorGTE applies the GTE predicate on the "create_author" field.
+func CreateAuthorGTE(v int64) predicate.Resource {
+	return predicate.Resource(sql.FieldGTE(FieldCreateAuthor, v))
+}
+
+// CreateAuthorLT applies the LT predicate on the "create_author" field.
+func CreateAuthorLT(v int64) predicate.Resource {
+	return predicate.Resource(sql.FieldLT(FieldCreateAuthor, v))
+}
+
+// CreateAuthorLTE applies the LTE predicate on the "create_author" field.
+func CreateAuthorLTE(v int64) predicate.Resource {
+	return predicate.Resource(sql.FieldLTE(FieldCreateAuthor, v))
+}
+
+// CreateAuthorIsNil applies the IsNil predicate on the "create_author" field.
+func CreateAuthorIsNil() predicate.Resource {
+	return predicate.Resource(sql.FieldIsNull(FieldCreateAuthor))
+}
+
+// CreateAuthorNotNil applies the NotNil predicate on the "create_author" field.
+func CreateAuthorNotNil() predicate.Resource {
+	return predicate.Resource(sql.FieldNotNull(FieldCreateAuthor))
+}
+
+// UpdateAuthorEQ applies the EQ predicate on the "update_author" field.
+func UpdateAuthorEQ(v int64) predicate.Resource {
+	return predicate.Resource(sql.FieldEQ(FieldUpdateAuthor, v))
+}
+
+// UpdateAuthorNEQ applies the NEQ predicate on the "update_author" field.
+func UpdateAuthorNEQ(v int64) predicate.Resource {
+	return predicate.Resource(sql.FieldNEQ(FieldUpdateAuthor, v))
+}
+
+// UpdateAuthorIn applies the In predicate on the "update_author" field.
+func UpdateAuthorIn(vs ...int64) predicate.Resource {
+	return predicate.Resource(sql.FieldIn(FieldUpdateAuthor, vs...))
+}
+
+// UpdateAuthorNotIn applies the NotIn predicate on the "update_author" field.
+func UpdateAuthorNotIn(vs ...int64) predicate.Resource {
+	return predicate.Resource(sql.FieldNotIn(FieldUpdateAuthor, vs...))
+}
+
+// UpdateAuthorGT applies the GT predicate on the "update_author" field.
+func UpdateAuthorGT(v int64) predicate.Resource {
+	return predicate.Resource(sql.FieldGT(FieldUpdateAuthor, v))
+}
+
+// UpdateAuthorGTE applies the GTE predicate on the "update_author" field.
+func UpdateAuthorGTE(v int64) predicate.Resource {
+	return predicate.Resource(sql.FieldGTE(FieldUpdateAuthor, v))
+}
+
+// UpdateAuthorLT applies the LT predicate on the "update_author" field.
+func UpdateAuthorLT(v int64) predicate.Resource {
+	return predicate.Resource(sql.FieldLT(FieldUpdateAuthor, v))
+}
+
+// UpdateAuthorLTE applies the LTE predicate on the "update_author" field.
+func UpdateAuthorLTE(v int64) predicate.Resource {
+	return predicate.Resource(sql.FieldLTE(FieldUpdateAuthor, v))
+}
+
+// UpdateAuthorIsNil applies the IsNil predicate on the "update_author" field.
+func UpdateAuthorIsNil() predicate.Resource {
+	return predicate.Resource(sql.FieldIsNull(FieldUpdateAuthor))
+}
+
+// UpdateAuthorNotNil applies the NotNil predicate on the "update_author" field.
+func UpdateAuthorNotNil() predicate.Resource {
+	return predicate.Resource(sql.FieldNotNull(FieldUpdateAuthor))
 }
 
 // CreateTimeEQ applies the EQ predicate on the "create_time" field.

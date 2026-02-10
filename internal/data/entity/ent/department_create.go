@@ -23,6 +23,34 @@ type DepartmentCreate struct {
 	hooks    []Hook
 }
 
+// SetCreateAuthor sets the "create_author" field.
+func (_c *DepartmentCreate) SetCreateAuthor(v int64) *DepartmentCreate {
+	_c.mutation.SetCreateAuthor(v)
+	return _c
+}
+
+// SetNillableCreateAuthor sets the "create_author" field if the given value is not nil.
+func (_c *DepartmentCreate) SetNillableCreateAuthor(v *int64) *DepartmentCreate {
+	if v != nil {
+		_c.SetCreateAuthor(*v)
+	}
+	return _c
+}
+
+// SetUpdateAuthor sets the "update_author" field.
+func (_c *DepartmentCreate) SetUpdateAuthor(v int64) *DepartmentCreate {
+	_c.mutation.SetUpdateAuthor(v)
+	return _c
+}
+
+// SetNillableUpdateAuthor sets the "update_author" field if the given value is not nil.
+func (_c *DepartmentCreate) SetNillableUpdateAuthor(v *int64) *DepartmentCreate {
+	if v != nil {
+		_c.SetUpdateAuthor(*v)
+	}
+	return _c
+}
+
 // SetCreateTime sets the "create_time" field.
 func (_c *DepartmentCreate) SetCreateTime(v time.Time) *DepartmentCreate {
 	_c.mutation.SetCreateTime(v)
@@ -233,7 +261,9 @@ func (_c *DepartmentCreate) Mutation() *DepartmentMutation {
 
 // Save creates the Department in the database.
 func (_c *DepartmentCreate) Save(ctx context.Context) (*Department, error) {
-	_c.defaults()
+	if err := _c.defaults(); err != nil {
+		return nil, err
+	}
 	return withHooks(ctx, _c.sqlSave, _c.mutation, _c.hooks)
 }
 
@@ -260,12 +290,18 @@ func (_c *DepartmentCreate) ExecX(ctx context.Context) {
 }
 
 // defaults sets the default values of the builder before save.
-func (_c *DepartmentCreate) defaults() {
+func (_c *DepartmentCreate) defaults() error {
 	if _, ok := _c.mutation.CreateTime(); !ok {
+		if department.DefaultCreateTime == nil {
+			return fmt.Errorf("ent: uninitialized department.DefaultCreateTime (forgotten import ent/runtime?)")
+		}
 		v := department.DefaultCreateTime()
 		_c.mutation.SetCreateTime(v)
 	}
 	if _, ok := _c.mutation.UpdateTime(); !ok {
+		if department.DefaultUpdateTime == nil {
+			return fmt.Errorf("ent: uninitialized department.DefaultUpdateTime (forgotten import ent/runtime?)")
+		}
 		v := department.DefaultUpdateTime()
 		_c.mutation.SetUpdateTime(v)
 	}
@@ -290,9 +326,13 @@ func (_c *DepartmentCreate) defaults() {
 		_c.mutation.SetDescription(v)
 	}
 	if _, ok := _c.mutation.ID(); !ok {
+		if department.DefaultID == nil {
+			return fmt.Errorf("ent: uninitialized department.DefaultID (forgotten import ent/runtime?)")
+		}
 		v := department.DefaultID()
 		_c.mutation.SetID(v)
 	}
+	return nil
 }
 
 // check runs all checks and user-defined validators on the builder.
@@ -380,6 +420,14 @@ func (_c *DepartmentCreate) createSpec() (*Department, *sqlgraph.CreateSpec) {
 	if id, ok := _c.mutation.ID(); ok {
 		_node.ID = id
 		_spec.ID.Value = id
+	}
+	if value, ok := _c.mutation.CreateAuthor(); ok {
+		_spec.SetField(department.FieldCreateAuthor, field.TypeInt64, value)
+		_node.CreateAuthor = value
+	}
+	if value, ok := _c.mutation.UpdateAuthor(); ok {
+		_spec.SetField(department.FieldUpdateAuthor, field.TypeInt64, value)
+		_node.UpdateAuthor = value
 	}
 	if value, ok := _c.mutation.CreateTime(); ok {
 		_spec.SetField(department.FieldCreateTime, field.TypeTime, value)

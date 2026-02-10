@@ -19,13 +19,6 @@ import (
 	"origadmin/application/admin/internal/helpers/i18n"
 )
 
-type IDGenerator interface {
-	Comment(key string) IDGenerator
-	OptionalFK(name string) ent.Field
-	FK(name string) ent.Field
-	PK(name string) ent.Field
-}
-
 // auditFields defines only the fields and indexes for auditing, without any hooks.
 // This allows models to include audit fields without enabling automatic updates.
 type auditFields struct {
@@ -36,19 +29,11 @@ type auditFields struct {
 
 // Fields of the auditFields mixin.
 func (m auditFields) Fields() []ent.Field {
-	auditCreate := innerID
-	auditCreate.Key = m.CreateField
-	auditCreate.CommentKey = i18n.Text("create_author.field.comment")
-	auditCreate.UseDefault = true
-	auditCreate.Optional = true
-	auditUpdate := innerID
-	auditUpdate.Key = m.UpdateField
-	auditUpdate.CommentKey = i18n.Text("update_author.field.comment")
-	auditUpdate.UseDefault = true
-	auditUpdate.Optional = true
+	// Use the innerID builder to construct fields with specific properties like Immutable.
+	// innerID.CommentKey(...) returns a new IDBuilder instance, so it's safe to chain.
 	return []ent.Field{
-		auditCreate.ToField(),
-		auditUpdate.ToField(),
+		innerID.CommentKey("create_author.field.comment").Immutable().OptionalFK(m.CreateField),
+		innerID.CommentKey("update_author.field.comment").OptionalFK(m.UpdateField),
 	}
 }
 
@@ -60,18 +45,18 @@ func (m auditFields) Indexes() []ent.Index {
 	}
 }
 
-// AuditFields returns a mixin that includes only the audit fields (create_author, update_author)
+// AuditMixin returns a mixin that includes only the audit fields (create_author, update_author)
 // and their indexes, without any automatic update hooks.
-func AuditFields(createField, updateField string) ent.Mixin {
+func AuditMixin(createField, updateField string) ent.Mixin {
 	return auditFields{
 		CreateField: createField,
 		UpdateField: updateField,
 	}
 }
 
-// DefaultAuditFields returns a new audit mixin with default field names, without hooks.
-func DefaultAuditFields() ent.Mixin {
-	return AuditFields("create_author", "update_author")
+// DefaultAuditMixin returns a new audit mixin with default field names, without hooks.
+func DefaultAuditMixin() ent.Mixin {
+	return AuditMixin("create_author", "update_author")
 }
 
 // auditMixin composes auditFields and adds an automatic update hook.
@@ -80,9 +65,9 @@ type auditMixin struct {
 	auditFields
 }
 
-// AuditHook is a hook that sets the create_author and update_author fields
+// AuditMixinHook is a hook that sets the create_author and update_author fields
 // by extracting the user ID from the context via contextutil.GetUserID.
-func AuditHook(createField, updateField string) ent.Hook {
+func AuditMixinHook(createField, updateField string) ent.Hook {
 	return func(next ent.Mutator) ent.Mutator {
 		return ent.MutateFunc(func(ctx context.Context, m ent.Mutation) (ent.Value, error) {
 			// Skip if not a Create or Update operation.
@@ -116,17 +101,17 @@ func AuditHook(createField, updateField string) ent.Hook {
 }
 
 // Hooks of the mixin.
-// It uses the AuditHook to automatically set the author fields during create and update operations.
+// It uses the AuditMixinHook to automatically set the author fields during create and update operations.
 // This hook relies on a user identifier being present in the `context.Context`
 // and uses the encapsulated `contextutil.GetUserID` function to retrieve it.
 func (m auditMixin) Hooks() []ent.Hook {
 	return []ent.Hook{
-		AuditHook(m.CreateField, m.UpdateField),
+		AuditMixinHook(m.CreateField, m.UpdateField),
 	}
 }
 
-// AuditWithHook returns a mixin that includes audit fields and an automatic update hook.
-func AuditWithHook(createField, updateField string) ent.Mixin {
+// AuditMixinWithHook returns a mixin that includes audit fields and an automatic update hook.
+func AuditMixinWithHook(createField, updateField string) ent.Mixin {
 	return auditMixin{
 		auditFields: auditFields{
 			CreateField: createField,
@@ -135,9 +120,9 @@ func AuditWithHook(createField, updateField string) ent.Mixin {
 	}
 }
 
-// DefaultAuditWithHook returns a new audit mixin with default field names and the update hook.
-func DefaultAuditWithHook() ent.Mixin {
-	return AuditWithHook("create_author", "update_author")
+// DefaultAuditMixinWithHook returns a new audit mixin with default field names and the update hook.
+func DefaultAuditMixinWithHook() ent.Mixin {
+	return AuditMixinWithHook("create_author", "update_author")
 }
 
 // ManagerSchema schema to include control and time fields.
@@ -147,21 +132,8 @@ type ManagerSchema struct {
 
 // Fields of the Model.
 func (ManagerSchema) Fields() []ent.Field {
-	manager := innerID
-	manager.Key = "manager_id"
-	manager.CommentKey = i18n.Text("manager_id.field.comment")
-	manager.Optional = true
-	manager.UseDefault = true
-	if manager.UseAlias {
-		return []ent.Field{
-			manager.ToField(),
-			field.String("manager_name").
-				Comment(i18n.Text("manager_name.field.comment")).
-				Default(""),
-		}
-	}
 	return []ent.Field{
-		manager.ToField(),
+		innerID.CommentKey("manager_id.field.comment").OptionalFK("manager_id"),
 	}
 }
 
@@ -281,23 +253,23 @@ func (m updateMixin) Indexes() []ent.Index {
 var (
 	// ModelMixin provides a basic set of fields for standard models.
 	ModelMixin = []ent.Mixin{
-		innerID,
+		innerID.Mixin(), // Use the Mixin() method to get the ent.Mixin
 		DefaultCreateMixin(),
 		DefaultUpdateMixin(),
 	}
 
 	// AuditFieldsModelMixin provides the basic model fields plus audit fields, but without automatic update hooks.
 	AuditFieldsModelMixin = []ent.Mixin{
-		innerID,
-		DefaultAuditFields(),
+		innerID.Mixin(),
+		DefaultAuditMixin(),
 		DefaultCreateMixin(),
 		DefaultUpdateMixin(),
 	}
 
 	// AuditModelMixin provides the full suite: basic fields, audit fields, and automatic update hooks.
 	AuditModelMixin = []ent.Mixin{
-		innerID,
-		DefaultAuditWithHook(),
+		innerID.Mixin(),
+		DefaultAuditMixinWithHook(),
 		DefaultCreateMixin(),
 		DefaultUpdateMixin(),
 	}

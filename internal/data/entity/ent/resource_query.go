@@ -480,12 +480,12 @@ func (_q *ResourceQuery) WithPermissionResources(opts ...func(*PermissionResourc
 // Example:
 //
 //	var v []struct {
-//		CreateTime time.Time `json:"create_time,omitempty"`
+//		CreateAuthor int64 `json:"create_author,omitempty"`
 //		Count int `json:"count,omitempty"`
 //	}
 //
 //	client.Resource.Query().
-//		GroupBy(resource.FieldCreateTime).
+//		GroupBy(resource.FieldCreateAuthor).
 //		Aggregate(ent.Count()).
 //		Scan(ctx, &v)
 func (_q *ResourceQuery) GroupBy(field string, fields ...string) *ResourceGroupBy {
@@ -503,11 +503,11 @@ func (_q *ResourceQuery) GroupBy(field string, fields ...string) *ResourceGroupB
 // Example:
 //
 //	var v []struct {
-//		CreateTime time.Time `json:"create_time,omitempty"`
+//		CreateAuthor int64 `json:"create_author,omitempty"`
 //	}
 //
 //	client.Resource.Query().
-//		Select(resource.FieldCreateTime).
+//		Select(resource.FieldCreateAuthor).
 //		Scan(ctx, &v)
 func (_q *ResourceQuery) Select(fields ...string) *ResourceSelect {
 	_q.ctx.Fields = append(_q.ctx.Fields, fields...)
@@ -998,6 +998,8 @@ func (_q *ResourceQuery) Modify(modifiers ...func(s *sql.Selector)) *ResourceSel
 // Example:
 //
 //	var v []struct {
+//	  CreateAuthor int64 `json:"create_author,omitempty"`
+//	  UpdateAuthor int64 `json:"update_author,omitempty"`
 //	  CreateTime time.Time `json:"create_time,omitempty"`
 //	  UpdateTime time.Time `json:"update_time,omitempty"`
 //	  Keyword string `json:"keyword,omitempty"`
@@ -1022,6 +1024,8 @@ func (_q *ResourceQuery) Modify(modifiers ...func(s *sql.Selector)) *ResourceSel
 //
 //	client.Resource.Query().
 //	  Omit(
+//	  resource.FieldCreateAuthor,
+//	  resource.FieldUpdateAuthor,
 //	  resource.FieldCreateTime,
 //	  resource.FieldUpdateTime,
 //	  resource.FieldKeyword,

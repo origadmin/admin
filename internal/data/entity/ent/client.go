@@ -663,7 +663,8 @@ func (c *DepartmentClient) QueryUserDepartments(_m *Department) *UserDepartmentQ
 
 // Hooks returns the client hooks.
 func (c *DepartmentClient) Hooks() []Hook {
-	return c.hooks.Department
+	hooks := c.hooks.Department
+	return append(hooks[:len(hooks):len(hooks)], department.Hooks[:]...)
 }
 
 // Interceptors returns the client interceptors.
@@ -1058,7 +1059,8 @@ func (c *PermissionClient) QueryViewPermissions(_m *Permission) *ViewPermissionQ
 
 // Hooks returns the client hooks.
 func (c *PermissionClient) Hooks() []Hook {
-	return c.hooks.Permission
+	hooks := c.hooks.Permission
+	return append(hooks[:len(hooks):len(hooks)], permission.Hooks[:]...)
 }
 
 // Interceptors returns the client interceptors.
@@ -1436,7 +1438,8 @@ func (c *PositionClient) QueryPositionPermissions(_m *Position) *PositionPermiss
 
 // Hooks returns the client hooks.
 func (c *PositionClient) Hooks() []Hook {
-	return c.hooks.Position
+	hooks := c.hooks.Position
+	return append(hooks[:len(hooks):len(hooks)], position.Hooks[:]...)
 }
 
 // Interceptors returns the client interceptors.
@@ -1830,7 +1833,8 @@ func (c *ResourceClient) QueryPermissionResources(_m *Resource) *PermissionResou
 
 // Hooks returns the client hooks.
 func (c *ResourceClient) Hooks() []Hook {
-	return c.hooks.Resource
+	hooks := c.hooks.Resource
+	return append(hooks[:len(hooks):len(hooks)], resource.Hooks[:]...)
 }
 
 // Interceptors returns the client interceptors.
@@ -2027,7 +2031,8 @@ func (c *RoleClient) QueryRolePermissions(_m *Role) *RolePermissionQuery {
 
 // Hooks returns the client hooks.
 func (c *RoleClient) Hooks() []Hook {
-	return c.hooks.Role
+	hooks := c.hooks.Role
+	return append(hooks[:len(hooks):len(hooks)], role.Hooks[:]...)
 }
 
 // Interceptors returns the client interceptors.

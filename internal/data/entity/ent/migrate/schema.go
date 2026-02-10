@@ -30,6 +30,8 @@ var (
 	// OrgDepartmentsColumns holds the columns for the "org_departments" table.
 	OrgDepartmentsColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeInt64, Comment: "field.primary_key.comment"},
+		{Name: "create_author", Type: field.TypeInt64, Nullable: true, Comment: "create_author.field.comment"},
+		{Name: "update_author", Type: field.TypeInt64, Nullable: true, Comment: "update_author.field.comment"},
 		{Name: "create_time", Type: field.TypeTime, Comment: "create_time.field.comment"},
 		{Name: "update_time", Type: field.TypeTime, Comment: "update_time.field.comment"},
 		{Name: "keyword", Type: field.TypeString, Unique: true, Size: 255, Comment: "entity.department.field.keyword"},
@@ -50,49 +52,59 @@ var (
 		ForeignKeys: []*schema.ForeignKey{
 			{
 				Symbol:     "org_departments_org_departments_children",
-				Columns:    []*schema.Column{OrgDepartmentsColumns[10]},
+				Columns:    []*schema.Column{OrgDepartmentsColumns[12]},
 				RefColumns: []*schema.Column{OrgDepartmentsColumns[0]},
 				OnDelete:   schema.SetNull,
 			},
 		},
 		Indexes: []*schema.Index{
 			{
-				Name:    "department_create_time",
+				Name:    "department_create_author",
 				Unique:  false,
 				Columns: []*schema.Column{OrgDepartmentsColumns[1]},
 			},
 			{
-				Name:    "department_update_time",
+				Name:    "department_update_author",
 				Unique:  false,
 				Columns: []*schema.Column{OrgDepartmentsColumns[2]},
 			},
 			{
-				Name:    "department_keyword",
+				Name:    "department_create_time",
 				Unique:  false,
 				Columns: []*schema.Column{OrgDepartmentsColumns[3]},
 			},
 			{
-				Name:    "department_name",
+				Name:    "department_update_time",
 				Unique:  false,
 				Columns: []*schema.Column{OrgDepartmentsColumns[4]},
 			},
 			{
-				Name:    "department_sequence",
+				Name:    "department_keyword",
+				Unique:  false,
+				Columns: []*schema.Column{OrgDepartmentsColumns[5]},
+			},
+			{
+				Name:    "department_name",
 				Unique:  false,
 				Columns: []*schema.Column{OrgDepartmentsColumns[6]},
 			},
 			{
+				Name:    "department_sequence",
+				Unique:  false,
+				Columns: []*schema.Column{OrgDepartmentsColumns[8]},
+			},
+			{
 				Name:    "department_status",
 				Unique:  false,
-				Columns: []*schema.Column{OrgDepartmentsColumns[7]},
+				Columns: []*schema.Column{OrgDepartmentsColumns[9]},
 			},
 		},
 	}
 	// NtfNotificationsColumns holds the columns for the "ntf_notifications" table.
 	NtfNotificationsColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeInt64, Comment: "field.primary_key.comment"},
-		{Name: "create_author", Type: field.TypeInt64, Nullable: true, Comment: "create_author.field.comment", Default: 0},
-		{Name: "update_author", Type: field.TypeInt64, Nullable: true, Comment: "update_author.field.comment", Default: 0},
+		{Name: "create_author", Type: field.TypeInt64, Nullable: true, Comment: "create_author.field.comment"},
+		{Name: "update_author", Type: field.TypeInt64, Nullable: true, Comment: "update_author.field.comment"},
 		{Name: "create_time", Type: field.TypeTime, Comment: "create_time.field.comment"},
 		{Name: "update_time", Type: field.TypeTime, Comment: "update_time.field.comment"},
 		{Name: "subject", Type: field.TypeString, Comment: "entity.notification.field.subject", Default: ""},
@@ -132,6 +144,8 @@ var (
 	// SysPermissionsColumns holds the columns for the "sys_permissions" table.
 	SysPermissionsColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeInt64, Comment: "field.primary_key.comment"},
+		{Name: "create_author", Type: field.TypeInt64, Nullable: true, Comment: "create_author.field.comment"},
+		{Name: "update_author", Type: field.TypeInt64, Nullable: true, Comment: "update_author.field.comment"},
 		{Name: "create_time", Type: field.TypeTime, Comment: "create_time.field.comment"},
 		{Name: "update_time", Type: field.TypeTime, Comment: "update_time.field.comment"},
 		{Name: "name", Type: field.TypeString, Size: 64, Comment: "entity.permission.field.name", Default: ""},
@@ -150,14 +164,24 @@ var (
 		PrimaryKey: []*schema.Column{SysPermissionsColumns[0]},
 		Indexes: []*schema.Index{
 			{
-				Name:    "permission_create_time",
+				Name:    "permission_create_author",
 				Unique:  false,
 				Columns: []*schema.Column{SysPermissionsColumns[1]},
 			},
 			{
-				Name:    "permission_update_time",
+				Name:    "permission_update_author",
 				Unique:  false,
 				Columns: []*schema.Column{SysPermissionsColumns[2]},
+			},
+			{
+				Name:    "permission_create_time",
+				Unique:  false,
+				Columns: []*schema.Column{SysPermissionsColumns[3]},
+			},
+			{
+				Name:    "permission_update_time",
+				Unique:  false,
+				Columns: []*schema.Column{SysPermissionsColumns[4]},
 			},
 		},
 	}
@@ -198,6 +222,8 @@ var (
 	// OrgPositionsColumns holds the columns for the "org_positions" table.
 	OrgPositionsColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeInt64, Comment: "field.primary_key.comment"},
+		{Name: "create_author", Type: field.TypeInt64, Nullable: true, Comment: "create_author.field.comment"},
+		{Name: "update_author", Type: field.TypeInt64, Nullable: true, Comment: "update_author.field.comment"},
 		{Name: "create_time", Type: field.TypeTime, Comment: "create_time.field.comment"},
 		{Name: "update_time", Type: field.TypeTime, Comment: "update_time.field.comment"},
 		{Name: "name", Type: field.TypeString, Unique: true, Size: 64, Comment: "entity.position.field.name"},
@@ -214,21 +240,31 @@ var (
 		ForeignKeys: []*schema.ForeignKey{
 			{
 				Symbol:     "org_positions_org_departments_positions",
-				Columns:    []*schema.Column{OrgPositionsColumns[6]},
+				Columns:    []*schema.Column{OrgPositionsColumns[8]},
 				RefColumns: []*schema.Column{OrgDepartmentsColumns[0]},
 				OnDelete:   schema.NoAction,
 			},
 		},
 		Indexes: []*schema.Index{
 			{
-				Name:    "position_create_time",
+				Name:    "position_create_author",
 				Unique:  false,
 				Columns: []*schema.Column{OrgPositionsColumns[1]},
 			},
 			{
-				Name:    "position_update_time",
+				Name:    "position_update_author",
 				Unique:  false,
 				Columns: []*schema.Column{OrgPositionsColumns[2]},
+			},
+			{
+				Name:    "position_create_time",
+				Unique:  false,
+				Columns: []*schema.Column{OrgPositionsColumns[3]},
+			},
+			{
+				Name:    "position_update_time",
+				Unique:  false,
+				Columns: []*schema.Column{OrgPositionsColumns[4]},
 			},
 		},
 	}
@@ -269,6 +305,8 @@ var (
 	// SysResourcesColumns holds the columns for the "sys_resources" table.
 	SysResourcesColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeInt64, Comment: "field.primary_key.comment"},
+		{Name: "create_author", Type: field.TypeInt64, Nullable: true, Comment: "create_author.field.comment"},
+		{Name: "update_author", Type: field.TypeInt64, Nullable: true, Comment: "update_author.field.comment"},
 		{Name: "create_time", Type: field.TypeTime, Comment: "create_time.field.comment"},
 		{Name: "update_time", Type: field.TypeTime, Comment: "update_time.field.comment"},
 		{Name: "keyword", Type: field.TypeString, Unique: true, Size: 255, Comment: "entity.resource.field.keyword"},
@@ -299,27 +337,39 @@ var (
 		ForeignKeys: []*schema.ForeignKey{
 			{
 				Symbol:     "sys_resources_sys_resources_children",
-				Columns:    []*schema.Column{SysResourcesColumns[20]},
+				Columns:    []*schema.Column{SysResourcesColumns[22]},
 				RefColumns: []*schema.Column{SysResourcesColumns[0]},
 				OnDelete:   schema.SetNull,
 			},
 		},
 		Indexes: []*schema.Index{
 			{
-				Name:    "resource_create_time",
+				Name:    "resource_create_author",
 				Unique:  false,
 				Columns: []*schema.Column{SysResourcesColumns[1]},
 			},
 			{
-				Name:    "resource_update_time",
+				Name:    "resource_update_author",
 				Unique:  false,
 				Columns: []*schema.Column{SysResourcesColumns[2]},
+			},
+			{
+				Name:    "resource_create_time",
+				Unique:  false,
+				Columns: []*schema.Column{SysResourcesColumns[3]},
+			},
+			{
+				Name:    "resource_update_time",
+				Unique:  false,
+				Columns: []*schema.Column{SysResourcesColumns[4]},
 			},
 		},
 	}
 	// SysRolesColumns holds the columns for the "sys_roles" table.
 	SysRolesColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeInt64, Comment: "field.primary_key.comment"},
+		{Name: "create_author", Type: field.TypeInt64, Nullable: true, Comment: "create_author.field.comment"},
+		{Name: "update_author", Type: field.TypeInt64, Nullable: true, Comment: "update_author.field.comment"},
 		{Name: "create_time", Type: field.TypeTime, Comment: "create_time.field.comment"},
 		{Name: "update_time", Type: field.TypeTime, Comment: "update_time.field.comment"},
 		{Name: "keyword", Type: field.TypeString, Unique: true, Size: 255, Comment: "entity.role.field.keyword"},
@@ -337,34 +387,44 @@ var (
 		PrimaryKey: []*schema.Column{SysRolesColumns[0]},
 		Indexes: []*schema.Index{
 			{
-				Name:    "role_create_time",
+				Name:    "role_create_author",
 				Unique:  false,
 				Columns: []*schema.Column{SysRolesColumns[1]},
 			},
 			{
-				Name:    "role_update_time",
+				Name:    "role_update_author",
 				Unique:  false,
 				Columns: []*schema.Column{SysRolesColumns[2]},
 			},
 			{
-				Name:    "role_keyword",
+				Name:    "role_create_time",
 				Unique:  false,
 				Columns: []*schema.Column{SysRolesColumns[3]},
 			},
 			{
-				Name:    "role_name",
+				Name:    "role_update_time",
 				Unique:  false,
 				Columns: []*schema.Column{SysRolesColumns[4]},
 			},
 			{
+				Name:    "role_keyword",
+				Unique:  false,
+				Columns: []*schema.Column{SysRolesColumns[5]},
+			},
+			{
+				Name:    "role_name",
+				Unique:  false,
+				Columns: []*schema.Column{SysRolesColumns[6]},
+			},
+			{
 				Name:    "role_sequence",
 				Unique:  false,
-				Columns: []*schema.Column{SysRolesColumns[7]},
+				Columns: []*schema.Column{SysRolesColumns[9]},
 			},
 			{
 				Name:    "role_status",
 				Unique:  false,
-				Columns: []*schema.Column{SysRolesColumns[8]},
+				Columns: []*schema.Column{SysRolesColumns[10]},
 			},
 		},
 	}
@@ -405,14 +465,14 @@ var (
 	// SysUsersColumns holds the columns for the "sys_users" table.
 	SysUsersColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeInt64, Comment: "field.primary_key.comment"},
-		{Name: "create_author", Type: field.TypeInt64, Nullable: true, Comment: "create_author.field.comment", Default: 0},
-		{Name: "update_author", Type: field.TypeInt64, Nullable: true, Comment: "update_author.field.comment", Default: 0},
+		{Name: "create_author", Type: field.TypeInt64, Nullable: true, Comment: "create_author.field.comment"},
+		{Name: "update_author", Type: field.TypeInt64, Nullable: true, Comment: "update_author.field.comment"},
 		{Name: "create_time", Type: field.TypeTime, Comment: "create_time.field.comment"},
 		{Name: "update_time", Type: field.TypeTime, Comment: "update_time.field.comment"},
 		{Name: "delete_time", Type: field.TypeTime, Nullable: true, Comment: "delete_time.field.comment"},
 		{Name: "uuid", Type: field.TypeString, Size: 36, Comment: "entity.user.field.uuid"},
 		{Name: "allowed_ip", Type: field.TypeString, Comment: "entity.user.field.allowed_ip", Default: "0.0.0.0"},
-		{Name: "username", Type: field.TypeString, Unique: true, Size: 32, Comment: "entity.user.field.username"},
+		{Name: "username", Type: field.TypeString, Size: 32, Comment: "entity.user.field.username"},
 		{Name: "nickname", Type: field.TypeString, Size: 64, Comment: "entity.user.field.nickname", Default: ""},
 		{Name: "avatar", Type: field.TypeString, Size: 256, Comment: "entity.user.field.avatar", Default: ""},
 		{Name: "name", Type: field.TypeString, Size: 64, Comment: "entity.user.field.nickname", Default: ""},
@@ -460,19 +520,28 @@ var (
 				Columns: []*schema.Column{SysUsersColumns[4]},
 			},
 			{
-				Name:    "user_username",
-				Unique:  false,
+				Name:    "idx_username_unique_not_deleted",
+				Unique:  true,
 				Columns: []*schema.Column{SysUsersColumns[8]},
+				Annotation: &entsql.IndexAnnotation{
+					Where: "deleted_at IS NULL",
+				},
 			},
 			{
-				Name:    "user_phone",
-				Unique:  false,
+				Name:    "idx_phone_unique_not_deleted",
+				Unique:  true,
 				Columns: []*schema.Column{SysUsersColumns[15]},
+				Annotation: &entsql.IndexAnnotation{
+					Where: "deleted_at IS NULL",
+				},
 			},
 			{
-				Name:    "user_email",
-				Unique:  false,
+				Name:    "idx_email_unique_not_deleted",
+				Unique:  true,
 				Columns: []*schema.Column{SysUsersColumns[16]},
+				Annotation: &entsql.IndexAnnotation{
+					Where: "deleted_at IS NULL",
+				},
 			},
 			{
 				Name:    "user_status",

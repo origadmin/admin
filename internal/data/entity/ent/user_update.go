@@ -36,33 +36,6 @@ func (_u *UserUpdate) Where(ps ...predicate.User) *UserUpdate {
 	return _u
 }
 
-// SetCreateAuthor sets the "create_author" field.
-func (_u *UserUpdate) SetCreateAuthor(v int64) *UserUpdate {
-	_u.mutation.ResetCreateAuthor()
-	_u.mutation.SetCreateAuthor(v)
-	return _u
-}
-
-// SetNillableCreateAuthor sets the "create_author" field if the given value is not nil.
-func (_u *UserUpdate) SetNillableCreateAuthor(v *int64) *UserUpdate {
-	if v != nil {
-		_u.SetCreateAuthor(*v)
-	}
-	return _u
-}
-
-// AddCreateAuthor adds value to the "create_author" field.
-func (_u *UserUpdate) AddCreateAuthor(v int64) *UserUpdate {
-	_u.mutation.AddCreateAuthor(v)
-	return _u
-}
-
-// ClearCreateAuthor clears the value of the "create_author" field.
-func (_u *UserUpdate) ClearCreateAuthor() *UserUpdate {
-	_u.mutation.ClearCreateAuthor()
-	return _u
-}
-
 // SetUpdateAuthor sets the "update_author" field.
 func (_u *UserUpdate) SetUpdateAuthor(v int64) *UserUpdate {
 	_u.mutation.ResetUpdateAuthor()
@@ -784,12 +757,6 @@ func (_u *UserUpdate) sqlSave(ctx context.Context) (_node int, err error) {
 			}
 		}
 	}
-	if value, ok := _u.mutation.CreateAuthor(); ok {
-		_spec.SetField(user.FieldCreateAuthor, field.TypeInt64, value)
-	}
-	if value, ok := _u.mutation.AddedCreateAuthor(); ok {
-		_spec.AddField(user.FieldCreateAuthor, field.TypeInt64, value)
-	}
 	if _u.mutation.CreateAuthorCleared() {
 		_spec.ClearField(user.FieldCreateAuthor, field.TypeInt64)
 	}
@@ -1170,33 +1137,6 @@ type UserUpdateOne struct {
 	hooks     []Hook
 	mutation  *UserMutation
 	modifiers []func(*sql.UpdateBuilder)
-}
-
-// SetCreateAuthor sets the "create_author" field.
-func (_u *UserUpdateOne) SetCreateAuthor(v int64) *UserUpdateOne {
-	_u.mutation.ResetCreateAuthor()
-	_u.mutation.SetCreateAuthor(v)
-	return _u
-}
-
-// SetNillableCreateAuthor sets the "create_author" field if the given value is not nil.
-func (_u *UserUpdateOne) SetNillableCreateAuthor(v *int64) *UserUpdateOne {
-	if v != nil {
-		_u.SetCreateAuthor(*v)
-	}
-	return _u
-}
-
-// AddCreateAuthor adds value to the "create_author" field.
-func (_u *UserUpdateOne) AddCreateAuthor(v int64) *UserUpdateOne {
-	_u.mutation.AddCreateAuthor(v)
-	return _u
-}
-
-// ClearCreateAuthor clears the value of the "create_author" field.
-func (_u *UserUpdateOne) ClearCreateAuthor() *UserUpdateOne {
-	_u.mutation.ClearCreateAuthor()
-	return _u
 }
 
 // SetUpdateAuthor sets the "update_author" field.
@@ -1949,12 +1889,6 @@ func (_u *UserUpdateOne) sqlSave(ctx context.Context) (_node *User, err error) {
 				ps[i](selector)
 			}
 		}
-	}
-	if value, ok := _u.mutation.CreateAuthor(); ok {
-		_spec.SetField(user.FieldCreateAuthor, field.TypeInt64, value)
-	}
-	if value, ok := _u.mutation.AddedCreateAuthor(); ok {
-		_spec.AddField(user.FieldCreateAuthor, field.TypeInt64, value)
 	}
 	if _u.mutation.CreateAuthorCleared() {
 		_spec.ClearField(user.FieldCreateAuthor, field.TypeInt64)
