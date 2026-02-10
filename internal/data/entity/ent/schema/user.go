@@ -112,7 +112,7 @@ func (User) Fields() []ent.Field {
 
 // Mixin of the User.
 func (User) Mixin() []ent.Mixin {
-	return append(mixin.AuditModelMixin, mixin.SoftDeleteMixin{})
+	return append(mixin.AuditHookModelMixin, mixin.SoftDeleteMixin{})
 }
 
 // Indexes of the User.

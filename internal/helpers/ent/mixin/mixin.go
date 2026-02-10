@@ -258,16 +258,16 @@ var (
 		DefaultUpdateMixin(),
 	}
 
-	// AuditFieldsModelMixin provides the basic model fields plus audit fields, but without automatic update hooks.
-	AuditFieldsModelMixin = []ent.Mixin{
+	// AuditModelMixin provides the basic model fields plus audit fields, but without automatic update hooks.
+	AuditModelMixin = []ent.Mixin{
 		innerID.Mixin(),
 		DefaultAuditMixin(),
 		DefaultCreateMixin(),
 		DefaultUpdateMixin(),
 	}
 
-	// AuditModelMixin provides the full suite: basic fields, audit fields, and automatic update hooks.
-	AuditModelMixin = []ent.Mixin{
+	// AuditHookModelMixin provides the full suite: basic fields, audit fields, and automatic update hooks.
+	AuditHookModelMixin = []ent.Mixin{
 		innerID.Mixin(),
 		DefaultAuditMixinWithHook(),
 		DefaultCreateMixin(),

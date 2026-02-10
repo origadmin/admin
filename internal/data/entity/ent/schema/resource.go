@@ -105,5 +105,5 @@ func (Resource) Annotations() []schema.Annotation {
 
 // Mixin of the Resource.
 func (Resource) Mixin() []ent.Mixin {
-	return mixin.AuditModelMixin
+	return mixin.AuditHookModelMixin
 }

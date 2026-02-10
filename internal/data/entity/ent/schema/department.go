@@ -55,7 +55,7 @@ func (Department) Fields() []ent.Field {
 
 // Mixin of the Department.
 func (Department) Mixin() []ent.Mixin {
-	return mixin.AuditModelMixin
+	return mixin.AuditHookModelMixin
 }
 
 // Indexes of the Department.

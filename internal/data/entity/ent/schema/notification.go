@@ -49,5 +49,5 @@ func (Notification) Annotations() []schema.Annotation {
 
 // Mixin of the Notification.
 func (Notification) Mixin() []ent.Mixin {
-	return mixin.AuditModelMixin
+	return mixin.AuditHookModelMixin
 }

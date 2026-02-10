@@ -54,7 +54,7 @@ func (Role) Fields() []ent.Field {
 
 // Mixin of the Role.
 func (Role) Mixin() []ent.Mixin {
-	return mixin.AuditModelMixin
+	return mixin.AuditHookModelMixin
 }
 
 // Indexes of the Role.
