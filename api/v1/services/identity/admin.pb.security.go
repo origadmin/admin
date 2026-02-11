@@ -11,21 +11,21 @@ func init() {
 	policies := []security.Policy{
 		{
 			ServiceMethod: "/api.v1.services.identity.AdminService/ForcePolicySync",
-			GatewayPath:   "POST:/api/v1/auth/admin/sync",
+			GatewayPath:   "POST:/auth/admin/sync",
 			Name:          "admin",
-			VersionID:     "99a2c3dea0b03a17f510cb20029a1ac5863432da59a1ea8772bc9a09698a9b87",
+			VersionID:     "f83094b794a0e4dc514541a544e6a3fbfb7943f7a07d8af5957f94e6216ecc4c",
 		},
 		{
 			ServiceMethod: "/api.v1.services.identity.AdminService/GetPolicySyncStatus",
-			GatewayPath:   "GET:/api/v1/auth/admin/sync/status",
+			GatewayPath:   "GET:/auth/admin/sync/status",
 			Name:          "admin",
-			VersionID:     "81a8063ef5ec2279965696c00d11578832770ae7ddc05f578f389294bc298183",
+			VersionID:     "06dc11d36db52fb925015a3b8cea49b7af867163866228c835f1c78c6dfd2e28",
 		},
 		{
 			ServiceMethod: "/api.v1.services.identity.AdminService/GetEnforcerPolicies",
-			GatewayPath:   "GET:/api/v1/auth/admin/enforcer/policies",
+			GatewayPath:   "GET:/auth/admin/enforcer/policies",
 			Name:          "admin",
-			VersionID:     "ce2643b7fd411483fc7877365388c97739fbb6caa211e6367b48f1631f4d2ad0",
+			VersionID:     "baceb38b4d2021a94c7b3d94021a9b9e2318d1d437a13196d564420c61fbec6b",
 		},
 	}
 

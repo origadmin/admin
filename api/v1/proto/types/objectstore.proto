@@ -1,0 +1,20 @@
+syntax = "proto3";
+
+package api.v1.services.types;
+
+import "google/protobuf/timestamp.proto";
+
+option go_package = "origadmin/application/admin/api/v1/services/types;types";
+option java_multiple_files = true;
+option java_outer_classname = "APIServiceTypeObjectStoreProto";
+option java_package = "com.origadmin.api.v1.services.types";
+
+// Represents a stored object.
+message Object {
+  string id = 1 [json_name = "id"];
+  string name = 2 [json_name = "name"];
+  string url = 3 [json_name = "url"];
+  int64 size = 4 [json_name = "size"];
+  string content_type = 5 [json_name = "content_type"];
+  google.protobuf.Timestamp created_time = 6 [json_name = "created_time"];
+}

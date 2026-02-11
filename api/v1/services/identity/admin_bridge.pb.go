@@ -69,9 +69,9 @@ type AdminServiceGetEnforcerPoliciesHooker interface {
 
 func RegisterAdminServiceBridgeServer(s *http.Server, srv AdminServiceHookedBridger) {
 	r := s.Route("/")
-	r.POST("/api/v1/auth/admin/sync", _AdminService_ForcePolicySync0_Bridge_Handler(srv))
-	r.GET("/api/v1/auth/admin/sync/status", _AdminService_GetPolicySyncStatus0_Bridge_Handler(srv))
-	r.GET("/api/v1/auth/admin/enforcer/policies", _AdminService_GetEnforcerPolicies0_Bridge_Handler(srv))
+	r.POST("/auth/admin/sync", _AdminService_ForcePolicySync0_Bridge_Handler(srv))
+	r.GET("/auth/admin/sync/status", _AdminService_GetPolicySyncStatus0_Bridge_Handler(srv))
+	r.GET("/auth/admin/enforcer/policies", _AdminService_GetEnforcerPolicies0_Bridge_Handler(srv))
 }
 
 func _AdminService_ForcePolicySync0_Bridge_Handler(srv AdminServiceHookedBridger) func(ctx http.Context) error {

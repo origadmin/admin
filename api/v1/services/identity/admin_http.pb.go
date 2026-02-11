@@ -37,9 +37,9 @@ type AdminServiceHTTPServer interface {
 
 func RegisterAdminServiceHTTPServer(s *http.Server, srv AdminServiceHTTPServer) {
 	r := s.Route("/")
-	r.POST("/api/v1/auth/admin/sync", _AdminService_ForcePolicySync0_HTTP_Handler(srv))
-	r.GET("/api/v1/auth/admin/sync/status", _AdminService_GetPolicySyncStatus0_HTTP_Handler(srv))
-	r.GET("/api/v1/auth/admin/enforcer/policies", _AdminService_GetEnforcerPolicies0_HTTP_Handler(srv))
+	r.POST("/auth/admin/sync", _AdminService_ForcePolicySync0_HTTP_Handler(srv))
+	r.GET("/auth/admin/sync/status", _AdminService_GetPolicySyncStatus0_HTTP_Handler(srv))
+	r.GET("/auth/admin/enforcer/policies", _AdminService_GetEnforcerPolicies0_HTTP_Handler(srv))
 }
 
 func _AdminService_ForcePolicySync0_HTTP_Handler(srv AdminServiceHTTPServer) func(ctx http.Context) error {
@@ -125,7 +125,7 @@ func NewAdminServiceHTTPClient(client *http.Client) AdminServiceHTTPClient {
 // This bypasses any debouncing or scheduled syncs and is a high-risk operation.
 func (c *AdminServiceHTTPClientImpl) ForcePolicySync(ctx context.Context, in *emptypb.Empty, opts ...http.CallOption) (*emptypb.Empty, error) {
 	var out emptypb.Empty
-	pattern := "/api/v1/auth/admin/sync"
+	pattern := "/auth/admin/sync"
 	path := binding.EncodeURL(pattern, in, false)
 	opts = append(opts, http.Operation(OperationAdminServiceForcePolicySync))
 	opts = append(opts, http.PathTemplate(pattern))
@@ -140,7 +140,7 @@ func (c *AdminServiceHTTPClientImpl) ForcePolicySync(ctx context.Context, in *em
 // This is primarily for debugging and auditing purposes.
 func (c *AdminServiceHTTPClientImpl) GetEnforcerPolicies(ctx context.Context, in *emptypb.Empty, opts ...http.CallOption) (*EnforcerPoliciesResponse, error) {
 	var out EnforcerPoliciesResponse
-	pattern := "/api/v1/auth/admin/enforcer/policies"
+	pattern := "/auth/admin/enforcer/policies"
 	path := binding.EncodeURL(pattern, in, true)
 	opts = append(opts, http.Operation(OperationAdminServiceGetEnforcerPolicies))
 	opts = append(opts, http.PathTemplate(pattern))
@@ -154,7 +154,7 @@ func (c *AdminServiceHTTPClientImpl) GetEnforcerPolicies(ctx context.Context, in
 // GetPolicySyncStatus GetPolicySyncStatus retrieves current status and metrics of policy synchronization service.
 func (c *AdminServiceHTTPClientImpl) GetPolicySyncStatus(ctx context.Context, in *emptypb.Empty, opts ...http.CallOption) (*PolicySyncStatusResponse, error) {
 	var out PolicySyncStatusResponse
-	pattern := "/api/v1/auth/admin/sync/status"
+	pattern := "/auth/admin/sync/status"
 	path := binding.EncodeURL(pattern, in, true)
 	opts = append(opts, http.Operation(OperationAdminServiceGetPolicySyncStatus))
 	opts = append(opts, http.PathTemplate(pattern))

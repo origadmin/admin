@@ -1,0 +1,65 @@
+syntax = "proto3";
+
+package api.v1.services.objectstore;
+
+import "google/api/annotations.proto";
+import "types/objectstore.proto";
+
+option go_package = "origadmin/application/admin/api/v1/services/objectstore;objectstore";
+option java_multiple_files = true;
+option java_outer_classname = "APIServiceObjectStoreProto";
+option java_package = "com.origadmin.api.v1.services.objectstore";
+
+// The ObjectStore service definition.
+service ObjectStoreService {
+  // Creates an object.
+  rpc CreateObject(CreateObjectRequest) returns (CreateObjectResponse) {
+    option (google.api.http) = {
+      post: "/objects"
+      body: "*"
+    };
+  }
+
+  // Gets an object.
+  rpc GetObject(GetObjectRequest) returns (GetObjectResponse) {
+    option (google.api.http) = {
+      get: "/objects/{id}"
+    };
+  }
+
+  // Deletes an object.
+  rpc DeleteObject(DeleteObjectRequest) returns (DeleteObjectResponse) {
+    option (google.api.http) = {
+      delete: "/objects/{id}"
+    };
+  }
+}
+
+// Request message for creating an object.
+message CreateObjectRequest {
+  bytes data = 1;
+  string name = 2;
+}
+
+// Response message for creating an object.
+message CreateObjectResponse {
+  api.v1.services.types.Object object = 1;
+}
+
+// Request message for getting an object.
+message GetObjectRequest {
+  string id = 1;
+}
+
+// Response message for getting an object.
+message GetObjectResponse {
+  api.v1.services.types.Object object = 1;
+}
+
+// Request message for deleting an object.
+message DeleteObjectRequest {
+  string id = 1;
+}
+
+// Response message for deleting an object.
+message DeleteObjectResponse {}

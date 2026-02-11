@@ -1,0 +1,65 @@
+syntax = "proto3";
+
+package api.v1.services.filemanager;
+
+import "google/api/annotations.proto";
+import "types/filemanager.proto";
+
+option go_package = "origadmin/application/admin/api/v1/services/filemanager;filemanager";
+option java_multiple_files = true;
+option java_outer_classname = "APIServiceFileManagerProto";
+option java_package = "com.origadmin.api.v1.services.filemanager";
+
+// The FileManager service definition.
+service FileManagerService {
+  // Uploads a file and creates its metadata.
+  rpc UploadFile(UploadFileRequest) returns (UploadFileResponse) {
+    option (google.api.http) = {
+      post: "/files/upload"
+      body: "*"
+    };
+  }
+
+  // Gets file metadata.
+  rpc GetFile(GetFileRequest) returns (GetFileResponse) {
+    option (google.api.http) = {
+      get: "/files/{id}"
+    };
+  }
+
+  // Deletes a file and its metadata.
+  rpc DeleteFile(DeleteFileRequest) returns (DeleteFileResponse) {
+    option (google.api.http) = {
+      delete: "/files/{id}"
+    };
+  }
+}
+
+// Request message for uploading a file.
+message UploadFileRequest {
+  bytes data = 1;
+  string name = 2;
+}
+
+// Response message for uploading a file.
+message UploadFileResponse {
+  api.v1.services.types.FileMetadata file_metadata = 1;
+}
+
+// Request message for getting file metadata.
+message GetFileRequest {
+  string id = 1;
+}
+
+// Response message for getting file metadata.
+message GetFileResponse {
+  api.v1.services.types.FileMetadata file_metadata = 1;
+}
+
+// Request message for deleting a file.
+message DeleteFileRequest {
+  string id = 1;
+}
+
+// Response message for deleting a file.
+message DeleteFileResponse {}

@@ -110,7 +110,7 @@ func RegisterAdminServiceHandlerServer(ctx context.Context, mux *runtime.ServeMu
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/api.v1.services.identity.AdminService/ForcePolicySync", runtime.WithHTTPPathPattern("/api/v1/auth/admin/sync"))
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/api.v1.services.identity.AdminService/ForcePolicySync", runtime.WithHTTPPathPattern("/auth/admin/sync"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -130,7 +130,7 @@ func RegisterAdminServiceHandlerServer(ctx context.Context, mux *runtime.ServeMu
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/api.v1.services.identity.AdminService/GetPolicySyncStatus", runtime.WithHTTPPathPattern("/api/v1/auth/admin/sync/status"))
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/api.v1.services.identity.AdminService/GetPolicySyncStatus", runtime.WithHTTPPathPattern("/auth/admin/sync/status"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -150,7 +150,7 @@ func RegisterAdminServiceHandlerServer(ctx context.Context, mux *runtime.ServeMu
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/api.v1.services.identity.AdminService/GetEnforcerPolicies", runtime.WithHTTPPathPattern("/api/v1/auth/admin/enforcer/policies"))
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/api.v1.services.identity.AdminService/GetEnforcerPolicies", runtime.WithHTTPPathPattern("/auth/admin/enforcer/policies"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -208,7 +208,7 @@ func RegisterAdminServiceHandlerClient(ctx context.Context, mux *runtime.ServeMu
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/api.v1.services.identity.AdminService/ForcePolicySync", runtime.WithHTTPPathPattern("/api/v1/auth/admin/sync"))
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/api.v1.services.identity.AdminService/ForcePolicySync", runtime.WithHTTPPathPattern("/auth/admin/sync"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -225,7 +225,7 @@ func RegisterAdminServiceHandlerClient(ctx context.Context, mux *runtime.ServeMu
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/api.v1.services.identity.AdminService/GetPolicySyncStatus", runtime.WithHTTPPathPattern("/api/v1/auth/admin/sync/status"))
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/api.v1.services.identity.AdminService/GetPolicySyncStatus", runtime.WithHTTPPathPattern("/auth/admin/sync/status"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -242,7 +242,7 @@ func RegisterAdminServiceHandlerClient(ctx context.Context, mux *runtime.ServeMu
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/api.v1.services.identity.AdminService/GetEnforcerPolicies", runtime.WithHTTPPathPattern("/api/v1/auth/admin/enforcer/policies"))
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/api.v1.services.identity.AdminService/GetEnforcerPolicies", runtime.WithHTTPPathPattern("/auth/admin/enforcer/policies"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -259,9 +259,9 @@ func RegisterAdminServiceHandlerClient(ctx context.Context, mux *runtime.ServeMu
 }
 
 var (
-	pattern_AdminService_ForcePolicySync_0     = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 2, 4}, []string{"api", "v1", "auth", "admin", "sync"}, ""))
-	pattern_AdminService_GetPolicySyncStatus_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 2, 4, 2, 5}, []string{"api", "v1", "auth", "admin", "sync", "status"}, ""))
-	pattern_AdminService_GetEnforcerPolicies_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 2, 4, 2, 5}, []string{"api", "v1", "auth", "admin", "enforcer", "policies"}, ""))
+	pattern_AdminService_ForcePolicySync_0     = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2}, []string{"auth", "admin", "sync"}, ""))
+	pattern_AdminService_GetPolicySyncStatus_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"auth", "admin", "sync", "status"}, ""))
+	pattern_AdminService_GetEnforcerPolicies_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"auth", "admin", "enforcer", "policies"}, ""))
 )
 
 var (

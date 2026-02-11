@@ -243,14 +243,14 @@ const file_identity_admin_proto_rawDesc = "" +
 	"\x05ptype\x18\x01 \x01(\tR\x05ptype\x12\f\n" +
 	"\x01v\x18\x02 \x03(\tR\x01v\"\\\n" +
 	"\x18EnforcerPoliciesResponse\x12@\n" +
-	"\bpolicies\x18\x01 \x03(\v2$.api.v1.services.identity.CasbinRuleR\bpolicies2\xb4\x03\n" +
-	"\fAdminService\x12p\n" +
-	"\x0fForcePolicySync\x12\x16.google.protobuf.Empty\x1a\x16.google.protobuf.Empty\"-\xea\xea\x1b\a\n" +
-	"\x05admin\x82\xd3\xe4\x93\x02\x1c:\x01*\"\x17/api/v1/auth/admin/sync\x12\x94\x01\n" +
-	"\x13GetPolicySyncStatus\x12\x16.google.protobuf.Empty\x1a2.api.v1.services.identity.PolicySyncStatusResponse\"1\xea\xea\x1b\a\n" +
-	"\x05admin\x82\xd3\xe4\x93\x02 \x12\x1e/api/v1/auth/admin/sync/status\x12\x9a\x01\n" +
-	"\x13GetEnforcerPolicies\x12\x16.google.protobuf.Empty\x1a2.api.v1.services.identity.EnforcerPoliciesResponse\"7\xea\xea\x1b\a\n" +
-	"\x05admin\x82\xd3\xe4\x93\x02&\x12$/api/v1/auth/admin/enforcer/policiesB\xed\x01\n" +
+	"\bpolicies\x18\x01 \x03(\v2$.api.v1.services.identity.CasbinRuleR\bpolicies2\x9f\x03\n" +
+	"\fAdminService\x12i\n" +
+	"\x0fForcePolicySync\x12\x16.google.protobuf.Empty\x1a\x16.google.protobuf.Empty\"&\xea\xea\x1b\a\n" +
+	"\x05admin\x82\xd3\xe4\x93\x02\x15:\x01*\"\x10/auth/admin/sync\x12\x8d\x01\n" +
+	"\x13GetPolicySyncStatus\x12\x16.google.protobuf.Empty\x1a2.api.v1.services.identity.PolicySyncStatusResponse\"*\xea\xea\x1b\a\n" +
+	"\x05admin\x82\xd3\xe4\x93\x02\x19\x12\x17/auth/admin/sync/status\x12\x93\x01\n" +
+	"\x13GetEnforcerPolicies\x12\x16.google.protobuf.Empty\x1a2.api.v1.services.identity.EnforcerPoliciesResponse\"0\xea\xea\x1b\a\n" +
+	"\x05admin\x82\xd3\xe4\x93\x02\x1f\x12\x1d/auth/admin/enforcer/policiesB\xed\x01\n" +
 	"\x1ccom.api.v1.services.identityB\n" +
 	"AdminProtoP\x01Z=origadmin/application/admin/api/v1/services/identity;identity\xa2\x02\x04AVSI\xaa\x02\x18Api.V1.Services.Identity\xca\x02\x18Api\\V1\\Services\\Identity\xe2\x02$Api\\V1\\Services\\Identity\\GPBMetadata\xea\x02\x1bApi::V1::Services::Identityb\x06proto3"
 
