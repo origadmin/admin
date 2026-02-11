@@ -43,9 +43,9 @@ func wireApp(rt *runtime.App, bootstrap *conf.Config) (initializer.Initializer, 
 	}
 	userRepo := dal.NewUserRepo(database, v)
 	userUseCase := biz.NewUserUseCase(userRepo, v)
-	resourceRepo := dal.NewResourceRepo(database)
+	resourceRepo := dal.NewResourceRepo(database, v)
 	resourceUseCase := biz.NewResourceUseCase(resourceRepo)
-	viewRepo := dal.NewViewRepo(database)
+	viewRepo := dal.NewViewRepo(database, v)
 	viewUseCase := biz.NewViewUseCase(viewRepo)
 	seederSeeder, err := seeder.NewSeeder(userUseCase, resourceUseCase, viewUseCase, bootstrap, v)
 	if err != nil {

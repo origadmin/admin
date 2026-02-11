@@ -8,6 +8,7 @@ import (
 	"context"
 	"strings"
 
+	"github.com/origadmin/runtime/log"
 	"origadmin/application/admin/api/v1/services/types"
 	"origadmin/application/admin/internal/conf"
 	"origadmin/application/admin/internal/data/entity/ent"
@@ -19,18 +20,21 @@ import (
 
 type resourceRepo struct {
 	db        *ent.Database
+	log       *log.Helper
 	Delimiter string
 }
 
 // NewResourceRepo .
-func NewResourceRepo(database *ent.Database) dto.ResourceRepo {
+func NewResourceRepo(database *ent.Database, logger log.Logger) dto.ResourceRepo {
 	return &resourceRepo{
 		db:        database,
+		log:       log.NewHelper(log.With(logger, "module", "dal.resource")),
 		Delimiter: "/",
 	}
 }
 
 func (r *resourceRepo) Get(ctx context.Context, id int64, opts ...*dto.ResourceQueryOption) (*types.Resource, error) {
+	r.log.WithContext(ctx).Debugw("msg", "Get", "id", id)
 	opt := repo.FirstOrDefault(opts...)
 	query := r.db.Resource(ctx).Query().Where(resource.ID(id))
 
@@ -45,12 +49,14 @@ func (r *resourceRepo) Get(ctx context.Context, id int64, opts ...*dto.ResourceQ
 
 	result, err := query.Only(ctx)
 	if err != nil {
+		r.log.WithContext(ctx).Errorw("msg", "Get", "err", err)
 		return nil, err
 	}
 	return dto.ConvertResourceToResourcePB(result), nil
 }
 
 func (r *resourceRepo) Create(ctx context.Context, res *types.Resource, opts ...*dto.ResourceCreateOption) (*types.Resource, error) {
+	r.log.WithContext(ctx).Debugw("msg", "Create", "resource", res)
 	opt := repo.FirstOrDefault(opts...)
 	entResource := dto.ConvertResourcePBToResource(res)
 	create := r.db.Resource(ctx).Create().
@@ -66,12 +72,14 @@ func (r *resourceRepo) Create(ctx context.Context, res *types.Resource, opts ...
 
 	saved, err := create.Save(ctx)
 	if err != nil {
+		r.log.WithContext(ctx).Errorw("msg", "Create", "err", err)
 		return nil, err
 	}
 	return dto.ConvertResourceToResourcePB(saved), nil
 }
 
 func (r *resourceRepo) CreateFromPolicy(ctx context.Context, input *dto.ResourceFromPolicyInput) (*types.Resource, error) {
+	r.log.WithContext(ctx).Debugw("msg", "CreateFromPolicy", "input", input)
 	policy := input.Policy
 
 	// Extract method and path from GatewayPath, e.g., "GET:/api/v1/users/{id}"
@@ -113,12 +121,14 @@ func (r *resourceRepo) CreateFromPolicy(ctx context.Context, input *dto.Resource
 
 	saved, err := create.Save(ctx)
 	if err != nil {
+		r.log.WithContext(ctx).Errorw("msg", "CreateFromPolicy", "err", err)
 		return nil, err
 	}
 	return dto.ConvertResourceToResourcePB(saved), nil
 }
 
 func (r *resourceRepo) Delete(ctx context.Context, id int64) error {
+	r.log.WithContext(ctx).Debugw("msg", "Delete", "id", id)
 	return r.db.Tx(ctx, func(txCtx context.Context) error {
 		// Clear all associations before deletion
 		err := r.db.Resource(txCtx).UpdateOneID(id).
@@ -127,15 +137,21 @@ func (r *resourceRepo) Delete(ctx context.Context, id int64) error {
 			ClearChildren().
 			Exec(txCtx)
 		if err != nil {
+			r.log.WithContext(ctx).Errorw("msg", "Delete.ClearAssociations", "err", err)
 			return err
 		}
 
 		// Delete the Resource entity
-		return r.db.Resource(txCtx).DeleteOneID(id).Exec(txCtx)
+		err = r.db.Resource(txCtx).DeleteOneID(id).Exec(txCtx)
+		if err != nil {
+			r.log.WithContext(ctx).Errorw("msg", "Delete.Exec", "err", err)
+		}
+		return err
 	})
 }
 
 func (r *resourceRepo) Update(ctx context.Context, res *types.Resource, opts ...*dto.ResourceUpdateOption) (*types.Resource, error) {
+	r.log.WithContext(ctx).Debugw("msg", "Update", "resource", res)
 	var updatedResource *ent.Resource
 	err := r.db.Tx(ctx, func(tx context.Context) error {
 		opt := repo.FirstOrDefault(opts...)
@@ -157,15 +173,20 @@ func (r *resourceRepo) Update(ctx context.Context, res *types.Resource, opts ...
 
 		var err error
 		updatedResource, err = update.Save(tx)
+		if err != nil {
+			r.log.WithContext(ctx).Errorw("msg", "Update.Save", "err", err)
+		}
 		return err
 	})
 	if err != nil {
+		r.log.WithContext(ctx).Errorw("msg", "Update.Tx", "err", err)
 		return nil, err
 	}
 	return dto.ConvertResourceToResourcePB(updatedResource), nil
 }
 
 func (r *resourceRepo) List(ctx context.Context, opts ...*dto.ResourceQueryOption) ([]*types.Resource, int32, error) {
+	r.log.WithContext(ctx).Debugw("msg", "List", "opts", opts)
 	opt := repo.FirstOrDefault(opts...)
 	query := r.db.Resource(ctx).Query()
 
@@ -198,6 +219,7 @@ func (r *resourceRepo) List(ctx context.Context, opts ...*dto.ResourceQueryOptio
 
 	result, count, err := db.Find(ctx, query, &opt.QueryOption)
 	if err != nil {
+		r.log.WithContext(ctx).Errorw("msg", "List", "err", err)
 		return nil, 0, err
 	}
 

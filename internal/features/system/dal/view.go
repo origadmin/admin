@@ -9,6 +9,7 @@ import (
 	"errors"
 	"strconv"
 
+	"github.com/origadmin/runtime/log"
 	"origadmin/application/admin/api/v1/services/types"
 	"origadmin/application/admin/internal/data/entity/ent"
 	"origadmin/application/admin/internal/data/entity/ent/view"
@@ -19,19 +20,22 @@ import (
 
 type viewRepo struct {
 	db        *ent.Database
+	log       *log.Helper
 	Delimiter string
 }
 
 // NewViewRepo creates a new view repository.
-func NewViewRepo(database *ent.Database) dto.ViewRepo {
+func NewViewRepo(database *ent.Database, logger log.Logger) dto.ViewRepo {
 	return &viewRepo{
 		db:        database,
 		Delimiter: "/",
+		log:       log.NewHelper(log.With(logger, "module", "dal.view")),
 	}
 }
 
 // Get retrieves a single view by its ID.
 func (r *viewRepo) Get(ctx context.Context, id int64, opts ...*dto.ViewQueryOption) (*types.View, error) {
+	r.log.WithContext(ctx).Debugw("msg", "Get", "id", id)
 	opt := repo.FirstOrDefault(opts...)
 	query := r.db.View(ctx).Query().Where(view.ID(id))
 
@@ -47,6 +51,7 @@ func (r *viewRepo) Get(ctx context.Context, id int64, opts ...*dto.ViewQueryOpti
 
 	result, err := query.Only(ctx)
 	if err != nil {
+		r.log.WithContext(ctx).Errorw("msg", "Get", "err", err)
 		return nil, err
 	}
 	return dto.ConvertViewToViewPB(result), nil
@@ -54,6 +59,7 @@ func (r *viewRepo) Get(ctx context.Context, id int64, opts ...*dto.ViewQueryOpti
 
 // List retrieves a list of views based on query options.
 func (r *viewRepo) List(ctx context.Context, opts ...*dto.ViewQueryOption) ([]*types.View, int32, error) {
+	r.log.WithContext(ctx).Debugw("msg", "List", "opts", opts)
 	opt := repo.FirstOrDefault(opts...)
 	query := r.db.View(ctx).Query()
 
@@ -80,6 +86,7 @@ func (r *viewRepo) List(ctx context.Context, opts ...*dto.ViewQueryOption) ([]*t
 
 	result, count, err := db.Find(ctx, query, &opt.QueryOption)
 	if err != nil {
+		r.log.WithContext(ctx).Errorw("msg", "List", "err", err)
 		return nil, 0, err
 	}
 
@@ -88,6 +95,7 @@ func (r *viewRepo) List(ctx context.Context, opts ...*dto.ViewQueryOption) ([]*t
 
 // Create creates a new view and its associations within a transaction.
 func (r *viewRepo) Create(ctx context.Context, in *types.View, opts ...*dto.ViewCreateOption) (*types.View, error) {
+	r.log.WithContext(ctx).Debugw("msg", "Create", "in", in)
 	if in == nil {
 		return nil, errors.New("input view data cannot be nil")
 	}
@@ -99,6 +107,7 @@ func (r *viewRepo) Create(ctx context.Context, in *types.View, opts ...*dto.View
 		if in.ParentId > 0 {
 			parent, err := r.db.View(tx).Get(ctx, in.ParentId)
 			if err != nil {
+				r.log.WithContext(ctx).Errorw("msg", "Create.GetParent", "err", err)
 				return err
 			}
 			in.TreePath = parent.TreePath + strconv.FormatInt(parent.ID, 10) + r.Delimiter
@@ -114,15 +123,20 @@ func (r *viewRepo) Create(ctx context.Context, in *types.View, opts ...*dto.View
 
 		saved, err := create.Save(ctx)
 		if err != nil {
+			r.log.WithContext(ctx).Errorw("msg", "Create.Save", "err", err)
 			return err
 		}
 
 		// Eager load the associated resources to ensure the returned object is complete.
 		createdView, err = r.db.View(tx).Query().Where(view.ID(saved.ID)).WithResources().Only(ctx)
+		if err != nil {
+			r.log.WithContext(ctx).Errorw("msg", "Create.EagerLoad", "err", err)
+		}
 		return err
 	})
 
 	if err != nil {
+		r.log.WithContext(ctx).Errorw("msg", "Create.Tx", "err", err)
 		return nil, err
 	}
 
@@ -131,6 +145,7 @@ func (r *viewRepo) Create(ctx context.Context, in *types.View, opts ...*dto.View
 
 // Update updates an existing view and its associations within a transaction.
 func (r *viewRepo) Update(ctx context.Context, in *types.View, opts ...*dto.ViewUpdateOption) (*types.View, error) {
+	r.log.WithContext(ctx).Debugw("msg", "Update", "in", in)
 	if in == nil {
 		return nil, errors.New("input view data cannot be nil")
 	}
@@ -160,15 +175,20 @@ func (r *viewRepo) Update(ctx context.Context, in *types.View, opts ...*dto.View
 
 		// 4. Execute a single Save operation
 		if _, err = updateBuilder.Save(ctx); err != nil {
+			r.log.WithContext(ctx).Errorw("msg", "Update.Save", "err", err)
 			return err
 		}
 
 		// 5. Eager load the complete, updated entity for the return value
 		updatedView, err = r.db.View(tx).Query().Where(view.ID(in.Id)).WithResources().Only(ctx)
+		if err != nil {
+			r.log.WithContext(ctx).Errorw("msg", "Update.EagerLoad", "err", err)
+		}
 		return err
 	})
 
 	if err != nil {
+		r.log.WithContext(ctx).Errorw("msg", "Update.Tx", "err", err)
 		return nil, err
 	}
 
@@ -177,6 +197,7 @@ func (r *viewRepo) Update(ctx context.Context, in *types.View, opts ...*dto.View
 
 // Delete deletes a view by its ID.
 func (r *viewRepo) Delete(ctx context.Context, id int64) error {
+	r.log.WithContext(ctx).Debugw("msg", "Delete", "id", id)
 	return r.db.Tx(ctx, func(txCtx context.Context) error {
 		// Clear all associations before deletion
 		err := r.db.View(txCtx).UpdateOneID(id).
@@ -185,10 +206,15 @@ func (r *viewRepo) Delete(ctx context.Context, id int64) error {
 			ClearChildren().
 			Exec(txCtx)
 		if err != nil {
+			r.log.WithContext(ctx).Errorw("msg", "Delete.ClearAssociations", "err", err)
 			return err
 		}
 
 		// Delete the View entity
-		return r.db.View(txCtx).DeleteOneID(id).Exec(txCtx)
+		err = r.db.View(txCtx).DeleteOneID(id).Exec(txCtx)
+		if err != nil {
+			r.log.WithContext(ctx).Errorw("msg", "Delete.Exec", "err", err)
+		}
+		return err
 	})
 }

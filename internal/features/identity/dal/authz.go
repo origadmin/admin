@@ -26,7 +26,7 @@ type AuthzRepo struct {
 func NewAuthzRepo(db *ent.Database, logger log.Logger) identitydto.AuthzRepo {
 	return &AuthzRepo{
 		db:  db,
-		log: log.NewHelper(logger),
+		log: log.NewHelper(log.With(logger, "module", "dal.authz")),
 	}
 }
 

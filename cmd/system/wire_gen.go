@@ -42,10 +42,10 @@ func wireApp(app *runtime.App, bootstrap *conf.Config) (*kratos.App, func(), err
 	if err != nil {
 		return nil, nil, err
 	}
-	resourceRepo := dal.NewResourceRepo(database)
+	resourceRepo := dal.NewResourceRepo(database, v)
 	resourceUseCase := biz.NewResourceUseCase(resourceRepo)
 	resourceService := service.NewResourceService(resourceUseCase)
-	roleRepo := dal.NewRoleRepo(database)
+	roleRepo := dal.NewRoleRepo(database, v)
 	roleUseCase := biz.NewRoleUseCase(roleRepo)
 	loggerAdapter := pubsub.NewWatermillLogger(v)
 	publisher, err := providers.ProvidePublisher(bootstrap, loggerAdapter)
@@ -57,10 +57,10 @@ func wireApp(app *runtime.App, bootstrap *conf.Config) (*kratos.App, func(), err
 	userRepo := dal.NewUserRepo(database, v)
 	userUseCase := biz.NewUserUseCase(userRepo, v)
 	userService := service.NewUserService(userUseCase, publisher, v)
-	permissionRepo := dal.NewPermissionRepo(database)
+	permissionRepo := dal.NewPermissionRepo(database, v)
 	permissionUseCase := biz.NewPermissionUseCase(permissionRepo)
 	permissionService := service.NewPermissionService(permissionUseCase)
-	viewRepo := dal.NewViewRepo(database)
+	viewRepo := dal.NewViewRepo(database, v)
 	viewUseCase := biz.NewViewUseCase(viewRepo)
 	viewService := service.NewViewService(viewUseCase)
 	policyRepo := dal.NewPolicyQueryRepo(database, v)

@@ -7,6 +7,7 @@ package dal
 import (
 	"context"
 
+	"github.com/origadmin/runtime/log"
 	"origadmin/application/admin/api/v1/services/types"
 	"origadmin/application/admin/internal/data/entity/ent"
 	"origadmin/application/admin/internal/data/entity/ent/permission"
@@ -16,15 +17,20 @@ import (
 )
 
 type permissionRepo struct {
-	db *ent.Database
+	db  *ent.Database
+	log *log.Helper
 }
 
 // NewPermissionRepo .
-func NewPermissionRepo(database *ent.Database) dto.PermissionRepo {
-	return &permissionRepo{db: database}
+func NewPermissionRepo(database *ent.Database, logger log.Logger) dto.PermissionRepo {
+	return &permissionRepo{
+		db:  database,
+		log: log.NewHelper(log.With(logger, "module", "dal.permission")),
+	}
 }
 
 func (r *permissionRepo) Get(ctx context.Context, id int64, opts ...*dto.PermissionQueryOption) (*types.Permission, error) {
+	r.log.WithContext(ctx).Debugw("msg", "Get", "id", id)
 	opt := repo.FirstOrDefault(opts...)
 	query := r.db.Permission(ctx).Query().Where(permission.ID(id))
 
@@ -45,12 +51,14 @@ func (r *permissionRepo) Get(ctx context.Context, id int64, opts ...*dto.Permiss
 
 	result, err := query.Only(ctx)
 	if err != nil {
+		r.log.WithContext(ctx).Errorw("msg", "Get", "err", err)
 		return nil, err
 	}
 	return dto.ConvertPermissionToPermissionPB(result), nil
 }
 
 func (r *permissionRepo) Create(ctx context.Context, p *types.Permission, opts ...*dto.PermissionCreateOption) (*types.Permission, error) {
+	r.log.WithContext(ctx).Debugw("msg", "Create", "permission", p)
 	opt := repo.FirstOrDefault(opts...)
 	entPermission := dto.ConvertPermissionPBToPermission(p)
 	create := r.db.Permission(ctx).Create().SetPermissionSkipZero(entPermission)
@@ -64,12 +72,14 @@ func (r *permissionRepo) Create(ctx context.Context, p *types.Permission, opts .
 
 	saved, err := create.Save(ctx)
 	if err != nil {
+		r.log.WithContext(ctx).Errorw("msg", "Create", "err", err)
 		return nil, err
 	}
 	return dto.ConvertPermissionToPermissionPB(saved), nil
 }
 
 func (r *permissionRepo) Delete(ctx context.Context, id int64) error {
+	r.log.WithContext(ctx).Debugw("msg", "Delete", "id", id)
 	return r.db.Tx(ctx, func(txCtx context.Context) error {
 		// Clear all associations before deletion (deletes intermediate table records)
 		err := r.db.Permission(txCtx).UpdateOneID(id).
@@ -79,15 +89,21 @@ func (r *permissionRepo) Delete(ctx context.Context, id int64) error {
 			ClearViews().
 			Exec(txCtx)
 		if err != nil {
+			r.log.WithContext(ctx).Errorw("msg", "Delete.ClearAssociations", "err", err)
 			return err
 		}
 
 		// Delete the Permission entity
-		return r.db.Permission(txCtx).DeleteOneID(id).Exec(txCtx)
+		err = r.db.Permission(txCtx).DeleteOneID(id).Exec(txCtx)
+		if err != nil {
+			r.log.WithContext(ctx).Errorw("msg", "Delete.Exec", "err", err)
+		}
+		return err
 	})
 }
 
 func (r *permissionRepo) Update(ctx context.Context, p *types.Permission, opts ...*dto.PermissionUpdateOption) (*types.Permission, error) {
+	r.log.WithContext(ctx).Debugw("msg", "Update", "permission", p)
 	var updatedPermission *ent.Permission
 	err := r.db.Tx(ctx, func(tx context.Context) error {
 		opt := repo.FirstOrDefault(opts...)
@@ -113,15 +129,20 @@ func (r *permissionRepo) Update(ctx context.Context, p *types.Permission, opts .
 
 		var err error
 		updatedPermission, err = update.Save(ctx)
+		if err != nil {
+			r.log.WithContext(ctx).Errorw("msg", "Update.Save", "err", err)
+		}
 		return err
 	})
 	if err != nil {
+		r.log.WithContext(ctx).Errorw("msg", "Update.Tx", "err", err)
 		return nil, err
 	}
 	return dto.ConvertPermissionToPermissionPB(updatedPermission), nil
 }
 
 func (r *permissionRepo) List(ctx context.Context, opts ...*dto.PermissionQueryOption) ([]*types.Permission, int32, error) {
+	r.log.WithContext(ctx).Debugw("msg", "List", "opts", opts)
 	opt := repo.FirstOrDefault(opts...)
 	query := r.db.Permission(ctx).Query()
 
@@ -148,6 +169,7 @@ func (r *permissionRepo) List(ctx context.Context, opts ...*dto.PermissionQueryO
 	// The generic type parameter [predicate.Permission] tells db.Find what kind of predicate to build.
 	result, count, err := db.Find(ctx, query, &opt.QueryOption)
 	if err != nil {
+		r.log.WithContext(ctx).Errorw("msg", "List", "err", err)
 		return nil, 0, err
 	}
 

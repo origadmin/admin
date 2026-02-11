@@ -14,7 +14,6 @@ import (
 	"origadmin/application/admin/internal/data/entity/ent"
 	"origadmin/application/admin/internal/data/entity/ent/casbinrule"
 	"origadmin/application/admin/internal/data/entity/ent/predicate"
-	"origadmin/application/admin/internal/features/system/dto"
 )
 
 // casbinPolicyModifier implements the authz.PolicyModifier interface for Casbin.
@@ -112,8 +111,7 @@ func (m *casbinPolicyModifier) getDomainIndex(ptype string) int {
 // ListPolicies queries policies matching the filter criteria.
 func (m *casbinPolicyModifier) ListPolicies(ctx context.Context, base *authzv1.PolicySpec, opts ...authz.PolicyFilterOption) ([]*authzv1.PolicySpec, error) {
 	filter := authz.BuildPolicyFilter(base, opts...)
-	m.log.WithContext(ctx).Debugf("Listing policies with filter: Type=%v, Subject=%v, Domain=%v",
-		dto.NonNilStr(filter.Type), dto.NonNilStr(filter.Subject), dto.NonNilStr(filter.Domain))
+	m.log.WithContext(ctx).Debugw("msg", "ListPolicies", "filter", filter)
 
 	policies := make([]*authzv1.PolicySpec, 0)
 
@@ -121,6 +119,7 @@ func (m *casbinPolicyModifier) ListPolicies(ctx context.Context, base *authzv1.P
 	for _, ptype := range ptypes {
 		ptypePolicies, err := m.listPoliciesByPType(ctx, ptype, filter)
 		if err != nil {
+			m.log.WithContext(ctx).Errorw("msg", "ListPolicies", "err", err)
 			return nil, err
 		}
 		policies = append(policies, ptypePolicies...)
@@ -156,6 +155,7 @@ func (m *casbinPolicyModifier) listPoliciesByPType(ctx context.Context, ptype st
 
 	rules, err := m.db.CasbinRule(ctx).Query().Where(preds...).All(ctx)
 	if err != nil {
+		m.log.WithContext(ctx).Errorw("msg", "listPoliciesByPType", "err", err)
 		return nil, err
 	}
 
@@ -175,7 +175,7 @@ func (m *casbinPolicyModifier) AddPolicies(ctx context.Context, policies ...*aut
 	if len(policies) == 0 {
 		return false, nil
 	}
-	m.log.WithContext(ctx).Debugf("Adding %d policies", len(policies))
+	m.log.WithContext(ctx).Debugw("msg", "AddPolicies", "count", len(policies))
 
 	var anyPolicyAdded bool
 	err := m.db.Tx(ctx, func(ctx context.Context) error {
@@ -195,7 +195,7 @@ func (m *casbinPolicyModifier) AddPolicies(ctx context.Context, policies ...*aut
 				return err
 			}
 			if exists {
-				m.log.WithContext(ctx).Debugf("Skipping duplicate policy (already exists): %v", policy)
+				m.log.WithContext(ctx).Debugw("msg", "AddPolicies", "warn", "Skipping duplicate policy", "policy", policy)
 				continue
 			}
 
@@ -219,7 +219,7 @@ func (m *casbinPolicyModifier) AddPolicies(ctx context.Context, policies ...*aut
 	})
 
 	if err != nil {
-		m.log.WithContext(ctx).Errorf("Failed to add policies: %v", err)
+		m.log.WithContext(ctx).Errorw("msg", "AddPolicies", "err", err)
 		return anyPolicyAdded, err
 	}
 	return anyPolicyAdded, nil
@@ -231,7 +231,7 @@ func (m *casbinPolicyModifier) UpdatePolicies(ctx context.Context, oldPolicies [
 		return false, fmt.Errorf("oldPolicies and newPolicies must have the same length")
 	}
 
-	m.log.WithContext(ctx).Debugf("Updating %d policies", len(oldPolicies))
+	m.log.WithContext(ctx).Debugw("msg", "UpdatePolicies", "count", len(oldPolicies))
 
 	changed := false
 	var firstErr error
@@ -246,6 +246,7 @@ func (m *casbinPolicyModifier) UpdatePolicies(ctx context.Context, oldPolicies [
 				if firstErr == nil {
 					firstErr = err
 				}
+				m.log.WithContext(ctx).Errorw("msg", "UpdatePolicies", "err", err)
 				continue
 			}
 
@@ -264,6 +265,7 @@ func (m *casbinPolicyModifier) UpdatePolicies(ctx context.Context, oldPolicies [
 				if firstErr == nil {
 					firstErr = err
 				}
+				m.log.WithContext(ctx).Errorw("msg", "UpdatePolicies.Only", "err", err)
 				continue
 			}
 
@@ -280,6 +282,7 @@ func (m *casbinPolicyModifier) UpdatePolicies(ctx context.Context, oldPolicies [
 				if firstErr == nil {
 					firstErr = err
 				}
+				m.log.WithContext(ctx).Errorw("msg", "UpdatePolicies.Save", "err", err)
 				continue
 			}
 			changed = true
@@ -288,6 +291,7 @@ func (m *casbinPolicyModifier) UpdatePolicies(ctx context.Context, oldPolicies [
 	})
 
 	if err != nil && firstErr == nil {
+		m.log.WithContext(ctx).Errorw("msg", "UpdatePolicies.Tx", "err", err)
 		return changed, err
 	}
 	if firstErr != nil {
@@ -299,8 +303,7 @@ func (m *casbinPolicyModifier) UpdatePolicies(ctx context.Context, oldPolicies [
 // RemovePolicies removes policies matching the filter criteria.
 func (m *casbinPolicyModifier) RemovePolicies(ctx context.Context, base *authzv1.PolicySpec, opts ...authz.PolicyFilterOption) (bool, error) {
 	filter := authz.BuildPolicyFilter(base, opts...)
-	m.log.WithContext(ctx).Debugf("Removing policies with filter: Type=%v, Subject=%v, Domain=%v",
-		dto.NonNilStr(filter.Type), dto.NonNilStr(filter.Subject), dto.NonNilStr(filter.Domain))
+	m.log.WithContext(ctx).Debugw("msg", "RemovePolicies", "filter", filter)
 
 	changed := false
 	var firstErr error
@@ -349,6 +352,7 @@ func (m *casbinPolicyModifier) removePoliciesByPType(ctx context.Context, ptype 
 
 	rules, err := m.db.CasbinRule(ctx).Query().Where(preds...).All(ctx)
 	if err != nil {
+		m.log.WithContext(ctx).Errorw("msg", "removePoliciesByPType.All", "err", err)
 		return false, err
 	}
 
@@ -367,7 +371,7 @@ func (m *casbinPolicyModifier) removePoliciesByPType(ctx context.Context, ptype 
 			Where(casbinrule.IDEQ(rule.ID)).
 			Exec(ctx)
 		if err != nil {
-			m.log.WithContext(ctx).Errorf("Failed to delete policy %d: %v", rule.ID, err)
+			m.log.WithContext(ctx).Errorw("msg", "removePoliciesByPType.Delete", "err", err, "id", rule.ID)
 			return changed, err
 		}
 		changed = true
@@ -378,13 +382,13 @@ func (m *casbinPolicyModifier) removePoliciesByPType(ctx context.Context, ptype 
 
 // ClearPolicies removes all policies.
 func (m *casbinPolicyModifier) ClearPolicies(ctx context.Context) (bool, error) {
-	m.log.WithContext(ctx).Info("Clearing all policies from storage")
+	m.log.WithContext(ctx).Debugw("msg", "ClearPolicies")
 	_, err := m.db.CasbinRule(ctx).Delete().Exec(ctx)
 	if err != nil {
-		m.log.WithContext(ctx).Errorf("Failed to clear all policies: %v", err)
+		m.log.WithContext(ctx).Errorw("msg", "ClearPolicies", "err", err)
 		return false, err
 	}
-	m.log.WithContext(ctx).Info("Successfully cleared all policies")
+	m.log.WithContext(ctx).Debugw("msg", "ClearPolicies", "msg", "Successfully cleared all policies")
 	return true, nil
 }
 
