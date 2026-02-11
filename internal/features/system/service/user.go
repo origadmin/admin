@@ -77,6 +77,19 @@ func (s *UserService) ListUserResources(ctx context.Context, req *system.ListUse
 	}, nil
 }
 
+func (s *UserService) ListUserRoles(ctx context.Context, req *system.ListUserRolesRequest) (*system.ListUserRolesResponse, error) {
+	roles, err := s.uc.ListUserRoles(ctx, req.GetId())
+	if err != nil {
+		if ent.IsNotFound(err) {
+			return nil, errors.NotFound("USER_NOT_FOUND", "User not found")
+		}
+		return nil, err
+	}
+	return &system.ListUserRolesResponse{
+		Roles: roles,
+	}, nil
+}
+
 func (s *UserService) ListUserViews(ctx context.Context, req *system.ListUserViewsRequest) (*system.ListUserViewsResponse, error) {
 	views, err := s.uc.ListUserViews(ctx, req.GetId())
 	if err != nil {
@@ -126,15 +139,18 @@ func (s *UserService) UpdateUserStatus(ctx context.Context, req *system.UpdateUs
 	return &system.UpdateUserStatusResponse{}, nil
 }
 
-func (s *UserService) ResetUserPassword(ctx context.Context, req *system.ResetUserPasswordRequest) (*system.ResetUserPasswordResponse, error) {
-	err := s.uc.ResetUserPassword(ctx, req.GetId(), req.GetPassword())
+// ChangeUserPassword updates a user's password.
+// The `password` field in the request MUST contain an already hashed password.
+// The identity service is responsible for any hashing logic.
+func (s *UserService) ChangeUserPassword(ctx context.Context, req *system.ChangeUserPasswordRequest) (*system.ChangeUserPasswordResponse, error) {
+	err := s.uc.UpdateUserPassword(ctx, req.GetId(), req.GetPassword())
 	if err != nil {
 		if ent.IsNotFound(err) {
 			return nil, errors.NotFound("USER_NOT_FOUND", "User not found")
 		}
 		return nil, err
 	}
-	return &system.ResetUserPasswordResponse{}, nil
+	return &system.ChangeUserPasswordResponse{}, nil
 }
 
 func (s *UserService) ListUsers(ctx context.Context, req *system.ListUsersRequest) (*system.ListUsersResponse, error) {
@@ -170,8 +186,12 @@ func (s *UserService) GetUser(ctx context.Context, req *system.GetUserRequest) (
 	return &system.GetUserResponse{User: user}, nil
 }
 
+// CreateUser creates a new user.
+// The `password` field in the request MUST contain an already hashed password.
+// The identity service is responsible for any hashing logic.
 func (s *UserService) CreateUser(ctx context.Context, req *system.CreateUserRequest) (*system.CreateUserResponse, error) {
 	opts := dto.CreateUserOptionsFromRequest(req)
+	// The password from the request is expected to be already hashed by the caller (e.g., identity service).
 	user, err := s.uc.CreateUser(ctx, req.GetUser(), req.GetPassword(), opts)
 	if err != nil {
 		return nil, err

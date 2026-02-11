@@ -50,9 +50,9 @@ type MeServiceClient interface {
 	// GetUserRoles retrieves role list for current user.
 	GetUserRoles(ctx context.Context, in *GetUserRolesRequest, opts ...grpc.CallOption) (*GetUserRolesResponse, error)
 	// GetUserSettings retrieves user settings (P2).
-	GetUserSettings(ctx context.Context, in *GetUserSettingsRequest, opts ...grpc.CallOption) (*GetUserSettingsResponse, error)
+	GetUserSettings(ctx context.Context, in *GetUserSettingRequest, opts ...grpc.CallOption) (*GetUserSettingResponse, error)
 	// UpdateSettings updates user settings (P2).
-	UpdateSettings(ctx context.Context, in *UpdateSettingsRequest, opts ...grpc.CallOption) (*UpdateSettingsResponse, error)
+	UpdateSettings(ctx context.Context, in *UpdateSettingRequest, opts ...grpc.CallOption) (*UpdateSettingResponse, error)
 	// GetUserPreferences retrieves user preferences (P2).
 	GetUserPreferences(ctx context.Context, in *GetUserPreferencesRequest, opts ...grpc.CallOption) (*GetUserPreferencesResponse, error)
 	// UpdatePreferences updates user preferences (P2).
@@ -127,9 +127,9 @@ func (c *meServiceClient) GetUserRoles(ctx context.Context, in *GetUserRolesRequ
 	return out, nil
 }
 
-func (c *meServiceClient) GetUserSettings(ctx context.Context, in *GetUserSettingsRequest, opts ...grpc.CallOption) (*GetUserSettingsResponse, error) {
+func (c *meServiceClient) GetUserSettings(ctx context.Context, in *GetUserSettingRequest, opts ...grpc.CallOption) (*GetUserSettingResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(GetUserSettingsResponse)
+	out := new(GetUserSettingResponse)
 	err := c.cc.Invoke(ctx, MeService_GetUserSettings_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
@@ -137,9 +137,9 @@ func (c *meServiceClient) GetUserSettings(ctx context.Context, in *GetUserSettin
 	return out, nil
 }
 
-func (c *meServiceClient) UpdateSettings(ctx context.Context, in *UpdateSettingsRequest, opts ...grpc.CallOption) (*UpdateSettingsResponse, error) {
+func (c *meServiceClient) UpdateSettings(ctx context.Context, in *UpdateSettingRequest, opts ...grpc.CallOption) (*UpdateSettingResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(UpdateSettingsResponse)
+	out := new(UpdateSettingResponse)
 	err := c.cc.Invoke(ctx, MeService_UpdateSettings_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
@@ -186,9 +186,9 @@ type MeServiceServer interface {
 	// GetUserRoles retrieves role list for current user.
 	GetUserRoles(context.Context, *GetUserRolesRequest) (*GetUserRolesResponse, error)
 	// GetUserSettings retrieves user settings (P2).
-	GetUserSettings(context.Context, *GetUserSettingsRequest) (*GetUserSettingsResponse, error)
+	GetUserSettings(context.Context, *GetUserSettingRequest) (*GetUserSettingResponse, error)
 	// UpdateSettings updates user settings (P2).
-	UpdateSettings(context.Context, *UpdateSettingsRequest) (*UpdateSettingsResponse, error)
+	UpdateSettings(context.Context, *UpdateSettingRequest) (*UpdateSettingResponse, error)
 	// GetUserPreferences retrieves user preferences (P2).
 	GetUserPreferences(context.Context, *GetUserPreferencesRequest) (*GetUserPreferencesResponse, error)
 	// UpdatePreferences updates user preferences (P2).
@@ -221,10 +221,10 @@ func (UnimplementedMeServiceServer) GetUserResources(context.Context, *GetUserRe
 func (UnimplementedMeServiceServer) GetUserRoles(context.Context, *GetUserRolesRequest) (*GetUserRolesResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetUserRoles not implemented")
 }
-func (UnimplementedMeServiceServer) GetUserSettings(context.Context, *GetUserSettingsRequest) (*GetUserSettingsResponse, error) {
+func (UnimplementedMeServiceServer) GetUserSettings(context.Context, *GetUserSettingRequest) (*GetUserSettingResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetUserSettings not implemented")
 }
-func (UnimplementedMeServiceServer) UpdateSettings(context.Context, *UpdateSettingsRequest) (*UpdateSettingsResponse, error) {
+func (UnimplementedMeServiceServer) UpdateSettings(context.Context, *UpdateSettingRequest) (*UpdateSettingResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdateSettings not implemented")
 }
 func (UnimplementedMeServiceServer) GetUserPreferences(context.Context, *GetUserPreferencesRequest) (*GetUserPreferencesResponse, error) {
@@ -363,7 +363,7 @@ func _MeService_GetUserRoles_Handler(srv interface{}, ctx context.Context, dec f
 }
 
 func _MeService_GetUserSettings_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetUserSettingsRequest)
+	in := new(GetUserSettingRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -375,13 +375,13 @@ func _MeService_GetUserSettings_Handler(srv interface{}, ctx context.Context, de
 		FullMethod: MeService_GetUserSettings_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(MeServiceServer).GetUserSettings(ctx, req.(*GetUserSettingsRequest))
+		return srv.(MeServiceServer).GetUserSettings(ctx, req.(*GetUserSettingRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
 func _MeService_UpdateSettings_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(UpdateSettingsRequest)
+	in := new(UpdateSettingRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -393,7 +393,7 @@ func _MeService_UpdateSettings_Handler(srv interface{}, ctx context.Context, dec
 		FullMethod: MeService_UpdateSettings_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(MeServiceServer).UpdateSettings(ctx, req.(*UpdateSettingsRequest))
+		return srv.(MeServiceServer).UpdateSettings(ctx, req.(*UpdateSettingRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }

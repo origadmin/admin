@@ -22,6 +22,24 @@ func init() {
 			VersionID:     "b0816bd9743d2a6a2e76215f6a3aa073bccf9b46665298f38ddd68bea4796943",
 		},
 		{
+			ServiceMethod: "/api.v1.services.system.UserService/ListUserRoles",
+			GatewayPath:   "GET:/sys/users/{id}/roles",
+			Name:          "authz",
+			VersionID:     "627ca28a3d5cb0ce39e3998f4fda1324b34b400eec4d794adf299daeaea5f9a3",
+		},
+		{
+			ServiceMethod: "/api.v1.services.system.UserService/ListUserPermissions",
+			GatewayPath:   "GET:/sys/users/{id}/permissions",
+			Name:          "authz",
+			VersionID:     "3edd8b435b934846eb93a33059f488359ce143144a02869c13891dc628c15848",
+		},
+		{
+			ServiceMethod: "/api.v1.services.system.UserService/ListUserViews",
+			GatewayPath:   "GET:/sys/users/{id}/views",
+			Name:          "authz",
+			VersionID:     "5b5d66635f9942bf594d465636dedd05846da4140318203524eec30fc9991f24",
+		},
+		{
 			ServiceMethod: "/api.v1.services.system.UserService/GetUser",
 			GatewayPath:   "GET:/sys/users/{id}",
 			Name:          "authz",
@@ -58,10 +76,10 @@ func init() {
 			VersionID:     "23c7996052d7fedfb56bc84ae63416b680baf9ce14360e2e48ad958ed835d86f",
 		},
 		{
-			ServiceMethod: "/api.v1.services.system.UserService/ResetUserPassword",
-			GatewayPath:   "POST:/sys/users/{id}/password/reset",
+			ServiceMethod: "/api.v1.services.system.UserService/ChangeUserPassword",
+			GatewayPath:   "POST:/sys/users/{id}/password",
 			Name:          "authz",
-			VersionID:     "4377bb2854d7ef8be1911bbb8ee2d4bc847934ed72a05a8a5e84eac162620908",
+			VersionID:     "eb8711d49747afca3de43510b24fa85588e0baf806143c5f56c9ad384c2cfe05",
 		},
 		{
 			ServiceMethod: "/api.v1.services.system.UserService/InviteUser",

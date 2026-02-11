@@ -14,7 +14,6 @@ import (
 
 	"github.com/origadmin/contrib/security"
 	"github.com/origadmin/runtime/log"
-	"github.com/origadmin/toolkits/crypto/hash"
 	"origadmin/application/admin/api/v1/services/types"
 	"origadmin/application/admin/internal/data/enums"
 	"origadmin/application/admin/internal/features/system/dto"
@@ -22,22 +21,24 @@ import (
 
 // UserUseCase is a User use case.
 type UserUseCase struct {
-	repo   dto.UserRepo
-	hasher hash.Crypto
-	log    *kratosLog.Helper
+	repo dto.UserRepo
+	log  *kratosLog.Helper
 }
 
 // NewUserUseCase new a User use case.
-func NewUserUseCase(repo dto.UserRepo, hasher hash.Crypto, logger log.Logger) *UserUseCase {
+func NewUserUseCase(repo dto.UserRepo, logger log.Logger) *UserUseCase {
 	return &UserUseCase{
-		repo:   repo,
-		hasher: hasher,
-		log:    log.NewHelper(log.With(logger, "module", "system.biz.user")),
+		repo: repo,
+		log:  log.NewHelper(log.With(logger, "module", "system.biz.user")),
 	}
 }
 
 func (uc *UserUseCase) ListUserResources(ctx context.Context, id int64) ([]*types.Resource, error) {
 	return uc.repo.ListResourceByUserID(ctx, id)
+}
+
+func (uc *UserUseCase) ListUserRoles(ctx context.Context, id int64) ([]*types.Role, error) {
+	return uc.repo.ListRoleByUserID(ctx, id)
 }
 
 func (uc *UserUseCase) ListUserViews(ctx context.Context, id int64) ([]*types.View, error) {
@@ -56,9 +57,11 @@ func (uc *UserUseCase) UpdateUserStatus(ctx context.Context, id int64, status in
 	return uc.repo.UpdateUserStatus(ctx, id, status)
 }
 
-func (uc *UserUseCase) ResetUserPassword(ctx context.Context, id int64, password string) error {
-	// TODO
-	return nil
+// UpdateUserPassword updates a user's password hash directly.
+// Note: The password verification and hashing should be handled by the identity service.
+func (uc *UserUseCase) UpdateUserPassword(ctx context.Context, userID int64, hashedPassword string) error {
+	// Update the password in the repository
+	return uc.repo.ChangeUserPassword(ctx, userID, hashedPassword)
 }
 
 func (uc *UserUseCase) ListUsers(ctx context.Context, opts ...*dto.UserQueryOption) ([]*types.User, int32, error) {
@@ -70,7 +73,8 @@ func (uc *UserUseCase) GetUser(ctx context.Context, id int64, opts ...*dto.UserQ
 }
 
 // CreateUser creates a new user, ensuring essential fields have valid default values.
-func (uc *UserUseCase) CreateUser(ctx context.Context, in *types.User, password string, opts ...*dto.UserCreateOption) (*types.User, error) {
+// The password argument must be already hashed.
+func (uc *UserUseCase) CreateUser(ctx context.Context, in *types.User, hashedPassword string, opts ...*dto.UserCreateOption) (*types.User, error) {
 	// The backend must always enforce data integrity, regardless of frontend behavior.
 	if in.Status == 0 {
 		in.Status = int32(enums.StatusEnabled)
@@ -84,11 +88,7 @@ func (uc *UserUseCase) CreateUser(ctx context.Context, in *types.User, password 
 		in.UpdateAuthor = authorID
 	}
 
-	hashedPassword, err := uc.hasher.Hash(password)
-	if err != nil {
-		return nil, err
-	}
-	fmt.Println("Create new user username:", in.Username, "password:", password)
+	fmt.Println("Create new user username:", in.Username, "hashedPassword:", hashedPassword)
 
 	return uc.repo.Create(ctx, in, hashedPassword, opts...)
 }

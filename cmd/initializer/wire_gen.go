@@ -41,13 +41,8 @@ func wireApp(rt *runtime.App, bootstrap *conf.Config) (initializer.Initializer, 
 	if err != nil {
 		return nil, nil, err
 	}
-	userRepo := dal.NewUserRepo(database)
-	crypto, err := providers.ProvideHasher()
-	if err != nil {
-		cleanup()
-		return nil, nil, err
-	}
-	userUseCase := biz.NewUserUseCase(userRepo, crypto, v)
+	userRepo := dal.NewUserRepo(database, v)
+	userUseCase := biz.NewUserUseCase(userRepo, v)
 	resourceRepo := dal.NewResourceRepo(database)
 	resourceUseCase := biz.NewResourceUseCase(resourceRepo)
 	viewRepo := dal.NewViewRepo(database)

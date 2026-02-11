@@ -54,13 +54,8 @@ func wireApp(app *runtime.App, bootstrap *conf.Config) (*kratos.App, func(), err
 		return nil, nil, err
 	}
 	roleService := service.NewRoleService(roleUseCase, publisher, v)
-	userRepo := dal.NewUserRepo(database)
-	crypto, err := providers.ProvideHasher()
-	if err != nil {
-		cleanup()
-		return nil, nil, err
-	}
-	userUseCase := biz.NewUserUseCase(userRepo, crypto, v)
+	userRepo := dal.NewUserRepo(database, v)
+	userUseCase := biz.NewUserUseCase(userRepo, v)
 	userService := service.NewUserService(userUseCase, publisher, v)
 	permissionRepo := dal.NewPermissionRepo(database)
 	permissionUseCase := biz.NewPermissionUseCase(permissionRepo)
@@ -72,7 +67,7 @@ func wireApp(app *runtime.App, bootstrap *conf.Config) (*kratos.App, func(), err
 	policyQueryUseCase := biz.NewPolicyQueryUseCase(policyRepo, v)
 	policyQueryService := service.NewPolicyQueryService(policyQueryUseCase, v)
 	systemService := service.NewSystemService(resourceService, roleService, userService, permissionService, viewService, policyQueryService)
-	policyModifier, err := dal.NewCasbinModifier(database, v)
+	policyModifier, err := dal.NewCasbinPolicyModifier(database, v)
 	if err != nil {
 		cleanup()
 		return nil, nil, err

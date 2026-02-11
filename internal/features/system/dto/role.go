@@ -21,7 +21,6 @@ type RoleRepo interface {
 	Update(context.Context, *types.Role, ...*RoleUpdateOption) (*types.Role, error)
 	Delete(context.Context, int64) error
 
-	// Business-specific methods
 	GetPermissions(context.Context, int64) ([]*types.Permission, error)
 	UpdatePermissions(context.Context, int64, []int64) error
 }

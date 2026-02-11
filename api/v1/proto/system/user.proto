@@ -27,10 +27,26 @@ service UserService {
     option (contrib.api.policy.v1.policy) = {name: "authz"};
   }
 
+  rpc ListUserRoles(ListUserRolesRequest) returns (ListUserRolesResponse) {
+    option (google.api.http) = {get: "/sys/users/{id}/roles"};
+    option (contrib.api.policy.v1.policy) = {name: "authz"};
+  }
+
+  rpc ListUserPermissions(ListUserPermissionsRequest) returns (ListUserPermissionsResponse) {
+    option (google.api.http) = {get: "/sys/users/{id}/permissions"};
+    option (contrib.api.policy.v1.policy) = {name: "authz"};
+  }
+
+  rpc ListUserViews(ListUserViewsRequest) returns (ListUserViewsResponse) {
+    option (google.api.http) = {get: "/sys/users/{id}/views"};
+    option (contrib.api.policy.v1.policy) = {name: "authz"};
+  }
+
   rpc GetUser(GetUserRequest) returns (GetUserResponse) {
     option (google.api.http) = {get: "/sys/users/{id}"};
     option (contrib.api.policy.v1.policy) = {name: "authz"};
   }
+
   rpc CreateUser(CreateUserRequest) returns (CreateUserResponse) {
     option (google.api.http) = {
       post: "/sys/users"
@@ -38,6 +54,7 @@ service UserService {
     };
     option (contrib.api.policy.v1.policy) = {name: "authz"};
   }
+
   rpc UpdateUser(UpdateUserRequest) returns (UpdateUserResponse) {
     option (google.api.http) = {
       put: "/sys/users/{user.id}"
@@ -45,11 +62,12 @@ service UserService {
     };
     option (contrib.api.policy.v1.policy) = {name: "authz"};
   }
+
   rpc DeleteUser(DeleteUserRequest) returns (DeleteUserResponse) {
     option (google.api.http) = {delete: "/sys/users/{id}"};
     option (contrib.api.policy.v1.policy) = {name: "authz"};
   }
-  // UpdateUserStatus Update the status of the user information
+
   rpc UpdateUserStatus(UpdateUserStatusRequest) returns (UpdateUserStatusResponse) {
     option (google.api.http) = {
       put: "/sys/users/{id}/status"
@@ -69,9 +87,9 @@ service UserService {
   }
 
   // ResetUserPassword reset the user s password
-  rpc ResetUserPassword(ResetUserPasswordRequest) returns (ResetUserPasswordResponse) {
+  rpc ChangeUserPassword(ChangeUserPasswordRequest) returns (ChangeUserPasswordResponse) {
     option (google.api.http) = {
-      post: "/sys/users/{id}/password/reset"
+      post: "/sys/users/{id}/password"
       body: "*"
     };
     option (contrib.api.policy.v1.policy) = {name: "authz"};
@@ -99,6 +117,42 @@ message ListUserResourcesResponse {
   repeated api.v1.services.types.Resource resources = 2 [json_name = "resources"];
 }
 
+message ListUserRolesRequest {
+  // The field will contain id of the user requested.
+  int64 id = 1 [json_name = "id"];
+}
+
+message ListUserRolesResponse {
+  // The total number of items in the list.
+  int32 total = 1 [json_name = "total"];
+  // The list of roles
+  repeated api.v1.services.types.Role roles = 2 [json_name = "roles"];
+}
+
+message ListUserPermissionsRequest {
+  // The field will contain id of the user requested.
+  int64 id = 1 [json_name = "id"];
+}
+
+message ListUserPermissionsResponse {
+  // The total number of items in the list.
+  int32 total = 1 [json_name = "total"];
+  // The list of permissions
+  repeated api.v1.services.types.Permission permissions = 2 [json_name = "permissions"];
+}
+
+message ListUserViewsRequest {
+  // The field will contain id of the user requested.
+  int64 id = 1 [json_name = "id"];
+}
+
+message ListUserViewsResponse {
+  // The total number of items in the list.
+  int32 total = 1 [json_name = "total"];
+  // The list of views
+  repeated api.v1.services.types.View views = 2 [json_name = "views"];
+}
+
 message UpdateUserStatusRequest {
   // The field will contain id of the resource requested.
   int64 id = 1 [json_name = "id"];
@@ -108,14 +162,14 @@ message UpdateUserStatusRequest {
 
 message UpdateUserStatusResponse {}
 
-message ResetUserPasswordRequest {
+message ChangeUserPasswordRequest {
   // The field will contain id of the resource requested.
   int64 id = 1 [json_name = "id"];
-  // The password to use for this user.
+  // The password to use for this user (plain text, will be hashed).
   string password = 2 [json_name = "password"];
 }
 
-message ResetUserPasswordResponse {}
+message ChangeUserPasswordResponse {}
 
 message ListUsersRequest {
   // The page number.
@@ -156,6 +210,10 @@ message GetUserRequest {
   int64 id = 1;
   // Whether to include roles in the response.
   bool with_roles = 2 [json_name = "with_roles"];
+  // Whether to include profile in the response.
+  bool with_profile = 3 [json_name = "with_profile"];
+  // Whether to include setting in the response.
+  bool with_setting = 4 [json_name = "with_setting"];
 }
 
 message GetUserResponse {

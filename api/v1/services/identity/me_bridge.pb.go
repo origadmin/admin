@@ -53,9 +53,9 @@ type MeServiceBridgeServer interface {
 	// GetUserRoles retrieves role list for current user.
 	GetUserRoles(context.Context, *GetUserRolesRequest) (*GetUserRolesResponse, error)
 	// GetUserSettings retrieves user settings (P2).
-	GetUserSettings(context.Context, *GetUserSettingsRequest) (*GetUserSettingsResponse, error)
+	GetUserSettings(context.Context, *GetUserSettingRequest) (*GetUserSettingResponse, error)
 	// UpdateSettings updates user settings (P2).
-	UpdateSettings(context.Context, *UpdateSettingsRequest) (*UpdateSettingsResponse, error)
+	UpdateSettings(context.Context, *UpdateSettingRequest) (*UpdateSettingResponse, error)
 	// GetUserPreferences retrieves user preferences (P2).
 	GetUserPreferences(context.Context, *GetUserPreferencesRequest) (*GetUserPreferencesResponse, error)
 	// UpdatePreferences updates user preferences (P2).
@@ -104,12 +104,12 @@ type MeServiceGetUserRolesHooker interface {
 	CompleteGetUserRoles(http.Context, *GetUserRolesRequest, *GetUserRolesResponse) error
 }
 type MeServiceGetUserSettingsHooker interface {
-	PrepareGetUserSettings(http.Context, *GetUserSettingsRequest) (context.Context, error)
-	CompleteGetUserSettings(http.Context, *GetUserSettingsRequest, *GetUserSettingsResponse) error
+	PrepareGetUserSettings(http.Context, *GetUserSettingRequest) (context.Context, error)
+	CompleteGetUserSettings(http.Context, *GetUserSettingRequest, *GetUserSettingResponse) error
 }
 type MeServiceUpdateSettingsHooker interface {
-	PrepareUpdateSettings(http.Context, *UpdateSettingsRequest) (context.Context, error)
-	CompleteUpdateSettings(http.Context, *UpdateSettingsRequest, *UpdateSettingsResponse) error
+	PrepareUpdateSettings(http.Context, *UpdateSettingRequest) (context.Context, error)
+	CompleteUpdateSettings(http.Context, *UpdateSettingRequest, *UpdateSettingResponse) error
 }
 type MeServiceGetUserPreferencesHooker interface {
 	PrepareGetUserPreferences(http.Context, *GetUserPreferencesRequest) (context.Context, error)
@@ -280,13 +280,13 @@ func _MeService_GetUserRoles0_Bridge_Handler(srv MeServiceHookedBridger) func(ct
 
 func _MeService_GetUserSettings0_Bridge_Handler(srv MeServiceHookedBridger) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
-		var in GetUserSettingsRequest
+		var in GetUserSettingRequest
 		if err := ctx.BindQuery(&in); err != nil {
 			return err
 		}
 		http.SetOperation(ctx, OperationMeServiceGetUserSettings)
 		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
-			return srv.GetUserSettings(ctx, req.(*GetUserSettingsRequest))
+			return srv.GetUserSettings(ctx, req.(*GetUserSettingRequest))
 		})
 
 		newctx, err := srv.PrepareGetUserSettings(ctx, &in)
@@ -297,13 +297,13 @@ func _MeService_GetUserSettings0_Bridge_Handler(srv MeServiceHookedBridger) func
 		if err != nil {
 			return err
 		}
-		return srv.CompleteGetUserSettings(ctx, &in, out.(*GetUserSettingsResponse))
+		return srv.CompleteGetUserSettings(ctx, &in, out.(*GetUserSettingResponse))
 	}
 }
 
 func _MeService_UpdateSettings0_Bridge_Handler(srv MeServiceHookedBridger) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
-		var in UpdateSettingsRequest
+		var in UpdateSettingRequest
 		if err := ctx.Bind(&in); err != nil {
 			return err
 		}
@@ -312,7 +312,7 @@ func _MeService_UpdateSettings0_Bridge_Handler(srv MeServiceHookedBridger) func(
 		}
 		http.SetOperation(ctx, OperationMeServiceUpdateSettings)
 		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
-			return srv.UpdateSettings(ctx, req.(*UpdateSettingsRequest))
+			return srv.UpdateSettings(ctx, req.(*UpdateSettingRequest))
 		})
 
 		newctx, err := srv.PrepareUpdateSettings(ctx, &in)
@@ -323,7 +323,7 @@ func _MeService_UpdateSettings0_Bridge_Handler(srv MeServiceHookedBridger) func(
 		if err != nil {
 			return err
 		}
-		return srv.CompleteUpdateSettings(ctx, &in, out.(*UpdateSettingsResponse))
+		return srv.CompleteUpdateSettings(ctx, &in, out.(*UpdateSettingResponse))
 	}
 }
 
@@ -431,19 +431,19 @@ func (UnimplementedMeServiceHooked) CompleteGetUserRoles(ctx http.Context, in *G
 	return ctx.Result(200, out)
 }
 
-func (UnimplementedMeServiceHooked) PrepareGetUserSettings(ctx http.Context, in *GetUserSettingsRequest) (context.Context, error) {
+func (UnimplementedMeServiceHooked) PrepareGetUserSettings(ctx http.Context, in *GetUserSettingRequest) (context.Context, error) {
 	return ctx, nil
 }
 
-func (UnimplementedMeServiceHooked) CompleteGetUserSettings(ctx http.Context, in *GetUserSettingsRequest, out *GetUserSettingsResponse) error {
+func (UnimplementedMeServiceHooked) CompleteGetUserSettings(ctx http.Context, in *GetUserSettingRequest, out *GetUserSettingResponse) error {
 	return ctx.Result(200, out)
 }
 
-func (UnimplementedMeServiceHooked) PrepareUpdateSettings(ctx http.Context, in *UpdateSettingsRequest) (context.Context, error) {
+func (UnimplementedMeServiceHooked) PrepareUpdateSettings(ctx http.Context, in *UpdateSettingRequest) (context.Context, error) {
 	return ctx, nil
 }
 
-func (UnimplementedMeServiceHooked) CompleteUpdateSettings(ctx http.Context, in *UpdateSettingsRequest, out *UpdateSettingsResponse) error {
+func (UnimplementedMeServiceHooked) CompleteUpdateSettings(ctx http.Context, in *UpdateSettingRequest, out *UpdateSettingResponse) error {
 	return ctx.Result(200, out)
 }
 
@@ -509,11 +509,11 @@ func (c *MeServiceHTTPBridgeImpl) GetUserRoles(ctx context.Context, in *GetUserR
 	return c.client.GetUserRoles(ctx, in)
 }
 
-func (c *MeServiceHTTPBridgeImpl) GetUserSettings(ctx context.Context, in *GetUserSettingsRequest) (*GetUserSettingsResponse, error) {
+func (c *MeServiceHTTPBridgeImpl) GetUserSettings(ctx context.Context, in *GetUserSettingRequest) (*GetUserSettingResponse, error) {
 	return c.client.GetUserSettings(ctx, in)
 }
 
-func (c *MeServiceHTTPBridgeImpl) UpdateSettings(ctx context.Context, in *UpdateSettingsRequest) (*UpdateSettingsResponse, error) {
+func (c *MeServiceHTTPBridgeImpl) UpdateSettings(ctx context.Context, in *UpdateSettingRequest) (*UpdateSettingResponse, error) {
 	return c.client.UpdateSettings(ctx, in)
 }
 
@@ -557,11 +557,11 @@ func (c *MeServiceBridgeImpl) GetUserRoles(ctx context.Context, in *GetUserRoles
 	return c.client.GetUserRoles(ctx, in)
 }
 
-func (c *MeServiceBridgeImpl) GetUserSettings(ctx context.Context, in *GetUserSettingsRequest) (*GetUserSettingsResponse, error) {
+func (c *MeServiceBridgeImpl) GetUserSettings(ctx context.Context, in *GetUserSettingRequest) (*GetUserSettingResponse, error) {
 	return c.client.GetUserSettings(ctx, in)
 }
 
-func (c *MeServiceBridgeImpl) UpdateSettings(ctx context.Context, in *UpdateSettingsRequest) (*UpdateSettingsResponse, error) {
+func (c *MeServiceBridgeImpl) UpdateSettings(ctx context.Context, in *UpdateSettingRequest) (*UpdateSettingResponse, error) {
 	return c.client.UpdateSettings(ctx, in)
 }
 
@@ -607,11 +607,11 @@ func (c *MeServiceGRPC2HTTPBridgeImpl) GetUserRoles(ctx context.Context, in *Get
 	return c.client.GetUserRoles(ctx, in)
 }
 
-func (c *MeServiceGRPC2HTTPBridgeImpl) GetUserSettings(ctx context.Context, in *GetUserSettingsRequest) (*GetUserSettingsResponse, error) {
+func (c *MeServiceGRPC2HTTPBridgeImpl) GetUserSettings(ctx context.Context, in *GetUserSettingRequest) (*GetUserSettingResponse, error) {
 	return c.client.GetUserSettings(ctx, in)
 }
 
-func (c *MeServiceGRPC2HTTPBridgeImpl) UpdateSettings(ctx context.Context, in *UpdateSettingsRequest) (*UpdateSettingsResponse, error) {
+func (c *MeServiceGRPC2HTTPBridgeImpl) UpdateSettings(ctx context.Context, in *UpdateSettingRequest) (*UpdateSettingResponse, error) {
 	return c.client.UpdateSettings(ctx, in)
 }
 
@@ -655,11 +655,11 @@ func (c *MeServiceHTTP2GRPCBridgeImpl) GetUserRoles(ctx context.Context, in *Get
 	return c.client.GetUserRoles(ctx, in)
 }
 
-func (c *MeServiceHTTP2GRPCBridgeImpl) GetUserSettings(ctx context.Context, in *GetUserSettingsRequest) (*GetUserSettingsResponse, error) {
+func (c *MeServiceHTTP2GRPCBridgeImpl) GetUserSettings(ctx context.Context, in *GetUserSettingRequest) (*GetUserSettingResponse, error) {
 	return c.client.GetUserSettings(ctx, in)
 }
 
-func (c *MeServiceHTTP2GRPCBridgeImpl) UpdateSettings(ctx context.Context, in *UpdateSettingsRequest) (*UpdateSettingsResponse, error) {
+func (c *MeServiceHTTP2GRPCBridgeImpl) UpdateSettings(ctx context.Context, in *UpdateSettingRequest) (*UpdateSettingResponse, error) {
 	return c.client.UpdateSettings(ctx, in)
 }
 

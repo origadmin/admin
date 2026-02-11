@@ -40,7 +40,7 @@ type MeServiceHTTPServer interface {
 	// GetUserRoles GetUserRoles retrieves role list for current user.
 	GetUserRoles(context.Context, *GetUserRolesRequest) (*GetUserRolesResponse, error)
 	// GetUserSettings GetUserSettings retrieves user settings (P2).
-	GetUserSettings(context.Context, *GetUserSettingsRequest) (*GetUserSettingsResponse, error)
+	GetUserSettings(context.Context, *GetUserSettingRequest) (*GetUserSettingResponse, error)
 	// ListMyViews ListMyViews retrieves entire view tree available to currently authenticated user.
 	ListMyViews(context.Context, *ListMyViewsRequest) (*ListMyViewsResponse, error)
 	// UpdatePassword UpdatePassword changes password for currently authenticated user.
@@ -50,7 +50,7 @@ type MeServiceHTTPServer interface {
 	// UpdateProfile UpdateProfile updates profile of currently authenticated user.
 	UpdateProfile(context.Context, *UpdateProfileRequest) (*UpdateProfileResponse, error)
 	// UpdateSettings UpdateSettings updates user settings (P2).
-	UpdateSettings(context.Context, *UpdateSettingsRequest) (*UpdateSettingsResponse, error)
+	UpdateSettings(context.Context, *UpdateSettingRequest) (*UpdateSettingResponse, error)
 }
 
 func RegisterMeServiceHTTPServer(s *http.Server, srv MeServiceHTTPServer) {
@@ -189,26 +189,26 @@ func _MeService_GetUserRoles0_HTTP_Handler(srv MeServiceHTTPServer) func(ctx htt
 
 func _MeService_GetUserSettings0_HTTP_Handler(srv MeServiceHTTPServer) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
-		var in GetUserSettingsRequest
+		var in GetUserSettingRequest
 		if err := ctx.BindQuery(&in); err != nil {
 			return err
 		}
 		http.SetOperation(ctx, OperationMeServiceGetUserSettings)
 		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
-			return srv.GetUserSettings(ctx, req.(*GetUserSettingsRequest))
+			return srv.GetUserSettings(ctx, req.(*GetUserSettingRequest))
 		})
 		out, err := h(ctx, &in)
 		if err != nil {
 			return err
 		}
-		reply := out.(*GetUserSettingsResponse)
+		reply := out.(*GetUserSettingResponse)
 		return ctx.Result(200, reply)
 	}
 }
 
 func _MeService_UpdateSettings0_HTTP_Handler(srv MeServiceHTTPServer) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
-		var in UpdateSettingsRequest
+		var in UpdateSettingRequest
 		if err := ctx.Bind(&in); err != nil {
 			return err
 		}
@@ -217,13 +217,13 @@ func _MeService_UpdateSettings0_HTTP_Handler(srv MeServiceHTTPServer) func(ctx h
 		}
 		http.SetOperation(ctx, OperationMeServiceUpdateSettings)
 		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
-			return srv.UpdateSettings(ctx, req.(*UpdateSettingsRequest))
+			return srv.UpdateSettings(ctx, req.(*UpdateSettingRequest))
 		})
 		out, err := h(ctx, &in)
 		if err != nil {
 			return err
 		}
-		reply := out.(*UpdateSettingsResponse)
+		reply := out.(*UpdateSettingResponse)
 		return ctx.Result(200, reply)
 	}
 }
@@ -279,7 +279,7 @@ type MeServiceHTTPClient interface {
 	// GetUserRoles GetUserRoles retrieves role list for current user.
 	GetUserRoles(ctx context.Context, req *GetUserRolesRequest, opts ...http.CallOption) (rsp *GetUserRolesResponse, err error)
 	// GetUserSettings GetUserSettings retrieves user settings (P2).
-	GetUserSettings(ctx context.Context, req *GetUserSettingsRequest, opts ...http.CallOption) (rsp *GetUserSettingsResponse, err error)
+	GetUserSettings(ctx context.Context, req *GetUserSettingRequest, opts ...http.CallOption) (rsp *GetUserSettingResponse, err error)
 	// ListMyViews ListMyViews retrieves entire view tree available to currently authenticated user.
 	ListMyViews(ctx context.Context, req *ListMyViewsRequest, opts ...http.CallOption) (rsp *ListMyViewsResponse, err error)
 	// UpdatePassword UpdatePassword changes password for currently authenticated user.
@@ -289,7 +289,7 @@ type MeServiceHTTPClient interface {
 	// UpdateProfile UpdateProfile updates profile of currently authenticated user.
 	UpdateProfile(ctx context.Context, req *UpdateProfileRequest, opts ...http.CallOption) (rsp *UpdateProfileResponse, err error)
 	// UpdateSettings UpdateSettings updates user settings (P2).
-	UpdateSettings(ctx context.Context, req *UpdateSettingsRequest, opts ...http.CallOption) (rsp *UpdateSettingsResponse, err error)
+	UpdateSettings(ctx context.Context, req *UpdateSettingRequest, opts ...http.CallOption) (rsp *UpdateSettingResponse, err error)
 }
 
 type MeServiceHTTPClientImpl struct {
@@ -357,8 +357,8 @@ func (c *MeServiceHTTPClientImpl) GetUserRoles(ctx context.Context, in *GetUserR
 }
 
 // GetUserSettings GetUserSettings retrieves user settings (P2).
-func (c *MeServiceHTTPClientImpl) GetUserSettings(ctx context.Context, in *GetUserSettingsRequest, opts ...http.CallOption) (*GetUserSettingsResponse, error) {
-	var out GetUserSettingsResponse
+func (c *MeServiceHTTPClientImpl) GetUserSettings(ctx context.Context, in *GetUserSettingRequest, opts ...http.CallOption) (*GetUserSettingResponse, error) {
+	var out GetUserSettingResponse
 	pattern := "/me/settings"
 	path := binding.EncodeURL(pattern, in, true)
 	opts = append(opts, http.Operation(OperationMeServiceGetUserSettings))
@@ -427,8 +427,8 @@ func (c *MeServiceHTTPClientImpl) UpdateProfile(ctx context.Context, in *UpdateP
 }
 
 // UpdateSettings UpdateSettings updates user settings (P2).
-func (c *MeServiceHTTPClientImpl) UpdateSettings(ctx context.Context, in *UpdateSettingsRequest, opts ...http.CallOption) (*UpdateSettingsResponse, error) {
-	var out UpdateSettingsResponse
+func (c *MeServiceHTTPClientImpl) UpdateSettings(ctx context.Context, in *UpdateSettingRequest, opts ...http.CallOption) (*UpdateSettingResponse, error) {
+	var out UpdateSettingResponse
 	pattern := "/me/settings"
 	path := binding.EncodeURL(pattern, in, false)
 	opts = append(opts, http.Operation(OperationMeServiceUpdateSettings))

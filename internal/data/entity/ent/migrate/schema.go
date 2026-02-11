@@ -474,8 +474,8 @@ var (
 		{Name: "username", Type: field.TypeString, Size: 32, Comment: "entity.user.field.username"},
 		{Name: "nickname", Type: field.TypeString, Size: 64, Comment: "entity.user_profile.field.nickname", Default: ""},
 		{Name: "encrypted_password", Type: field.TypeString, Size: 256, Comment: "entity.user.field.encrypted_password", Default: ""},
-		{Name: "phone", Type: field.TypeString, Size: 32, Comment: "entity.user.field.phone", Default: ""},
-		{Name: "email", Type: field.TypeString, Size: 64, Comment: "entity.user.field.email", Default: ""},
+		{Name: "phone", Type: field.TypeString, Size: 32, Comment: "entity.user.field.phone. dev.recommend_unique_constraint", Default: ""},
+		{Name: "email", Type: field.TypeString, Size: 64, Comment: "entity.user.field.email. dev.recommend_unique_constraint", Default: ""},
 		{Name: "session_id", Type: field.TypeString, Size: 512, Comment: "entity.user.field.session_id", Default: ""},
 		{Name: "status", Type: field.TypeInt8, Comment: "entity.user.field.status", Default: 1},
 		{Name: "is_system", Type: field.TypeBool, Comment: "entity.user.field.is_system", Default: false},
@@ -516,22 +516,6 @@ var (
 				Name:    "idx_username_unique_not_deleted",
 				Unique:  true,
 				Columns: []*schema.Column{SysUsersColumns[8]},
-				Annotation: &entsql.IndexAnnotation{
-					Where: "delete_time IS NULL",
-				},
-			},
-			{
-				Name:    "idx_phone_unique_not_deleted",
-				Unique:  true,
-				Columns: []*schema.Column{SysUsersColumns[11]},
-				Annotation: &entsql.IndexAnnotation{
-					Where: "delete_time IS NULL",
-				},
-			},
-			{
-				Name:    "idx_email_unique_not_deleted",
-				Unique:  true,
-				Columns: []*schema.Column{SysUsersColumns[12]},
 				Annotation: &entsql.IndexAnnotation{
 					Where: "delete_time IS NULL",
 				},

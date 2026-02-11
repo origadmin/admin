@@ -22,19 +22,46 @@ type UserRepo interface {
 	Delete(context.Context, int64) error
 	Restore(context.Context, int64) error
 
-	AddRoleIDs(context.Context, int64, []int64) ([]*types.Role, error)
 	GetByUsername(context.Context, string) (*types.User, error)
+	GetByEmail(context.Context, string) (*types.User, error)
+	GetByPhone(context.Context, string) (*types.User, error)
+	GetUserAndPassword(context.Context, int64) (*types.User, string, error)
+
+	ChangeUserPassword(context.Context, int64, string) error
+	UpdateUserProfile(context.Context, int64, *types.UserProfile) error
+	GetUserProfile(context.Context, int64) (*types.UserProfile, error)
+	UpdateUserSetting(context.Context, int64, *types.UserSetting) error
+	GetUserSetting(context.Context, int64) (*types.UserSetting, error)
+
+	ListRoleByUserID(context.Context, int64) ([]*types.Role, error)
+	AddRoleIDs(context.Context, int64, []int64) ([]*types.Role, error)
 	GetRoleIDs(context.Context, int64) ([]int64, error)
+	DeleteRoleIDs(context.Context, int64, []int64) error
+
 	ListResourceByUserID(context.Context, int64) ([]*types.Resource, error)
+	AddResourceIDs(context.Context, int64, []int64) ([]*types.Resource, error)
+	GetResourceIDs(context.Context, int64) ([]int64, error)
+	DeleteResourceIDs(context.Context, int64, []int64) error
+
 	ListViewByUserID(context.Context, int64) ([]*types.View, error)
+	AddViewIDs(context.Context, int64, []int64) ([]*types.View, error)
+	GetViewIDs(context.Context, int64) ([]int64, error)
+	DeleteViewIDs(context.Context, int64, []int64) error
+
 	ListPermissionByUserID(context.Context, int64) ([]*types.Permission, error)
-	UpdateUserStatus(ctx context.Context, id int64, status int8) error
+	AddPermissionIDs(context.Context, int64, []int64) ([]*types.Permission, error)
+	GetPermissionIDs(context.Context, int64) ([]int64, error)
+	DeletePermissionIDs(context.Context, int64, []int64) error
+
+	UpdateUserStatus(context.Context, int64, int8) error
 }
 
 // UserQueryOption specifies options for querying users.
 type UserQueryOption struct {
 	repo.QueryOption
-	WithRoles bool
+	WithRoles   bool
+	WithProfile bool
+	WithSetting bool
 }
 
 // UserCreateOption specifies options for creating a user.
@@ -57,6 +84,8 @@ func GetUserRequestToQueryOption(req *system.GetUserRequest) *UserQueryOption {
 	return &UserQueryOption{
 		QueryOption: repo.QueryOptionFromRequest(req),
 		WithRoles:   true, // Always load roles for a single user
+		WithProfile: req.GetWithProfile(),
+		WithSetting: req.GetWithSetting(),
 	}
 }
 

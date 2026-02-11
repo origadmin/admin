@@ -76,10 +76,12 @@ func (s *AuthService) Login(ctx context.Context, req *v1.LoginRequest) (*v1.Logi
 	}
 
 	return &v1.LoginResponse{
-		AccessToken:  token.GetAccessToken(),
-		RefreshToken: token.GetRefreshToken(),
-		TokenType:    token.GetTokenType(),
-		ExpiresIn:    token.GetExpiresIn(),
+		Token: &v1.Token{
+			AccessToken:  token.GetAccessToken(),
+			RefreshToken: token.GetRefreshToken(),
+			TokenType:    token.GetTokenType(),
+			ExpiresIn:    token.GetExpiresIn(),
+		},
 	}, nil
 }
 

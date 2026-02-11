@@ -51,11 +51,11 @@ func (User) Fields() []ent.Field {
 		field.String("phone").
 			MaxLen(32).
 			Default("").
-			Comment(i18n.Text("entity.user.field.phone")), // login phone number of user
+			Comment(i18n.Text("entity.user.field.phone") + ". " + i18n.Text("dev.recommend_unique_constraint")), // login phone number of user
 		field.String("email").
 			MaxLen(64).
 			Default("").
-			Comment(i18n.Text("entity.user.field.email")), // login email of user
+			Comment(i18n.Text("entity.user.field.email") + ". " + i18n.Text("dev.recommend_unique_constraint")), // login email of user
 		field.String("session_id").
 			MaxLen(512).
 			Default("").
@@ -92,18 +92,6 @@ func (User) Indexes() []ent.Index {
 		index.Fields("username").
 			Unique().
 			StorageKey("idx_username_unique_not_deleted").
-			Annotations(
-				entsql.IndexWhere(fmt.Sprintf("%s IS NULL", mixin.SoftDeleteField)),
-			),
-		index.Fields("phone").
-			Unique().
-			StorageKey("idx_phone_unique_not_deleted").
-			Annotations(
-				entsql.IndexWhere(fmt.Sprintf("%s IS NULL", mixin.SoftDeleteField)),
-			),
-		index.Fields("email").
-			Unique().
-			StorageKey("idx_email_unique_not_deleted").
 			Annotations(
 				entsql.IndexWhere(fmt.Sprintf("%s IS NULL", mixin.SoftDeleteField)),
 			),

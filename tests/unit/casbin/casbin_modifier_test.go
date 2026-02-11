@@ -32,7 +32,7 @@ func setupTest(t *testing.T) (context.Context, authz.PolicyModifier, *casbin.Enf
 	db := ent.NewDatabaseWithClient(client)
 
 	// Create the modifier.
-	modifier, err := dal.NewCasbinModifier(db, log.DefaultLogger)
+	modifier, err := dal.NewCasbinPolicyModifier(db, log.DefaultLogger)
 	require.NoError(t, err)
 
 	// Create the enforcer with the modifier as the adapter.

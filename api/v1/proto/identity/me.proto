@@ -65,7 +65,7 @@ service MeService {
   }
 
   // GetUserSettings retrieves user settings (P2).
-  rpc GetUserSettings(GetUserSettingsRequest) returns (GetUserSettingsResponse) {
+  rpc GetUserSettings(GetUserSettingRequest) returns (GetUserSettingResponse) {
     option (google.api.http) = {
       get: "/me/settings"
     };
@@ -73,7 +73,7 @@ service MeService {
   }
 
   // UpdateSettings updates user settings (P2).
-  rpc UpdateSettings(UpdateSettingsRequest) returns (UpdateSettingsResponse) {
+  rpc UpdateSettings(UpdateSettingRequest) returns (UpdateSettingResponse) {
     option (google.api.http) = {
       put: "/me/settings"
       body: "*"
@@ -150,20 +150,20 @@ message GetUserRolesResponse {
 }
 
 // The request message for the GetUserSettings RPC (P2).
-message GetUserSettingsRequest {}
+message GetUserSettingRequest {}
 
 // The response message for the GetUserSettings RPC (P2).
-message GetUserSettingsResponse {
+message GetUserSettingResponse {
   api.v1.services.types.UserSetting setting = 1;
 }
 
 // The request message for the UpdateSettings RPC (P2).
-message UpdateSettingsRequest {
+message UpdateSettingRequest {
   api.v1.services.types.UserSetting setting = 1;
 }
 
 // The response message for the UpdateSettings RPC (P2).
-message UpdateSettingsResponse {}
+message UpdateSettingResponse {}
 
 // The request message for the GetUserPreferences RPC (P2).
 message GetUserPreferencesRequest {}

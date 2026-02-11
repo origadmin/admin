@@ -41,124 +41,43 @@ func NewAuthzGRPCRepo(
 	}
 }
 
-// GetPermissions retrieves all permissions for the current user via gRPC.
-func (r *authzGRPCRepo) GetPermissions(ctx context.Context, userID int64) (dto.PermissionsPB, error) {
-	r.log.WithContext(ctx).Debugf("Fetching permissions for user ID %d via gRPC", userID)
-
-	// Get user with roles
-	resp, err := r.userClient.GetUser(ctx, &systemv1.GetUserRequest{Id: userID, WithRoles: true})
+func (r *authzGRPCRepo) ListMyPermissions(ctx context.Context, userID int64) (dto.PermissionsPB, error) {
+	resp, err := r.userClient.ListUserPermissions(ctx, &systemv1.ListUserPermissionsRequest{Id: userID})
 	if err != nil {
 		return nil, err
 	}
-
-	user := resp.GetUser()
-	if user == nil || len(user.Roles) == 0 {
-		return nil, nil
-	}
-
-	// Get each role with permissions
-	permissionSet := make(map[string]*dto.PermissionPB)
-	for _, role := range user.Roles {
-		roleResp, err := r.roleClient.GetRole(ctx, &systemv1.GetRoleRequest{Id: role.Id})
-		if err != nil {
-			return nil, err
-		}
-		fullRole := roleResp.GetRole()
-		if fullRole == nil {
-			continue
-		}
-		// Collect permissions from role
-		for _, permission := range fullRole.Permissions {
-			if permission != nil && permission.Keyword != "" {
-				permissionSet[permission.Keyword] = permission
-			}
-		}
-	}
-
-	permissions := make(dto.PermissionsPB, 0, len(permissionSet))
-	for _, p := range permissionSet {
-		permissions = append(permissions, p)
-	}
-
-	return permissions, nil
+	return resp.GetPermissions(), nil
 }
 
-// GetRoles retrieves all roles for the current user via gRPC.
-func (r *authzGRPCRepo) GetRoles(ctx context.Context, userID int64) (dto.RolesPB, error) {
-	r.log.WithContext(ctx).Debugf("Fetching roles for user ID %d via gRPC", userID)
-
-	resp, err := r.userClient.GetUser(ctx, &systemv1.GetUserRequest{Id: userID, WithRoles: true})
+func (r *authzGRPCRepo) ListMyRoles(ctx context.Context, userID int64) (dto.RolesPB, error) {
+	resp, err := r.userClient.ListUserRoles(ctx, &systemv1.ListUserRolesRequest{Id: userID})
 	if err != nil {
 		return nil, err
 	}
-
-	user := resp.GetUser()
-	if user == nil {
-		return nil, nil
-	}
-
-	return user.Roles, nil
+	return resp.GetRoles(), nil
 }
 
-// GetViews retrieves all views for the current user via gRPC.
-func (r *authzGRPCRepo) GetViews(ctx context.Context, userID int64) (dto.ViewsPB, error) {
-	r.log.WithContext(ctx).Debugf("Fetching views for user ID %d via gRPC", userID)
-
-	// Get permissions and extract views
-	permissions, err := r.GetPermissions(ctx, userID)
+func (r *authzGRPCRepo) ListMyViews(ctx context.Context, userID int64) (dto.ViewsPB, error) {
+	resp, err := r.userClient.ListUserViews(ctx, &systemv1.ListUserViewsRequest{Id: userID})
 	if err != nil {
 		return nil, err
 	}
-
-	viewSet := make(map[string]*dto.ViewPB)
-	for _, permission := range permissions {
-		for _, view := range permission.Views {
-			if view != nil && view.Keyword != "" {
-				viewSet[view.Keyword] = view
-			}
-		}
-	}
-
-	views := make(dto.ViewsPB, 0, len(viewSet))
-	for _, v := range viewSet {
-		views = append(views, v)
-	}
-
-	return views, nil
+	return resp.GetViews(), nil
 }
 
-// GetResources retrieves all resources for the current user via gRPC.
-func (r *authzGRPCRepo) GetResources(ctx context.Context, userID int64) (dto.ResourcesPB, error) {
-	r.log.WithContext(ctx).Debugf("Fetching resources for user ID %d via gRPC", userID)
-
-	// Get permissions and extract resources
-	permissions, err := r.GetPermissions(ctx, userID)
+func (r *authzGRPCRepo) ListMyResources(ctx context.Context, userID int64) (dto.ResourcesPB, error) {
+	resp, err := r.userClient.ListUserResources(ctx, &systemv1.ListUserResourcesRequest{Id: userID})
 	if err != nil {
 		return nil, err
 	}
-
-	resourceSet := make(map[string]*dto.ResourcePB)
-	for _, permission := range permissions {
-		for _, resource := range permission.Resources {
-			if resource != nil && resource.Keyword != "" {
-				resourceSet[resource.Keyword] = resource
-			}
-		}
-	}
-
-	resources := make(dto.ResourcesPB, 0, len(resourceSet))
-	for _, r := range resourceSet {
-		resources = append(resources, r)
-	}
-
-	return resources, nil
+	return resp.GetResources(), nil
 }
 
 // GetPermissionKeywordsByUserID retrieves all permission keywords for the current user via gRPC.
 func (r *authzGRPCRepo) GetPermissionKeywordsByUserID(ctx context.Context, userID int64) ([]string, error) {
 	r.log.WithContext(ctx).Debugf("Fetching permission keywords for user ID %d via gRPC", userID)
 
-	permissions, err := r.GetPermissions(ctx, userID)
+	permissions, err := r.ListMyPermissions(ctx, userID)
 	if err != nil {
 		return nil, err
 	}

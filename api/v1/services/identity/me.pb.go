@@ -527,26 +527,26 @@ func (x *GetUserRolesResponse) GetRoles() []*types.Role {
 }
 
 // The request message for the GetUserSettings RPC (P2).
-type GetUserSettingsRequest struct {
+type GetUserSettingRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *GetUserSettingsRequest) Reset() {
-	*x = GetUserSettingsRequest{}
+func (x *GetUserSettingRequest) Reset() {
+	*x = GetUserSettingRequest{}
 	mi := &file_identity_me_proto_msgTypes[12]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *GetUserSettingsRequest) String() string {
+func (x *GetUserSettingRequest) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*GetUserSettingsRequest) ProtoMessage() {}
+func (*GetUserSettingRequest) ProtoMessage() {}
 
-func (x *GetUserSettingsRequest) ProtoReflect() protoreflect.Message {
+func (x *GetUserSettingRequest) ProtoReflect() protoreflect.Message {
 	mi := &file_identity_me_proto_msgTypes[12]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -558,33 +558,33 @@ func (x *GetUserSettingsRequest) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use GetUserSettingsRequest.ProtoReflect.Descriptor instead.
-func (*GetUserSettingsRequest) Descriptor() ([]byte, []int) {
+// Deprecated: Use GetUserSettingRequest.ProtoReflect.Descriptor instead.
+func (*GetUserSettingRequest) Descriptor() ([]byte, []int) {
 	return file_identity_me_proto_rawDescGZIP(), []int{12}
 }
 
 // The response message for the GetUserSettings RPC (P2).
-type GetUserSettingsResponse struct {
+type GetUserSettingResponse struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Setting       *types.UserSetting     `protobuf:"bytes,1,opt,name=setting,proto3" json:"setting,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *GetUserSettingsResponse) Reset() {
-	*x = GetUserSettingsResponse{}
+func (x *GetUserSettingResponse) Reset() {
+	*x = GetUserSettingResponse{}
 	mi := &file_identity_me_proto_msgTypes[13]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *GetUserSettingsResponse) String() string {
+func (x *GetUserSettingResponse) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*GetUserSettingsResponse) ProtoMessage() {}
+func (*GetUserSettingResponse) ProtoMessage() {}
 
-func (x *GetUserSettingsResponse) ProtoReflect() protoreflect.Message {
+func (x *GetUserSettingResponse) ProtoReflect() protoreflect.Message {
 	mi := &file_identity_me_proto_msgTypes[13]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -596,12 +596,12 @@ func (x *GetUserSettingsResponse) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use GetUserSettingsResponse.ProtoReflect.Descriptor instead.
-func (*GetUserSettingsResponse) Descriptor() ([]byte, []int) {
+// Deprecated: Use GetUserSettingResponse.ProtoReflect.Descriptor instead.
+func (*GetUserSettingResponse) Descriptor() ([]byte, []int) {
 	return file_identity_me_proto_rawDescGZIP(), []int{13}
 }
 
-func (x *GetUserSettingsResponse) GetSetting() *types.UserSetting {
+func (x *GetUserSettingResponse) GetSetting() *types.UserSetting {
 	if x != nil {
 		return x.Setting
 	}
@@ -609,27 +609,27 @@ func (x *GetUserSettingsResponse) GetSetting() *types.UserSetting {
 }
 
 // The request message for the UpdateSettings RPC (P2).
-type UpdateSettingsRequest struct {
+type UpdateSettingRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Setting       *types.UserSetting     `protobuf:"bytes,1,opt,name=setting,proto3" json:"setting,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *UpdateSettingsRequest) Reset() {
-	*x = UpdateSettingsRequest{}
+func (x *UpdateSettingRequest) Reset() {
+	*x = UpdateSettingRequest{}
 	mi := &file_identity_me_proto_msgTypes[14]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *UpdateSettingsRequest) String() string {
+func (x *UpdateSettingRequest) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*UpdateSettingsRequest) ProtoMessage() {}
+func (*UpdateSettingRequest) ProtoMessage() {}
 
-func (x *UpdateSettingsRequest) ProtoReflect() protoreflect.Message {
+func (x *UpdateSettingRequest) ProtoReflect() protoreflect.Message {
 	mi := &file_identity_me_proto_msgTypes[14]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -641,12 +641,12 @@ func (x *UpdateSettingsRequest) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use UpdateSettingsRequest.ProtoReflect.Descriptor instead.
-func (*UpdateSettingsRequest) Descriptor() ([]byte, []int) {
+// Deprecated: Use UpdateSettingRequest.ProtoReflect.Descriptor instead.
+func (*UpdateSettingRequest) Descriptor() ([]byte, []int) {
 	return file_identity_me_proto_rawDescGZIP(), []int{14}
 }
 
-func (x *UpdateSettingsRequest) GetSetting() *types.UserSetting {
+func (x *UpdateSettingRequest) GetSetting() *types.UserSetting {
 	if x != nil {
 		return x.Setting
 	}
@@ -654,26 +654,26 @@ func (x *UpdateSettingsRequest) GetSetting() *types.UserSetting {
 }
 
 // The response message for the UpdateSettings RPC (P2).
-type UpdateSettingsResponse struct {
+type UpdateSettingResponse struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *UpdateSettingsResponse) Reset() {
-	*x = UpdateSettingsResponse{}
+func (x *UpdateSettingResponse) Reset() {
+	*x = UpdateSettingResponse{}
 	mi := &file_identity_me_proto_msgTypes[15]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *UpdateSettingsResponse) String() string {
+func (x *UpdateSettingResponse) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*UpdateSettingsResponse) ProtoMessage() {}
+func (*UpdateSettingResponse) ProtoMessage() {}
 
-func (x *UpdateSettingsResponse) ProtoReflect() protoreflect.Message {
+func (x *UpdateSettingResponse) ProtoReflect() protoreflect.Message {
 	mi := &file_identity_me_proto_msgTypes[15]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -685,8 +685,8 @@ func (x *UpdateSettingsResponse) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use UpdateSettingsResponse.ProtoReflect.Descriptor instead.
-func (*UpdateSettingsResponse) Descriptor() ([]byte, []int) {
+// Deprecated: Use UpdateSettingResponse.ProtoReflect.Descriptor instead.
+func (*UpdateSettingResponse) Descriptor() ([]byte, []int) {
 	return file_identity_me_proto_rawDescGZIP(), []int{15}
 }
 
@@ -877,13 +877,13 @@ const file_identity_me_proto_rawDesc = "" +
 	"\tresources\x18\x01 \x03(\v2\x1f.api.v1.services.types.ResourceR\tresources\"\x15\n" +
 	"\x13GetUserRolesRequest\"I\n" +
 	"\x14GetUserRolesResponse\x121\n" +
-	"\x05roles\x18\x01 \x03(\v2\x1b.api.v1.services.types.RoleR\x05roles\"\x18\n" +
-	"\x16GetUserSettingsRequest\"W\n" +
-	"\x17GetUserSettingsResponse\x12<\n" +
-	"\asetting\x18\x01 \x01(\v2\".api.v1.services.types.UserSettingR\asetting\"U\n" +
-	"\x15UpdateSettingsRequest\x12<\n" +
-	"\asetting\x18\x01 \x01(\v2\".api.v1.services.types.UserSettingR\asetting\"\x18\n" +
-	"\x16UpdateSettingsResponse\"\x1b\n" +
+	"\x05roles\x18\x01 \x03(\v2\x1b.api.v1.services.types.RoleR\x05roles\"\x17\n" +
+	"\x15GetUserSettingRequest\"V\n" +
+	"\x16GetUserSettingResponse\x12<\n" +
+	"\asetting\x18\x01 \x01(\v2\".api.v1.services.types.UserSettingR\asetting\"T\n" +
+	"\x14UpdateSettingRequest\x12<\n" +
+	"\asetting\x18\x01 \x01(\v2\".api.v1.services.types.UserSettingR\asetting\"\x17\n" +
+	"\x15UpdateSettingResponse\"\x1b\n" +
 	"\x19GetUserPreferencesRequest\"\xc5\x01\n" +
 	"\x1aGetUserPreferencesResponse\x12g\n" +
 	"\vpreferences\x18\x01 \x03(\v2E.api.v1.services.identity.GetUserPreferencesResponse.PreferencesEntryR\vpreferences\x1a>\n" +
@@ -895,7 +895,7 @@ const file_identity_me_proto_rawDesc = "" +
 	"\x10PreferencesEntry\x12\x10\n" +
 	"\x03key\x18\x01 \x01(\tR\x03key\x12\x14\n" +
 	"\x05value\x18\x02 \x01(\tR\x05value:\x028\x01\"\x1b\n" +
-	"\x19UpdatePreferencesResponse2\xfc\v\n" +
+	"\x19UpdatePreferencesResponse2\xf8\v\n" +
 	"\tMeService\x12\x88\x01\n" +
 	"\vListMyViews\x12,.api.v1.services.identity.ListMyViewsRequest\x1a-.api.v1.services.identity.ListMyViewsResponse\"\x1c\xea\xea\x1b\a\n" +
 	"\x05authn\x82\xd3\xe4\x93\x02\v\x12\t/me/views\x12\x87\x01\n" +
@@ -909,10 +909,10 @@ const file_identity_me_proto_rawDesc = "" +
 	"\x10GetUserResources\x121.api.v1.services.identity.GetUserResourcesRequest\x1a2.api.v1.services.identity.GetUserResourcesResponse\" \xea\xea\x1b\a\n" +
 	"\x05authn\x82\xd3\xe4\x93\x02\x0f\x12\r/me/resources\x12\x8b\x01\n" +
 	"\fGetUserRoles\x12-.api.v1.services.identity.GetUserRolesRequest\x1a..api.v1.services.identity.GetUserRolesResponse\"\x1c\xea\xea\x1b\a\n" +
-	"\x05authn\x82\xd3\xe4\x93\x02\v\x12\t/me/roles\x12\x97\x01\n" +
-	"\x0fGetUserSettings\x120.api.v1.services.identity.GetUserSettingsRequest\x1a1.api.v1.services.identity.GetUserSettingsResponse\"\x1f\xea\xea\x1b\a\n" +
-	"\x05authn\x82\xd3\xe4\x93\x02\x0e\x12\f/me/settings\x12\x97\x01\n" +
-	"\x0eUpdateSettings\x12/.api.v1.services.identity.UpdateSettingsRequest\x1a0.api.v1.services.identity.UpdateSettingsResponse\"\"\xea\xea\x1b\a\n" +
+	"\x05authn\x82\xd3\xe4\x93\x02\v\x12\t/me/roles\x12\x95\x01\n" +
+	"\x0fGetUserSettings\x12/.api.v1.services.identity.GetUserSettingRequest\x1a0.api.v1.services.identity.GetUserSettingResponse\"\x1f\xea\xea\x1b\a\n" +
+	"\x05authn\x82\xd3\xe4\x93\x02\x0e\x12\f/me/settings\x12\x95\x01\n" +
+	"\x0eUpdateSettings\x12..api.v1.services.identity.UpdateSettingRequest\x1a/.api.v1.services.identity.UpdateSettingResponse\"\"\xea\xea\x1b\a\n" +
 	"\x05authn\x82\xd3\xe4\x93\x02\x11:\x01*\x1a\f/me/settings\x12\xa3\x01\n" +
 	"\x12GetUserPreferences\x123.api.v1.services.identity.GetUserPreferencesRequest\x1a4.api.v1.services.identity.GetUserPreferencesResponse\"\"\xea\xea\x1b\a\n" +
 	"\x05authn\x82\xd3\xe4\x93\x02\x11\x12\x0f/me/preferences\x12\xa3\x01\n" +
@@ -946,10 +946,10 @@ var file_identity_me_proto_goTypes = []any{
 	(*GetUserResourcesResponse)(nil),   // 9: api.v1.services.identity.GetUserResourcesResponse
 	(*GetUserRolesRequest)(nil),        // 10: api.v1.services.identity.GetUserRolesRequest
 	(*GetUserRolesResponse)(nil),       // 11: api.v1.services.identity.GetUserRolesResponse
-	(*GetUserSettingsRequest)(nil),     // 12: api.v1.services.identity.GetUserSettingsRequest
-	(*GetUserSettingsResponse)(nil),    // 13: api.v1.services.identity.GetUserSettingsResponse
-	(*UpdateSettingsRequest)(nil),      // 14: api.v1.services.identity.UpdateSettingsRequest
-	(*UpdateSettingsResponse)(nil),     // 15: api.v1.services.identity.UpdateSettingsResponse
+	(*GetUserSettingRequest)(nil),      // 12: api.v1.services.identity.GetUserSettingRequest
+	(*GetUserSettingResponse)(nil),     // 13: api.v1.services.identity.GetUserSettingResponse
+	(*UpdateSettingRequest)(nil),       // 14: api.v1.services.identity.UpdateSettingRequest
+	(*UpdateSettingResponse)(nil),      // 15: api.v1.services.identity.UpdateSettingResponse
 	(*GetUserPreferencesRequest)(nil),  // 16: api.v1.services.identity.GetUserPreferencesRequest
 	(*GetUserPreferencesResponse)(nil), // 17: api.v1.services.identity.GetUserPreferencesResponse
 	(*UpdatePreferencesRequest)(nil),   // 18: api.v1.services.identity.UpdatePreferencesRequest
@@ -968,8 +968,8 @@ var file_identity_me_proto_depIdxs = []int32{
 	23, // 2: api.v1.services.identity.UpdateProfileRequest.profile:type_name -> api.v1.services.types.UserProfile
 	24, // 3: api.v1.services.identity.GetUserResourcesResponse.resources:type_name -> api.v1.services.types.Resource
 	25, // 4: api.v1.services.identity.GetUserRolesResponse.roles:type_name -> api.v1.services.types.Role
-	26, // 5: api.v1.services.identity.GetUserSettingsResponse.setting:type_name -> api.v1.services.types.UserSetting
-	26, // 6: api.v1.services.identity.UpdateSettingsRequest.setting:type_name -> api.v1.services.types.UserSetting
+	26, // 5: api.v1.services.identity.GetUserSettingResponse.setting:type_name -> api.v1.services.types.UserSetting
+	26, // 6: api.v1.services.identity.UpdateSettingRequest.setting:type_name -> api.v1.services.types.UserSetting
 	20, // 7: api.v1.services.identity.GetUserPreferencesResponse.preferences:type_name -> api.v1.services.identity.GetUserPreferencesResponse.PreferencesEntry
 	21, // 8: api.v1.services.identity.UpdatePreferencesRequest.preferences:type_name -> api.v1.services.identity.UpdatePreferencesRequest.PreferencesEntry
 	0,  // 9: api.v1.services.identity.MeService.ListMyViews:input_type -> api.v1.services.identity.ListMyViewsRequest
@@ -978,8 +978,8 @@ var file_identity_me_proto_depIdxs = []int32{
 	6,  // 12: api.v1.services.identity.MeService.UpdatePassword:input_type -> api.v1.services.identity.UpdatePasswordRequest
 	8,  // 13: api.v1.services.identity.MeService.GetUserResources:input_type -> api.v1.services.identity.GetUserResourcesRequest
 	10, // 14: api.v1.services.identity.MeService.GetUserRoles:input_type -> api.v1.services.identity.GetUserRolesRequest
-	12, // 15: api.v1.services.identity.MeService.GetUserSettings:input_type -> api.v1.services.identity.GetUserSettingsRequest
-	14, // 16: api.v1.services.identity.MeService.UpdateSettings:input_type -> api.v1.services.identity.UpdateSettingsRequest
+	12, // 15: api.v1.services.identity.MeService.GetUserSettings:input_type -> api.v1.services.identity.GetUserSettingRequest
+	14, // 16: api.v1.services.identity.MeService.UpdateSettings:input_type -> api.v1.services.identity.UpdateSettingRequest
 	16, // 17: api.v1.services.identity.MeService.GetUserPreferences:input_type -> api.v1.services.identity.GetUserPreferencesRequest
 	18, // 18: api.v1.services.identity.MeService.UpdatePreferences:input_type -> api.v1.services.identity.UpdatePreferencesRequest
 	1,  // 19: api.v1.services.identity.MeService.ListMyViews:output_type -> api.v1.services.identity.ListMyViewsResponse
@@ -988,8 +988,8 @@ var file_identity_me_proto_depIdxs = []int32{
 	7,  // 22: api.v1.services.identity.MeService.UpdatePassword:output_type -> api.v1.services.identity.UpdatePasswordResponse
 	9,  // 23: api.v1.services.identity.MeService.GetUserResources:output_type -> api.v1.services.identity.GetUserResourcesResponse
 	11, // 24: api.v1.services.identity.MeService.GetUserRoles:output_type -> api.v1.services.identity.GetUserRolesResponse
-	13, // 25: api.v1.services.identity.MeService.GetUserSettings:output_type -> api.v1.services.identity.GetUserSettingsResponse
-	15, // 26: api.v1.services.identity.MeService.UpdateSettings:output_type -> api.v1.services.identity.UpdateSettingsResponse
+	13, // 25: api.v1.services.identity.MeService.GetUserSettings:output_type -> api.v1.services.identity.GetUserSettingResponse
+	15, // 26: api.v1.services.identity.MeService.UpdateSettings:output_type -> api.v1.services.identity.UpdateSettingResponse
 	17, // 27: api.v1.services.identity.MeService.GetUserPreferences:output_type -> api.v1.services.identity.GetUserPreferencesResponse
 	19, // 28: api.v1.services.identity.MeService.UpdatePreferences:output_type -> api.v1.services.identity.UpdatePreferencesResponse
 	19, // [19:29] is the sub-list for method output_type

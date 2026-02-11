@@ -19,15 +19,17 @@ import (
 // MeUseCase is the use case for managing the current user's profile.
 type MeUseCase struct {
 	meRepo    dto.MeRepo
+	authnRepo dto.AuthnRepo
 	authzRepo dto.AuthzRepo
 	hasher    hash.Crypto
 	log       *log.Helper
 }
 
 // NewMeUseCase creates a new MeUseCase.
-func NewMeUseCase(meRepo dto.MeRepo, authzRepo dto.AuthzRepo, hasher hash.Crypto, logger log.Logger) *MeUseCase {
+func NewMeUseCase(meRepo dto.MeRepo, authnRepo dto.AuthnRepo, authzRepo dto.AuthzRepo, hasher hash.Crypto, logger log.Logger) *MeUseCase {
 	return &MeUseCase{
 		meRepo:    meRepo,
+		authnRepo: authnRepo,
 		authzRepo: authzRepo,
 		hasher:    hasher,
 		log:       log.NewHelper(log.With(logger, "module", "biz.me")),
@@ -64,7 +66,7 @@ func (uc *MeUseCase) GetSettings(ctx context.Context) (*dto.UserSettingPB, error
 		return nil, err
 	}
 
-	return uc.meRepo.GetSettings(ctx, userID)
+	return uc.meRepo.GetSetting(ctx, userID)
 }
 
 // UpdateProfile updates the current user's profile.
@@ -84,7 +86,7 @@ func (uc *MeUseCase) UpdateSettings(ctx context.Context, req *dto.UserSettingPB)
 		return err
 	}
 
-	return uc.meRepo.UpdateSettings(ctx, userID, req)
+	return uc.meRepo.UpdateSetting(ctx, userID, req)
 }
 
 // UpdatePreferences updates the current user's preferences.
@@ -104,14 +106,14 @@ func (uc *MeUseCase) ChangePassword(ctx context.Context, oldPassword, newPasswor
 		return err
 	}
 
-	// Get the user to verify the old password
-	user, err := uc.meRepo.GetUserByID(ctx, userID)
+	// Get the authenticated user to verify the old password
+	authedUser, err := uc.authnRepo.GetUserByCredential(ctx, strconv.FormatInt(userID, 10))
 	if err != nil {
 		return err
 	}
 
 	// Verify the old password
-	if err := uc.hasher.Verify(user.EncryptedPassword, oldPassword); err != nil {
+	if err := uc.hasher.Verify(authedUser.EncryptedPassword, oldPassword); err != nil {
 		return errors.BadRequest("INVALID_PASSWORD", "Invalid old password")
 	}
 

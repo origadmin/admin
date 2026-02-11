@@ -23,8 +23,8 @@ type casbinPolicyModifier struct {
 	log *log.Helper
 }
 
-// NewCasbinModifier creates a new Casbin PolicyModifier.
-func NewCasbinModifier(db *ent.Database, logger log.Logger) (authz.PolicyModifier, error) {
+// NewCasbinPolicyModifier creates a new Casbin PolicyModifier.
+func NewCasbinPolicyModifier(db *ent.Database, logger log.Logger) (authz.PolicyModifier, error) {
 	return &casbinPolicyModifier{
 		db:  db,
 		log: log.NewHelper(log.With(logger, "module", "system.dal.casbin_policy_modifier")),

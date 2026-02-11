@@ -19,16 +19,19 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	UserService_ListUsers_FullMethodName         = "/api.v1.services.system.UserService/ListUsers"
-	UserService_ListUserResources_FullMethodName = "/api.v1.services.system.UserService/ListUserResources"
-	UserService_GetUser_FullMethodName           = "/api.v1.services.system.UserService/GetUser"
-	UserService_CreateUser_FullMethodName        = "/api.v1.services.system.UserService/CreateUser"
-	UserService_UpdateUser_FullMethodName        = "/api.v1.services.system.UserService/UpdateUser"
-	UserService_DeleteUser_FullMethodName        = "/api.v1.services.system.UserService/DeleteUser"
-	UserService_UpdateUserStatus_FullMethodName  = "/api.v1.services.system.UserService/UpdateUserStatus"
-	UserService_UpdateUserRoles_FullMethodName   = "/api.v1.services.system.UserService/UpdateUserRoles"
-	UserService_ResetUserPassword_FullMethodName = "/api.v1.services.system.UserService/ResetUserPassword"
-	UserService_InviteUser_FullMethodName        = "/api.v1.services.system.UserService/InviteUser"
+	UserService_ListUsers_FullMethodName           = "/api.v1.services.system.UserService/ListUsers"
+	UserService_ListUserResources_FullMethodName   = "/api.v1.services.system.UserService/ListUserResources"
+	UserService_ListUserRoles_FullMethodName       = "/api.v1.services.system.UserService/ListUserRoles"
+	UserService_ListUserPermissions_FullMethodName = "/api.v1.services.system.UserService/ListUserPermissions"
+	UserService_ListUserViews_FullMethodName       = "/api.v1.services.system.UserService/ListUserViews"
+	UserService_GetUser_FullMethodName             = "/api.v1.services.system.UserService/GetUser"
+	UserService_CreateUser_FullMethodName          = "/api.v1.services.system.UserService/CreateUser"
+	UserService_UpdateUser_FullMethodName          = "/api.v1.services.system.UserService/UpdateUser"
+	UserService_DeleteUser_FullMethodName          = "/api.v1.services.system.UserService/DeleteUser"
+	UserService_UpdateUserStatus_FullMethodName    = "/api.v1.services.system.UserService/UpdateUserStatus"
+	UserService_UpdateUserRoles_FullMethodName     = "/api.v1.services.system.UserService/UpdateUserRoles"
+	UserService_ChangeUserPassword_FullMethodName  = "/api.v1.services.system.UserService/ChangeUserPassword"
+	UserService_InviteUser_FullMethodName          = "/api.v1.services.system.UserService/InviteUser"
 )
 
 // UserServiceClient is the client API for UserService service.
@@ -39,17 +42,19 @@ const (
 type UserServiceClient interface {
 	ListUsers(ctx context.Context, in *ListUsersRequest, opts ...grpc.CallOption) (*ListUsersResponse, error)
 	ListUserResources(ctx context.Context, in *ListUserResourcesRequest, opts ...grpc.CallOption) (*ListUserResourcesResponse, error)
+	ListUserRoles(ctx context.Context, in *ListUserRolesRequest, opts ...grpc.CallOption) (*ListUserRolesResponse, error)
+	ListUserPermissions(ctx context.Context, in *ListUserPermissionsRequest, opts ...grpc.CallOption) (*ListUserPermissionsResponse, error)
+	ListUserViews(ctx context.Context, in *ListUserViewsRequest, opts ...grpc.CallOption) (*ListUserViewsResponse, error)
 	GetUser(ctx context.Context, in *GetUserRequest, opts ...grpc.CallOption) (*GetUserResponse, error)
 	CreateUser(ctx context.Context, in *CreateUserRequest, opts ...grpc.CallOption) (*CreateUserResponse, error)
 	UpdateUser(ctx context.Context, in *UpdateUserRequest, opts ...grpc.CallOption) (*UpdateUserResponse, error)
 	DeleteUser(ctx context.Context, in *DeleteUserRequest, opts ...grpc.CallOption) (*DeleteUserResponse, error)
-	// UpdateUserStatus Update the status of the user information
 	UpdateUserStatus(ctx context.Context, in *UpdateUserStatusRequest, opts ...grpc.CallOption) (*UpdateUserStatusResponse, error)
 	// Deprecated: Do not use.
 	// Deprecated: Use UpdateUser with role_ids instead.
 	UpdateUserRoles(ctx context.Context, in *UpdateUserRolesRequest, opts ...grpc.CallOption) (*UpdateUserRolesResponse, error)
 	// ResetUserPassword reset the user s password
-	ResetUserPassword(ctx context.Context, in *ResetUserPasswordRequest, opts ...grpc.CallOption) (*ResetUserPasswordResponse, error)
+	ChangeUserPassword(ctx context.Context, in *ChangeUserPasswordRequest, opts ...grpc.CallOption) (*ChangeUserPasswordResponse, error)
 	// InviteUser invite a new user
 	InviteUser(ctx context.Context, in *InviteUserRequest, opts ...grpc.CallOption) (*InviteUserResponse, error)
 }
@@ -76,6 +81,36 @@ func (c *userServiceClient) ListUserResources(ctx context.Context, in *ListUserR
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(ListUserResourcesResponse)
 	err := c.cc.Invoke(ctx, UserService_ListUserResources_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *userServiceClient) ListUserRoles(ctx context.Context, in *ListUserRolesRequest, opts ...grpc.CallOption) (*ListUserRolesResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(ListUserRolesResponse)
+	err := c.cc.Invoke(ctx, UserService_ListUserRoles_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *userServiceClient) ListUserPermissions(ctx context.Context, in *ListUserPermissionsRequest, opts ...grpc.CallOption) (*ListUserPermissionsResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(ListUserPermissionsResponse)
+	err := c.cc.Invoke(ctx, UserService_ListUserPermissions_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *userServiceClient) ListUserViews(ctx context.Context, in *ListUserViewsRequest, opts ...grpc.CallOption) (*ListUserViewsResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(ListUserViewsResponse)
+	err := c.cc.Invoke(ctx, UserService_ListUserViews_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -143,10 +178,10 @@ func (c *userServiceClient) UpdateUserRoles(ctx context.Context, in *UpdateUserR
 	return out, nil
 }
 
-func (c *userServiceClient) ResetUserPassword(ctx context.Context, in *ResetUserPasswordRequest, opts ...grpc.CallOption) (*ResetUserPasswordResponse, error) {
+func (c *userServiceClient) ChangeUserPassword(ctx context.Context, in *ChangeUserPasswordRequest, opts ...grpc.CallOption) (*ChangeUserPasswordResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(ResetUserPasswordResponse)
-	err := c.cc.Invoke(ctx, UserService_ResetUserPassword_FullMethodName, in, out, cOpts...)
+	out := new(ChangeUserPasswordResponse)
+	err := c.cc.Invoke(ctx, UserService_ChangeUserPassword_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -171,17 +206,19 @@ func (c *userServiceClient) InviteUser(ctx context.Context, in *InviteUserReques
 type UserServiceServer interface {
 	ListUsers(context.Context, *ListUsersRequest) (*ListUsersResponse, error)
 	ListUserResources(context.Context, *ListUserResourcesRequest) (*ListUserResourcesResponse, error)
+	ListUserRoles(context.Context, *ListUserRolesRequest) (*ListUserRolesResponse, error)
+	ListUserPermissions(context.Context, *ListUserPermissionsRequest) (*ListUserPermissionsResponse, error)
+	ListUserViews(context.Context, *ListUserViewsRequest) (*ListUserViewsResponse, error)
 	GetUser(context.Context, *GetUserRequest) (*GetUserResponse, error)
 	CreateUser(context.Context, *CreateUserRequest) (*CreateUserResponse, error)
 	UpdateUser(context.Context, *UpdateUserRequest) (*UpdateUserResponse, error)
 	DeleteUser(context.Context, *DeleteUserRequest) (*DeleteUserResponse, error)
-	// UpdateUserStatus Update the status of the user information
 	UpdateUserStatus(context.Context, *UpdateUserStatusRequest) (*UpdateUserStatusResponse, error)
 	// Deprecated: Do not use.
 	// Deprecated: Use UpdateUser with role_ids instead.
 	UpdateUserRoles(context.Context, *UpdateUserRolesRequest) (*UpdateUserRolesResponse, error)
 	// ResetUserPassword reset the user s password
-	ResetUserPassword(context.Context, *ResetUserPasswordRequest) (*ResetUserPasswordResponse, error)
+	ChangeUserPassword(context.Context, *ChangeUserPasswordRequest) (*ChangeUserPasswordResponse, error)
 	// InviteUser invite a new user
 	InviteUser(context.Context, *InviteUserRequest) (*InviteUserResponse, error)
 	mustEmbedUnimplementedUserServiceServer()
@@ -199,6 +236,15 @@ func (UnimplementedUserServiceServer) ListUsers(context.Context, *ListUsersReque
 }
 func (UnimplementedUserServiceServer) ListUserResources(context.Context, *ListUserResourcesRequest) (*ListUserResourcesResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListUserResources not implemented")
+}
+func (UnimplementedUserServiceServer) ListUserRoles(context.Context, *ListUserRolesRequest) (*ListUserRolesResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ListUserRoles not implemented")
+}
+func (UnimplementedUserServiceServer) ListUserPermissions(context.Context, *ListUserPermissionsRequest) (*ListUserPermissionsResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ListUserPermissions not implemented")
+}
+func (UnimplementedUserServiceServer) ListUserViews(context.Context, *ListUserViewsRequest) (*ListUserViewsResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ListUserViews not implemented")
 }
 func (UnimplementedUserServiceServer) GetUser(context.Context, *GetUserRequest) (*GetUserResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetUser not implemented")
@@ -218,8 +264,8 @@ func (UnimplementedUserServiceServer) UpdateUserStatus(context.Context, *UpdateU
 func (UnimplementedUserServiceServer) UpdateUserRoles(context.Context, *UpdateUserRolesRequest) (*UpdateUserRolesResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdateUserRoles not implemented")
 }
-func (UnimplementedUserServiceServer) ResetUserPassword(context.Context, *ResetUserPasswordRequest) (*ResetUserPasswordResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method ResetUserPassword not implemented")
+func (UnimplementedUserServiceServer) ChangeUserPassword(context.Context, *ChangeUserPasswordRequest) (*ChangeUserPasswordResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ChangeUserPassword not implemented")
 }
 func (UnimplementedUserServiceServer) InviteUser(context.Context, *InviteUserRequest) (*InviteUserResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method InviteUser not implemented")
@@ -277,6 +323,60 @@ func _UserService_ListUserResources_Handler(srv interface{}, ctx context.Context
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(UserServiceServer).ListUserResources(ctx, req.(*ListUserResourcesRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _UserService_ListUserRoles_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListUserRolesRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServiceServer).ListUserRoles(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: UserService_ListUserRoles_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServiceServer).ListUserRoles(ctx, req.(*ListUserRolesRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _UserService_ListUserPermissions_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListUserPermissionsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServiceServer).ListUserPermissions(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: UserService_ListUserPermissions_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServiceServer).ListUserPermissions(ctx, req.(*ListUserPermissionsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _UserService_ListUserViews_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListUserViewsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServiceServer).ListUserViews(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: UserService_ListUserViews_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServiceServer).ListUserViews(ctx, req.(*ListUserViewsRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -389,20 +489,20 @@ func _UserService_UpdateUserRoles_Handler(srv interface{}, ctx context.Context, 
 	return interceptor(ctx, in, info, handler)
 }
 
-func _UserService_ResetUserPassword_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(ResetUserPasswordRequest)
+func _UserService_ChangeUserPassword_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ChangeUserPasswordRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(UserServiceServer).ResetUserPassword(ctx, in)
+		return srv.(UserServiceServer).ChangeUserPassword(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: UserService_ResetUserPassword_FullMethodName,
+		FullMethod: UserService_ChangeUserPassword_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(UserServiceServer).ResetUserPassword(ctx, req.(*ResetUserPasswordRequest))
+		return srv.(UserServiceServer).ChangeUserPassword(ctx, req.(*ChangeUserPasswordRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -441,6 +541,18 @@ var UserService_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _UserService_ListUserResources_Handler,
 		},
 		{
+			MethodName: "ListUserRoles",
+			Handler:    _UserService_ListUserRoles_Handler,
+		},
+		{
+			MethodName: "ListUserPermissions",
+			Handler:    _UserService_ListUserPermissions_Handler,
+		},
+		{
+			MethodName: "ListUserViews",
+			Handler:    _UserService_ListUserViews_Handler,
+		},
+		{
 			MethodName: "GetUser",
 			Handler:    _UserService_GetUser_Handler,
 		},
@@ -465,8 +577,8 @@ var UserService_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _UserService_UpdateUserRoles_Handler,
 		},
 		{
-			MethodName: "ResetUserPassword",
-			Handler:    _UserService_ResetUserPassword_Handler,
+			MethodName: "ChangeUserPassword",
+			Handler:    _UserService_ChangeUserPassword_Handler,
 		},
 		{
 			MethodName: "InviteUser",

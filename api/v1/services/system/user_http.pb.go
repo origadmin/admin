@@ -19,32 +19,37 @@ var _ = binding.EncodeURL
 
 const _ = http.SupportPackageIsVersion1
 
+const OperationUserServiceChangeUserPassword = "/api.v1.services.system.UserService/ChangeUserPassword"
 const OperationUserServiceCreateUser = "/api.v1.services.system.UserService/CreateUser"
 const OperationUserServiceDeleteUser = "/api.v1.services.system.UserService/DeleteUser"
 const OperationUserServiceGetUser = "/api.v1.services.system.UserService/GetUser"
 const OperationUserServiceInviteUser = "/api.v1.services.system.UserService/InviteUser"
+const OperationUserServiceListUserPermissions = "/api.v1.services.system.UserService/ListUserPermissions"
 const OperationUserServiceListUserResources = "/api.v1.services.system.UserService/ListUserResources"
+const OperationUserServiceListUserRoles = "/api.v1.services.system.UserService/ListUserRoles"
+const OperationUserServiceListUserViews = "/api.v1.services.system.UserService/ListUserViews"
 const OperationUserServiceListUsers = "/api.v1.services.system.UserService/ListUsers"
-const OperationUserServiceResetUserPassword = "/api.v1.services.system.UserService/ResetUserPassword"
 const OperationUserServiceUpdateUser = "/api.v1.services.system.UserService/UpdateUser"
 const OperationUserServiceUpdateUserRoles = "/api.v1.services.system.UserService/UpdateUserRoles"
 const OperationUserServiceUpdateUserStatus = "/api.v1.services.system.UserService/UpdateUserStatus"
 
 type UserServiceHTTPServer interface {
+	// ChangeUserPassword ResetUserPassword reset the user s password
+	ChangeUserPassword(context.Context, *ChangeUserPasswordRequest) (*ChangeUserPasswordResponse, error)
 	CreateUser(context.Context, *CreateUserRequest) (*CreateUserResponse, error)
 	DeleteUser(context.Context, *DeleteUserRequest) (*DeleteUserResponse, error)
 	GetUser(context.Context, *GetUserRequest) (*GetUserResponse, error)
 	// InviteUser InviteUser invite a new user
 	InviteUser(context.Context, *InviteUserRequest) (*InviteUserResponse, error)
+	ListUserPermissions(context.Context, *ListUserPermissionsRequest) (*ListUserPermissionsResponse, error)
 	ListUserResources(context.Context, *ListUserResourcesRequest) (*ListUserResourcesResponse, error)
+	ListUserRoles(context.Context, *ListUserRolesRequest) (*ListUserRolesResponse, error)
+	ListUserViews(context.Context, *ListUserViewsRequest) (*ListUserViewsResponse, error)
 	ListUsers(context.Context, *ListUsersRequest) (*ListUsersResponse, error)
-	// ResetUserPassword ResetUserPassword reset the user s password
-	ResetUserPassword(context.Context, *ResetUserPasswordRequest) (*ResetUserPasswordResponse, error)
 	UpdateUser(context.Context, *UpdateUserRequest) (*UpdateUserResponse, error)
 	// UpdateUserRoles Deprecated: Use UpdateUser with role_ids instead.
 	// Deprecated: Do not use.
 	UpdateUserRoles(context.Context, *UpdateUserRolesRequest) (*UpdateUserRolesResponse, error)
-	// UpdateUserStatus UpdateUserStatus Update the status of the user information
 	UpdateUserStatus(context.Context, *UpdateUserStatusRequest) (*UpdateUserStatusResponse, error)
 }
 
@@ -52,13 +57,16 @@ func RegisterUserServiceHTTPServer(s *http.Server, srv UserServiceHTTPServer) {
 	r := s.Route("/")
 	r.GET("/sys/users", _UserService_ListUsers0_HTTP_Handler(srv))
 	r.GET("/sys/users/{id}/resources", _UserService_ListUserResources0_HTTP_Handler(srv))
+	r.GET("/sys/users/{id}/roles", _UserService_ListUserRoles0_HTTP_Handler(srv))
+	r.GET("/sys/users/{id}/permissions", _UserService_ListUserPermissions0_HTTP_Handler(srv))
+	r.GET("/sys/users/{id}/views", _UserService_ListUserViews0_HTTP_Handler(srv))
 	r.GET("/sys/users/{id}", _UserService_GetUser0_HTTP_Handler(srv))
 	r.POST("/sys/users", _UserService_CreateUser0_HTTP_Handler(srv))
 	r.PUT("/sys/users/{user.id}", _UserService_UpdateUser0_HTTP_Handler(srv))
 	r.DELETE("/sys/users/{id}", _UserService_DeleteUser0_HTTP_Handler(srv))
 	r.PUT("/sys/users/{id}/status", _UserService_UpdateUserStatus0_HTTP_Handler(srv))
 	r.PUT("/sys/users/{id}/roles", _UserService_UpdateUserRoles0_HTTP_Handler(srv))
-	r.POST("/sys/users/{id}/password/reset", _UserService_ResetUserPassword0_HTTP_Handler(srv))
+	r.POST("/sys/users/{id}/password", _UserService_ChangeUserPassword0_HTTP_Handler(srv))
 	r.POST("/sys/users/invite", _UserService_InviteUser0_HTTP_Handler(srv))
 }
 
@@ -99,6 +107,72 @@ func _UserService_ListUserResources0_HTTP_Handler(srv UserServiceHTTPServer) fun
 			return err
 		}
 		reply := out.(*ListUserResourcesResponse)
+		return ctx.Result(200, reply)
+	}
+}
+
+func _UserService_ListUserRoles0_HTTP_Handler(srv UserServiceHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in ListUserRolesRequest
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		if err := ctx.BindVars(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationUserServiceListUserRoles)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.ListUserRoles(ctx, req.(*ListUserRolesRequest))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*ListUserRolesResponse)
+		return ctx.Result(200, reply)
+	}
+}
+
+func _UserService_ListUserPermissions0_HTTP_Handler(srv UserServiceHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in ListUserPermissionsRequest
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		if err := ctx.BindVars(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationUserServiceListUserPermissions)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.ListUserPermissions(ctx, req.(*ListUserPermissionsRequest))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*ListUserPermissionsResponse)
+		return ctx.Result(200, reply)
+	}
+}
+
+func _UserService_ListUserViews0_HTTP_Handler(srv UserServiceHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in ListUserViewsRequest
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		if err := ctx.BindVars(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationUserServiceListUserViews)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.ListUserViews(ctx, req.(*ListUserViewsRequest))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*ListUserViewsResponse)
 		return ctx.Result(200, reply)
 	}
 }
@@ -244,9 +318,9 @@ func _UserService_UpdateUserRoles0_HTTP_Handler(srv UserServiceHTTPServer) func(
 	}
 }
 
-func _UserService_ResetUserPassword0_HTTP_Handler(srv UserServiceHTTPServer) func(ctx http.Context) error {
+func _UserService_ChangeUserPassword0_HTTP_Handler(srv UserServiceHTTPServer) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
-		var in ResetUserPasswordRequest
+		var in ChangeUserPasswordRequest
 		if err := ctx.Bind(&in); err != nil {
 			return err
 		}
@@ -256,15 +330,15 @@ func _UserService_ResetUserPassword0_HTTP_Handler(srv UserServiceHTTPServer) fun
 		if err := ctx.BindVars(&in); err != nil {
 			return err
 		}
-		http.SetOperation(ctx, OperationUserServiceResetUserPassword)
+		http.SetOperation(ctx, OperationUserServiceChangeUserPassword)
 		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
-			return srv.ResetUserPassword(ctx, req.(*ResetUserPasswordRequest))
+			return srv.ChangeUserPassword(ctx, req.(*ChangeUserPasswordRequest))
 		})
 		out, err := h(ctx, &in)
 		if err != nil {
 			return err
 		}
-		reply := out.(*ResetUserPasswordResponse)
+		reply := out.(*ChangeUserPasswordResponse)
 		return ctx.Result(200, reply)
 	}
 }
@@ -292,20 +366,22 @@ func _UserService_InviteUser0_HTTP_Handler(srv UserServiceHTTPServer) func(ctx h
 }
 
 type UserServiceHTTPClient interface {
+	// ChangeUserPassword ResetUserPassword reset the user s password
+	ChangeUserPassword(ctx context.Context, req *ChangeUserPasswordRequest, opts ...http.CallOption) (rsp *ChangeUserPasswordResponse, err error)
 	CreateUser(ctx context.Context, req *CreateUserRequest, opts ...http.CallOption) (rsp *CreateUserResponse, err error)
 	DeleteUser(ctx context.Context, req *DeleteUserRequest, opts ...http.CallOption) (rsp *DeleteUserResponse, err error)
 	GetUser(ctx context.Context, req *GetUserRequest, opts ...http.CallOption) (rsp *GetUserResponse, err error)
 	// InviteUser InviteUser invite a new user
 	InviteUser(ctx context.Context, req *InviteUserRequest, opts ...http.CallOption) (rsp *InviteUserResponse, err error)
+	ListUserPermissions(ctx context.Context, req *ListUserPermissionsRequest, opts ...http.CallOption) (rsp *ListUserPermissionsResponse, err error)
 	ListUserResources(ctx context.Context, req *ListUserResourcesRequest, opts ...http.CallOption) (rsp *ListUserResourcesResponse, err error)
+	ListUserRoles(ctx context.Context, req *ListUserRolesRequest, opts ...http.CallOption) (rsp *ListUserRolesResponse, err error)
+	ListUserViews(ctx context.Context, req *ListUserViewsRequest, opts ...http.CallOption) (rsp *ListUserViewsResponse, err error)
 	ListUsers(ctx context.Context, req *ListUsersRequest, opts ...http.CallOption) (rsp *ListUsersResponse, err error)
-	// ResetUserPassword ResetUserPassword reset the user s password
-	ResetUserPassword(ctx context.Context, req *ResetUserPasswordRequest, opts ...http.CallOption) (rsp *ResetUserPasswordResponse, err error)
 	UpdateUser(ctx context.Context, req *UpdateUserRequest, opts ...http.CallOption) (rsp *UpdateUserResponse, err error)
 	// UpdateUserRoles Deprecated: Use UpdateUser with role_ids instead.
 	// Deprecated: Do not use.
 	UpdateUserRoles(ctx context.Context, req *UpdateUserRolesRequest, opts ...http.CallOption) (rsp *UpdateUserRolesResponse, err error)
-	// UpdateUserStatus UpdateUserStatus Update the status of the user information
 	UpdateUserStatus(ctx context.Context, req *UpdateUserStatusRequest, opts ...http.CallOption) (rsp *UpdateUserStatusResponse, err error)
 }
 
@@ -315,6 +391,20 @@ type UserServiceHTTPClientImpl struct {
 
 func NewUserServiceHTTPClient(client *http.Client) UserServiceHTTPClient {
 	return &UserServiceHTTPClientImpl{client}
+}
+
+// ChangeUserPassword ResetUserPassword reset the user s password
+func (c *UserServiceHTTPClientImpl) ChangeUserPassword(ctx context.Context, in *ChangeUserPasswordRequest, opts ...http.CallOption) (*ChangeUserPasswordResponse, error) {
+	var out ChangeUserPasswordResponse
+	pattern := "/sys/users/{id}/password"
+	path := binding.EncodeURL(pattern, in, false)
+	opts = append(opts, http.Operation(OperationUserServiceChangeUserPassword))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "POST", path, in, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, nil
 }
 
 func (c *UserServiceHTTPClientImpl) CreateUser(ctx context.Context, in *CreateUserRequest, opts ...http.CallOption) (*CreateUserResponse, error) {
@@ -370,11 +460,50 @@ func (c *UserServiceHTTPClientImpl) InviteUser(ctx context.Context, in *InviteUs
 	return &out, nil
 }
 
+func (c *UserServiceHTTPClientImpl) ListUserPermissions(ctx context.Context, in *ListUserPermissionsRequest, opts ...http.CallOption) (*ListUserPermissionsResponse, error) {
+	var out ListUserPermissionsResponse
+	pattern := "/sys/users/{id}/permissions"
+	path := binding.EncodeURL(pattern, in, true)
+	opts = append(opts, http.Operation(OperationUserServiceListUserPermissions))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "GET", path, nil, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, nil
+}
+
 func (c *UserServiceHTTPClientImpl) ListUserResources(ctx context.Context, in *ListUserResourcesRequest, opts ...http.CallOption) (*ListUserResourcesResponse, error) {
 	var out ListUserResourcesResponse
 	pattern := "/sys/users/{id}/resources"
 	path := binding.EncodeURL(pattern, in, true)
 	opts = append(opts, http.Operation(OperationUserServiceListUserResources))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "GET", path, nil, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, nil
+}
+
+func (c *UserServiceHTTPClientImpl) ListUserRoles(ctx context.Context, in *ListUserRolesRequest, opts ...http.CallOption) (*ListUserRolesResponse, error) {
+	var out ListUserRolesResponse
+	pattern := "/sys/users/{id}/roles"
+	path := binding.EncodeURL(pattern, in, true)
+	opts = append(opts, http.Operation(OperationUserServiceListUserRoles))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "GET", path, nil, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, nil
+}
+
+func (c *UserServiceHTTPClientImpl) ListUserViews(ctx context.Context, in *ListUserViewsRequest, opts ...http.CallOption) (*ListUserViewsResponse, error) {
+	var out ListUserViewsResponse
+	pattern := "/sys/users/{id}/views"
+	path := binding.EncodeURL(pattern, in, true)
+	opts = append(opts, http.Operation(OperationUserServiceListUserViews))
 	opts = append(opts, http.PathTemplate(pattern))
 	err := c.cc.Invoke(ctx, "GET", path, nil, &out, opts...)
 	if err != nil {
@@ -390,20 +519,6 @@ func (c *UserServiceHTTPClientImpl) ListUsers(ctx context.Context, in *ListUsers
 	opts = append(opts, http.Operation(OperationUserServiceListUsers))
 	opts = append(opts, http.PathTemplate(pattern))
 	err := c.cc.Invoke(ctx, "GET", path, nil, &out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return &out, nil
-}
-
-// ResetUserPassword ResetUserPassword reset the user s password
-func (c *UserServiceHTTPClientImpl) ResetUserPassword(ctx context.Context, in *ResetUserPasswordRequest, opts ...http.CallOption) (*ResetUserPasswordResponse, error) {
-	var out ResetUserPasswordResponse
-	pattern := "/sys/users/{id}/password/reset"
-	path := binding.EncodeURL(pattern, in, false)
-	opts = append(opts, http.Operation(OperationUserServiceResetUserPassword))
-	opts = append(opts, http.PathTemplate(pattern))
-	err := c.cc.Invoke(ctx, "POST", path, in, &out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -438,7 +553,6 @@ func (c *UserServiceHTTPClientImpl) UpdateUserRoles(ctx context.Context, in *Upd
 	return &out, nil
 }
 
-// UpdateUserStatus UpdateUserStatus Update the status of the user information
 func (c *UserServiceHTTPClientImpl) UpdateUserStatus(ctx context.Context, in *UpdateUserStatusRequest, opts ...http.CallOption) (*UpdateUserStatusResponse, error) {
 	var out UpdateUserStatusResponse
 	pattern := "/sys/users/{id}/status"

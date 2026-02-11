@@ -6,6 +6,7 @@ package client
 
 import (
 	"fmt"
+
 	"github.com/google/wire"
 	"google.golang.org/grpc"
 
@@ -33,12 +34,12 @@ func NewAuthorizationServiceClient(
 	app *runtime.App,
 	bootstrap *conf.Config,
 	middlewareProvider container.ClientMiddlewareProvider,
-) (systemv1.AuthorizationServiceClient, error) {
+) (systemv1.PolicyQueryServiceClient, error) {
 	conn, err := grpcclient.NewConn(app, bootstrap, ServiceNameSystem, middlewareProvider)
 	if err != nil {
 		return nil, fmt.Errorf("failed to create gRPC connection to system service for AuthorizationService: %w", err)
 	}
-	return systemv1.NewAuthorizationServiceClient(conn.(*grpc.ClientConn)), nil
+	return systemv1.NewPolicyQueryServiceClient(conn.(*grpc.ClientConn)), nil
 }
 
 // NewUserServiceClient creates a gRPC client for the system's UserService.

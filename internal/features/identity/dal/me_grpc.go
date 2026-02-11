@@ -32,8 +32,13 @@ func NewMeGRPCRepo(
 	}
 }
 
+func (r *meGRPCRepo) GetByID(ctx context.Context, userID int64) (*dto.UserPB, error) {
+	//TODO implement me
+	panic("implement me")
+}
+
 // GetProfile retrieves user profile information via a gRPC call to UserService.
-func (r *meGRPCRepo) GetProfile(ctx context.Context, userID int64) (dto.UserProfilePB, error) {
+func (r *meGRPCRepo) GetProfile(ctx context.Context, userID int64) (*dto.UserProfilePB, error) {
 	r.log.WithContext(ctx).Debugf("Fetching profile for user ID %d via gRPC", userID)
 	resp, err := r.userClient.GetUser(ctx, &systemv1.GetUserRequest{Id: userID, WithProfile: true})
 	if err != nil {
@@ -46,8 +51,8 @@ func (r *meGRPCRepo) GetProfile(ctx context.Context, userID int64) (dto.UserProf
 	return user.Profile, nil
 }
 
-// GetSettings retrieves user settings via gRPC.
-func (r *meGRPCRepo) GetSettings(ctx context.Context, userID int64) (dto.UserSettingPB, error) {
+// GetSetting retrieves user settings via gRPC.
+func (r *meGRPCRepo) GetSetting(ctx context.Context, userID int64) (*dto.UserSettingPB, error) {
 	r.log.WithContext(ctx).Debugf("Fetching settings for user ID %d via gRPC", userID)
 	resp, err := r.userClient.GetUser(ctx, &systemv1.GetUserRequest{Id: userID, WithSetting: true})
 	if err != nil {
@@ -61,10 +66,10 @@ func (r *meGRPCRepo) GetSettings(ctx context.Context, userID int64) (dto.UserSet
 }
 
 // UpdateProfile updates user's profile information via a gRPC call to UserService.
-func (r *meGRPCRepo) UpdateProfile(ctx context.Context, userID int64, profileData dto.UserProfilePB) error {
+func (r *meGRPCRepo) UpdateProfile(ctx context.Context, userID int64, profileData *dto.UserProfilePB) error {
 	r.log.WithContext(ctx).Debugf("Updating profile for user ID %d via gRPC", userID)
 	_, err := r.userClient.UpdateUser(ctx, &systemv1.UpdateUserRequest{
-		User: &dto.User{
+		User: &dto.UserPB{
 			Id:      userID,
 			Profile: profileData,
 		},
@@ -75,11 +80,11 @@ func (r *meGRPCRepo) UpdateProfile(ctx context.Context, userID int64, profileDat
 	return err
 }
 
-// UpdateSettings updates user's settings via gRPC.
-func (r *meGRPCRepo) UpdateSettings(ctx context.Context, userID int64, settingsData dto.UserSettingPB) error {
+// UpdateSetting updates user's settings via gRPC.
+func (r *meGRPCRepo) UpdateSetting(ctx context.Context, userID int64, settingsData *dto.UserSettingPB) error {
 	r.log.WithContext(ctx).Debugf("Updating settings for user ID %d via gRPC", userID)
 	_, err := r.userClient.UpdateUser(ctx, &systemv1.UpdateUserRequest{
-		User: &dto.User{
+		User: &dto.UserPB{
 			Id:      userID,
 			Setting: settingsData,
 		},
@@ -115,9 +120,9 @@ func (r *meGRPCRepo) UpdatePreferences(ctx context.Context, userID int64, prefer
 
 	// Update settings
 	_, err = r.userClient.UpdateUser(ctx, &systemv1.UpdateUserRequest{
-		User: &dto.User{
+		User: &dto.UserPB{
 			Id: userID,
-			Setting: &dto.UserSetting{
+			Setting: &dto.UserSettingPB{
 				Theme:       user.Setting.Theme,
 				Language:    user.Setting.Language,
 				Timezone:    user.Setting.Timezone,
@@ -131,11 +136,15 @@ func (r *meGRPCRepo) UpdatePreferences(ctx context.Context, userID int64, prefer
 	return err
 }
 
-// ChangePassword changes user's password.
-// This method cannot be implemented securely via gRPC with current UserService API.
-func (r *meGRPCRepo) ChangePassword(ctx context.Context, userID int64, oldPassword, newPassword string) error {
-	r.log.WithContext(ctx).Warnf("ChangePassword for user ID %d is not implemented via gRPC due to API limitations.", userID)
-	return errors.ServiceUnavailable("CHANGE_PASSWORD_UNIMPLEMENTED", "Change password is not implemented via gRPC for current user due to UserService API limitations.")
+// UpdatePassword changes the current user's password via gRPC.
+// Passes plain text passwords to system's ChangeUserPassword which handles verification and hashing.
+func (r *meGRPCRepo) UpdatePassword(ctx context.Context, userID int64, hashedPassword string) error {
+	r.log.WithContext(ctx).Debugf("Changing password for user ID %d via gRPC", userID)
+	_, err := r.userClient.ChangeUserPassword(ctx, &systemv1.ChangeUserPasswordRequest{
+		Id:       userID,
+		Password: hashedPassword,
+	})
+	return err
 }
 
 var _ dto.MeRepo = (*meGRPCRepo)(nil)

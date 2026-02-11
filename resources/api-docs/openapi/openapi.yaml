@@ -639,7 +639,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/api.v1.services.identity.GetUserSettingsResponse'
+                $ref: '#/components/schemas/api.v1.services.identity.GetUserSettingResponse'
         default:
           description: Default error response
           content:
@@ -655,7 +655,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/api.v1.services.identity.UpdateSettingsRequest'
+              $ref: '#/components/schemas/api.v1.services.identity.UpdateSettingRequest'
         required: true
       responses:
         "200":
@@ -663,7 +663,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/api.v1.services.identity.UpdateSettingsResponse'
+                $ref: '#/components/schemas/api.v1.services.identity.UpdateSettingResponse'
         default:
           description: Default error response
           content:
@@ -1903,6 +1903,16 @@ paths:
                   description: Whether to include roles in the response.
                   schema:
                     type: boolean
+                - name: with_profile
+                  in: query
+                  description: Whether to include profile in the response.
+                  schema:
+                    type: boolean
+                - name: with_setting
+                  in: query
+                  description: Whether to include setting in the response.
+                  schema:
+                    type: boolean
             responses:
                 "200":
                     description: OK
@@ -1940,12 +1950,12 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/google.rpc.Status'
-    /sys/users/{id}/password/reset:
+  /sys/users/{id}/password:
         post:
             tags:
                 - UserService
             description: ResetUserPassword reset the user s password
-            operationId: UserService_ResetUserPassword
+            operationId: UserService_ChangeUserPassword
             parameters:
                 - name: id
                   in: path
@@ -1957,7 +1967,7 @@ paths:
                 content:
                     application/json:
                         schema:
-                            $ref: '#/components/schemas/api.v1.services.system.ResetUserPasswordRequest'
+                          $ref: '#/components/schemas/api.v1.services.system.ChangeUserPasswordRequest'
                 required: true
             responses:
                 "200":
@@ -1965,7 +1975,32 @@ paths:
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/api.v1.services.system.ResetUserPasswordResponse'
+                              $ref: '#/components/schemas/api.v1.services.system.ChangeUserPasswordResponse'
+                default:
+                  description: Default error response
+                  content:
+                    application/json:
+                      schema:
+                        $ref: '#/components/schemas/google.rpc.Status'
+  /sys/users/{id}/permissions:
+    get:
+      tags:
+        - UserService
+      operationId: UserService_ListUserPermissions
+      parameters:
+        - name: id
+          in: path
+          description: The field will contain id of the user requested.
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/api.v1.services.system.ListUserPermissionsResponse'
                 default:
                     description: Default error response
                     content:
@@ -1998,6 +2033,30 @@ paths:
                             schema:
                                 $ref: '#/components/schemas/google.rpc.Status'
     /sys/users/{id}/roles:
+      get:
+        tags:
+          - UserService
+        operationId: UserService_ListUserRoles
+        parameters:
+          - name: id
+            in: path
+            description: The field will contain id of the user requested.
+            required: true
+            schema:
+              type: string
+        responses:
+          "200":
+            description: OK
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/api.v1.services.system.ListUserRolesResponse'
+          default:
+            description: Default error response
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/google.rpc.Status'
         put:
             tags:
                 - UserService
@@ -2033,7 +2092,6 @@ paths:
         put:
             tags:
                 - UserService
-            description: UpdateUserStatus Update the status of the user information
             operationId: UserService_UpdateUserStatus
             parameters:
                 - name: id
@@ -2061,6 +2119,31 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/google.rpc.Status'
+  /sys/users/{id}/views:
+    get:
+      tags:
+        - UserService
+      operationId: UserService_ListUserViews
+      parameters:
+        - name: id
+          in: path
+          description: The field will contain id of the user requested.
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/api.v1.services.system.ListUserViewsResponse'
+        default:
+          description: Default error response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/google.rpc.Status'
     /sys/users/{user.id}:
         put:
             tags:
@@ -2662,7 +2745,7 @@ components:
                     items:
                         $ref: '#/components/schemas/api.v1.services.types.Role'
             description: The response message for the GetUserRoles RPC.
-      api.v1.services.identity.GetUserSettingsResponse:
+      api.v1.services.identity.GetUserSettingResponse:
         type: object
         properties:
           setting:
@@ -2809,13 +2892,13 @@ components:
             type: object
             properties: {}
             description: The response message for the UpdateProfile RPC.
-      api.v1.services.identity.UpdateSettingsRequest:
+      api.v1.services.identity.UpdateSettingRequest:
         type: object
         properties:
           setting:
             $ref: '#/components/schemas/api.v1.services.types.UserSetting'
         description: The request message for the UpdateSettings RPC (P2).
-      api.v1.services.identity.UpdateSettingsResponse:
+      api.v1.services.identity.UpdateSettingResponse:
         type: object
         properties: { }
         description: The response message for the UpdateSettings RPC (P2).
@@ -3049,6 +3132,18 @@ components:
             allOf:
               - $ref: '#/components/schemas/api.v1.services.types.Position'
             description: The position resource for update.
+      api.v1.services.system.ChangeUserPasswordRequest:
+        type: object
+        properties:
+          id:
+            type: string
+            description: The field will contain id of the resource requested.
+          password:
+            type: string
+            description: The password to use for this user (plain text, will be hashed).
+      api.v1.services.system.ChangeUserPasswordResponse:
+        type: object
+        properties: { }
         api.v1.services.system.CreatePermissionRequest:
             type: object
             properties:
@@ -3404,6 +3499,18 @@ components:
                     description: |-
                         Additional information about this response.
                          content to be added without destroying the page data format
+      api.v1.services.system.ListUserPermissionsResponse:
+        type: object
+        properties:
+          total:
+            type: integer
+            description: The total number of items in the list.
+            format: int32
+          permissions:
+            type: array
+            items:
+              $ref: '#/components/schemas/api.v1.services.types.Permission'
+            description: The list of permissions
         api.v1.services.system.ListUserResourcesResponse:
             type: object
             properties:
@@ -3416,6 +3523,30 @@ components:
                     items:
                         $ref: '#/components/schemas/api.v1.services.types.Resource'
                     description: The paging resources
+      api.v1.services.system.ListUserRolesResponse:
+        type: object
+        properties:
+          total:
+            type: integer
+            description: The total number of items in the list.
+            format: int32
+          roles:
+            type: array
+            items:
+              $ref: '#/components/schemas/api.v1.services.types.Role'
+            description: The list of roles
+      api.v1.services.system.ListUserViewsResponse:
+        type: object
+        properties:
+          total:
+            type: integer
+            description: The total number of items in the list.
+            format: int32
+          views:
+            type: array
+            items:
+              $ref: '#/components/schemas/api.v1.services.types.View'
+            description: The list of views
         api.v1.services.system.ListUsersResponse:
             type: object
             properties:
@@ -3475,18 +3606,6 @@ components:
                         - $ref: '#/components/schemas/google.protobuf.Any'
                     description: Additional information about this response.
             description: Response message for ViewService.ListViews.
-        api.v1.services.system.ResetUserPasswordRequest:
-            type: object
-            properties:
-                id:
-                    type: string
-                    description: The field will contain id of the resource requested.
-                password:
-                    type: string
-                    description: The password to use for this user.
-        api.v1.services.system.ResetUserPasswordResponse:
-            type: object
-            properties: {}
         api.v1.services.system.UpdatePermissionRequest:
             type: object
             properties:

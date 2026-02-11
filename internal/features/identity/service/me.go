@@ -30,16 +30,16 @@ func NewMeService(meUseCase *biz.MeUseCase, logger log.Logger) *MeService {
 
 // GetProfile gets the current user's profile.
 func (s *MeService) GetProfile(ctx context.Context, req *pb.GetProfileRequest) (*pb.GetProfileResponse, error) {
-	user, err := s.meUseCase.GetProfile(ctx)
+	profile, err := s.meUseCase.GetProfile(ctx)
 	if err != nil {
 		return nil, err
 	}
-	return &pb.GetProfileResponse{User: user}, nil
+	return &pb.GetProfileResponse{Profile: profile}, nil
 }
 
 // UpdateProfile updates the current user's profile.
 func (s *MeService) UpdateProfile(ctx context.Context, req *pb.UpdateProfileRequest) (*pb.UpdateProfileResponse, error) {
-	err := s.meUseCase.UpdateProfile(ctx, req.GetUser())
+	err := s.meUseCase.UpdateProfile(ctx, req.GetProfile())
 	if err != nil {
 		return nil, err
 	}
@@ -57,7 +57,7 @@ func (s *MeService) UpdatePassword(ctx context.Context, req *pb.UpdatePasswordRe
 
 // UpdatePreferences updates the current user's preferences (P2).
 func (s *MeService) UpdatePreferences(ctx context.Context, req *pb.UpdatePreferencesRequest) (*pb.UpdatePreferencesResponse, error) {
-	err := s.meUseCase.UpdatePreferences(ctx, req.Preferences)
+	err := s.meUseCase.UpdatePreferences(ctx, req.GetPreferences())
 	if err != nil {
 		return nil, err
 	}
@@ -65,10 +65,10 @@ func (s *MeService) UpdatePreferences(ctx context.Context, req *pb.UpdatePrefere
 }
 
 // GetUserSettings retrieves the current user's settings (P2).
-func (s *MeService) GetUserSettings(ctx context.Context, req *pb.GetUserSettingsRequest) (*pb.GetUserSettingsResponse, error) {
-	settings, err := s.meUseCase.GetUserSettings(ctx)
+func (s *MeService) GetUserSettings(ctx context.Context, req *pb.GetUserSettingRequest) (*pb.GetUserSettingResponse, error) {
+	settings, err := s.meUseCase.GetSettings(ctx)
 	if err != nil {
 		return nil, err
 	}
-	return &pb.GetUserSettingsResponse{Settings: settings}, nil
+	return &pb.GetUserSettingResponse{Setting: settings}, nil
 }

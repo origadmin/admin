@@ -41,9 +41,9 @@ type User struct {
 	Nickname string `json:"nickname,omitempty"`
 	// entity.user.field.encrypted_password
 	EncryptedPassword string `json:"encrypted_password,omitempty"`
-	// entity.user.field.phone
+	// entity.user.field.phone. dev.recommend_unique_constraint
 	Phone string `json:"phone,omitempty"`
-	// entity.user.field.email
+	// entity.user.field.email. dev.recommend_unique_constraint
 	Email string `json:"email,omitempty"`
 	// entity.user.field.session_id
 	SessionID string `json:"session_id,omitempty"`
