@@ -12,7 +12,6 @@ import (
 	grpc "google.golang.org/grpc"
 	codes "google.golang.org/grpc/codes"
 	status "google.golang.org/grpc/status"
-	emptypb "google.golang.org/protobuf/types/known/emptypb"
 	io "io"
 )
 
@@ -36,12 +35,12 @@ const AdminServiceGetEnforcerPoliciesBridgeOperation = "/api.v1.services.identit
 type AdminServiceBridgeServer interface {
 	// ForcePolicySync triggers an immediate, full synchronization of all authorization policies.
 	// This bypasses any debouncing or scheduled syncs and is a high-risk operation.
-	ForcePolicySync(context.Context, *emptypb.Empty) (*emptypb.Empty, error)
+	ForcePolicySync(context.Context, *ForcePolicySyncRequest) (*ForcePolicySyncResponse, error)
 	// GetPolicySyncStatus retrieves current status and metrics of policy synchronization service.
-	GetPolicySyncStatus(context.Context, *emptypb.Empty) (*PolicySyncStatusResponse, error)
+	GetPolicySyncStatus(context.Context, *GetPolicySyncStatusRequest) (*GetPolicySyncStatusResponse, error)
 	// GetEnforcerPolicies retrieves all policy rules currently loaded into Casbin Enforcer's memory.
 	// This is primarily for debugging and auditing purposes.
-	GetEnforcerPolicies(context.Context, *emptypb.Empty) (*EnforcerPoliciesResponse, error)
+	GetEnforcerPolicies(context.Context, *GetEnforcerPoliciesRequest) (*GetEnforcerPoliciesResponse, error)
 }
 
 type AdminServiceHooker interface {
@@ -55,16 +54,16 @@ type AdminServiceHookedBridger interface {
 	AdminServiceBridgeServer
 }
 type AdminServiceForcePolicySyncHooker interface {
-	PrepareForcePolicySync(http.Context, *emptypb.Empty) (context.Context, error)
-	CompleteForcePolicySync(http.Context, *emptypb.Empty, *emptypb.Empty) error
+	PrepareForcePolicySync(http.Context, *ForcePolicySyncRequest) (context.Context, error)
+	CompleteForcePolicySync(http.Context, *ForcePolicySyncRequest, *ForcePolicySyncResponse) error
 }
 type AdminServiceGetPolicySyncStatusHooker interface {
-	PrepareGetPolicySyncStatus(http.Context, *emptypb.Empty) (context.Context, error)
-	CompleteGetPolicySyncStatus(http.Context, *emptypb.Empty, *PolicySyncStatusResponse) error
+	PrepareGetPolicySyncStatus(http.Context, *GetPolicySyncStatusRequest) (context.Context, error)
+	CompleteGetPolicySyncStatus(http.Context, *GetPolicySyncStatusRequest, *GetPolicySyncStatusResponse) error
 }
 type AdminServiceGetEnforcerPoliciesHooker interface {
-	PrepareGetEnforcerPolicies(http.Context, *emptypb.Empty) (context.Context, error)
-	CompleteGetEnforcerPolicies(http.Context, *emptypb.Empty, *EnforcerPoliciesResponse) error
+	PrepareGetEnforcerPolicies(http.Context, *GetEnforcerPoliciesRequest) (context.Context, error)
+	CompleteGetEnforcerPolicies(http.Context, *GetEnforcerPoliciesRequest, *GetEnforcerPoliciesResponse) error
 }
 
 func RegisterAdminServiceBridgeServer(s *http.Server, srv AdminServiceHookedBridger) {
@@ -76,7 +75,7 @@ func RegisterAdminServiceBridgeServer(s *http.Server, srv AdminServiceHookedBrid
 
 func _AdminService_ForcePolicySync0_Bridge_Handler(srv AdminServiceHookedBridger) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
-		var in emptypb.Empty
+		var in ForcePolicySyncRequest
 		if err := ctx.Bind(&in); err != nil {
 			return err
 		}
@@ -85,7 +84,7 @@ func _AdminService_ForcePolicySync0_Bridge_Handler(srv AdminServiceHookedBridger
 		}
 		http.SetOperation(ctx, OperationAdminServiceForcePolicySync)
 		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
-			return srv.ForcePolicySync(ctx, req.(*emptypb.Empty))
+			return srv.ForcePolicySync(ctx, req.(*ForcePolicySyncRequest))
 		})
 
 		newctx, err := srv.PrepareForcePolicySync(ctx, &in)
@@ -96,19 +95,19 @@ func _AdminService_ForcePolicySync0_Bridge_Handler(srv AdminServiceHookedBridger
 		if err != nil {
 			return err
 		}
-		return srv.CompleteForcePolicySync(ctx, &in, out.(*emptypb.Empty))
+		return srv.CompleteForcePolicySync(ctx, &in, out.(*ForcePolicySyncResponse))
 	}
 }
 
 func _AdminService_GetPolicySyncStatus0_Bridge_Handler(srv AdminServiceHookedBridger) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
-		var in emptypb.Empty
+		var in GetPolicySyncStatusRequest
 		if err := ctx.BindQuery(&in); err != nil {
 			return err
 		}
 		http.SetOperation(ctx, OperationAdminServiceGetPolicySyncStatus)
 		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
-			return srv.GetPolicySyncStatus(ctx, req.(*emptypb.Empty))
+			return srv.GetPolicySyncStatus(ctx, req.(*GetPolicySyncStatusRequest))
 		})
 
 		newctx, err := srv.PrepareGetPolicySyncStatus(ctx, &in)
@@ -119,19 +118,19 @@ func _AdminService_GetPolicySyncStatus0_Bridge_Handler(srv AdminServiceHookedBri
 		if err != nil {
 			return err
 		}
-		return srv.CompleteGetPolicySyncStatus(ctx, &in, out.(*PolicySyncStatusResponse))
+		return srv.CompleteGetPolicySyncStatus(ctx, &in, out.(*GetPolicySyncStatusResponse))
 	}
 }
 
 func _AdminService_GetEnforcerPolicies0_Bridge_Handler(srv AdminServiceHookedBridger) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
-		var in emptypb.Empty
+		var in GetEnforcerPoliciesRequest
 		if err := ctx.BindQuery(&in); err != nil {
 			return err
 		}
 		http.SetOperation(ctx, OperationAdminServiceGetEnforcerPolicies)
 		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
-			return srv.GetEnforcerPolicies(ctx, req.(*emptypb.Empty))
+			return srv.GetEnforcerPolicies(ctx, req.(*GetEnforcerPoliciesRequest))
 		})
 
 		newctx, err := srv.PrepareGetEnforcerPolicies(ctx, &in)
@@ -142,7 +141,7 @@ func _AdminService_GetEnforcerPolicies0_Bridge_Handler(srv AdminServiceHookedBri
 		if err != nil {
 			return err
 		}
-		return srv.CompleteGetEnforcerPolicies(ctx, &in, out.(*EnforcerPoliciesResponse))
+		return srv.CompleteGetEnforcerPolicies(ctx, &in, out.(*GetEnforcerPoliciesResponse))
 	}
 }
 
@@ -153,27 +152,27 @@ func _AdminService_GetEnforcerPolicies0_Bridge_Handler(srv AdminServiceHookedBri
 // pointer dereference when methods are called.
 type UnimplementedAdminServiceHooked struct{}
 
-func (UnimplementedAdminServiceHooked) PrepareForcePolicySync(ctx http.Context, in *emptypb.Empty) (context.Context, error) {
+func (UnimplementedAdminServiceHooked) PrepareForcePolicySync(ctx http.Context, in *ForcePolicySyncRequest) (context.Context, error) {
 	return ctx, nil
 }
 
-func (UnimplementedAdminServiceHooked) CompleteForcePolicySync(ctx http.Context, in *emptypb.Empty, out *emptypb.Empty) error {
+func (UnimplementedAdminServiceHooked) CompleteForcePolicySync(ctx http.Context, in *ForcePolicySyncRequest, out *ForcePolicySyncResponse) error {
 	return ctx.Result(200, out)
 }
 
-func (UnimplementedAdminServiceHooked) PrepareGetPolicySyncStatus(ctx http.Context, in *emptypb.Empty) (context.Context, error) {
+func (UnimplementedAdminServiceHooked) PrepareGetPolicySyncStatus(ctx http.Context, in *GetPolicySyncStatusRequest) (context.Context, error) {
 	return ctx, nil
 }
 
-func (UnimplementedAdminServiceHooked) CompleteGetPolicySyncStatus(ctx http.Context, in *emptypb.Empty, out *PolicySyncStatusResponse) error {
+func (UnimplementedAdminServiceHooked) CompleteGetPolicySyncStatus(ctx http.Context, in *GetPolicySyncStatusRequest, out *GetPolicySyncStatusResponse) error {
 	return ctx.Result(200, out)
 }
 
-func (UnimplementedAdminServiceHooked) PrepareGetEnforcerPolicies(ctx http.Context, in *emptypb.Empty) (context.Context, error) {
+func (UnimplementedAdminServiceHooked) PrepareGetEnforcerPolicies(ctx http.Context, in *GetEnforcerPoliciesRequest) (context.Context, error) {
 	return ctx, nil
 }
 
-func (UnimplementedAdminServiceHooked) CompleteGetEnforcerPolicies(ctx http.Context, in *emptypb.Empty, out *EnforcerPoliciesResponse) error {
+func (UnimplementedAdminServiceHooked) CompleteGetEnforcerPolicies(ctx http.Context, in *GetEnforcerPoliciesRequest, out *GetEnforcerPoliciesResponse) error {
 	return ctx.Result(200, out)
 }
 
@@ -199,15 +198,15 @@ func NewAdminServiceHTTPBridge(client *http.Client) AdminServiceHTTPServer {
 	return &AdminServiceHTTPBridgeImpl{client: NewAdminServiceHTTPClient(client)}
 }
 
-func (c *AdminServiceHTTPBridgeImpl) ForcePolicySync(ctx context.Context, in *emptypb.Empty) (*emptypb.Empty, error) {
+func (c *AdminServiceHTTPBridgeImpl) ForcePolicySync(ctx context.Context, in *ForcePolicySyncRequest) (*ForcePolicySyncResponse, error) {
 	return c.client.ForcePolicySync(ctx, in)
 }
 
-func (c *AdminServiceHTTPBridgeImpl) GetPolicySyncStatus(ctx context.Context, in *emptypb.Empty) (*PolicySyncStatusResponse, error) {
+func (c *AdminServiceHTTPBridgeImpl) GetPolicySyncStatus(ctx context.Context, in *GetPolicySyncStatusRequest) (*GetPolicySyncStatusResponse, error) {
 	return c.client.GetPolicySyncStatus(ctx, in)
 }
 
-func (c *AdminServiceHTTPBridgeImpl) GetEnforcerPolicies(ctx context.Context, in *emptypb.Empty) (*EnforcerPoliciesResponse, error) {
+func (c *AdminServiceHTTPBridgeImpl) GetEnforcerPolicies(ctx context.Context, in *GetEnforcerPoliciesRequest) (*GetEnforcerPoliciesResponse, error) {
 	return c.client.GetEnforcerPolicies(ctx, in)
 }
 
@@ -219,15 +218,15 @@ func NewAdminServiceBridge(client grpc.ClientConnInterface) AdminServiceServer {
 	return &AdminServiceBridgeImpl{client: NewAdminServiceClient(client)}
 }
 
-func (c *AdminServiceBridgeImpl) ForcePolicySync(ctx context.Context, in *emptypb.Empty) (*emptypb.Empty, error) {
+func (c *AdminServiceBridgeImpl) ForcePolicySync(ctx context.Context, in *ForcePolicySyncRequest) (*ForcePolicySyncResponse, error) {
 	return c.client.ForcePolicySync(ctx, in)
 }
 
-func (c *AdminServiceBridgeImpl) GetPolicySyncStatus(ctx context.Context, in *emptypb.Empty) (*PolicySyncStatusResponse, error) {
+func (c *AdminServiceBridgeImpl) GetPolicySyncStatus(ctx context.Context, in *GetPolicySyncStatusRequest) (*GetPolicySyncStatusResponse, error) {
 	return c.client.GetPolicySyncStatus(ctx, in)
 }
 
-func (c *AdminServiceBridgeImpl) GetEnforcerPolicies(ctx context.Context, in *emptypb.Empty) (*EnforcerPoliciesResponse, error) {
+func (c *AdminServiceBridgeImpl) GetEnforcerPolicies(ctx context.Context, in *GetEnforcerPoliciesRequest) (*GetEnforcerPoliciesResponse, error) {
 	return c.client.GetEnforcerPolicies(ctx, in)
 }
 
@@ -241,15 +240,15 @@ func NewAdminServiceGRPC2HTTP(client grpc.ClientConnInterface) AdminServiceHTTPS
 	return &AdminServiceGRPC2HTTPBridgeImpl{client: NewAdminServiceClient(client)}
 }
 
-func (c *AdminServiceGRPC2HTTPBridgeImpl) ForcePolicySync(ctx context.Context, in *emptypb.Empty) (*emptypb.Empty, error) {
+func (c *AdminServiceGRPC2HTTPBridgeImpl) ForcePolicySync(ctx context.Context, in *ForcePolicySyncRequest) (*ForcePolicySyncResponse, error) {
 	return c.client.ForcePolicySync(ctx, in)
 }
 
-func (c *AdminServiceGRPC2HTTPBridgeImpl) GetPolicySyncStatus(ctx context.Context, in *emptypb.Empty) (*PolicySyncStatusResponse, error) {
+func (c *AdminServiceGRPC2HTTPBridgeImpl) GetPolicySyncStatus(ctx context.Context, in *GetPolicySyncStatusRequest) (*GetPolicySyncStatusResponse, error) {
 	return c.client.GetPolicySyncStatus(ctx, in)
 }
 
-func (c *AdminServiceGRPC2HTTPBridgeImpl) GetEnforcerPolicies(ctx context.Context, in *emptypb.Empty) (*EnforcerPoliciesResponse, error) {
+func (c *AdminServiceGRPC2HTTPBridgeImpl) GetEnforcerPolicies(ctx context.Context, in *GetEnforcerPoliciesRequest) (*GetEnforcerPoliciesResponse, error) {
 	return c.client.GetEnforcerPolicies(ctx, in)
 }
 
@@ -261,15 +260,15 @@ func NewAdminServiceHTTP2GRPC(client *http.Client) AdminServiceServer {
 	return &AdminServiceHTTP2GRPCBridgeImpl{client: NewAdminServiceHTTPClient(client)}
 }
 
-func (c *AdminServiceHTTP2GRPCBridgeImpl) ForcePolicySync(ctx context.Context, in *emptypb.Empty) (*emptypb.Empty, error) {
+func (c *AdminServiceHTTP2GRPCBridgeImpl) ForcePolicySync(ctx context.Context, in *ForcePolicySyncRequest) (*ForcePolicySyncResponse, error) {
 	return c.client.ForcePolicySync(ctx, in)
 }
 
-func (c *AdminServiceHTTP2GRPCBridgeImpl) GetPolicySyncStatus(ctx context.Context, in *emptypb.Empty) (*PolicySyncStatusResponse, error) {
+func (c *AdminServiceHTTP2GRPCBridgeImpl) GetPolicySyncStatus(ctx context.Context, in *GetPolicySyncStatusRequest) (*GetPolicySyncStatusResponse, error) {
 	return c.client.GetPolicySyncStatus(ctx, in)
 }
 
-func (c *AdminServiceHTTP2GRPCBridgeImpl) GetEnforcerPolicies(ctx context.Context, in *emptypb.Empty) (*EnforcerPoliciesResponse, error) {
+func (c *AdminServiceHTTP2GRPCBridgeImpl) GetEnforcerPolicies(ctx context.Context, in *GetEnforcerPoliciesRequest) (*GetEnforcerPoliciesResponse, error) {
 	return c.client.GetEnforcerPolicies(ctx, in)
 }
 

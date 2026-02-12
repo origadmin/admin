@@ -23,11 +23,12 @@ const (
 	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
 )
 
-// Request message for uploading a file.
+// Request message for uploading a small file directly.
 type UploadFileRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Data          []byte                 `protobuf:"bytes,1,opt,name=data,proto3" json:"data,omitempty"`
 	Name          string                 `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`
+	ContentType   string                 `protobuf:"bytes,3,opt,name=content_type,json=contentType,proto3" json:"content_type,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -72,6 +73,13 @@ func (x *UploadFileRequest) GetData() []byte {
 func (x *UploadFileRequest) GetName() string {
 	if x != nil {
 		return x.Name
+	}
+	return ""
+}
+
+func (x *UploadFileRequest) GetContentType() string {
+	if x != nil {
+		return x.ContentType
 	}
 	return ""
 }
@@ -121,6 +129,442 @@ func (x *UploadFileResponse) GetFileMetadata() *types.FileMetadata {
 	return nil
 }
 
+// Request message for initiating a multipart upload.
+type InitiateMultipartUploadRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Name          string                 `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
+	Size          int64                  `protobuf:"varint,2,opt,name=size,proto3" json:"size,omitempty"`
+	ContentType   string                 `protobuf:"bytes,3,opt,name=content_type,json=contentType,proto3" json:"content_type,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *InitiateMultipartUploadRequest) Reset() {
+	*x = InitiateMultipartUploadRequest{}
+	mi := &file_filemanager_filemanager_proto_msgTypes[2]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *InitiateMultipartUploadRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*InitiateMultipartUploadRequest) ProtoMessage() {}
+
+func (x *InitiateMultipartUploadRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_filemanager_filemanager_proto_msgTypes[2]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use InitiateMultipartUploadRequest.ProtoReflect.Descriptor instead.
+func (*InitiateMultipartUploadRequest) Descriptor() ([]byte, []int) {
+	return file_filemanager_filemanager_proto_rawDescGZIP(), []int{2}
+}
+
+func (x *InitiateMultipartUploadRequest) GetName() string {
+	if x != nil {
+		return x.Name
+	}
+	return ""
+}
+
+func (x *InitiateMultipartUploadRequest) GetSize() int64 {
+	if x != nil {
+		return x.Size
+	}
+	return 0
+}
+
+func (x *InitiateMultipartUploadRequest) GetContentType() string {
+	if x != nil {
+		return x.ContentType
+	}
+	return ""
+}
+
+// Response message for initiating a multipart upload.
+type InitiateMultipartUploadResponse struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	UploadId      string                 `protobuf:"bytes,1,opt,name=upload_id,json=uploadId,proto3" json:"upload_id,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *InitiateMultipartUploadResponse) Reset() {
+	*x = InitiateMultipartUploadResponse{}
+	mi := &file_filemanager_filemanager_proto_msgTypes[3]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *InitiateMultipartUploadResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*InitiateMultipartUploadResponse) ProtoMessage() {}
+
+func (x *InitiateMultipartUploadResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_filemanager_filemanager_proto_msgTypes[3]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use InitiateMultipartUploadResponse.ProtoReflect.Descriptor instead.
+func (*InitiateMultipartUploadResponse) Descriptor() ([]byte, []int) {
+	return file_filemanager_filemanager_proto_rawDescGZIP(), []int{3}
+}
+
+func (x *InitiateMultipartUploadResponse) GetUploadId() string {
+	if x != nil {
+		return x.UploadId
+	}
+	return ""
+}
+
+// Request message for getting a multipart upload URL.
+type GetMultipartUploadUrlRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	UploadId      string                 `protobuf:"bytes,1,opt,name=upload_id,json=uploadId,proto3" json:"upload_id,omitempty"`
+	PartNumber    int32                  `protobuf:"varint,2,opt,name=part_number,json=partNumber,proto3" json:"part_number,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *GetMultipartUploadUrlRequest) Reset() {
+	*x = GetMultipartUploadUrlRequest{}
+	mi := &file_filemanager_filemanager_proto_msgTypes[4]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *GetMultipartUploadUrlRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetMultipartUploadUrlRequest) ProtoMessage() {}
+
+func (x *GetMultipartUploadUrlRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_filemanager_filemanager_proto_msgTypes[4]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetMultipartUploadUrlRequest.ProtoReflect.Descriptor instead.
+func (*GetMultipartUploadUrlRequest) Descriptor() ([]byte, []int) {
+	return file_filemanager_filemanager_proto_rawDescGZIP(), []int{4}
+}
+
+func (x *GetMultipartUploadUrlRequest) GetUploadId() string {
+	if x != nil {
+		return x.UploadId
+	}
+	return ""
+}
+
+func (x *GetMultipartUploadUrlRequest) GetPartNumber() int32 {
+	if x != nil {
+		return x.PartNumber
+	}
+	return 0
+}
+
+// Response message for getting a multipart upload URL.
+type GetMultipartUploadUrlResponse struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	UploadUrl     string                 `protobuf:"bytes,1,opt,name=upload_url,json=uploadUrl,proto3" json:"upload_url,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *GetMultipartUploadUrlResponse) Reset() {
+	*x = GetMultipartUploadUrlResponse{}
+	mi := &file_filemanager_filemanager_proto_msgTypes[5]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *GetMultipartUploadUrlResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetMultipartUploadUrlResponse) ProtoMessage() {}
+
+func (x *GetMultipartUploadUrlResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_filemanager_filemanager_proto_msgTypes[5]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetMultipartUploadUrlResponse.ProtoReflect.Descriptor instead.
+func (*GetMultipartUploadUrlResponse) Descriptor() ([]byte, []int) {
+	return file_filemanager_filemanager_proto_rawDescGZIP(), []int{5}
+}
+
+func (x *GetMultipartUploadUrlResponse) GetUploadUrl() string {
+	if x != nil {
+		return x.UploadUrl
+	}
+	return ""
+}
+
+// Request message for completing a multipart upload.
+type CompleteMultipartUploadRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	UploadId      string                 `protobuf:"bytes,1,opt,name=upload_id,json=uploadId,proto3" json:"upload_id,omitempty"`
+	Parts         []*PartInfo            `protobuf:"bytes,2,rep,name=parts,proto3" json:"parts,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *CompleteMultipartUploadRequest) Reset() {
+	*x = CompleteMultipartUploadRequest{}
+	mi := &file_filemanager_filemanager_proto_msgTypes[6]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *CompleteMultipartUploadRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*CompleteMultipartUploadRequest) ProtoMessage() {}
+
+func (x *CompleteMultipartUploadRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_filemanager_filemanager_proto_msgTypes[6]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use CompleteMultipartUploadRequest.ProtoReflect.Descriptor instead.
+func (*CompleteMultipartUploadRequest) Descriptor() ([]byte, []int) {
+	return file_filemanager_filemanager_proto_rawDescGZIP(), []int{6}
+}
+
+func (x *CompleteMultipartUploadRequest) GetUploadId() string {
+	if x != nil {
+		return x.UploadId
+	}
+	return ""
+}
+
+func (x *CompleteMultipartUploadRequest) GetParts() []*PartInfo {
+	if x != nil {
+		return x.Parts
+	}
+	return nil
+}
+
+type PartInfo struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	PartNumber    int32                  `protobuf:"varint,1,opt,name=part_number,json=partNumber,proto3" json:"part_number,omitempty"`
+	Etag          string                 `protobuf:"bytes,2,opt,name=etag,proto3" json:"etag,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *PartInfo) Reset() {
+	*x = PartInfo{}
+	mi := &file_filemanager_filemanager_proto_msgTypes[7]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *PartInfo) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*PartInfo) ProtoMessage() {}
+
+func (x *PartInfo) ProtoReflect() protoreflect.Message {
+	mi := &file_filemanager_filemanager_proto_msgTypes[7]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use PartInfo.ProtoReflect.Descriptor instead.
+func (*PartInfo) Descriptor() ([]byte, []int) {
+	return file_filemanager_filemanager_proto_rawDescGZIP(), []int{7}
+}
+
+func (x *PartInfo) GetPartNumber() int32 {
+	if x != nil {
+		return x.PartNumber
+	}
+	return 0
+}
+
+func (x *PartInfo) GetEtag() string {
+	if x != nil {
+		return x.Etag
+	}
+	return ""
+}
+
+// Response message for completing a multipart upload.
+type CompleteMultipartUploadResponse struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	FileMetadata  *types.FileMetadata    `protobuf:"bytes,1,opt,name=file_metadata,json=fileMetadata,proto3" json:"file_metadata,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *CompleteMultipartUploadResponse) Reset() {
+	*x = CompleteMultipartUploadResponse{}
+	mi := &file_filemanager_filemanager_proto_msgTypes[8]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *CompleteMultipartUploadResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*CompleteMultipartUploadResponse) ProtoMessage() {}
+
+func (x *CompleteMultipartUploadResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_filemanager_filemanager_proto_msgTypes[8]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use CompleteMultipartUploadResponse.ProtoReflect.Descriptor instead.
+func (*CompleteMultipartUploadResponse) Descriptor() ([]byte, []int) {
+	return file_filemanager_filemanager_proto_rawDescGZIP(), []int{8}
+}
+
+func (x *CompleteMultipartUploadResponse) GetFileMetadata() *types.FileMetadata {
+	if x != nil {
+		return x.FileMetadata
+	}
+	return nil
+}
+
+// Request message for aborting a multipart upload.
+type AbortMultipartUploadRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	UploadId      string                 `protobuf:"bytes,1,opt,name=upload_id,json=uploadId,proto3" json:"upload_id,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *AbortMultipartUploadRequest) Reset() {
+	*x = AbortMultipartUploadRequest{}
+	mi := &file_filemanager_filemanager_proto_msgTypes[9]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *AbortMultipartUploadRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*AbortMultipartUploadRequest) ProtoMessage() {}
+
+func (x *AbortMultipartUploadRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_filemanager_filemanager_proto_msgTypes[9]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use AbortMultipartUploadRequest.ProtoReflect.Descriptor instead.
+func (*AbortMultipartUploadRequest) Descriptor() ([]byte, []int) {
+	return file_filemanager_filemanager_proto_rawDescGZIP(), []int{9}
+}
+
+func (x *AbortMultipartUploadRequest) GetUploadId() string {
+	if x != nil {
+		return x.UploadId
+	}
+	return ""
+}
+
+// Response message for aborting a multipart upload.
+type AbortMultipartUploadResponse struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *AbortMultipartUploadResponse) Reset() {
+	*x = AbortMultipartUploadResponse{}
+	mi := &file_filemanager_filemanager_proto_msgTypes[10]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *AbortMultipartUploadResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*AbortMultipartUploadResponse) ProtoMessage() {}
+
+func (x *AbortMultipartUploadResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_filemanager_filemanager_proto_msgTypes[10]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use AbortMultipartUploadResponse.ProtoReflect.Descriptor instead.
+func (*AbortMultipartUploadResponse) Descriptor() ([]byte, []int) {
+	return file_filemanager_filemanager_proto_rawDescGZIP(), []int{10}
+}
+
 // Request message for getting file metadata.
 type GetFileRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
@@ -131,7 +575,7 @@ type GetFileRequest struct {
 
 func (x *GetFileRequest) Reset() {
 	*x = GetFileRequest{}
-	mi := &file_filemanager_filemanager_proto_msgTypes[2]
+	mi := &file_filemanager_filemanager_proto_msgTypes[11]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -143,7 +587,7 @@ func (x *GetFileRequest) String() string {
 func (*GetFileRequest) ProtoMessage() {}
 
 func (x *GetFileRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_filemanager_filemanager_proto_msgTypes[2]
+	mi := &file_filemanager_filemanager_proto_msgTypes[11]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -156,7 +600,7 @@ func (x *GetFileRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetFileRequest.ProtoReflect.Descriptor instead.
 func (*GetFileRequest) Descriptor() ([]byte, []int) {
-	return file_filemanager_filemanager_proto_rawDescGZIP(), []int{2}
+	return file_filemanager_filemanager_proto_rawDescGZIP(), []int{11}
 }
 
 func (x *GetFileRequest) GetId() string {
@@ -176,7 +620,7 @@ type GetFileResponse struct {
 
 func (x *GetFileResponse) Reset() {
 	*x = GetFileResponse{}
-	mi := &file_filemanager_filemanager_proto_msgTypes[3]
+	mi := &file_filemanager_filemanager_proto_msgTypes[12]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -188,7 +632,7 @@ func (x *GetFileResponse) String() string {
 func (*GetFileResponse) ProtoMessage() {}
 
 func (x *GetFileResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_filemanager_filemanager_proto_msgTypes[3]
+	mi := &file_filemanager_filemanager_proto_msgTypes[12]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -201,7 +645,7 @@ func (x *GetFileResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetFileResponse.ProtoReflect.Descriptor instead.
 func (*GetFileResponse) Descriptor() ([]byte, []int) {
-	return file_filemanager_filemanager_proto_rawDescGZIP(), []int{3}
+	return file_filemanager_filemanager_proto_rawDescGZIP(), []int{12}
 }
 
 func (x *GetFileResponse) GetFileMetadata() *types.FileMetadata {
@@ -221,7 +665,7 @@ type DeleteFileRequest struct {
 
 func (x *DeleteFileRequest) Reset() {
 	*x = DeleteFileRequest{}
-	mi := &file_filemanager_filemanager_proto_msgTypes[4]
+	mi := &file_filemanager_filemanager_proto_msgTypes[13]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -233,7 +677,7 @@ func (x *DeleteFileRequest) String() string {
 func (*DeleteFileRequest) ProtoMessage() {}
 
 func (x *DeleteFileRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_filemanager_filemanager_proto_msgTypes[4]
+	mi := &file_filemanager_filemanager_proto_msgTypes[13]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -246,7 +690,7 @@ func (x *DeleteFileRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use DeleteFileRequest.ProtoReflect.Descriptor instead.
 func (*DeleteFileRequest) Descriptor() ([]byte, []int) {
-	return file_filemanager_filemanager_proto_rawDescGZIP(), []int{4}
+	return file_filemanager_filemanager_proto_rawDescGZIP(), []int{13}
 }
 
 func (x *DeleteFileRequest) GetId() string {
@@ -265,7 +709,7 @@ type DeleteFileResponse struct {
 
 func (x *DeleteFileResponse) Reset() {
 	*x = DeleteFileResponse{}
-	mi := &file_filemanager_filemanager_proto_msgTypes[5]
+	mi := &file_filemanager_filemanager_proto_msgTypes[14]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -277,7 +721,7 @@ func (x *DeleteFileResponse) String() string {
 func (*DeleteFileResponse) ProtoMessage() {}
 
 func (x *DeleteFileResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_filemanager_filemanager_proto_msgTypes[5]
+	mi := &file_filemanager_filemanager_proto_msgTypes[14]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -290,29 +734,59 @@ func (x *DeleteFileResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use DeleteFileResponse.ProtoReflect.Descriptor instead.
 func (*DeleteFileResponse) Descriptor() ([]byte, []int) {
-	return file_filemanager_filemanager_proto_rawDescGZIP(), []int{5}
+	return file_filemanager_filemanager_proto_rawDescGZIP(), []int{14}
 }
 
 var File_filemanager_filemanager_proto protoreflect.FileDescriptor
 
 const file_filemanager_filemanager_proto_rawDesc = "" +
 	"\n" +
-	"\x1dfilemanager/filemanager.proto\x12\x1bapi.v1.services.filemanager\x1a\x1cgoogle/api/annotations.proto\x1a\x17types/filemanager.proto\";\n" +
+	"\x1dfilemanager/filemanager.proto\x12\x1bapi.v1.services.filemanager\x1a\x1cgoogle/api/annotations.proto\x1a\x17types/filemanager.proto\"^\n" +
 	"\x11UploadFileRequest\x12\x12\n" +
 	"\x04data\x18\x01 \x01(\fR\x04data\x12\x12\n" +
-	"\x04name\x18\x02 \x01(\tR\x04name\"^\n" +
+	"\x04name\x18\x02 \x01(\tR\x04name\x12!\n" +
+	"\fcontent_type\x18\x03 \x01(\tR\vcontentType\"^\n" +
 	"\x12UploadFileResponse\x12H\n" +
-	"\rfile_metadata\x18\x01 \x01(\v2#.api.v1.services.types.FileMetadataR\ffileMetadata\" \n" +
+	"\rfile_metadata\x18\x01 \x01(\v2#.api.v1.services.types.FileMetadataR\ffileMetadata\"k\n" +
+	"\x1eInitiateMultipartUploadRequest\x12\x12\n" +
+	"\x04name\x18\x01 \x01(\tR\x04name\x12\x12\n" +
+	"\x04size\x18\x02 \x01(\x03R\x04size\x12!\n" +
+	"\fcontent_type\x18\x03 \x01(\tR\vcontentType\">\n" +
+	"\x1fInitiateMultipartUploadResponse\x12\x1b\n" +
+	"\tupload_id\x18\x01 \x01(\tR\buploadId\"\\\n" +
+	"\x1cGetMultipartUploadUrlRequest\x12\x1b\n" +
+	"\tupload_id\x18\x01 \x01(\tR\buploadId\x12\x1f\n" +
+	"\vpart_number\x18\x02 \x01(\x05R\n" +
+	"partNumber\">\n" +
+	"\x1dGetMultipartUploadUrlResponse\x12\x1d\n" +
+	"\n" +
+	"upload_url\x18\x01 \x01(\tR\tuploadUrl\"z\n" +
+	"\x1eCompleteMultipartUploadRequest\x12\x1b\n" +
+	"\tupload_id\x18\x01 \x01(\tR\buploadId\x12;\n" +
+	"\x05parts\x18\x02 \x03(\v2%.api.v1.services.filemanager.PartInfoR\x05parts\"?\n" +
+	"\bPartInfo\x12\x1f\n" +
+	"\vpart_number\x18\x01 \x01(\x05R\n" +
+	"partNumber\x12\x12\n" +
+	"\x04etag\x18\x02 \x01(\tR\x04etag\"k\n" +
+	"\x1fCompleteMultipartUploadResponse\x12H\n" +
+	"\rfile_metadata\x18\x01 \x01(\v2#.api.v1.services.types.FileMetadataR\ffileMetadata\":\n" +
+	"\x1bAbortMultipartUploadRequest\x12\x1b\n" +
+	"\tupload_id\x18\x01 \x01(\tR\buploadId\"\x1e\n" +
+	"\x1cAbortMultipartUploadResponse\" \n" +
 	"\x0eGetFileRequest\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\tR\x02id\"[\n" +
 	"\x0fGetFileResponse\x12H\n" +
 	"\rfile_metadata\x18\x01 \x01(\v2#.api.v1.services.types.FileMetadataR\ffileMetadata\"#\n" +
 	"\x11DeleteFileRequest\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\tR\x02id\"\x14\n" +
-	"\x12DeleteFileResponse2\x9e\x03\n" +
-	"\x12FileManagerService\x12\x87\x01\n" +
+	"\x12DeleteFileResponse2\x93\t\n" +
+	"\x12FileManagerService\x12\x80\x01\n" +
 	"\n" +
-	"UploadFile\x12..api.v1.services.filemanager.UploadFileRequest\x1a/.api.v1.services.filemanager.UploadFileResponse\"\x18\x82\xd3\xe4\x93\x02\x12:\x01*\"\r/files/upload\x12y\n" +
+	"UploadFile\x12..api.v1.services.filemanager.UploadFileRequest\x1a/.api.v1.services.filemanager.UploadFileResponse\"\x11\x82\xd3\xe4\x93\x02\v:\x01*\"\x06/files\x12\xb1\x01\n" +
+	"\x17InitiateMultipartUpload\x12;.api.v1.services.filemanager.InitiateMultipartUploadRequest\x1a<.api.v1.services.filemanager.InitiateMultipartUploadResponse\"\x1b\x82\xd3\xe4\x93\x02\x15:\x01*\"\x10/files/multipart\x12\xc8\x01\n" +
+	"\x15GetMultipartUploadUrl\x129.api.v1.services.filemanager.GetMultipartUploadUrlRequest\x1a:.api.v1.services.filemanager.GetMultipartUploadUrlResponse\"8\x82\xd3\xe4\x93\x022\x120/files/multipart/{upload_id}/parts/{part_number}\x12\xc6\x01\n" +
+	"\x17CompleteMultipartUpload\x12;.api.v1.services.filemanager.CompleteMultipartUploadRequest\x1a<.api.v1.services.filemanager.CompleteMultipartUploadResponse\"0\x82\xd3\xe4\x93\x02*:\x01*\"%/files/multipart/{upload_id}/complete\x12\xb1\x01\n" +
+	"\x14AbortMultipartUpload\x128.api.v1.services.filemanager.AbortMultipartUploadRequest\x1a9.api.v1.services.filemanager.AbortMultipartUploadResponse\"$\x82\xd3\xe4\x93\x02\x1e*\x1c/files/multipart/{upload_id}\x12y\n" +
 	"\aGetFile\x12+.api.v1.services.filemanager.GetFileRequest\x1a,.api.v1.services.filemanager.GetFileResponse\"\x13\x82\xd3\xe4\x93\x02\r\x12\v/files/{id}\x12\x82\x01\n" +
 	"\n" +
 	"DeleteFile\x12..api.v1.services.filemanager.DeleteFileRequest\x1a/.api.v1.services.filemanager.DeleteFileResponse\"\x13\x82\xd3\xe4\x93\x02\r*\v/files/{id}B\x88\x02\n" +
@@ -330,30 +804,49 @@ func file_filemanager_filemanager_proto_rawDescGZIP() []byte {
 	return file_filemanager_filemanager_proto_rawDescData
 }
 
-var file_filemanager_filemanager_proto_msgTypes = make([]protoimpl.MessageInfo, 6)
+var file_filemanager_filemanager_proto_msgTypes = make([]protoimpl.MessageInfo, 15)
 var file_filemanager_filemanager_proto_goTypes = []any{
-	(*UploadFileRequest)(nil),  // 0: api.v1.services.filemanager.UploadFileRequest
-	(*UploadFileResponse)(nil), // 1: api.v1.services.filemanager.UploadFileResponse
-	(*GetFileRequest)(nil),     // 2: api.v1.services.filemanager.GetFileRequest
-	(*GetFileResponse)(nil),    // 3: api.v1.services.filemanager.GetFileResponse
-	(*DeleteFileRequest)(nil),  // 4: api.v1.services.filemanager.DeleteFileRequest
-	(*DeleteFileResponse)(nil), // 5: api.v1.services.filemanager.DeleteFileResponse
-	(*types.FileMetadata)(nil), // 6: api.v1.services.types.FileMetadata
+	(*UploadFileRequest)(nil),               // 0: api.v1.services.filemanager.UploadFileRequest
+	(*UploadFileResponse)(nil),              // 1: api.v1.services.filemanager.UploadFileResponse
+	(*InitiateMultipartUploadRequest)(nil),  // 2: api.v1.services.filemanager.InitiateMultipartUploadRequest
+	(*InitiateMultipartUploadResponse)(nil), // 3: api.v1.services.filemanager.InitiateMultipartUploadResponse
+	(*GetMultipartUploadUrlRequest)(nil),    // 4: api.v1.services.filemanager.GetMultipartUploadUrlRequest
+	(*GetMultipartUploadUrlResponse)(nil),   // 5: api.v1.services.filemanager.GetMultipartUploadUrlResponse
+	(*CompleteMultipartUploadRequest)(nil),  // 6: api.v1.services.filemanager.CompleteMultipartUploadRequest
+	(*PartInfo)(nil),                        // 7: api.v1.services.filemanager.PartInfo
+	(*CompleteMultipartUploadResponse)(nil), // 8: api.v1.services.filemanager.CompleteMultipartUploadResponse
+	(*AbortMultipartUploadRequest)(nil),     // 9: api.v1.services.filemanager.AbortMultipartUploadRequest
+	(*AbortMultipartUploadResponse)(nil),    // 10: api.v1.services.filemanager.AbortMultipartUploadResponse
+	(*GetFileRequest)(nil),                  // 11: api.v1.services.filemanager.GetFileRequest
+	(*GetFileResponse)(nil),                 // 12: api.v1.services.filemanager.GetFileResponse
+	(*DeleteFileRequest)(nil),               // 13: api.v1.services.filemanager.DeleteFileRequest
+	(*DeleteFileResponse)(nil),              // 14: api.v1.services.filemanager.DeleteFileResponse
+	(*types.FileMetadata)(nil),              // 15: api.v1.services.types.FileMetadata
 }
 var file_filemanager_filemanager_proto_depIdxs = []int32{
-	6, // 0: api.v1.services.filemanager.UploadFileResponse.file_metadata:type_name -> api.v1.services.types.FileMetadata
-	6, // 1: api.v1.services.filemanager.GetFileResponse.file_metadata:type_name -> api.v1.services.types.FileMetadata
-	0, // 2: api.v1.services.filemanager.FileManagerService.UploadFile:input_type -> api.v1.services.filemanager.UploadFileRequest
-	2, // 3: api.v1.services.filemanager.FileManagerService.GetFile:input_type -> api.v1.services.filemanager.GetFileRequest
-	4, // 4: api.v1.services.filemanager.FileManagerService.DeleteFile:input_type -> api.v1.services.filemanager.DeleteFileRequest
-	1, // 5: api.v1.services.filemanager.FileManagerService.UploadFile:output_type -> api.v1.services.filemanager.UploadFileResponse
-	3, // 6: api.v1.services.filemanager.FileManagerService.GetFile:output_type -> api.v1.services.filemanager.GetFileResponse
-	5, // 7: api.v1.services.filemanager.FileManagerService.DeleteFile:output_type -> api.v1.services.filemanager.DeleteFileResponse
-	5, // [5:8] is the sub-list for method output_type
-	2, // [2:5] is the sub-list for method input_type
-	2, // [2:2] is the sub-list for extension type_name
-	2, // [2:2] is the sub-list for extension extendee
-	0, // [0:2] is the sub-list for field type_name
+	15, // 0: api.v1.services.filemanager.UploadFileResponse.file_metadata:type_name -> api.v1.services.types.FileMetadata
+	7,  // 1: api.v1.services.filemanager.CompleteMultipartUploadRequest.parts:type_name -> api.v1.services.filemanager.PartInfo
+	15, // 2: api.v1.services.filemanager.CompleteMultipartUploadResponse.file_metadata:type_name -> api.v1.services.types.FileMetadata
+	15, // 3: api.v1.services.filemanager.GetFileResponse.file_metadata:type_name -> api.v1.services.types.FileMetadata
+	0,  // 4: api.v1.services.filemanager.FileManagerService.UploadFile:input_type -> api.v1.services.filemanager.UploadFileRequest
+	2,  // 5: api.v1.services.filemanager.FileManagerService.InitiateMultipartUpload:input_type -> api.v1.services.filemanager.InitiateMultipartUploadRequest
+	4,  // 6: api.v1.services.filemanager.FileManagerService.GetMultipartUploadUrl:input_type -> api.v1.services.filemanager.GetMultipartUploadUrlRequest
+	6,  // 7: api.v1.services.filemanager.FileManagerService.CompleteMultipartUpload:input_type -> api.v1.services.filemanager.CompleteMultipartUploadRequest
+	9,  // 8: api.v1.services.filemanager.FileManagerService.AbortMultipartUpload:input_type -> api.v1.services.filemanager.AbortMultipartUploadRequest
+	11, // 9: api.v1.services.filemanager.FileManagerService.GetFile:input_type -> api.v1.services.filemanager.GetFileRequest
+	13, // 10: api.v1.services.filemanager.FileManagerService.DeleteFile:input_type -> api.v1.services.filemanager.DeleteFileRequest
+	1,  // 11: api.v1.services.filemanager.FileManagerService.UploadFile:output_type -> api.v1.services.filemanager.UploadFileResponse
+	3,  // 12: api.v1.services.filemanager.FileManagerService.InitiateMultipartUpload:output_type -> api.v1.services.filemanager.InitiateMultipartUploadResponse
+	5,  // 13: api.v1.services.filemanager.FileManagerService.GetMultipartUploadUrl:output_type -> api.v1.services.filemanager.GetMultipartUploadUrlResponse
+	8,  // 14: api.v1.services.filemanager.FileManagerService.CompleteMultipartUpload:output_type -> api.v1.services.filemanager.CompleteMultipartUploadResponse
+	10, // 15: api.v1.services.filemanager.FileManagerService.AbortMultipartUpload:output_type -> api.v1.services.filemanager.AbortMultipartUploadResponse
+	12, // 16: api.v1.services.filemanager.FileManagerService.GetFile:output_type -> api.v1.services.filemanager.GetFileResponse
+	14, // 17: api.v1.services.filemanager.FileManagerService.DeleteFile:output_type -> api.v1.services.filemanager.DeleteFileResponse
+	11, // [11:18] is the sub-list for method output_type
+	4,  // [4:11] is the sub-list for method input_type
+	4,  // [4:4] is the sub-list for extension type_name
+	4,  // [4:4] is the sub-list for extension extendee
+	0,  // [0:4] is the sub-list for field type_name
 }
 
 func init() { file_filemanager_filemanager_proto_init() }
@@ -367,7 +860,7 @@ func file_filemanager_filemanager_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_filemanager_filemanager_proto_rawDesc), len(file_filemanager_filemanager_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   6,
+			NumMessages:   15,
 			NumExtensions: 0,
 			NumServices:   1,
 		},

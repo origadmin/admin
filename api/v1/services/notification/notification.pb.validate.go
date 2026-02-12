@@ -648,6 +648,108 @@ var _ interface {
 	ErrorName() string
 } = MarkAsReadRequestValidationError{}
 
+// Validate checks the field values on MarkAsReadResponse with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the first error encountered is returned, or nil if there are no violations.
+func (m *MarkAsReadResponse) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on MarkAsReadResponse with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the result is a list of violation errors wrapped in
+// MarkAsReadResponseMultiError, or nil if none found.
+func (m *MarkAsReadResponse) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *MarkAsReadResponse) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	if len(errors) > 0 {
+		return MarkAsReadResponseMultiError(errors)
+	}
+
+	return nil
+}
+
+// MarkAsReadResponseMultiError is an error wrapping multiple validation errors
+// returned by MarkAsReadResponse.ValidateAll() if the designated constraints
+// aren't met.
+type MarkAsReadResponseMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m MarkAsReadResponseMultiError) Error() string {
+	msgs := make([]string, 0, len(m))
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m MarkAsReadResponseMultiError) AllErrors() []error { return m }
+
+// MarkAsReadResponseValidationError is the validation error returned by
+// MarkAsReadResponse.Validate if the designated constraints aren't met.
+type MarkAsReadResponseValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e MarkAsReadResponseValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e MarkAsReadResponseValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e MarkAsReadResponseValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e MarkAsReadResponseValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e MarkAsReadResponseValidationError) ErrorName() string {
+	return "MarkAsReadResponseValidationError"
+}
+
+// Error satisfies the builtin error interface
+func (e MarkAsReadResponseValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sMarkAsReadResponse.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = MarkAsReadResponseValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = MarkAsReadResponseValidationError{}
+
 // Validate checks the field values on CreateTemplateRequest with the rules
 // defined in the proto definition for this message. If any rules are
 // violated, the first error encountered is returned, or nil if there are no violations.
@@ -1551,3 +1653,105 @@ var _ interface {
 	Cause() error
 	ErrorName() string
 } = DeleteTemplateRequestValidationError{}
+
+// Validate checks the field values on DeleteTemplateResponse with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the first error encountered is returned, or nil if there are no violations.
+func (m *DeleteTemplateResponse) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on DeleteTemplateResponse with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the result is a list of violation errors wrapped in
+// DeleteTemplateResponseMultiError, or nil if none found.
+func (m *DeleteTemplateResponse) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *DeleteTemplateResponse) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	if len(errors) > 0 {
+		return DeleteTemplateResponseMultiError(errors)
+	}
+
+	return nil
+}
+
+// DeleteTemplateResponseMultiError is an error wrapping multiple validation
+// errors returned by DeleteTemplateResponse.ValidateAll() if the designated
+// constraints aren't met.
+type DeleteTemplateResponseMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m DeleteTemplateResponseMultiError) Error() string {
+	msgs := make([]string, 0, len(m))
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m DeleteTemplateResponseMultiError) AllErrors() []error { return m }
+
+// DeleteTemplateResponseValidationError is the validation error returned by
+// DeleteTemplateResponse.Validate if the designated constraints aren't met.
+type DeleteTemplateResponseValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e DeleteTemplateResponseValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e DeleteTemplateResponseValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e DeleteTemplateResponseValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e DeleteTemplateResponseValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e DeleteTemplateResponseValidationError) ErrorName() string {
+	return "DeleteTemplateResponseValidationError"
+}
+
+// Error satisfies the builtin error interface
+func (e DeleteTemplateResponseValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sDeleteTemplateResponse.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = DeleteTemplateResponseValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = DeleteTemplateResponseValidationError{}

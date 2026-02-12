@@ -10,7 +10,6 @@ import (
 	context "context"
 	http "github.com/go-kratos/kratos/v2/transport/http"
 	binding "github.com/go-kratos/kratos/v2/transport/http/binding"
-	emptypb "google.golang.org/protobuf/types/known/emptypb"
 )
 
 // This is a compile-time assertion to ensure that this generated file
@@ -32,13 +31,13 @@ type NotificationServiceHTTPServer interface {
 	// CreateTemplate CreateTemplate creates a notification template.
 	CreateTemplate(context.Context, *CreateTemplateRequest) (*CreateTemplateResponse, error)
 	// DeleteTemplate DeleteTemplate deletes a notification template.
-	DeleteTemplate(context.Context, *DeleteTemplateRequest) (*emptypb.Empty, error)
+	DeleteTemplate(context.Context, *DeleteTemplateRequest) (*DeleteTemplateResponse, error)
 	// ListNotifications ListNotifications retrieves notifications for the current user.
 	ListNotifications(context.Context, *ListNotificationsRequest) (*ListNotificationsResponse, error)
 	// ListTemplates ListTemplates retrieves notification templates.
 	ListTemplates(context.Context, *ListTemplatesRequest) (*ListTemplatesResponse, error)
 	// MarkAsRead MarkAsRead marks a notification as read.
-	MarkAsRead(context.Context, *MarkAsReadRequest) (*emptypb.Empty, error)
+	MarkAsRead(context.Context, *MarkAsReadRequest) (*MarkAsReadResponse, error)
 	// SendNotification SendNotification sends a notification to specified recipients.
 	SendNotification(context.Context, *SendNotificationRequest) (*SendNotificationResponse, error)
 	// UpdateTemplate UpdateTemplate updates a notification template.
@@ -117,7 +116,7 @@ func _NotificationService_MarkAsRead0_HTTP_Handler(srv NotificationServiceHTTPSe
 		if err != nil {
 			return err
 		}
-		reply := out.(*emptypb.Empty)
+		reply := out.(*MarkAsReadResponse)
 		return ctx.Result(200, reply)
 	}
 }
@@ -205,7 +204,7 @@ func _NotificationService_DeleteTemplate0_HTTP_Handler(srv NotificationServiceHT
 		if err != nil {
 			return err
 		}
-		reply := out.(*emptypb.Empty)
+		reply := out.(*DeleteTemplateResponse)
 		return ctx.Result(200, reply)
 	}
 }
@@ -214,13 +213,13 @@ type NotificationServiceHTTPClient interface {
 	// CreateTemplate CreateTemplate creates a notification template.
 	CreateTemplate(ctx context.Context, req *CreateTemplateRequest, opts ...http.CallOption) (rsp *CreateTemplateResponse, err error)
 	// DeleteTemplate DeleteTemplate deletes a notification template.
-	DeleteTemplate(ctx context.Context, req *DeleteTemplateRequest, opts ...http.CallOption) (rsp *emptypb.Empty, err error)
+	DeleteTemplate(ctx context.Context, req *DeleteTemplateRequest, opts ...http.CallOption) (rsp *DeleteTemplateResponse, err error)
 	// ListNotifications ListNotifications retrieves notifications for the current user.
 	ListNotifications(ctx context.Context, req *ListNotificationsRequest, opts ...http.CallOption) (rsp *ListNotificationsResponse, err error)
 	// ListTemplates ListTemplates retrieves notification templates.
 	ListTemplates(ctx context.Context, req *ListTemplatesRequest, opts ...http.CallOption) (rsp *ListTemplatesResponse, err error)
 	// MarkAsRead MarkAsRead marks a notification as read.
-	MarkAsRead(ctx context.Context, req *MarkAsReadRequest, opts ...http.CallOption) (rsp *emptypb.Empty, err error)
+	MarkAsRead(ctx context.Context, req *MarkAsReadRequest, opts ...http.CallOption) (rsp *MarkAsReadResponse, err error)
 	// SendNotification SendNotification sends a notification to specified recipients.
 	SendNotification(ctx context.Context, req *SendNotificationRequest, opts ...http.CallOption) (rsp *SendNotificationResponse, err error)
 	// UpdateTemplate UpdateTemplate updates a notification template.
@@ -250,8 +249,8 @@ func (c *NotificationServiceHTTPClientImpl) CreateTemplate(ctx context.Context, 
 }
 
 // DeleteTemplate DeleteTemplate deletes a notification template.
-func (c *NotificationServiceHTTPClientImpl) DeleteTemplate(ctx context.Context, in *DeleteTemplateRequest, opts ...http.CallOption) (*emptypb.Empty, error) {
-	var out emptypb.Empty
+func (c *NotificationServiceHTTPClientImpl) DeleteTemplate(ctx context.Context, in *DeleteTemplateRequest, opts ...http.CallOption) (*DeleteTemplateResponse, error) {
+	var out DeleteTemplateResponse
 	pattern := "/ntf/templates/{template_id}"
 	path := binding.EncodeURL(pattern, in, true)
 	opts = append(opts, http.Operation(OperationNotificationServiceDeleteTemplate))
@@ -292,8 +291,8 @@ func (c *NotificationServiceHTTPClientImpl) ListTemplates(ctx context.Context, i
 }
 
 // MarkAsRead MarkAsRead marks a notification as read.
-func (c *NotificationServiceHTTPClientImpl) MarkAsRead(ctx context.Context, in *MarkAsReadRequest, opts ...http.CallOption) (*emptypb.Empty, error) {
-	var out emptypb.Empty
+func (c *NotificationServiceHTTPClientImpl) MarkAsRead(ctx context.Context, in *MarkAsReadRequest, opts ...http.CallOption) (*MarkAsReadResponse, error) {
+	var out MarkAsReadResponse
 	pattern := "/ntf/{notification_id}/read"
 	path := binding.EncodeURL(pattern, in, false)
 	opts = append(opts, http.Operation(OperationNotificationServiceMarkAsRead))

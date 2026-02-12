@@ -27,32 +27,32 @@ type SortField int32
 
 const (
 	// Default value, should be treated as an error or fallback to ID.
-	SortField_DEFAULT_UNSPECIFIED SortField = 0
+	SortField_SORT_FIELD_DEFAULT_UNSPECIFIED SortField = 0
 	// Primary Key ID
-	SortField_ID SortField = 1
+	SortField_SORT_FIELD_ID SortField = 1
 	// Creation timestamp
-	SortField_CREATE_TIME SortField = 2
+	SortField_SORT_FIELD_CREATE_TIME SortField = 2
 	// Update timestamp
-	SortField_UPDATE_TIME SortField = 3
+	SortField_SORT_FIELD_UPDATE_TIME SortField = 3
 	// Custom sequence/order number
-	SortField_SEQUENCE SortField = 4
+	SortField_SORT_FIELD_SEQUENCE SortField = 4
 )
 
 // Enum value maps for SortField.
 var (
 	SortField_name = map[int32]string{
-		0: "DEFAULT_UNSPECIFIED",
-		1: "ID",
-		2: "CREATE_TIME",
-		3: "UPDATE_TIME",
-		4: "SEQUENCE",
+		0: "SORT_FIELD_DEFAULT_UNSPECIFIED",
+		1: "SORT_FIELD_ID",
+		2: "SORT_FIELD_CREATE_TIME",
+		3: "SORT_FIELD_UPDATE_TIME",
+		4: "SORT_FIELD_SEQUENCE",
 	}
 	SortField_value = map[string]int32{
-		"DEFAULT_UNSPECIFIED": 0,
-		"ID":                  1,
-		"CREATE_TIME":         2,
-		"UPDATE_TIME":         3,
-		"SEQUENCE":            4,
+		"SORT_FIELD_DEFAULT_UNSPECIFIED": 0,
+		"SORT_FIELD_ID":                  1,
+		"SORT_FIELD_CREATE_TIME":         2,
+		"SORT_FIELD_UPDATE_TIME":         3,
+		"SORT_FIELD_SEQUENCE":            4,
 	}
 )
 
@@ -186,7 +186,7 @@ func (x *SortValue) GetField() SortField {
 	if x != nil {
 		return x.Field
 	}
-	return SortField_DEFAULT_UNSPECIFIED
+	return SortField_SORT_FIELD_DEFAULT_UNSPECIFIED
 }
 
 func (x *SortValue) GetIsDesc() bool {
@@ -208,13 +208,13 @@ const file_types_common_proto_rawDesc = "" +
 	"\tSortValue\x12\x14\n" +
 	"\x05value\x18\x01 \x01(\tR\x05value\x126\n" +
 	"\x05field\x18\x02 \x01(\x0e2 .api.v1.services.types.SortFieldR\x05field\x12\x17\n" +
-	"\ais_desc\x18\x03 \x01(\bR\x06isDesc*\\\n" +
-	"\tSortField\x12\x17\n" +
-	"\x13DEFAULT_UNSPECIFIED\x10\x00\x12\x06\n" +
-	"\x02ID\x10\x01\x12\x0f\n" +
-	"\vCREATE_TIME\x10\x02\x12\x0f\n" +
-	"\vUPDATE_TIME\x10\x03\x12\f\n" +
-	"\bSEQUENCE\x10\x04B\xd9\x01\n" +
+	"\ais_desc\x18\x03 \x01(\bR\x06isDesc*\x93\x01\n" +
+	"\tSortField\x12\"\n" +
+	"\x1eSORT_FIELD_DEFAULT_UNSPECIFIED\x10\x00\x12\x11\n" +
+	"\rSORT_FIELD_ID\x10\x01\x12\x1a\n" +
+	"\x16SORT_FIELD_CREATE_TIME\x10\x02\x12\x1a\n" +
+	"\x16SORT_FIELD_UPDATE_TIME\x10\x03\x12\x17\n" +
+	"\x13SORT_FIELD_SEQUENCE\x10\x04B\xd9\x01\n" +
 	"\x19com.api.v1.services.typesB\vCommonProtoP\x01Z7origadmin/application/admin/api/v1/services/types;types\xa2\x02\x04AVST\xaa\x02\x15Api.V1.Services.Types\xca\x02\x15Api\\V1\\Services\\Types\xe2\x02!Api\\V1\\Services\\Types\\GPBMetadata\xea\x02\x18Api::V1::Services::Typesb\x06proto3"
 
 var (

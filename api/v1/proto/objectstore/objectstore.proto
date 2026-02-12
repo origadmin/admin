@@ -11,38 +11,86 @@ option java_outer_classname = "APIServiceObjectStoreProto";
 option java_package = "com.origadmin.api.v1.services.objectstore";
 
 // The ObjectStore service definition.
+// This service provides a generic interface for object storage.
+// It is designed to be used internally by other services (like FileManager)
+// and not exposed directly to the public API gateway.
 service ObjectStoreService {
-  // Creates an object.
-  rpc CreateObject(CreateObjectRequest) returns (CreateObjectResponse) {
-    option (google.api.http) = {
-      post: "/objects"
-      body: "*"
-    };
-  }
+  // Initiates a multipart upload and returns an upload ID.
+  rpc InitiateMultipartUpload(InitiateMultipartUploadRequest) returns (InitiateMultipartUploadResponse);
 
-  // Gets an object.
-  rpc GetObject(GetObjectRequest) returns (GetObjectResponse) {
-    option (google.api.http) = {
-      get: "/objects/{id}"
-    };
-  }
+  // Generates a presigned URL for uploading a part.
+  rpc GetMultipartUploadUrl(GetMultipartUploadUrlRequest) returns (GetMultipartUploadUrlResponse);
+
+  // Completes a multipart upload.
+  rpc CompleteMultipartUpload(CompleteMultipartUploadRequest) returns (CompleteMultipartUploadResponse);
+
+  // Aborts a multipart upload.
+  rpc AbortMultipartUpload(AbortMultipartUploadRequest) returns (AbortMultipartUploadResponse);
+
+  // Uploads an object in a single request. Suitable for small files.
+  rpc UploadObject(UploadObjectRequest) returns (UploadObjectResponse);
+
+  // Downloads an object.
+  rpc GetObject(GetObjectRequest) returns (GetObjectResponse);
 
   // Deletes an object.
-  rpc DeleteObject(DeleteObjectRequest) returns (DeleteObjectResponse) {
-    option (google.api.http) = {
-      delete: "/objects/{id}"
-    };
-  }
+  rpc DeleteObject(DeleteObjectRequest) returns (DeleteObjectResponse);
 }
 
-// Request message for creating an object.
-message CreateObjectRequest {
+// Request message for initiating a multipart upload.
+message InitiateMultipartUploadRequest {
+  string name = 1;
+  string content_type = 2;
+}
+
+// Response message for initiating a multipart upload.
+message InitiateMultipartUploadResponse {
+  string upload_id = 1;
+  string object_id = 2; // The final object ID/key in the storage.
+}
+
+// Request message for getting a multipart upload URL.
+message GetMultipartUploadUrlRequest {
+  string upload_id = 1;
+  string object_id = 2;
+  int32 part_number = 3;
+}
+
+// Response message for getting a multipart upload URL.
+message GetMultipartUploadUrlResponse {
+  string upload_url = 1;
+}
+
+// Request message for completing a multipart upload.
+message CompleteMultipartUploadRequest {
+  string upload_id = 1;
+  string object_id = 2;
+  repeated api.v1.services.types.PartInfo parts = 3;
+}
+
+// Response message for completing a multipart upload.
+message CompleteMultipartUploadResponse {
+  api.v1.services.types.Object object = 1;
+}
+
+// Request message for aborting a multipart upload.
+message AbortMultipartUploadRequest {
+  string upload_id = 1;
+  string object_id = 2;
+}
+
+// Response message for aborting a multipart upload.
+message AbortMultipartUploadResponse {}
+
+// Request message for uploading an object in a single request.
+message UploadObjectRequest {
   bytes data = 1;
   string name = 2;
+  string content_type = 3;
 }
 
-// Response message for creating an object.
-message CreateObjectResponse {
+// Response message for uploading an object.
+message UploadObjectResponse {
   api.v1.services.types.Object object = 1;
 }
 

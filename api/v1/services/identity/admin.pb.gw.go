@@ -22,7 +22,6 @@ import (
 	"google.golang.org/grpc/metadata"
 	"google.golang.org/grpc/status"
 	"google.golang.org/protobuf/proto"
-	"google.golang.org/protobuf/types/known/emptypb"
 )
 
 // Suppress "imported and not used" errors
@@ -38,7 +37,7 @@ var (
 
 func request_AdminService_ForcePolicySync_0(ctx context.Context, marshaler runtime.Marshaler, client AdminServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var (
-		protoReq emptypb.Empty
+		protoReq ForcePolicySyncRequest
 		metadata runtime.ServerMetadata
 	)
 	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && !errors.Is(err, io.EOF) {
@@ -50,7 +49,7 @@ func request_AdminService_ForcePolicySync_0(ctx context.Context, marshaler runti
 
 func local_request_AdminService_ForcePolicySync_0(ctx context.Context, marshaler runtime.Marshaler, server AdminServiceServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var (
-		protoReq emptypb.Empty
+		protoReq ForcePolicySyncRequest
 		metadata runtime.ServerMetadata
 	)
 	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && !errors.Is(err, io.EOF) {
@@ -62,7 +61,7 @@ func local_request_AdminService_ForcePolicySync_0(ctx context.Context, marshaler
 
 func request_AdminService_GetPolicySyncStatus_0(ctx context.Context, marshaler runtime.Marshaler, client AdminServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var (
-		protoReq emptypb.Empty
+		protoReq GetPolicySyncStatusRequest
 		metadata runtime.ServerMetadata
 	)
 	io.Copy(io.Discard, req.Body)
@@ -72,7 +71,7 @@ func request_AdminService_GetPolicySyncStatus_0(ctx context.Context, marshaler r
 
 func local_request_AdminService_GetPolicySyncStatus_0(ctx context.Context, marshaler runtime.Marshaler, server AdminServiceServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var (
-		protoReq emptypb.Empty
+		protoReq GetPolicySyncStatusRequest
 		metadata runtime.ServerMetadata
 	)
 	msg, err := server.GetPolicySyncStatus(ctx, &protoReq)
@@ -81,7 +80,7 @@ func local_request_AdminService_GetPolicySyncStatus_0(ctx context.Context, marsh
 
 func request_AdminService_GetEnforcerPolicies_0(ctx context.Context, marshaler runtime.Marshaler, client AdminServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var (
-		protoReq emptypb.Empty
+		protoReq GetEnforcerPoliciesRequest
 		metadata runtime.ServerMetadata
 	)
 	io.Copy(io.Discard, req.Body)
@@ -91,7 +90,7 @@ func request_AdminService_GetEnforcerPolicies_0(ctx context.Context, marshaler r
 
 func local_request_AdminService_GetEnforcerPolicies_0(ctx context.Context, marshaler runtime.Marshaler, server AdminServiceServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var (
-		protoReq emptypb.Empty
+		protoReq GetEnforcerPoliciesRequest
 		metadata runtime.ServerMetadata
 	)
 	msg, err := server.GetEnforcerPolicies(ctx, &protoReq)

@@ -161,7 +161,7 @@ func local_request_MeService_GetUserRoles_0(ctx context.Context, marshaler runti
 
 func request_MeService_GetUserSettings_0(ctx context.Context, marshaler runtime.Marshaler, client MeServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var (
-		protoReq GetUserSettingRequest
+		protoReq GetUserSettingsRequest
 		metadata runtime.ServerMetadata
 	)
 	io.Copy(io.Discard, req.Body)
@@ -171,7 +171,7 @@ func request_MeService_GetUserSettings_0(ctx context.Context, marshaler runtime.
 
 func local_request_MeService_GetUserSettings_0(ctx context.Context, marshaler runtime.Marshaler, server MeServiceServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var (
-		protoReq GetUserSettingRequest
+		protoReq GetUserSettingsRequest
 		metadata runtime.ServerMetadata
 	)
 	msg, err := server.GetUserSettings(ctx, &protoReq)
@@ -180,7 +180,7 @@ func local_request_MeService_GetUserSettings_0(ctx context.Context, marshaler ru
 
 func request_MeService_UpdateSettings_0(ctx context.Context, marshaler runtime.Marshaler, client MeServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var (
-		protoReq UpdateSettingRequest
+		protoReq UpdateSettingsRequest
 		metadata runtime.ServerMetadata
 	)
 	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && !errors.Is(err, io.EOF) {
@@ -192,7 +192,7 @@ func request_MeService_UpdateSettings_0(ctx context.Context, marshaler runtime.M
 
 func local_request_MeService_UpdateSettings_0(ctx context.Context, marshaler runtime.Marshaler, server MeServiceServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var (
-		protoReq UpdateSettingRequest
+		protoReq UpdateSettingsRequest
 		metadata runtime.ServerMetadata
 	)
 	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && !errors.Is(err, io.EOF) {

@@ -19,22 +19,39 @@ var _ = binding.EncodeURL
 
 const _ = http.SupportPackageIsVersion1
 
+const OperationFileManagerServiceAbortMultipartUpload = "/api.v1.services.filemanager.FileManagerService/AbortMultipartUpload"
+const OperationFileManagerServiceCompleteMultipartUpload = "/api.v1.services.filemanager.FileManagerService/CompleteMultipartUpload"
 const OperationFileManagerServiceDeleteFile = "/api.v1.services.filemanager.FileManagerService/DeleteFile"
 const OperationFileManagerServiceGetFile = "/api.v1.services.filemanager.FileManagerService/GetFile"
+const OperationFileManagerServiceGetMultipartUploadUrl = "/api.v1.services.filemanager.FileManagerService/GetMultipartUploadUrl"
+const OperationFileManagerServiceInitiateMultipartUpload = "/api.v1.services.filemanager.FileManagerService/InitiateMultipartUpload"
 const OperationFileManagerServiceUploadFile = "/api.v1.services.filemanager.FileManagerService/UploadFile"
 
 type FileManagerServiceHTTPServer interface {
+	// AbortMultipartUpload Aborts a multipart upload.
+	AbortMultipartUpload(context.Context, *AbortMultipartUploadRequest) (*AbortMultipartUploadResponse, error)
+	// CompleteMultipartUpload Completes a multipart upload.
+	CompleteMultipartUpload(context.Context, *CompleteMultipartUploadRequest) (*CompleteMultipartUploadResponse, error)
 	// DeleteFile Deletes a file and its metadata.
 	DeleteFile(context.Context, *DeleteFileRequest) (*DeleteFileResponse, error)
 	// GetFile Gets file metadata.
 	GetFile(context.Context, *GetFileRequest) (*GetFileResponse, error)
-	// UploadFile Uploads a file and creates its metadata.
+	// GetMultipartUploadUrl Gets a presigned URL for a specific part of a multipart upload.
+	GetMultipartUploadUrl(context.Context, *GetMultipartUploadUrlRequest) (*GetMultipartUploadUrlResponse, error)
+	// InitiateMultipartUpload Initiates a multipart upload for large files.
+	InitiateMultipartUpload(context.Context, *InitiateMultipartUploadRequest) (*InitiateMultipartUploadResponse, error)
+	// UploadFile Simple upload for small files (e.g. avatars, images).
+	// The file size should be limited (e.g. < 10MB).
 	UploadFile(context.Context, *UploadFileRequest) (*UploadFileResponse, error)
 }
 
 func RegisterFileManagerServiceHTTPServer(s *http.Server, srv FileManagerServiceHTTPServer) {
 	r := s.Route("/")
-	r.POST("/files/upload", _FileManagerService_UploadFile0_HTTP_Handler(srv))
+	r.POST("/files", _FileManagerService_UploadFile0_HTTP_Handler(srv))
+	r.POST("/files/multipart", _FileManagerService_InitiateMultipartUpload0_HTTP_Handler(srv))
+	r.GET("/files/multipart/{upload_id}/parts/{part_number}", _FileManagerService_GetMultipartUploadUrl0_HTTP_Handler(srv))
+	r.POST("/files/multipart/{upload_id}/complete", _FileManagerService_CompleteMultipartUpload0_HTTP_Handler(srv))
+	r.DELETE("/files/multipart/{upload_id}", _FileManagerService_AbortMultipartUpload0_HTTP_Handler(srv))
 	r.GET("/files/{id}", _FileManagerService_GetFile0_HTTP_Handler(srv))
 	r.DELETE("/files/{id}", _FileManagerService_DeleteFile0_HTTP_Handler(srv))
 }
@@ -57,6 +74,97 @@ func _FileManagerService_UploadFile0_HTTP_Handler(srv FileManagerServiceHTTPServ
 			return err
 		}
 		reply := out.(*UploadFileResponse)
+		return ctx.Result(200, reply)
+	}
+}
+
+func _FileManagerService_InitiateMultipartUpload0_HTTP_Handler(srv FileManagerServiceHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in InitiateMultipartUploadRequest
+		if err := ctx.Bind(&in); err != nil {
+			return err
+		}
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationFileManagerServiceInitiateMultipartUpload)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.InitiateMultipartUpload(ctx, req.(*InitiateMultipartUploadRequest))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*InitiateMultipartUploadResponse)
+		return ctx.Result(200, reply)
+	}
+}
+
+func _FileManagerService_GetMultipartUploadUrl0_HTTP_Handler(srv FileManagerServiceHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in GetMultipartUploadUrlRequest
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		if err := ctx.BindVars(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationFileManagerServiceGetMultipartUploadUrl)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.GetMultipartUploadUrl(ctx, req.(*GetMultipartUploadUrlRequest))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*GetMultipartUploadUrlResponse)
+		return ctx.Result(200, reply)
+	}
+}
+
+func _FileManagerService_CompleteMultipartUpload0_HTTP_Handler(srv FileManagerServiceHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in CompleteMultipartUploadRequest
+		if err := ctx.Bind(&in); err != nil {
+			return err
+		}
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		if err := ctx.BindVars(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationFileManagerServiceCompleteMultipartUpload)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.CompleteMultipartUpload(ctx, req.(*CompleteMultipartUploadRequest))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*CompleteMultipartUploadResponse)
+		return ctx.Result(200, reply)
+	}
+}
+
+func _FileManagerService_AbortMultipartUpload0_HTTP_Handler(srv FileManagerServiceHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in AbortMultipartUploadRequest
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		if err := ctx.BindVars(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationFileManagerServiceAbortMultipartUpload)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.AbortMultipartUpload(ctx, req.(*AbortMultipartUploadRequest))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*AbortMultipartUploadResponse)
 		return ctx.Result(200, reply)
 	}
 }
@@ -106,11 +214,20 @@ func _FileManagerService_DeleteFile0_HTTP_Handler(srv FileManagerServiceHTTPServ
 }
 
 type FileManagerServiceHTTPClient interface {
+	// AbortMultipartUpload Aborts a multipart upload.
+	AbortMultipartUpload(ctx context.Context, req *AbortMultipartUploadRequest, opts ...http.CallOption) (rsp *AbortMultipartUploadResponse, err error)
+	// CompleteMultipartUpload Completes a multipart upload.
+	CompleteMultipartUpload(ctx context.Context, req *CompleteMultipartUploadRequest, opts ...http.CallOption) (rsp *CompleteMultipartUploadResponse, err error)
 	// DeleteFile Deletes a file and its metadata.
 	DeleteFile(ctx context.Context, req *DeleteFileRequest, opts ...http.CallOption) (rsp *DeleteFileResponse, err error)
 	// GetFile Gets file metadata.
 	GetFile(ctx context.Context, req *GetFileRequest, opts ...http.CallOption) (rsp *GetFileResponse, err error)
-	// UploadFile Uploads a file and creates its metadata.
+	// GetMultipartUploadUrl Gets a presigned URL for a specific part of a multipart upload.
+	GetMultipartUploadUrl(ctx context.Context, req *GetMultipartUploadUrlRequest, opts ...http.CallOption) (rsp *GetMultipartUploadUrlResponse, err error)
+	// InitiateMultipartUpload Initiates a multipart upload for large files.
+	InitiateMultipartUpload(ctx context.Context, req *InitiateMultipartUploadRequest, opts ...http.CallOption) (rsp *InitiateMultipartUploadResponse, err error)
+	// UploadFile Simple upload for small files (e.g. avatars, images).
+	// The file size should be limited (e.g. < 10MB).
 	UploadFile(ctx context.Context, req *UploadFileRequest, opts ...http.CallOption) (rsp *UploadFileResponse, err error)
 }
 
@@ -120,6 +237,34 @@ type FileManagerServiceHTTPClientImpl struct {
 
 func NewFileManagerServiceHTTPClient(client *http.Client) FileManagerServiceHTTPClient {
 	return &FileManagerServiceHTTPClientImpl{client}
+}
+
+// AbortMultipartUpload Aborts a multipart upload.
+func (c *FileManagerServiceHTTPClientImpl) AbortMultipartUpload(ctx context.Context, in *AbortMultipartUploadRequest, opts ...http.CallOption) (*AbortMultipartUploadResponse, error) {
+	var out AbortMultipartUploadResponse
+	pattern := "/files/multipart/{upload_id}"
+	path := binding.EncodeURL(pattern, in, true)
+	opts = append(opts, http.Operation(OperationFileManagerServiceAbortMultipartUpload))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "DELETE", path, nil, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, nil
+}
+
+// CompleteMultipartUpload Completes a multipart upload.
+func (c *FileManagerServiceHTTPClientImpl) CompleteMultipartUpload(ctx context.Context, in *CompleteMultipartUploadRequest, opts ...http.CallOption) (*CompleteMultipartUploadResponse, error) {
+	var out CompleteMultipartUploadResponse
+	pattern := "/files/multipart/{upload_id}/complete"
+	path := binding.EncodeURL(pattern, in, false)
+	opts = append(opts, http.Operation(OperationFileManagerServiceCompleteMultipartUpload))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "POST", path, in, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, nil
 }
 
 // DeleteFile Deletes a file and its metadata.
@@ -150,10 +295,39 @@ func (c *FileManagerServiceHTTPClientImpl) GetFile(ctx context.Context, in *GetF
 	return &out, nil
 }
 
-// UploadFile Uploads a file and creates its metadata.
+// GetMultipartUploadUrl Gets a presigned URL for a specific part of a multipart upload.
+func (c *FileManagerServiceHTTPClientImpl) GetMultipartUploadUrl(ctx context.Context, in *GetMultipartUploadUrlRequest, opts ...http.CallOption) (*GetMultipartUploadUrlResponse, error) {
+	var out GetMultipartUploadUrlResponse
+	pattern := "/files/multipart/{upload_id}/parts/{part_number}"
+	path := binding.EncodeURL(pattern, in, true)
+	opts = append(opts, http.Operation(OperationFileManagerServiceGetMultipartUploadUrl))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "GET", path, nil, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, nil
+}
+
+// InitiateMultipartUpload Initiates a multipart upload for large files.
+func (c *FileManagerServiceHTTPClientImpl) InitiateMultipartUpload(ctx context.Context, in *InitiateMultipartUploadRequest, opts ...http.CallOption) (*InitiateMultipartUploadResponse, error) {
+	var out InitiateMultipartUploadResponse
+	pattern := "/files/multipart"
+	path := binding.EncodeURL(pattern, in, false)
+	opts = append(opts, http.Operation(OperationFileManagerServiceInitiateMultipartUpload))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "POST", path, in, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, nil
+}
+
+// UploadFile Simple upload for small files (e.g. avatars, images).
+// The file size should be limited (e.g. < 10MB).
 func (c *FileManagerServiceHTTPClientImpl) UploadFile(ctx context.Context, in *UploadFileRequest, opts ...http.CallOption) (*UploadFileResponse, error) {
 	var out UploadFileResponse
-	pattern := "/files/upload"
+	pattern := "/files"
 	path := binding.EncodeURL(pattern, in, false)
 	opts = append(opts, http.Operation(OperationFileManagerServiceUploadFile))
 	opts = append(opts, http.PathTemplate(pattern))

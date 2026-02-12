@@ -11,7 +11,6 @@ import (
 	_ "google.golang.org/genproto/googleapis/api/annotations"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
-	emptypb "google.golang.org/protobuf/types/known/emptypb"
 	timestamppb "google.golang.org/protobuf/types/known/timestamppb"
 	reflect "reflect"
 	sync "sync"
@@ -25,8 +24,119 @@ const (
 	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
 )
 
-// PolicySyncStatusResponse contains status and metrics of policy synchronization service.
-type PolicySyncStatusResponse struct {
+// ForcePolicySyncRequest is the request for AdminService.ForcePolicySync.
+type ForcePolicySyncRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *ForcePolicySyncRequest) Reset() {
+	*x = ForcePolicySyncRequest{}
+	mi := &file_identity_admin_proto_msgTypes[0]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *ForcePolicySyncRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ForcePolicySyncRequest) ProtoMessage() {}
+
+func (x *ForcePolicySyncRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_identity_admin_proto_msgTypes[0]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ForcePolicySyncRequest.ProtoReflect.Descriptor instead.
+func (*ForcePolicySyncRequest) Descriptor() ([]byte, []int) {
+	return file_identity_admin_proto_rawDescGZIP(), []int{0}
+}
+
+// ForcePolicySyncResponse is the response for AdminService.ForcePolicySync.
+type ForcePolicySyncResponse struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *ForcePolicySyncResponse) Reset() {
+	*x = ForcePolicySyncResponse{}
+	mi := &file_identity_admin_proto_msgTypes[1]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *ForcePolicySyncResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ForcePolicySyncResponse) ProtoMessage() {}
+
+func (x *ForcePolicySyncResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_identity_admin_proto_msgTypes[1]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ForcePolicySyncResponse.ProtoReflect.Descriptor instead.
+func (*ForcePolicySyncResponse) Descriptor() ([]byte, []int) {
+	return file_identity_admin_proto_rawDescGZIP(), []int{1}
+}
+
+// GetPolicySyncStatusRequest is the request for AdminService.GetPolicySyncStatus.
+type GetPolicySyncStatusRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *GetPolicySyncStatusRequest) Reset() {
+	*x = GetPolicySyncStatusRequest{}
+	mi := &file_identity_admin_proto_msgTypes[2]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *GetPolicySyncStatusRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetPolicySyncStatusRequest) ProtoMessage() {}
+
+func (x *GetPolicySyncStatusRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_identity_admin_proto_msgTypes[2]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetPolicySyncStatusRequest.ProtoReflect.Descriptor instead.
+func (*GetPolicySyncStatusRequest) Descriptor() ([]byte, []int) {
+	return file_identity_admin_proto_rawDescGZIP(), []int{2}
+}
+
+// GetPolicySyncStatusResponse contains status and metrics of policy synchronization service.
+type GetPolicySyncStatusResponse struct {
 	state            protoimpl.MessageState `protogen:"open.v1"`
 	SyncPending      bool                   `protobuf:"varint,1,opt,name=sync_pending,proto3" json:"sync_pending,omitempty"`
 	LastSyncTime     *timestamppb.Timestamp `protobuf:"bytes,2,opt,name=last_sync_time,proto3" json:"last_sync_time,omitempty"`
@@ -40,21 +150,21 @@ type PolicySyncStatusResponse struct {
 	sizeCache        protoimpl.SizeCache
 }
 
-func (x *PolicySyncStatusResponse) Reset() {
-	*x = PolicySyncStatusResponse{}
-	mi := &file_identity_admin_proto_msgTypes[0]
+func (x *GetPolicySyncStatusResponse) Reset() {
+	*x = GetPolicySyncStatusResponse{}
+	mi := &file_identity_admin_proto_msgTypes[3]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *PolicySyncStatusResponse) String() string {
+func (x *GetPolicySyncStatusResponse) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*PolicySyncStatusResponse) ProtoMessage() {}
+func (*GetPolicySyncStatusResponse) ProtoMessage() {}
 
-func (x *PolicySyncStatusResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_identity_admin_proto_msgTypes[0]
+func (x *GetPolicySyncStatusResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_identity_admin_proto_msgTypes[3]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -65,65 +175,102 @@ func (x *PolicySyncStatusResponse) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use PolicySyncStatusResponse.ProtoReflect.Descriptor instead.
-func (*PolicySyncStatusResponse) Descriptor() ([]byte, []int) {
-	return file_identity_admin_proto_rawDescGZIP(), []int{0}
+// Deprecated: Use GetPolicySyncStatusResponse.ProtoReflect.Descriptor instead.
+func (*GetPolicySyncStatusResponse) Descriptor() ([]byte, []int) {
+	return file_identity_admin_proto_rawDescGZIP(), []int{3}
 }
 
-func (x *PolicySyncStatusResponse) GetSyncPending() bool {
+func (x *GetPolicySyncStatusResponse) GetSyncPending() bool {
 	if x != nil {
 		return x.SyncPending
 	}
 	return false
 }
 
-func (x *PolicySyncStatusResponse) GetLastSyncTime() *timestamppb.Timestamp {
+func (x *GetPolicySyncStatusResponse) GetLastSyncTime() *timestamppb.Timestamp {
 	if x != nil {
 		return x.LastSyncTime
 	}
 	return nil
 }
 
-func (x *PolicySyncStatusResponse) GetLastSyncDuration() int64 {
+func (x *GetPolicySyncStatusResponse) GetLastSyncDuration() int64 {
 	if x != nil {
 		return x.LastSyncDuration
 	}
 	return 0
 }
 
-func (x *PolicySyncStatusResponse) GetTotalEvents() int64 {
+func (x *GetPolicySyncStatusResponse) GetTotalEvents() int64 {
 	if x != nil {
 		return x.TotalEvents
 	}
 	return 0
 }
 
-func (x *PolicySyncStatusResponse) GetSuccessfulSyncs() int64 {
+func (x *GetPolicySyncStatusResponse) GetSuccessfulSyncs() int64 {
 	if x != nil {
 		return x.SuccessfulSyncs
 	}
 	return 0
 }
 
-func (x *PolicySyncStatusResponse) GetFailedSyncs() int64 {
+func (x *GetPolicySyncStatusResponse) GetFailedSyncs() int64 {
 	if x != nil {
 		return x.FailedSyncs
 	}
 	return 0
 }
 
-func (x *PolicySyncStatusResponse) GetDuplicateEvents() int64 {
+func (x *GetPolicySyncStatusResponse) GetDuplicateEvents() int64 {
 	if x != nil {
 		return x.DuplicateEvents
 	}
 	return 0
 }
 
-func (x *PolicySyncStatusResponse) GetFailureRate() float64 {
+func (x *GetPolicySyncStatusResponse) GetFailureRate() float64 {
 	if x != nil {
 		return x.FailureRate
 	}
 	return 0
+}
+
+// GetEnforcerPoliciesRequest is the request for AdminService.GetEnforcerPolicies.
+type GetEnforcerPoliciesRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *GetEnforcerPoliciesRequest) Reset() {
+	*x = GetEnforcerPoliciesRequest{}
+	mi := &file_identity_admin_proto_msgTypes[4]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *GetEnforcerPoliciesRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetEnforcerPoliciesRequest) ProtoMessage() {}
+
+func (x *GetEnforcerPoliciesRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_identity_admin_proto_msgTypes[4]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetEnforcerPoliciesRequest.ProtoReflect.Descriptor instead.
+func (*GetEnforcerPoliciesRequest) Descriptor() ([]byte, []int) {
+	return file_identity_admin_proto_rawDescGZIP(), []int{4}
 }
 
 // CasbinRule represents a single policy rule (p-rule or g-rule) from Casbin Enforcer.
@@ -137,7 +284,7 @@ type CasbinRule struct {
 
 func (x *CasbinRule) Reset() {
 	*x = CasbinRule{}
-	mi := &file_identity_admin_proto_msgTypes[1]
+	mi := &file_identity_admin_proto_msgTypes[5]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -149,7 +296,7 @@ func (x *CasbinRule) String() string {
 func (*CasbinRule) ProtoMessage() {}
 
 func (x *CasbinRule) ProtoReflect() protoreflect.Message {
-	mi := &file_identity_admin_proto_msgTypes[1]
+	mi := &file_identity_admin_proto_msgTypes[5]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -162,7 +309,7 @@ func (x *CasbinRule) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CasbinRule.ProtoReflect.Descriptor instead.
 func (*CasbinRule) Descriptor() ([]byte, []int) {
-	return file_identity_admin_proto_rawDescGZIP(), []int{1}
+	return file_identity_admin_proto_rawDescGZIP(), []int{5}
 }
 
 func (x *CasbinRule) GetPtype() string {
@@ -179,29 +326,29 @@ func (x *CasbinRule) GetV() []string {
 	return nil
 }
 
-// EnforcerPoliciesResponse contains all policy rules loaded into Casbin Enforcer's memory.
-type EnforcerPoliciesResponse struct {
+// GetEnforcerPoliciesResponse contains all policy rules loaded into Casbin Enforcer's memory.
+type GetEnforcerPoliciesResponse struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Policies      []*CasbinRule          `protobuf:"bytes,1,rep,name=policies,proto3" json:"policies,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *EnforcerPoliciesResponse) Reset() {
-	*x = EnforcerPoliciesResponse{}
-	mi := &file_identity_admin_proto_msgTypes[2]
+func (x *GetEnforcerPoliciesResponse) Reset() {
+	*x = GetEnforcerPoliciesResponse{}
+	mi := &file_identity_admin_proto_msgTypes[6]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *EnforcerPoliciesResponse) String() string {
+func (x *GetEnforcerPoliciesResponse) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*EnforcerPoliciesResponse) ProtoMessage() {}
+func (*GetEnforcerPoliciesResponse) ProtoMessage() {}
 
-func (x *EnforcerPoliciesResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_identity_admin_proto_msgTypes[2]
+func (x *GetEnforcerPoliciesResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_identity_admin_proto_msgTypes[6]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -212,12 +359,12 @@ func (x *EnforcerPoliciesResponse) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use EnforcerPoliciesResponse.ProtoReflect.Descriptor instead.
-func (*EnforcerPoliciesResponse) Descriptor() ([]byte, []int) {
-	return file_identity_admin_proto_rawDescGZIP(), []int{2}
+// Deprecated: Use GetEnforcerPoliciesResponse.ProtoReflect.Descriptor instead.
+func (*GetEnforcerPoliciesResponse) Descriptor() ([]byte, []int) {
+	return file_identity_admin_proto_rawDescGZIP(), []int{6}
 }
 
-func (x *EnforcerPoliciesResponse) GetPolicies() []*CasbinRule {
+func (x *GetEnforcerPoliciesResponse) GetPolicies() []*CasbinRule {
 	if x != nil {
 		return x.Policies
 	}
@@ -228,8 +375,11 @@ var File_identity_admin_proto protoreflect.FileDescriptor
 
 const file_identity_admin_proto_rawDesc = "" +
 	"\n" +
-	"\x14identity/admin.proto\x12\x18api.v1.services.identity\x1a\x1cgoogle/api/annotations.proto\x1a\x1bgoogle/protobuf/empty.proto\x1a\x1fgoogle/protobuf/timestamp.proto\x1a\x16policy/v1/policy.proto\"\xf6\x02\n" +
-	"\x18PolicySyncStatusResponse\x12\"\n" +
+	"\x14identity/admin.proto\x12\x18api.v1.services.identity\x1a\x1cgoogle/api/annotations.proto\x1a\x1fgoogle/protobuf/timestamp.proto\x1a\x16policy/v1/policy.proto\"\x18\n" +
+	"\x16ForcePolicySyncRequest\"\x19\n" +
+	"\x17ForcePolicySyncResponse\"\x1c\n" +
+	"\x1aGetPolicySyncStatusRequest\"\xf9\x02\n" +
+	"\x1bGetPolicySyncStatusResponse\x12\"\n" +
 	"\fsync_pending\x18\x01 \x01(\bR\fsync_pending\x12B\n" +
 	"\x0elast_sync_time\x18\x02 \x01(\v2\x1a.google.protobuf.TimestampR\x0elast_sync_time\x12.\n" +
 	"\x12last_sync_duration\x18\x03 \x01(\x03R\x12last_sync_duration\x12\"\n" +
@@ -237,19 +387,20 @@ const file_identity_admin_proto_rawDesc = "" +
 	"\x10successful_syncs\x18\x05 \x01(\x03R\x10successful_syncs\x12\"\n" +
 	"\ffailed_syncs\x18\x06 \x01(\x03R\ffailed_syncs\x12*\n" +
 	"\x10duplicate_events\x18\a \x01(\x03R\x10duplicate_events\x12\"\n" +
-	"\ffailure_rate\x18\b \x01(\x01R\ffailure_rate\"0\n" +
+	"\ffailure_rate\x18\b \x01(\x01R\ffailure_rate\"\x1c\n" +
+	"\x1aGetEnforcerPoliciesRequest\"0\n" +
 	"\n" +
 	"CasbinRule\x12\x14\n" +
 	"\x05ptype\x18\x01 \x01(\tR\x05ptype\x12\f\n" +
-	"\x01v\x18\x02 \x03(\tR\x01v\"\\\n" +
-	"\x18EnforcerPoliciesResponse\x12@\n" +
-	"\bpolicies\x18\x01 \x03(\v2$.api.v1.services.identity.CasbinRuleR\bpolicies2\x9f\x03\n" +
-	"\fAdminService\x12i\n" +
-	"\x0fForcePolicySync\x12\x16.google.protobuf.Empty\x1a\x16.google.protobuf.Empty\"&\xea\xea\x1b\a\n" +
-	"\x05admin\x82\xd3\xe4\x93\x02\x15:\x01*\"\x10/auth/admin/sync\x12\x8d\x01\n" +
-	"\x13GetPolicySyncStatus\x12\x16.google.protobuf.Empty\x1a2.api.v1.services.identity.PolicySyncStatusResponse\"*\xea\xea\x1b\a\n" +
-	"\x05admin\x82\xd3\xe4\x93\x02\x19\x12\x17/auth/admin/sync/status\x12\x93\x01\n" +
-	"\x13GetEnforcerPolicies\x12\x16.google.protobuf.Empty\x1a2.api.v1.services.identity.EnforcerPoliciesResponse\"0\xea\xea\x1b\a\n" +
+	"\x01v\x18\x02 \x03(\tR\x01v\"_\n" +
+	"\x1bGetEnforcerPoliciesResponse\x12@\n" +
+	"\bpolicies\x18\x01 \x03(\v2$.api.v1.services.identity.CasbinRuleR\bpolicies2\x97\x04\n" +
+	"\fAdminService\x12\x9e\x01\n" +
+	"\x0fForcePolicySync\x120.api.v1.services.identity.ForcePolicySyncRequest\x1a1.api.v1.services.identity.ForcePolicySyncResponse\"&\xea\xea\x1b\a\n" +
+	"\x05admin\x82\xd3\xe4\x93\x02\x15:\x01*\"\x10/auth/admin/sync\x12\xae\x01\n" +
+	"\x13GetPolicySyncStatus\x124.api.v1.services.identity.GetPolicySyncStatusRequest\x1a5.api.v1.services.identity.GetPolicySyncStatusResponse\"*\xea\xea\x1b\a\n" +
+	"\x05admin\x82\xd3\xe4\x93\x02\x19\x12\x17/auth/admin/sync/status\x12\xb4\x01\n" +
+	"\x13GetEnforcerPolicies\x124.api.v1.services.identity.GetEnforcerPoliciesRequest\x1a5.api.v1.services.identity.GetEnforcerPoliciesResponse\"0\xea\xea\x1b\a\n" +
 	"\x05admin\x82\xd3\xe4\x93\x02\x1f\x12\x1d/auth/admin/enforcer/policiesB\xed\x01\n" +
 	"\x1ccom.api.v1.services.identityB\n" +
 	"AdminProtoP\x01Z=origadmin/application/admin/api/v1/services/identity;identity\xa2\x02\x04AVSI\xaa\x02\x18Api.V1.Services.Identity\xca\x02\x18Api\\V1\\Services\\Identity\xe2\x02$Api\\V1\\Services\\Identity\\GPBMetadata\xea\x02\x1bApi::V1::Services::Identityb\x06proto3"
@@ -266,23 +417,26 @@ func file_identity_admin_proto_rawDescGZIP() []byte {
 	return file_identity_admin_proto_rawDescData
 }
 
-var file_identity_admin_proto_msgTypes = make([]protoimpl.MessageInfo, 3)
+var file_identity_admin_proto_msgTypes = make([]protoimpl.MessageInfo, 7)
 var file_identity_admin_proto_goTypes = []any{
-	(*PolicySyncStatusResponse)(nil), // 0: api.v1.services.identity.PolicySyncStatusResponse
-	(*CasbinRule)(nil),               // 1: api.v1.services.identity.CasbinRule
-	(*EnforcerPoliciesResponse)(nil), // 2: api.v1.services.identity.EnforcerPoliciesResponse
-	(*timestamppb.Timestamp)(nil),    // 3: google.protobuf.Timestamp
-	(*emptypb.Empty)(nil),            // 4: google.protobuf.Empty
+	(*ForcePolicySyncRequest)(nil),      // 0: api.v1.services.identity.ForcePolicySyncRequest
+	(*ForcePolicySyncResponse)(nil),     // 1: api.v1.services.identity.ForcePolicySyncResponse
+	(*GetPolicySyncStatusRequest)(nil),  // 2: api.v1.services.identity.GetPolicySyncStatusRequest
+	(*GetPolicySyncStatusResponse)(nil), // 3: api.v1.services.identity.GetPolicySyncStatusResponse
+	(*GetEnforcerPoliciesRequest)(nil),  // 4: api.v1.services.identity.GetEnforcerPoliciesRequest
+	(*CasbinRule)(nil),                  // 5: api.v1.services.identity.CasbinRule
+	(*GetEnforcerPoliciesResponse)(nil), // 6: api.v1.services.identity.GetEnforcerPoliciesResponse
+	(*timestamppb.Timestamp)(nil),       // 7: google.protobuf.Timestamp
 }
 var file_identity_admin_proto_depIdxs = []int32{
-	3, // 0: api.v1.services.identity.PolicySyncStatusResponse.last_sync_time:type_name -> google.protobuf.Timestamp
-	1, // 1: api.v1.services.identity.EnforcerPoliciesResponse.policies:type_name -> api.v1.services.identity.CasbinRule
-	4, // 2: api.v1.services.identity.AdminService.ForcePolicySync:input_type -> google.protobuf.Empty
-	4, // 3: api.v1.services.identity.AdminService.GetPolicySyncStatus:input_type -> google.protobuf.Empty
-	4, // 4: api.v1.services.identity.AdminService.GetEnforcerPolicies:input_type -> google.protobuf.Empty
-	4, // 5: api.v1.services.identity.AdminService.ForcePolicySync:output_type -> google.protobuf.Empty
-	0, // 6: api.v1.services.identity.AdminService.GetPolicySyncStatus:output_type -> api.v1.services.identity.PolicySyncStatusResponse
-	2, // 7: api.v1.services.identity.AdminService.GetEnforcerPolicies:output_type -> api.v1.services.identity.EnforcerPoliciesResponse
+	7, // 0: api.v1.services.identity.GetPolicySyncStatusResponse.last_sync_time:type_name -> google.protobuf.Timestamp
+	5, // 1: api.v1.services.identity.GetEnforcerPoliciesResponse.policies:type_name -> api.v1.services.identity.CasbinRule
+	0, // 2: api.v1.services.identity.AdminService.ForcePolicySync:input_type -> api.v1.services.identity.ForcePolicySyncRequest
+	2, // 3: api.v1.services.identity.AdminService.GetPolicySyncStatus:input_type -> api.v1.services.identity.GetPolicySyncStatusRequest
+	4, // 4: api.v1.services.identity.AdminService.GetEnforcerPolicies:input_type -> api.v1.services.identity.GetEnforcerPoliciesRequest
+	1, // 5: api.v1.services.identity.AdminService.ForcePolicySync:output_type -> api.v1.services.identity.ForcePolicySyncResponse
+	3, // 6: api.v1.services.identity.AdminService.GetPolicySyncStatus:output_type -> api.v1.services.identity.GetPolicySyncStatusResponse
+	6, // 7: api.v1.services.identity.AdminService.GetEnforcerPolicies:output_type -> api.v1.services.identity.GetEnforcerPoliciesResponse
 	5, // [5:8] is the sub-list for method output_type
 	2, // [2:5] is the sub-list for method input_type
 	2, // [2:2] is the sub-list for extension type_name
@@ -301,7 +455,7 @@ func file_identity_admin_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_identity_admin_proto_rawDesc), len(file_identity_admin_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   3,
+			NumMessages:   7,
 			NumExtensions: 0,
 			NumServices:   1,
 		},

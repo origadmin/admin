@@ -12,9 +12,6 @@ import (
 	_ "google.golang.org/genproto/googleapis/api/annotations"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
-	_ "google.golang.org/protobuf/types/known/anypb"
-	emptypb "google.golang.org/protobuf/types/known/emptypb"
-	_ "google.golang.org/protobuf/types/known/timestamppb"
 	types "origadmin/application/admin/api/v1/services/types"
 	reflect "reflect"
 	sync "sync"
@@ -375,6 +372,43 @@ func (x *MarkAsReadRequest) GetNotificationId() int64 {
 	return 0
 }
 
+// MarkAsReadResponse is the response for NotificationService.MarkAsRead.
+type MarkAsReadResponse struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *MarkAsReadResponse) Reset() {
+	*x = MarkAsReadResponse{}
+	mi := &file_notification_notification_proto_msgTypes[5]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *MarkAsReadResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*MarkAsReadResponse) ProtoMessage() {}
+
+func (x *MarkAsReadResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_notification_notification_proto_msgTypes[5]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use MarkAsReadResponse.ProtoReflect.Descriptor instead.
+func (*MarkAsReadResponse) Descriptor() ([]byte, []int) {
+	return file_notification_notification_proto_rawDescGZIP(), []int{5}
+}
+
 // CreateTemplateRequest is the request for NotificationService.CreateTemplate.
 type CreateTemplateRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
@@ -386,7 +420,7 @@ type CreateTemplateRequest struct {
 
 func (x *CreateTemplateRequest) Reset() {
 	*x = CreateTemplateRequest{}
-	mi := &file_notification_notification_proto_msgTypes[5]
+	mi := &file_notification_notification_proto_msgTypes[6]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -398,7 +432,7 @@ func (x *CreateTemplateRequest) String() string {
 func (*CreateTemplateRequest) ProtoMessage() {}
 
 func (x *CreateTemplateRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_notification_notification_proto_msgTypes[5]
+	mi := &file_notification_notification_proto_msgTypes[6]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -411,7 +445,7 @@ func (x *CreateTemplateRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CreateTemplateRequest.ProtoReflect.Descriptor instead.
 func (*CreateTemplateRequest) Descriptor() ([]byte, []int) {
-	return file_notification_notification_proto_rawDescGZIP(), []int{5}
+	return file_notification_notification_proto_rawDescGZIP(), []int{6}
 }
 
 func (x *CreateTemplateRequest) GetTemplate() *types.Template {
@@ -432,7 +466,7 @@ type CreateTemplateResponse struct {
 
 func (x *CreateTemplateResponse) Reset() {
 	*x = CreateTemplateResponse{}
-	mi := &file_notification_notification_proto_msgTypes[6]
+	mi := &file_notification_notification_proto_msgTypes[7]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -444,7 +478,7 @@ func (x *CreateTemplateResponse) String() string {
 func (*CreateTemplateResponse) ProtoMessage() {}
 
 func (x *CreateTemplateResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_notification_notification_proto_msgTypes[6]
+	mi := &file_notification_notification_proto_msgTypes[7]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -457,7 +491,7 @@ func (x *CreateTemplateResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CreateTemplateResponse.ProtoReflect.Descriptor instead.
 func (*CreateTemplateResponse) Descriptor() ([]byte, []int) {
-	return file_notification_notification_proto_rawDescGZIP(), []int{6}
+	return file_notification_notification_proto_rawDescGZIP(), []int{7}
 }
 
 func (x *CreateTemplateResponse) GetTemplate() *types.Template {
@@ -484,7 +518,7 @@ type ListTemplatesRequest struct {
 
 func (x *ListTemplatesRequest) Reset() {
 	*x = ListTemplatesRequest{}
-	mi := &file_notification_notification_proto_msgTypes[7]
+	mi := &file_notification_notification_proto_msgTypes[8]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -496,7 +530,7 @@ func (x *ListTemplatesRequest) String() string {
 func (*ListTemplatesRequest) ProtoMessage() {}
 
 func (x *ListTemplatesRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_notification_notification_proto_msgTypes[7]
+	mi := &file_notification_notification_proto_msgTypes[8]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -509,7 +543,7 @@ func (x *ListTemplatesRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListTemplatesRequest.ProtoReflect.Descriptor instead.
 func (*ListTemplatesRequest) Descriptor() ([]byte, []int) {
-	return file_notification_notification_proto_rawDescGZIP(), []int{7}
+	return file_notification_notification_proto_rawDescGZIP(), []int{8}
 }
 
 func (x *ListTemplatesRequest) GetChannel() types.NotificationChannel {
@@ -557,7 +591,7 @@ type ListTemplatesResponse struct {
 
 func (x *ListTemplatesResponse) Reset() {
 	*x = ListTemplatesResponse{}
-	mi := &file_notification_notification_proto_msgTypes[8]
+	mi := &file_notification_notification_proto_msgTypes[9]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -569,7 +603,7 @@ func (x *ListTemplatesResponse) String() string {
 func (*ListTemplatesResponse) ProtoMessage() {}
 
 func (x *ListTemplatesResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_notification_notification_proto_msgTypes[8]
+	mi := &file_notification_notification_proto_msgTypes[9]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -582,7 +616,7 @@ func (x *ListTemplatesResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListTemplatesResponse.ProtoReflect.Descriptor instead.
 func (*ListTemplatesResponse) Descriptor() ([]byte, []int) {
-	return file_notification_notification_proto_rawDescGZIP(), []int{8}
+	return file_notification_notification_proto_rawDescGZIP(), []int{9}
 }
 
 func (x *ListTemplatesResponse) GetTemplates() []*types.Template {
@@ -626,7 +660,7 @@ type UpdateTemplateRequest struct {
 
 func (x *UpdateTemplateRequest) Reset() {
 	*x = UpdateTemplateRequest{}
-	mi := &file_notification_notification_proto_msgTypes[9]
+	mi := &file_notification_notification_proto_msgTypes[10]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -638,7 +672,7 @@ func (x *UpdateTemplateRequest) String() string {
 func (*UpdateTemplateRequest) ProtoMessage() {}
 
 func (x *UpdateTemplateRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_notification_notification_proto_msgTypes[9]
+	mi := &file_notification_notification_proto_msgTypes[10]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -651,7 +685,7 @@ func (x *UpdateTemplateRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use UpdateTemplateRequest.ProtoReflect.Descriptor instead.
 func (*UpdateTemplateRequest) Descriptor() ([]byte, []int) {
-	return file_notification_notification_proto_rawDescGZIP(), []int{9}
+	return file_notification_notification_proto_rawDescGZIP(), []int{10}
 }
 
 func (x *UpdateTemplateRequest) GetTemplateId() int64 {
@@ -679,7 +713,7 @@ type UpdateTemplateResponse struct {
 
 func (x *UpdateTemplateResponse) Reset() {
 	*x = UpdateTemplateResponse{}
-	mi := &file_notification_notification_proto_msgTypes[10]
+	mi := &file_notification_notification_proto_msgTypes[11]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -691,7 +725,7 @@ func (x *UpdateTemplateResponse) String() string {
 func (*UpdateTemplateResponse) ProtoMessage() {}
 
 func (x *UpdateTemplateResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_notification_notification_proto_msgTypes[10]
+	mi := &file_notification_notification_proto_msgTypes[11]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -704,7 +738,7 @@ func (x *UpdateTemplateResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use UpdateTemplateResponse.ProtoReflect.Descriptor instead.
 func (*UpdateTemplateResponse) Descriptor() ([]byte, []int) {
-	return file_notification_notification_proto_rawDescGZIP(), []int{10}
+	return file_notification_notification_proto_rawDescGZIP(), []int{11}
 }
 
 func (x *UpdateTemplateResponse) GetTemplate() *types.Template {
@@ -725,7 +759,7 @@ type DeleteTemplateRequest struct {
 
 func (x *DeleteTemplateRequest) Reset() {
 	*x = DeleteTemplateRequest{}
-	mi := &file_notification_notification_proto_msgTypes[11]
+	mi := &file_notification_notification_proto_msgTypes[12]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -737,7 +771,7 @@ func (x *DeleteTemplateRequest) String() string {
 func (*DeleteTemplateRequest) ProtoMessage() {}
 
 func (x *DeleteTemplateRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_notification_notification_proto_msgTypes[11]
+	mi := &file_notification_notification_proto_msgTypes[12]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -750,7 +784,7 @@ func (x *DeleteTemplateRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use DeleteTemplateRequest.ProtoReflect.Descriptor instead.
 func (*DeleteTemplateRequest) Descriptor() ([]byte, []int) {
-	return file_notification_notification_proto_rawDescGZIP(), []int{11}
+	return file_notification_notification_proto_rawDescGZIP(), []int{12}
 }
 
 func (x *DeleteTemplateRequest) GetTemplateId() int64 {
@@ -760,11 +794,48 @@ func (x *DeleteTemplateRequest) GetTemplateId() int64 {
 	return 0
 }
 
+// DeleteTemplateResponse is the response for NotificationService.DeleteTemplate.
+type DeleteTemplateResponse struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *DeleteTemplateResponse) Reset() {
+	*x = DeleteTemplateResponse{}
+	mi := &file_notification_notification_proto_msgTypes[13]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *DeleteTemplateResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*DeleteTemplateResponse) ProtoMessage() {}
+
+func (x *DeleteTemplateResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_notification_notification_proto_msgTypes[13]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use DeleteTemplateResponse.ProtoReflect.Descriptor instead.
+func (*DeleteTemplateResponse) Descriptor() ([]byte, []int) {
+	return file_notification_notification_proto_rawDescGZIP(), []int{13}
+}
+
 var File_notification_notification_proto protoreflect.FileDescriptor
 
 const file_notification_notification_proto_rawDesc = "" +
 	"\n" +
-	"\x1fnotification/notification.proto\x12\x1capi.v1.services.notification\x1a\x1cgoogle/api/annotations.proto\x1a\x19google/protobuf/any.proto\x1a\x1bgoogle/protobuf/empty.proto\x1a\x1fgoogle/protobuf/timestamp.proto\x1a\x18types/notification.proto\x1a\x17validate/validate.proto\x1a\x16policy/v1/policy.proto\"\xa2\x03\n" +
+	"\x1fnotification/notification.proto\x12\x1capi.v1.services.notification\x1a\x1cgoogle/api/annotations.proto\x1a\x18types/notification.proto\x1a\x17validate/validate.proto\x1a\x16policy/v1/policy.proto\"\xa2\x03\n" +
 	"\x17SendNotificationRequest\x12\x1d\n" +
 	"\x05title\x18\x01 \x01(\tB\a\xfaB\x04r\x02\x10\x01R\x05title\x12!\n" +
 	"\acontent\x18\x02 \x01(\tB\a\xfaB\x04r\x02\x10\x01R\acontent\x12;\n" +
@@ -795,7 +866,8 @@ const file_notification_notification_proto_rawDesc = "" +
 	"\x04page\x18\x03 \x01(\x05R\x04page\x12\x1c\n" +
 	"\tpage_size\x18\x04 \x01(\x05R\tpage_size\"F\n" +
 	"\x11MarkAsReadRequest\x121\n" +
-	"\x0fnotification_id\x18\x01 \x01(\x03B\a\xfaB\x04\"\x02 \x00R\x0fnotification_id\"T\n" +
+	"\x0fnotification_id\x18\x01 \x01(\x03B\a\xfaB\x04\"\x02 \x00R\x0fnotification_id\"\x14\n" +
+	"\x12MarkAsReadResponse\"T\n" +
 	"\x15CreateTemplateRequest\x12;\n" +
 	"\btemplate\x18\x01 \x01(\v2\x1f.api.v1.services.types.TemplateR\btemplate\"U\n" +
 	"\x16CreateTemplateResponse\x12;\n" +
@@ -820,22 +892,23 @@ const file_notification_notification_proto_rawDesc = "" +
 	"\x16UpdateTemplateResponse\x12;\n" +
 	"\btemplate\x18\x01 \x01(\v2\x1f.api.v1.services.types.TemplateR\btemplate\"B\n" +
 	"\x15DeleteTemplateRequest\x12)\n" +
-	"\vtemplate_id\x18\x01 \x01(\x03B\a\xfaB\x04\"\x02 \x00R\vtemplate_id2\x88\t\n" +
+	"\vtemplate_id\x18\x01 \x01(\x03B\a\xfaB\x04\"\x02 \x00R\vtemplate_id\"\x18\n" +
+	"\x16DeleteTemplateResponse2\xc0\t\n" +
 	"\x13NotificationService\x12\xa2\x01\n" +
 	"\x10SendNotification\x125.api.v1.services.notification.SendNotificationRequest\x1a6.api.v1.services.notification.SendNotificationResponse\"\x1f\xea\xea\x1b\a\n" +
 	"\x05admin\x82\xd3\xe4\x93\x02\x0e:\x01*\"\t/ntf/send\x12\xa5\x01\n" +
 	"\x11ListNotifications\x126.api.v1.services.notification.ListNotificationsRequest\x1a7.api.v1.services.notification.ListNotificationsResponse\"\x1f\xea\xea\x1b\x0f\n" +
-	"\rauthenticated\x82\xd3\xe4\x93\x02\x06\x12\x04/ntf\x12\x90\x01\n" +
+	"\rauthenticated\x82\xd3\xe4\x93\x02\x06\x12\x04/ntf\x12\xaa\x01\n" +
 	"\n" +
-	"MarkAsRead\x12/.api.v1.services.notification.MarkAsReadRequest\x1a\x16.google.protobuf.Empty\"9\xea\xea\x1b\x0f\n" +
+	"MarkAsRead\x12/.api.v1.services.notification.MarkAsReadRequest\x1a0.api.v1.services.notification.MarkAsReadResponse\"9\xea\xea\x1b\x0f\n" +
 	"\rauthenticated\x82\xd3\xe4\x93\x02 :\x01*\"\x1b/ntf/{notification_id}/read\x12\xa8\x01\n" +
 	"\x0eCreateTemplate\x123.api.v1.services.notification.CreateTemplateRequest\x1a4.api.v1.services.notification.CreateTemplateResponse\"+\xea\xea\x1b\a\n" +
 	"\x05admin\x82\xd3\xe4\x93\x02\x1a:\btemplate\"\x0e/ntf/templates\x12\x9b\x01\n" +
 	"\rListTemplates\x122.api.v1.services.notification.ListTemplatesRequest\x1a3.api.v1.services.notification.ListTemplatesResponse\"!\xea\xea\x1b\a\n" +
 	"\x05admin\x82\xd3\xe4\x93\x02\x10\x12\x0e/ntf/templates\x12\xb6\x01\n" +
 	"\x0eUpdateTemplate\x123.api.v1.services.notification.UpdateTemplateRequest\x1a4.api.v1.services.notification.UpdateTemplateResponse\"9\xea\xea\x1b\a\n" +
-	"\x05admin\x82\xd3\xe4\x93\x02(:\btemplate\x1a\x1c/ntf/templates/{template.id}\x12\x8e\x01\n" +
-	"\x0eDeleteTemplate\x123.api.v1.services.notification.DeleteTemplateRequest\x1a\x16.google.protobuf.Empty\"/\xea\xea\x1b\a\n" +
+	"\x05admin\x82\xd3\xe4\x93\x02(:\btemplate\x1a\x1c/ntf/templates/{template.id}\x12\xac\x01\n" +
+	"\x0eDeleteTemplate\x123.api.v1.services.notification.DeleteTemplateRequest\x1a4.api.v1.services.notification.DeleteTemplateResponse\"/\xea\xea\x1b\a\n" +
 	"\x05admin\x82\xd3\xe4\x93\x02\x1e*\x1c/ntf/templates/{template_id}B\x90\x02\n" +
 	" com.api.v1.services.notificationB\x11NotificationProtoP\x01ZEorigadmin/application/admin/api/v1/services/notification;notification\xa2\x02\x04AVSN\xaa\x02\x1cApi.V1.Services.Notification\xca\x02\x1cApi\\V1\\Services\\Notification\xe2\x02(Api\\V1\\Services\\Notification\\GPBMetadata\xea\x02\x1fApi::V1::Services::Notificationb\x06proto3"
 
@@ -851,54 +924,55 @@ func file_notification_notification_proto_rawDescGZIP() []byte {
 	return file_notification_notification_proto_rawDescData
 }
 
-var file_notification_notification_proto_msgTypes = make([]protoimpl.MessageInfo, 13)
+var file_notification_notification_proto_msgTypes = make([]protoimpl.MessageInfo, 15)
 var file_notification_notification_proto_goTypes = []any{
 	(*SendNotificationRequest)(nil),   // 0: api.v1.services.notification.SendNotificationRequest
 	(*SendNotificationResponse)(nil),  // 1: api.v1.services.notification.SendNotificationResponse
 	(*ListNotificationsRequest)(nil),  // 2: api.v1.services.notification.ListNotificationsRequest
 	(*ListNotificationsResponse)(nil), // 3: api.v1.services.notification.ListNotificationsResponse
 	(*MarkAsReadRequest)(nil),         // 4: api.v1.services.notification.MarkAsReadRequest
-	(*CreateTemplateRequest)(nil),     // 5: api.v1.services.notification.CreateTemplateRequest
-	(*CreateTemplateResponse)(nil),    // 6: api.v1.services.notification.CreateTemplateResponse
-	(*ListTemplatesRequest)(nil),      // 7: api.v1.services.notification.ListTemplatesRequest
-	(*ListTemplatesResponse)(nil),     // 8: api.v1.services.notification.ListTemplatesResponse
-	(*UpdateTemplateRequest)(nil),     // 9: api.v1.services.notification.UpdateTemplateRequest
-	(*UpdateTemplateResponse)(nil),    // 10: api.v1.services.notification.UpdateTemplateResponse
-	(*DeleteTemplateRequest)(nil),     // 11: api.v1.services.notification.DeleteTemplateRequest
-	nil,                               // 12: api.v1.services.notification.SendNotificationRequest.MetadataEntry
-	(types.NotificationType)(0),       // 13: api.v1.services.types.NotificationType
-	(types.NotificationChannel)(0),    // 14: api.v1.services.types.NotificationChannel
-	(*types.Notification)(nil),        // 15: api.v1.services.types.Notification
-	(*types.Template)(nil),            // 16: api.v1.services.types.Template
-	(*emptypb.Empty)(nil),             // 17: google.protobuf.Empty
+	(*MarkAsReadResponse)(nil),        // 5: api.v1.services.notification.MarkAsReadResponse
+	(*CreateTemplateRequest)(nil),     // 6: api.v1.services.notification.CreateTemplateRequest
+	(*CreateTemplateResponse)(nil),    // 7: api.v1.services.notification.CreateTemplateResponse
+	(*ListTemplatesRequest)(nil),      // 8: api.v1.services.notification.ListTemplatesRequest
+	(*ListTemplatesResponse)(nil),     // 9: api.v1.services.notification.ListTemplatesResponse
+	(*UpdateTemplateRequest)(nil),     // 10: api.v1.services.notification.UpdateTemplateRequest
+	(*UpdateTemplateResponse)(nil),    // 11: api.v1.services.notification.UpdateTemplateResponse
+	(*DeleteTemplateRequest)(nil),     // 12: api.v1.services.notification.DeleteTemplateRequest
+	(*DeleteTemplateResponse)(nil),    // 13: api.v1.services.notification.DeleteTemplateResponse
+	nil,                               // 14: api.v1.services.notification.SendNotificationRequest.MetadataEntry
+	(types.NotificationType)(0),       // 15: api.v1.services.types.NotificationType
+	(types.NotificationChannel)(0),    // 16: api.v1.services.types.NotificationChannel
+	(*types.Notification)(nil),        // 17: api.v1.services.types.Notification
+	(*types.Template)(nil),            // 18: api.v1.services.types.Template
 }
 var file_notification_notification_proto_depIdxs = []int32{
-	13, // 0: api.v1.services.notification.SendNotificationRequest.type:type_name -> api.v1.services.types.NotificationType
-	14, // 1: api.v1.services.notification.SendNotificationRequest.channel:type_name -> api.v1.services.types.NotificationChannel
-	12, // 2: api.v1.services.notification.SendNotificationRequest.metadata:type_name -> api.v1.services.notification.SendNotificationRequest.MetadataEntry
-	13, // 3: api.v1.services.notification.ListNotificationsRequest.type:type_name -> api.v1.services.types.NotificationType
-	14, // 4: api.v1.services.notification.ListNotificationsRequest.channel:type_name -> api.v1.services.types.NotificationChannel
-	15, // 5: api.v1.services.notification.ListNotificationsResponse.notifications:type_name -> api.v1.services.types.Notification
-	16, // 6: api.v1.services.notification.CreateTemplateRequest.template:type_name -> api.v1.services.types.Template
-	16, // 7: api.v1.services.notification.CreateTemplateResponse.template:type_name -> api.v1.services.types.Template
-	14, // 8: api.v1.services.notification.ListTemplatesRequest.channel:type_name -> api.v1.services.types.NotificationChannel
-	16, // 9: api.v1.services.notification.ListTemplatesResponse.templates:type_name -> api.v1.services.types.Template
-	16, // 10: api.v1.services.notification.UpdateTemplateRequest.template:type_name -> api.v1.services.types.Template
-	16, // 11: api.v1.services.notification.UpdateTemplateResponse.template:type_name -> api.v1.services.types.Template
+	15, // 0: api.v1.services.notification.SendNotificationRequest.type:type_name -> api.v1.services.types.NotificationType
+	16, // 1: api.v1.services.notification.SendNotificationRequest.channel:type_name -> api.v1.services.types.NotificationChannel
+	14, // 2: api.v1.services.notification.SendNotificationRequest.metadata:type_name -> api.v1.services.notification.SendNotificationRequest.MetadataEntry
+	15, // 3: api.v1.services.notification.ListNotificationsRequest.type:type_name -> api.v1.services.types.NotificationType
+	16, // 4: api.v1.services.notification.ListNotificationsRequest.channel:type_name -> api.v1.services.types.NotificationChannel
+	17, // 5: api.v1.services.notification.ListNotificationsResponse.notifications:type_name -> api.v1.services.types.Notification
+	18, // 6: api.v1.services.notification.CreateTemplateRequest.template:type_name -> api.v1.services.types.Template
+	18, // 7: api.v1.services.notification.CreateTemplateResponse.template:type_name -> api.v1.services.types.Template
+	16, // 8: api.v1.services.notification.ListTemplatesRequest.channel:type_name -> api.v1.services.types.NotificationChannel
+	18, // 9: api.v1.services.notification.ListTemplatesResponse.templates:type_name -> api.v1.services.types.Template
+	18, // 10: api.v1.services.notification.UpdateTemplateRequest.template:type_name -> api.v1.services.types.Template
+	18, // 11: api.v1.services.notification.UpdateTemplateResponse.template:type_name -> api.v1.services.types.Template
 	0,  // 12: api.v1.services.notification.NotificationService.SendNotification:input_type -> api.v1.services.notification.SendNotificationRequest
 	2,  // 13: api.v1.services.notification.NotificationService.ListNotifications:input_type -> api.v1.services.notification.ListNotificationsRequest
 	4,  // 14: api.v1.services.notification.NotificationService.MarkAsRead:input_type -> api.v1.services.notification.MarkAsReadRequest
-	5,  // 15: api.v1.services.notification.NotificationService.CreateTemplate:input_type -> api.v1.services.notification.CreateTemplateRequest
-	7,  // 16: api.v1.services.notification.NotificationService.ListTemplates:input_type -> api.v1.services.notification.ListTemplatesRequest
-	9,  // 17: api.v1.services.notification.NotificationService.UpdateTemplate:input_type -> api.v1.services.notification.UpdateTemplateRequest
-	11, // 18: api.v1.services.notification.NotificationService.DeleteTemplate:input_type -> api.v1.services.notification.DeleteTemplateRequest
+	6,  // 15: api.v1.services.notification.NotificationService.CreateTemplate:input_type -> api.v1.services.notification.CreateTemplateRequest
+	8,  // 16: api.v1.services.notification.NotificationService.ListTemplates:input_type -> api.v1.services.notification.ListTemplatesRequest
+	10, // 17: api.v1.services.notification.NotificationService.UpdateTemplate:input_type -> api.v1.services.notification.UpdateTemplateRequest
+	12, // 18: api.v1.services.notification.NotificationService.DeleteTemplate:input_type -> api.v1.services.notification.DeleteTemplateRequest
 	1,  // 19: api.v1.services.notification.NotificationService.SendNotification:output_type -> api.v1.services.notification.SendNotificationResponse
 	3,  // 20: api.v1.services.notification.NotificationService.ListNotifications:output_type -> api.v1.services.notification.ListNotificationsResponse
-	17, // 21: api.v1.services.notification.NotificationService.MarkAsRead:output_type -> google.protobuf.Empty
-	6,  // 22: api.v1.services.notification.NotificationService.CreateTemplate:output_type -> api.v1.services.notification.CreateTemplateResponse
-	8,  // 23: api.v1.services.notification.NotificationService.ListTemplates:output_type -> api.v1.services.notification.ListTemplatesResponse
-	10, // 24: api.v1.services.notification.NotificationService.UpdateTemplate:output_type -> api.v1.services.notification.UpdateTemplateResponse
-	17, // 25: api.v1.services.notification.NotificationService.DeleteTemplate:output_type -> google.protobuf.Empty
+	5,  // 21: api.v1.services.notification.NotificationService.MarkAsRead:output_type -> api.v1.services.notification.MarkAsReadResponse
+	7,  // 22: api.v1.services.notification.NotificationService.CreateTemplate:output_type -> api.v1.services.notification.CreateTemplateResponse
+	9,  // 23: api.v1.services.notification.NotificationService.ListTemplates:output_type -> api.v1.services.notification.ListTemplatesResponse
+	11, // 24: api.v1.services.notification.NotificationService.UpdateTemplate:output_type -> api.v1.services.notification.UpdateTemplateResponse
+	13, // 25: api.v1.services.notification.NotificationService.DeleteTemplate:output_type -> api.v1.services.notification.DeleteTemplateResponse
 	19, // [19:26] is the sub-list for method output_type
 	12, // [12:19] is the sub-list for method input_type
 	12, // [12:12] is the sub-list for extension type_name
@@ -912,14 +986,14 @@ func file_notification_notification_proto_init() {
 		return
 	}
 	file_notification_notification_proto_msgTypes[2].OneofWrappers = []any{}
-	file_notification_notification_proto_msgTypes[7].OneofWrappers = []any{}
+	file_notification_notification_proto_msgTypes[8].OneofWrappers = []any{}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_notification_notification_proto_rawDesc), len(file_notification_notification_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   13,
+			NumMessages:   15,
 			NumExtensions: 0,
 			NumServices:   1,
 		},

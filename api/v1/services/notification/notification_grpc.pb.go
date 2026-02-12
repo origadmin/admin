@@ -11,7 +11,6 @@ import (
 	grpc "google.golang.org/grpc"
 	codes "google.golang.org/grpc/codes"
 	status "google.golang.org/grpc/status"
-	emptypb "google.golang.org/protobuf/types/known/emptypb"
 )
 
 // This is a compile-time assertion to ensure that this generated file
@@ -41,7 +40,7 @@ type NotificationServiceClient interface {
 	// ListNotifications retrieves notifications for the current user.
 	ListNotifications(ctx context.Context, in *ListNotificationsRequest, opts ...grpc.CallOption) (*ListNotificationsResponse, error)
 	// MarkAsRead marks a notification as read.
-	MarkAsRead(ctx context.Context, in *MarkAsReadRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	MarkAsRead(ctx context.Context, in *MarkAsReadRequest, opts ...grpc.CallOption) (*MarkAsReadResponse, error)
 	// CreateTemplate creates a notification template.
 	CreateTemplate(ctx context.Context, in *CreateTemplateRequest, opts ...grpc.CallOption) (*CreateTemplateResponse, error)
 	// ListTemplates retrieves notification templates.
@@ -49,7 +48,7 @@ type NotificationServiceClient interface {
 	// UpdateTemplate updates a notification template.
 	UpdateTemplate(ctx context.Context, in *UpdateTemplateRequest, opts ...grpc.CallOption) (*UpdateTemplateResponse, error)
 	// DeleteTemplate deletes a notification template.
-	DeleteTemplate(ctx context.Context, in *DeleteTemplateRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	DeleteTemplate(ctx context.Context, in *DeleteTemplateRequest, opts ...grpc.CallOption) (*DeleteTemplateResponse, error)
 }
 
 type notificationServiceClient struct {
@@ -80,9 +79,9 @@ func (c *notificationServiceClient) ListNotifications(ctx context.Context, in *L
 	return out, nil
 }
 
-func (c *notificationServiceClient) MarkAsRead(ctx context.Context, in *MarkAsReadRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+func (c *notificationServiceClient) MarkAsRead(ctx context.Context, in *MarkAsReadRequest, opts ...grpc.CallOption) (*MarkAsReadResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(emptypb.Empty)
+	out := new(MarkAsReadResponse)
 	err := c.cc.Invoke(ctx, NotificationService_MarkAsRead_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
@@ -120,9 +119,9 @@ func (c *notificationServiceClient) UpdateTemplate(ctx context.Context, in *Upda
 	return out, nil
 }
 
-func (c *notificationServiceClient) DeleteTemplate(ctx context.Context, in *DeleteTemplateRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+func (c *notificationServiceClient) DeleteTemplate(ctx context.Context, in *DeleteTemplateRequest, opts ...grpc.CallOption) (*DeleteTemplateResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(emptypb.Empty)
+	out := new(DeleteTemplateResponse)
 	err := c.cc.Invoke(ctx, NotificationService_DeleteTemplate_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
@@ -142,7 +141,7 @@ type NotificationServiceServer interface {
 	// ListNotifications retrieves notifications for the current user.
 	ListNotifications(context.Context, *ListNotificationsRequest) (*ListNotificationsResponse, error)
 	// MarkAsRead marks a notification as read.
-	MarkAsRead(context.Context, *MarkAsReadRequest) (*emptypb.Empty, error)
+	MarkAsRead(context.Context, *MarkAsReadRequest) (*MarkAsReadResponse, error)
 	// CreateTemplate creates a notification template.
 	CreateTemplate(context.Context, *CreateTemplateRequest) (*CreateTemplateResponse, error)
 	// ListTemplates retrieves notification templates.
@@ -150,7 +149,7 @@ type NotificationServiceServer interface {
 	// UpdateTemplate updates a notification template.
 	UpdateTemplate(context.Context, *UpdateTemplateRequest) (*UpdateTemplateResponse, error)
 	// DeleteTemplate deletes a notification template.
-	DeleteTemplate(context.Context, *DeleteTemplateRequest) (*emptypb.Empty, error)
+	DeleteTemplate(context.Context, *DeleteTemplateRequest) (*DeleteTemplateResponse, error)
 	mustEmbedUnimplementedNotificationServiceServer()
 }
 
@@ -167,7 +166,7 @@ func (UnimplementedNotificationServiceServer) SendNotification(context.Context, 
 func (UnimplementedNotificationServiceServer) ListNotifications(context.Context, *ListNotificationsRequest) (*ListNotificationsResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListNotifications not implemented")
 }
-func (UnimplementedNotificationServiceServer) MarkAsRead(context.Context, *MarkAsReadRequest) (*emptypb.Empty, error) {
+func (UnimplementedNotificationServiceServer) MarkAsRead(context.Context, *MarkAsReadRequest) (*MarkAsReadResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method MarkAsRead not implemented")
 }
 func (UnimplementedNotificationServiceServer) CreateTemplate(context.Context, *CreateTemplateRequest) (*CreateTemplateResponse, error) {
@@ -179,7 +178,7 @@ func (UnimplementedNotificationServiceServer) ListTemplates(context.Context, *Li
 func (UnimplementedNotificationServiceServer) UpdateTemplate(context.Context, *UpdateTemplateRequest) (*UpdateTemplateResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdateTemplate not implemented")
 }
-func (UnimplementedNotificationServiceServer) DeleteTemplate(context.Context, *DeleteTemplateRequest) (*emptypb.Empty, error) {
+func (UnimplementedNotificationServiceServer) DeleteTemplate(context.Context, *DeleteTemplateRequest) (*DeleteTemplateResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DeleteTemplate not implemented")
 }
 func (UnimplementedNotificationServiceServer) mustEmbedUnimplementedNotificationServiceServer() {}

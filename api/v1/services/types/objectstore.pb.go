@@ -107,6 +107,59 @@ func (x *Object) GetCreatedTime() *timestamppb.Timestamp {
 	return nil
 }
 
+// Represents information about a part of a multipart upload.
+type PartInfo struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	PartNumber    int32                  `protobuf:"varint,1,opt,name=part_number,proto3" json:"part_number,omitempty"`
+	Etag          string                 `protobuf:"bytes,2,opt,name=etag,proto3" json:"etag,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *PartInfo) Reset() {
+	*x = PartInfo{}
+	mi := &file_types_objectstore_proto_msgTypes[1]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *PartInfo) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*PartInfo) ProtoMessage() {}
+
+func (x *PartInfo) ProtoReflect() protoreflect.Message {
+	mi := &file_types_objectstore_proto_msgTypes[1]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use PartInfo.ProtoReflect.Descriptor instead.
+func (*PartInfo) Descriptor() ([]byte, []int) {
+	return file_types_objectstore_proto_rawDescGZIP(), []int{1}
+}
+
+func (x *PartInfo) GetPartNumber() int32 {
+	if x != nil {
+		return x.PartNumber
+	}
+	return 0
+}
+
+func (x *PartInfo) GetEtag() string {
+	if x != nil {
+		return x.Etag
+	}
+	return ""
+}
+
 var File_types_objectstore_proto protoreflect.FileDescriptor
 
 const file_types_objectstore_proto_rawDesc = "" +
@@ -118,7 +171,10 @@ const file_types_objectstore_proto_rawDesc = "" +
 	"\x03url\x18\x03 \x01(\tR\x03url\x12\x12\n" +
 	"\x04size\x18\x04 \x01(\x03R\x04size\x12\"\n" +
 	"\fcontent_type\x18\x05 \x01(\tR\fcontent_type\x12>\n" +
-	"\fcreated_time\x18\x06 \x01(\v2\x1a.google.protobuf.TimestampR\fcreated_timeB\xde\x01\n" +
+	"\fcreated_time\x18\x06 \x01(\v2\x1a.google.protobuf.TimestampR\fcreated_time\"@\n" +
+	"\bPartInfo\x12 \n" +
+	"\vpart_number\x18\x01 \x01(\x05R\vpart_number\x12\x12\n" +
+	"\x04etag\x18\x02 \x01(\tR\x04etagB\xde\x01\n" +
 	"\x19com.api.v1.services.typesB\x10ObjectstoreProtoP\x01Z7origadmin/application/admin/api/v1/services/types;types\xa2\x02\x04AVST\xaa\x02\x15Api.V1.Services.Types\xca\x02\x15Api\\V1\\Services\\Types\xe2\x02!Api\\V1\\Services\\Types\\GPBMetadata\xea\x02\x18Api::V1::Services::Typesb\x06proto3"
 
 var (
@@ -133,13 +189,14 @@ func file_types_objectstore_proto_rawDescGZIP() []byte {
 	return file_types_objectstore_proto_rawDescData
 }
 
-var file_types_objectstore_proto_msgTypes = make([]protoimpl.MessageInfo, 1)
+var file_types_objectstore_proto_msgTypes = make([]protoimpl.MessageInfo, 2)
 var file_types_objectstore_proto_goTypes = []any{
 	(*Object)(nil),                // 0: api.v1.services.types.Object
-	(*timestamppb.Timestamp)(nil), // 1: google.protobuf.Timestamp
+	(*PartInfo)(nil),              // 1: api.v1.services.types.PartInfo
+	(*timestamppb.Timestamp)(nil), // 2: google.protobuf.Timestamp
 }
 var file_types_objectstore_proto_depIdxs = []int32{
-	1, // 0: api.v1.services.types.Object.created_time:type_name -> google.protobuf.Timestamp
+	2, // 0: api.v1.services.types.Object.created_time:type_name -> google.protobuf.Timestamp
 	1, // [1:1] is the sub-list for method output_type
 	1, // [1:1] is the sub-list for method input_type
 	1, // [1:1] is the sub-list for extension type_name
@@ -158,7 +215,7 @@ func file_types_objectstore_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_types_objectstore_proto_rawDesc), len(file_types_objectstore_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   1,
+			NumMessages:   2,
 			NumExtensions: 0,
 			NumServices:   0,
 		},

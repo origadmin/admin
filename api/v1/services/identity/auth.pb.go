@@ -11,7 +11,6 @@ import (
 	_ "google.golang.org/genproto/googleapis/api/annotations"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
-	_ "origadmin/application/admin/api/v1/services/types"
 	reflect "reflect"
 	sync "sync"
 	unsafe "unsafe"
@@ -753,7 +752,7 @@ var File_identity_auth_proto protoreflect.FileDescriptor
 
 const file_identity_auth_proto_rawDesc = "" +
 	"\n" +
-	"\x13identity/auth.proto\x12\x18api.v1.services.identity\x1a\x1cgoogle/api/annotations.proto\x1a\x16policy/v1/policy.proto\x1a\x12types/system.proto\"\x8a\x01\n" +
+	"\x13identity/auth.proto\x12\x18api.v1.services.identity\x1a\x1cgoogle/api/annotations.proto\x1a\x16policy/v1/policy.proto\"\x8a\x01\n" +
 	"\fLoginRequest\x12\x1a\n" +
 	"\busername\x18\x01 \x01(\tR\busername\x12\x1a\n" +
 	"\bpassword\x18\x02 \x01(\tR\bpassword\x12\x1e\n" +

@@ -12,7 +12,6 @@ import (
 	grpc "google.golang.org/grpc"
 	codes "google.golang.org/grpc/codes"
 	status "google.golang.org/grpc/status"
-	emptypb "google.golang.org/protobuf/types/known/emptypb"
 	io "io"
 )
 
@@ -43,7 +42,7 @@ type NotificationServiceBridgeServer interface {
 	// ListNotifications retrieves notifications for the current user.
 	ListNotifications(context.Context, *ListNotificationsRequest) (*ListNotificationsResponse, error)
 	// MarkAsRead marks a notification as read.
-	MarkAsRead(context.Context, *MarkAsReadRequest) (*emptypb.Empty, error)
+	MarkAsRead(context.Context, *MarkAsReadRequest) (*MarkAsReadResponse, error)
 	// CreateTemplate creates a notification template.
 	CreateTemplate(context.Context, *CreateTemplateRequest) (*CreateTemplateResponse, error)
 	// ListTemplates retrieves notification templates.
@@ -51,7 +50,7 @@ type NotificationServiceBridgeServer interface {
 	// UpdateTemplate updates a notification template.
 	UpdateTemplate(context.Context, *UpdateTemplateRequest) (*UpdateTemplateResponse, error)
 	// DeleteTemplate deletes a notification template.
-	DeleteTemplate(context.Context, *DeleteTemplateRequest) (*emptypb.Empty, error)
+	DeleteTemplate(context.Context, *DeleteTemplateRequest) (*DeleteTemplateResponse, error)
 }
 
 type NotificationServiceHooker interface {
@@ -78,7 +77,7 @@ type NotificationServiceListNotificationsHooker interface {
 }
 type NotificationServiceMarkAsReadHooker interface {
 	PrepareMarkAsRead(http.Context, *MarkAsReadRequest) (context.Context, error)
-	CompleteMarkAsRead(http.Context, *MarkAsReadRequest, *emptypb.Empty) error
+	CompleteMarkAsRead(http.Context, *MarkAsReadRequest, *MarkAsReadResponse) error
 }
 type NotificationServiceCreateTemplateHooker interface {
 	PrepareCreateTemplate(http.Context, *CreateTemplateRequest) (context.Context, error)
@@ -94,7 +93,7 @@ type NotificationServiceUpdateTemplateHooker interface {
 }
 type NotificationServiceDeleteTemplateHooker interface {
 	PrepareDeleteTemplate(http.Context, *DeleteTemplateRequest) (context.Context, error)
-	CompleteDeleteTemplate(http.Context, *DeleteTemplateRequest, *emptypb.Empty) error
+	CompleteDeleteTemplate(http.Context, *DeleteTemplateRequest, *DeleteTemplateResponse) error
 }
 
 func RegisterNotificationServiceBridgeServer(s *http.Server, srv NotificationServiceHookedBridger) {
@@ -182,7 +181,7 @@ func _NotificationService_MarkAsRead0_Bridge_Handler(srv NotificationServiceHook
 		if err != nil {
 			return err
 		}
-		return srv.CompleteMarkAsRead(ctx, &in, out.(*emptypb.Empty))
+		return srv.CompleteMarkAsRead(ctx, &in, out.(*MarkAsReadResponse))
 	}
 }
 
@@ -286,7 +285,7 @@ func _NotificationService_DeleteTemplate0_Bridge_Handler(srv NotificationService
 		if err != nil {
 			return err
 		}
-		return srv.CompleteDeleteTemplate(ctx, &in, out.(*emptypb.Empty))
+		return srv.CompleteDeleteTemplate(ctx, &in, out.(*DeleteTemplateResponse))
 	}
 }
 
@@ -317,7 +316,7 @@ func (UnimplementedNotificationServiceHooked) PrepareMarkAsRead(ctx http.Context
 	return ctx, nil
 }
 
-func (UnimplementedNotificationServiceHooked) CompleteMarkAsRead(ctx http.Context, in *MarkAsReadRequest, out *emptypb.Empty) error {
+func (UnimplementedNotificationServiceHooked) CompleteMarkAsRead(ctx http.Context, in *MarkAsReadRequest, out *MarkAsReadResponse) error {
 	return ctx.Result(200, out)
 }
 
@@ -349,7 +348,7 @@ func (UnimplementedNotificationServiceHooked) PrepareDeleteTemplate(ctx http.Con
 	return ctx, nil
 }
 
-func (UnimplementedNotificationServiceHooked) CompleteDeleteTemplate(ctx http.Context, in *DeleteTemplateRequest, out *emptypb.Empty) error {
+func (UnimplementedNotificationServiceHooked) CompleteDeleteTemplate(ctx http.Context, in *DeleteTemplateRequest, out *DeleteTemplateResponse) error {
 	return ctx.Result(200, out)
 }
 
@@ -383,7 +382,7 @@ func (c *NotificationServiceHTTPBridgeImpl) ListNotifications(ctx context.Contex
 	return c.client.ListNotifications(ctx, in)
 }
 
-func (c *NotificationServiceHTTPBridgeImpl) MarkAsRead(ctx context.Context, in *MarkAsReadRequest) (*emptypb.Empty, error) {
+func (c *NotificationServiceHTTPBridgeImpl) MarkAsRead(ctx context.Context, in *MarkAsReadRequest) (*MarkAsReadResponse, error) {
 	return c.client.MarkAsRead(ctx, in)
 }
 
@@ -399,7 +398,7 @@ func (c *NotificationServiceHTTPBridgeImpl) UpdateTemplate(ctx context.Context, 
 	return c.client.UpdateTemplate(ctx, in)
 }
 
-func (c *NotificationServiceHTTPBridgeImpl) DeleteTemplate(ctx context.Context, in *DeleteTemplateRequest) (*emptypb.Empty, error) {
+func (c *NotificationServiceHTTPBridgeImpl) DeleteTemplate(ctx context.Context, in *DeleteTemplateRequest) (*DeleteTemplateResponse, error) {
 	return c.client.DeleteTemplate(ctx, in)
 }
 
@@ -419,7 +418,7 @@ func (c *NotificationServiceBridgeImpl) ListNotifications(ctx context.Context, i
 	return c.client.ListNotifications(ctx, in)
 }
 
-func (c *NotificationServiceBridgeImpl) MarkAsRead(ctx context.Context, in *MarkAsReadRequest) (*emptypb.Empty, error) {
+func (c *NotificationServiceBridgeImpl) MarkAsRead(ctx context.Context, in *MarkAsReadRequest) (*MarkAsReadResponse, error) {
 	return c.client.MarkAsRead(ctx, in)
 }
 
@@ -435,7 +434,7 @@ func (c *NotificationServiceBridgeImpl) UpdateTemplate(ctx context.Context, in *
 	return c.client.UpdateTemplate(ctx, in)
 }
 
-func (c *NotificationServiceBridgeImpl) DeleteTemplate(ctx context.Context, in *DeleteTemplateRequest) (*emptypb.Empty, error) {
+func (c *NotificationServiceBridgeImpl) DeleteTemplate(ctx context.Context, in *DeleteTemplateRequest) (*DeleteTemplateResponse, error) {
 	return c.client.DeleteTemplate(ctx, in)
 }
 
@@ -457,7 +456,7 @@ func (c *NotificationServiceGRPC2HTTPBridgeImpl) ListNotifications(ctx context.C
 	return c.client.ListNotifications(ctx, in)
 }
 
-func (c *NotificationServiceGRPC2HTTPBridgeImpl) MarkAsRead(ctx context.Context, in *MarkAsReadRequest) (*emptypb.Empty, error) {
+func (c *NotificationServiceGRPC2HTTPBridgeImpl) MarkAsRead(ctx context.Context, in *MarkAsReadRequest) (*MarkAsReadResponse, error) {
 	return c.client.MarkAsRead(ctx, in)
 }
 
@@ -473,7 +472,7 @@ func (c *NotificationServiceGRPC2HTTPBridgeImpl) UpdateTemplate(ctx context.Cont
 	return c.client.UpdateTemplate(ctx, in)
 }
 
-func (c *NotificationServiceGRPC2HTTPBridgeImpl) DeleteTemplate(ctx context.Context, in *DeleteTemplateRequest) (*emptypb.Empty, error) {
+func (c *NotificationServiceGRPC2HTTPBridgeImpl) DeleteTemplate(ctx context.Context, in *DeleteTemplateRequest) (*DeleteTemplateResponse, error) {
 	return c.client.DeleteTemplate(ctx, in)
 }
 
@@ -493,7 +492,7 @@ func (c *NotificationServiceHTTP2GRPCBridgeImpl) ListNotifications(ctx context.C
 	return c.client.ListNotifications(ctx, in)
 }
 
-func (c *NotificationServiceHTTP2GRPCBridgeImpl) MarkAsRead(ctx context.Context, in *MarkAsReadRequest) (*emptypb.Empty, error) {
+func (c *NotificationServiceHTTP2GRPCBridgeImpl) MarkAsRead(ctx context.Context, in *MarkAsReadRequest) (*MarkAsReadResponse, error) {
 	return c.client.MarkAsRead(ctx, in)
 }
 
@@ -509,7 +508,7 @@ func (c *NotificationServiceHTTP2GRPCBridgeImpl) UpdateTemplate(ctx context.Cont
 	return c.client.UpdateTemplate(ctx, in)
 }
 
-func (c *NotificationServiceHTTP2GRPCBridgeImpl) DeleteTemplate(ctx context.Context, in *DeleteTemplateRequest) (*emptypb.Empty, error) {
+func (c *NotificationServiceHTTP2GRPCBridgeImpl) DeleteTemplate(ctx context.Context, in *DeleteTemplateRequest) (*DeleteTemplateResponse, error) {
 	return c.client.DeleteTemplate(ctx, in)
 }
 

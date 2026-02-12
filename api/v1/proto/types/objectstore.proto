@@ -19,3 +19,9 @@ message Object {
   string content_type = 5 [json_name = "content_type"];
   google.protobuf.Timestamp created_time = 6 [json_name = "created_time"];
 }
+
+// Represents information about a part of a multipart upload.
+message PartInfo {
+  int32 part_number = 1 [json_name = "part_number"];
+  string etag = 2 [json_name = "etag"];
+}

@@ -29,12 +29,25 @@ var (
 )
 
 const FileManagerServiceUploadFileBridgeOperation = "/api.v1.services.filemanager.FileManagerService/UploadFile"
+const FileManagerServiceInitiateMultipartUploadBridgeOperation = "/api.v1.services.filemanager.FileManagerService/InitiateMultipartUpload"
+const FileManagerServiceGetMultipartUploadUrlBridgeOperation = "/api.v1.services.filemanager.FileManagerService/GetMultipartUploadUrl"
+const FileManagerServiceCompleteMultipartUploadBridgeOperation = "/api.v1.services.filemanager.FileManagerService/CompleteMultipartUpload"
+const FileManagerServiceAbortMultipartUploadBridgeOperation = "/api.v1.services.filemanager.FileManagerService/AbortMultipartUpload"
 const FileManagerServiceGetFileBridgeOperation = "/api.v1.services.filemanager.FileManagerService/GetFile"
 const FileManagerServiceDeleteFileBridgeOperation = "/api.v1.services.filemanager.FileManagerService/DeleteFile"
 
 type FileManagerServiceBridgeServer interface {
-	// Uploads a file and creates its metadata.
+	// Simple upload for small files (e.g. avatars, images).
+	// The file size should be limited (e.g. < 10MB).
 	UploadFile(context.Context, *UploadFileRequest) (*UploadFileResponse, error)
+	// Initiates a multipart upload for large files.
+	InitiateMultipartUpload(context.Context, *InitiateMultipartUploadRequest) (*InitiateMultipartUploadResponse, error)
+	// Gets a presigned URL for a specific part of a multipart upload.
+	GetMultipartUploadUrl(context.Context, *GetMultipartUploadUrlRequest) (*GetMultipartUploadUrlResponse, error)
+	// Completes a multipart upload.
+	CompleteMultipartUpload(context.Context, *CompleteMultipartUploadRequest) (*CompleteMultipartUploadResponse, error)
+	// Aborts a multipart upload.
+	AbortMultipartUpload(context.Context, *AbortMultipartUploadRequest) (*AbortMultipartUploadResponse, error)
 	// Gets file metadata.
 	GetFile(context.Context, *GetFileRequest) (*GetFileResponse, error)
 	// Deletes a file and its metadata.
@@ -43,6 +56,10 @@ type FileManagerServiceBridgeServer interface {
 
 type FileManagerServiceHooker interface {
 	FileManagerServiceUploadFileHooker
+	FileManagerServiceInitiateMultipartUploadHooker
+	FileManagerServiceGetMultipartUploadUrlHooker
+	FileManagerServiceCompleteMultipartUploadHooker
+	FileManagerServiceAbortMultipartUploadHooker
 	FileManagerServiceGetFileHooker
 	FileManagerServiceDeleteFileHooker
 }
@@ -55,6 +72,22 @@ type FileManagerServiceUploadFileHooker interface {
 	PrepareUploadFile(http.Context, *UploadFileRequest) (context.Context, error)
 	CompleteUploadFile(http.Context, *UploadFileRequest, *UploadFileResponse) error
 }
+type FileManagerServiceInitiateMultipartUploadHooker interface {
+	PrepareInitiateMultipartUpload(http.Context, *InitiateMultipartUploadRequest) (context.Context, error)
+	CompleteInitiateMultipartUpload(http.Context, *InitiateMultipartUploadRequest, *InitiateMultipartUploadResponse) error
+}
+type FileManagerServiceGetMultipartUploadUrlHooker interface {
+	PrepareGetMultipartUploadUrl(http.Context, *GetMultipartUploadUrlRequest) (context.Context, error)
+	CompleteGetMultipartUploadUrl(http.Context, *GetMultipartUploadUrlRequest, *GetMultipartUploadUrlResponse) error
+}
+type FileManagerServiceCompleteMultipartUploadHooker interface {
+	PrepareCompleteMultipartUpload(http.Context, *CompleteMultipartUploadRequest) (context.Context, error)
+	CompleteCompleteMultipartUpload(http.Context, *CompleteMultipartUploadRequest, *CompleteMultipartUploadResponse) error
+}
+type FileManagerServiceAbortMultipartUploadHooker interface {
+	PrepareAbortMultipartUpload(http.Context, *AbortMultipartUploadRequest) (context.Context, error)
+	CompleteAbortMultipartUpload(http.Context, *AbortMultipartUploadRequest, *AbortMultipartUploadResponse) error
+}
 type FileManagerServiceGetFileHooker interface {
 	PrepareGetFile(http.Context, *GetFileRequest) (context.Context, error)
 	CompleteGetFile(http.Context, *GetFileRequest, *GetFileResponse) error
@@ -66,7 +99,11 @@ type FileManagerServiceDeleteFileHooker interface {
 
 func RegisterFileManagerServiceBridgeServer(s *http.Server, srv FileManagerServiceHookedBridger) {
 	r := s.Route("/")
-	r.POST("/files/upload", _FileManagerService_UploadFile0_Bridge_Handler(srv))
+	r.POST("/files", _FileManagerService_UploadFile0_Bridge_Handler(srv))
+	r.POST("/files/multipart", _FileManagerService_InitiateMultipartUpload0_Bridge_Handler(srv))
+	r.GET("/files/multipart/:upload_id/parts/:part_number", _FileManagerService_GetMultipartUploadUrl0_Bridge_Handler(srv))
+	r.POST("/files/multipart/:upload_id/complete", _FileManagerService_CompleteMultipartUpload0_Bridge_Handler(srv))
+	r.DELETE("/files/multipart/:upload_id", _FileManagerService_AbortMultipartUpload0_Bridge_Handler(srv))
 	r.GET("/files/:id", _FileManagerService_GetFile0_Bridge_Handler(srv))
 	r.DELETE("/files/:id", _FileManagerService_DeleteFile0_Bridge_Handler(srv))
 }
@@ -94,6 +131,113 @@ func _FileManagerService_UploadFile0_Bridge_Handler(srv FileManagerServiceHooked
 			return err
 		}
 		return srv.CompleteUploadFile(ctx, &in, out.(*UploadFileResponse))
+	}
+}
+
+func _FileManagerService_InitiateMultipartUpload0_Bridge_Handler(srv FileManagerServiceHookedBridger) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in InitiateMultipartUploadRequest
+		if err := ctx.Bind(&in); err != nil {
+			return err
+		}
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationFileManagerServiceInitiateMultipartUpload)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.InitiateMultipartUpload(ctx, req.(*InitiateMultipartUploadRequest))
+		})
+
+		newctx, err := srv.PrepareInitiateMultipartUpload(ctx, &in)
+		if err != nil {
+			return err
+		}
+		out, err := h(newctx, &in)
+		if err != nil {
+			return err
+		}
+		return srv.CompleteInitiateMultipartUpload(ctx, &in, out.(*InitiateMultipartUploadResponse))
+	}
+}
+
+func _FileManagerService_GetMultipartUploadUrl0_Bridge_Handler(srv FileManagerServiceHookedBridger) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in GetMultipartUploadUrlRequest
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		if err := ctx.BindVars(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationFileManagerServiceGetMultipartUploadUrl)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.GetMultipartUploadUrl(ctx, req.(*GetMultipartUploadUrlRequest))
+		})
+
+		newctx, err := srv.PrepareGetMultipartUploadUrl(ctx, &in)
+		if err != nil {
+			return err
+		}
+		out, err := h(newctx, &in)
+		if err != nil {
+			return err
+		}
+		return srv.CompleteGetMultipartUploadUrl(ctx, &in, out.(*GetMultipartUploadUrlResponse))
+	}
+}
+
+func _FileManagerService_CompleteMultipartUpload0_Bridge_Handler(srv FileManagerServiceHookedBridger) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in CompleteMultipartUploadRequest
+		if err := ctx.Bind(&in); err != nil {
+			return err
+		}
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		if err := ctx.BindVars(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationFileManagerServiceCompleteMultipartUpload)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.CompleteMultipartUpload(ctx, req.(*CompleteMultipartUploadRequest))
+		})
+
+		newctx, err := srv.PrepareCompleteMultipartUpload(ctx, &in)
+		if err != nil {
+			return err
+		}
+		out, err := h(newctx, &in)
+		if err != nil {
+			return err
+		}
+		return srv.CompleteCompleteMultipartUpload(ctx, &in, out.(*CompleteMultipartUploadResponse))
+	}
+}
+
+func _FileManagerService_AbortMultipartUpload0_Bridge_Handler(srv FileManagerServiceHookedBridger) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in AbortMultipartUploadRequest
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		if err := ctx.BindVars(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationFileManagerServiceAbortMultipartUpload)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.AbortMultipartUpload(ctx, req.(*AbortMultipartUploadRequest))
+		})
+
+		newctx, err := srv.PrepareAbortMultipartUpload(ctx, &in)
+		if err != nil {
+			return err
+		}
+		out, err := h(newctx, &in)
+		if err != nil {
+			return err
+		}
+		return srv.CompleteAbortMultipartUpload(ctx, &in, out.(*AbortMultipartUploadResponse))
 	}
 }
 
@@ -164,6 +308,38 @@ func (UnimplementedFileManagerServiceHooked) CompleteUploadFile(ctx http.Context
 	return ctx.Result(200, out)
 }
 
+func (UnimplementedFileManagerServiceHooked) PrepareInitiateMultipartUpload(ctx http.Context, in *InitiateMultipartUploadRequest) (context.Context, error) {
+	return ctx, nil
+}
+
+func (UnimplementedFileManagerServiceHooked) CompleteInitiateMultipartUpload(ctx http.Context, in *InitiateMultipartUploadRequest, out *InitiateMultipartUploadResponse) error {
+	return ctx.Result(200, out)
+}
+
+func (UnimplementedFileManagerServiceHooked) PrepareGetMultipartUploadUrl(ctx http.Context, in *GetMultipartUploadUrlRequest) (context.Context, error) {
+	return ctx, nil
+}
+
+func (UnimplementedFileManagerServiceHooked) CompleteGetMultipartUploadUrl(ctx http.Context, in *GetMultipartUploadUrlRequest, out *GetMultipartUploadUrlResponse) error {
+	return ctx.Result(200, out)
+}
+
+func (UnimplementedFileManagerServiceHooked) PrepareCompleteMultipartUpload(ctx http.Context, in *CompleteMultipartUploadRequest) (context.Context, error) {
+	return ctx, nil
+}
+
+func (UnimplementedFileManagerServiceHooked) CompleteCompleteMultipartUpload(ctx http.Context, in *CompleteMultipartUploadRequest, out *CompleteMultipartUploadResponse) error {
+	return ctx.Result(200, out)
+}
+
+func (UnimplementedFileManagerServiceHooked) PrepareAbortMultipartUpload(ctx http.Context, in *AbortMultipartUploadRequest) (context.Context, error) {
+	return ctx, nil
+}
+
+func (UnimplementedFileManagerServiceHooked) CompleteAbortMultipartUpload(ctx http.Context, in *AbortMultipartUploadRequest, out *AbortMultipartUploadResponse) error {
+	return ctx.Result(200, out)
+}
+
 func (UnimplementedFileManagerServiceHooked) PrepareGetFile(ctx http.Context, in *GetFileRequest) (context.Context, error) {
 	return ctx, nil
 }
@@ -206,6 +382,22 @@ func (c *FileManagerServiceHTTPBridgeImpl) UploadFile(ctx context.Context, in *U
 	return c.client.UploadFile(ctx, in)
 }
 
+func (c *FileManagerServiceHTTPBridgeImpl) InitiateMultipartUpload(ctx context.Context, in *InitiateMultipartUploadRequest) (*InitiateMultipartUploadResponse, error) {
+	return c.client.InitiateMultipartUpload(ctx, in)
+}
+
+func (c *FileManagerServiceHTTPBridgeImpl) GetMultipartUploadUrl(ctx context.Context, in *GetMultipartUploadUrlRequest) (*GetMultipartUploadUrlResponse, error) {
+	return c.client.GetMultipartUploadUrl(ctx, in)
+}
+
+func (c *FileManagerServiceHTTPBridgeImpl) CompleteMultipartUpload(ctx context.Context, in *CompleteMultipartUploadRequest) (*CompleteMultipartUploadResponse, error) {
+	return c.client.CompleteMultipartUpload(ctx, in)
+}
+
+func (c *FileManagerServiceHTTPBridgeImpl) AbortMultipartUpload(ctx context.Context, in *AbortMultipartUploadRequest) (*AbortMultipartUploadResponse, error) {
+	return c.client.AbortMultipartUpload(ctx, in)
+}
+
 func (c *FileManagerServiceHTTPBridgeImpl) GetFile(ctx context.Context, in *GetFileRequest) (*GetFileResponse, error) {
 	return c.client.GetFile(ctx, in)
 }
@@ -224,6 +416,22 @@ func NewFileManagerServiceBridge(client grpc.ClientConnInterface) FileManagerSer
 
 func (c *FileManagerServiceBridgeImpl) UploadFile(ctx context.Context, in *UploadFileRequest) (*UploadFileResponse, error) {
 	return c.client.UploadFile(ctx, in)
+}
+
+func (c *FileManagerServiceBridgeImpl) InitiateMultipartUpload(ctx context.Context, in *InitiateMultipartUploadRequest) (*InitiateMultipartUploadResponse, error) {
+	return c.client.InitiateMultipartUpload(ctx, in)
+}
+
+func (c *FileManagerServiceBridgeImpl) GetMultipartUploadUrl(ctx context.Context, in *GetMultipartUploadUrlRequest) (*GetMultipartUploadUrlResponse, error) {
+	return c.client.GetMultipartUploadUrl(ctx, in)
+}
+
+func (c *FileManagerServiceBridgeImpl) CompleteMultipartUpload(ctx context.Context, in *CompleteMultipartUploadRequest) (*CompleteMultipartUploadResponse, error) {
+	return c.client.CompleteMultipartUpload(ctx, in)
+}
+
+func (c *FileManagerServiceBridgeImpl) AbortMultipartUpload(ctx context.Context, in *AbortMultipartUploadRequest) (*AbortMultipartUploadResponse, error) {
+	return c.client.AbortMultipartUpload(ctx, in)
 }
 
 func (c *FileManagerServiceBridgeImpl) GetFile(ctx context.Context, in *GetFileRequest) (*GetFileResponse, error) {
@@ -248,6 +456,22 @@ func (c *FileManagerServiceGRPC2HTTPBridgeImpl) UploadFile(ctx context.Context, 
 	return c.client.UploadFile(ctx, in)
 }
 
+func (c *FileManagerServiceGRPC2HTTPBridgeImpl) InitiateMultipartUpload(ctx context.Context, in *InitiateMultipartUploadRequest) (*InitiateMultipartUploadResponse, error) {
+	return c.client.InitiateMultipartUpload(ctx, in)
+}
+
+func (c *FileManagerServiceGRPC2HTTPBridgeImpl) GetMultipartUploadUrl(ctx context.Context, in *GetMultipartUploadUrlRequest) (*GetMultipartUploadUrlResponse, error) {
+	return c.client.GetMultipartUploadUrl(ctx, in)
+}
+
+func (c *FileManagerServiceGRPC2HTTPBridgeImpl) CompleteMultipartUpload(ctx context.Context, in *CompleteMultipartUploadRequest) (*CompleteMultipartUploadResponse, error) {
+	return c.client.CompleteMultipartUpload(ctx, in)
+}
+
+func (c *FileManagerServiceGRPC2HTTPBridgeImpl) AbortMultipartUpload(ctx context.Context, in *AbortMultipartUploadRequest) (*AbortMultipartUploadResponse, error) {
+	return c.client.AbortMultipartUpload(ctx, in)
+}
+
 func (c *FileManagerServiceGRPC2HTTPBridgeImpl) GetFile(ctx context.Context, in *GetFileRequest) (*GetFileResponse, error) {
 	return c.client.GetFile(ctx, in)
 }
@@ -266,6 +490,22 @@ func NewFileManagerServiceHTTP2GRPC(client *http.Client) FileManagerServiceServe
 
 func (c *FileManagerServiceHTTP2GRPCBridgeImpl) UploadFile(ctx context.Context, in *UploadFileRequest) (*UploadFileResponse, error) {
 	return c.client.UploadFile(ctx, in)
+}
+
+func (c *FileManagerServiceHTTP2GRPCBridgeImpl) InitiateMultipartUpload(ctx context.Context, in *InitiateMultipartUploadRequest) (*InitiateMultipartUploadResponse, error) {
+	return c.client.InitiateMultipartUpload(ctx, in)
+}
+
+func (c *FileManagerServiceHTTP2GRPCBridgeImpl) GetMultipartUploadUrl(ctx context.Context, in *GetMultipartUploadUrlRequest) (*GetMultipartUploadUrlResponse, error) {
+	return c.client.GetMultipartUploadUrl(ctx, in)
+}
+
+func (c *FileManagerServiceHTTP2GRPCBridgeImpl) CompleteMultipartUpload(ctx context.Context, in *CompleteMultipartUploadRequest) (*CompleteMultipartUploadResponse, error) {
+	return c.client.CompleteMultipartUpload(ctx, in)
+}
+
+func (c *FileManagerServiceHTTP2GRPCBridgeImpl) AbortMultipartUpload(ctx context.Context, in *AbortMultipartUploadRequest) (*AbortMultipartUploadResponse, error) {
+	return c.client.AbortMultipartUpload(ctx, in)
 }
 
 func (c *FileManagerServiceHTTP2GRPCBridgeImpl) GetFile(ctx context.Context, in *GetFileRequest) (*GetFileResponse, error) {

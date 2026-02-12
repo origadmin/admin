@@ -12,11 +12,42 @@ option java_package = "com.origadmin.api.v1.services.filemanager";
 
 // The FileManager service definition.
 service FileManagerService {
-  // Uploads a file and creates its metadata.
+  // Simple upload for small files (e.g. avatars, images).
+  // The file size should be limited (e.g. < 10MB).
   rpc UploadFile(UploadFileRequest) returns (UploadFileResponse) {
     option (google.api.http) = {
-      post: "/files/upload"
+      post: "/files"
       body: "*"
+    };
+  }
+
+  // Initiates a multipart upload for large files.
+  rpc InitiateMultipartUpload(InitiateMultipartUploadRequest) returns (InitiateMultipartUploadResponse) {
+    option (google.api.http) = {
+      post: "/files/multipart"
+      body: "*"
+    };
+  }
+
+  // Gets a presigned URL for a specific part of a multipart upload.
+  rpc GetMultipartUploadUrl(GetMultipartUploadUrlRequest) returns (GetMultipartUploadUrlResponse) {
+    option (google.api.http) = {
+      get: "/files/multipart/{upload_id}/parts/{part_number}"
+    };
+  }
+
+  // Completes a multipart upload.
+  rpc CompleteMultipartUpload(CompleteMultipartUploadRequest) returns (CompleteMultipartUploadResponse) {
+    option (google.api.http) = {
+      post: "/files/multipart/{upload_id}/complete"
+      body: "*"
+    };
+  }
+
+  // Aborts a multipart upload.
+  rpc AbortMultipartUpload(AbortMultipartUploadRequest) returns (AbortMultipartUploadResponse) {
+    option (google.api.http) = {
+      delete: "/files/multipart/{upload_id}"
     };
   }
 
@@ -35,16 +66,64 @@ service FileManagerService {
   }
 }
 
-// Request message for uploading a file.
+// Request message for uploading a small file directly.
 message UploadFileRequest {
   bytes data = 1;
   string name = 2;
+  string content_type = 3;
 }
 
 // Response message for uploading a file.
 message UploadFileResponse {
   api.v1.services.types.FileMetadata file_metadata = 1;
 }
+
+// Request message for initiating a multipart upload.
+message InitiateMultipartUploadRequest {
+  string name = 1;
+  int64 size = 2;
+  string content_type = 3;
+}
+
+// Response message for initiating a multipart upload.
+message InitiateMultipartUploadResponse {
+  string upload_id = 1;
+}
+
+// Request message for getting a multipart upload URL.
+message GetMultipartUploadUrlRequest {
+  string upload_id = 1;
+  int32 part_number = 2;
+}
+
+// Response message for getting a multipart upload URL.
+message GetMultipartUploadUrlResponse {
+  string upload_url = 1;
+}
+
+// Request message for completing a multipart upload.
+message CompleteMultipartUploadRequest {
+  string upload_id = 1;
+  repeated PartInfo parts = 2;
+}
+
+message PartInfo {
+  int32 part_number = 1;
+  string etag = 2;
+}
+
+// Response message for completing a multipart upload.
+message CompleteMultipartUploadResponse {
+  api.v1.services.types.FileMetadata file_metadata = 1;
+}
+
+// Request message for aborting a multipart upload.
+message AbortMultipartUploadRequest {
+  string upload_id = 1;
+}
+
+// Response message for aborting a multipart upload.
+message AbortMultipartUploadResponse {}
 
 // Request message for getting file metadata.
 message GetFileRequest {

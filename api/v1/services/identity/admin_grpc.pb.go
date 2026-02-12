@@ -11,7 +11,6 @@ import (
 	grpc "google.golang.org/grpc"
 	codes "google.golang.org/grpc/codes"
 	status "google.golang.org/grpc/status"
-	emptypb "google.golang.org/protobuf/types/known/emptypb"
 )
 
 // This is a compile-time assertion to ensure that this generated file
@@ -34,12 +33,12 @@ const (
 type AdminServiceClient interface {
 	// ForcePolicySync triggers an immediate, full synchronization of all authorization policies.
 	// This bypasses any debouncing or scheduled syncs and is a high-risk operation.
-	ForcePolicySync(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	ForcePolicySync(ctx context.Context, in *ForcePolicySyncRequest, opts ...grpc.CallOption) (*ForcePolicySyncResponse, error)
 	// GetPolicySyncStatus retrieves current status and metrics of policy synchronization service.
-	GetPolicySyncStatus(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*PolicySyncStatusResponse, error)
+	GetPolicySyncStatus(ctx context.Context, in *GetPolicySyncStatusRequest, opts ...grpc.CallOption) (*GetPolicySyncStatusResponse, error)
 	// GetEnforcerPolicies retrieves all policy rules currently loaded into Casbin Enforcer's memory.
 	// This is primarily for debugging and auditing purposes.
-	GetEnforcerPolicies(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*EnforcerPoliciesResponse, error)
+	GetEnforcerPolicies(ctx context.Context, in *GetEnforcerPoliciesRequest, opts ...grpc.CallOption) (*GetEnforcerPoliciesResponse, error)
 }
 
 type adminServiceClient struct {
@@ -50,9 +49,9 @@ func NewAdminServiceClient(cc grpc.ClientConnInterface) AdminServiceClient {
 	return &adminServiceClient{cc}
 }
 
-func (c *adminServiceClient) ForcePolicySync(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+func (c *adminServiceClient) ForcePolicySync(ctx context.Context, in *ForcePolicySyncRequest, opts ...grpc.CallOption) (*ForcePolicySyncResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(emptypb.Empty)
+	out := new(ForcePolicySyncResponse)
 	err := c.cc.Invoke(ctx, AdminService_ForcePolicySync_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
@@ -60,9 +59,9 @@ func (c *adminServiceClient) ForcePolicySync(ctx context.Context, in *emptypb.Em
 	return out, nil
 }
 
-func (c *adminServiceClient) GetPolicySyncStatus(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*PolicySyncStatusResponse, error) {
+func (c *adminServiceClient) GetPolicySyncStatus(ctx context.Context, in *GetPolicySyncStatusRequest, opts ...grpc.CallOption) (*GetPolicySyncStatusResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(PolicySyncStatusResponse)
+	out := new(GetPolicySyncStatusResponse)
 	err := c.cc.Invoke(ctx, AdminService_GetPolicySyncStatus_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
@@ -70,9 +69,9 @@ func (c *adminServiceClient) GetPolicySyncStatus(ctx context.Context, in *emptyp
 	return out, nil
 }
 
-func (c *adminServiceClient) GetEnforcerPolicies(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*EnforcerPoliciesResponse, error) {
+func (c *adminServiceClient) GetEnforcerPolicies(ctx context.Context, in *GetEnforcerPoliciesRequest, opts ...grpc.CallOption) (*GetEnforcerPoliciesResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(EnforcerPoliciesResponse)
+	out := new(GetEnforcerPoliciesResponse)
 	err := c.cc.Invoke(ctx, AdminService_GetEnforcerPolicies_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
@@ -89,12 +88,12 @@ func (c *adminServiceClient) GetEnforcerPolicies(ctx context.Context, in *emptyp
 type AdminServiceServer interface {
 	// ForcePolicySync triggers an immediate, full synchronization of all authorization policies.
 	// This bypasses any debouncing or scheduled syncs and is a high-risk operation.
-	ForcePolicySync(context.Context, *emptypb.Empty) (*emptypb.Empty, error)
+	ForcePolicySync(context.Context, *ForcePolicySyncRequest) (*ForcePolicySyncResponse, error)
 	// GetPolicySyncStatus retrieves current status and metrics of policy synchronization service.
-	GetPolicySyncStatus(context.Context, *emptypb.Empty) (*PolicySyncStatusResponse, error)
+	GetPolicySyncStatus(context.Context, *GetPolicySyncStatusRequest) (*GetPolicySyncStatusResponse, error)
 	// GetEnforcerPolicies retrieves all policy rules currently loaded into Casbin Enforcer's memory.
 	// This is primarily for debugging and auditing purposes.
-	GetEnforcerPolicies(context.Context, *emptypb.Empty) (*EnforcerPoliciesResponse, error)
+	GetEnforcerPolicies(context.Context, *GetEnforcerPoliciesRequest) (*GetEnforcerPoliciesResponse, error)
 	mustEmbedUnimplementedAdminServiceServer()
 }
 
@@ -105,13 +104,13 @@ type AdminServiceServer interface {
 // pointer dereference when methods are called.
 type UnimplementedAdminServiceServer struct{}
 
-func (UnimplementedAdminServiceServer) ForcePolicySync(context.Context, *emptypb.Empty) (*emptypb.Empty, error) {
+func (UnimplementedAdminServiceServer) ForcePolicySync(context.Context, *ForcePolicySyncRequest) (*ForcePolicySyncResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ForcePolicySync not implemented")
 }
-func (UnimplementedAdminServiceServer) GetPolicySyncStatus(context.Context, *emptypb.Empty) (*PolicySyncStatusResponse, error) {
+func (UnimplementedAdminServiceServer) GetPolicySyncStatus(context.Context, *GetPolicySyncStatusRequest) (*GetPolicySyncStatusResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetPolicySyncStatus not implemented")
 }
-func (UnimplementedAdminServiceServer) GetEnforcerPolicies(context.Context, *emptypb.Empty) (*EnforcerPoliciesResponse, error) {
+func (UnimplementedAdminServiceServer) GetEnforcerPolicies(context.Context, *GetEnforcerPoliciesRequest) (*GetEnforcerPoliciesResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetEnforcerPolicies not implemented")
 }
 func (UnimplementedAdminServiceServer) mustEmbedUnimplementedAdminServiceServer() {}
@@ -136,7 +135,7 @@ func RegisterAdminServiceServer(s grpc.ServiceRegistrar, srv AdminServiceServer)
 }
 
 func _AdminService_ForcePolicySync_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(emptypb.Empty)
+	in := new(ForcePolicySyncRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -148,13 +147,13 @@ func _AdminService_ForcePolicySync_Handler(srv interface{}, ctx context.Context,
 		FullMethod: AdminService_ForcePolicySync_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AdminServiceServer).ForcePolicySync(ctx, req.(*emptypb.Empty))
+		return srv.(AdminServiceServer).ForcePolicySync(ctx, req.(*ForcePolicySyncRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
 func _AdminService_GetPolicySyncStatus_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(emptypb.Empty)
+	in := new(GetPolicySyncStatusRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -166,13 +165,13 @@ func _AdminService_GetPolicySyncStatus_Handler(srv interface{}, ctx context.Cont
 		FullMethod: AdminService_GetPolicySyncStatus_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AdminServiceServer).GetPolicySyncStatus(ctx, req.(*emptypb.Empty))
+		return srv.(AdminServiceServer).GetPolicySyncStatus(ctx, req.(*GetPolicySyncStatusRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
 func _AdminService_GetEnforcerPolicies_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(emptypb.Empty)
+	in := new(GetEnforcerPoliciesRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -184,7 +183,7 @@ func _AdminService_GetEnforcerPolicies_Handler(srv interface{}, ctx context.Cont
 		FullMethod: AdminService_GetEnforcerPolicies_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AdminServiceServer).GetEnforcerPolicies(ctx, req.(*emptypb.Empty))
+		return srv.(AdminServiceServer).GetEnforcerPolicies(ctx, req.(*GetEnforcerPoliciesRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }

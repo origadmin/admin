@@ -10,7 +10,6 @@ import (
 	context "context"
 	http "github.com/go-kratos/kratos/v2/transport/http"
 	binding "github.com/go-kratos/kratos/v2/transport/http/binding"
-	emptypb "google.golang.org/protobuf/types/known/emptypb"
 )
 
 // This is a compile-time assertion to ensure that this generated file
@@ -27,12 +26,12 @@ const OperationAdminServiceGetPolicySyncStatus = "/api.v1.services.identity.Admi
 type AdminServiceHTTPServer interface {
 	// ForcePolicySync ForcePolicySync triggers an immediate, full synchronization of all authorization policies.
 	// This bypasses any debouncing or scheduled syncs and is a high-risk operation.
-	ForcePolicySync(context.Context, *emptypb.Empty) (*emptypb.Empty, error)
+	ForcePolicySync(context.Context, *ForcePolicySyncRequest) (*ForcePolicySyncResponse, error)
 	// GetEnforcerPolicies GetEnforcerPolicies retrieves all policy rules currently loaded into Casbin Enforcer's memory.
 	// This is primarily for debugging and auditing purposes.
-	GetEnforcerPolicies(context.Context, *emptypb.Empty) (*EnforcerPoliciesResponse, error)
+	GetEnforcerPolicies(context.Context, *GetEnforcerPoliciesRequest) (*GetEnforcerPoliciesResponse, error)
 	// GetPolicySyncStatus GetPolicySyncStatus retrieves current status and metrics of policy synchronization service.
-	GetPolicySyncStatus(context.Context, *emptypb.Empty) (*PolicySyncStatusResponse, error)
+	GetPolicySyncStatus(context.Context, *GetPolicySyncStatusRequest) (*GetPolicySyncStatusResponse, error)
 }
 
 func RegisterAdminServiceHTTPServer(s *http.Server, srv AdminServiceHTTPServer) {
@@ -44,7 +43,7 @@ func RegisterAdminServiceHTTPServer(s *http.Server, srv AdminServiceHTTPServer) 
 
 func _AdminService_ForcePolicySync0_HTTP_Handler(srv AdminServiceHTTPServer) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
-		var in emptypb.Empty
+		var in ForcePolicySyncRequest
 		if err := ctx.Bind(&in); err != nil {
 			return err
 		}
@@ -53,51 +52,51 @@ func _AdminService_ForcePolicySync0_HTTP_Handler(srv AdminServiceHTTPServer) fun
 		}
 		http.SetOperation(ctx, OperationAdminServiceForcePolicySync)
 		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
-			return srv.ForcePolicySync(ctx, req.(*emptypb.Empty))
+			return srv.ForcePolicySync(ctx, req.(*ForcePolicySyncRequest))
 		})
 		out, err := h(ctx, &in)
 		if err != nil {
 			return err
 		}
-		reply := out.(*emptypb.Empty)
+		reply := out.(*ForcePolicySyncResponse)
 		return ctx.Result(200, reply)
 	}
 }
 
 func _AdminService_GetPolicySyncStatus0_HTTP_Handler(srv AdminServiceHTTPServer) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
-		var in emptypb.Empty
+		var in GetPolicySyncStatusRequest
 		if err := ctx.BindQuery(&in); err != nil {
 			return err
 		}
 		http.SetOperation(ctx, OperationAdminServiceGetPolicySyncStatus)
 		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
-			return srv.GetPolicySyncStatus(ctx, req.(*emptypb.Empty))
+			return srv.GetPolicySyncStatus(ctx, req.(*GetPolicySyncStatusRequest))
 		})
 		out, err := h(ctx, &in)
 		if err != nil {
 			return err
 		}
-		reply := out.(*PolicySyncStatusResponse)
+		reply := out.(*GetPolicySyncStatusResponse)
 		return ctx.Result(200, reply)
 	}
 }
 
 func _AdminService_GetEnforcerPolicies0_HTTP_Handler(srv AdminServiceHTTPServer) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
-		var in emptypb.Empty
+		var in GetEnforcerPoliciesRequest
 		if err := ctx.BindQuery(&in); err != nil {
 			return err
 		}
 		http.SetOperation(ctx, OperationAdminServiceGetEnforcerPolicies)
 		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
-			return srv.GetEnforcerPolicies(ctx, req.(*emptypb.Empty))
+			return srv.GetEnforcerPolicies(ctx, req.(*GetEnforcerPoliciesRequest))
 		})
 		out, err := h(ctx, &in)
 		if err != nil {
 			return err
 		}
-		reply := out.(*EnforcerPoliciesResponse)
+		reply := out.(*GetEnforcerPoliciesResponse)
 		return ctx.Result(200, reply)
 	}
 }
@@ -105,12 +104,12 @@ func _AdminService_GetEnforcerPolicies0_HTTP_Handler(srv AdminServiceHTTPServer)
 type AdminServiceHTTPClient interface {
 	// ForcePolicySync ForcePolicySync triggers an immediate, full synchronization of all authorization policies.
 	// This bypasses any debouncing or scheduled syncs and is a high-risk operation.
-	ForcePolicySync(ctx context.Context, req *emptypb.Empty, opts ...http.CallOption) (rsp *emptypb.Empty, err error)
+	ForcePolicySync(ctx context.Context, req *ForcePolicySyncRequest, opts ...http.CallOption) (rsp *ForcePolicySyncResponse, err error)
 	// GetEnforcerPolicies GetEnforcerPolicies retrieves all policy rules currently loaded into Casbin Enforcer's memory.
 	// This is primarily for debugging and auditing purposes.
-	GetEnforcerPolicies(ctx context.Context, req *emptypb.Empty, opts ...http.CallOption) (rsp *EnforcerPoliciesResponse, err error)
+	GetEnforcerPolicies(ctx context.Context, req *GetEnforcerPoliciesRequest, opts ...http.CallOption) (rsp *GetEnforcerPoliciesResponse, err error)
 	// GetPolicySyncStatus GetPolicySyncStatus retrieves current status and metrics of policy synchronization service.
-	GetPolicySyncStatus(ctx context.Context, req *emptypb.Empty, opts ...http.CallOption) (rsp *PolicySyncStatusResponse, err error)
+	GetPolicySyncStatus(ctx context.Context, req *GetPolicySyncStatusRequest, opts ...http.CallOption) (rsp *GetPolicySyncStatusResponse, err error)
 }
 
 type AdminServiceHTTPClientImpl struct {
@@ -123,8 +122,8 @@ func NewAdminServiceHTTPClient(client *http.Client) AdminServiceHTTPClient {
 
 // ForcePolicySync ForcePolicySync triggers an immediate, full synchronization of all authorization policies.
 // This bypasses any debouncing or scheduled syncs and is a high-risk operation.
-func (c *AdminServiceHTTPClientImpl) ForcePolicySync(ctx context.Context, in *emptypb.Empty, opts ...http.CallOption) (*emptypb.Empty, error) {
-	var out emptypb.Empty
+func (c *AdminServiceHTTPClientImpl) ForcePolicySync(ctx context.Context, in *ForcePolicySyncRequest, opts ...http.CallOption) (*ForcePolicySyncResponse, error) {
+	var out ForcePolicySyncResponse
 	pattern := "/auth/admin/sync"
 	path := binding.EncodeURL(pattern, in, false)
 	opts = append(opts, http.Operation(OperationAdminServiceForcePolicySync))
@@ -138,8 +137,8 @@ func (c *AdminServiceHTTPClientImpl) ForcePolicySync(ctx context.Context, in *em
 
 // GetEnforcerPolicies GetEnforcerPolicies retrieves all policy rules currently loaded into Casbin Enforcer's memory.
 // This is primarily for debugging and auditing purposes.
-func (c *AdminServiceHTTPClientImpl) GetEnforcerPolicies(ctx context.Context, in *emptypb.Empty, opts ...http.CallOption) (*EnforcerPoliciesResponse, error) {
-	var out EnforcerPoliciesResponse
+func (c *AdminServiceHTTPClientImpl) GetEnforcerPolicies(ctx context.Context, in *GetEnforcerPoliciesRequest, opts ...http.CallOption) (*GetEnforcerPoliciesResponse, error) {
+	var out GetEnforcerPoliciesResponse
 	pattern := "/auth/admin/enforcer/policies"
 	path := binding.EncodeURL(pattern, in, true)
 	opts = append(opts, http.Operation(OperationAdminServiceGetEnforcerPolicies))
@@ -152,8 +151,8 @@ func (c *AdminServiceHTTPClientImpl) GetEnforcerPolicies(ctx context.Context, in
 }
 
 // GetPolicySyncStatus GetPolicySyncStatus retrieves current status and metrics of policy synchronization service.
-func (c *AdminServiceHTTPClientImpl) GetPolicySyncStatus(ctx context.Context, in *emptypb.Empty, opts ...http.CallOption) (*PolicySyncStatusResponse, error) {
-	var out PolicySyncStatusResponse
+func (c *AdminServiceHTTPClientImpl) GetPolicySyncStatus(ctx context.Context, in *GetPolicySyncStatusRequest, opts ...http.CallOption) (*GetPolicySyncStatusResponse, error) {
+	var out GetPolicySyncStatusResponse
 	pattern := "/auth/admin/sync/status"
 	path := binding.EncodeURL(pattern, in, true)
 	opts = append(opts, http.Operation(OperationAdminServiceGetPolicySyncStatus))

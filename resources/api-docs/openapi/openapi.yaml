@@ -50,7 +50,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/api.v1.services.identity.EnforcerPoliciesResponse'
+                $ref: '#/components/schemas/api.v1.services.identity.GetEnforcerPoliciesResponse'
         default:
           description: Default error response
           content:
@@ -67,12 +67,17 @@ paths:
       operationId: AdminService_ForcePolicySync
       requestBody:
         content:
-          application/json: { }
+          application/json:
+            schema:
+              $ref: '#/components/schemas/api.v1.services.identity.ForcePolicySyncRequest'
         required: true
       responses:
         "200":
           description: OK
-          content: { }
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/api.v1.services.identity.ForcePolicySyncResponse'
         default:
           description: Default error response
           content:
@@ -91,7 +96,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/api.v1.services.identity.PolicySyncStatusResponse'
+                $ref: '#/components/schemas/api.v1.services.identity.GetPolicySyncStatusResponse'
         default:
           description: Default error response
           content:
@@ -228,17 +233,17 @@ paths:
                   application/json:
                     schema:
                       $ref: '#/components/schemas/google.rpc.Status'
-  /ds:
+  /files:
     post:
       tags:
-        - DatastoreService
-      description: CreateDatastore creates a data object.
-      operationId: DatastoreService_CreateDatastore
+        - FileManagerService
+      description: "Simple upload for small files (e.g. avatars, images).\r\n The file size should be limited (e.g. < 10MB)."
+      operationId: FileManagerService_UploadFile
             requestBody:
                 content:
                     application/json:
                         schema:
-                          $ref: '#/components/schemas/api.v1.services.types.DataObject'
+                          $ref: '#/components/schemas/api.v1.services.filemanager.UploadFileRequest'
                 required: true
             responses:
                 "200":
@@ -246,138 +251,47 @@ paths:
                     content:
                         application/json:
                             schema:
-                              $ref: '#/components/schemas/api.v1.services.datastore.CreateDatastoreResponse'
+                              $ref: '#/components/schemas/api.v1.services.filemanager.UploadFileResponse'
                 default:
-                    description: Default error response
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/google.rpc.Status'
-  /ds/files:
-        get:
-            tags:
-                - DatastoreService
-            description: ListFiles retrieves a list of files.
-            operationId: DatastoreService_ListFiles
-            parameters:
-              - name: owner_id
-                in: query
-                description: Filter by owner ID.
-                schema:
-                  type: string
-              - name: content_type
-                  in: query
-                description: Filter by content type.
-                  schema:
-                    type: string
-              - name: page
-                  in: query
-                description: Page number.
-                  schema:
-                    type: integer
-                    format: int32
-                - name: page_size
-                  in: query
-                  description: Page size.
-                  schema:
-                    type: integer
-                    format: int32
-            responses:
-              "200":
-                description: OK
-                content:
-                  application/json:
-                    schema:
-                      $ref: '#/components/schemas/api.v1.services.datastore.ListFilesResponse'
-              default:
-                description: Default error response
-                content:
-                  application/json:
-                    schema:
-                      $ref: '#/components/schemas/google.rpc.Status'
-  /ds/files/upload:
+                  description: Default error response
+                  content:
+                    application/json:
+                      schema:
+                        $ref: '#/components/schemas/google.rpc.Status'
+  /files/multipart:
     post:
       tags:
-        - DatastoreService
-      description: UploadFile uploads a file to the datastore.
-      operationId: DatastoreService_UploadFile
+        - FileManagerService
+      description: Initiates a multipart upload for large files.
+      operationId: FileManagerService_InitiateMultipartUpload
       requestBody:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/api.v1.services.datastore.UploadFileRequest'
-        required: true
-            responses:
-                "200":
-                    description: OK
-                    content:
-                        application/json:
-                            schema:
-                              $ref: '#/components/schemas/api.v1.services.datastore.UploadFileResponse'
-                default:
-                    description: Default error response
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/google.rpc.Status'
-  /ds/files/{file_id}:
-    get:
-            tags:
-                - DatastoreService
-            description: DownloadFile downloads a file from the datastore.
-            operationId: DatastoreService_DownloadFile
-            parameters:
-              - name: file_id
-                in: path
-                description: The file ID.
+              $ref: '#/components/schemas/api.v1.services.filemanager.InitiateMultipartUploadRequest'
                 required: true
-                  schema:
-                    type: string
             responses:
               "200":
                 description: OK
                 content:
                   application/json:
                     schema:
-                      $ref: '#/components/schemas/api.v1.services.datastore.DownloadFileResponse'
+                      $ref: '#/components/schemas/api.v1.services.filemanager.InitiateMultipartUploadResponse'
               default:
                 description: Default error response
                 content:
                   application/json:
                     schema:
                       $ref: '#/components/schemas/google.rpc.Status'
+  /files/multipart/{upload_id}:
     delete:
       tags:
-        - DatastoreService
-      description: DeleteFile deletes a file from the datastore.
-      operationId: DatastoreService_DeleteFile
+        - FileManagerService
+      description: Aborts a multipart upload.
+      operationId: FileManagerService_AbortMultipartUpload
       parameters:
-        - name: file_id
+        - name: upload_id
           in: path
-          description: The file ID.
-          required: true
-                  schema:
-                    type: string
-      responses:
-        "200":
-          description: OK
-          content: { }
-        default:
-          description: Default error response
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/google.rpc.Status'
-  /ds/files/{file_id}/info:
-    get:
-      tags:
-        - DatastoreService
-      description: GetFile retrieves a file by ID.
-      operationId: DatastoreService_GetFile
-      parameters:
-        - name: file_id
-          in: path
-          description: The file ID.
           required: true
           schema:
             type: string
@@ -387,35 +301,30 @@ paths:
                     content:
                         application/json:
                             schema:
-                              $ref: '#/components/schemas/api.v1.services.datastore.GetFileResponse'
+                              $ref: '#/components/schemas/api.v1.services.filemanager.AbortMultipartUploadResponse'
                 default:
                     description: Default error response
                     content:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/google.rpc.Status'
-  /ds/{data.id}:
-        put:
+  /files/multipart/{upload_id}/complete:
+    post:
             tags:
-                - DatastoreService
-            description: UpdateDatastore updates a data object.
-            operationId: DatastoreService_UpdateDatastore
+              - FileManagerService
+            description: Completes a multipart upload.
+            operationId: FileManagerService_CompleteMultipartUpload
             parameters:
-                - name: data.id
+              - name: upload_id
                   in: path
                   required: true
-                  schema:
-                    type: string
-                - name: id
-                  in: query
-                  description: The ID of the data object to update.
                   schema:
                     type: string
             requestBody:
                 content:
                     application/json:
                         schema:
-                            $ref: '#/components/schemas/api.v1.services.types.DataObject'
+                          $ref: '#/components/schemas/api.v1.services.filemanager.CompleteMultipartUploadRequest'
                 required: true
             responses:
                 "200":
@@ -423,86 +332,44 @@ paths:
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/api.v1.services.datastore.UpdateDatastoreResponse'
+                              $ref: '#/components/schemas/api.v1.services.filemanager.CompleteMultipartUploadResponse'
                 default:
                     description: Default error response
                     content:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/google.rpc.Status'
-  /ds/{id}:
+  /files/multipart/{upload_id}/parts/{part_number}:
         get:
             tags:
-                - DatastoreService
-            description: GetDatastore retrieves a data object by ID.
-            operationId: DatastoreService_GetDatastore
+              - FileManagerService
+            description: Gets a presigned URL for a specific part of a multipart upload.
+            operationId: FileManagerService_GetMultipartUploadUrl
             parameters:
-                - name: id
+              - name: upload_id
                   in: path
-                  description: The data ID.
                   required: true
                   schema:
                     type: string
-            responses:
-                "200":
-                    description: OK
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/api.v1.services.datastore.GetDatastoreResponse'
-                default:
-                    description: Default error response
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/google.rpc.Status'
-        delete:
-            tags:
-                - DatastoreService
-            description: DeleteDatastore deletes a data object.
-            operationId: DatastoreService_DeleteDatastore
-            parameters:
-                - name: id
+              - name: part_number
                   in: path
-                  description: The ID of the data object to delete.
                   required: true
                   schema:
-                    type: string
+                    type: integer
+                    format: int32
             responses:
-                "200":
-                    description: OK
-                    content: { }
-                default:
-                  description: Default error response
-                  content:
-                    application/json:
-                      schema:
-                        $ref: '#/components/schemas/google.rpc.Status'
-  /files/upload:
-    post:
-      tags:
-        - FileManagerService
-      description: Uploads a file and creates its metadata.
-      operationId: FileManagerService_UploadFile
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/api.v1.services.filemanager.UploadFileRequest'
-        required: true
-      responses:
-        "200":
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/api.v1.services.filemanager.UploadFileResponse'
-        default:
-          description: Default error response
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/google.rpc.Status'
+              "200":
+                description: OK
+                content:
+                  application/json:
+                    schema:
+                      $ref: '#/components/schemas/api.v1.services.filemanager.GetMultipartUploadUrlResponse'
+              default:
+                description: Default error response
+                content:
+                  application/json:
+                    schema:
+                      $ref: '#/components/schemas/google.rpc.Status'
   /files/{id}:
     get:
       tags:
@@ -713,7 +580,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/api.v1.services.identity.GetUserSettingResponse'
+                $ref: '#/components/schemas/api.v1.services.identity.GetUserSettingsResponse'
         default:
           description: Default error response
           content:
@@ -729,7 +596,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/api.v1.services.identity.UpdateSettingRequest'
+              $ref: '#/components/schemas/api.v1.services.identity.UpdateSettingsRequest'
         required: true
       responses:
         "200":
@@ -737,7 +604,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/api.v1.services.identity.UpdateSettingResponse'
+                $ref: '#/components/schemas/api.v1.services.identity.UpdateSettingsResponse'
         default:
           description: Default error response
           content:
@@ -961,7 +828,10 @@ paths:
       responses:
         "200":
           description: OK
-          content: { }
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/api.v1.services.notification.DeleteTemplateResponse'
         default:
           description: Default error response
           content:
@@ -990,81 +860,10 @@ paths:
       responses:
         "200":
           description: OK
-          content: { }
-                default:
-                    description: Default error response
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/google.rpc.Status'
-  /objects:
-    post:
-      tags:
-        - ObjectStoreService
-      description: Creates an object.
-      operationId: ObjectStoreService_CreateObject
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/api.v1.services.objectstore.CreateObjectRequest'
-        required: true
-      responses:
-        "200":
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/api.v1.services.objectstore.CreateObjectResponse'
-        default:
-          description: Default error response
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/google.rpc.Status'
-  /objects/{id}:
-    get:
-      tags:
-        - ObjectStoreService
-      description: Gets an object.
-      operationId: ObjectStoreService_GetObject
-      parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: string
-      responses:
-        "200":
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/api.v1.services.objectstore.GetObjectResponse'
-        default:
-          description: Default error response
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/google.rpc.Status'
-    delete:
-      tags:
-        - ObjectStoreService
-      description: Deletes an object.
-      operationId: ObjectStoreService_DeleteObject
-      parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: string
-      responses:
-        "200":
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/api.v1.services.objectstore.DeleteObjectResponse'
+                              $ref: '#/components/schemas/api.v1.services.notification.MarkAsReadResponse'
         default:
           description: Default error response
           content:
@@ -2495,180 +2294,6 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/google.rpc.Status'
-    /upload:
-        get:
-            tags:
-                - UploadService
-            operationId: UploadService_ListUpload
-            parameters:
-                - name: id
-                  in: query
-                  description: The parent data id, for example, "shelves/shelf1".
-                  schema:
-                    type: string
-                - name: current
-                  in: query
-                  description: The current page number.
-                  schema:
-                    type: integer
-                    format: int32
-                - name: page_size
-                  in: query
-                  description: The maximum number of items to return.
-                  schema:
-                    type: integer
-                    format: int32
-                - name: page_token
-                  in: query
-                  description: The next_page_token value returned from a previous List request, if any.
-                  schema:
-                    type: string
-                - name: no_paging
-                  in: query
-                  description: The no_paging is used to disable pagination.
-                  schema:
-                    type: boolean
-                - name: only_count
-                  in: query
-                  description: The only_count is the query parameter for set only to query the total number
-                  schema:
-                    type: boolean
-                - name: type
-                  in: query
-                  description: data type
-                  schema:
-                    type: string
-            responses:
-                "200":
-                    description: OK
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/api.v1.services.datastore.ListUploadResponse'
-                default:
-                    description: Default error response
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/google.rpc.Status'
-        post:
-            tags:
-                - UploadService
-            operationId: UploadService_CreateUpload
-            parameters:
-                - name: parent
-                  in: query
-                  description: The parent data id where the data is to be created.
-                  schema:
-                    type: string
-                - name: data_id
-                  in: query
-                  description: The data id to use for this data.
-                  schema:
-                    type: string
-            requestBody:
-                content:
-                    application/json:
-                        schema:
-                            $ref: '#/components/schemas/api.v1.services.types.DataObject'
-                required: true
-            responses:
-                "200":
-                    description: OK
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/api.v1.services.datastore.CreateUploadResponse'
-                default:
-                    description: Default error response
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/google.rpc.Status'
-    /upload/{data.id}:
-        put:
-            tags:
-                - UploadService
-            operationId: UploadService_UpdateUpload
-            parameters:
-                - name: data.id
-                  in: path
-                  required: true
-                  schema:
-                    type: string
-                - name: id
-                  in: query
-                  description: The id of the data object to update.
-                  schema:
-                    type: string
-            requestBody:
-                content:
-                    application/json:
-                        schema:
-                            $ref: '#/components/schemas/api.v1.services.types.DataObject'
-                required: true
-            responses:
-                "200":
-                    description: OK
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/api.v1.services.datastore.UpdateUploadResponse'
-                default:
-                    description: Default error response
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/google.rpc.Status'
-    /upload/{id}:
-        get:
-            tags:
-                - UploadService
-            operationId: UploadService_GetUpload
-            parameters:
-                - name: id
-                  in: path
-                  description: "The field will contain id of the data requested, for example:\r\n \"shelves/shelf1/upload/data2\""
-                  required: true
-                  schema:
-                    type: string
-            responses:
-                "200":
-                    description: OK
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/api.v1.services.datastore.GetUploadResponse'
-                default:
-                    description: Default error response
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/google.rpc.Status'
-        delete:
-            tags:
-                - UploadService
-            operationId: UploadService_DeleteUpload
-            parameters:
-                - name: id
-                  in: path
-                  description: "The data id of the data to be deleted, for example:\r\n \"shelves/shelf1/upload/data2\""
-                  required: true
-                  schema:
-                    type: string
-            responses:
-                "200":
-                    description: OK
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/api.v1.services.datastore.DeleteUploadResponse'
-                default:
-                    description: Default error response
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/google.rpc.Status'
 components:
     schemas:
       api.v1.services.admin.HealthCheckResponse:
@@ -2683,155 +2308,26 @@ components:
               type: string
             description: Additional information about the service.
         description: HealthCheckResponse is the response for AdminService.HealthCheck.
-      api.v1.services.datastore.CreateDatastoreResponse:
-        type: object
-        properties:
-          data:
-            allOf:
-              - $ref: '#/components/schemas/api.v1.services.types.DataObject'
-            description: The created data object.
-        description: CreateDatastoreResponse is the response for DatastoreService.CreateDatastore.
-      api.v1.services.datastore.CreateUploadResponse:
-        type: object
-        properties:
-          data:
-            $ref: '#/components/schemas/api.v1.services.types.DataObject'
-        description: CreateUploadResponse is the response for the UploadService.CreateUpload method.
-      api.v1.services.datastore.DeleteUploadResponse:
+      api.v1.services.filemanager.AbortMultipartUploadResponse:
         type: object
         properties: { }
-        description: DeleteUploadResponse is the response for the UploadService.DeleteUpload method.
-      api.v1.services.datastore.DownloadFileResponse:
+        description: Response message for aborting a multipart upload.
+      api.v1.services.filemanager.CompleteMultipartUploadRequest:
         type: object
         properties:
-          content:
+          upload_id:
             type: string
-            description: The file content as bytes.
-            format: bytes
-          content_type:
-            type: string
-            description: The file content type.
-          filename:
-            type: string
-            description: The file name.
-        description: DownloadFileResponse is the response for DatastoreService.DownloadFile.
-      api.v1.services.datastore.GetDatastoreResponse:
-        type: object
-        properties:
-          data:
-            allOf:
-              - $ref: '#/components/schemas/api.v1.services.types.DataObject'
-            description: The data object.
-        description: GetDatastoreResponse is the response for DatastoreService.GetDatastore.
-      api.v1.services.datastore.GetFileResponse:
-        type: object
-        properties:
-          file:
-            allOf:
-              - $ref: '#/components/schemas/api.v1.services.types.File'
-            description: The file info.
-        description: GetFileResponse is the response for DatastoreService.GetFile.
-      api.v1.services.datastore.GetUploadResponse:
-        type: object
-        properties:
-          data:
-            allOf:
-              - $ref: '#/components/schemas/api.v1.services.types.DataObject'
-            description: The field id should match the Noun in the method id.
-        description: GetUploadResponse is the response for the UploadService.GetUpload method.
-      api.v1.services.datastore.ListFilesResponse:
-        type: object
-        properties:
-          files:
+          parts:
             type: array
             items:
-              $ref: '#/components/schemas/api.v1.services.types.File'
-            description: The list of files.
-          total:
-            type: integer
-            description: Total count.
-            format: int32
-          page:
-            type: integer
-            description: Current page.
-            format: int32
-          page_size:
-            type: integer
-            description: Page size.
-            format: int32
-        description: ListFilesResponse is the response for DatastoreService.ListFiles.
-      api.v1.services.datastore.ListUploadResponse:
+              $ref: '#/components/schemas/api.v1.services.filemanager.PartInfo'
+        description: Request message for completing a multipart upload.
+      api.v1.services.filemanager.CompleteMultipartUploadResponse:
         type: object
         properties:
-          total_size:
-            type: integer
-            description: The total number of items in the list.
-            format: int32
-          data:
-            type: array
-            items:
-              $ref: '#/components/schemas/api.v1.services.types.DataObject'
-            description: The paging upload
-          current:
-            type: integer
-            description: The current page number.
-            format: int32
-          page_size:
-            type: integer
-            description: The maximum number of items to return.
-            format: int32
-          next_page_token:
-            type: string
-            description: "Token to retrieve the next page of results, or empty if there are no\r\n more results in the list."
-          extra:
-            allOf:
-              - $ref: '#/components/schemas/google.protobuf.Any'
-            description: "Additional information about this response.\r\n content to be added without destroying the current data format"
-        description: ListUploadResponse is the response for the UploadService.ListUpload method.
-      api.v1.services.datastore.UpdateDatastoreResponse:
-        type: object
-        properties:
-          data:
-            allOf:
-              - $ref: '#/components/schemas/api.v1.services.types.DataObject'
-            description: The updated data object.
-        description: UpdateDatastoreResponse is the response for DatastoreService.UpdateDatastore.
-      api.v1.services.datastore.UpdateUploadResponse:
-        type: object
-        properties:
-          data:
-            $ref: '#/components/schemas/api.v1.services.types.DataObject'
-        description: UpdateUploadResponse is the response for the UploadService.UpdateUpload method.
-      api.v1.services.datastore.UploadFileRequest:
-        type: object
-        properties:
-          filename:
-            type: string
-            description: The file name.
-          content_type:
-            type: string
-            description: The file content type (MIME type).
-          content:
-            type: string
-            description: The file content as bytes.
-            format: bytes
-          owner_id:
-            type: string
-            description: The owner ID.
-          metadata:
-            type: object
-            additionalProperties:
-              type: string
-            description: Additional metadata.
-        description: UploadFileRequest is the request for DatastoreService.UploadFile.
-      api.v1.services.datastore.UploadFileResponse:
-        type: object
-        properties:
-          file:
-            allOf:
-              - $ref: '#/components/schemas/api.v1.services.types.File'
-            description: The uploaded file info.
-        description: UploadFileResponse is the response for DatastoreService.UploadFile.
+          file_metadata:
+            $ref: '#/components/schemas/api.v1.services.types.FileMetadata'
+        description: Response message for completing a multipart upload.
       api.v1.services.filemanager.DeleteFileResponse:
         type: object
         properties: { }
@@ -2842,6 +2338,36 @@ components:
           file_metadata:
             $ref: '#/components/schemas/api.v1.services.types.FileMetadata'
         description: Response message for getting file metadata.
+      api.v1.services.filemanager.GetMultipartUploadUrlResponse:
+        type: object
+        properties:
+          upload_url:
+            type: string
+        description: Response message for getting a multipart upload URL.
+      api.v1.services.filemanager.InitiateMultipartUploadRequest:
+        type: object
+        properties:
+          name:
+            type: string
+          size:
+            type: string
+          content_type:
+            type: string
+        description: Request message for initiating a multipart upload.
+      api.v1.services.filemanager.InitiateMultipartUploadResponse:
+            type: object
+            properties:
+              upload_id:
+                type: string
+            description: Response message for initiating a multipart upload.
+      api.v1.services.filemanager.PartInfo:
+        type: object
+        properties:
+          part_number:
+            type: integer
+            format: int32
+          etag:
+            type: string
       api.v1.services.filemanager.UploadFileRequest:
         type: object
         properties:
@@ -2850,7 +2376,9 @@ components:
             format: bytes
           name:
             type: string
-        description: Request message for uploading a file.
+          content_type:
+            type: string
+        description: Request message for uploading a small file directly.
       api.v1.services.filemanager.UploadFileResponse:
         type: object
         properties:
@@ -2867,14 +2395,14 @@ components:
             items:
               type: string
         description: CasbinRule represents a single policy rule (p-rule or g-rule) from Casbin Enforcer.
-      api.v1.services.identity.EnforcerPoliciesResponse:
+      api.v1.services.identity.ForcePolicySyncRequest:
         type: object
-        properties:
-          policies:
-            type: array
-            items:
-              $ref: '#/components/schemas/api.v1.services.identity.CasbinRule'
-        description: EnforcerPoliciesResponse contains all policy rules loaded into Casbin Enforcer's memory.
+        properties: { }
+        description: ForcePolicySyncRequest is the request for AdminService.ForcePolicySync.
+      api.v1.services.identity.ForcePolicySyncResponse:
+        type: object
+        properties: { }
+        description: ForcePolicySyncResponse is the response for AdminService.ForcePolicySync.
       api.v1.services.identity.GetCaptchaResponse:
             type: object
             properties:
@@ -2888,6 +2416,36 @@ components:
                     type: string
                     description: The MIME type of captcha data (e.g., "image/png", "audio/wav").
             description: The response message for the GetCaptcha RPC.
+      api.v1.services.identity.GetEnforcerPoliciesResponse:
+        type: object
+        properties:
+          policies:
+            type: array
+            items:
+              $ref: '#/components/schemas/api.v1.services.identity.CasbinRule'
+        description: GetEnforcerPoliciesResponse contains all policy rules loaded into Casbin Enforcer's memory.
+      api.v1.services.identity.GetPolicySyncStatusResponse:
+        type: object
+        properties:
+          sync_pending:
+            type: boolean
+          last_sync_time:
+            type: string
+            format: date-time
+          last_sync_duration:
+            type: string
+          total_events:
+            type: string
+          successful_syncs:
+            type: string
+          failed_syncs:
+            type: string
+          duplicate_events:
+            type: string
+          failure_rate:
+            type: number
+            format: double
+        description: GetPolicySyncStatusResponse contains status and metrics of policy synchronization service.
       api.v1.services.identity.GetProfileResponse:
             type: object
             properties:
@@ -2918,7 +2476,7 @@ components:
                     items:
                         $ref: '#/components/schemas/api.v1.services.types.Role'
             description: The response message for the GetUserRoles RPC.
-      api.v1.services.identity.GetUserSettingResponse:
+      api.v1.services.identity.GetUserSettingsResponse:
         type: object
         properties:
           setting:
@@ -2959,28 +2517,6 @@ components:
             type: object
             properties: {}
             description: The response message for the Logout RPC.
-      api.v1.services.identity.PolicySyncStatusResponse:
-            type: object
-            properties:
-              sync_pending:
-                type: boolean
-              last_sync_time:
-                type: string
-                format: date-time
-              last_sync_duration:
-                    type: string
-              total_events:
-                type: string
-              successful_syncs:
-                type: string
-              failed_syncs:
-                type: string
-              duplicate_events:
-                type: string
-              failure_rate:
-                type: number
-                format: double
-            description: PolicySyncStatusResponse contains status and metrics of policy synchronization service.
       api.v1.services.identity.RefreshTokenRequest:
             type: object
             properties:
@@ -3065,13 +2601,13 @@ components:
             type: object
             properties: {}
             description: The response message for the UpdateProfile RPC.
-      api.v1.services.identity.UpdateSettingRequest:
+      api.v1.services.identity.UpdateSettingsRequest:
         type: object
         properties:
           setting:
             $ref: '#/components/schemas/api.v1.services.types.UserSetting'
         description: The request message for the UpdateSettings RPC (P2).
-      api.v1.services.identity.UpdateSettingResponse:
+      api.v1.services.identity.UpdateSettingsResponse:
         type: object
         properties: { }
         description: The response message for the UpdateSettings RPC (P2).
@@ -3083,6 +2619,10 @@ components:
               - $ref: '#/components/schemas/api.v1.services.types.Template'
             description: The created template.
         description: CreateTemplateResponse is the response for NotificationService.CreateTemplate.
+      api.v1.services.notification.DeleteTemplateResponse:
+        type: object
+        properties: { }
+        description: DeleteTemplateResponse is the response for NotificationService.DeleteTemplate.
       api.v1.services.notification.ListNotificationsResponse:
             type: object
             properties:
@@ -3132,6 +2672,10 @@ components:
             type: string
             description: The notification ID.
         description: MarkAsReadRequest is the request for NotificationService.MarkAsRead.
+      api.v1.services.notification.MarkAsReadResponse:
+        type: object
+        properties: { }
+        description: MarkAsReadResponse is the response for NotificationService.MarkAsRead.
       api.v1.services.notification.SendNotificationRequest:
         type: object
         properties:
@@ -3175,31 +2719,6 @@ components:
               - $ref: '#/components/schemas/api.v1.services.types.Template'
             description: The updated template.
         description: UpdateTemplateResponse is the response for NotificationService.UpdateTemplate.
-      api.v1.services.objectstore.CreateObjectRequest:
-        type: object
-        properties:
-          data:
-            type: string
-            format: bytes
-          name:
-            type: string
-        description: Request message for creating an object.
-      api.v1.services.objectstore.CreateObjectResponse:
-        type: object
-        properties:
-          object:
-            $ref: '#/components/schemas/api.v1.services.types.Object'
-        description: Response message for creating an object.
-      api.v1.services.objectstore.DeleteObjectResponse:
-        type: object
-        properties: { }
-        description: Response message for deleting an object.
-      api.v1.services.objectstore.GetObjectResponse:
-        type: object
-        properties:
-          object:
-            $ref: '#/components/schemas/api.v1.services.types.Object'
-        description: Response message for getting an object.
       api.v1.services.organization.CreateDepartmentRequest:
         type: object
         properties:
@@ -3964,40 +3483,6 @@ components:
                         - $ref: '#/components/schemas/api.v1.services.types.View'
                     description: The updated view resource.
             description: Response message for ViewService.UpdateView.
-        api.v1.services.types.DataObject:
-            type: object
-            properties:
-                id:
-                    type: string
-                    description: ID of the ent.
-                create_time:
-                    type: string
-                    description: CreateTime holds the value of the "create_time" field.
-                    format: date-time
-                update_time:
-                    type: string
-                    description: UpdateTime holds the value of the "update_time" field.
-                    format: date-time
-                delete_time:
-                    type: string
-                    description: DeleteTime holds the value of the "delete_time" field.
-                    format: date-time
-                version:
-                    type: string
-                    description: Version holds the value of the "version" field.
-                owner_id:
-                    type: string
-                    description: OwnerID holds the value of the "owner_id" field.
-                metadata:
-                    type: object
-                    additionalProperties:
-                        type: string
-                    description: Metadata holds the value of the "metadata" field.
-                payload:
-                    type: string
-                    description: Payload holds the value of the "payload" field.
-                    format: bytes
-            description: DataObject is the model entity for the DataObject schema.
         api.v1.services.types.Department:
             type: object
             properties:
@@ -4049,40 +3534,6 @@ components:
                         - $ref: '#/components/schemas/api.v1.services.types.Department'
                     description: Parent holds the value of the parent edge.
             description: department.table.comment
-      api.v1.services.types.File:
-        type: object
-        properties:
-          id:
-            type: string
-            description: The file ID.
-          name:
-            type: string
-            description: The file name.
-          url:
-            type: string
-            description: The file URL for download.
-          content_type:
-            type: string
-            description: The file content type (MIME type).
-          size:
-            type: string
-            description: The file size in bytes.
-          storage_path:
-            type: string
-            description: The storage path.
-          created_by:
-            type: string
-            description: The owner user ID.
-          created_at:
-            type: string
-            description: The creation time.
-            format: date-time
-          metadata:
-            type: object
-            additionalProperties:
-              type: string
-            description: Additional metadata.
-        description: File represents a stored file.
       api.v1.services.types.FileMetadata:
         type: object
         properties:
@@ -4724,10 +4175,6 @@ tags:
        These endpoints are intended for system administrators, operators, and for use in testing.
   - name: AuthService
     description: Service AuthService provides APIs for the identity lifecycle.
-    - name: DatastoreService
-      description: |-
-        DatastoreService provides file storage and data management capabilities.
-         Note: This service is not yet implemented, proto definitions are prepared for future use.
     - name: DepartmentService
       description: The organization department service definition.
   - name: FileManagerService
@@ -4736,8 +4183,6 @@ tags:
       description: Service MeService provides APIs for currently authenticated user to manage their own profile and data.
   - name: NotificationService
     description: "NotificationService provides notification capabilities.\r\n Note: This service is not yet implemented, proto definitions are prepared for future use."
-  - name: ObjectStoreService
-    description: The ObjectStore service definition.
     - name: PermissionService
       description: The login service definition.
   - name: PolicyQueryService
@@ -4753,8 +4198,6 @@ tags:
          as specified in 09_Data_Model_Schema.md.
     - name: RoleService
       description: The login service definition.
-    - name: UploadService
-      description: The data service definition.
     - name: UserService
       description: The login service definition.
     - name: ViewService

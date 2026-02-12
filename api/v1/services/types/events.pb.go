@@ -166,7 +166,7 @@ var File_types_events_proto protoreflect.FileDescriptor
 
 const file_types_events_proto_rawDesc = "" +
 	"\n" +
-	"\x12types/events.proto\x12\x12api.v1.proto.types\x1a\x1fgoogle/protobuf/timestamp.proto\"\xa9\x01\n" +
+	"\x12types/events.proto\x12\x15api.v1.services.types\x1a\x1fgoogle/protobuf/timestamp.proto\"\xa9\x01\n" +
 	"\x15UserRoleAssignedEvent\x128\n" +
 	"\ttimestamp\x18\x01 \x01(\v2\x1a.google.protobuf.TimestampR\ttimestamp\x12\x18\n" +
 	"\auser_id\x18\x02 \x01(\tR\auser_id\x12$\n" +
@@ -175,8 +175,8 @@ const file_types_events_proto_rawDesc = "" +
 	"\x16RolePolicyChangedEvent\x128\n" +
 	"\ttimestamp\x18\x01 \x01(\v2\x1a.google.protobuf.TimestampR\ttimestamp\x12\x16\n" +
 	"\x06source\x18\x02 \x01(\tR\x06source\x12$\n" +
-	"\rrole_keywords\x18\x03 \x03(\tR\rrole_keywordsB\xca\x01\n" +
-	"\x16com.api.v1.proto.typesB\vEventsProtoP\x01Z7origadmin/application/admin/api/v1/services/types;types\xa2\x02\x04AVPT\xaa\x02\x12Api.V1.Proto.Types\xca\x02\x12Api\\V1\\Proto\\Types\xe2\x02\x1eApi\\V1\\Proto\\Types\\GPBMetadata\xea\x02\x15Api::V1::Proto::Typesb\x06proto3"
+	"\rrole_keywords\x18\x03 \x03(\tR\rrole_keywordsB\xd9\x01\n" +
+	"\x19com.api.v1.services.typesB\vEventsProtoP\x01Z7origadmin/application/admin/api/v1/services/types;types\xa2\x02\x04AVST\xaa\x02\x15Api.V1.Services.Types\xca\x02\x15Api\\V1\\Services\\Types\xe2\x02!Api\\V1\\Services\\Types\\GPBMetadata\xea\x02\x18Api::V1::Services::Typesb\x06proto3"
 
 var (
 	file_types_events_proto_rawDescOnce sync.Once
@@ -192,13 +192,13 @@ func file_types_events_proto_rawDescGZIP() []byte {
 
 var file_types_events_proto_msgTypes = make([]protoimpl.MessageInfo, 2)
 var file_types_events_proto_goTypes = []any{
-	(*UserRoleAssignedEvent)(nil),  // 0: api.v1.proto.types.UserRoleAssignedEvent
-	(*RolePolicyChangedEvent)(nil), // 1: api.v1.proto.types.RolePolicyChangedEvent
+	(*UserRoleAssignedEvent)(nil),  // 0: api.v1.services.types.UserRoleAssignedEvent
+	(*RolePolicyChangedEvent)(nil), // 1: api.v1.services.types.RolePolicyChangedEvent
 	(*timestamppb.Timestamp)(nil),  // 2: google.protobuf.Timestamp
 }
 var file_types_events_proto_depIdxs = []int32{
-	2, // 0: api.v1.proto.types.UserRoleAssignedEvent.timestamp:type_name -> google.protobuf.Timestamp
-	2, // 1: api.v1.proto.types.RolePolicyChangedEvent.timestamp:type_name -> google.protobuf.Timestamp
+	2, // 0: api.v1.services.types.UserRoleAssignedEvent.timestamp:type_name -> google.protobuf.Timestamp
+	2, // 1: api.v1.services.types.RolePolicyChangedEvent.timestamp:type_name -> google.protobuf.Timestamp
 	2, // [2:2] is the sub-list for method output_type
 	2, // [2:2] is the sub-list for method input_type
 	2, // [2:2] is the sub-list for extension type_name

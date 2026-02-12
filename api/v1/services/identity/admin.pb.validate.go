@@ -35,22 +35,328 @@ var (
 	_ = sort.Sort
 )
 
-// Validate checks the field values on PolicySyncStatusResponse with the rules
+// Validate checks the field values on ForcePolicySyncRequest with the rules
 // defined in the proto definition for this message. If any rules are
 // violated, the first error encountered is returned, or nil if there are no violations.
-func (m *PolicySyncStatusResponse) Validate() error {
+func (m *ForcePolicySyncRequest) Validate() error {
 	return m.validate(false)
 }
 
-// ValidateAll checks the field values on PolicySyncStatusResponse with the
-// rules defined in the proto definition for this message. If any rules are
+// ValidateAll checks the field values on ForcePolicySyncRequest with the rules
+// defined in the proto definition for this message. If any rules are
 // violated, the result is a list of violation errors wrapped in
-// PolicySyncStatusResponseMultiError, or nil if none found.
-func (m *PolicySyncStatusResponse) ValidateAll() error {
+// ForcePolicySyncRequestMultiError, or nil if none found.
+func (m *ForcePolicySyncRequest) ValidateAll() error {
 	return m.validate(true)
 }
 
-func (m *PolicySyncStatusResponse) validate(all bool) error {
+func (m *ForcePolicySyncRequest) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	if len(errors) > 0 {
+		return ForcePolicySyncRequestMultiError(errors)
+	}
+
+	return nil
+}
+
+// ForcePolicySyncRequestMultiError is an error wrapping multiple validation
+// errors returned by ForcePolicySyncRequest.ValidateAll() if the designated
+// constraints aren't met.
+type ForcePolicySyncRequestMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m ForcePolicySyncRequestMultiError) Error() string {
+	msgs := make([]string, 0, len(m))
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m ForcePolicySyncRequestMultiError) AllErrors() []error { return m }
+
+// ForcePolicySyncRequestValidationError is the validation error returned by
+// ForcePolicySyncRequest.Validate if the designated constraints aren't met.
+type ForcePolicySyncRequestValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e ForcePolicySyncRequestValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e ForcePolicySyncRequestValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e ForcePolicySyncRequestValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e ForcePolicySyncRequestValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e ForcePolicySyncRequestValidationError) ErrorName() string {
+	return "ForcePolicySyncRequestValidationError"
+}
+
+// Error satisfies the builtin error interface
+func (e ForcePolicySyncRequestValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sForcePolicySyncRequest.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = ForcePolicySyncRequestValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = ForcePolicySyncRequestValidationError{}
+
+// Validate checks the field values on ForcePolicySyncResponse with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the first error encountered is returned, or nil if there are no violations.
+func (m *ForcePolicySyncResponse) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on ForcePolicySyncResponse with the
+// rules defined in the proto definition for this message. If any rules are
+// violated, the result is a list of violation errors wrapped in
+// ForcePolicySyncResponseMultiError, or nil if none found.
+func (m *ForcePolicySyncResponse) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *ForcePolicySyncResponse) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	if len(errors) > 0 {
+		return ForcePolicySyncResponseMultiError(errors)
+	}
+
+	return nil
+}
+
+// ForcePolicySyncResponseMultiError is an error wrapping multiple validation
+// errors returned by ForcePolicySyncResponse.ValidateAll() if the designated
+// constraints aren't met.
+type ForcePolicySyncResponseMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m ForcePolicySyncResponseMultiError) Error() string {
+	msgs := make([]string, 0, len(m))
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m ForcePolicySyncResponseMultiError) AllErrors() []error { return m }
+
+// ForcePolicySyncResponseValidationError is the validation error returned by
+// ForcePolicySyncResponse.Validate if the designated constraints aren't met.
+type ForcePolicySyncResponseValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e ForcePolicySyncResponseValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e ForcePolicySyncResponseValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e ForcePolicySyncResponseValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e ForcePolicySyncResponseValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e ForcePolicySyncResponseValidationError) ErrorName() string {
+	return "ForcePolicySyncResponseValidationError"
+}
+
+// Error satisfies the builtin error interface
+func (e ForcePolicySyncResponseValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sForcePolicySyncResponse.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = ForcePolicySyncResponseValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = ForcePolicySyncResponseValidationError{}
+
+// Validate checks the field values on GetPolicySyncStatusRequest with the
+// rules defined in the proto definition for this message. If any rules are
+// violated, the first error encountered is returned, or nil if there are no violations.
+func (m *GetPolicySyncStatusRequest) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on GetPolicySyncStatusRequest with the
+// rules defined in the proto definition for this message. If any rules are
+// violated, the result is a list of violation errors wrapped in
+// GetPolicySyncStatusRequestMultiError, or nil if none found.
+func (m *GetPolicySyncStatusRequest) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *GetPolicySyncStatusRequest) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	if len(errors) > 0 {
+		return GetPolicySyncStatusRequestMultiError(errors)
+	}
+
+	return nil
+}
+
+// GetPolicySyncStatusRequestMultiError is an error wrapping multiple
+// validation errors returned by GetPolicySyncStatusRequest.ValidateAll() if
+// the designated constraints aren't met.
+type GetPolicySyncStatusRequestMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m GetPolicySyncStatusRequestMultiError) Error() string {
+	msgs := make([]string, 0, len(m))
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m GetPolicySyncStatusRequestMultiError) AllErrors() []error { return m }
+
+// GetPolicySyncStatusRequestValidationError is the validation error returned
+// by GetPolicySyncStatusRequest.Validate if the designated constraints aren't met.
+type GetPolicySyncStatusRequestValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e GetPolicySyncStatusRequestValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e GetPolicySyncStatusRequestValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e GetPolicySyncStatusRequestValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e GetPolicySyncStatusRequestValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e GetPolicySyncStatusRequestValidationError) ErrorName() string {
+	return "GetPolicySyncStatusRequestValidationError"
+}
+
+// Error satisfies the builtin error interface
+func (e GetPolicySyncStatusRequestValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sGetPolicySyncStatusRequest.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = GetPolicySyncStatusRequestValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = GetPolicySyncStatusRequestValidationError{}
+
+// Validate checks the field values on GetPolicySyncStatusResponse with the
+// rules defined in the proto definition for this message. If any rules are
+// violated, the first error encountered is returned, or nil if there are no violations.
+func (m *GetPolicySyncStatusResponse) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on GetPolicySyncStatusResponse with the
+// rules defined in the proto definition for this message. If any rules are
+// violated, the result is a list of violation errors wrapped in
+// GetPolicySyncStatusResponseMultiError, or nil if none found.
+func (m *GetPolicySyncStatusResponse) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *GetPolicySyncStatusResponse) validate(all bool) error {
 	if m == nil {
 		return nil
 	}
@@ -63,7 +369,7 @@ func (m *PolicySyncStatusResponse) validate(all bool) error {
 		switch v := interface{}(m.GetLastSyncTime()).(type) {
 		case interface{ ValidateAll() error }:
 			if err := v.ValidateAll(); err != nil {
-				errors = append(errors, PolicySyncStatusResponseValidationError{
+				errors = append(errors, GetPolicySyncStatusResponseValidationError{
 					field:  "LastSyncTime",
 					reason: "embedded message failed validation",
 					cause:  err,
@@ -71,7 +377,7 @@ func (m *PolicySyncStatusResponse) validate(all bool) error {
 			}
 		case interface{ Validate() error }:
 			if err := v.Validate(); err != nil {
-				errors = append(errors, PolicySyncStatusResponseValidationError{
+				errors = append(errors, GetPolicySyncStatusResponseValidationError{
 					field:  "LastSyncTime",
 					reason: "embedded message failed validation",
 					cause:  err,
@@ -80,7 +386,7 @@ func (m *PolicySyncStatusResponse) validate(all bool) error {
 		}
 	} else if v, ok := interface{}(m.GetLastSyncTime()).(interface{ Validate() error }); ok {
 		if err := v.Validate(); err != nil {
-			return PolicySyncStatusResponseValidationError{
+			return GetPolicySyncStatusResponseValidationError{
 				field:  "LastSyncTime",
 				reason: "embedded message failed validation",
 				cause:  err,
@@ -101,19 +407,19 @@ func (m *PolicySyncStatusResponse) validate(all bool) error {
 	// no validation rules for FailureRate
 
 	if len(errors) > 0 {
-		return PolicySyncStatusResponseMultiError(errors)
+		return GetPolicySyncStatusResponseMultiError(errors)
 	}
 
 	return nil
 }
 
-// PolicySyncStatusResponseMultiError is an error wrapping multiple validation
-// errors returned by PolicySyncStatusResponse.ValidateAll() if the designated
-// constraints aren't met.
-type PolicySyncStatusResponseMultiError []error
+// GetPolicySyncStatusResponseMultiError is an error wrapping multiple
+// validation errors returned by GetPolicySyncStatusResponse.ValidateAll() if
+// the designated constraints aren't met.
+type GetPolicySyncStatusResponseMultiError []error
 
 // Error returns a concatenation of all the error messages it wraps.
-func (m PolicySyncStatusResponseMultiError) Error() string {
+func (m GetPolicySyncStatusResponseMultiError) Error() string {
 	msgs := make([]string, 0, len(m))
 	for _, err := range m {
 		msgs = append(msgs, err.Error())
@@ -122,11 +428,12 @@ func (m PolicySyncStatusResponseMultiError) Error() string {
 }
 
 // AllErrors returns a list of validation violation errors.
-func (m PolicySyncStatusResponseMultiError) AllErrors() []error { return m }
+func (m GetPolicySyncStatusResponseMultiError) AllErrors() []error { return m }
 
-// PolicySyncStatusResponseValidationError is the validation error returned by
-// PolicySyncStatusResponse.Validate if the designated constraints aren't met.
-type PolicySyncStatusResponseValidationError struct {
+// GetPolicySyncStatusResponseValidationError is the validation error returned
+// by GetPolicySyncStatusResponse.Validate if the designated constraints
+// aren't met.
+type GetPolicySyncStatusResponseValidationError struct {
 	field  string
 	reason string
 	cause  error
@@ -134,24 +441,24 @@ type PolicySyncStatusResponseValidationError struct {
 }
 
 // Field function returns field value.
-func (e PolicySyncStatusResponseValidationError) Field() string { return e.field }
+func (e GetPolicySyncStatusResponseValidationError) Field() string { return e.field }
 
 // Reason function returns reason value.
-func (e PolicySyncStatusResponseValidationError) Reason() string { return e.reason }
+func (e GetPolicySyncStatusResponseValidationError) Reason() string { return e.reason }
 
 // Cause function returns cause value.
-func (e PolicySyncStatusResponseValidationError) Cause() error { return e.cause }
+func (e GetPolicySyncStatusResponseValidationError) Cause() error { return e.cause }
 
 // Key function returns key value.
-func (e PolicySyncStatusResponseValidationError) Key() bool { return e.key }
+func (e GetPolicySyncStatusResponseValidationError) Key() bool { return e.key }
 
 // ErrorName returns error name.
-func (e PolicySyncStatusResponseValidationError) ErrorName() string {
-	return "PolicySyncStatusResponseValidationError"
+func (e GetPolicySyncStatusResponseValidationError) ErrorName() string {
+	return "GetPolicySyncStatusResponseValidationError"
 }
 
 // Error satisfies the builtin error interface
-func (e PolicySyncStatusResponseValidationError) Error() string {
+func (e GetPolicySyncStatusResponseValidationError) Error() string {
 	cause := ""
 	if e.cause != nil {
 		cause = fmt.Sprintf(" | caused by: %v", e.cause)
@@ -163,14 +470,14 @@ func (e PolicySyncStatusResponseValidationError) Error() string {
 	}
 
 	return fmt.Sprintf(
-		"invalid %sPolicySyncStatusResponse.%s: %s%s",
+		"invalid %sGetPolicySyncStatusResponse.%s: %s%s",
 		key,
 		e.field,
 		e.reason,
 		cause)
 }
 
-var _ error = PolicySyncStatusResponseValidationError{}
+var _ error = GetPolicySyncStatusResponseValidationError{}
 
 var _ interface {
 	Field() string
@@ -178,7 +485,109 @@ var _ interface {
 	Key() bool
 	Cause() error
 	ErrorName() string
-} = PolicySyncStatusResponseValidationError{}
+} = GetPolicySyncStatusResponseValidationError{}
+
+// Validate checks the field values on GetEnforcerPoliciesRequest with the
+// rules defined in the proto definition for this message. If any rules are
+// violated, the first error encountered is returned, or nil if there are no violations.
+func (m *GetEnforcerPoliciesRequest) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on GetEnforcerPoliciesRequest with the
+// rules defined in the proto definition for this message. If any rules are
+// violated, the result is a list of violation errors wrapped in
+// GetEnforcerPoliciesRequestMultiError, or nil if none found.
+func (m *GetEnforcerPoliciesRequest) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *GetEnforcerPoliciesRequest) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	if len(errors) > 0 {
+		return GetEnforcerPoliciesRequestMultiError(errors)
+	}
+
+	return nil
+}
+
+// GetEnforcerPoliciesRequestMultiError is an error wrapping multiple
+// validation errors returned by GetEnforcerPoliciesRequest.ValidateAll() if
+// the designated constraints aren't met.
+type GetEnforcerPoliciesRequestMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m GetEnforcerPoliciesRequestMultiError) Error() string {
+	msgs := make([]string, 0, len(m))
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m GetEnforcerPoliciesRequestMultiError) AllErrors() []error { return m }
+
+// GetEnforcerPoliciesRequestValidationError is the validation error returned
+// by GetEnforcerPoliciesRequest.Validate if the designated constraints aren't met.
+type GetEnforcerPoliciesRequestValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e GetEnforcerPoliciesRequestValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e GetEnforcerPoliciesRequestValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e GetEnforcerPoliciesRequestValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e GetEnforcerPoliciesRequestValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e GetEnforcerPoliciesRequestValidationError) ErrorName() string {
+	return "GetEnforcerPoliciesRequestValidationError"
+}
+
+// Error satisfies the builtin error interface
+func (e GetEnforcerPoliciesRequestValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sGetEnforcerPoliciesRequest.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = GetEnforcerPoliciesRequestValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = GetEnforcerPoliciesRequestValidationError{}
 
 // Validate checks the field values on CasbinRule with the rules defined in the
 // proto definition for this message. If any rules are violated, the first
@@ -281,22 +690,22 @@ var _ interface {
 	ErrorName() string
 } = CasbinRuleValidationError{}
 
-// Validate checks the field values on EnforcerPoliciesResponse with the rules
-// defined in the proto definition for this message. If any rules are
+// Validate checks the field values on GetEnforcerPoliciesResponse with the
+// rules defined in the proto definition for this message. If any rules are
 // violated, the first error encountered is returned, or nil if there are no violations.
-func (m *EnforcerPoliciesResponse) Validate() error {
+func (m *GetEnforcerPoliciesResponse) Validate() error {
 	return m.validate(false)
 }
 
-// ValidateAll checks the field values on EnforcerPoliciesResponse with the
+// ValidateAll checks the field values on GetEnforcerPoliciesResponse with the
 // rules defined in the proto definition for this message. If any rules are
 // violated, the result is a list of violation errors wrapped in
-// EnforcerPoliciesResponseMultiError, or nil if none found.
-func (m *EnforcerPoliciesResponse) ValidateAll() error {
+// GetEnforcerPoliciesResponseMultiError, or nil if none found.
+func (m *GetEnforcerPoliciesResponse) ValidateAll() error {
 	return m.validate(true)
 }
 
-func (m *EnforcerPoliciesResponse) validate(all bool) error {
+func (m *GetEnforcerPoliciesResponse) validate(all bool) error {
 	if m == nil {
 		return nil
 	}
@@ -310,7 +719,7 @@ func (m *EnforcerPoliciesResponse) validate(all bool) error {
 			switch v := interface{}(item).(type) {
 			case interface{ ValidateAll() error }:
 				if err := v.ValidateAll(); err != nil {
-					errors = append(errors, EnforcerPoliciesResponseValidationError{
+					errors = append(errors, GetEnforcerPoliciesResponseValidationError{
 						field:  fmt.Sprintf("Policies[%v]", idx),
 						reason: "embedded message failed validation",
 						cause:  err,
@@ -318,7 +727,7 @@ func (m *EnforcerPoliciesResponse) validate(all bool) error {
 				}
 			case interface{ Validate() error }:
 				if err := v.Validate(); err != nil {
-					errors = append(errors, EnforcerPoliciesResponseValidationError{
+					errors = append(errors, GetEnforcerPoliciesResponseValidationError{
 						field:  fmt.Sprintf("Policies[%v]", idx),
 						reason: "embedded message failed validation",
 						cause:  err,
@@ -327,7 +736,7 @@ func (m *EnforcerPoliciesResponse) validate(all bool) error {
 			}
 		} else if v, ok := interface{}(item).(interface{ Validate() error }); ok {
 			if err := v.Validate(); err != nil {
-				return EnforcerPoliciesResponseValidationError{
+				return GetEnforcerPoliciesResponseValidationError{
 					field:  fmt.Sprintf("Policies[%v]", idx),
 					reason: "embedded message failed validation",
 					cause:  err,
@@ -338,19 +747,19 @@ func (m *EnforcerPoliciesResponse) validate(all bool) error {
 	}
 
 	if len(errors) > 0 {
-		return EnforcerPoliciesResponseMultiError(errors)
+		return GetEnforcerPoliciesResponseMultiError(errors)
 	}
 
 	return nil
 }
 
-// EnforcerPoliciesResponseMultiError is an error wrapping multiple validation
-// errors returned by EnforcerPoliciesResponse.ValidateAll() if the designated
-// constraints aren't met.
-type EnforcerPoliciesResponseMultiError []error
+// GetEnforcerPoliciesResponseMultiError is an error wrapping multiple
+// validation errors returned by GetEnforcerPoliciesResponse.ValidateAll() if
+// the designated constraints aren't met.
+type GetEnforcerPoliciesResponseMultiError []error
 
 // Error returns a concatenation of all the error messages it wraps.
-func (m EnforcerPoliciesResponseMultiError) Error() string {
+func (m GetEnforcerPoliciesResponseMultiError) Error() string {
 	msgs := make([]string, 0, len(m))
 	for _, err := range m {
 		msgs = append(msgs, err.Error())
@@ -359,11 +768,12 @@ func (m EnforcerPoliciesResponseMultiError) Error() string {
 }
 
 // AllErrors returns a list of validation violation errors.
-func (m EnforcerPoliciesResponseMultiError) AllErrors() []error { return m }
+func (m GetEnforcerPoliciesResponseMultiError) AllErrors() []error { return m }
 
-// EnforcerPoliciesResponseValidationError is the validation error returned by
-// EnforcerPoliciesResponse.Validate if the designated constraints aren't met.
-type EnforcerPoliciesResponseValidationError struct {
+// GetEnforcerPoliciesResponseValidationError is the validation error returned
+// by GetEnforcerPoliciesResponse.Validate if the designated constraints
+// aren't met.
+type GetEnforcerPoliciesResponseValidationError struct {
 	field  string
 	reason string
 	cause  error
@@ -371,24 +781,24 @@ type EnforcerPoliciesResponseValidationError struct {
 }
 
 // Field function returns field value.
-func (e EnforcerPoliciesResponseValidationError) Field() string { return e.field }
+func (e GetEnforcerPoliciesResponseValidationError) Field() string { return e.field }
 
 // Reason function returns reason value.
-func (e EnforcerPoliciesResponseValidationError) Reason() string { return e.reason }
+func (e GetEnforcerPoliciesResponseValidationError) Reason() string { return e.reason }
 
 // Cause function returns cause value.
-func (e EnforcerPoliciesResponseValidationError) Cause() error { return e.cause }
+func (e GetEnforcerPoliciesResponseValidationError) Cause() error { return e.cause }
 
 // Key function returns key value.
-func (e EnforcerPoliciesResponseValidationError) Key() bool { return e.key }
+func (e GetEnforcerPoliciesResponseValidationError) Key() bool { return e.key }
 
 // ErrorName returns error name.
-func (e EnforcerPoliciesResponseValidationError) ErrorName() string {
-	return "EnforcerPoliciesResponseValidationError"
+func (e GetEnforcerPoliciesResponseValidationError) ErrorName() string {
+	return "GetEnforcerPoliciesResponseValidationError"
 }
 
 // Error satisfies the builtin error interface
-func (e EnforcerPoliciesResponseValidationError) Error() string {
+func (e GetEnforcerPoliciesResponseValidationError) Error() string {
 	cause := ""
 	if e.cause != nil {
 		cause = fmt.Sprintf(" | caused by: %v", e.cause)
@@ -400,14 +810,14 @@ func (e EnforcerPoliciesResponseValidationError) Error() string {
 	}
 
 	return fmt.Sprintf(
-		"invalid %sEnforcerPoliciesResponse.%s: %s%s",
+		"invalid %sGetEnforcerPoliciesResponse.%s: %s%s",
 		key,
 		e.field,
 		e.reason,
 		cause)
 }
 
-var _ error = EnforcerPoliciesResponseValidationError{}
+var _ error = GetEnforcerPoliciesResponseValidationError{}
 
 var _ interface {
 	Field() string
@@ -415,4 +825,4 @@ var _ interface {
 	Key() bool
 	Cause() error
 	ErrorName() string
-} = EnforcerPoliciesResponseValidationError{}
+} = GetEnforcerPoliciesResponseValidationError{}

@@ -19,9 +19,13 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	ObjectStoreService_CreateObject_FullMethodName = "/api.v1.services.objectstore.ObjectStoreService/CreateObject"
-	ObjectStoreService_GetObject_FullMethodName    = "/api.v1.services.objectstore.ObjectStoreService/GetObject"
-	ObjectStoreService_DeleteObject_FullMethodName = "/api.v1.services.objectstore.ObjectStoreService/DeleteObject"
+	ObjectStoreService_InitiateMultipartUpload_FullMethodName = "/api.v1.services.objectstore.ObjectStoreService/InitiateMultipartUpload"
+	ObjectStoreService_GetMultipartUploadUrl_FullMethodName   = "/api.v1.services.objectstore.ObjectStoreService/GetMultipartUploadUrl"
+	ObjectStoreService_CompleteMultipartUpload_FullMethodName = "/api.v1.services.objectstore.ObjectStoreService/CompleteMultipartUpload"
+	ObjectStoreService_AbortMultipartUpload_FullMethodName    = "/api.v1.services.objectstore.ObjectStoreService/AbortMultipartUpload"
+	ObjectStoreService_UploadObject_FullMethodName            = "/api.v1.services.objectstore.ObjectStoreService/UploadObject"
+	ObjectStoreService_GetObject_FullMethodName               = "/api.v1.services.objectstore.ObjectStoreService/GetObject"
+	ObjectStoreService_DeleteObject_FullMethodName            = "/api.v1.services.objectstore.ObjectStoreService/DeleteObject"
 )
 
 // ObjectStoreServiceClient is the client API for ObjectStoreService service.
@@ -29,10 +33,21 @@ const (
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 //
 // The ObjectStore service definition.
+// This service provides a generic interface for object storage.
+// It is designed to be used internally by other services (like FileManager)
+// and not exposed directly to the public API gateway.
 type ObjectStoreServiceClient interface {
-	// Creates an object.
-	CreateObject(ctx context.Context, in *CreateObjectRequest, opts ...grpc.CallOption) (*CreateObjectResponse, error)
-	// Gets an object.
+	// Initiates a multipart upload and returns an upload ID.
+	InitiateMultipartUpload(ctx context.Context, in *InitiateMultipartUploadRequest, opts ...grpc.CallOption) (*InitiateMultipartUploadResponse, error)
+	// Generates a presigned URL for uploading a part.
+	GetMultipartUploadUrl(ctx context.Context, in *GetMultipartUploadUrlRequest, opts ...grpc.CallOption) (*GetMultipartUploadUrlResponse, error)
+	// Completes a multipart upload.
+	CompleteMultipartUpload(ctx context.Context, in *CompleteMultipartUploadRequest, opts ...grpc.CallOption) (*CompleteMultipartUploadResponse, error)
+	// Aborts a multipart upload.
+	AbortMultipartUpload(ctx context.Context, in *AbortMultipartUploadRequest, opts ...grpc.CallOption) (*AbortMultipartUploadResponse, error)
+	// Uploads an object in a single request. Suitable for small files.
+	UploadObject(ctx context.Context, in *UploadObjectRequest, opts ...grpc.CallOption) (*UploadObjectResponse, error)
+	// Downloads an object.
 	GetObject(ctx context.Context, in *GetObjectRequest, opts ...grpc.CallOption) (*GetObjectResponse, error)
 	// Deletes an object.
 	DeleteObject(ctx context.Context, in *DeleteObjectRequest, opts ...grpc.CallOption) (*DeleteObjectResponse, error)
@@ -46,10 +61,50 @@ func NewObjectStoreServiceClient(cc grpc.ClientConnInterface) ObjectStoreService
 	return &objectStoreServiceClient{cc}
 }
 
-func (c *objectStoreServiceClient) CreateObject(ctx context.Context, in *CreateObjectRequest, opts ...grpc.CallOption) (*CreateObjectResponse, error) {
+func (c *objectStoreServiceClient) InitiateMultipartUpload(ctx context.Context, in *InitiateMultipartUploadRequest, opts ...grpc.CallOption) (*InitiateMultipartUploadResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(CreateObjectResponse)
-	err := c.cc.Invoke(ctx, ObjectStoreService_CreateObject_FullMethodName, in, out, cOpts...)
+	out := new(InitiateMultipartUploadResponse)
+	err := c.cc.Invoke(ctx, ObjectStoreService_InitiateMultipartUpload_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *objectStoreServiceClient) GetMultipartUploadUrl(ctx context.Context, in *GetMultipartUploadUrlRequest, opts ...grpc.CallOption) (*GetMultipartUploadUrlResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(GetMultipartUploadUrlResponse)
+	err := c.cc.Invoke(ctx, ObjectStoreService_GetMultipartUploadUrl_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *objectStoreServiceClient) CompleteMultipartUpload(ctx context.Context, in *CompleteMultipartUploadRequest, opts ...grpc.CallOption) (*CompleteMultipartUploadResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(CompleteMultipartUploadResponse)
+	err := c.cc.Invoke(ctx, ObjectStoreService_CompleteMultipartUpload_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *objectStoreServiceClient) AbortMultipartUpload(ctx context.Context, in *AbortMultipartUploadRequest, opts ...grpc.CallOption) (*AbortMultipartUploadResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(AbortMultipartUploadResponse)
+	err := c.cc.Invoke(ctx, ObjectStoreService_AbortMultipartUpload_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *objectStoreServiceClient) UploadObject(ctx context.Context, in *UploadObjectRequest, opts ...grpc.CallOption) (*UploadObjectResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(UploadObjectResponse)
+	err := c.cc.Invoke(ctx, ObjectStoreService_UploadObject_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -81,10 +136,21 @@ func (c *objectStoreServiceClient) DeleteObject(ctx context.Context, in *DeleteO
 // for forward compatibility.
 //
 // The ObjectStore service definition.
+// This service provides a generic interface for object storage.
+// It is designed to be used internally by other services (like FileManager)
+// and not exposed directly to the public API gateway.
 type ObjectStoreServiceServer interface {
-	// Creates an object.
-	CreateObject(context.Context, *CreateObjectRequest) (*CreateObjectResponse, error)
-	// Gets an object.
+	// Initiates a multipart upload and returns an upload ID.
+	InitiateMultipartUpload(context.Context, *InitiateMultipartUploadRequest) (*InitiateMultipartUploadResponse, error)
+	// Generates a presigned URL for uploading a part.
+	GetMultipartUploadUrl(context.Context, *GetMultipartUploadUrlRequest) (*GetMultipartUploadUrlResponse, error)
+	// Completes a multipart upload.
+	CompleteMultipartUpload(context.Context, *CompleteMultipartUploadRequest) (*CompleteMultipartUploadResponse, error)
+	// Aborts a multipart upload.
+	AbortMultipartUpload(context.Context, *AbortMultipartUploadRequest) (*AbortMultipartUploadResponse, error)
+	// Uploads an object in a single request. Suitable for small files.
+	UploadObject(context.Context, *UploadObjectRequest) (*UploadObjectResponse, error)
+	// Downloads an object.
 	GetObject(context.Context, *GetObjectRequest) (*GetObjectResponse, error)
 	// Deletes an object.
 	DeleteObject(context.Context, *DeleteObjectRequest) (*DeleteObjectResponse, error)
@@ -98,8 +164,20 @@ type ObjectStoreServiceServer interface {
 // pointer dereference when methods are called.
 type UnimplementedObjectStoreServiceServer struct{}
 
-func (UnimplementedObjectStoreServiceServer) CreateObject(context.Context, *CreateObjectRequest) (*CreateObjectResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method CreateObject not implemented")
+func (UnimplementedObjectStoreServiceServer) InitiateMultipartUpload(context.Context, *InitiateMultipartUploadRequest) (*InitiateMultipartUploadResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method InitiateMultipartUpload not implemented")
+}
+func (UnimplementedObjectStoreServiceServer) GetMultipartUploadUrl(context.Context, *GetMultipartUploadUrlRequest) (*GetMultipartUploadUrlResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetMultipartUploadUrl not implemented")
+}
+func (UnimplementedObjectStoreServiceServer) CompleteMultipartUpload(context.Context, *CompleteMultipartUploadRequest) (*CompleteMultipartUploadResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method CompleteMultipartUpload not implemented")
+}
+func (UnimplementedObjectStoreServiceServer) AbortMultipartUpload(context.Context, *AbortMultipartUploadRequest) (*AbortMultipartUploadResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method AbortMultipartUpload not implemented")
+}
+func (UnimplementedObjectStoreServiceServer) UploadObject(context.Context, *UploadObjectRequest) (*UploadObjectResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UploadObject not implemented")
 }
 func (UnimplementedObjectStoreServiceServer) GetObject(context.Context, *GetObjectRequest) (*GetObjectResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetObject not implemented")
@@ -128,20 +206,92 @@ func RegisterObjectStoreServiceServer(s grpc.ServiceRegistrar, srv ObjectStoreSe
 	s.RegisterService(&ObjectStoreService_ServiceDesc, srv)
 }
 
-func _ObjectStoreService_CreateObject_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(CreateObjectRequest)
+func _ObjectStoreService_InitiateMultipartUpload_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(InitiateMultipartUploadRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(ObjectStoreServiceServer).CreateObject(ctx, in)
+		return srv.(ObjectStoreServiceServer).InitiateMultipartUpload(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: ObjectStoreService_CreateObject_FullMethodName,
+		FullMethod: ObjectStoreService_InitiateMultipartUpload_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ObjectStoreServiceServer).CreateObject(ctx, req.(*CreateObjectRequest))
+		return srv.(ObjectStoreServiceServer).InitiateMultipartUpload(ctx, req.(*InitiateMultipartUploadRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _ObjectStoreService_GetMultipartUploadUrl_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetMultipartUploadUrlRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ObjectStoreServiceServer).GetMultipartUploadUrl(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: ObjectStoreService_GetMultipartUploadUrl_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ObjectStoreServiceServer).GetMultipartUploadUrl(ctx, req.(*GetMultipartUploadUrlRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _ObjectStoreService_CompleteMultipartUpload_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CompleteMultipartUploadRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ObjectStoreServiceServer).CompleteMultipartUpload(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: ObjectStoreService_CompleteMultipartUpload_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ObjectStoreServiceServer).CompleteMultipartUpload(ctx, req.(*CompleteMultipartUploadRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _ObjectStoreService_AbortMultipartUpload_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(AbortMultipartUploadRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ObjectStoreServiceServer).AbortMultipartUpload(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: ObjectStoreService_AbortMultipartUpload_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ObjectStoreServiceServer).AbortMultipartUpload(ctx, req.(*AbortMultipartUploadRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _ObjectStoreService_UploadObject_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UploadObjectRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ObjectStoreServiceServer).UploadObject(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: ObjectStoreService_UploadObject_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ObjectStoreServiceServer).UploadObject(ctx, req.(*UploadObjectRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -190,8 +340,24 @@ var ObjectStoreService_ServiceDesc = grpc.ServiceDesc{
 	HandlerType: (*ObjectStoreServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
-			MethodName: "CreateObject",
-			Handler:    _ObjectStoreService_CreateObject_Handler,
+			MethodName: "InitiateMultipartUpload",
+			Handler:    _ObjectStoreService_InitiateMultipartUpload_Handler,
+		},
+		{
+			MethodName: "GetMultipartUploadUrl",
+			Handler:    _ObjectStoreService_GetMultipartUploadUrl_Handler,
+		},
+		{
+			MethodName: "CompleteMultipartUpload",
+			Handler:    _ObjectStoreService_CompleteMultipartUpload_Handler,
+		},
+		{
+			MethodName: "AbortMultipartUpload",
+			Handler:    _ObjectStoreService_AbortMultipartUpload_Handler,
+		},
+		{
+			MethodName: "UploadObject",
+			Handler:    _ObjectStoreService_UploadObject_Handler,
 		},
 		{
 			MethodName: "GetObject",
