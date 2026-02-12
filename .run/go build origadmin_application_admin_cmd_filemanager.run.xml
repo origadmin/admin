@@ -1,3 +1,7 @@
+<!--
+  ~ Copyright (c) 2024 OrigAdmin. All rights reserved.
+  -->
+
 <component name="ProjectRunConfigurationManager">
     <configuration default="false" name="go build origadmin/application/admin/cmd/filemanager"
                    type="GoApplicationRunConfiguration" factoryName="Go Application" nameIsGenerated="true">
