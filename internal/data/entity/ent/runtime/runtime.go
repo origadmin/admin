@@ -5,6 +5,7 @@ package runtime
 import (
 	"origadmin/application/admin/internal/data/entity/ent/casbinrule"
 	"origadmin/application/admin/internal/data/entity/ent/department"
+	"origadmin/application/admin/internal/data/entity/ent/file"
 	"origadmin/application/admin/internal/data/entity/ent/notification"
 	"origadmin/application/admin/internal/data/entity/ent/permission"
 	"origadmin/application/admin/internal/data/entity/ent/permissionresource"
@@ -118,6 +119,49 @@ func init() {
 	department.DefaultID = departmentDescID.Default.(func() int64)
 	// department.IDValidator is a validator for the "id" field. It is called by the builders before save.
 	department.IDValidator = departmentDescID.Validators[0].(func(int64) error)
+	fileMixin := schema.File{}.Mixin()
+	fileMixinHooks1 := fileMixin[1].Hooks()
+	fileMixinHooks4 := fileMixin[4].Hooks()
+	fileHooks := schema.File{}.Hooks()
+	file.Hooks[0] = fileMixinHooks1[0]
+	file.Hooks[1] = fileMixinHooks4[0]
+	file.Hooks[2] = fileHooks[0]
+	fileMixinInters4 := fileMixin[4].Interceptors()
+	fileInters := schema.File{}.Interceptors()
+	file.Interceptors[0] = fileMixinInters4[0]
+	file.Interceptors[1] = fileInters[0]
+	fileMixinFields0 := fileMixin[0].Fields()
+	_ = fileMixinFields0
+	fileMixinFields2 := fileMixin[2].Fields()
+	_ = fileMixinFields2
+	fileMixinFields3 := fileMixin[3].Fields()
+	_ = fileMixinFields3
+	fileFields := schema.File{}.Fields()
+	_ = fileFields
+	// fileDescCreateTime is the schema descriptor for create_time field.
+	fileDescCreateTime := fileMixinFields2[0].Descriptor()
+	// file.DefaultCreateTime holds the default value on creation for the create_time field.
+	file.DefaultCreateTime = fileDescCreateTime.Default.(func() time.Time)
+	// fileDescUpdateTime is the schema descriptor for update_time field.
+	fileDescUpdateTime := fileMixinFields3[0].Descriptor()
+	// file.DefaultUpdateTime holds the default value on creation for the update_time field.
+	file.DefaultUpdateTime = fileDescUpdateTime.Default.(func() time.Time)
+	// file.UpdateDefaultUpdateTime holds the default value on update for the update_time field.
+	file.UpdateDefaultUpdateTime = fileDescUpdateTime.UpdateDefault.(func() time.Time)
+	// fileDescVisibility is the schema descriptor for visibility field.
+	fileDescVisibility := fileFields[2].Descriptor()
+	// file.DefaultVisibility holds the default value on creation for the visibility field.
+	file.DefaultVisibility = fileDescVisibility.Default.(string)
+	// fileDescSize is the schema descriptor for size field.
+	fileDescSize := fileFields[4].Descriptor()
+	// file.DefaultSize holds the default value on creation for the size field.
+	file.DefaultSize = fileDescSize.Default.(int64)
+	// fileDescID is the schema descriptor for id field.
+	fileDescID := fileMixinFields0[0].Descriptor()
+	// file.DefaultID holds the default value on creation for the id field.
+	file.DefaultID = fileDescID.Default.(func() int64)
+	// file.IDValidator is a validator for the "id" field. It is called by the builders before save.
+	file.IDValidator = fileDescID.Validators[0].(func(int64) error)
 	notificationMixin := schema.Notification{}.Mixin()
 	notificationMixinHooks1 := notificationMixin[1].Hooks()
 	notification.Hooks[0] = notificationMixinHooks1[0]

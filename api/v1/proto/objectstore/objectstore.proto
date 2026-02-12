@@ -12,29 +12,60 @@ option java_package = "com.origadmin.api.v1.services.objectstore";
 
 // The ObjectStore service definition.
 // This service provides a generic interface for object storage.
-// It is designed to be used internally by other services (like FileManager)
-// and not exposed directly to the public API gateway.
+// While HTTP bindings are provided for flexibility and internal use,
+// it's primarily designed to be consumed by other backend services like FileManager.
 service ObjectStoreService {
-  // Initiates a multipart upload and returns an upload ID.
-  rpc InitiateMultipartUpload(InitiateMultipartUploadRequest) returns (InitiateMultipartUploadResponse);
-
-  // Generates a presigned URL for uploading a part.
-  rpc GetMultipartUploadUrl(GetMultipartUploadUrlRequest) returns (GetMultipartUploadUrlResponse);
-
-  // Completes a multipart upload.
-  rpc CompleteMultipartUpload(CompleteMultipartUploadRequest) returns (CompleteMultipartUploadResponse);
-
-  // Aborts a multipart upload.
-  rpc AbortMultipartUpload(AbortMultipartUploadRequest) returns (AbortMultipartUploadResponse);
-
   // Uploads an object in a single request. Suitable for small files.
-  rpc UploadObject(UploadObjectRequest) returns (UploadObjectResponse);
+  rpc UploadObject(UploadObjectRequest) returns (UploadObjectResponse) {
+    option (google.api.http) = {
+      post: "/obs/objects"
+      body: "*"
+    };
+  }
 
   // Downloads an object.
-  rpc GetObject(GetObjectRequest) returns (GetObjectResponse);
+  rpc GetObject(GetObjectRequest) returns (GetObjectResponse) {
+    option (google.api.http) = {
+      get: "/obs/objects/{id}"
+    };
+  }
 
   // Deletes an object.
-  rpc DeleteObject(DeleteObjectRequest) returns (DeleteObjectResponse);
+  rpc DeleteObject(DeleteObjectRequest) returns (DeleteObjectResponse) {
+    option (google.api.http) = {
+      delete: "/obs/objects/{id}"
+    };
+  }
+
+  // Initiates a multipart upload and returns an upload ID.
+  rpc InitiateMultipartUpload(InitiateMultipartUploadRequest) returns (InitiateMultipartUploadResponse) {
+    option (google.api.http) = {
+      post: "/obs/objects/multipart"
+      body: "*"
+    };
+  }
+
+  // Generates a presigned URL for uploading a part.
+  rpc GetMultipartUploadUrl(GetMultipartUploadUrlRequest) returns (GetMultipartUploadUrlResponse) {
+    option (google.api.http) = {
+      get: "/obs/objects/multipart/{object_id}/uploads/{upload_id}/parts/{part_number}"
+    };
+  }
+
+  // Completes a multipart upload.
+  rpc CompleteMultipartUpload(CompleteMultipartUploadRequest) returns (CompleteMultipartUploadResponse) {
+    option (google.api.http) = {
+      post: "/obs/objects/multipart/{object_id}/uploads/{upload_id}:complete"
+      body: "*"
+    };
+  }
+
+  // Aborts a multipart upload.
+  rpc AbortMultipartUpload(AbortMultipartUploadRequest) returns (AbortMultipartUploadResponse) {
+    option (google.api.http) = {
+      delete: "/obs/objects/multipart/{object_id}/uploads/{upload_id}"
+    };
+  }
 }
 
 // Request message for initiating a multipart upload.
@@ -65,7 +96,13 @@ message GetMultipartUploadUrlResponse {
 message CompleteMultipartUploadRequest {
   string upload_id = 1;
   string object_id = 2;
-  repeated api.v1.services.types.PartInfo parts = 3;
+  repeated PartInfo parts = 3;
+}
+
+// PartInfo contains information about a single uploaded part.
+message PartInfo {
+  int32 part_number = 1;
+  string etag = 2;
 }
 
 // Response message for completing a multipart upload.

@@ -233,11 +233,48 @@ paths:
                   application/json:
                     schema:
                       $ref: '#/components/schemas/google.rpc.Status'
-  /files:
+  /fm/files:
+    get:
+      tags:
+        - FileManagerService
+      description: Lists files with pagination and filtering.
+      operationId: FileManagerService_ListFiles
+      parameters:
+        - name: page
+          in: query
+          schema:
+            type: integer
+            format: int32
+        - name: page_size
+          in: query
+          schema:
+            type: integer
+            format: int32
+        - name: owner_id
+          in: query
+          schema:
+            type: string
+        - name: visibility
+          in: query
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/api.v1.services.filemanager.ListFilesResponse'
+        default:
+          description: Default error response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/google.rpc.Status'
     post:
       tags:
         - FileManagerService
-      description: "Simple upload for small files (e.g. avatars, images).\r\n The file size should be limited (e.g. < 10MB)."
+      description: Simple upload for small files (e.g. avatars, images).
       operationId: FileManagerService_UploadFile
             requestBody:
                 content:
@@ -258,7 +295,7 @@ paths:
                     application/json:
                       schema:
                         $ref: '#/components/schemas/google.rpc.Status'
-  /files/multipart:
+  /fm/files/multipart:
     post:
       tags:
         - FileManagerService
@@ -283,7 +320,7 @@ paths:
                   application/json:
                     schema:
                       $ref: '#/components/schemas/google.rpc.Status'
-  /files/multipart/{upload_id}:
+  /fm/files/multipart/{upload_id}:
     delete:
       tags:
         - FileManagerService
@@ -308,7 +345,7 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/google.rpc.Status'
-  /files/multipart/{upload_id}/complete:
+  /fm/files/multipart/{upload_id}/complete:
     post:
             tags:
               - FileManagerService
@@ -339,7 +376,7 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/google.rpc.Status'
-  /files/multipart/{upload_id}/parts/{part_number}:
+  /fm/files/multipart/{upload_id}/parts/{part_number}:
         get:
             tags:
               - FileManagerService
@@ -370,7 +407,7 @@ paths:
                   application/json:
                     schema:
                       $ref: '#/components/schemas/google.rpc.Status'
-  /files/{id}:
+  /fm/files/{id}:
     get:
       tags:
         - FileManagerService
@@ -389,6 +426,36 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/api.v1.services.filemanager.GetFileResponse'
+        default:
+          description: Default error response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/google.rpc.Status'
+    put:
+      tags:
+        - FileManagerService
+      description: Updates file metadata.
+      operationId: FileManagerService_UpdateFile
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/api.v1.services.filemanager.UpdateFileRequest'
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/api.v1.services.filemanager.UpdateFileResponse'
         default:
           description: Default error response
           content:
@@ -864,6 +931,207 @@ paths:
                         application/json:
                             schema:
                               $ref: '#/components/schemas/api.v1.services.notification.MarkAsReadResponse'
+        default:
+          description: Default error response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/google.rpc.Status'
+  /obs/objects:
+    post:
+      tags:
+        - ObjectStoreService
+      description: Uploads an object in a single request. Suitable for small files.
+      operationId: ObjectStoreService_UploadObject
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/api.v1.services.objectstore.UploadObjectRequest'
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/api.v1.services.objectstore.UploadObjectResponse'
+        default:
+          description: Default error response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/google.rpc.Status'
+  /obs/objects/multipart:
+    post:
+      tags:
+        - ObjectStoreService
+      description: Initiates a multipart upload and returns an upload ID.
+      operationId: ObjectStoreService_InitiateMultipartUpload
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/api.v1.services.objectstore.InitiateMultipartUploadRequest'
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/api.v1.services.objectstore.InitiateMultipartUploadResponse'
+        default:
+          description: Default error response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/google.rpc.Status'
+  /obs/objects/multipart/{object_id}/uploads/{upload_id}:
+    delete:
+      tags:
+        - ObjectStoreService
+      description: Aborts a multipart upload.
+      operationId: ObjectStoreService_AbortMultipartUpload
+      parameters:
+        - name: object_id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: upload_id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/api.v1.services.objectstore.AbortMultipartUploadResponse'
+        default:
+          description: Default error response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/google.rpc.Status'
+  /obs/objects/multipart/{object_id}/uploads/{upload_id}/parts/{part_number}:
+    get:
+      tags:
+        - ObjectStoreService
+      description: Generates a presigned URL for uploading a part.
+      operationId: ObjectStoreService_GetMultipartUploadUrl
+      parameters:
+        - name: object_id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: upload_id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: part_number
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int32
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/api.v1.services.objectstore.GetMultipartUploadUrlResponse'
+        default:
+          description: Default error response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/google.rpc.Status'
+  /obs/objects/multipart/{object_id}/uploads/{upload_id}:complete:
+    post:
+      tags:
+        - ObjectStoreService
+      description: Completes a multipart upload.
+      operationId: ObjectStoreService_CompleteMultipartUpload
+      parameters:
+        - name: object_id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: upload_id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/api.v1.services.objectstore.CompleteMultipartUploadRequest'
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/api.v1.services.objectstore.CompleteMultipartUploadResponse'
+        default:
+          description: Default error response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/google.rpc.Status'
+  /obs/objects/{id}:
+    get:
+      tags:
+        - ObjectStoreService
+      description: Downloads an object.
+      operationId: ObjectStoreService_GetObject
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/api.v1.services.objectstore.GetObjectResponse'
+        default:
+          description: Default error response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/google.rpc.Status'
+    delete:
+      tags:
+        - ObjectStoreService
+      description: Deletes an object.
+      operationId: ObjectStoreService_DeleteObject
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/api.v1.services.objectstore.DeleteObjectResponse'
         default:
           description: Default error response
           content:
@@ -2337,6 +2605,8 @@ components:
         properties:
           file_metadata:
             $ref: '#/components/schemas/api.v1.services.types.FileMetadata'
+          download_url:
+            type: string
         description: Response message for getting file metadata.
       api.v1.services.filemanager.GetMultipartUploadUrlResponse:
         type: object
@@ -2353,6 +2623,8 @@ components:
             type: string
           content_type:
             type: string
+          visibility:
+            type: string
         description: Request message for initiating a multipart upload.
       api.v1.services.filemanager.InitiateMultipartUploadResponse:
             type: object
@@ -2360,6 +2632,17 @@ components:
               upload_id:
                 type: string
             description: Response message for initiating a multipart upload.
+      api.v1.services.filemanager.ListFilesResponse:
+        type: object
+        properties:
+          files:
+            type: array
+            items:
+              $ref: '#/components/schemas/api.v1.services.types.FileMetadata'
+          total_count:
+            type: integer
+            format: int32
+        description: Response message for listing files.
       api.v1.services.filemanager.PartInfo:
         type: object
         properties:
@@ -2368,6 +2651,22 @@ components:
             format: int32
           etag:
             type: string
+      api.v1.services.filemanager.UpdateFileRequest:
+        type: object
+        properties:
+          id:
+            type: string
+          name:
+            type: string
+          visibility:
+            type: string
+        description: Request message for updating file metadata.
+      api.v1.services.filemanager.UpdateFileResponse:
+        type: object
+        properties:
+          file_metadata:
+            $ref: '#/components/schemas/api.v1.services.types.FileMetadata'
+        description: Response message for updating file metadata.
       api.v1.services.filemanager.UploadFileRequest:
         type: object
         properties:
@@ -2377,6 +2676,8 @@ components:
           name:
             type: string
           content_type:
+            type: string
+          visibility:
             type: string
         description: Request message for uploading a small file directly.
       api.v1.services.filemanager.UploadFileResponse:
@@ -2719,6 +3020,86 @@ components:
               - $ref: '#/components/schemas/api.v1.services.types.Template'
             description: The updated template.
         description: UpdateTemplateResponse is the response for NotificationService.UpdateTemplate.
+      api.v1.services.objectstore.AbortMultipartUploadResponse:
+        type: object
+        properties: { }
+        description: Response message for aborting a multipart upload.
+      api.v1.services.objectstore.CompleteMultipartUploadRequest:
+        type: object
+        properties:
+          upload_id:
+            type: string
+          object_id:
+            type: string
+          parts:
+            type: array
+            items:
+              $ref: '#/components/schemas/api.v1.services.objectstore.PartInfo'
+        description: Request message for completing a multipart upload.
+      api.v1.services.objectstore.CompleteMultipartUploadResponse:
+        type: object
+        properties:
+          object:
+            $ref: '#/components/schemas/api.v1.services.types.Object'
+        description: Response message for completing a multipart upload.
+      api.v1.services.objectstore.DeleteObjectResponse:
+        type: object
+        properties: { }
+        description: Response message for deleting an object.
+      api.v1.services.objectstore.GetMultipartUploadUrlResponse:
+        type: object
+        properties:
+          upload_url:
+            type: string
+        description: Response message for getting a multipart upload URL.
+      api.v1.services.objectstore.GetObjectResponse:
+        type: object
+        properties:
+          object:
+            $ref: '#/components/schemas/api.v1.services.types.Object'
+        description: Response message for getting an object.
+      api.v1.services.objectstore.InitiateMultipartUploadRequest:
+        type: object
+        properties:
+          name:
+            type: string
+          content_type:
+            type: string
+        description: Request message for initiating a multipart upload.
+      api.v1.services.objectstore.InitiateMultipartUploadResponse:
+        type: object
+        properties:
+          upload_id:
+            type: string
+          object_id:
+            type: string
+        description: Response message for initiating a multipart upload.
+      api.v1.services.objectstore.PartInfo:
+        type: object
+        properties:
+          part_number:
+            type: integer
+            format: int32
+          etag:
+            type: string
+        description: PartInfo contains information about a single uploaded part.
+      api.v1.services.objectstore.UploadObjectRequest:
+        type: object
+        properties:
+          data:
+            type: string
+            format: bytes
+          name:
+            type: string
+          content_type:
+            type: string
+        description: Request message for uploading an object in a single request.
+      api.v1.services.objectstore.UploadObjectResponse:
+        type: object
+        properties:
+          object:
+            $ref: '#/components/schemas/api.v1.services.types.Object'
+        description: Response message for uploading an object.
       api.v1.services.organization.CreateDepartmentRequest:
         type: object
         properties:
@@ -3548,8 +3929,22 @@ components:
           created_time:
             type: string
             format: date-time
+          updated_time:
+            type: string
+            format: date-time
+          visibility:
+            type: string
+            description: 'Visibility of the file: "public" or "private"'
+          mime_type:
+            type: string
+            description: MIME type of the file (e.g., "image/jpeg")
+          size:
+            type: string
+            description: Size of the file in bytes
           object_info:
-            $ref: '#/components/schemas/api.v1.services.types.Object'
+            allOf:
+              - $ref: '#/components/schemas/api.v1.services.types.Object'
+            description: 'Optional: Detailed object info from ObjectStore (not stored in DB)'
         description: Represents file metadata managed by the filemanager service.
       api.v1.services.types.Notification:
         type: object
@@ -4167,12 +4562,12 @@ components:
 tags:
   - name: AdminService
     description: |-
-      AdminService provides administrative and operational endpoints.
-       Note: This service is a placeholder for future administrative features.
-  - name: AdminService
-    description: |-
       AdminService provides administrative and operational endpoints for identity service.
        These endpoints are intended for system administrators, operators, and for use in testing.
+  - name: AdminService
+    description: |-
+      AdminService provides administrative and operational endpoints.
+       Note: This service is a placeholder for future administrative features.
   - name: AuthService
     description: Service AuthService provides APIs for the identity lifecycle.
     - name: DepartmentService
@@ -4183,6 +4578,8 @@ tags:
       description: Service MeService provides APIs for currently authenticated user to manage their own profile and data.
   - name: NotificationService
     description: "NotificationService provides notification capabilities.\r\n Note: This service is not yet implemented, proto definitions are prepared for future use."
+  - name: ObjectStoreService
+    description: "The ObjectStore service definition.\r\n This service provides a generic interface for object storage.\r\n While HTTP bindings are provided for flexibility and internal use,\r\n it's primarily designed to be consumed by other backend services like FileManager."
     - name: PermissionService
       description: The login service definition.
   - name: PolicyQueryService

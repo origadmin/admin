@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"origadmin/application/admin/internal/data/entity/ent/casbinrule"
 	"origadmin/application/admin/internal/data/entity/ent/department"
+	"origadmin/application/admin/internal/data/entity/ent/file"
 	"origadmin/application/admin/internal/data/entity/ent/notification"
 	"origadmin/application/admin/internal/data/entity/ent/permission"
 	"origadmin/application/admin/internal/data/entity/ent/permissionresource"
@@ -212,6 +213,120 @@ func (m *DepartmentMutation) SetFieldsSkipZero(input *Department, fields ...stri
 			}
 		default:
 			return fmt.Errorf("unknown %s field %s", "Department", fields[i])
+		}
+	}
+	return nil
+}
+
+// SetFields sets the values of the fields with the given names.
+// It returns an error if the field is not defined in the schema,
+// or if the type mismatches the field type.
+// Zero values are included in the update.
+func (m *FileMutation) SetFields(input *File, fields ...string) error {
+	for i := range fields {
+		switch fields[i] {
+		case file.FieldCreateAuthor:
+			m.SetCreateAuthor(input.CreateAuthor)
+		case file.FieldUpdateAuthor:
+			m.SetUpdateAuthor(input.UpdateAuthor)
+		case file.FieldCreateTime:
+			m.SetCreateTime(input.CreateTime)
+		case file.FieldUpdateTime:
+			m.SetUpdateTime(input.UpdateTime)
+		case file.FieldDeleteTime:
+			if input.DeleteTime != nil {
+				m.SetDeleteTime(*input.DeleteTime)
+			} else {
+				m.ResetDeleteTime()
+			}
+		case file.FieldOwnerID:
+			m.SetOwnerID(input.OwnerID)
+		case file.FieldName:
+			m.SetName(input.Name)
+		case file.FieldObjectID:
+			m.SetObjectID(input.ObjectID)
+		case file.FieldVisibility:
+			m.SetVisibility(input.Visibility)
+		case file.FieldMimeType:
+			m.SetMimeType(input.MimeType)
+		case file.FieldSize:
+			m.SetSize(input.Size)
+		case file.FieldID:
+			m.SetID(input.ID)
+		default:
+			return fmt.Errorf("unknown %s field %s", "File", fields[i])
+		}
+	}
+	return nil
+}
+
+// SetFieldsSkipZero sets the values of the fields with the given names, skipping zero values.
+// It returns an error if the field is not defined in the schema,
+// or if the type mismatches the field type.
+func (m *FileMutation) SetFieldsSkipZero(input *File, fields ...string) error {
+	for i := range fields {
+		switch fields[i] {
+		case file.FieldCreateAuthor:
+			// check int64 with sql.NullInt64 if it is zero
+			if input.CreateAuthor != 0 {
+				m.SetCreateAuthor(input.CreateAuthor)
+			}
+		case file.FieldUpdateAuthor:
+			// check int64 with sql.NullInt64 if it is zero
+			if input.UpdateAuthor != 0 {
+				m.SetUpdateAuthor(input.UpdateAuthor)
+			}
+		case file.FieldCreateTime:
+			if !input.CreateTime.IsZero() {
+				m.SetCreateTime(input.CreateTime)
+			}
+		case file.FieldUpdateTime:
+			if !input.UpdateTime.IsZero() {
+				m.SetUpdateTime(input.UpdateTime)
+			}
+		case file.FieldDeleteTime:
+			if input.DeleteTime != nil {
+				m.SetDeleteTime(*input.DeleteTime)
+			} else {
+				m.ResetDeleteTime()
+			}
+		case file.FieldOwnerID:
+			// check int64 with sql.NullInt64 if it is zero
+			if input.OwnerID != 0 {
+				m.SetOwnerID(input.OwnerID)
+			}
+		case file.FieldName:
+			// check string with sql.NullString if it is empty
+			if input.Name != "" {
+				m.SetName(input.Name)
+			}
+		case file.FieldObjectID:
+			// check string with sql.NullString if it is empty
+			if input.ObjectID != "" {
+				m.SetObjectID(input.ObjectID)
+			}
+		case file.FieldVisibility:
+			// check string with sql.NullString if it is empty
+			if input.Visibility != "" {
+				m.SetVisibility(input.Visibility)
+			}
+		case file.FieldMimeType:
+			// check string with sql.NullString if it is empty
+			if input.MimeType != "" {
+				m.SetMimeType(input.MimeType)
+			}
+		case file.FieldSize:
+			// check int64 with sql.NullInt64 if it is zero
+			if input.Size != 0 {
+				m.SetSize(input.Size)
+			}
+		case file.FieldID:
+			// check int64 with sql.NullInt64 if it is zero
+			if input.ID != 0 {
+				m.SetID(input.ID)
+			}
+		default:
+			return fmt.Errorf("unknown %s field %s", "File", fields[i])
 		}
 	}
 	return nil

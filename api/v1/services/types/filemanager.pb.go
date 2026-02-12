@@ -24,13 +24,21 @@ const (
 
 // Represents file metadata managed by the filemanager service.
 type FileMetadata struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Id            string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
-	Name          string                 `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`
-	ObjectId      string                 `protobuf:"bytes,3,opt,name=object_id,json=objectId,proto3" json:"object_id,omitempty"`
-	OwnerId       string                 `protobuf:"bytes,4,opt,name=owner_id,json=ownerId,proto3" json:"owner_id,omitempty"`
-	CreatedTime   *timestamppb.Timestamp `protobuf:"bytes,5,opt,name=created_time,proto3" json:"created_time,omitempty"`
-	ObjectInfo    *Object                `protobuf:"bytes,6,opt,name=object_info,json=objectInfo,proto3" json:"object_info,omitempty"`
+	state       protoimpl.MessageState `protogen:"open.v1"`
+	Id          int64                  `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
+	Name        string                 `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`
+	ObjectId    string                 `protobuf:"bytes,3,opt,name=object_id,proto3" json:"object_id,omitempty"`
+	OwnerId     int64                  `protobuf:"varint,4,opt,name=owner_id,proto3" json:"owner_id,omitempty"`
+	CreatedTime *timestamppb.Timestamp `protobuf:"bytes,5,opt,name=created_time,proto3" json:"created_time,omitempty"`
+	UpdatedTime *timestamppb.Timestamp `protobuf:"bytes,6,opt,name=updated_time,proto3" json:"updated_time,omitempty"`
+	// Visibility of the file: "public" or "private"
+	Visibility string `protobuf:"bytes,7,opt,name=visibility,proto3" json:"visibility,omitempty"`
+	// MIME type of the file (e.g., "image/jpeg")
+	MimeType string `protobuf:"bytes,8,opt,name=mime_type,proto3" json:"mime_type,omitempty"`
+	// Size of the file in bytes
+	Size int64 `protobuf:"varint,9,opt,name=size,proto3" json:"size,omitempty"`
+	// Optional: Detailed object info from ObjectStore (not stored in DB)
+	ObjectInfo    *Object `protobuf:"bytes,10,opt,name=object_info,proto3" json:"object_info,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -65,11 +73,11 @@ func (*FileMetadata) Descriptor() ([]byte, []int) {
 	return file_types_filemanager_proto_rawDescGZIP(), []int{0}
 }
 
-func (x *FileMetadata) GetId() string {
+func (x *FileMetadata) GetId() int64 {
 	if x != nil {
 		return x.Id
 	}
-	return ""
+	return 0
 }
 
 func (x *FileMetadata) GetName() string {
@@ -86,11 +94,11 @@ func (x *FileMetadata) GetObjectId() string {
 	return ""
 }
 
-func (x *FileMetadata) GetOwnerId() string {
+func (x *FileMetadata) GetOwnerId() int64 {
 	if x != nil {
 		return x.OwnerId
 	}
-	return ""
+	return 0
 }
 
 func (x *FileMetadata) GetCreatedTime() *timestamppb.Timestamp {
@@ -98,6 +106,34 @@ func (x *FileMetadata) GetCreatedTime() *timestamppb.Timestamp {
 		return x.CreatedTime
 	}
 	return nil
+}
+
+func (x *FileMetadata) GetUpdatedTime() *timestamppb.Timestamp {
+	if x != nil {
+		return x.UpdatedTime
+	}
+	return nil
+}
+
+func (x *FileMetadata) GetVisibility() string {
+	if x != nil {
+		return x.Visibility
+	}
+	return ""
+}
+
+func (x *FileMetadata) GetMimeType() string {
+	if x != nil {
+		return x.MimeType
+	}
+	return ""
+}
+
+func (x *FileMetadata) GetSize() int64 {
+	if x != nil {
+		return x.Size
+	}
+	return 0
 }
 
 func (x *FileMetadata) GetObjectInfo() *Object {
@@ -111,15 +147,21 @@ var File_types_filemanager_proto protoreflect.FileDescriptor
 
 const file_types_filemanager_proto_rawDesc = "" +
 	"\n" +
-	"\x17types/filemanager.proto\x12\x15api.v1.services.types\x1a\x1fgoogle/protobuf/timestamp.proto\x1a\x17types/objectstore.proto\"\xea\x01\n" +
+	"\x17types/filemanager.proto\x12\x15api.v1.services.types\x1a\x1fgoogle/protobuf/timestamp.proto\x1a\x17types/objectstore.proto\"\xff\x02\n" +
 	"\fFileMetadata\x12\x0e\n" +
-	"\x02id\x18\x01 \x01(\tR\x02id\x12\x12\n" +
-	"\x04name\x18\x02 \x01(\tR\x04name\x12\x1b\n" +
-	"\tobject_id\x18\x03 \x01(\tR\bobjectId\x12\x19\n" +
-	"\bowner_id\x18\x04 \x01(\tR\aownerId\x12>\n" +
+	"\x02id\x18\x01 \x01(\x03R\x02id\x12\x12\n" +
+	"\x04name\x18\x02 \x01(\tR\x04name\x12\x1c\n" +
+	"\tobject_id\x18\x03 \x01(\tR\tobject_id\x12\x1a\n" +
+	"\bowner_id\x18\x04 \x01(\x03R\bowner_id\x12>\n" +
 	"\fcreated_time\x18\x05 \x01(\v2\x1a.google.protobuf.TimestampR\fcreated_time\x12>\n" +
-	"\vobject_info\x18\x06 \x01(\v2\x1d.api.v1.services.types.ObjectR\n" +
-	"objectInfoB\xde\x01\n" +
+	"\fupdated_time\x18\x06 \x01(\v2\x1a.google.protobuf.TimestampR\fupdated_time\x12\x1e\n" +
+	"\n" +
+	"visibility\x18\a \x01(\tR\n" +
+	"visibility\x12\x1c\n" +
+	"\tmime_type\x18\b \x01(\tR\tmime_type\x12\x12\n" +
+	"\x04size\x18\t \x01(\x03R\x04size\x12?\n" +
+	"\vobject_info\x18\n" +
+	" \x01(\v2\x1d.api.v1.services.types.ObjectR\vobject_infoB\xde\x01\n" +
 	"\x19com.api.v1.services.typesB\x10FilemanagerProtoP\x01Z7origadmin/application/admin/api/v1/services/types;types\xa2\x02\x04AVST\xaa\x02\x15Api.V1.Services.Types\xca\x02\x15Api\\V1\\Services\\Types\xe2\x02!Api\\V1\\Services\\Types\\GPBMetadata\xea\x02\x18Api::V1::Services::Typesb\x06proto3"
 
 var (
@@ -142,12 +184,13 @@ var file_types_filemanager_proto_goTypes = []any{
 }
 var file_types_filemanager_proto_depIdxs = []int32{
 	1, // 0: api.v1.services.types.FileMetadata.created_time:type_name -> google.protobuf.Timestamp
-	2, // 1: api.v1.services.types.FileMetadata.object_info:type_name -> api.v1.services.types.Object
-	2, // [2:2] is the sub-list for method output_type
-	2, // [2:2] is the sub-list for method input_type
-	2, // [2:2] is the sub-list for extension type_name
-	2, // [2:2] is the sub-list for extension extendee
-	0, // [0:2] is the sub-list for field type_name
+	1, // 1: api.v1.services.types.FileMetadata.updated_time:type_name -> google.protobuf.Timestamp
+	2, // 2: api.v1.services.types.FileMetadata.object_info:type_name -> api.v1.services.types.Object
+	3, // [3:3] is the sub-list for method output_type
+	3, // [3:3] is the sub-list for method input_type
+	3, // [3:3] is the sub-list for extension type_name
+	3, // [3:3] is the sub-list for extension extendee
+	0, // [0:3] is the sub-list for field type_name
 }
 
 func init() { file_types_filemanager_proto_init() }

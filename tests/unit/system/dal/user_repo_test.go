@@ -12,6 +12,7 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 
+	"github.com/origadmin/runtime/log"
 	_ "github.com/sqlite3ent/sqlite3"
 	"origadmin/application/admin/api/v1/services/types"
 	"origadmin/application/admin/internal/data/entity/ent"
@@ -43,8 +44,8 @@ func TestUserSoftDeleteAndRestore(t *testing.T) {
 	defer cleanup()
 
 	// Initialize repos
-	userRepo := dal.NewUserRepo(db)
-	roleRepo := dal.NewRoleRepo(db)
+	userRepo := dal.NewUserRepo(db, log.DefaultLogger)
+	roleRepo := dal.NewRoleRepo(db, log.DefaultLogger)
 
 	// Step 1: Create test role
 	testRole, err := roleRepo.Create(ctx, &types.Role{
@@ -60,7 +61,6 @@ func TestUserSoftDeleteAndRestore(t *testing.T) {
 	testUser, err := userRepo.Create(ctx, &types.User{
 		Username: "testuser_" + time.Now().Format("20060102150405"),
 		Nickname: "Test User",
-		Name:     "Test User",
 		Status:   int32(enums.StatusActive),
 	}, "")
 	require.NoError(t, err)
@@ -110,8 +110,8 @@ func TestUserSoftDeleteDoesNotClearAssociations(t *testing.T) {
 	ctx, db, cleanup := setupUserTest(t)
 	defer cleanup()
 
-	userRepo := dal.NewUserRepo(db)
-	roleRepo := dal.NewRoleRepo(db)
+	userRepo := dal.NewUserRepo(db, log.DefaultLogger)
+	roleRepo := dal.NewRoleRepo(db, log.DefaultLogger)
 
 	// Create two roles
 	role1, err := roleRepo.Create(ctx, &types.Role{
@@ -132,7 +132,6 @@ func TestUserSoftDeleteDoesNotClearAssociations(t *testing.T) {
 	user, err := userRepo.Create(ctx, &types.User{
 		Username: "user_multi_" + time.Now().Format("20060102150405"),
 		Nickname: "Multi Role User",
-		Name:     "Multi Role User",
 		Status:   int32(enums.StatusActive),
 	}, "")
 	require.NoError(t, err)

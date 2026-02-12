@@ -100,6 +100,60 @@ var (
 			},
 		},
 	}
+	// FmFilesColumns holds the columns for the "fm_files" table.
+	FmFilesColumns = []*schema.Column{
+		{Name: "id", Type: field.TypeInt64, Comment: "field.primary_key.comment"},
+		{Name: "create_author", Type: field.TypeInt64, Nullable: true, Comment: "create_author.field.comment"},
+		{Name: "update_author", Type: field.TypeInt64, Nullable: true, Comment: "update_author.field.comment"},
+		{Name: "create_time", Type: field.TypeTime, Comment: "create_time.field.comment"},
+		{Name: "update_time", Type: field.TypeTime, Comment: "update_time.field.comment"},
+		{Name: "delete_time", Type: field.TypeTime, Nullable: true, Comment: "delete_time.field.comment"},
+		{Name: "owner_id", Type: field.TypeInt64, Nullable: true, Comment: "owner_id.field.comment"},
+		{Name: "name", Type: field.TypeString, Comment: "entity.filemanager.field.name"},
+		{Name: "object_id", Type: field.TypeString, Comment: "entity.filemanager.field.object_id"},
+		{Name: "visibility", Type: field.TypeString, Comment: "entity.filemanager.field.visibility", Default: "private"},
+		{Name: "mime_type", Type: field.TypeString, Nullable: true, Comment: "entity.filemanager.field.mime_type"},
+		{Name: "size", Type: field.TypeInt64, Comment: "entity.filemanager.field.size", Default: 0},
+	}
+	// FmFilesTable holds the schema information for the "fm_files" table.
+	FmFilesTable = &schema.Table{
+		Name:       "fm_files",
+		Comment:    "entity.filemanager.table.comment",
+		Columns:    FmFilesColumns,
+		PrimaryKey: []*schema.Column{FmFilesColumns[0]},
+		Indexes: []*schema.Index{
+			{
+				Name:    "file_create_author",
+				Unique:  false,
+				Columns: []*schema.Column{FmFilesColumns[1]},
+			},
+			{
+				Name:    "file_update_author",
+				Unique:  false,
+				Columns: []*schema.Column{FmFilesColumns[2]},
+			},
+			{
+				Name:    "file_create_time",
+				Unique:  false,
+				Columns: []*schema.Column{FmFilesColumns[3]},
+			},
+			{
+				Name:    "file_update_time",
+				Unique:  false,
+				Columns: []*schema.Column{FmFilesColumns[4]},
+			},
+			{
+				Name:    "file_owner_id",
+				Unique:  false,
+				Columns: []*schema.Column{FmFilesColumns[6]},
+			},
+			{
+				Name:    "file_object_id",
+				Unique:  true,
+				Columns: []*schema.Column{FmFilesColumns[8]},
+			},
+		},
+	}
 	// NtfNotificationsColumns holds the columns for the "ntf_notifications" table.
 	NtfNotificationsColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeInt64, Comment: "field.primary_key.comment"},
@@ -856,6 +910,7 @@ var (
 	Tables = []*schema.Table{
 		CasbinRuleTable,
 		OrgDepartmentsTable,
+		FmFilesTable,
 		NtfNotificationsTable,
 		SysPermissionsTable,
 		SysPermissionResourcesTable,
@@ -883,6 +938,9 @@ func init() {
 	OrgDepartmentsTable.ForeignKeys[0].RefTable = OrgDepartmentsTable
 	OrgDepartmentsTable.Annotation = &entsql.Annotation{
 		Table: "org_departments",
+	}
+	FmFilesTable.Annotation = &entsql.Annotation{
+		Table: "fm_files",
 	}
 	NtfNotificationsTable.Annotation = &entsql.Annotation{
 		Table: "ntf_notifications",

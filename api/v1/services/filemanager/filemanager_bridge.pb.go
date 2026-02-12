@@ -34,11 +34,12 @@ const FileManagerServiceGetMultipartUploadUrlBridgeOperation = "/api.v1.services
 const FileManagerServiceCompleteMultipartUploadBridgeOperation = "/api.v1.services.filemanager.FileManagerService/CompleteMultipartUpload"
 const FileManagerServiceAbortMultipartUploadBridgeOperation = "/api.v1.services.filemanager.FileManagerService/AbortMultipartUpload"
 const FileManagerServiceGetFileBridgeOperation = "/api.v1.services.filemanager.FileManagerService/GetFile"
+const FileManagerServiceListFilesBridgeOperation = "/api.v1.services.filemanager.FileManagerService/ListFiles"
+const FileManagerServiceUpdateFileBridgeOperation = "/api.v1.services.filemanager.FileManagerService/UpdateFile"
 const FileManagerServiceDeleteFileBridgeOperation = "/api.v1.services.filemanager.FileManagerService/DeleteFile"
 
 type FileManagerServiceBridgeServer interface {
 	// Simple upload for small files (e.g. avatars, images).
-	// The file size should be limited (e.g. < 10MB).
 	UploadFile(context.Context, *UploadFileRequest) (*UploadFileResponse, error)
 	// Initiates a multipart upload for large files.
 	InitiateMultipartUpload(context.Context, *InitiateMultipartUploadRequest) (*InitiateMultipartUploadResponse, error)
@@ -50,6 +51,10 @@ type FileManagerServiceBridgeServer interface {
 	AbortMultipartUpload(context.Context, *AbortMultipartUploadRequest) (*AbortMultipartUploadResponse, error)
 	// Gets file metadata.
 	GetFile(context.Context, *GetFileRequest) (*GetFileResponse, error)
+	// Lists files with pagination and filtering.
+	ListFiles(context.Context, *ListFilesRequest) (*ListFilesResponse, error)
+	// Updates file metadata.
+	UpdateFile(context.Context, *UpdateFileRequest) (*UpdateFileResponse, error)
 	// Deletes a file and its metadata.
 	DeleteFile(context.Context, *DeleteFileRequest) (*DeleteFileResponse, error)
 }
@@ -61,6 +66,8 @@ type FileManagerServiceHooker interface {
 	FileManagerServiceCompleteMultipartUploadHooker
 	FileManagerServiceAbortMultipartUploadHooker
 	FileManagerServiceGetFileHooker
+	FileManagerServiceListFilesHooker
+	FileManagerServiceUpdateFileHooker
 	FileManagerServiceDeleteFileHooker
 }
 
@@ -92,6 +99,14 @@ type FileManagerServiceGetFileHooker interface {
 	PrepareGetFile(http.Context, *GetFileRequest) (context.Context, error)
 	CompleteGetFile(http.Context, *GetFileRequest, *GetFileResponse) error
 }
+type FileManagerServiceListFilesHooker interface {
+	PrepareListFiles(http.Context, *ListFilesRequest) (context.Context, error)
+	CompleteListFiles(http.Context, *ListFilesRequest, *ListFilesResponse) error
+}
+type FileManagerServiceUpdateFileHooker interface {
+	PrepareUpdateFile(http.Context, *UpdateFileRequest) (context.Context, error)
+	CompleteUpdateFile(http.Context, *UpdateFileRequest, *UpdateFileResponse) error
+}
 type FileManagerServiceDeleteFileHooker interface {
 	PrepareDeleteFile(http.Context, *DeleteFileRequest) (context.Context, error)
 	CompleteDeleteFile(http.Context, *DeleteFileRequest, *DeleteFileResponse) error
@@ -99,13 +114,15 @@ type FileManagerServiceDeleteFileHooker interface {
 
 func RegisterFileManagerServiceBridgeServer(s *http.Server, srv FileManagerServiceHookedBridger) {
 	r := s.Route("/")
-	r.POST("/files", _FileManagerService_UploadFile0_Bridge_Handler(srv))
-	r.POST("/files/multipart", _FileManagerService_InitiateMultipartUpload0_Bridge_Handler(srv))
-	r.GET("/files/multipart/:upload_id/parts/:part_number", _FileManagerService_GetMultipartUploadUrl0_Bridge_Handler(srv))
-	r.POST("/files/multipart/:upload_id/complete", _FileManagerService_CompleteMultipartUpload0_Bridge_Handler(srv))
-	r.DELETE("/files/multipart/:upload_id", _FileManagerService_AbortMultipartUpload0_Bridge_Handler(srv))
-	r.GET("/files/:id", _FileManagerService_GetFile0_Bridge_Handler(srv))
-	r.DELETE("/files/:id", _FileManagerService_DeleteFile0_Bridge_Handler(srv))
+	r.POST("/fm/files", _FileManagerService_UploadFile0_Bridge_Handler(srv))
+	r.POST("/fm/files/multipart", _FileManagerService_InitiateMultipartUpload0_Bridge_Handler(srv))
+	r.GET("/fm/files/multipart/:upload_id/parts/:part_number", _FileManagerService_GetMultipartUploadUrl0_Bridge_Handler(srv))
+	r.POST("/fm/files/multipart/:upload_id/complete", _FileManagerService_CompleteMultipartUpload0_Bridge_Handler(srv))
+	r.DELETE("/fm/files/multipart/:upload_id", _FileManagerService_AbortMultipartUpload0_Bridge_Handler(srv))
+	r.GET("/fm/files/:id", _FileManagerService_GetFile0_Bridge_Handler(srv))
+	r.GET("/fm/files", _FileManagerService_ListFiles0_Bridge_Handler(srv))
+	r.PUT("/fm/files/:id", _FileManagerService_UpdateFile0_Bridge_Handler(srv))
+	r.DELETE("/fm/files/:id", _FileManagerService_DeleteFile0_Bridge_Handler(srv))
 }
 
 func _FileManagerService_UploadFile0_Bridge_Handler(srv FileManagerServiceHookedBridger) func(ctx http.Context) error {
@@ -267,6 +284,58 @@ func _FileManagerService_GetFile0_Bridge_Handler(srv FileManagerServiceHookedBri
 	}
 }
 
+func _FileManagerService_ListFiles0_Bridge_Handler(srv FileManagerServiceHookedBridger) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in ListFilesRequest
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationFileManagerServiceListFiles)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.ListFiles(ctx, req.(*ListFilesRequest))
+		})
+
+		newctx, err := srv.PrepareListFiles(ctx, &in)
+		if err != nil {
+			return err
+		}
+		out, err := h(newctx, &in)
+		if err != nil {
+			return err
+		}
+		return srv.CompleteListFiles(ctx, &in, out.(*ListFilesResponse))
+	}
+}
+
+func _FileManagerService_UpdateFile0_Bridge_Handler(srv FileManagerServiceHookedBridger) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in UpdateFileRequest
+		if err := ctx.Bind(&in); err != nil {
+			return err
+		}
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		if err := ctx.BindVars(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationFileManagerServiceUpdateFile)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.UpdateFile(ctx, req.(*UpdateFileRequest))
+		})
+
+		newctx, err := srv.PrepareUpdateFile(ctx, &in)
+		if err != nil {
+			return err
+		}
+		out, err := h(newctx, &in)
+		if err != nil {
+			return err
+		}
+		return srv.CompleteUpdateFile(ctx, &in, out.(*UpdateFileResponse))
+	}
+}
+
 func _FileManagerService_DeleteFile0_Bridge_Handler(srv FileManagerServiceHookedBridger) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
 		var in DeleteFileRequest
@@ -348,6 +417,22 @@ func (UnimplementedFileManagerServiceHooked) CompleteGetFile(ctx http.Context, i
 	return ctx.Result(200, out)
 }
 
+func (UnimplementedFileManagerServiceHooked) PrepareListFiles(ctx http.Context, in *ListFilesRequest) (context.Context, error) {
+	return ctx, nil
+}
+
+func (UnimplementedFileManagerServiceHooked) CompleteListFiles(ctx http.Context, in *ListFilesRequest, out *ListFilesResponse) error {
+	return ctx.Result(200, out)
+}
+
+func (UnimplementedFileManagerServiceHooked) PrepareUpdateFile(ctx http.Context, in *UpdateFileRequest) (context.Context, error) {
+	return ctx, nil
+}
+
+func (UnimplementedFileManagerServiceHooked) CompleteUpdateFile(ctx http.Context, in *UpdateFileRequest, out *UpdateFileResponse) error {
+	return ctx.Result(200, out)
+}
+
 func (UnimplementedFileManagerServiceHooked) PrepareDeleteFile(ctx http.Context, in *DeleteFileRequest) (context.Context, error) {
 	return ctx, nil
 }
@@ -402,6 +487,14 @@ func (c *FileManagerServiceHTTPBridgeImpl) GetFile(ctx context.Context, in *GetF
 	return c.client.GetFile(ctx, in)
 }
 
+func (c *FileManagerServiceHTTPBridgeImpl) ListFiles(ctx context.Context, in *ListFilesRequest) (*ListFilesResponse, error) {
+	return c.client.ListFiles(ctx, in)
+}
+
+func (c *FileManagerServiceHTTPBridgeImpl) UpdateFile(ctx context.Context, in *UpdateFileRequest) (*UpdateFileResponse, error) {
+	return c.client.UpdateFile(ctx, in)
+}
+
 func (c *FileManagerServiceHTTPBridgeImpl) DeleteFile(ctx context.Context, in *DeleteFileRequest) (*DeleteFileResponse, error) {
 	return c.client.DeleteFile(ctx, in)
 }
@@ -436,6 +529,14 @@ func (c *FileManagerServiceBridgeImpl) AbortMultipartUpload(ctx context.Context,
 
 func (c *FileManagerServiceBridgeImpl) GetFile(ctx context.Context, in *GetFileRequest) (*GetFileResponse, error) {
 	return c.client.GetFile(ctx, in)
+}
+
+func (c *FileManagerServiceBridgeImpl) ListFiles(ctx context.Context, in *ListFilesRequest) (*ListFilesResponse, error) {
+	return c.client.ListFiles(ctx, in)
+}
+
+func (c *FileManagerServiceBridgeImpl) UpdateFile(ctx context.Context, in *UpdateFileRequest) (*UpdateFileResponse, error) {
+	return c.client.UpdateFile(ctx, in)
 }
 
 func (c *FileManagerServiceBridgeImpl) DeleteFile(ctx context.Context, in *DeleteFileRequest) (*DeleteFileResponse, error) {
@@ -476,6 +577,14 @@ func (c *FileManagerServiceGRPC2HTTPBridgeImpl) GetFile(ctx context.Context, in 
 	return c.client.GetFile(ctx, in)
 }
 
+func (c *FileManagerServiceGRPC2HTTPBridgeImpl) ListFiles(ctx context.Context, in *ListFilesRequest) (*ListFilesResponse, error) {
+	return c.client.ListFiles(ctx, in)
+}
+
+func (c *FileManagerServiceGRPC2HTTPBridgeImpl) UpdateFile(ctx context.Context, in *UpdateFileRequest) (*UpdateFileResponse, error) {
+	return c.client.UpdateFile(ctx, in)
+}
+
 func (c *FileManagerServiceGRPC2HTTPBridgeImpl) DeleteFile(ctx context.Context, in *DeleteFileRequest) (*DeleteFileResponse, error) {
 	return c.client.DeleteFile(ctx, in)
 }
@@ -510,6 +619,14 @@ func (c *FileManagerServiceHTTP2GRPCBridgeImpl) AbortMultipartUpload(ctx context
 
 func (c *FileManagerServiceHTTP2GRPCBridgeImpl) GetFile(ctx context.Context, in *GetFileRequest) (*GetFileResponse, error) {
 	return c.client.GetFile(ctx, in)
+}
+
+func (c *FileManagerServiceHTTP2GRPCBridgeImpl) ListFiles(ctx context.Context, in *ListFilesRequest) (*ListFilesResponse, error) {
+	return c.client.ListFiles(ctx, in)
+}
+
+func (c *FileManagerServiceHTTP2GRPCBridgeImpl) UpdateFile(ctx context.Context, in *UpdateFileRequest) (*UpdateFileResponse, error) {
+	return c.client.UpdateFile(ctx, in)
 }
 
 func (c *FileManagerServiceHTTP2GRPCBridgeImpl) DeleteFile(ctx context.Context, in *DeleteFileRequest) (*DeleteFileResponse, error) {

@@ -13,10 +13,9 @@ option java_package = "com.origadmin.api.v1.services.filemanager";
 // The FileManager service definition.
 service FileManagerService {
   // Simple upload for small files (e.g. avatars, images).
-  // The file size should be limited (e.g. < 10MB).
   rpc UploadFile(UploadFileRequest) returns (UploadFileResponse) {
     option (google.api.http) = {
-      post: "/files"
+      post: "/fm/files"
       body: "*"
     };
   }
@@ -24,7 +23,7 @@ service FileManagerService {
   // Initiates a multipart upload for large files.
   rpc InitiateMultipartUpload(InitiateMultipartUploadRequest) returns (InitiateMultipartUploadResponse) {
     option (google.api.http) = {
-      post: "/files/multipart"
+      post: "/fm/files/multipart"
       body: "*"
     };
   }
@@ -32,14 +31,14 @@ service FileManagerService {
   // Gets a presigned URL for a specific part of a multipart upload.
   rpc GetMultipartUploadUrl(GetMultipartUploadUrlRequest) returns (GetMultipartUploadUrlResponse) {
     option (google.api.http) = {
-      get: "/files/multipart/{upload_id}/parts/{part_number}"
+      get: "/fm/files/multipart/{upload_id}/parts/{part_number}"
     };
   }
 
   // Completes a multipart upload.
   rpc CompleteMultipartUpload(CompleteMultipartUploadRequest) returns (CompleteMultipartUploadResponse) {
     option (google.api.http) = {
-      post: "/files/multipart/{upload_id}/complete"
+      post: "/fm/files/multipart/{upload_id}/complete"
       body: "*"
     };
   }
@@ -47,21 +46,36 @@ service FileManagerService {
   // Aborts a multipart upload.
   rpc AbortMultipartUpload(AbortMultipartUploadRequest) returns (AbortMultipartUploadResponse) {
     option (google.api.http) = {
-      delete: "/files/multipart/{upload_id}"
+      delete: "/fm/files/multipart/{upload_id}"
     };
   }
 
   // Gets file metadata.
   rpc GetFile(GetFileRequest) returns (GetFileResponse) {
     option (google.api.http) = {
-      get: "/files/{id}"
+      get: "/fm/files/{id}"
+    };
+  }
+
+  // Lists files with pagination and filtering.
+  rpc ListFiles(ListFilesRequest) returns (ListFilesResponse) {
+    option (google.api.http) = {
+      get: "/fm/files"
+    };
+  }
+
+  // Updates file metadata.
+  rpc UpdateFile(UpdateFileRequest) returns (UpdateFileResponse) {
+    option (google.api.http) = {
+      put: "/fm/files/{id}"
+      body: "*"
     };
   }
 
   // Deletes a file and its metadata.
   rpc DeleteFile(DeleteFileRequest) returns (DeleteFileResponse) {
     option (google.api.http) = {
-      delete: "/files/{id}"
+      delete: "/fm/files/{id}"
     };
   }
 }
@@ -71,6 +85,7 @@ message UploadFileRequest {
   bytes data = 1;
   string name = 2;
   string content_type = 3;
+  string visibility = 4; // "public" or "private"
 }
 
 // Response message for uploading a file.
@@ -83,6 +98,7 @@ message InitiateMultipartUploadRequest {
   string name = 1;
   int64 size = 2;
   string content_type = 3;
+  string visibility = 4; // "public" or "private"
 }
 
 // Response message for initiating a multipart upload.
@@ -127,17 +143,44 @@ message AbortMultipartUploadResponse {}
 
 // Request message for getting file metadata.
 message GetFileRequest {
-  string id = 1;
+  int64 id = 1;
 }
 
 // Response message for getting file metadata.
 message GetFileResponse {
   api.v1.services.types.FileMetadata file_metadata = 1;
+  string download_url = 2; // Presigned URL or public URL
+}
+
+// Request message for listing files.
+message ListFilesRequest {
+  int32 page = 1;
+  int32 page_size = 2;
+  int64 owner_id = 3;
+  string visibility = 4;
+}
+
+// Response message for listing files.
+message ListFilesResponse {
+  repeated api.v1.services.types.FileMetadata files = 1;
+  int32 total_count = 2;
+}
+
+// Request message for updating file metadata.
+message UpdateFileRequest {
+  int64 id = 1;
+  string name = 2;
+  string visibility = 3;
+}
+
+// Response message for updating file metadata.
+message UpdateFileResponse {
+  api.v1.services.types.FileMetadata file_metadata = 1;
 }
 
 // Request message for deleting a file.
 message DeleteFileRequest {
-  string id = 1;
+  int64 id = 1;
 }
 
 // Response message for deleting a file.

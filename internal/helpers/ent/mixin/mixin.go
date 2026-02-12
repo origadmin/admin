@@ -2,7 +2,7 @@
  * Copyright (c) 2024 OrigAdmin. All rights reserved.
  */
 
-// Package mixin implements the functions, types, and interfaces for the module.
+// Package mixin implements reusable schema components for Ent.
 package mixin
 
 import (
@@ -19,73 +19,87 @@ import (
 	"origadmin/application/admin/internal/helpers/i18n"
 )
 
-// auditFields defines only the fields and indexes for auditing, without any hooks.
-// This allows models to include audit fields without enabling automatic updates.
-type auditFields struct {
-	mixin.Schema
-	CreateField string
-	UpdateField string
+const (
+	// Default field names for mixins.
+	DefaultCreateAuthorField = "create_author"
+	DefaultUpdateAuthorField = "update_author"
+	DefaultOwnerField        = "owner_id"
+	DefaultManagerField      = "manager_id"
+	DefaultCreateTimeField   = "create_time"
+	DefaultUpdateTimeField   = "update_time"
+)
+
+// FieldMixin defines an interface for mixins that wrap a single field.
+// It extends ent.Mixin with methods to access the underlying field and index.
+type FieldMixin interface {
+	ent.Mixin
+	Field() ent.Field
+	Index() ent.Index
 }
 
-// Fields of the auditFields mixin.
+// fieldMixin is a generic unexported mixin for a single field.
+type fieldMixin struct {
+	mixin.Schema
+	fieldName string
+}
+
+// dualFieldMixin is a generic unexported mixin for two fields.
+type dualFieldMixin struct {
+	mixin.Schema
+	createField string
+	updateField string
+}
+
+// auditFields defines the fields and indexes for auditing.
+type auditFields struct {
+	dualFieldMixin
+}
+
 func (m auditFields) Fields() []ent.Field {
-	// Use the innerID builder to construct fields with specific properties like Immutable.
-	// innerID.CommentKey(...) returns a new IDBuilder instance, so it's safe to chain.
 	return []ent.Field{
-		innerID.CommentKey("create_author.field.comment").Immutable().OptionalFK(m.CreateField),
-		innerID.CommentKey("update_author.field.comment").OptionalFK(m.UpdateField),
+		innerID.CommentKey("create_author.field.comment").Immutable().OptionalFK(m.createField),
+		innerID.CommentKey("update_author.field.comment").OptionalFK(m.updateField),
 	}
 }
 
-// Indexes of the auditFields mixin.
 func (m auditFields) Indexes() []ent.Index {
 	return []ent.Index{
-		index.Fields(m.CreateField),
-		index.Fields(m.UpdateField),
+		index.Fields(m.createField),
+		index.Fields(m.updateField),
 	}
 }
 
-// AuditMixin returns a mixin that includes only the audit fields (create_author, update_author)
-// and their indexes, without any automatic update hooks.
+// AuditMixin returns a composite mixin for audit fields.
 func AuditMixin(createField, updateField string) ent.Mixin {
 	return auditFields{
-		CreateField: createField,
-		UpdateField: updateField,
+		dualFieldMixin: dualFieldMixin{createField: createField, updateField: updateField},
 	}
 }
 
-// DefaultAuditMixin returns a new audit mixin with default field names, without hooks.
 func DefaultAuditMixin() ent.Mixin {
-	return AuditMixin("create_author", "update_author")
+	return AuditMixin(DefaultCreateAuthorField, DefaultUpdateAuthorField)
 }
 
 // auditMixin composes auditFields and adds an automatic update hook.
-// This provides the full-featured auditing capability.
-type auditMixin struct {
-	auditFields
+type auditMixin struct{ auditFields }
+
+func (m auditMixin) Hooks() []ent.Hook {
+	return []ent.Hook{AuditMixinHook(m.createField, m.updateField)}
 }
 
-// AuditMixinHook is a hook that sets the create_author and update_author fields
-// by extracting the user ID from the context via contextutil.GetUserID.
 func AuditMixinHook(createField, updateField string) ent.Hook {
 	return func(next ent.Mutator) ent.Mutator {
 		return ent.MutateFunc(func(ctx context.Context, m ent.Mutation) (ent.Value, error) {
-			// Skip if not a Create or Update operation.
 			if !m.Op().Is(ent.OpCreate | ent.OpUpdate) {
 				return next.Mutate(ctx, m)
 			}
-
 			userID, err := contextutil.GetUserID(ctx)
 			if err != nil {
-				// If the error indicates no principal was found, proceed without setting audit fields.
-				// This allows for anonymous or system-level actions.
 				if errors.Is(err, contextutil.ErrNoPrincipalInContext) {
 					return next.Mutate(ctx, m)
 				}
-				// For other errors (e.g., parsing), fail the mutation to prevent data corruption.
 				return nil, err
 			}
-
 			if m.Op().Is(ent.OpCreate) {
 				if err := m.SetField(createField, userID); err != nil {
 					return nil, err
@@ -94,166 +108,124 @@ func AuditMixinHook(createField, updateField string) ent.Hook {
 			if err := m.SetField(updateField, userID); err != nil {
 				return nil, err
 			}
-
 			return next.Mutate(ctx, m)
 		})
 	}
 }
 
-// Hooks of the mixin.
-// It uses the AuditMixinHook to automatically set the author fields during create and update operations.
-// This hook relies on a user identifier being present in the `context.Context`
-// and uses the encapsulated `contextutil.GetUserID` function to retrieve it.
-func (m auditMixin) Hooks() []ent.Hook {
-	return []ent.Hook{
-		AuditMixinHook(m.CreateField, m.UpdateField),
-	}
-}
-
-// AuditMixinWithHook returns a mixin that includes audit fields and an automatic update hook.
 func AuditMixinWithHook(createField, updateField string) ent.Mixin {
 	return auditMixin{
 		auditFields: auditFields{
-			CreateField: createField,
-			UpdateField: updateField,
+			dualFieldMixin: dualFieldMixin{createField: createField, updateField: updateField},
 		},
 	}
 }
 
-// DefaultAuditMixinWithHook returns a new audit mixin with default field names and the update hook.
 func DefaultAuditMixinWithHook() ent.Mixin {
-	return AuditMixinWithHook("create_author", "update_author")
+	return AuditMixinWithHook(DefaultCreateAuthorField, DefaultUpdateAuthorField)
 }
 
-// ManagerSchema schema to include control and time fields.
-type ManagerSchema struct {
-	mixin.Schema
+// ownerMixin defines the owner_id field.
+type ownerMixin struct{ fieldMixin }
+
+func (m ownerMixin) Field() ent.Field {
+	return innerID.CommentKey("owner_id.field.comment").Immutable().OptionalFK(m.fieldName)
+}
+func (m ownerMixin) Index() ent.Index     { return index.Fields(m.fieldName) }
+func (m ownerMixin) Fields() []ent.Field  { return []ent.Field{m.Field()} }
+func (m ownerMixin) Indexes() []ent.Index { return []ent.Index{m.Index()} }
+
+func OwnerMixin(ownerField string) FieldMixin {
+	return ownerMixin{fieldMixin: fieldMixin{fieldName: ownerField}}
 }
 
-// Fields of the Model.
-func (ManagerSchema) Fields() []ent.Field {
-	return []ent.Field{
-		innerID.CommentKey("manager_id.field.comment").OptionalFK("manager_id"),
-	}
+func DefaultOwnerMixin() FieldMixin {
+	return OwnerMixin(DefaultOwnerField)
 }
 
-// Indexes of the mixin.
-func (ManagerSchema) Indexes() []ent.Index {
-	return []ent.Index{
-		index.Fields("manager_id"),
-	}
-}
+// managerMixin defines the manager_id field.
+type managerMixin struct{ fieldMixin }
 
-// createUpdateMixin schema to include control and time fields.
-type createUpdateMixin struct {
-	mixin.Schema
-	UpdateField string
-	CreateField string
+func (m managerMixin) Field() ent.Field {
+	return innerID.CommentKey("manager_id.field.comment").OptionalFK(m.fieldName)
 }
+func (m managerMixin) Index() ent.Index     { return index.Fields(m.fieldName) }
+func (m managerMixin) Fields() []ent.Field  { return []ent.Field{m.Field()} }
+func (m managerMixin) Indexes() []ent.Index { return []ent.Index{m.Index()} }
 
-func DefaultCreateUpdateMixin() ent.Mixin {
-	return createUpdateMixin{
-		UpdateField: "update_time",
-		CreateField: "create_time",
-	}
-}
+// createUpdateMixin is a composite mixin for create and update timestamps.
+type createUpdateMixin struct{ dualFieldMixin }
 
 func CreateUpdateMixin(updateField, createField string) ent.Mixin {
 	return createUpdateMixin{
-		UpdateField: updateField,
-		CreateField: createField,
+		dualFieldMixin: dualFieldMixin{createField: createField, updateField: updateField},
 	}
 }
 
-// Fields of the mixin.
+func DefaultCreateUpdateMixin() ent.Mixin {
+	return CreateUpdateMixin(DefaultUpdateTimeField, DefaultCreateTimeField)
+}
+
 func (m createUpdateMixin) Fields() []ent.Field {
-	return append(
-		CreateMixin(m.CreateField).Fields(),
-		UpdateMixin(m.UpdateField).Fields()...,
-	)
+	return []ent.Field{
+		CreateMixin(m.createField).Field(),
+		UpdateMixin(m.updateField).Field(),
+	}
 }
 
-// Indexes of the mixin.
 func (m createUpdateMixin) Indexes() []ent.Index {
-	return append(
-		CreateMixin(m.CreateField).Indexes(),
-		UpdateMixin(m.UpdateField).Indexes()...,
-	)
-}
-
-// createMixin schema to include control and time fields.
-type createMixin struct {
-	mixin.Schema
-	CreateField string
-}
-
-func DefaultCreateMixin() ent.Mixin {
-	return createMixin{
-		CreateField: "create_time",
-	}
-}
-
-func CreateMixin(fieldName string) ent.Mixin {
-	return createMixin{
-		CreateField: fieldName,
-	}
-}
-
-// Fields of the mixin.
-func (m createMixin) Fields() []ent.Field {
-	return []ent.Field{
-		field.Time(m.CreateField).
-			Comment(i18n.Text("create_time.field.comment")).
-			Default(time.Now).
-			Immutable(),
-	}
-}
-
-// Indexes of the mixin.
-func (m createMixin) Indexes() []ent.Index {
 	return []ent.Index{
-		index.Fields(m.CreateField),
+		CreateMixin(m.createField).Index(),
+		UpdateMixin(m.updateField).Index(),
 	}
 }
 
-// updateMixin schema to include control and time fields.
-type updateMixin struct {
-	mixin.Schema
-	UpdateField string
+// createMixin defines the create_time field.
+type createMixin struct{ fieldMixin }
+
+func CreateMixin(fieldName string) FieldMixin {
+	return createMixin{fieldMixin: fieldMixin{fieldName: fieldName}}
 }
 
-func DefaultUpdateMixin() ent.Mixin {
-	return updateMixin{
-		UpdateField: "update_time",
-	}
-}
-func UpdateMixin(fieldName string) ent.Mixin {
-	return updateMixin{
-		UpdateField: fieldName,
-	}
+func DefaultCreateMixin() FieldMixin {
+	return CreateMixin(DefaultCreateTimeField)
 }
 
-// Fields of the mixin.
-func (m updateMixin) Fields() []ent.Field {
-	return []ent.Field{
-		field.Time(m.UpdateField).
-			Comment(i18n.Text("update_time.field.comment")).
-			Default(time.Now).
-			UpdateDefault(time.Now),
-	}
+func (m createMixin) Field() ent.Field {
+	return field.Time(m.fieldName).
+		Comment(i18n.Text("create_time.field.comment")).
+		Default(time.Now).
+		Immutable()
+}
+func (m createMixin) Index() ent.Index     { return index.Fields(m.fieldName) }
+func (m createMixin) Fields() []ent.Field  { return []ent.Field{m.Field()} }
+func (m createMixin) Indexes() []ent.Index { return []ent.Index{m.Index()} }
+
+// updateMixin defines the update_time field.
+type updateMixin struct{ fieldMixin }
+
+func UpdateMixin(fieldName string) FieldMixin {
+	return updateMixin{fieldMixin: fieldMixin{fieldName: fieldName}}
 }
 
-// Indexes of the mixin.
-func (m updateMixin) Indexes() []ent.Index {
-	return []ent.Index{
-		index.Fields(m.UpdateField),
-	}
+func DefaultUpdateMixin() FieldMixin {
+	return UpdateMixin(DefaultUpdateTimeField)
 }
+
+func (m updateMixin) Field() ent.Field {
+	return field.Time(m.fieldName).
+		Comment(i18n.Text("update_time.field.comment")).
+		Default(time.Now).
+		UpdateDefault(time.Now)
+}
+func (m updateMixin) Index() ent.Index     { return index.Fields(m.fieldName) }
+func (m updateMixin) Fields() []ent.Field  { return []ent.Field{m.Field()} }
+func (m updateMixin) Indexes() []ent.Index { return []ent.Index{m.Index()} }
 
 var (
 	// ModelMixin provides a basic set of fields for standard models.
 	ModelMixin = []ent.Mixin{
-		innerID.Mixin(), // Use the Mixin() method to get the ent.Mixin
+		innerID.Mixin(),
 		DefaultCreateMixin(),
 		DefaultUpdateMixin(),
 	}

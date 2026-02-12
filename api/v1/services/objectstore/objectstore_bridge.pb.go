@@ -28,15 +28,21 @@ var (
 	_ = codes.Unimplemented
 )
 
+const ObjectStoreServiceUploadObjectBridgeOperation = "/api.v1.services.objectstore.ObjectStoreService/UploadObject"
+const ObjectStoreServiceGetObjectBridgeOperation = "/api.v1.services.objectstore.ObjectStoreService/GetObject"
+const ObjectStoreServiceDeleteObjectBridgeOperation = "/api.v1.services.objectstore.ObjectStoreService/DeleteObject"
 const ObjectStoreServiceInitiateMultipartUploadBridgeOperation = "/api.v1.services.objectstore.ObjectStoreService/InitiateMultipartUpload"
 const ObjectStoreServiceGetMultipartUploadUrlBridgeOperation = "/api.v1.services.objectstore.ObjectStoreService/GetMultipartUploadUrl"
 const ObjectStoreServiceCompleteMultipartUploadBridgeOperation = "/api.v1.services.objectstore.ObjectStoreService/CompleteMultipartUpload"
 const ObjectStoreServiceAbortMultipartUploadBridgeOperation = "/api.v1.services.objectstore.ObjectStoreService/AbortMultipartUpload"
-const ObjectStoreServiceUploadObjectBridgeOperation = "/api.v1.services.objectstore.ObjectStoreService/UploadObject"
-const ObjectStoreServiceGetObjectBridgeOperation = "/api.v1.services.objectstore.ObjectStoreService/GetObject"
-const ObjectStoreServiceDeleteObjectBridgeOperation = "/api.v1.services.objectstore.ObjectStoreService/DeleteObject"
 
 type ObjectStoreServiceBridgeServer interface {
+	// Uploads an object in a single request. Suitable for small files.
+	UploadObject(context.Context, *UploadObjectRequest) (*UploadObjectResponse, error)
+	// Downloads an object.
+	GetObject(context.Context, *GetObjectRequest) (*GetObjectResponse, error)
+	// Deletes an object.
+	DeleteObject(context.Context, *DeleteObjectRequest) (*DeleteObjectResponse, error)
 	// Initiates a multipart upload and returns an upload ID.
 	InitiateMultipartUpload(context.Context, *InitiateMultipartUploadRequest) (*InitiateMultipartUploadResponse, error)
 	// Generates a presigned URL for uploading a part.
@@ -45,27 +51,33 @@ type ObjectStoreServiceBridgeServer interface {
 	CompleteMultipartUpload(context.Context, *CompleteMultipartUploadRequest) (*CompleteMultipartUploadResponse, error)
 	// Aborts a multipart upload.
 	AbortMultipartUpload(context.Context, *AbortMultipartUploadRequest) (*AbortMultipartUploadResponse, error)
-	// Uploads an object in a single request. Suitable for small files.
-	UploadObject(context.Context, *UploadObjectRequest) (*UploadObjectResponse, error)
-	// Downloads an object.
-	GetObject(context.Context, *GetObjectRequest) (*GetObjectResponse, error)
-	// Deletes an object.
-	DeleteObject(context.Context, *DeleteObjectRequest) (*DeleteObjectResponse, error)
 }
 
 type ObjectStoreServiceHooker interface {
+	ObjectStoreServiceUploadObjectHooker
+	ObjectStoreServiceGetObjectHooker
+	ObjectStoreServiceDeleteObjectHooker
 	ObjectStoreServiceInitiateMultipartUploadHooker
 	ObjectStoreServiceGetMultipartUploadUrlHooker
 	ObjectStoreServiceCompleteMultipartUploadHooker
 	ObjectStoreServiceAbortMultipartUploadHooker
-	ObjectStoreServiceUploadObjectHooker
-	ObjectStoreServiceGetObjectHooker
-	ObjectStoreServiceDeleteObjectHooker
 }
 
 type ObjectStoreServiceHookedBridger interface {
 	ObjectStoreServiceHooker
 	ObjectStoreServiceBridgeServer
+}
+type ObjectStoreServiceUploadObjectHooker interface {
+	PrepareUploadObject(http.Context, *UploadObjectRequest) (context.Context, error)
+	CompleteUploadObject(http.Context, *UploadObjectRequest, *UploadObjectResponse) error
+}
+type ObjectStoreServiceGetObjectHooker interface {
+	PrepareGetObject(http.Context, *GetObjectRequest) (context.Context, error)
+	CompleteGetObject(http.Context, *GetObjectRequest, *GetObjectResponse) error
+}
+type ObjectStoreServiceDeleteObjectHooker interface {
+	PrepareDeleteObject(http.Context, *DeleteObjectRequest) (context.Context, error)
+	CompleteDeleteObject(http.Context, *DeleteObjectRequest, *DeleteObjectResponse) error
 }
 type ObjectStoreServiceInitiateMultipartUploadHooker interface {
 	PrepareInitiateMultipartUpload(http.Context, *InitiateMultipartUploadRequest) (context.Context, error)
@@ -83,17 +95,201 @@ type ObjectStoreServiceAbortMultipartUploadHooker interface {
 	PrepareAbortMultipartUpload(http.Context, *AbortMultipartUploadRequest) (context.Context, error)
 	CompleteAbortMultipartUpload(http.Context, *AbortMultipartUploadRequest, *AbortMultipartUploadResponse) error
 }
-type ObjectStoreServiceUploadObjectHooker interface {
-	PrepareUploadObject(http.Context, *UploadObjectRequest) (context.Context, error)
-	CompleteUploadObject(http.Context, *UploadObjectRequest, *UploadObjectResponse) error
+
+func RegisterObjectStoreServiceBridgeServer(s *http.Server, srv ObjectStoreServiceHookedBridger) {
+	r := s.Route("/")
+	r.POST("/obs/objects", _ObjectStoreService_UploadObject0_Bridge_Handler(srv))
+	r.GET("/obs/objects/:id", _ObjectStoreService_GetObject0_Bridge_Handler(srv))
+	r.DELETE("/obs/objects/:id", _ObjectStoreService_DeleteObject0_Bridge_Handler(srv))
+	r.POST("/obs/objects/multipart", _ObjectStoreService_InitiateMultipartUpload0_Bridge_Handler(srv))
+	r.GET("/obs/objects/multipart/:object_id/uploads/:upload_id/parts/:part_number", _ObjectStoreService_GetMultipartUploadUrl0_Bridge_Handler(srv))
+	r.POST("/obs/objects/multipart/:object_id/uploads/{upload_id}:complete", _ObjectStoreService_CompleteMultipartUpload0_Bridge_Handler(srv))
+	r.DELETE("/obs/objects/multipart/:object_id/uploads/:upload_id", _ObjectStoreService_AbortMultipartUpload0_Bridge_Handler(srv))
 }
-type ObjectStoreServiceGetObjectHooker interface {
-	PrepareGetObject(http.Context, *GetObjectRequest) (context.Context, error)
-	CompleteGetObject(http.Context, *GetObjectRequest, *GetObjectResponse) error
+
+func _ObjectStoreService_UploadObject0_Bridge_Handler(srv ObjectStoreServiceHookedBridger) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in UploadObjectRequest
+		if err := ctx.Bind(&in); err != nil {
+			return err
+		}
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationObjectStoreServiceUploadObject)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.UploadObject(ctx, req.(*UploadObjectRequest))
+		})
+
+		newctx, err := srv.PrepareUploadObject(ctx, &in)
+		if err != nil {
+			return err
+		}
+		out, err := h(newctx, &in)
+		if err != nil {
+			return err
+		}
+		return srv.CompleteUploadObject(ctx, &in, out.(*UploadObjectResponse))
+	}
 }
-type ObjectStoreServiceDeleteObjectHooker interface {
-	PrepareDeleteObject(http.Context, *DeleteObjectRequest) (context.Context, error)
-	CompleteDeleteObject(http.Context, *DeleteObjectRequest, *DeleteObjectResponse) error
+
+func _ObjectStoreService_GetObject0_Bridge_Handler(srv ObjectStoreServiceHookedBridger) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in GetObjectRequest
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		if err := ctx.BindVars(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationObjectStoreServiceGetObject)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.GetObject(ctx, req.(*GetObjectRequest))
+		})
+
+		newctx, err := srv.PrepareGetObject(ctx, &in)
+		if err != nil {
+			return err
+		}
+		out, err := h(newctx, &in)
+		if err != nil {
+			return err
+		}
+		return srv.CompleteGetObject(ctx, &in, out.(*GetObjectResponse))
+	}
+}
+
+func _ObjectStoreService_DeleteObject0_Bridge_Handler(srv ObjectStoreServiceHookedBridger) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in DeleteObjectRequest
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		if err := ctx.BindVars(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationObjectStoreServiceDeleteObject)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.DeleteObject(ctx, req.(*DeleteObjectRequest))
+		})
+
+		newctx, err := srv.PrepareDeleteObject(ctx, &in)
+		if err != nil {
+			return err
+		}
+		out, err := h(newctx, &in)
+		if err != nil {
+			return err
+		}
+		return srv.CompleteDeleteObject(ctx, &in, out.(*DeleteObjectResponse))
+	}
+}
+
+func _ObjectStoreService_InitiateMultipartUpload0_Bridge_Handler(srv ObjectStoreServiceHookedBridger) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in InitiateMultipartUploadRequest
+		if err := ctx.Bind(&in); err != nil {
+			return err
+		}
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationObjectStoreServiceInitiateMultipartUpload)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.InitiateMultipartUpload(ctx, req.(*InitiateMultipartUploadRequest))
+		})
+
+		newctx, err := srv.PrepareInitiateMultipartUpload(ctx, &in)
+		if err != nil {
+			return err
+		}
+		out, err := h(newctx, &in)
+		if err != nil {
+			return err
+		}
+		return srv.CompleteInitiateMultipartUpload(ctx, &in, out.(*InitiateMultipartUploadResponse))
+	}
+}
+
+func _ObjectStoreService_GetMultipartUploadUrl0_Bridge_Handler(srv ObjectStoreServiceHookedBridger) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in GetMultipartUploadUrlRequest
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		if err := ctx.BindVars(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationObjectStoreServiceGetMultipartUploadUrl)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.GetMultipartUploadUrl(ctx, req.(*GetMultipartUploadUrlRequest))
+		})
+
+		newctx, err := srv.PrepareGetMultipartUploadUrl(ctx, &in)
+		if err != nil {
+			return err
+		}
+		out, err := h(newctx, &in)
+		if err != nil {
+			return err
+		}
+		return srv.CompleteGetMultipartUploadUrl(ctx, &in, out.(*GetMultipartUploadUrlResponse))
+	}
+}
+
+func _ObjectStoreService_CompleteMultipartUpload0_Bridge_Handler(srv ObjectStoreServiceHookedBridger) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in CompleteMultipartUploadRequest
+		if err := ctx.Bind(&in); err != nil {
+			return err
+		}
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		if err := ctx.BindVars(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationObjectStoreServiceCompleteMultipartUpload)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.CompleteMultipartUpload(ctx, req.(*CompleteMultipartUploadRequest))
+		})
+
+		newctx, err := srv.PrepareCompleteMultipartUpload(ctx, &in)
+		if err != nil {
+			return err
+		}
+		out, err := h(newctx, &in)
+		if err != nil {
+			return err
+		}
+		return srv.CompleteCompleteMultipartUpload(ctx, &in, out.(*CompleteMultipartUploadResponse))
+	}
+}
+
+func _ObjectStoreService_AbortMultipartUpload0_Bridge_Handler(srv ObjectStoreServiceHookedBridger) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in AbortMultipartUploadRequest
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		if err := ctx.BindVars(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationObjectStoreServiceAbortMultipartUpload)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.AbortMultipartUpload(ctx, req.(*AbortMultipartUploadRequest))
+		})
+
+		newctx, err := srv.PrepareAbortMultipartUpload(ctx, &in)
+		if err != nil {
+			return err
+		}
+		out, err := h(newctx, &in)
+		if err != nil {
+			return err
+		}
+		return srv.CompleteAbortMultipartUpload(ctx, &in, out.(*AbortMultipartUploadResponse))
+	}
 }
 
 // UnimplementedObjectStoreServiceHooked must be embedded to have
@@ -102,6 +298,30 @@ type ObjectStoreServiceDeleteObjectHooker interface {
 // NOTE: this should be embedded by value instead of pointer to avoid a nil
 // pointer dereference when methods are called.
 type UnimplementedObjectStoreServiceHooked struct{}
+
+func (UnimplementedObjectStoreServiceHooked) PrepareUploadObject(ctx http.Context, in *UploadObjectRequest) (context.Context, error) {
+	return ctx, nil
+}
+
+func (UnimplementedObjectStoreServiceHooked) CompleteUploadObject(ctx http.Context, in *UploadObjectRequest, out *UploadObjectResponse) error {
+	return ctx.Result(200, out)
+}
+
+func (UnimplementedObjectStoreServiceHooked) PrepareGetObject(ctx http.Context, in *GetObjectRequest) (context.Context, error) {
+	return ctx, nil
+}
+
+func (UnimplementedObjectStoreServiceHooked) CompleteGetObject(ctx http.Context, in *GetObjectRequest, out *GetObjectResponse) error {
+	return ctx.Result(200, out)
+}
+
+func (UnimplementedObjectStoreServiceHooked) PrepareDeleteObject(ctx http.Context, in *DeleteObjectRequest) (context.Context, error) {
+	return ctx, nil
+}
+
+func (UnimplementedObjectStoreServiceHooked) CompleteDeleteObject(ctx http.Context, in *DeleteObjectRequest, out *DeleteObjectResponse) error {
+	return ctx.Result(200, out)
+}
 
 func (UnimplementedObjectStoreServiceHooked) PrepareInitiateMultipartUpload(ctx http.Context, in *InitiateMultipartUploadRequest) (context.Context, error) {
 	return ctx, nil
@@ -135,30 +355,6 @@ func (UnimplementedObjectStoreServiceHooked) CompleteAbortMultipartUpload(ctx ht
 	return ctx.Result(200, out)
 }
 
-func (UnimplementedObjectStoreServiceHooked) PrepareUploadObject(ctx http.Context, in *UploadObjectRequest) (context.Context, error) {
-	return ctx, nil
-}
-
-func (UnimplementedObjectStoreServiceHooked) CompleteUploadObject(ctx http.Context, in *UploadObjectRequest, out *UploadObjectResponse) error {
-	return ctx.Result(200, out)
-}
-
-func (UnimplementedObjectStoreServiceHooked) PrepareGetObject(ctx http.Context, in *GetObjectRequest) (context.Context, error) {
-	return ctx, nil
-}
-
-func (UnimplementedObjectStoreServiceHooked) CompleteGetObject(ctx http.Context, in *GetObjectRequest, out *GetObjectResponse) error {
-	return ctx.Result(200, out)
-}
-
-func (UnimplementedObjectStoreServiceHooked) PrepareDeleteObject(ctx http.Context, in *DeleteObjectRequest) (context.Context, error) {
-	return ctx, nil
-}
-
-func (UnimplementedObjectStoreServiceHooked) CompleteDeleteObject(ctx http.Context, in *DeleteObjectRequest, out *DeleteObjectResponse) error {
-	return ctx.Result(200, out)
-}
-
 func WithObjectStoreServiceHook(h ObjectStoreServiceHooker) func(ObjectStoreServiceBridgeServer) ObjectStoreServiceHookedBridger {
 	return func(srv ObjectStoreServiceBridgeServer) ObjectStoreServiceHookedBridger {
 		return ObjectStoreServiceHookedBridge{ObjectStoreServiceBridgeServer: srv, ObjectStoreServiceHooker: h}
@@ -173,6 +369,42 @@ type ObjectStoreServiceHookedBridge struct {
 	ObjectStoreServiceHooker
 }
 
+type ObjectStoreServiceHTTPBridgeImpl struct {
+	client ObjectStoreServiceHTTPClient
+}
+
+func NewObjectStoreServiceHTTPBridge(client *http.Client) ObjectStoreServiceHTTPServer {
+	return &ObjectStoreServiceHTTPBridgeImpl{client: NewObjectStoreServiceHTTPClient(client)}
+}
+
+func (c *ObjectStoreServiceHTTPBridgeImpl) UploadObject(ctx context.Context, in *UploadObjectRequest) (*UploadObjectResponse, error) {
+	return c.client.UploadObject(ctx, in)
+}
+
+func (c *ObjectStoreServiceHTTPBridgeImpl) GetObject(ctx context.Context, in *GetObjectRequest) (*GetObjectResponse, error) {
+	return c.client.GetObject(ctx, in)
+}
+
+func (c *ObjectStoreServiceHTTPBridgeImpl) DeleteObject(ctx context.Context, in *DeleteObjectRequest) (*DeleteObjectResponse, error) {
+	return c.client.DeleteObject(ctx, in)
+}
+
+func (c *ObjectStoreServiceHTTPBridgeImpl) InitiateMultipartUpload(ctx context.Context, in *InitiateMultipartUploadRequest) (*InitiateMultipartUploadResponse, error) {
+	return c.client.InitiateMultipartUpload(ctx, in)
+}
+
+func (c *ObjectStoreServiceHTTPBridgeImpl) GetMultipartUploadUrl(ctx context.Context, in *GetMultipartUploadUrlRequest) (*GetMultipartUploadUrlResponse, error) {
+	return c.client.GetMultipartUploadUrl(ctx, in)
+}
+
+func (c *ObjectStoreServiceHTTPBridgeImpl) CompleteMultipartUpload(ctx context.Context, in *CompleteMultipartUploadRequest) (*CompleteMultipartUploadResponse, error) {
+	return c.client.CompleteMultipartUpload(ctx, in)
+}
+
+func (c *ObjectStoreServiceHTTPBridgeImpl) AbortMultipartUpload(ctx context.Context, in *AbortMultipartUploadRequest) (*AbortMultipartUploadResponse, error) {
+	return c.client.AbortMultipartUpload(ctx, in)
+}
+
 type ObjectStoreServiceBridgeImpl struct {
 	client ObjectStoreServiceClient
 }
@@ -181,32 +413,106 @@ func NewObjectStoreServiceBridge(client grpc.ClientConnInterface) ObjectStoreSer
 	return &ObjectStoreServiceBridgeImpl{client: NewObjectStoreServiceClient(client)}
 }
 
-func (c *ObjectStoreServiceBridgeImpl) InitiateMultipartUpload(ctx context.Context, in *InitiateMultipartUploadRequest) (*InitiateMultipartUploadResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method InitiateMultipartUpload not implemented")
-}
-
-func (c *ObjectStoreServiceBridgeImpl) GetMultipartUploadUrl(ctx context.Context, in *GetMultipartUploadUrlRequest) (*GetMultipartUploadUrlResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetMultipartUploadUrl not implemented")
-}
-
-func (c *ObjectStoreServiceBridgeImpl) CompleteMultipartUpload(ctx context.Context, in *CompleteMultipartUploadRequest) (*CompleteMultipartUploadResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method CompleteMultipartUpload not implemented")
-}
-
-func (c *ObjectStoreServiceBridgeImpl) AbortMultipartUpload(ctx context.Context, in *AbortMultipartUploadRequest) (*AbortMultipartUploadResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method AbortMultipartUpload not implemented")
-}
-
 func (c *ObjectStoreServiceBridgeImpl) UploadObject(ctx context.Context, in *UploadObjectRequest) (*UploadObjectResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method UploadObject not implemented")
+	return c.client.UploadObject(ctx, in)
 }
 
 func (c *ObjectStoreServiceBridgeImpl) GetObject(ctx context.Context, in *GetObjectRequest) (*GetObjectResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetObject not implemented")
+	return c.client.GetObject(ctx, in)
 }
 
 func (c *ObjectStoreServiceBridgeImpl) DeleteObject(ctx context.Context, in *DeleteObjectRequest) (*DeleteObjectResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method DeleteObject not implemented")
+	return c.client.DeleteObject(ctx, in)
+}
+
+func (c *ObjectStoreServiceBridgeImpl) InitiateMultipartUpload(ctx context.Context, in *InitiateMultipartUploadRequest) (*InitiateMultipartUploadResponse, error) {
+	return c.client.InitiateMultipartUpload(ctx, in)
+}
+
+func (c *ObjectStoreServiceBridgeImpl) GetMultipartUploadUrl(ctx context.Context, in *GetMultipartUploadUrlRequest) (*GetMultipartUploadUrlResponse, error) {
+	return c.client.GetMultipartUploadUrl(ctx, in)
+}
+
+func (c *ObjectStoreServiceBridgeImpl) CompleteMultipartUpload(ctx context.Context, in *CompleteMultipartUploadRequest) (*CompleteMultipartUploadResponse, error) {
+	return c.client.CompleteMultipartUpload(ctx, in)
+}
+
+func (c *ObjectStoreServiceBridgeImpl) AbortMultipartUpload(ctx context.Context, in *AbortMultipartUploadRequest) (*AbortMultipartUploadResponse, error) {
+	return c.client.AbortMultipartUpload(ctx, in)
 }
 
 func (c *ObjectStoreServiceBridgeImpl) mustEmbedUnimplementedObjectStoreServiceServer() {}
+
+type ObjectStoreServiceGRPC2HTTPBridgeImpl struct {
+	client ObjectStoreServiceClient
+}
+
+func NewObjectStoreServiceGRPC2HTTP(client grpc.ClientConnInterface) ObjectStoreServiceHTTPServer {
+	return &ObjectStoreServiceGRPC2HTTPBridgeImpl{client: NewObjectStoreServiceClient(client)}
+}
+
+func (c *ObjectStoreServiceGRPC2HTTPBridgeImpl) UploadObject(ctx context.Context, in *UploadObjectRequest) (*UploadObjectResponse, error) {
+	return c.client.UploadObject(ctx, in)
+}
+
+func (c *ObjectStoreServiceGRPC2HTTPBridgeImpl) GetObject(ctx context.Context, in *GetObjectRequest) (*GetObjectResponse, error) {
+	return c.client.GetObject(ctx, in)
+}
+
+func (c *ObjectStoreServiceGRPC2HTTPBridgeImpl) DeleteObject(ctx context.Context, in *DeleteObjectRequest) (*DeleteObjectResponse, error) {
+	return c.client.DeleteObject(ctx, in)
+}
+
+func (c *ObjectStoreServiceGRPC2HTTPBridgeImpl) InitiateMultipartUpload(ctx context.Context, in *InitiateMultipartUploadRequest) (*InitiateMultipartUploadResponse, error) {
+	return c.client.InitiateMultipartUpload(ctx, in)
+}
+
+func (c *ObjectStoreServiceGRPC2HTTPBridgeImpl) GetMultipartUploadUrl(ctx context.Context, in *GetMultipartUploadUrlRequest) (*GetMultipartUploadUrlResponse, error) {
+	return c.client.GetMultipartUploadUrl(ctx, in)
+}
+
+func (c *ObjectStoreServiceGRPC2HTTPBridgeImpl) CompleteMultipartUpload(ctx context.Context, in *CompleteMultipartUploadRequest) (*CompleteMultipartUploadResponse, error) {
+	return c.client.CompleteMultipartUpload(ctx, in)
+}
+
+func (c *ObjectStoreServiceGRPC2HTTPBridgeImpl) AbortMultipartUpload(ctx context.Context, in *AbortMultipartUploadRequest) (*AbortMultipartUploadResponse, error) {
+	return c.client.AbortMultipartUpload(ctx, in)
+}
+
+type ObjectStoreServiceHTTP2GRPCBridgeImpl struct {
+	client ObjectStoreServiceHTTPClient
+}
+
+func NewObjectStoreServiceHTTP2GRPC(client *http.Client) ObjectStoreServiceServer {
+	return &ObjectStoreServiceHTTP2GRPCBridgeImpl{client: NewObjectStoreServiceHTTPClient(client)}
+}
+
+func (c *ObjectStoreServiceHTTP2GRPCBridgeImpl) UploadObject(ctx context.Context, in *UploadObjectRequest) (*UploadObjectResponse, error) {
+	return c.client.UploadObject(ctx, in)
+}
+
+func (c *ObjectStoreServiceHTTP2GRPCBridgeImpl) GetObject(ctx context.Context, in *GetObjectRequest) (*GetObjectResponse, error) {
+	return c.client.GetObject(ctx, in)
+}
+
+func (c *ObjectStoreServiceHTTP2GRPCBridgeImpl) DeleteObject(ctx context.Context, in *DeleteObjectRequest) (*DeleteObjectResponse, error) {
+	return c.client.DeleteObject(ctx, in)
+}
+
+func (c *ObjectStoreServiceHTTP2GRPCBridgeImpl) InitiateMultipartUpload(ctx context.Context, in *InitiateMultipartUploadRequest) (*InitiateMultipartUploadResponse, error) {
+	return c.client.InitiateMultipartUpload(ctx, in)
+}
+
+func (c *ObjectStoreServiceHTTP2GRPCBridgeImpl) GetMultipartUploadUrl(ctx context.Context, in *GetMultipartUploadUrlRequest) (*GetMultipartUploadUrlResponse, error) {
+	return c.client.GetMultipartUploadUrl(ctx, in)
+}
+
+func (c *ObjectStoreServiceHTTP2GRPCBridgeImpl) CompleteMultipartUpload(ctx context.Context, in *CompleteMultipartUploadRequest) (*CompleteMultipartUploadResponse, error) {
+	return c.client.CompleteMultipartUpload(ctx, in)
+}
+
+func (c *ObjectStoreServiceHTTP2GRPCBridgeImpl) AbortMultipartUpload(ctx context.Context, in *AbortMultipartUploadRequest) (*AbortMultipartUploadResponse, error) {
+	return c.client.AbortMultipartUpload(ctx, in)
+}
+
+func (c *ObjectStoreServiceHTTP2GRPCBridgeImpl) mustEmbedUnimplementedObjectStoreServiceServer() {}

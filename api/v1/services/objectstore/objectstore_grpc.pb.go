@@ -19,13 +19,13 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
+	ObjectStoreService_UploadObject_FullMethodName            = "/api.v1.services.objectstore.ObjectStoreService/UploadObject"
+	ObjectStoreService_GetObject_FullMethodName               = "/api.v1.services.objectstore.ObjectStoreService/GetObject"
+	ObjectStoreService_DeleteObject_FullMethodName            = "/api.v1.services.objectstore.ObjectStoreService/DeleteObject"
 	ObjectStoreService_InitiateMultipartUpload_FullMethodName = "/api.v1.services.objectstore.ObjectStoreService/InitiateMultipartUpload"
 	ObjectStoreService_GetMultipartUploadUrl_FullMethodName   = "/api.v1.services.objectstore.ObjectStoreService/GetMultipartUploadUrl"
 	ObjectStoreService_CompleteMultipartUpload_FullMethodName = "/api.v1.services.objectstore.ObjectStoreService/CompleteMultipartUpload"
 	ObjectStoreService_AbortMultipartUpload_FullMethodName    = "/api.v1.services.objectstore.ObjectStoreService/AbortMultipartUpload"
-	ObjectStoreService_UploadObject_FullMethodName            = "/api.v1.services.objectstore.ObjectStoreService/UploadObject"
-	ObjectStoreService_GetObject_FullMethodName               = "/api.v1.services.objectstore.ObjectStoreService/GetObject"
-	ObjectStoreService_DeleteObject_FullMethodName            = "/api.v1.services.objectstore.ObjectStoreService/DeleteObject"
 )
 
 // ObjectStoreServiceClient is the client API for ObjectStoreService service.
@@ -34,9 +34,15 @@ const (
 //
 // The ObjectStore service definition.
 // This service provides a generic interface for object storage.
-// It is designed to be used internally by other services (like FileManager)
-// and not exposed directly to the public API gateway.
+// While HTTP bindings are provided for flexibility and internal use,
+// it's primarily designed to be consumed by other backend services like FileManager.
 type ObjectStoreServiceClient interface {
+	// Uploads an object in a single request. Suitable for small files.
+	UploadObject(ctx context.Context, in *UploadObjectRequest, opts ...grpc.CallOption) (*UploadObjectResponse, error)
+	// Downloads an object.
+	GetObject(ctx context.Context, in *GetObjectRequest, opts ...grpc.CallOption) (*GetObjectResponse, error)
+	// Deletes an object.
+	DeleteObject(ctx context.Context, in *DeleteObjectRequest, opts ...grpc.CallOption) (*DeleteObjectResponse, error)
 	// Initiates a multipart upload and returns an upload ID.
 	InitiateMultipartUpload(ctx context.Context, in *InitiateMultipartUploadRequest, opts ...grpc.CallOption) (*InitiateMultipartUploadResponse, error)
 	// Generates a presigned URL for uploading a part.
@@ -45,12 +51,6 @@ type ObjectStoreServiceClient interface {
 	CompleteMultipartUpload(ctx context.Context, in *CompleteMultipartUploadRequest, opts ...grpc.CallOption) (*CompleteMultipartUploadResponse, error)
 	// Aborts a multipart upload.
 	AbortMultipartUpload(ctx context.Context, in *AbortMultipartUploadRequest, opts ...grpc.CallOption) (*AbortMultipartUploadResponse, error)
-	// Uploads an object in a single request. Suitable for small files.
-	UploadObject(ctx context.Context, in *UploadObjectRequest, opts ...grpc.CallOption) (*UploadObjectResponse, error)
-	// Downloads an object.
-	GetObject(ctx context.Context, in *GetObjectRequest, opts ...grpc.CallOption) (*GetObjectResponse, error)
-	// Deletes an object.
-	DeleteObject(ctx context.Context, in *DeleteObjectRequest, opts ...grpc.CallOption) (*DeleteObjectResponse, error)
 }
 
 type objectStoreServiceClient struct {
@@ -59,6 +59,36 @@ type objectStoreServiceClient struct {
 
 func NewObjectStoreServiceClient(cc grpc.ClientConnInterface) ObjectStoreServiceClient {
 	return &objectStoreServiceClient{cc}
+}
+
+func (c *objectStoreServiceClient) UploadObject(ctx context.Context, in *UploadObjectRequest, opts ...grpc.CallOption) (*UploadObjectResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(UploadObjectResponse)
+	err := c.cc.Invoke(ctx, ObjectStoreService_UploadObject_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *objectStoreServiceClient) GetObject(ctx context.Context, in *GetObjectRequest, opts ...grpc.CallOption) (*GetObjectResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(GetObjectResponse)
+	err := c.cc.Invoke(ctx, ObjectStoreService_GetObject_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *objectStoreServiceClient) DeleteObject(ctx context.Context, in *DeleteObjectRequest, opts ...grpc.CallOption) (*DeleteObjectResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(DeleteObjectResponse)
+	err := c.cc.Invoke(ctx, ObjectStoreService_DeleteObject_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
 }
 
 func (c *objectStoreServiceClient) InitiateMultipartUpload(ctx context.Context, in *InitiateMultipartUploadRequest, opts ...grpc.CallOption) (*InitiateMultipartUploadResponse, error) {
@@ -101,45 +131,21 @@ func (c *objectStoreServiceClient) AbortMultipartUpload(ctx context.Context, in 
 	return out, nil
 }
 
-func (c *objectStoreServiceClient) UploadObject(ctx context.Context, in *UploadObjectRequest, opts ...grpc.CallOption) (*UploadObjectResponse, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(UploadObjectResponse)
-	err := c.cc.Invoke(ctx, ObjectStoreService_UploadObject_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *objectStoreServiceClient) GetObject(ctx context.Context, in *GetObjectRequest, opts ...grpc.CallOption) (*GetObjectResponse, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(GetObjectResponse)
-	err := c.cc.Invoke(ctx, ObjectStoreService_GetObject_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *objectStoreServiceClient) DeleteObject(ctx context.Context, in *DeleteObjectRequest, opts ...grpc.CallOption) (*DeleteObjectResponse, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(DeleteObjectResponse)
-	err := c.cc.Invoke(ctx, ObjectStoreService_DeleteObject_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
 // ObjectStoreServiceServer is the server API for ObjectStoreService service.
 // All implementations must embed UnimplementedObjectStoreServiceServer
 // for forward compatibility.
 //
 // The ObjectStore service definition.
 // This service provides a generic interface for object storage.
-// It is designed to be used internally by other services (like FileManager)
-// and not exposed directly to the public API gateway.
+// While HTTP bindings are provided for flexibility and internal use,
+// it's primarily designed to be consumed by other backend services like FileManager.
 type ObjectStoreServiceServer interface {
+	// Uploads an object in a single request. Suitable for small files.
+	UploadObject(context.Context, *UploadObjectRequest) (*UploadObjectResponse, error)
+	// Downloads an object.
+	GetObject(context.Context, *GetObjectRequest) (*GetObjectResponse, error)
+	// Deletes an object.
+	DeleteObject(context.Context, *DeleteObjectRequest) (*DeleteObjectResponse, error)
 	// Initiates a multipart upload and returns an upload ID.
 	InitiateMultipartUpload(context.Context, *InitiateMultipartUploadRequest) (*InitiateMultipartUploadResponse, error)
 	// Generates a presigned URL for uploading a part.
@@ -148,12 +154,6 @@ type ObjectStoreServiceServer interface {
 	CompleteMultipartUpload(context.Context, *CompleteMultipartUploadRequest) (*CompleteMultipartUploadResponse, error)
 	// Aborts a multipart upload.
 	AbortMultipartUpload(context.Context, *AbortMultipartUploadRequest) (*AbortMultipartUploadResponse, error)
-	// Uploads an object in a single request. Suitable for small files.
-	UploadObject(context.Context, *UploadObjectRequest) (*UploadObjectResponse, error)
-	// Downloads an object.
-	GetObject(context.Context, *GetObjectRequest) (*GetObjectResponse, error)
-	// Deletes an object.
-	DeleteObject(context.Context, *DeleteObjectRequest) (*DeleteObjectResponse, error)
 	mustEmbedUnimplementedObjectStoreServiceServer()
 }
 
@@ -164,6 +164,15 @@ type ObjectStoreServiceServer interface {
 // pointer dereference when methods are called.
 type UnimplementedObjectStoreServiceServer struct{}
 
+func (UnimplementedObjectStoreServiceServer) UploadObject(context.Context, *UploadObjectRequest) (*UploadObjectResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UploadObject not implemented")
+}
+func (UnimplementedObjectStoreServiceServer) GetObject(context.Context, *GetObjectRequest) (*GetObjectResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetObject not implemented")
+}
+func (UnimplementedObjectStoreServiceServer) DeleteObject(context.Context, *DeleteObjectRequest) (*DeleteObjectResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method DeleteObject not implemented")
+}
 func (UnimplementedObjectStoreServiceServer) InitiateMultipartUpload(context.Context, *InitiateMultipartUploadRequest) (*InitiateMultipartUploadResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method InitiateMultipartUpload not implemented")
 }
@@ -175,15 +184,6 @@ func (UnimplementedObjectStoreServiceServer) CompleteMultipartUpload(context.Con
 }
 func (UnimplementedObjectStoreServiceServer) AbortMultipartUpload(context.Context, *AbortMultipartUploadRequest) (*AbortMultipartUploadResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method AbortMultipartUpload not implemented")
-}
-func (UnimplementedObjectStoreServiceServer) UploadObject(context.Context, *UploadObjectRequest) (*UploadObjectResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method UploadObject not implemented")
-}
-func (UnimplementedObjectStoreServiceServer) GetObject(context.Context, *GetObjectRequest) (*GetObjectResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetObject not implemented")
-}
-func (UnimplementedObjectStoreServiceServer) DeleteObject(context.Context, *DeleteObjectRequest) (*DeleteObjectResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method DeleteObject not implemented")
 }
 func (UnimplementedObjectStoreServiceServer) mustEmbedUnimplementedObjectStoreServiceServer() {}
 func (UnimplementedObjectStoreServiceServer) testEmbeddedByValue()                            {}
@@ -204,6 +204,60 @@ func RegisterObjectStoreServiceServer(s grpc.ServiceRegistrar, srv ObjectStoreSe
 		t.testEmbeddedByValue()
 	}
 	s.RegisterService(&ObjectStoreService_ServiceDesc, srv)
+}
+
+func _ObjectStoreService_UploadObject_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UploadObjectRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ObjectStoreServiceServer).UploadObject(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: ObjectStoreService_UploadObject_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ObjectStoreServiceServer).UploadObject(ctx, req.(*UploadObjectRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _ObjectStoreService_GetObject_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetObjectRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ObjectStoreServiceServer).GetObject(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: ObjectStoreService_GetObject_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ObjectStoreServiceServer).GetObject(ctx, req.(*GetObjectRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _ObjectStoreService_DeleteObject_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DeleteObjectRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ObjectStoreServiceServer).DeleteObject(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: ObjectStoreService_DeleteObject_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ObjectStoreServiceServer).DeleteObject(ctx, req.(*DeleteObjectRequest))
+	}
+	return interceptor(ctx, in, info, handler)
 }
 
 func _ObjectStoreService_InitiateMultipartUpload_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
@@ -278,60 +332,6 @@ func _ObjectStoreService_AbortMultipartUpload_Handler(srv interface{}, ctx conte
 	return interceptor(ctx, in, info, handler)
 }
 
-func _ObjectStoreService_UploadObject_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(UploadObjectRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(ObjectStoreServiceServer).UploadObject(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: ObjectStoreService_UploadObject_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ObjectStoreServiceServer).UploadObject(ctx, req.(*UploadObjectRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _ObjectStoreService_GetObject_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetObjectRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(ObjectStoreServiceServer).GetObject(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: ObjectStoreService_GetObject_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ObjectStoreServiceServer).GetObject(ctx, req.(*GetObjectRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _ObjectStoreService_DeleteObject_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(DeleteObjectRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(ObjectStoreServiceServer).DeleteObject(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: ObjectStoreService_DeleteObject_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ObjectStoreServiceServer).DeleteObject(ctx, req.(*DeleteObjectRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
 // ObjectStoreService_ServiceDesc is the grpc.ServiceDesc for ObjectStoreService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -339,6 +339,18 @@ var ObjectStoreService_ServiceDesc = grpc.ServiceDesc{
 	ServiceName: "api.v1.services.objectstore.ObjectStoreService",
 	HandlerType: (*ObjectStoreServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
+		{
+			MethodName: "UploadObject",
+			Handler:    _ObjectStoreService_UploadObject_Handler,
+		},
+		{
+			MethodName: "GetObject",
+			Handler:    _ObjectStoreService_GetObject_Handler,
+		},
+		{
+			MethodName: "DeleteObject",
+			Handler:    _ObjectStoreService_DeleteObject_Handler,
+		},
 		{
 			MethodName: "InitiateMultipartUpload",
 			Handler:    _ObjectStoreService_InitiateMultipartUpload_Handler,
@@ -354,18 +366,6 @@ var ObjectStoreService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "AbortMultipartUpload",
 			Handler:    _ObjectStoreService_AbortMultipartUpload_Handler,
-		},
-		{
-			MethodName: "UploadObject",
-			Handler:    _ObjectStoreService_UploadObject_Handler,
-		},
-		{
-			MethodName: "GetObject",
-			Handler:    _ObjectStoreService_GetObject_Handler,
-		},
-		{
-			MethodName: "DeleteObject",
-			Handler:    _ObjectStoreService_DeleteObject_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

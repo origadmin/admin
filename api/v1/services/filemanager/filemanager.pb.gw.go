@@ -226,7 +226,7 @@ func request_FileManagerService_GetFile_0(ctx context.Context, marshaler runtime
 	if !ok {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "id")
 	}
-	protoReq.Id, err = runtime.String(val)
+	protoReq.Id, err = runtime.Int64(val)
 	if err != nil {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "id", err)
 	}
@@ -244,11 +244,86 @@ func local_request_FileManagerService_GetFile_0(ctx context.Context, marshaler r
 	if !ok {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "id")
 	}
-	protoReq.Id, err = runtime.String(val)
+	protoReq.Id, err = runtime.Int64(val)
 	if err != nil {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "id", err)
 	}
 	msg, err := server.GetFile(ctx, &protoReq)
+	return msg, metadata, err
+}
+
+var filter_FileManagerService_ListFiles_0 = &utilities.DoubleArray{Encoding: map[string]int{}, Base: []int(nil), Check: []int(nil)}
+
+func request_FileManagerService_ListFiles_0(ctx context.Context, marshaler runtime.Marshaler, client FileManagerServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+	var (
+		protoReq ListFilesRequest
+		metadata runtime.ServerMetadata
+	)
+	io.Copy(io.Discard, req.Body)
+	if err := req.ParseForm(); err != nil {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
+	}
+	if err := runtime.PopulateQueryParameters(&protoReq, req.Form, filter_FileManagerService_ListFiles_0); err != nil {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
+	}
+	msg, err := client.ListFiles(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
+	return msg, metadata, err
+}
+
+func local_request_FileManagerService_ListFiles_0(ctx context.Context, marshaler runtime.Marshaler, server FileManagerServiceServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+	var (
+		protoReq ListFilesRequest
+		metadata runtime.ServerMetadata
+	)
+	if err := req.ParseForm(); err != nil {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
+	}
+	if err := runtime.PopulateQueryParameters(&protoReq, req.Form, filter_FileManagerService_ListFiles_0); err != nil {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
+	}
+	msg, err := server.ListFiles(ctx, &protoReq)
+	return msg, metadata, err
+}
+
+func request_FileManagerService_UpdateFile_0(ctx context.Context, marshaler runtime.Marshaler, client FileManagerServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+	var (
+		protoReq UpdateFileRequest
+		metadata runtime.ServerMetadata
+		err      error
+	)
+	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && !errors.Is(err, io.EOF) {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
+	}
+	val, ok := pathParams["id"]
+	if !ok {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "id")
+	}
+	protoReq.Id, err = runtime.Int64(val)
+	if err != nil {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "id", err)
+	}
+	msg, err := client.UpdateFile(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
+	return msg, metadata, err
+}
+
+func local_request_FileManagerService_UpdateFile_0(ctx context.Context, marshaler runtime.Marshaler, server FileManagerServiceServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+	var (
+		protoReq UpdateFileRequest
+		metadata runtime.ServerMetadata
+		err      error
+	)
+	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && !errors.Is(err, io.EOF) {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
+	}
+	val, ok := pathParams["id"]
+	if !ok {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "id")
+	}
+	protoReq.Id, err = runtime.Int64(val)
+	if err != nil {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "id", err)
+	}
+	msg, err := server.UpdateFile(ctx, &protoReq)
 	return msg, metadata, err
 }
 
@@ -263,7 +338,7 @@ func request_FileManagerService_DeleteFile_0(ctx context.Context, marshaler runt
 	if !ok {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "id")
 	}
-	protoReq.Id, err = runtime.String(val)
+	protoReq.Id, err = runtime.Int64(val)
 	if err != nil {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "id", err)
 	}
@@ -281,7 +356,7 @@ func local_request_FileManagerService_DeleteFile_0(ctx context.Context, marshale
 	if !ok {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "id")
 	}
-	protoReq.Id, err = runtime.String(val)
+	protoReq.Id, err = runtime.Int64(val)
 	if err != nil {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "id", err)
 	}
@@ -301,7 +376,7 @@ func RegisterFileManagerServiceHandlerServer(ctx context.Context, mux *runtime.S
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/api.v1.services.filemanager.FileManagerService/UploadFile", runtime.WithHTTPPathPattern("/files"))
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/api.v1.services.filemanager.FileManagerService/UploadFile", runtime.WithHTTPPathPattern("/fm/files"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -321,7 +396,7 @@ func RegisterFileManagerServiceHandlerServer(ctx context.Context, mux *runtime.S
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/api.v1.services.filemanager.FileManagerService/InitiateMultipartUpload", runtime.WithHTTPPathPattern("/files/multipart"))
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/api.v1.services.filemanager.FileManagerService/InitiateMultipartUpload", runtime.WithHTTPPathPattern("/fm/files/multipart"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -341,7 +416,7 @@ func RegisterFileManagerServiceHandlerServer(ctx context.Context, mux *runtime.S
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/api.v1.services.filemanager.FileManagerService/GetMultipartUploadUrl", runtime.WithHTTPPathPattern("/files/multipart/{upload_id}/parts/{part_number}"))
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/api.v1.services.filemanager.FileManagerService/GetMultipartUploadUrl", runtime.WithHTTPPathPattern("/fm/files/multipart/{upload_id}/parts/{part_number}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -361,7 +436,7 @@ func RegisterFileManagerServiceHandlerServer(ctx context.Context, mux *runtime.S
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/api.v1.services.filemanager.FileManagerService/CompleteMultipartUpload", runtime.WithHTTPPathPattern("/files/multipart/{upload_id}/complete"))
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/api.v1.services.filemanager.FileManagerService/CompleteMultipartUpload", runtime.WithHTTPPathPattern("/fm/files/multipart/{upload_id}/complete"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -381,7 +456,7 @@ func RegisterFileManagerServiceHandlerServer(ctx context.Context, mux *runtime.S
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/api.v1.services.filemanager.FileManagerService/AbortMultipartUpload", runtime.WithHTTPPathPattern("/files/multipart/{upload_id}"))
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/api.v1.services.filemanager.FileManagerService/AbortMultipartUpload", runtime.WithHTTPPathPattern("/fm/files/multipart/{upload_id}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -401,7 +476,7 @@ func RegisterFileManagerServiceHandlerServer(ctx context.Context, mux *runtime.S
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/api.v1.services.filemanager.FileManagerService/GetFile", runtime.WithHTTPPathPattern("/files/{id}"))
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/api.v1.services.filemanager.FileManagerService/GetFile", runtime.WithHTTPPathPattern("/fm/files/{id}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -415,13 +490,53 @@ func RegisterFileManagerServiceHandlerServer(ctx context.Context, mux *runtime.S
 		}
 		forward_FileManagerService_GetFile_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 	})
+	mux.Handle(http.MethodGet, pattern_FileManagerService_ListFiles_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+		ctx, cancel := context.WithCancel(req.Context())
+		defer cancel()
+		var stream runtime.ServerTransportStream
+		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
+		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/api.v1.services.filemanager.FileManagerService/ListFiles", runtime.WithHTTPPathPattern("/fm/files"))
+		if err != nil {
+			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
+			return
+		}
+		resp, md, err := local_request_FileManagerService_ListFiles_0(annotatedContext, inboundMarshaler, server, req, pathParams)
+		md.HeaderMD, md.TrailerMD = metadata.Join(md.HeaderMD, stream.Header()), metadata.Join(md.TrailerMD, stream.Trailer())
+		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
+		if err != nil {
+			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
+			return
+		}
+		forward_FileManagerService_ListFiles_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+	})
+	mux.Handle(http.MethodPut, pattern_FileManagerService_UpdateFile_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+		ctx, cancel := context.WithCancel(req.Context())
+		defer cancel()
+		var stream runtime.ServerTransportStream
+		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
+		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/api.v1.services.filemanager.FileManagerService/UpdateFile", runtime.WithHTTPPathPattern("/fm/files/{id}"))
+		if err != nil {
+			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
+			return
+		}
+		resp, md, err := local_request_FileManagerService_UpdateFile_0(annotatedContext, inboundMarshaler, server, req, pathParams)
+		md.HeaderMD, md.TrailerMD = metadata.Join(md.HeaderMD, stream.Header()), metadata.Join(md.TrailerMD, stream.Trailer())
+		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
+		if err != nil {
+			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
+			return
+		}
+		forward_FileManagerService_UpdateFile_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+	})
 	mux.Handle(http.MethodDelete, pattern_FileManagerService_DeleteFile_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/api.v1.services.filemanager.FileManagerService/DeleteFile", runtime.WithHTTPPathPattern("/files/{id}"))
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/api.v1.services.filemanager.FileManagerService/DeleteFile", runtime.WithHTTPPathPattern("/fm/files/{id}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -479,7 +594,7 @@ func RegisterFileManagerServiceHandlerClient(ctx context.Context, mux *runtime.S
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/api.v1.services.filemanager.FileManagerService/UploadFile", runtime.WithHTTPPathPattern("/files"))
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/api.v1.services.filemanager.FileManagerService/UploadFile", runtime.WithHTTPPathPattern("/fm/files"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -496,7 +611,7 @@ func RegisterFileManagerServiceHandlerClient(ctx context.Context, mux *runtime.S
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/api.v1.services.filemanager.FileManagerService/InitiateMultipartUpload", runtime.WithHTTPPathPattern("/files/multipart"))
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/api.v1.services.filemanager.FileManagerService/InitiateMultipartUpload", runtime.WithHTTPPathPattern("/fm/files/multipart"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -513,7 +628,7 @@ func RegisterFileManagerServiceHandlerClient(ctx context.Context, mux *runtime.S
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/api.v1.services.filemanager.FileManagerService/GetMultipartUploadUrl", runtime.WithHTTPPathPattern("/files/multipart/{upload_id}/parts/{part_number}"))
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/api.v1.services.filemanager.FileManagerService/GetMultipartUploadUrl", runtime.WithHTTPPathPattern("/fm/files/multipart/{upload_id}/parts/{part_number}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -530,7 +645,7 @@ func RegisterFileManagerServiceHandlerClient(ctx context.Context, mux *runtime.S
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/api.v1.services.filemanager.FileManagerService/CompleteMultipartUpload", runtime.WithHTTPPathPattern("/files/multipart/{upload_id}/complete"))
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/api.v1.services.filemanager.FileManagerService/CompleteMultipartUpload", runtime.WithHTTPPathPattern("/fm/files/multipart/{upload_id}/complete"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -547,7 +662,7 @@ func RegisterFileManagerServiceHandlerClient(ctx context.Context, mux *runtime.S
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/api.v1.services.filemanager.FileManagerService/AbortMultipartUpload", runtime.WithHTTPPathPattern("/files/multipart/{upload_id}"))
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/api.v1.services.filemanager.FileManagerService/AbortMultipartUpload", runtime.WithHTTPPathPattern("/fm/files/multipart/{upload_id}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -564,7 +679,7 @@ func RegisterFileManagerServiceHandlerClient(ctx context.Context, mux *runtime.S
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/api.v1.services.filemanager.FileManagerService/GetFile", runtime.WithHTTPPathPattern("/files/{id}"))
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/api.v1.services.filemanager.FileManagerService/GetFile", runtime.WithHTTPPathPattern("/fm/files/{id}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -577,11 +692,45 @@ func RegisterFileManagerServiceHandlerClient(ctx context.Context, mux *runtime.S
 		}
 		forward_FileManagerService_GetFile_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 	})
+	mux.Handle(http.MethodGet, pattern_FileManagerService_ListFiles_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+		ctx, cancel := context.WithCancel(req.Context())
+		defer cancel()
+		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/api.v1.services.filemanager.FileManagerService/ListFiles", runtime.WithHTTPPathPattern("/fm/files"))
+		if err != nil {
+			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
+			return
+		}
+		resp, md, err := request_FileManagerService_ListFiles_0(annotatedContext, inboundMarshaler, client, req, pathParams)
+		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
+		if err != nil {
+			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
+			return
+		}
+		forward_FileManagerService_ListFiles_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+	})
+	mux.Handle(http.MethodPut, pattern_FileManagerService_UpdateFile_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+		ctx, cancel := context.WithCancel(req.Context())
+		defer cancel()
+		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/api.v1.services.filemanager.FileManagerService/UpdateFile", runtime.WithHTTPPathPattern("/fm/files/{id}"))
+		if err != nil {
+			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
+			return
+		}
+		resp, md, err := request_FileManagerService_UpdateFile_0(annotatedContext, inboundMarshaler, client, req, pathParams)
+		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
+		if err != nil {
+			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
+			return
+		}
+		forward_FileManagerService_UpdateFile_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+	})
 	mux.Handle(http.MethodDelete, pattern_FileManagerService_DeleteFile_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/api.v1.services.filemanager.FileManagerService/DeleteFile", runtime.WithHTTPPathPattern("/files/{id}"))
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/api.v1.services.filemanager.FileManagerService/DeleteFile", runtime.WithHTTPPathPattern("/fm/files/{id}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -598,13 +747,15 @@ func RegisterFileManagerServiceHandlerClient(ctx context.Context, mux *runtime.S
 }
 
 var (
-	pattern_FileManagerService_UploadFile_0              = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0}, []string{"files"}, ""))
-	pattern_FileManagerService_InitiateMultipartUpload_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"files", "multipart"}, ""))
-	pattern_FileManagerService_GetMultipartUploadUrl_0   = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 1, 0, 4, 1, 5, 2, 2, 3, 1, 0, 4, 1, 5, 4}, []string{"files", "multipart", "upload_id", "parts", "part_number"}, ""))
-	pattern_FileManagerService_CompleteMultipartUpload_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 1, 0, 4, 1, 5, 2, 2, 3}, []string{"files", "multipart", "upload_id", "complete"}, ""))
-	pattern_FileManagerService_AbortMultipartUpload_0    = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 1, 0, 4, 1, 5, 2}, []string{"files", "multipart", "upload_id"}, ""))
-	pattern_FileManagerService_GetFile_0                 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 1, 0, 4, 1, 5, 1}, []string{"files", "id"}, ""))
-	pattern_FileManagerService_DeleteFile_0              = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 1, 0, 4, 1, 5, 1}, []string{"files", "id"}, ""))
+	pattern_FileManagerService_UploadFile_0              = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"fm", "files"}, ""))
+	pattern_FileManagerService_InitiateMultipartUpload_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2}, []string{"fm", "files", "multipart"}, ""))
+	pattern_FileManagerService_GetMultipartUploadUrl_0   = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 1, 0, 4, 1, 5, 3, 2, 4, 1, 0, 4, 1, 5, 5}, []string{"fm", "files", "multipart", "upload_id", "parts", "part_number"}, ""))
+	pattern_FileManagerService_CompleteMultipartUpload_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 1, 0, 4, 1, 5, 3, 2, 4}, []string{"fm", "files", "multipart", "upload_id", "complete"}, ""))
+	pattern_FileManagerService_AbortMultipartUpload_0    = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 1, 0, 4, 1, 5, 3}, []string{"fm", "files", "multipart", "upload_id"}, ""))
+	pattern_FileManagerService_GetFile_0                 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 1, 0, 4, 1, 5, 2}, []string{"fm", "files", "id"}, ""))
+	pattern_FileManagerService_ListFiles_0               = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"fm", "files"}, ""))
+	pattern_FileManagerService_UpdateFile_0              = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 1, 0, 4, 1, 5, 2}, []string{"fm", "files", "id"}, ""))
+	pattern_FileManagerService_DeleteFile_0              = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 1, 0, 4, 1, 5, 2}, []string{"fm", "files", "id"}, ""))
 )
 
 var (
@@ -614,5 +765,7 @@ var (
 	forward_FileManagerService_CompleteMultipartUpload_0 = runtime.ForwardResponseMessage
 	forward_FileManagerService_AbortMultipartUpload_0    = runtime.ForwardResponseMessage
 	forward_FileManagerService_GetFile_0                 = runtime.ForwardResponseMessage
+	forward_FileManagerService_ListFiles_0               = runtime.ForwardResponseMessage
+	forward_FileManagerService_UpdateFile_0              = runtime.ForwardResponseMessage
 	forward_FileManagerService_DeleteFile_0              = runtime.ForwardResponseMessage
 )

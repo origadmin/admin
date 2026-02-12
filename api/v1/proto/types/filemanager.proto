@@ -12,10 +12,22 @@ option java_package = "com.origadmin.api.v1.services.types";
 
 // Represents file metadata managed by the filemanager service.
 message FileMetadata {
-  string id = 1;
-  string name = 2;
-  string object_id = 3;
-  string owner_id = 4;
+  int64 id = 1 [json_name = "id"];
+  string name = 2 [json_name = "name"];
+  string object_id = 3 [json_name = "object_id"];
+  int64 owner_id = 4 [json_name = "owner_id"];
   google.protobuf.Timestamp created_time = 5 [json_name = "created_time"];
-  Object object_info = 6;
+  google.protobuf.Timestamp updated_time = 6 [json_name = "updated_time"];
+
+  // Visibility of the file: "public" or "private"
+  string visibility = 7 [json_name = "visibility"];
+
+  // MIME type of the file (e.g., "image/jpeg")
+  string mime_type = 8 [json_name = "mime_type"];
+
+  // Size of the file in bytes
+  int64 size = 9 [json_name = "size"];
+
+  // Optional: Detailed object info from ObjectStore (not stored in DB)
+  Object object_info = 10 [json_name = "object_info"];
 }

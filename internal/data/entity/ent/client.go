@@ -13,6 +13,7 @@ import (
 
 	"origadmin/application/admin/internal/data/entity/ent/casbinrule"
 	"origadmin/application/admin/internal/data/entity/ent/department"
+	"origadmin/application/admin/internal/data/entity/ent/file"
 	"origadmin/application/admin/internal/data/entity/ent/notification"
 	"origadmin/application/admin/internal/data/entity/ent/permission"
 	"origadmin/application/admin/internal/data/entity/ent/permissionresource"
@@ -46,6 +47,8 @@ type Client struct {
 	CasbinRule *CasbinRuleClient
 	// Department is the client for interacting with the Department builders.
 	Department *DepartmentClient
+	// File is the client for interacting with the File builders.
+	File *FileClient
 	// Notification is the client for interacting with the Notification builders.
 	Notification *NotificationClient
 	// Permission is the client for interacting with the Permission builders.
@@ -93,6 +96,7 @@ func (c *Client) init() {
 	c.Schema = migrate.NewSchema(c.driver)
 	c.CasbinRule = NewCasbinRuleClient(c.config)
 	c.Department = NewDepartmentClient(c.config)
+	c.File = NewFileClient(c.config)
 	c.Notification = NewNotificationClient(c.config)
 	c.Permission = NewPermissionClient(c.config)
 	c.PermissionResource = NewPermissionResourceClient(c.config)
@@ -204,6 +208,7 @@ func (c *Client) Tx(ctx context.Context) (*Tx, error) {
 		config:             cfg,
 		CasbinRule:         NewCasbinRuleClient(cfg),
 		Department:         NewDepartmentClient(cfg),
+		File:               NewFileClient(cfg),
 		Notification:       NewNotificationClient(cfg),
 		Permission:         NewPermissionClient(cfg),
 		PermissionResource: NewPermissionResourceClient(cfg),
@@ -242,6 +247,7 @@ func (c *Client) BeginTx(ctx context.Context, opts *sql.TxOptions) (*Tx, error) 
 		config:             cfg,
 		CasbinRule:         NewCasbinRuleClient(cfg),
 		Department:         NewDepartmentClient(cfg),
+		File:               NewFileClient(cfg),
 		Notification:       NewNotificationClient(cfg),
 		Permission:         NewPermissionClient(cfg),
 		PermissionResource: NewPermissionResourceClient(cfg),
@@ -288,10 +294,10 @@ func (c *Client) Close() error {
 // In order to add hooks to a specific client, call: `client.Node.Use(...)`.
 func (c *Client) Use(hooks ...Hook) {
 	for _, n := range []interface{ Use(...Hook) }{
-		c.CasbinRule, c.Department, c.Notification, c.Permission, c.PermissionResource,
-		c.Position, c.PositionPermission, c.Resource, c.Role, c.RolePermission, c.User,
-		c.UserDepartment, c.UserPosition, c.UserProfile, c.UserRole, c.UserSetting,
-		c.View, c.ViewPermission, c.ViewResource,
+		c.CasbinRule, c.Department, c.File, c.Notification, c.Permission,
+		c.PermissionResource, c.Position, c.PositionPermission, c.Resource, c.Role,
+		c.RolePermission, c.User, c.UserDepartment, c.UserPosition, c.UserProfile,
+		c.UserRole, c.UserSetting, c.View, c.ViewPermission, c.ViewResource,
 	} {
 		n.Use(hooks...)
 	}
@@ -301,10 +307,10 @@ func (c *Client) Use(hooks ...Hook) {
 // In order to add interceptors to a specific client, call: `client.Node.Intercept(...)`.
 func (c *Client) Intercept(interceptors ...Interceptor) {
 	for _, n := range []interface{ Intercept(...Interceptor) }{
-		c.CasbinRule, c.Department, c.Notification, c.Permission, c.PermissionResource,
-		c.Position, c.PositionPermission, c.Resource, c.Role, c.RolePermission, c.User,
-		c.UserDepartment, c.UserPosition, c.UserProfile, c.UserRole, c.UserSetting,
-		c.View, c.ViewPermission, c.ViewResource,
+		c.CasbinRule, c.Department, c.File, c.Notification, c.Permission,
+		c.PermissionResource, c.Position, c.PositionPermission, c.Resource, c.Role,
+		c.RolePermission, c.User, c.UserDepartment, c.UserPosition, c.UserProfile,
+		c.UserRole, c.UserSetting, c.View, c.ViewPermission, c.ViewResource,
 	} {
 		n.Intercept(interceptors...)
 	}
@@ -317,6 +323,8 @@ func (c *Client) Mutate(ctx context.Context, m Mutation) (Value, error) {
 		return c.CasbinRule.mutate(ctx, m)
 	case *DepartmentMutation:
 		return c.Department.mutate(ctx, m)
+	case *FileMutation:
+		return c.File.mutate(ctx, m)
 	case *NotificationMutation:
 		return c.Notification.mutate(ctx, m)
 	case *PermissionMutation:
@@ -700,6 +708,141 @@ func (c *DepartmentClient) mutate(ctx context.Context, m *DepartmentMutation) (V
 		return (&DepartmentDelete{config: c.config, hooks: c.Hooks(), mutation: m}).Exec(ctx)
 	default:
 		return nil, fmt.Errorf("ent: unknown Department mutation op: %q", m.Op())
+	}
+}
+
+// FileClient is a client for the File schema.
+type FileClient struct {
+	config
+}
+
+// NewFileClient returns a client for the File from the given config.
+func NewFileClient(c config) *FileClient {
+	return &FileClient{config: c}
+}
+
+// Use adds a list of mutation hooks to the hooks stack.
+// A call to `Use(f, g, h)` equals to `file.Hooks(f(g(h())))`.
+func (c *FileClient) Use(hooks ...Hook) {
+	c.hooks.File = append(c.hooks.File, hooks...)
+}
+
+// Intercept adds a list of query interceptors to the interceptors stack.
+// A call to `Intercept(f, g, h)` equals to `file.Intercept(f(g(h())))`.
+func (c *FileClient) Intercept(interceptors ...Interceptor) {
+	c.inters.File = append(c.inters.File, interceptors...)
+}
+
+// Create returns a builder for creating a File entity.
+func (c *FileClient) Create() *FileCreate {
+	mutation := newFileMutation(c.config, OpCreate)
+	return &FileCreate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// CreateBulk returns a builder for creating a bulk of File entities.
+func (c *FileClient) CreateBulk(builders ...*FileCreate) *FileCreateBulk {
+	return &FileCreateBulk{config: c.config, builders: builders}
+}
+
+// MapCreateBulk creates a bulk creation builder from the given slice. For each item in the slice, the function creates
+// a builder and applies setFunc on it.
+func (c *FileClient) MapCreateBulk(slice any, setFunc func(*FileCreate, int)) *FileCreateBulk {
+	rv := reflect.ValueOf(slice)
+	if rv.Kind() != reflect.Slice {
+		return &FileCreateBulk{err: fmt.Errorf("calling to FileClient.MapCreateBulk with wrong type %T, need slice", slice)}
+	}
+	builders := make([]*FileCreate, rv.Len())
+	for i := 0; i < rv.Len(); i++ {
+		builders[i] = c.Create()
+		setFunc(builders[i], i)
+	}
+	return &FileCreateBulk{config: c.config, builders: builders}
+}
+
+// Update returns an update builder for File.
+func (c *FileClient) Update() *FileUpdate {
+	mutation := newFileMutation(c.config, OpUpdate)
+	return &FileUpdate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOne returns an update builder for the given entity.
+func (c *FileClient) UpdateOne(_m *File) *FileUpdateOne {
+	mutation := newFileMutation(c.config, OpUpdateOne, withFile(_m))
+	return &FileUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOneID returns an update builder for the given id.
+func (c *FileClient) UpdateOneID(id int64) *FileUpdateOne {
+	mutation := newFileMutation(c.config, OpUpdateOne, withFileID(id))
+	return &FileUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// Delete returns a delete builder for File.
+func (c *FileClient) Delete() *FileDelete {
+	mutation := newFileMutation(c.config, OpDelete)
+	return &FileDelete{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// DeleteOne returns a builder for deleting the given entity.
+func (c *FileClient) DeleteOne(_m *File) *FileDeleteOne {
+	return c.DeleteOneID(_m.ID)
+}
+
+// DeleteOneID returns a builder for deleting the given entity by its id.
+func (c *FileClient) DeleteOneID(id int64) *FileDeleteOne {
+	builder := c.Delete().Where(file.ID(id))
+	builder.mutation.id = &id
+	builder.mutation.op = OpDeleteOne
+	return &FileDeleteOne{builder}
+}
+
+// Query returns a query builder for File.
+func (c *FileClient) Query() *FileQuery {
+	return &FileQuery{
+		config: c.config,
+		ctx:    &QueryContext{Type: TypeFile},
+		inters: c.Interceptors(),
+	}
+}
+
+// Get returns a File entity by its id.
+func (c *FileClient) Get(ctx context.Context, id int64) (*File, error) {
+	return c.Query().Where(file.ID(id)).Only(ctx)
+}
+
+// GetX is like Get, but panics if an error occurs.
+func (c *FileClient) GetX(ctx context.Context, id int64) *File {
+	obj, err := c.Get(ctx, id)
+	if err != nil {
+		panic(err)
+	}
+	return obj
+}
+
+// Hooks returns the client hooks.
+func (c *FileClient) Hooks() []Hook {
+	hooks := c.hooks.File
+	return append(hooks[:len(hooks):len(hooks)], file.Hooks[:]...)
+}
+
+// Interceptors returns the client interceptors.
+func (c *FileClient) Interceptors() []Interceptor {
+	inters := c.inters.File
+	return append(inters[:len(inters):len(inters)], file.Interceptors[:]...)
+}
+
+func (c *FileClient) mutate(ctx context.Context, m *FileMutation) (Value, error) {
+	switch m.Op() {
+	case OpCreate:
+		return (&FileCreate{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+	case OpUpdate:
+		return (&FileUpdate{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+	case OpUpdateOne:
+		return (&FileUpdateOne{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+	case OpDelete, OpDeleteOne:
+		return (&FileDelete{config: c.config, hooks: c.Hooks(), mutation: m}).Exec(ctx)
+	default:
+		return nil, fmt.Errorf("ent: unknown File mutation op: %q", m.Op())
 	}
 }
 
@@ -3858,15 +4001,15 @@ func (c *ViewResourceClient) mutate(ctx context.Context, m *ViewResourceMutation
 // hooks and interceptors per client, for fast access.
 type (
 	hooks struct {
-		CasbinRule, Department, Notification, Permission, PermissionResource, Position,
-		PositionPermission, Resource, Role, RolePermission, User, UserDepartment,
-		UserPosition, UserProfile, UserRole, UserSetting, View, ViewPermission,
-		ViewResource []ent.Hook
+		CasbinRule, Department, File, Notification, Permission, PermissionResource,
+		Position, PositionPermission, Resource, Role, RolePermission, User,
+		UserDepartment, UserPosition, UserProfile, UserRole, UserSetting, View,
+		ViewPermission, ViewResource []ent.Hook
 	}
 	inters struct {
-		CasbinRule, Department, Notification, Permission, PermissionResource, Position,
-		PositionPermission, Resource, Role, RolePermission, User, UserDepartment,
-		UserPosition, UserProfile, UserRole, UserSetting, View, ViewPermission,
-		ViewResource []ent.Interceptor
+		CasbinRule, Department, File, Notification, Permission, PermissionResource,
+		Position, PositionPermission, Resource, Role, RolePermission, User,
+		UserDepartment, UserPosition, UserProfile, UserRole, UserSetting, View,
+		ViewPermission, ViewResource []ent.Interceptor
 	}
 )

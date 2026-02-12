@@ -123,6 +123,11 @@ func (db *Database) Department(ctx context.Context) *DepartmentClient {
 	return db.Client(ctx).Department
 }
 
+// File is the client for interacting with the File builders.
+func (db *Database) File(ctx context.Context) *FileClient {
+	return db.Client(ctx).File
+}
+
 // Notification is the client for interacting with the Notification builders.
 func (db *Database) Notification(ctx context.Context) *NotificationClient {
 	return db.Client(ctx).Notification

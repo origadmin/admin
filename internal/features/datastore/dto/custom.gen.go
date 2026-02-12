@@ -3,49 +3,16 @@
 
 package dto
 
-import (
-	"origadmin/application/admin/internal/data/entity/ent/userprofile"
-	"origadmin/application/admin/internal/data/entity/ent/view"
-)
-
-// ConvertGenderToString is a custom conversion function stub.
+// ConvertStringToStringMapToString is a custom conversion function stub.
 // Please implement this function to complete the conversion.
-func ConvertGenderToString(from userprofile.Gender) string {
+func ConvertStringToStringMapToString(from map[string]string) string {
 	// TODO: Implement this custom conversion
 	panic("stub! not implemented")
 }
 
-// ConvertStringToGender is a custom conversion function stub.
+// ConvertStringToStringToStringMap is a custom conversion function stub.
 // Please implement this function to complete the conversion.
-func ConvertStringToGender(from string) userprofile.Gender {
-	// TODO: Implement this custom conversion
-	panic("stub! not implemented")
-}
-
-// ConvertStringToObjectMapToStringToStringMap is a custom conversion function stub.
-// Please implement this function to complete the conversion.
-func ConvertStringToObjectMapToStringToStringMap(from map[string]any) map[string]string {
-	// TODO: Implement this custom conversion
-	panic("stub! not implemented")
-}
-
-// ConvertStringToStringMapToStringToObjectMap is a custom conversion function stub.
-// Please implement this function to complete the conversion.
-func ConvertStringToStringMapToStringToObjectMap(from map[string]string) map[string]any {
-	// TODO: Implement this custom conversion
-	panic("stub! not implemented")
-}
-
-// ConvertStringToType is a custom conversion function stub.
-// Please implement this function to complete the conversion.
-func ConvertStringToType(from string) view.Type {
-	// TODO: Implement this custom conversion
-	panic("stub! not implemented")
-}
-
-// ConvertTypeToString is a custom conversion function stub.
-// Please implement this function to complete the conversion.
-func ConvertTypeToString(from view.Type) string {
+func ConvertStringToStringToStringMap(from string) map[string]string {
 	// TODO: Implement this custom conversion
 	panic("stub! not implemented")
 }

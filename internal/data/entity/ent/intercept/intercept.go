@@ -9,6 +9,7 @@ import (
 	"origadmin/application/admin/internal/data/entity/ent"
 	"origadmin/application/admin/internal/data/entity/ent/casbinrule"
 	"origadmin/application/admin/internal/data/entity/ent/department"
+	"origadmin/application/admin/internal/data/entity/ent/file"
 	"origadmin/application/admin/internal/data/entity/ent/notification"
 	"origadmin/application/admin/internal/data/entity/ent/permission"
 	"origadmin/application/admin/internal/data/entity/ent/permissionresource"
@@ -139,6 +140,33 @@ func (f TraverseDepartment) Traverse(ctx context.Context, q ent.Query) error {
 		return f(ctx, q)
 	}
 	return fmt.Errorf("unexpected query type %T. expect *ent.DepartmentQuery", q)
+}
+
+// The FileFunc type is an adapter to allow the use of ordinary function as a Querier.
+type FileFunc func(context.Context, *ent.FileQuery) (ent.Value, error)
+
+// Query calls f(ctx, q).
+func (f FileFunc) Query(ctx context.Context, q ent.Query) (ent.Value, error) {
+	if q, ok := q.(*ent.FileQuery); ok {
+		return f(ctx, q)
+	}
+	return nil, fmt.Errorf("unexpected query type %T. expect *ent.FileQuery", q)
+}
+
+// The TraverseFile type is an adapter to allow the use of ordinary function as Traverser.
+type TraverseFile func(context.Context, *ent.FileQuery) error
+
+// Intercept is a dummy implementation of Intercept that returns the next Querier in the pipeline.
+func (f TraverseFile) Intercept(next ent.Querier) ent.Querier {
+	return next
+}
+
+// Traverse calls f(ctx, q).
+func (f TraverseFile) Traverse(ctx context.Context, q ent.Query) error {
+	if q, ok := q.(*ent.FileQuery); ok {
+		return f(ctx, q)
+	}
+	return fmt.Errorf("unexpected query type %T. expect *ent.FileQuery", q)
 }
 
 // The NotificationFunc type is an adapter to allow the use of ordinary function as a Querier.
@@ -607,6 +635,8 @@ func NewQuery(q ent.Query) (Query, error) {
 		return &query[*ent.CasbinRuleQuery, predicate.CasbinRule, casbinrule.OrderOption]{typ: ent.TypeCasbinRule, tq: q}, nil
 	case *ent.DepartmentQuery:
 		return &query[*ent.DepartmentQuery, predicate.Department, department.OrderOption]{typ: ent.TypeDepartment, tq: q}, nil
+	case *ent.FileQuery:
+		return &query[*ent.FileQuery, predicate.File, file.OrderOption]{typ: ent.TypeFile, tq: q}, nil
 	case *ent.NotificationQuery:
 		return &query[*ent.NotificationQuery, predicate.Notification, notification.OrderOption]{typ: ent.TypeNotification, tq: q}, nil
 	case *ent.PermissionQuery:

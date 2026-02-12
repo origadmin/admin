@@ -24,23 +24,7 @@ servers:
           - logging
           - authn
 
-    # Auth Service gRPC Server
-    - name: "identity"
-      protocol: "grpc"
-      grpc:
-        addr: "0.0.0.0:18011"
-        timeout: 5s
-        middlewares:
-          - "recovery"
-          - "authz"
-    - name: "identity"
-      protocol: "http"
-      http:
-        addr: "0.0.0.0:18012"
-        timeout: 5s
-        middlewares:
-          - "recovery"
-          - "authz"
+
     # System Service gRPC Server
     - name: "system"
       protocol: "grpc"
@@ -76,3 +60,40 @@ servers:
             connect_timeout: 15s
             reconnect_wait: 2s
             max_reconnects: 10
+    # Auth Service gRPC Server
+    - name: "identity"
+      protocol: "grpc"
+      grpc:
+        addr: "0.0.0.0:18011"
+        timeout: 5s
+        middlewares:
+          - "recovery"
+          - "authz"
+    - name: "identity"
+      protocol: "http"
+      http:
+        addr: "0.0.0.0:18012"
+        timeout: 5s
+        middlewares:
+          - "recovery"
+          - "authz"
+    - name: "filemanager"
+      protocol: "grpc"
+      grpc:
+        addr: "0.0.0.0:18021"
+        timeout: 5s
+        # Apply middlewares by name. These names must correspond to entries
+        # in the middlewares.yaml configuration file.
+        middlewares:
+          - "recovery"
+          - "authz"
+    # System Service HTTP Server
+    - name: "filemanager"
+      protocol: "http"
+      http:
+        addr: "0.0.0.0:18022"
+        timeout: 5s
+        # Apply middlewares by name.
+        middlewares:
+          - "recovery"
+          - "authz"

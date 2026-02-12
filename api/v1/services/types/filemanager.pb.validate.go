@@ -95,6 +95,41 @@ func (m *FileMetadata) validate(all bool) error {
 	}
 
 	if all {
+		switch v := interface{}(m.GetUpdatedTime()).(type) {
+		case interface{ ValidateAll() error }:
+			if err := v.ValidateAll(); err != nil {
+				errors = append(errors, FileMetadataValidationError{
+					field:  "UpdatedTime",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		case interface{ Validate() error }:
+			if err := v.Validate(); err != nil {
+				errors = append(errors, FileMetadataValidationError{
+					field:  "UpdatedTime",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		}
+	} else if v, ok := interface{}(m.GetUpdatedTime()).(interface{ Validate() error }); ok {
+		if err := v.Validate(); err != nil {
+			return FileMetadataValidationError{
+				field:  "UpdatedTime",
+				reason: "embedded message failed validation",
+				cause:  err,
+			}
+		}
+	}
+
+	// no validation rules for Visibility
+
+	// no validation rules for MimeType
+
+	// no validation rules for Size
+
+	if all {
 		switch v := interface{}(m.GetObjectInfo()).(type) {
 		case interface{ ValidateAll() error }:
 			if err := v.ValidateAll(); err != nil {

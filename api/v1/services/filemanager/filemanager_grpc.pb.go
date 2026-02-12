@@ -25,6 +25,8 @@ const (
 	FileManagerService_CompleteMultipartUpload_FullMethodName = "/api.v1.services.filemanager.FileManagerService/CompleteMultipartUpload"
 	FileManagerService_AbortMultipartUpload_FullMethodName    = "/api.v1.services.filemanager.FileManagerService/AbortMultipartUpload"
 	FileManagerService_GetFile_FullMethodName                 = "/api.v1.services.filemanager.FileManagerService/GetFile"
+	FileManagerService_ListFiles_FullMethodName               = "/api.v1.services.filemanager.FileManagerService/ListFiles"
+	FileManagerService_UpdateFile_FullMethodName              = "/api.v1.services.filemanager.FileManagerService/UpdateFile"
 	FileManagerService_DeleteFile_FullMethodName              = "/api.v1.services.filemanager.FileManagerService/DeleteFile"
 )
 
@@ -35,7 +37,6 @@ const (
 // The FileManager service definition.
 type FileManagerServiceClient interface {
 	// Simple upload for small files (e.g. avatars, images).
-	// The file size should be limited (e.g. < 10MB).
 	UploadFile(ctx context.Context, in *UploadFileRequest, opts ...grpc.CallOption) (*UploadFileResponse, error)
 	// Initiates a multipart upload for large files.
 	InitiateMultipartUpload(ctx context.Context, in *InitiateMultipartUploadRequest, opts ...grpc.CallOption) (*InitiateMultipartUploadResponse, error)
@@ -47,6 +48,10 @@ type FileManagerServiceClient interface {
 	AbortMultipartUpload(ctx context.Context, in *AbortMultipartUploadRequest, opts ...grpc.CallOption) (*AbortMultipartUploadResponse, error)
 	// Gets file metadata.
 	GetFile(ctx context.Context, in *GetFileRequest, opts ...grpc.CallOption) (*GetFileResponse, error)
+	// Lists files with pagination and filtering.
+	ListFiles(ctx context.Context, in *ListFilesRequest, opts ...grpc.CallOption) (*ListFilesResponse, error)
+	// Updates file metadata.
+	UpdateFile(ctx context.Context, in *UpdateFileRequest, opts ...grpc.CallOption) (*UpdateFileResponse, error)
 	// Deletes a file and its metadata.
 	DeleteFile(ctx context.Context, in *DeleteFileRequest, opts ...grpc.CallOption) (*DeleteFileResponse, error)
 }
@@ -119,6 +124,26 @@ func (c *fileManagerServiceClient) GetFile(ctx context.Context, in *GetFileReque
 	return out, nil
 }
 
+func (c *fileManagerServiceClient) ListFiles(ctx context.Context, in *ListFilesRequest, opts ...grpc.CallOption) (*ListFilesResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(ListFilesResponse)
+	err := c.cc.Invoke(ctx, FileManagerService_ListFiles_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *fileManagerServiceClient) UpdateFile(ctx context.Context, in *UpdateFileRequest, opts ...grpc.CallOption) (*UpdateFileResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(UpdateFileResponse)
+	err := c.cc.Invoke(ctx, FileManagerService_UpdateFile_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *fileManagerServiceClient) DeleteFile(ctx context.Context, in *DeleteFileRequest, opts ...grpc.CallOption) (*DeleteFileResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(DeleteFileResponse)
@@ -136,7 +161,6 @@ func (c *fileManagerServiceClient) DeleteFile(ctx context.Context, in *DeleteFil
 // The FileManager service definition.
 type FileManagerServiceServer interface {
 	// Simple upload for small files (e.g. avatars, images).
-	// The file size should be limited (e.g. < 10MB).
 	UploadFile(context.Context, *UploadFileRequest) (*UploadFileResponse, error)
 	// Initiates a multipart upload for large files.
 	InitiateMultipartUpload(context.Context, *InitiateMultipartUploadRequest) (*InitiateMultipartUploadResponse, error)
@@ -148,6 +172,10 @@ type FileManagerServiceServer interface {
 	AbortMultipartUpload(context.Context, *AbortMultipartUploadRequest) (*AbortMultipartUploadResponse, error)
 	// Gets file metadata.
 	GetFile(context.Context, *GetFileRequest) (*GetFileResponse, error)
+	// Lists files with pagination and filtering.
+	ListFiles(context.Context, *ListFilesRequest) (*ListFilesResponse, error)
+	// Updates file metadata.
+	UpdateFile(context.Context, *UpdateFileRequest) (*UpdateFileResponse, error)
 	// Deletes a file and its metadata.
 	DeleteFile(context.Context, *DeleteFileRequest) (*DeleteFileResponse, error)
 	mustEmbedUnimplementedFileManagerServiceServer()
@@ -177,6 +205,12 @@ func (UnimplementedFileManagerServiceServer) AbortMultipartUpload(context.Contex
 }
 func (UnimplementedFileManagerServiceServer) GetFile(context.Context, *GetFileRequest) (*GetFileResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetFile not implemented")
+}
+func (UnimplementedFileManagerServiceServer) ListFiles(context.Context, *ListFilesRequest) (*ListFilesResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ListFiles not implemented")
+}
+func (UnimplementedFileManagerServiceServer) UpdateFile(context.Context, *UpdateFileRequest) (*UpdateFileResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpdateFile not implemented")
 }
 func (UnimplementedFileManagerServiceServer) DeleteFile(context.Context, *DeleteFileRequest) (*DeleteFileResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DeleteFile not implemented")
@@ -310,6 +344,42 @@ func _FileManagerService_GetFile_Handler(srv interface{}, ctx context.Context, d
 	return interceptor(ctx, in, info, handler)
 }
 
+func _FileManagerService_ListFiles_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListFilesRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(FileManagerServiceServer).ListFiles(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: FileManagerService_ListFiles_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(FileManagerServiceServer).ListFiles(ctx, req.(*ListFilesRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _FileManagerService_UpdateFile_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UpdateFileRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(FileManagerServiceServer).UpdateFile(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: FileManagerService_UpdateFile_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(FileManagerServiceServer).UpdateFile(ctx, req.(*UpdateFileRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _FileManagerService_DeleteFile_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(DeleteFileRequest)
 	if err := dec(in); err != nil {
@@ -358,6 +428,14 @@ var FileManagerService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GetFile",
 			Handler:    _FileManagerService_GetFile_Handler,
+		},
+		{
+			MethodName: "ListFiles",
+			Handler:    _FileManagerService_ListFiles_Handler,
+		},
+		{
+			MethodName: "UpdateFile",
+			Handler:    _FileManagerService_UpdateFile_Handler,
 		},
 		{
 			MethodName: "DeleteFile",
