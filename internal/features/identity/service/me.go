@@ -65,10 +65,10 @@ func (s *MeService) UpdatePreferences(ctx context.Context, req *pb.UpdatePrefere
 }
 
 // GetUserSettings retrieves the current user's settings (P2).
-func (s *MeService) GetUserSettings(ctx context.Context, req *pb.GetUserSettingRequest) (*pb.GetUserSettingResponse, error) {
+func (s *MeService) GetUserSettings(ctx context.Context, req *pb.GetUserSettingsRequest) (*pb.GetUserSettingsResponse, error) {
 	settings, err := s.meUseCase.GetSettings(ctx)
 	if err != nil {
 		return nil, err
 	}
-	return &pb.GetUserSettingResponse{Setting: settings}, nil
+	return &pb.GetUserSettingsResponse{Setting: settings}, nil
 }

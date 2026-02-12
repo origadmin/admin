@@ -229,7 +229,7 @@ func (s *PolicySyncUseCase) syncAndReload() {
 }
 
 // GetMetrics returns the current status and metrics of the syncer.
-func (s *PolicySyncUseCase) GetMetrics() *identityv1.PolicySyncStatusResponse {
+func (s *PolicySyncUseCase) GetMetrics() *identityv1.GetPolicySyncStatusResponse {
 	pending := s.debouncer.IsPending()
 	lastTime, _ := s.lastSyncTime.Load().(time.Time)
 	var lastTimeProto *timestamppb.Timestamp
@@ -247,7 +247,7 @@ func (s *PolicySyncUseCase) GetMetrics() *identityv1.PolicySyncStatusResponse {
 		}
 	}
 
-	return &identityv1.PolicySyncStatusResponse{
+	return &identityv1.GetPolicySyncStatusResponse{
 		SyncPending:      pending,
 		LastSyncTime:     lastTimeProto,
 		LastSyncDuration: s.lastSyncDuration.Load(),

@@ -96,13 +96,13 @@ func generateNextPageToken[T any](results []T, opt *repo.QueryOption) (string, e
 		var err error
 
 		switch fieldEnum {
-		case types.SortField_ID:
+		case types.SortField_SORT_FIELD_ID:
 			if item, ok := lastItem.(Identifiable); ok {
 				valueStr = fmt.Sprintf("%d", item.GetId())
 			} else {
 				err = fmt.Errorf("sort field 'id' used on a type that does not implement db.Identifiable")
 			}
-		case types.SortField_CREATE_TIME:
+		case types.SortField_SORT_FIELD_CREATE_TIME:
 			if item, ok := lastItem.(TimeTracker); ok {
 				if t := item.GetCreateTime(); t != nil {
 					valueStr = fmt.Sprintf("%d", t.AsTime().UnixNano())
@@ -112,7 +112,7 @@ func generateNextPageToken[T any](results []T, opt *repo.QueryOption) (string, e
 			} else {
 				err = fmt.Errorf("sort field 'create_time' used on a type that does not implement db.TimeTracker")
 			}
-		case types.SortField_UPDATE_TIME:
+		case types.SortField_SORT_FIELD_UPDATE_TIME:
 			if item, ok := lastItem.(TimeTracker); ok {
 				if t := item.GetUpdateTime(); t != nil {
 					valueStr = fmt.Sprintf("%d", t.AsTime().UnixNano())
@@ -122,7 +122,7 @@ func generateNextPageToken[T any](results []T, opt *repo.QueryOption) (string, e
 			} else {
 				err = fmt.Errorf("sort field 'update_time' used on a type that does not implement db.TimeTracker")
 			}
-		case types.SortField_SEQUENCE:
+		case types.SortField_SORT_FIELD_SEQUENCE:
 			if item, ok := lastItem.(Sequencer); ok {
 				valueStr = fmt.Sprintf("%d", item.GetSequence())
 			} else {
@@ -183,28 +183,28 @@ func parseOrderByClause(orderByClause string) (field string, isDesc bool) {
 func MapFieldToEnum(field string) types.SortField {
 	switch strings.ToLower(field) {
 	case "id":
-		return types.SortField_ID
+		return types.SortField_SORT_FIELD_ID
 	case "create_time":
-		return types.SortField_CREATE_TIME
+		return types.SortField_SORT_FIELD_CREATE_TIME
 	case "update_time":
-		return types.SortField_UPDATE_TIME
+		return types.SortField_SORT_FIELD_UPDATE_TIME
 	case "sequence":
-		return types.SortField_SEQUENCE
+		return types.SortField_SORT_FIELD_SEQUENCE
 	default:
-		return types.SortField_DEFAULT_UNSPECIFIED
+		return types.SortField_SORT_FIELD_DEFAULT_UNSPECIFIED
 	}
 }
 
 // MapEnumToField converts a SortField enum to its corresponding database column name.
 func MapEnumToField(fieldEnum types.SortField) string {
 	switch fieldEnum {
-	case types.SortField_ID:
+	case types.SortField_SORT_FIELD_ID:
 		return "id"
-	case types.SortField_CREATE_TIME:
+	case types.SortField_SORT_FIELD_CREATE_TIME:
 		return "create_time"
-	case types.SortField_UPDATE_TIME:
+	case types.SortField_SORT_FIELD_UPDATE_TIME:
 		return "update_time"
-	case types.SortField_SEQUENCE:
+	case types.SortField_SORT_FIELD_SEQUENCE:
 		return "sequence"
 	default:
 		return "id" // Safe fallback
