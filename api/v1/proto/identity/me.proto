@@ -3,9 +3,8 @@ syntax = "proto3";
 package api.v1.services.identity;
 
 import "google/api/annotations.proto";
-import "google/protobuf/empty.proto";
-import "types/system.proto";
 import "policy/v1/policy.proto";
+import "types/system.proto";
 
 option go_package = "origadmin/application/admin/api/v1/services/identity;identity";
 option java_multiple_files = true;
@@ -65,7 +64,7 @@ service MeService {
   }
 
   // GetUserSettings retrieves user settings (P2).
-  rpc GetUserSettings(GetUserSettingRequest) returns (GetUserSettingResponse) {
+  rpc GetUserSettings(GetUserSettingsRequest) returns (GetUserSettingsResponse) {
     option (google.api.http) = {
       get: "/me/settings"
     };
@@ -73,7 +72,7 @@ service MeService {
   }
 
   // UpdateSettings updates user settings (P2).
-  rpc UpdateSettings(UpdateSettingRequest) returns (UpdateSettingResponse) {
+  rpc UpdateSettings(UpdateSettingsRequest) returns (UpdateSettingsResponse) {
     option (google.api.http) = {
       put: "/me/settings"
       body: "*"
@@ -150,20 +149,20 @@ message GetUserRolesResponse {
 }
 
 // The request message for the GetUserSettings RPC (P2).
-message GetUserSettingRequest {}
+message GetUserSettingsRequest {}
 
 // The response message for the GetUserSettings RPC (P2).
-message GetUserSettingResponse {
+message GetUserSettingsResponse {
   api.v1.services.types.UserSetting setting = 1;
 }
 
 // The request message for the UpdateSettings RPC (P2).
-message UpdateSettingRequest {
+message UpdateSettingsRequest {
   api.v1.services.types.UserSetting setting = 1;
 }
 
 // The response message for the UpdateSettings RPC (P2).
-message UpdateSettingResponse {}
+message UpdateSettingsResponse {}
 
 // The request message for the GetUserPreferences RPC (P2).
 message GetUserPreferencesRequest {}

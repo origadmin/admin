@@ -4,7 +4,6 @@ package api.v1.services.identity;
 
 import "google/api/annotations.proto";
 import "policy/v1/policy.proto";
-import "types/system.proto";
 
 option go_package = "origadmin/application/admin/api/v1/services/identity;identity";
 option java_multiple_files = true;

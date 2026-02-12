@@ -3,8 +3,6 @@ syntax = "proto3";
 package api.v1.services.datastore;
 
 import "google/api/annotations.proto";
-import "google/protobuf/empty.proto";
-import "google/protobuf/timestamp.proto";
 import "types/datastore.proto";
 import "validate/validate.proto";
 import "policy/v1/policy.proto";
@@ -51,7 +49,7 @@ service DatastoreService {
   }
 
   // DeleteFile deletes a file from the datastore.
-  rpc DeleteFile(DeleteFileRequest) returns (google.protobuf.Empty) {
+  rpc DeleteFile(DeleteFileRequest) returns (DeleteFileResponse) {
     option (google.api.http) = {
       delete: "/ds/files/{file_id}"
     };
@@ -85,7 +83,7 @@ service DatastoreService {
   }
 
   // DeleteDatastore deletes a data object.
-  rpc DeleteDatastore(DeleteDatastoreRequest) returns (google.protobuf.Empty) {
+  rpc DeleteDatastore(DeleteDatastoreRequest) returns (DeleteDatastoreResponse) {
     option (google.api.http) = {
       delete: "/ds/{id}"
     };
@@ -227,3 +225,9 @@ message DeleteDatastoreRequest {
   // The ID of the data object to delete.
   string id = 1 [json_name = "id", (validate.rules).string = {min_len: 1}];
 }
+
+// DeleteFileResponse is the response for DatastoreService.DeleteFile.
+message DeleteFileResponse {}
+
+// DeleteDatastoreResponse is the response for DatastoreService.DeleteDatastore.
+message DeleteDatastoreResponse {}

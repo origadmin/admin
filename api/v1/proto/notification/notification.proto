@@ -3,9 +3,6 @@ syntax = "proto3";
 package api.v1.services.notification;
 
 import "google/api/annotations.proto";
-import "google/protobuf/any.proto";
-import "google/protobuf/empty.proto";
-import "google/protobuf/timestamp.proto";
 import "types/notification.proto";
 import "validate/validate.proto";
 import "policy/v1/policy.proto";
@@ -36,7 +33,7 @@ service NotificationService {
   }
 
   // MarkAsRead marks a notification as read.
-  rpc MarkAsRead(MarkAsReadRequest) returns (google.protobuf.Empty) {
+  rpc MarkAsRead(MarkAsReadRequest) returns (MarkAsReadResponse) {
     option (google.api.http) = {
       post: "/ntf/{notification_id}/read"
       body: "*"
@@ -71,7 +68,7 @@ service NotificationService {
   }
 
   // DeleteTemplate deletes a notification template.
-  rpc DeleteTemplate(DeleteTemplateRequest) returns (google.protobuf.Empty) {
+  rpc DeleteTemplate(DeleteTemplateRequest) returns (DeleteTemplateResponse) {
     option (google.api.http) = {
       delete: "/ntf/templates/{template_id}"
     };
@@ -148,6 +145,9 @@ message MarkAsReadRequest {
   int64 notification_id = 1 [json_name = "notification_id", (validate.rules).int64 = {gt: 0}];
 }
 
+// MarkAsReadResponse is the response for NotificationService.MarkAsRead.
+message MarkAsReadResponse {}
+
 // CreateTemplateRequest is the request for NotificationService.CreateTemplate.
 message CreateTemplateRequest {
   // The template to create.
@@ -210,3 +210,6 @@ message DeleteTemplateRequest {
   // The template ID.
   int64 template_id = 1 [json_name = "template_id", (validate.rules).int64 = {gt: 0}];
 }
+
+// DeleteTemplateResponse is the response for NotificationService.DeleteTemplate.
+message DeleteTemplateResponse {}

@@ -3,18 +3,20 @@ syntax = "proto3";
 package api.v1.services.identity;
 
 import "google/api/annotations.proto";
-import "google/protobuf/empty.proto";
 import "google/protobuf/timestamp.proto";
 import "policy/v1/policy.proto";
 
 option go_package = "origadmin/application/admin/api/v1/services/identity;identity";
+option java_multiple_files = true;
+option java_outer_classname = "APIServiceIdentityAdminProto";
+option java_package = "com.origadmin.api.v1.services.identity";
 
 // AdminService provides administrative and operational endpoints for identity service.
 // These endpoints are intended for system administrators, operators, and for use in testing.
 service AdminService {
   // ForcePolicySync triggers an immediate, full synchronization of all authorization policies.
   // This bypasses any debouncing or scheduled syncs and is a high-risk operation.
-  rpc ForcePolicySync(google.protobuf.Empty) returns (google.protobuf.Empty) {
+  rpc ForcePolicySync(ForcePolicySyncRequest) returns (ForcePolicySyncResponse) {
     option (google.api.http) = {
       post: "/auth/admin/sync"
       body: "*"
@@ -25,7 +27,7 @@ service AdminService {
   }
 
   // GetPolicySyncStatus retrieves current status and metrics of policy synchronization service.
-  rpc GetPolicySyncStatus(google.protobuf.Empty) returns (PolicySyncStatusResponse) {
+  rpc GetPolicySyncStatus(GetPolicySyncStatusRequest) returns (GetPolicySyncStatusResponse) {
     option (google.api.http) = {
       get: "/auth/admin/sync/status"
     };
@@ -36,7 +38,7 @@ service AdminService {
 
   // GetEnforcerPolicies retrieves all policy rules currently loaded into Casbin Enforcer's memory.
   // This is primarily for debugging and auditing purposes.
-  rpc GetEnforcerPolicies(google.protobuf.Empty) returns (EnforcerPoliciesResponse) {
+  rpc GetEnforcerPolicies(GetEnforcerPoliciesRequest) returns (GetEnforcerPoliciesResponse) {
     option (google.api.http) = {
       get: "/auth/admin/enforcer/policies"
     };
@@ -46,8 +48,17 @@ service AdminService {
   }
 }
 
-// PolicySyncStatusResponse contains status and metrics of policy synchronization service.
-message PolicySyncStatusResponse {
+// ForcePolicySyncRequest is the request for AdminService.ForcePolicySync.
+message ForcePolicySyncRequest {}
+
+// ForcePolicySyncResponse is the response for AdminService.ForcePolicySync.
+message ForcePolicySyncResponse {}
+
+// GetPolicySyncStatusRequest is the request for AdminService.GetPolicySyncStatus.
+message GetPolicySyncStatusRequest {}
+
+// GetPolicySyncStatusResponse contains status and metrics of policy synchronization service.
+message GetPolicySyncStatusResponse {
   bool sync_pending = 1 [json_name = "sync_pending"];
   google.protobuf.Timestamp last_sync_time = 2 [json_name = "last_sync_time"];
   int64 last_sync_duration = 3 [json_name = "last_sync_duration"];
@@ -58,13 +69,16 @@ message PolicySyncStatusResponse {
   double failure_rate = 8 [json_name = "failure_rate"];
 }
 
+// GetEnforcerPoliciesRequest is the request for AdminService.GetEnforcerPolicies.
+message GetEnforcerPoliciesRequest {}
+
 // CasbinRule represents a single policy rule (p-rule or g-rule) from Casbin Enforcer.
 message CasbinRule {
   string ptype = 1 [json_name = "ptype"];
   repeated string v = 2 [json_name = "v"];
 }
 
-// EnforcerPoliciesResponse contains all policy rules loaded into Casbin Enforcer's memory.
-message EnforcerPoliciesResponse {
+// GetEnforcerPoliciesResponse contains all policy rules loaded into Casbin Enforcer's memory.
+message GetEnforcerPoliciesResponse {
   repeated CasbinRule policies = 1 [json_name = "policies"];
 }

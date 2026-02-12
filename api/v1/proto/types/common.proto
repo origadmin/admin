@@ -3,6 +3,10 @@ syntax = "proto3";
 package api.v1.services.types;
 
 option go_package = "origadmin/application/admin/api/v1/services/types;types";
+option java_multiple_files = true;
+option java_outer_classname = "APIServiceTypeCommonProto";
+option java_package = "com.origadmin.api.v1.services.types";
+option objc_class_prefix = "APIServiceType";
 
 // PageCursor represents the information needed for cursor-based pagination.
 // It's designed to be compact for use in page tokens.
@@ -29,13 +33,13 @@ message SortValue {
 // This avoids storing bulky strings in the token.
 enum SortField {
   // Default value, should be treated as an error or fallback to ID.
-  DEFAULT_UNSPECIFIED = 0;
+  SORT_FIELD_DEFAULT_UNSPECIFIED = 0;
   // Primary Key ID
-  ID = 1;
+  SORT_FIELD_ID = 1;
   // Creation timestamp
-  CREATE_TIME = 2;
+  SORT_FIELD_CREATE_TIME = 2;
   // Update timestamp
-  UPDATE_TIME = 3;
+  SORT_FIELD_UPDATE_TIME = 3;
   // Custom sequence/order number
-  SEQUENCE = 4;
+  SORT_FIELD_SEQUENCE = 4;
 }
