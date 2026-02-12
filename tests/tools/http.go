@@ -174,9 +174,10 @@ func (c *TestHTTPClient) Login(t *testing.T, username, password string) string {
 	var loginResp identityv1.LoginResponse
 	err = protojson.Unmarshal(bodyBytes, &loginResp)
 	require.NoError(t, err, "Failed to unmarshal login response")
-	require.NotEmpty(t, loginResp.AccessToken, "Access token should not be empty")
+	require.NotNil(t, loginResp.Token, "Token object should not be nil")
+	require.NotEmpty(t, loginResp.Token.AccessToken, "Access token should not be empty")
 
-	return loginResp.AccessToken
+	return loginResp.Token.AccessToken
 }
 
 // ============== System Test Client ==============

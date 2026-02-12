@@ -14,3 +14,10 @@ clients:
         discovery_name: "default_consul"
         middlewares:
           - "propagation"
+    - name: "origadmin.service.filemanager.client.grpc"
+      grpc:
+        endpoint: "discovery:///origadmin.service.filemanager"
+        timeout: 5s
+        discovery_name: "default_consul"
+        middlewares:
+          - "propagation"

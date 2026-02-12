@@ -86,7 +86,7 @@ servers:
         # in the middlewares.yaml configuration file.
         middlewares:
           - "recovery"
-          - "authz"
+    #          - "authz"
     # System Service HTTP Server
     - name: "filemanager"
       protocol: "http"
@@ -96,4 +96,4 @@ servers:
         # Apply middlewares by name.
         middlewares:
           - "recovery"
-          - "authz"
+#          - "authz"

@@ -10,6 +10,7 @@ import (
 
 	"github.com/origadmin/runtime"
 	"github.com/origadmin/runtime/container"
+	"origadmin/application/admin/api/v1/services/filemanager"
 	"origadmin/application/admin/api/v1/services/identity"
 	"origadmin/application/admin/api/v1/services/system"
 	"origadmin/application/admin/internal/conf"
@@ -20,6 +21,7 @@ import (
 var ProviderSet = wire.NewSet(
 	NewIdentityBridgeSet,
 	NewSystemBridgeSet,
+	NewFileManagerBridgeSet,
 )
 
 const (
@@ -27,6 +29,8 @@ const (
 	ServiceNameIdentity = "identity"
 	// ServiceNameSystem is the short name for the system service.
 	ServiceNameSystem = "system"
+	// ServiceNameFileManager is the short name for the filemanager service.
+	ServiceNameFileManager = "filemanager"
 )
 
 // IdentityBridgeSet holds all the clients for the 'auth' service.
@@ -43,6 +47,11 @@ type SystemBridgeSet struct {
 	Permission system.PermissionServiceHTTPServer
 	Resource   system.ResourceServiceHTTPServer
 	View       system.ViewServiceHTTPServer
+}
+
+// FileManagerBridgeSet holds all the clients for the 'filemanager' service.
+type FileManagerBridgeSet struct {
+	FileManager filemanager.FileManagerServiceHTTPServer
 }
 
 // NewGRPCConn finds a client configuration by service name or convention
@@ -86,5 +95,17 @@ func NewSystemBridgeSet(app *runtime.App, bootstrap *conf.Config, middlewareProv
 		Permission: system.NewPermissionServiceGRPC2HTTP(conn),
 		Resource:   system.NewResourceServiceGRPC2HTTP(conn),
 		View:       system.NewViewServiceGRPC2HTTP(conn),
+	}, nil
+}
+
+// NewFileManagerBridgeSet creates a set of clients for the filemanager service.
+func NewFileManagerBridgeSet(app *runtime.App, bootstrap *conf.Config, middlewareProvider container.ClientMiddlewareProvider) (*FileManagerBridgeSet, error) {
+	// Use the application's root context.
+	conn, err := NewGRPCConn(app, bootstrap, ServiceNameFileManager, middlewareProvider)
+	if err != nil {
+		return nil, err
+	}
+	return &FileManagerBridgeSet{
+		FileManager: filemanager.NewFileManagerServiceGRPC2HTTP(conn),
 	}, nil
 }
