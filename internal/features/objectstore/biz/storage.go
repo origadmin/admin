@@ -63,6 +63,11 @@ func (uc *ObjectUseCase) GetMultipartUploadURL(ctx context.Context, objectID str
 	return uc.repo.GetMultipartUploadURL(ctx, objectID, uploadID, partNumber, expires)
 }
 
+// ListParts lists the parts that have been uploaded for a specific multipart upload.
+func (uc *ObjectUseCase) ListParts(ctx context.Context, objectID string, uploadID string) ([]*types.PartInfo, error) {
+	return uc.repo.ListParts(ctx, objectID, uploadID)
+}
+
 // CompleteMultipartUpload completes a multipart upload.
 func (uc *ObjectUseCase) CompleteMultipartUpload(ctx context.Context, objectID string, uploadID string, parts []*types.PartInfo) (*types.Object, error) {
 	return uc.repo.CompleteMultipartUpload(ctx, objectID, uploadID, parts)

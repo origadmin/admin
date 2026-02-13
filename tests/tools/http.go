@@ -115,7 +115,7 @@ func (c *BaseHTTPClient) GetBaseURL() string {
 	return c.baseURL
 }
 
-// TestHTTPClient HTTP client for testing (backward compatibility)
+// TestHTTPClient HTTP client for testing with automatic prefix handling.
 type TestHTTPClient struct {
 	*BaseHTTPClient
 	prefix string
@@ -145,6 +145,37 @@ func NewTestHTTPClientWithTimeout(baseURL string, timeout time.Duration) *TestHT
 	}
 }
 
+// Request overrides the embedded BaseHTTPClient's Request method to automatically prepend the prefix.
+func (c *TestHTTPClient) Request(t *testing.T, method, path string, body interface{}, token string) *http.Response {
+	t.Helper()
+	fullPath := c.prefix + path
+	return c.BaseHTTPClient.Request(t, method, fullPath, body, token)
+}
+
+// Get overrides BaseHTTPClient.Get to use TestHTTPClient.Request
+func (c *TestHTTPClient) Get(t *testing.T, path, token string) *http.Response {
+	t.Helper()
+	return c.Request(t, "GET", path, nil, token)
+}
+
+// Post overrides BaseHTTPClient.Post to use TestHTTPClient.Request
+func (c *TestHTTPClient) Post(t *testing.T, path string, body interface{}, token string) *http.Response {
+	t.Helper()
+	return c.Request(t, "POST", path, body, token)
+}
+
+// Put overrides BaseHTTPClient.Put to use TestHTTPClient.Request
+func (c *TestHTTPClient) Put(t *testing.T, path string, body interface{}, token string) *http.Response {
+	t.Helper()
+	return c.Request(t, "PUT", path, body, token)
+}
+
+// Delete overrides BaseHTTPClient.Delete to use TestHTTPClient.Request
+func (c *TestHTTPClient) Delete(t *testing.T, path, token string) *http.Response {
+	t.Helper()
+	return c.Request(t, "DELETE", path, nil, token)
+}
+
 // SetPrefix updates the API prefix for the client
 func (c *TestHTTPClient) SetPrefix(prefix string) {
 	c.prefix = prefix
@@ -155,7 +186,8 @@ func (c *TestHTTPClient) GetPrefix() string {
 	return c.prefix
 }
 
-// Login performs login request and returns token
+// Login performs login request and returns token.
+// This method now uses the overridden Request method, so the prefix is handled automatically.
 func (c *TestHTTPClient) Login(t *testing.T, username, password string) string {
 	t.Helper()
 	reqBody := &identityv1.LoginRequest{
@@ -163,7 +195,8 @@ func (c *TestHTTPClient) Login(t *testing.T, username, password string) string {
 		Password: password,
 	}
 
-	resp := c.Request(t, "POST", c.prefix+"/auth/login", reqBody, "")
+	// The prefix is now automatically added by the overridden Request method.
+	resp := c.Request(t, "POST", "/auth/login", reqBody, "")
 	defer resp.Body.Close()
 
 	AssertHTTPStatusCode(t, resp, http.StatusOK)
@@ -217,7 +250,7 @@ func (c *SystemTestClient) CreateRole(t *testing.T, token, name, keyword string,
 		Role:          rolePayload,
 		PermissionIds: permissionIDs,
 	}
-	resp := c.Post(t, c.prefix+"/sys/roles", req, token)
+	resp := c.Post(t, "/sys/roles", req, token)
 	defer resp.Body.Close()
 
 	AssertHTTPStatusCode(t, resp, http.StatusOK)
@@ -243,7 +276,7 @@ func (c *SystemTestClient) CreateUser(t *testing.T, token, username, password st
 		Password: password,
 		RoleIds:  roleIDs,
 	}
-	resp := c.Post(t, c.prefix+"/sys/users", req, token)
+	resp := c.Post(t, "/sys/users", req, token)
 	defer resp.Body.Close()
 
 	AssertHTTPStatusCode(t, resp, http.StatusOK)
@@ -270,7 +303,7 @@ func (c *SystemTestClient) CreateResource(t *testing.T, token, name, keyword, pa
 	req := &systemv1.CreateResourceRequest{
 		Resource: resPayload,
 	}
-	resp := c.Post(t, c.prefix+"/sys/resources", req, token)
+	resp := c.Post(t, "/sys/resources", req, token)
 	defer resp.Body.Close()
 
 	AssertHTTPStatusCode(t, resp, http.StatusOK)
@@ -295,7 +328,7 @@ func (c *SystemTestClient) CreatePermission(t *testing.T, token, name, keyword s
 		Permission:  permPayload,
 		ResourceIds: resourceIDs,
 	}
-	resp := c.Post(t, c.prefix+"/sys/permissions", req, token)
+	resp := c.Post(t, "/sys/permissions", req, token)
 	defer resp.Body.Close()
 
 	AssertHTTPStatusCode(t, resp, http.StatusOK)
@@ -321,7 +354,7 @@ func (c *SystemTestClient) UpdateRole(t *testing.T, token string, roleID int64, 
 		Role:          rolePayload,
 		PermissionIds: permissionIDs,
 	}
-	path := c.prefix + "/sys/roles/" + strconv.FormatInt(roleID, 10)
+	path := "/sys/roles/" + strconv.FormatInt(roleID, 10)
 	resp := c.Put(t, path, req, token)
 	defer resp.Body.Close()
 
@@ -336,7 +369,7 @@ func (c *SystemTestClient) UpdateUser(t *testing.T, token string, userID int64, 
 		User:    user,
 		RoleIds: roleIDs,
 	}
-	path := c.prefix + "/sys/users/" + strconv.FormatInt(userID, 10)
+	path := "/sys/users/" + strconv.FormatInt(userID, 10)
 	resp := c.Put(t, path, req, token)
 	defer resp.Body.Close()
 
@@ -357,7 +390,7 @@ func (c *SystemTestClient) UpdateResource(t *testing.T, token string, resID int6
 	req := &systemv1.UpdateResourceRequest{
 		Resource: resPayload,
 	}
-	urlPath := c.prefix + "/sys/resources/" + strconv.FormatInt(resID, 10)
+	urlPath := "/sys/resources/" + strconv.FormatInt(resID, 10)
 	resp := c.Put(t, urlPath, req, token)
 	defer resp.Body.Close()
 
@@ -368,7 +401,7 @@ func (c *SystemTestClient) UpdateResource(t *testing.T, token string, resID int6
 // DeleteResource deletes a resource by ID (System-specific helper)
 func (c *SystemTestClient) DeleteResource(t *testing.T, token, path string, id int64, isUser bool) {
 	t.Helper()
-	urlPath := c.prefix + path + "/" + strconv.FormatInt(id, 10)
+	urlPath := path + "/" + strconv.FormatInt(id, 10)
 	if isUser {
 		urlPath += "?force=true"
 	}

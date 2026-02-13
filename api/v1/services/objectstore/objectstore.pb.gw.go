@@ -226,6 +226,59 @@ func local_request_ObjectStoreService_GetMultipartUploadUrl_0(ctx context.Contex
 	return msg, metadata, err
 }
 
+func request_ObjectStoreService_ListParts_0(ctx context.Context, marshaler runtime.Marshaler, client ObjectStoreServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+	var (
+		protoReq ListPartsRequest
+		metadata runtime.ServerMetadata
+		err      error
+	)
+	io.Copy(io.Discard, req.Body)
+	val, ok := pathParams["object_id"]
+	if !ok {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "object_id")
+	}
+	protoReq.ObjectId, err = runtime.String(val)
+	if err != nil {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "object_id", err)
+	}
+	val, ok = pathParams["upload_id"]
+	if !ok {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "upload_id")
+	}
+	protoReq.UploadId, err = runtime.String(val)
+	if err != nil {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "upload_id", err)
+	}
+	msg, err := client.ListParts(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
+	return msg, metadata, err
+}
+
+func local_request_ObjectStoreService_ListParts_0(ctx context.Context, marshaler runtime.Marshaler, server ObjectStoreServiceServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+	var (
+		protoReq ListPartsRequest
+		metadata runtime.ServerMetadata
+		err      error
+	)
+	val, ok := pathParams["object_id"]
+	if !ok {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "object_id")
+	}
+	protoReq.ObjectId, err = runtime.String(val)
+	if err != nil {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "object_id", err)
+	}
+	val, ok = pathParams["upload_id"]
+	if !ok {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "upload_id")
+	}
+	protoReq.UploadId, err = runtime.String(val)
+	if err != nil {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "upload_id", err)
+	}
+	msg, err := server.ListParts(ctx, &protoReq)
+	return msg, metadata, err
+}
+
 func request_ObjectStoreService_CompleteMultipartUpload_0(ctx context.Context, marshaler runtime.Marshaler, client ObjectStoreServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var (
 		protoReq CompleteMultipartUploadRequest
@@ -443,6 +496,26 @@ func RegisterObjectStoreServiceHandlerServer(ctx context.Context, mux *runtime.S
 		}
 		forward_ObjectStoreService_GetMultipartUploadUrl_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 	})
+	mux.Handle(http.MethodGet, pattern_ObjectStoreService_ListParts_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+		ctx, cancel := context.WithCancel(req.Context())
+		defer cancel()
+		var stream runtime.ServerTransportStream
+		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
+		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/api.v1.services.objectstore.ObjectStoreService/ListParts", runtime.WithHTTPPathPattern("/obs/objects/multipart/{object_id}/uploads/{upload_id}/parts"))
+		if err != nil {
+			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
+			return
+		}
+		resp, md, err := local_request_ObjectStoreService_ListParts_0(annotatedContext, inboundMarshaler, server, req, pathParams)
+		md.HeaderMD, md.TrailerMD = metadata.Join(md.HeaderMD, stream.Header()), metadata.Join(md.TrailerMD, stream.Trailer())
+		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
+		if err != nil {
+			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
+			return
+		}
+		forward_ObjectStoreService_ListParts_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+	})
 	mux.Handle(http.MethodPost, pattern_ObjectStoreService_CompleteMultipartUpload_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
@@ -608,6 +681,23 @@ func RegisterObjectStoreServiceHandlerClient(ctx context.Context, mux *runtime.S
 		}
 		forward_ObjectStoreService_GetMultipartUploadUrl_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 	})
+	mux.Handle(http.MethodGet, pattern_ObjectStoreService_ListParts_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+		ctx, cancel := context.WithCancel(req.Context())
+		defer cancel()
+		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/api.v1.services.objectstore.ObjectStoreService/ListParts", runtime.WithHTTPPathPattern("/obs/objects/multipart/{object_id}/uploads/{upload_id}/parts"))
+		if err != nil {
+			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
+			return
+		}
+		resp, md, err := request_ObjectStoreService_ListParts_0(annotatedContext, inboundMarshaler, client, req, pathParams)
+		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
+		if err != nil {
+			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
+			return
+		}
+		forward_ObjectStoreService_ListParts_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+	})
 	mux.Handle(http.MethodPost, pattern_ObjectStoreService_CompleteMultipartUpload_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
@@ -651,6 +741,7 @@ var (
 	pattern_ObjectStoreService_DeleteObject_0            = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 1, 0, 4, 1, 5, 2}, []string{"obs", "objects", "id"}, ""))
 	pattern_ObjectStoreService_InitiateMultipartUpload_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2}, []string{"obs", "objects", "multipart"}, ""))
 	pattern_ObjectStoreService_GetMultipartUploadUrl_0   = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 1, 0, 4, 1, 5, 3, 2, 4, 1, 0, 4, 1, 5, 5, 2, 6, 1, 0, 4, 1, 5, 7}, []string{"obs", "objects", "multipart", "object_id", "uploads", "upload_id", "parts", "part_number"}, ""))
+	pattern_ObjectStoreService_ListParts_0               = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 1, 0, 4, 1, 5, 3, 2, 4, 1, 0, 4, 1, 5, 5, 2, 6}, []string{"obs", "objects", "multipart", "object_id", "uploads", "upload_id", "parts"}, ""))
 	pattern_ObjectStoreService_CompleteMultipartUpload_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 1, 0, 4, 1, 5, 3, 2, 4, 1, 0, 4, 1, 5, 5}, []string{"obs", "objects", "multipart", "object_id", "uploads", "upload_id"}, "complete"))
 	pattern_ObjectStoreService_AbortMultipartUpload_0    = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 1, 0, 4, 1, 5, 3, 2, 4, 1, 0, 4, 1, 5, 5}, []string{"obs", "objects", "multipart", "object_id", "uploads", "upload_id"}, ""))
 )
@@ -661,6 +752,7 @@ var (
 	forward_ObjectStoreService_DeleteObject_0            = runtime.ForwardResponseMessage
 	forward_ObjectStoreService_InitiateMultipartUpload_0 = runtime.ForwardResponseMessage
 	forward_ObjectStoreService_GetMultipartUploadUrl_0   = runtime.ForwardResponseMessage
+	forward_ObjectStoreService_ListParts_0               = runtime.ForwardResponseMessage
 	forward_ObjectStoreService_CompleteMultipartUpload_0 = runtime.ForwardResponseMessage
 	forward_ObjectStoreService_AbortMultipartUpload_0    = runtime.ForwardResponseMessage
 )

@@ -1,5 +1,5 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="go build origadmin/application/admin/cmd/gateway" type="GoApplicationRunConfiguration" factoryName="Go Application" nameIsGenerated="true">
+  <configuration default="false" name="gateway" type="GoApplicationRunConfiguration" factoryName="Go Application">
     <module name="framework" />
     <working_directory value="$PROJECT_DIR$/projects/backend" />
     <kind value="PACKAGE" />

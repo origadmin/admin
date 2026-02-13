@@ -1,10 +1,11 @@
 <component name="ProjectRunConfigurationManager">
   <configuration default="false" name="backend" type="CompoundRunConfigurationType">
-    <toRun name="go build origadmin/application/admin/cmd/filemanager" type="GoApplicationRunConfiguration"/>
-    <toRun name="go build origadmin/application/admin/cmd/gateway" type="GoApplicationRunConfiguration"/>
-    <toRun name="go build origadmin/application/admin/cmd/identity" type="GoApplicationRunConfiguration"/>
-    <toRun name="go build origadmin/application/admin/cmd/initializer" type="GoApplicationRunConfiguration"/>
-    <toRun name="go build origadmin/application/admin/cmd/system" type="GoApplicationRunConfiguration"/>
+    <toRun name="filemanager" type="GoApplicationRunConfiguration"/>
+    <toRun name="gateway" type="GoApplicationRunConfiguration"/>
+    <toRun name="objectstore" type="GoApplicationRunConfiguration"/>
+    <toRun name="identity" type="GoApplicationRunConfiguration"/>
+    <toRun name="initializer" type="GoApplicationRunConfiguration"/>
+    <toRun name="system" type="GoApplicationRunConfiguration"/>
     <method v="2"/>
   </configuration>
 </component>

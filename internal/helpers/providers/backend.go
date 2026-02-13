@@ -141,9 +141,12 @@ func ProvideServiceMiddlewares(app *runtime.App, authorizer *casbin.Authorizer, 
 	if err != nil {
 		return nil, err
 	}
-	m := factory.NewBackend(authorizer, skip, log.WithLogger(app.Logger()), authzmiddleware.WithRuleSpec(ruleSpec))
-	provider.RegisterServerMiddleware("authz", m)
+	authzM := factory.NewBackend(authorizer, skip, log.WithLogger(app.Logger()), authzmiddleware.WithRuleSpec(ruleSpec))
+	provider.RegisterServerMiddleware("authz", authzM)
 	provider.RegisterClientMiddleware("authz", middleware.Noop())
+	propagationM := factory.NewPropagationOnly(log.WithLogger(app.Logger()))
+	provider.RegisterServerMiddleware("propagation", propagationM)
+	provider.RegisterClientMiddleware("propagation", middleware.Noop())
 	log.NewHelper(app.Logger()).Infof("registered %+v middlewares", provider.Names())
 	return provider, nil
 }

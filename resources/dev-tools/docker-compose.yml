@@ -2,7 +2,7 @@ services:
   consul:
     image: hashicorp/consul:1.22.2
     container_name: backend_consul
-    command: "agent -server -bootstrap-expect=1 -client=0.0.0.0"
+    command: "agent -server -bootstrap-expect=1 -dev -client=0.0.0.0"
     ports:
       - "8500:8500" # HTTP API
       - "8600:8600/tcp" # DNS API (TCP)
@@ -61,4 +61,4 @@ volumes:
 networks:
   tools-network:
     driver: bridge
-    name: dev-tools-network
+    name: tools-network

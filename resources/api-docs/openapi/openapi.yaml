@@ -1017,6 +1017,36 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/google.rpc.Status'
+  /obs/objects/multipart/{object_id}/uploads/{upload_id}/parts:
+    get:
+      tags:
+        - ObjectStoreService
+      description: Lists the parts that have been uploaded for a specific multipart upload.
+      operationId: ObjectStoreService_ListParts
+      parameters:
+        - name: object_id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: upload_id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/api.v1.services.objectstore.ListPartsResponse'
+        default:
+          description: Default error response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/google.rpc.Status'
   /obs/objects/multipart/{object_id}/uploads/{upload_id}/parts/{part_number}:
     get:
       tags:
@@ -3034,7 +3064,7 @@ components:
           parts:
             type: array
             items:
-              $ref: '#/components/schemas/api.v1.services.objectstore.PartInfo'
+              $ref: '#/components/schemas/api.v1.services.types.PartInfo'
         description: Request message for completing a multipart upload.
       api.v1.services.objectstore.CompleteMultipartUploadResponse:
         type: object
@@ -3074,15 +3104,14 @@ components:
           object_id:
             type: string
         description: Response message for initiating a multipart upload.
-      api.v1.services.objectstore.PartInfo:
+      api.v1.services.objectstore.ListPartsResponse:
         type: object
         properties:
-          part_number:
-            type: integer
-            format: int32
-          etag:
-            type: string
-        description: PartInfo contains information about a single uploaded part.
+          parts:
+            type: array
+            items:
+              $ref: '#/components/schemas/api.v1.services.types.PartInfo'
+        description: Response message for listing uploaded parts.
       api.v1.services.objectstore.UploadObjectRequest:
         type: object
         properties:
@@ -3999,6 +4028,15 @@ components:
             type: string
             format: date-time
         description: Represents a stored object.
+      api.v1.services.types.PartInfo:
+        type: object
+        properties:
+          part_number:
+            type: integer
+            format: int32
+          etag:
+            type: string
+        description: Represents information about a part of a multipart upload.
         api.v1.services.types.Permission:
             type: object
             properties:

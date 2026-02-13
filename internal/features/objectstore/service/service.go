@@ -99,6 +99,17 @@ func (s *ObjectStoreService) GetMultipartUploadUrl(ctx context.Context, req *pb.
 	}, nil
 }
 
+// ListParts lists the parts that have been uploaded for a specific multipart upload.
+func (s *ObjectStoreService) ListParts(ctx context.Context, req *pb.ListPartsRequest) (*pb.ListPartsResponse, error) {
+	parts, err := s.uc.ListParts(ctx, req.ObjectId, req.UploadId)
+	if err != nil {
+		return nil, err
+	}
+	return &pb.ListPartsResponse{
+		Parts: parts,
+	}, nil
+}
+
 // CompleteMultipartUpload completes a multipart upload.
 func (s *ObjectStoreService) CompleteMultipartUpload(ctx context.Context, req *pb.CompleteMultipartUploadRequest) (*pb.CompleteMultipartUploadResponse, error) {
 	obj, err := s.uc.CompleteMultipartUpload(ctx, req.ObjectId, req.UploadId, req.Parts)

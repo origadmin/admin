@@ -463,6 +463,246 @@ var _ interface {
 	ErrorName() string
 } = GetMultipartUploadUrlResponseValidationError{}
 
+// Validate checks the field values on ListPartsRequest with the rules defined
+// in the proto definition for this message. If any rules are violated, the
+// first error encountered is returned, or nil if there are no violations.
+func (m *ListPartsRequest) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on ListPartsRequest with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the result is a list of violation errors wrapped in
+// ListPartsRequestMultiError, or nil if none found.
+func (m *ListPartsRequest) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *ListPartsRequest) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	// no validation rules for UploadId
+
+	// no validation rules for ObjectId
+
+	if len(errors) > 0 {
+		return ListPartsRequestMultiError(errors)
+	}
+
+	return nil
+}
+
+// ListPartsRequestMultiError is an error wrapping multiple validation errors
+// returned by ListPartsRequest.ValidateAll() if the designated constraints
+// aren't met.
+type ListPartsRequestMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m ListPartsRequestMultiError) Error() string {
+	msgs := make([]string, 0, len(m))
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m ListPartsRequestMultiError) AllErrors() []error { return m }
+
+// ListPartsRequestValidationError is the validation error returned by
+// ListPartsRequest.Validate if the designated constraints aren't met.
+type ListPartsRequestValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e ListPartsRequestValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e ListPartsRequestValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e ListPartsRequestValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e ListPartsRequestValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e ListPartsRequestValidationError) ErrorName() string { return "ListPartsRequestValidationError" }
+
+// Error satisfies the builtin error interface
+func (e ListPartsRequestValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sListPartsRequest.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = ListPartsRequestValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = ListPartsRequestValidationError{}
+
+// Validate checks the field values on ListPartsResponse with the rules defined
+// in the proto definition for this message. If any rules are violated, the
+// first error encountered is returned, or nil if there are no violations.
+func (m *ListPartsResponse) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on ListPartsResponse with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the result is a list of violation errors wrapped in
+// ListPartsResponseMultiError, or nil if none found.
+func (m *ListPartsResponse) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *ListPartsResponse) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	for idx, item := range m.GetParts() {
+		_, _ = idx, item
+
+		if all {
+			switch v := interface{}(item).(type) {
+			case interface{ ValidateAll() error }:
+				if err := v.ValidateAll(); err != nil {
+					errors = append(errors, ListPartsResponseValidationError{
+						field:  fmt.Sprintf("Parts[%v]", idx),
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			case interface{ Validate() error }:
+				if err := v.Validate(); err != nil {
+					errors = append(errors, ListPartsResponseValidationError{
+						field:  fmt.Sprintf("Parts[%v]", idx),
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			}
+		} else if v, ok := interface{}(item).(interface{ Validate() error }); ok {
+			if err := v.Validate(); err != nil {
+				return ListPartsResponseValidationError{
+					field:  fmt.Sprintf("Parts[%v]", idx),
+					reason: "embedded message failed validation",
+					cause:  err,
+				}
+			}
+		}
+
+	}
+
+	if len(errors) > 0 {
+		return ListPartsResponseMultiError(errors)
+	}
+
+	return nil
+}
+
+// ListPartsResponseMultiError is an error wrapping multiple validation errors
+// returned by ListPartsResponse.ValidateAll() if the designated constraints
+// aren't met.
+type ListPartsResponseMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m ListPartsResponseMultiError) Error() string {
+	msgs := make([]string, 0, len(m))
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m ListPartsResponseMultiError) AllErrors() []error { return m }
+
+// ListPartsResponseValidationError is the validation error returned by
+// ListPartsResponse.Validate if the designated constraints aren't met.
+type ListPartsResponseValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e ListPartsResponseValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e ListPartsResponseValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e ListPartsResponseValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e ListPartsResponseValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e ListPartsResponseValidationError) ErrorName() string {
+	return "ListPartsResponseValidationError"
+}
+
+// Error satisfies the builtin error interface
+func (e ListPartsResponseValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sListPartsResponse.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = ListPartsResponseValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = ListPartsResponseValidationError{}
+
 // Validate checks the field values on CompleteMultipartUploadRequest with the
 // rules defined in the proto definition for this message. If any rules are
 // violated, the first error encountered is returned, or nil if there are no violations.
@@ -603,109 +843,6 @@ var _ interface {
 	Cause() error
 	ErrorName() string
 } = CompleteMultipartUploadRequestValidationError{}
-
-// Validate checks the field values on PartInfo with the rules defined in the
-// proto definition for this message. If any rules are violated, the first
-// error encountered is returned, or nil if there are no violations.
-func (m *PartInfo) Validate() error {
-	return m.validate(false)
-}
-
-// ValidateAll checks the field values on PartInfo with the rules defined in
-// the proto definition for this message. If any rules are violated, the
-// result is a list of violation errors wrapped in PartInfoMultiError, or nil
-// if none found.
-func (m *PartInfo) ValidateAll() error {
-	return m.validate(true)
-}
-
-func (m *PartInfo) validate(all bool) error {
-	if m == nil {
-		return nil
-	}
-
-	var errors []error
-
-	// no validation rules for PartNumber
-
-	// no validation rules for Etag
-
-	if len(errors) > 0 {
-		return PartInfoMultiError(errors)
-	}
-
-	return nil
-}
-
-// PartInfoMultiError is an error wrapping multiple validation errors returned
-// by PartInfo.ValidateAll() if the designated constraints aren't met.
-type PartInfoMultiError []error
-
-// Error returns a concatenation of all the error messages it wraps.
-func (m PartInfoMultiError) Error() string {
-	msgs := make([]string, 0, len(m))
-	for _, err := range m {
-		msgs = append(msgs, err.Error())
-	}
-	return strings.Join(msgs, "; ")
-}
-
-// AllErrors returns a list of validation violation errors.
-func (m PartInfoMultiError) AllErrors() []error { return m }
-
-// PartInfoValidationError is the validation error returned by
-// PartInfo.Validate if the designated constraints aren't met.
-type PartInfoValidationError struct {
-	field  string
-	reason string
-	cause  error
-	key    bool
-}
-
-// Field function returns field value.
-func (e PartInfoValidationError) Field() string { return e.field }
-
-// Reason function returns reason value.
-func (e PartInfoValidationError) Reason() string { return e.reason }
-
-// Cause function returns cause value.
-func (e PartInfoValidationError) Cause() error { return e.cause }
-
-// Key function returns key value.
-func (e PartInfoValidationError) Key() bool { return e.key }
-
-// ErrorName returns error name.
-func (e PartInfoValidationError) ErrorName() string { return "PartInfoValidationError" }
-
-// Error satisfies the builtin error interface
-func (e PartInfoValidationError) Error() string {
-	cause := ""
-	if e.cause != nil {
-		cause = fmt.Sprintf(" | caused by: %v", e.cause)
-	}
-
-	key := ""
-	if e.key {
-		key = "key for "
-	}
-
-	return fmt.Sprintf(
-		"invalid %sPartInfo.%s: %s%s",
-		key,
-		e.field,
-		e.reason,
-		cause)
-}
-
-var _ error = PartInfoValidationError{}
-
-var _ interface {
-	Field() string
-	Reason() string
-	Key() bool
-	Cause() error
-	ErrorName() string
-} = PartInfoValidationError{}
 
 // Validate checks the field values on CompleteMultipartUploadResponse with the
 // rules defined in the proto definition for this message. If any rules are

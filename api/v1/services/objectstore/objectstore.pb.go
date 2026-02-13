@@ -235,19 +235,117 @@ func (x *GetMultipartUploadUrlResponse) GetUploadUrl() string {
 	return ""
 }
 
+// Request message for listing uploaded parts.
+type ListPartsRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	UploadId      string                 `protobuf:"bytes,1,opt,name=upload_id,json=uploadId,proto3" json:"upload_id,omitempty"`
+	ObjectId      string                 `protobuf:"bytes,2,opt,name=object_id,json=objectId,proto3" json:"object_id,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *ListPartsRequest) Reset() {
+	*x = ListPartsRequest{}
+	mi := &file_objectstore_objectstore_proto_msgTypes[4]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *ListPartsRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ListPartsRequest) ProtoMessage() {}
+
+func (x *ListPartsRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_objectstore_objectstore_proto_msgTypes[4]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ListPartsRequest.ProtoReflect.Descriptor instead.
+func (*ListPartsRequest) Descriptor() ([]byte, []int) {
+	return file_objectstore_objectstore_proto_rawDescGZIP(), []int{4}
+}
+
+func (x *ListPartsRequest) GetUploadId() string {
+	if x != nil {
+		return x.UploadId
+	}
+	return ""
+}
+
+func (x *ListPartsRequest) GetObjectId() string {
+	if x != nil {
+		return x.ObjectId
+	}
+	return ""
+}
+
+// Response message for listing uploaded parts.
+type ListPartsResponse struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Parts         []*types.PartInfo      `protobuf:"bytes,1,rep,name=parts,proto3" json:"parts,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *ListPartsResponse) Reset() {
+	*x = ListPartsResponse{}
+	mi := &file_objectstore_objectstore_proto_msgTypes[5]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *ListPartsResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ListPartsResponse) ProtoMessage() {}
+
+func (x *ListPartsResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_objectstore_objectstore_proto_msgTypes[5]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ListPartsResponse.ProtoReflect.Descriptor instead.
+func (*ListPartsResponse) Descriptor() ([]byte, []int) {
+	return file_objectstore_objectstore_proto_rawDescGZIP(), []int{5}
+}
+
+func (x *ListPartsResponse) GetParts() []*types.PartInfo {
+	if x != nil {
+		return x.Parts
+	}
+	return nil
+}
+
 // Request message for completing a multipart upload.
 type CompleteMultipartUploadRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	UploadId      string                 `protobuf:"bytes,1,opt,name=upload_id,json=uploadId,proto3" json:"upload_id,omitempty"`
 	ObjectId      string                 `protobuf:"bytes,2,opt,name=object_id,json=objectId,proto3" json:"object_id,omitempty"`
-	Parts         []*PartInfo            `protobuf:"bytes,3,rep,name=parts,proto3" json:"parts,omitempty"`
+	Parts         []*types.PartInfo      `protobuf:"bytes,3,rep,name=parts,proto3" json:"parts,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
 func (x *CompleteMultipartUploadRequest) Reset() {
 	*x = CompleteMultipartUploadRequest{}
-	mi := &file_objectstore_objectstore_proto_msgTypes[4]
+	mi := &file_objectstore_objectstore_proto_msgTypes[6]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -259,7 +357,7 @@ func (x *CompleteMultipartUploadRequest) String() string {
 func (*CompleteMultipartUploadRequest) ProtoMessage() {}
 
 func (x *CompleteMultipartUploadRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_objectstore_objectstore_proto_msgTypes[4]
+	mi := &file_objectstore_objectstore_proto_msgTypes[6]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -272,7 +370,7 @@ func (x *CompleteMultipartUploadRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CompleteMultipartUploadRequest.ProtoReflect.Descriptor instead.
 func (*CompleteMultipartUploadRequest) Descriptor() ([]byte, []int) {
-	return file_objectstore_objectstore_proto_rawDescGZIP(), []int{4}
+	return file_objectstore_objectstore_proto_rawDescGZIP(), []int{6}
 }
 
 func (x *CompleteMultipartUploadRequest) GetUploadId() string {
@@ -289,64 +387,11 @@ func (x *CompleteMultipartUploadRequest) GetObjectId() string {
 	return ""
 }
 
-func (x *CompleteMultipartUploadRequest) GetParts() []*PartInfo {
+func (x *CompleteMultipartUploadRequest) GetParts() []*types.PartInfo {
 	if x != nil {
 		return x.Parts
 	}
 	return nil
-}
-
-// PartInfo contains information about a single uploaded part.
-type PartInfo struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	PartNumber    int32                  `protobuf:"varint,1,opt,name=part_number,json=partNumber,proto3" json:"part_number,omitempty"`
-	Etag          string                 `protobuf:"bytes,2,opt,name=etag,proto3" json:"etag,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *PartInfo) Reset() {
-	*x = PartInfo{}
-	mi := &file_objectstore_objectstore_proto_msgTypes[5]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *PartInfo) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*PartInfo) ProtoMessage() {}
-
-func (x *PartInfo) ProtoReflect() protoreflect.Message {
-	mi := &file_objectstore_objectstore_proto_msgTypes[5]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use PartInfo.ProtoReflect.Descriptor instead.
-func (*PartInfo) Descriptor() ([]byte, []int) {
-	return file_objectstore_objectstore_proto_rawDescGZIP(), []int{5}
-}
-
-func (x *PartInfo) GetPartNumber() int32 {
-	if x != nil {
-		return x.PartNumber
-	}
-	return 0
-}
-
-func (x *PartInfo) GetEtag() string {
-	if x != nil {
-		return x.Etag
-	}
-	return ""
 }
 
 // Response message for completing a multipart upload.
@@ -359,7 +404,7 @@ type CompleteMultipartUploadResponse struct {
 
 func (x *CompleteMultipartUploadResponse) Reset() {
 	*x = CompleteMultipartUploadResponse{}
-	mi := &file_objectstore_objectstore_proto_msgTypes[6]
+	mi := &file_objectstore_objectstore_proto_msgTypes[7]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -371,7 +416,7 @@ func (x *CompleteMultipartUploadResponse) String() string {
 func (*CompleteMultipartUploadResponse) ProtoMessage() {}
 
 func (x *CompleteMultipartUploadResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_objectstore_objectstore_proto_msgTypes[6]
+	mi := &file_objectstore_objectstore_proto_msgTypes[7]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -384,7 +429,7 @@ func (x *CompleteMultipartUploadResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CompleteMultipartUploadResponse.ProtoReflect.Descriptor instead.
 func (*CompleteMultipartUploadResponse) Descriptor() ([]byte, []int) {
-	return file_objectstore_objectstore_proto_rawDescGZIP(), []int{6}
+	return file_objectstore_objectstore_proto_rawDescGZIP(), []int{7}
 }
 
 func (x *CompleteMultipartUploadResponse) GetObject() *types.Object {
@@ -405,7 +450,7 @@ type AbortMultipartUploadRequest struct {
 
 func (x *AbortMultipartUploadRequest) Reset() {
 	*x = AbortMultipartUploadRequest{}
-	mi := &file_objectstore_objectstore_proto_msgTypes[7]
+	mi := &file_objectstore_objectstore_proto_msgTypes[8]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -417,7 +462,7 @@ func (x *AbortMultipartUploadRequest) String() string {
 func (*AbortMultipartUploadRequest) ProtoMessage() {}
 
 func (x *AbortMultipartUploadRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_objectstore_objectstore_proto_msgTypes[7]
+	mi := &file_objectstore_objectstore_proto_msgTypes[8]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -430,7 +475,7 @@ func (x *AbortMultipartUploadRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use AbortMultipartUploadRequest.ProtoReflect.Descriptor instead.
 func (*AbortMultipartUploadRequest) Descriptor() ([]byte, []int) {
-	return file_objectstore_objectstore_proto_rawDescGZIP(), []int{7}
+	return file_objectstore_objectstore_proto_rawDescGZIP(), []int{8}
 }
 
 func (x *AbortMultipartUploadRequest) GetUploadId() string {
@@ -456,7 +501,7 @@ type AbortMultipartUploadResponse struct {
 
 func (x *AbortMultipartUploadResponse) Reset() {
 	*x = AbortMultipartUploadResponse{}
-	mi := &file_objectstore_objectstore_proto_msgTypes[8]
+	mi := &file_objectstore_objectstore_proto_msgTypes[9]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -468,7 +513,7 @@ func (x *AbortMultipartUploadResponse) String() string {
 func (*AbortMultipartUploadResponse) ProtoMessage() {}
 
 func (x *AbortMultipartUploadResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_objectstore_objectstore_proto_msgTypes[8]
+	mi := &file_objectstore_objectstore_proto_msgTypes[9]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -481,7 +526,7 @@ func (x *AbortMultipartUploadResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use AbortMultipartUploadResponse.ProtoReflect.Descriptor instead.
 func (*AbortMultipartUploadResponse) Descriptor() ([]byte, []int) {
-	return file_objectstore_objectstore_proto_rawDescGZIP(), []int{8}
+	return file_objectstore_objectstore_proto_rawDescGZIP(), []int{9}
 }
 
 // Request message for uploading an object in a single request.
@@ -496,7 +541,7 @@ type UploadObjectRequest struct {
 
 func (x *UploadObjectRequest) Reset() {
 	*x = UploadObjectRequest{}
-	mi := &file_objectstore_objectstore_proto_msgTypes[9]
+	mi := &file_objectstore_objectstore_proto_msgTypes[10]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -508,7 +553,7 @@ func (x *UploadObjectRequest) String() string {
 func (*UploadObjectRequest) ProtoMessage() {}
 
 func (x *UploadObjectRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_objectstore_objectstore_proto_msgTypes[9]
+	mi := &file_objectstore_objectstore_proto_msgTypes[10]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -521,7 +566,7 @@ func (x *UploadObjectRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use UploadObjectRequest.ProtoReflect.Descriptor instead.
 func (*UploadObjectRequest) Descriptor() ([]byte, []int) {
-	return file_objectstore_objectstore_proto_rawDescGZIP(), []int{9}
+	return file_objectstore_objectstore_proto_rawDescGZIP(), []int{10}
 }
 
 func (x *UploadObjectRequest) GetData() []byte {
@@ -555,7 +600,7 @@ type UploadObjectResponse struct {
 
 func (x *UploadObjectResponse) Reset() {
 	*x = UploadObjectResponse{}
-	mi := &file_objectstore_objectstore_proto_msgTypes[10]
+	mi := &file_objectstore_objectstore_proto_msgTypes[11]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -567,7 +612,7 @@ func (x *UploadObjectResponse) String() string {
 func (*UploadObjectResponse) ProtoMessage() {}
 
 func (x *UploadObjectResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_objectstore_objectstore_proto_msgTypes[10]
+	mi := &file_objectstore_objectstore_proto_msgTypes[11]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -580,7 +625,7 @@ func (x *UploadObjectResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use UploadObjectResponse.ProtoReflect.Descriptor instead.
 func (*UploadObjectResponse) Descriptor() ([]byte, []int) {
-	return file_objectstore_objectstore_proto_rawDescGZIP(), []int{10}
+	return file_objectstore_objectstore_proto_rawDescGZIP(), []int{11}
 }
 
 func (x *UploadObjectResponse) GetObject() *types.Object {
@@ -600,7 +645,7 @@ type GetObjectRequest struct {
 
 func (x *GetObjectRequest) Reset() {
 	*x = GetObjectRequest{}
-	mi := &file_objectstore_objectstore_proto_msgTypes[11]
+	mi := &file_objectstore_objectstore_proto_msgTypes[12]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -612,7 +657,7 @@ func (x *GetObjectRequest) String() string {
 func (*GetObjectRequest) ProtoMessage() {}
 
 func (x *GetObjectRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_objectstore_objectstore_proto_msgTypes[11]
+	mi := &file_objectstore_objectstore_proto_msgTypes[12]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -625,7 +670,7 @@ func (x *GetObjectRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetObjectRequest.ProtoReflect.Descriptor instead.
 func (*GetObjectRequest) Descriptor() ([]byte, []int) {
-	return file_objectstore_objectstore_proto_rawDescGZIP(), []int{11}
+	return file_objectstore_objectstore_proto_rawDescGZIP(), []int{12}
 }
 
 func (x *GetObjectRequest) GetId() string {
@@ -645,7 +690,7 @@ type GetObjectResponse struct {
 
 func (x *GetObjectResponse) Reset() {
 	*x = GetObjectResponse{}
-	mi := &file_objectstore_objectstore_proto_msgTypes[12]
+	mi := &file_objectstore_objectstore_proto_msgTypes[13]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -657,7 +702,7 @@ func (x *GetObjectResponse) String() string {
 func (*GetObjectResponse) ProtoMessage() {}
 
 func (x *GetObjectResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_objectstore_objectstore_proto_msgTypes[12]
+	mi := &file_objectstore_objectstore_proto_msgTypes[13]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -670,7 +715,7 @@ func (x *GetObjectResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetObjectResponse.ProtoReflect.Descriptor instead.
 func (*GetObjectResponse) Descriptor() ([]byte, []int) {
-	return file_objectstore_objectstore_proto_rawDescGZIP(), []int{12}
+	return file_objectstore_objectstore_proto_rawDescGZIP(), []int{13}
 }
 
 func (x *GetObjectResponse) GetObject() *types.Object {
@@ -690,7 +735,7 @@ type DeleteObjectRequest struct {
 
 func (x *DeleteObjectRequest) Reset() {
 	*x = DeleteObjectRequest{}
-	mi := &file_objectstore_objectstore_proto_msgTypes[13]
+	mi := &file_objectstore_objectstore_proto_msgTypes[14]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -702,7 +747,7 @@ func (x *DeleteObjectRequest) String() string {
 func (*DeleteObjectRequest) ProtoMessage() {}
 
 func (x *DeleteObjectRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_objectstore_objectstore_proto_msgTypes[13]
+	mi := &file_objectstore_objectstore_proto_msgTypes[14]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -715,7 +760,7 @@ func (x *DeleteObjectRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use DeleteObjectRequest.ProtoReflect.Descriptor instead.
 func (*DeleteObjectRequest) Descriptor() ([]byte, []int) {
-	return file_objectstore_objectstore_proto_rawDescGZIP(), []int{13}
+	return file_objectstore_objectstore_proto_rawDescGZIP(), []int{14}
 }
 
 func (x *DeleteObjectRequest) GetId() string {
@@ -734,7 +779,7 @@ type DeleteObjectResponse struct {
 
 func (x *DeleteObjectResponse) Reset() {
 	*x = DeleteObjectResponse{}
-	mi := &file_objectstore_objectstore_proto_msgTypes[14]
+	mi := &file_objectstore_objectstore_proto_msgTypes[15]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -746,7 +791,7 @@ func (x *DeleteObjectResponse) String() string {
 func (*DeleteObjectResponse) ProtoMessage() {}
 
 func (x *DeleteObjectResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_objectstore_objectstore_proto_msgTypes[14]
+	mi := &file_objectstore_objectstore_proto_msgTypes[15]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -759,7 +804,7 @@ func (x *DeleteObjectResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use DeleteObjectResponse.ProtoReflect.Descriptor instead.
 func (*DeleteObjectResponse) Descriptor() ([]byte, []int) {
-	return file_objectstore_objectstore_proto_rawDescGZIP(), []int{14}
+	return file_objectstore_objectstore_proto_rawDescGZIP(), []int{15}
 }
 
 var File_objectstore_objectstore_proto protoreflect.FileDescriptor
@@ -780,15 +825,16 @@ const file_objectstore_objectstore_proto_rawDesc = "" +
 	"partNumber\">\n" +
 	"\x1dGetMultipartUploadUrlResponse\x12\x1d\n" +
 	"\n" +
-	"upload_url\x18\x01 \x01(\tR\tuploadUrl\"\x97\x01\n" +
+	"upload_url\x18\x01 \x01(\tR\tuploadUrl\"L\n" +
+	"\x10ListPartsRequest\x12\x1b\n" +
+	"\tupload_id\x18\x01 \x01(\tR\buploadId\x12\x1b\n" +
+	"\tobject_id\x18\x02 \x01(\tR\bobjectId\"J\n" +
+	"\x11ListPartsResponse\x125\n" +
+	"\x05parts\x18\x01 \x03(\v2\x1f.api.v1.services.types.PartInfoR\x05parts\"\x91\x01\n" +
 	"\x1eCompleteMultipartUploadRequest\x12\x1b\n" +
 	"\tupload_id\x18\x01 \x01(\tR\buploadId\x12\x1b\n" +
-	"\tobject_id\x18\x02 \x01(\tR\bobjectId\x12;\n" +
-	"\x05parts\x18\x03 \x03(\v2%.api.v1.services.objectstore.PartInfoR\x05parts\"?\n" +
-	"\bPartInfo\x12\x1f\n" +
-	"\vpart_number\x18\x01 \x01(\x05R\n" +
-	"partNumber\x12\x12\n" +
-	"\x04etag\x18\x02 \x01(\tR\x04etag\"X\n" +
+	"\tobject_id\x18\x02 \x01(\tR\bobjectId\x125\n" +
+	"\x05parts\x18\x03 \x03(\v2\x1f.api.v1.services.types.PartInfoR\x05parts\"X\n" +
 	"\x1fCompleteMultipartUploadResponse\x125\n" +
 	"\x06object\x18\x01 \x01(\v2\x1d.api.v1.services.types.ObjectR\x06object\"W\n" +
 	"\x1bAbortMultipartUploadRequest\x12\x1b\n" +
@@ -807,14 +853,14 @@ const file_objectstore_objectstore_proto_rawDesc = "" +
 	"\x06object\x18\x01 \x01(\v2\x1d.api.v1.services.types.ObjectR\x06object\"%\n" +
 	"\x13DeleteObjectRequest\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\tR\x02id\"\x16\n" +
-	"\x14DeleteObjectResponse2\x8c\n" +
-	"\n" +
+	"\x14DeleteObjectResponse2\xbf\v\n" +
 	"\x12ObjectStoreService\x12\x8c\x01\n" +
 	"\fUploadObject\x120.api.v1.services.objectstore.UploadObjectRequest\x1a1.api.v1.services.objectstore.UploadObjectResponse\"\x17\x82\xd3\xe4\x93\x02\x11:\x01*\"\f/obs/objects\x12\x85\x01\n" +
 	"\tGetObject\x12-.api.v1.services.objectstore.GetObjectRequest\x1a..api.v1.services.objectstore.GetObjectResponse\"\x19\x82\xd3\xe4\x93\x02\x13\x12\x11/obs/objects/{id}\x12\x8e\x01\n" +
 	"\fDeleteObject\x120.api.v1.services.objectstore.DeleteObjectRequest\x1a1.api.v1.services.objectstore.DeleteObjectResponse\"\x19\x82\xd3\xe4\x93\x02\x13*\x11/obs/objects/{id}\x12\xb7\x01\n" +
 	"\x17InitiateMultipartUpload\x12;.api.v1.services.objectstore.InitiateMultipartUploadRequest\x1a<.api.v1.services.objectstore.InitiateMultipartUploadResponse\"!\x82\xd3\xe4\x93\x02\x1b:\x01*\"\x16/obs/objects/multipart\x12\xe2\x01\n" +
-	"\x15GetMultipartUploadUrl\x129.api.v1.services.objectstore.GetMultipartUploadUrlRequest\x1a:.api.v1.services.objectstore.GetMultipartUploadUrlResponse\"R\x82\xd3\xe4\x93\x02L\x12J/obs/objects/multipart/{object_id}/uploads/{upload_id}/parts/{part_number}\x12\xe0\x01\n" +
+	"\x15GetMultipartUploadUrl\x129.api.v1.services.objectstore.GetMultipartUploadUrlRequest\x1a:.api.v1.services.objectstore.GetMultipartUploadUrlResponse\"R\x82\xd3\xe4\x93\x02L\x12J/obs/objects/multipart/{object_id}/uploads/{upload_id}/parts/{part_number}\x12\xb0\x01\n" +
+	"\tListParts\x12-.api.v1.services.objectstore.ListPartsRequest\x1a..api.v1.services.objectstore.ListPartsResponse\"D\x82\xd3\xe4\x93\x02>\x12</obs/objects/multipart/{object_id}/uploads/{upload_id}/parts\x12\xe0\x01\n" +
 	"\x17CompleteMultipartUpload\x12;.api.v1.services.objectstore.CompleteMultipartUploadRequest\x1a<.api.v1.services.objectstore.CompleteMultipartUploadResponse\"J\x82\xd3\xe4\x93\x02D:\x01*\"?/obs/objects/multipart/{object_id}/uploads/{upload_id}:complete\x12\xcb\x01\n" +
 	"\x14AbortMultipartUpload\x128.api.v1.services.objectstore.AbortMultipartUploadRequest\x1a9.api.v1.services.objectstore.AbortMultipartUploadResponse\">\x82\xd3\xe4\x93\x028*6/obs/objects/multipart/{object_id}/uploads/{upload_id}B\x88\x02\n" +
 	"\x1fcom.api.v1.services.objectstoreB\x10ObjectstoreProtoP\x01ZCorigadmin/application/admin/api/v1/services/objectstore;objectstore\xa2\x02\x04AVSO\xaa\x02\x1bApi.V1.Services.Objectstore\xca\x02\x1bApi\\V1\\Services\\Objectstore\xe2\x02'Api\\V1\\Services\\Objectstore\\GPBMetadata\xea\x02\x1eApi::V1::Services::Objectstoreb\x06proto3"
@@ -831,49 +877,54 @@ func file_objectstore_objectstore_proto_rawDescGZIP() []byte {
 	return file_objectstore_objectstore_proto_rawDescData
 }
 
-var file_objectstore_objectstore_proto_msgTypes = make([]protoimpl.MessageInfo, 15)
+var file_objectstore_objectstore_proto_msgTypes = make([]protoimpl.MessageInfo, 16)
 var file_objectstore_objectstore_proto_goTypes = []any{
 	(*InitiateMultipartUploadRequest)(nil),  // 0: api.v1.services.objectstore.InitiateMultipartUploadRequest
 	(*InitiateMultipartUploadResponse)(nil), // 1: api.v1.services.objectstore.InitiateMultipartUploadResponse
 	(*GetMultipartUploadUrlRequest)(nil),    // 2: api.v1.services.objectstore.GetMultipartUploadUrlRequest
 	(*GetMultipartUploadUrlResponse)(nil),   // 3: api.v1.services.objectstore.GetMultipartUploadUrlResponse
-	(*CompleteMultipartUploadRequest)(nil),  // 4: api.v1.services.objectstore.CompleteMultipartUploadRequest
-	(*PartInfo)(nil),                        // 5: api.v1.services.objectstore.PartInfo
-	(*CompleteMultipartUploadResponse)(nil), // 6: api.v1.services.objectstore.CompleteMultipartUploadResponse
-	(*AbortMultipartUploadRequest)(nil),     // 7: api.v1.services.objectstore.AbortMultipartUploadRequest
-	(*AbortMultipartUploadResponse)(nil),    // 8: api.v1.services.objectstore.AbortMultipartUploadResponse
-	(*UploadObjectRequest)(nil),             // 9: api.v1.services.objectstore.UploadObjectRequest
-	(*UploadObjectResponse)(nil),            // 10: api.v1.services.objectstore.UploadObjectResponse
-	(*GetObjectRequest)(nil),                // 11: api.v1.services.objectstore.GetObjectRequest
-	(*GetObjectResponse)(nil),               // 12: api.v1.services.objectstore.GetObjectResponse
-	(*DeleteObjectRequest)(nil),             // 13: api.v1.services.objectstore.DeleteObjectRequest
-	(*DeleteObjectResponse)(nil),            // 14: api.v1.services.objectstore.DeleteObjectResponse
-	(*types.Object)(nil),                    // 15: api.v1.services.types.Object
+	(*ListPartsRequest)(nil),                // 4: api.v1.services.objectstore.ListPartsRequest
+	(*ListPartsResponse)(nil),               // 5: api.v1.services.objectstore.ListPartsResponse
+	(*CompleteMultipartUploadRequest)(nil),  // 6: api.v1.services.objectstore.CompleteMultipartUploadRequest
+	(*CompleteMultipartUploadResponse)(nil), // 7: api.v1.services.objectstore.CompleteMultipartUploadResponse
+	(*AbortMultipartUploadRequest)(nil),     // 8: api.v1.services.objectstore.AbortMultipartUploadRequest
+	(*AbortMultipartUploadResponse)(nil),    // 9: api.v1.services.objectstore.AbortMultipartUploadResponse
+	(*UploadObjectRequest)(nil),             // 10: api.v1.services.objectstore.UploadObjectRequest
+	(*UploadObjectResponse)(nil),            // 11: api.v1.services.objectstore.UploadObjectResponse
+	(*GetObjectRequest)(nil),                // 12: api.v1.services.objectstore.GetObjectRequest
+	(*GetObjectResponse)(nil),               // 13: api.v1.services.objectstore.GetObjectResponse
+	(*DeleteObjectRequest)(nil),             // 14: api.v1.services.objectstore.DeleteObjectRequest
+	(*DeleteObjectResponse)(nil),            // 15: api.v1.services.objectstore.DeleteObjectResponse
+	(*types.PartInfo)(nil),                  // 16: api.v1.services.types.PartInfo
+	(*types.Object)(nil),                    // 17: api.v1.services.types.Object
 }
 var file_objectstore_objectstore_proto_depIdxs = []int32{
-	5,  // 0: api.v1.services.objectstore.CompleteMultipartUploadRequest.parts:type_name -> api.v1.services.objectstore.PartInfo
-	15, // 1: api.v1.services.objectstore.CompleteMultipartUploadResponse.object:type_name -> api.v1.services.types.Object
-	15, // 2: api.v1.services.objectstore.UploadObjectResponse.object:type_name -> api.v1.services.types.Object
-	15, // 3: api.v1.services.objectstore.GetObjectResponse.object:type_name -> api.v1.services.types.Object
-	9,  // 4: api.v1.services.objectstore.ObjectStoreService.UploadObject:input_type -> api.v1.services.objectstore.UploadObjectRequest
-	11, // 5: api.v1.services.objectstore.ObjectStoreService.GetObject:input_type -> api.v1.services.objectstore.GetObjectRequest
-	13, // 6: api.v1.services.objectstore.ObjectStoreService.DeleteObject:input_type -> api.v1.services.objectstore.DeleteObjectRequest
-	0,  // 7: api.v1.services.objectstore.ObjectStoreService.InitiateMultipartUpload:input_type -> api.v1.services.objectstore.InitiateMultipartUploadRequest
-	2,  // 8: api.v1.services.objectstore.ObjectStoreService.GetMultipartUploadUrl:input_type -> api.v1.services.objectstore.GetMultipartUploadUrlRequest
-	4,  // 9: api.v1.services.objectstore.ObjectStoreService.CompleteMultipartUpload:input_type -> api.v1.services.objectstore.CompleteMultipartUploadRequest
-	7,  // 10: api.v1.services.objectstore.ObjectStoreService.AbortMultipartUpload:input_type -> api.v1.services.objectstore.AbortMultipartUploadRequest
-	10, // 11: api.v1.services.objectstore.ObjectStoreService.UploadObject:output_type -> api.v1.services.objectstore.UploadObjectResponse
-	12, // 12: api.v1.services.objectstore.ObjectStoreService.GetObject:output_type -> api.v1.services.objectstore.GetObjectResponse
-	14, // 13: api.v1.services.objectstore.ObjectStoreService.DeleteObject:output_type -> api.v1.services.objectstore.DeleteObjectResponse
-	1,  // 14: api.v1.services.objectstore.ObjectStoreService.InitiateMultipartUpload:output_type -> api.v1.services.objectstore.InitiateMultipartUploadResponse
-	3,  // 15: api.v1.services.objectstore.ObjectStoreService.GetMultipartUploadUrl:output_type -> api.v1.services.objectstore.GetMultipartUploadUrlResponse
-	6,  // 16: api.v1.services.objectstore.ObjectStoreService.CompleteMultipartUpload:output_type -> api.v1.services.objectstore.CompleteMultipartUploadResponse
-	8,  // 17: api.v1.services.objectstore.ObjectStoreService.AbortMultipartUpload:output_type -> api.v1.services.objectstore.AbortMultipartUploadResponse
-	11, // [11:18] is the sub-list for method output_type
-	4,  // [4:11] is the sub-list for method input_type
-	4,  // [4:4] is the sub-list for extension type_name
-	4,  // [4:4] is the sub-list for extension extendee
-	0,  // [0:4] is the sub-list for field type_name
+	16, // 0: api.v1.services.objectstore.ListPartsResponse.parts:type_name -> api.v1.services.types.PartInfo
+	16, // 1: api.v1.services.objectstore.CompleteMultipartUploadRequest.parts:type_name -> api.v1.services.types.PartInfo
+	17, // 2: api.v1.services.objectstore.CompleteMultipartUploadResponse.object:type_name -> api.v1.services.types.Object
+	17, // 3: api.v1.services.objectstore.UploadObjectResponse.object:type_name -> api.v1.services.types.Object
+	17, // 4: api.v1.services.objectstore.GetObjectResponse.object:type_name -> api.v1.services.types.Object
+	10, // 5: api.v1.services.objectstore.ObjectStoreService.UploadObject:input_type -> api.v1.services.objectstore.UploadObjectRequest
+	12, // 6: api.v1.services.objectstore.ObjectStoreService.GetObject:input_type -> api.v1.services.objectstore.GetObjectRequest
+	14, // 7: api.v1.services.objectstore.ObjectStoreService.DeleteObject:input_type -> api.v1.services.objectstore.DeleteObjectRequest
+	0,  // 8: api.v1.services.objectstore.ObjectStoreService.InitiateMultipartUpload:input_type -> api.v1.services.objectstore.InitiateMultipartUploadRequest
+	2,  // 9: api.v1.services.objectstore.ObjectStoreService.GetMultipartUploadUrl:input_type -> api.v1.services.objectstore.GetMultipartUploadUrlRequest
+	4,  // 10: api.v1.services.objectstore.ObjectStoreService.ListParts:input_type -> api.v1.services.objectstore.ListPartsRequest
+	6,  // 11: api.v1.services.objectstore.ObjectStoreService.CompleteMultipartUpload:input_type -> api.v1.services.objectstore.CompleteMultipartUploadRequest
+	8,  // 12: api.v1.services.objectstore.ObjectStoreService.AbortMultipartUpload:input_type -> api.v1.services.objectstore.AbortMultipartUploadRequest
+	11, // 13: api.v1.services.objectstore.ObjectStoreService.UploadObject:output_type -> api.v1.services.objectstore.UploadObjectResponse
+	13, // 14: api.v1.services.objectstore.ObjectStoreService.GetObject:output_type -> api.v1.services.objectstore.GetObjectResponse
+	15, // 15: api.v1.services.objectstore.ObjectStoreService.DeleteObject:output_type -> api.v1.services.objectstore.DeleteObjectResponse
+	1,  // 16: api.v1.services.objectstore.ObjectStoreService.InitiateMultipartUpload:output_type -> api.v1.services.objectstore.InitiateMultipartUploadResponse
+	3,  // 17: api.v1.services.objectstore.ObjectStoreService.GetMultipartUploadUrl:output_type -> api.v1.services.objectstore.GetMultipartUploadUrlResponse
+	5,  // 18: api.v1.services.objectstore.ObjectStoreService.ListParts:output_type -> api.v1.services.objectstore.ListPartsResponse
+	7,  // 19: api.v1.services.objectstore.ObjectStoreService.CompleteMultipartUpload:output_type -> api.v1.services.objectstore.CompleteMultipartUploadResponse
+	9,  // 20: api.v1.services.objectstore.ObjectStoreService.AbortMultipartUpload:output_type -> api.v1.services.objectstore.AbortMultipartUploadResponse
+	13, // [13:21] is the sub-list for method output_type
+	5,  // [5:13] is the sub-list for method input_type
+	5,  // [5:5] is the sub-list for extension type_name
+	5,  // [5:5] is the sub-list for extension extendee
+	0,  // [0:5] is the sub-list for field type_name
 }
 
 func init() { file_objectstore_objectstore_proto_init() }
@@ -887,7 +938,7 @@ func file_objectstore_objectstore_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_objectstore_objectstore_proto_rawDesc), len(file_objectstore_objectstore_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   15,
+			NumMessages:   16,
 			NumExtensions: 0,
 			NumServices:   1,
 		},

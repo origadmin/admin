@@ -42,6 +42,9 @@ type ObjectRepo interface {
 	// GetMultipartUploadURL generates a presigned URL for uploading a specific part.
 	GetMultipartUploadURL(ctx context.Context, objectID string, uploadID string, partNumber int32, expires time.Duration) (string, error)
 
+	// ListParts lists the parts that have been uploaded for a specific multipart upload.
+	ListParts(ctx context.Context, objectID string, uploadID string) ([]*types.PartInfo, error)
+
 	// CompleteMultipartUpload completes a multipart upload by assembling the parts.
 	CompleteMultipartUpload(ctx context.Context, objectID string, uploadID string, parts []*types.PartInfo) (*types.Object, error)
 

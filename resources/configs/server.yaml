@@ -20,7 +20,7 @@ servers:
           allow_credentials: true
         middlewares:
           - recovery
-          - tracing
+          #          - tracing
           - logging
           - authn
 
@@ -86,6 +86,7 @@ servers:
         # in the middlewares.yaml configuration file.
         middlewares:
           - "recovery"
+          - "propagation"
     #          - "authz"
     # System Service HTTP Server
     - name: "filemanager"
@@ -96,4 +97,5 @@ servers:
         # Apply middlewares by name.
         middlewares:
           - "recovery"
+          - "propagation"
 #          - "authz"

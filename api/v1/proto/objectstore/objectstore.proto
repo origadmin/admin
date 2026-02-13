@@ -52,6 +52,13 @@ service ObjectStoreService {
     };
   }
 
+  // Lists the parts that have been uploaded for a specific multipart upload.
+  rpc ListParts(ListPartsRequest) returns (ListPartsResponse) {
+    option (google.api.http) = {
+      get: "/obs/objects/multipart/{object_id}/uploads/{upload_id}/parts"
+    };
+  }
+
   // Completes a multipart upload.
   rpc CompleteMultipartUpload(CompleteMultipartUploadRequest) returns (CompleteMultipartUploadResponse) {
     option (google.api.http) = {
@@ -92,17 +99,22 @@ message GetMultipartUploadUrlResponse {
   string upload_url = 1;
 }
 
+// Request message for listing uploaded parts.
+message ListPartsRequest {
+  string upload_id = 1;
+  string object_id = 2;
+}
+
+// Response message for listing uploaded parts.
+message ListPartsResponse {
+  repeated api.v1.services.types.PartInfo parts = 1;
+}
+
 // Request message for completing a multipart upload.
 message CompleteMultipartUploadRequest {
   string upload_id = 1;
   string object_id = 2;
-  repeated PartInfo parts = 3;
-}
-
-// PartInfo contains information about a single uploaded part.
-message PartInfo {
-  int32 part_number = 1;
-  string etag = 2;
+  repeated api.v1.services.types.PartInfo parts = 3;
 }
 
 // Response message for completing a multipart upload.

@@ -11,6 +11,7 @@ import (
 	"os"
 	"path/filepath"
 	"sort"
+	"strconv"
 	"time"
 
 	"github.com/google/uuid"
@@ -160,6 +161,45 @@ func (s *LocalStorage) GetMultipartUploadURL(ctx context.Context, objectID strin
 	// For local storage simulation, we return a URL that points to where the part *should* be uploaded.
 	// Note: This requires an HTTP handler to actually accept the PUT request and write to this path.
 	return fmt.Sprintf("%s/multipart/%s/%d", s.baseURL, uploadID, partNumber), nil
+}
+
+// ListParts lists the parts that have been uploaded for a specific multipart upload.
+func (s *LocalStorage) ListParts(ctx context.Context, objectID string, uploadID string) ([]*types.PartInfo, error) {
+	uploadPath := filepath.Join(s.basePath, "multipart", uploadID)
+	dirEntries, err := os.ReadDir(uploadPath)
+	if err != nil {
+		if os.IsNotExist(err) {
+			return nil, fmt.Errorf("upload not found: %s", uploadID)
+		}
+		return nil, fmt.Errorf("failed to list parts for upload %s: %w", uploadID, err)
+	}
+
+	var parts []*types.PartInfo
+	for _, entry := range dirEntries {
+		if entry.IsDir() {
+			continue
+		}
+		// Assuming part files are named just by their number, e.g., "1", "2", etc.
+		partNum, err := strconv.Atoi(entry.Name())
+		if err != nil {
+			// Ignore files that are not valid part numbers
+			continue
+		}
+
+		// In a real implementation, ETag would be calculated on upload and stored.
+		// For ListParts, we can either re-calculate it or, if not strictly needed for the client, return an empty string.
+		parts = append(parts, &types.PartInfo{
+			PartNumber: int32(partNum),
+			Etag:       "", // Placeholder for ETag
+		})
+	}
+
+	// Sort parts by part number to ensure consistent order
+	sort.Slice(parts, func(i, j int) bool {
+		return parts[i].PartNumber < parts[j].PartNumber
+	})
+
+	return parts, nil
 }
 
 // CompleteMultipartUpload completes a multipart upload by assembling the parts.
