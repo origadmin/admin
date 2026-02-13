@@ -31,6 +31,7 @@ const (
 	UserService_UpdateUserStatus_FullMethodName    = "/api.v1.services.system.UserService/UpdateUserStatus"
 	UserService_UpdateUserRoles_FullMethodName     = "/api.v1.services.system.UserService/UpdateUserRoles"
 	UserService_ChangeUserPassword_FullMethodName  = "/api.v1.services.system.UserService/ChangeUserPassword"
+	UserService_VerifyPassword_FullMethodName      = "/api.v1.services.system.UserService/VerifyPassword"
 	UserService_InviteUser_FullMethodName          = "/api.v1.services.system.UserService/InviteUser"
 )
 
@@ -55,6 +56,9 @@ type UserServiceClient interface {
 	UpdateUserRoles(ctx context.Context, in *UpdateUserRolesRequest, opts ...grpc.CallOption) (*UpdateUserRolesResponse, error)
 	// ResetUserPassword reset the user s password
 	ChangeUserPassword(ctx context.Context, in *ChangeUserPasswordRequest, opts ...grpc.CallOption) (*ChangeUserPasswordResponse, error)
+	// VerifyPassword verifies if the provided password matches the user's password.
+	// This is primarily for internal use by other services (like Identity).
+	VerifyPassword(ctx context.Context, in *VerifyPasswordRequest, opts ...grpc.CallOption) (*VerifyPasswordResponse, error)
 	// InviteUser invite a new user
 	InviteUser(ctx context.Context, in *InviteUserRequest, opts ...grpc.CallOption) (*InviteUserResponse, error)
 }
@@ -188,6 +192,16 @@ func (c *userServiceClient) ChangeUserPassword(ctx context.Context, in *ChangeUs
 	return out, nil
 }
 
+func (c *userServiceClient) VerifyPassword(ctx context.Context, in *VerifyPasswordRequest, opts ...grpc.CallOption) (*VerifyPasswordResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(VerifyPasswordResponse)
+	err := c.cc.Invoke(ctx, UserService_VerifyPassword_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *userServiceClient) InviteUser(ctx context.Context, in *InviteUserRequest, opts ...grpc.CallOption) (*InviteUserResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(InviteUserResponse)
@@ -219,6 +233,9 @@ type UserServiceServer interface {
 	UpdateUserRoles(context.Context, *UpdateUserRolesRequest) (*UpdateUserRolesResponse, error)
 	// ResetUserPassword reset the user s password
 	ChangeUserPassword(context.Context, *ChangeUserPasswordRequest) (*ChangeUserPasswordResponse, error)
+	// VerifyPassword verifies if the provided password matches the user's password.
+	// This is primarily for internal use by other services (like Identity).
+	VerifyPassword(context.Context, *VerifyPasswordRequest) (*VerifyPasswordResponse, error)
 	// InviteUser invite a new user
 	InviteUser(context.Context, *InviteUserRequest) (*InviteUserResponse, error)
 	mustEmbedUnimplementedUserServiceServer()
@@ -266,6 +283,9 @@ func (UnimplementedUserServiceServer) UpdateUserRoles(context.Context, *UpdateUs
 }
 func (UnimplementedUserServiceServer) ChangeUserPassword(context.Context, *ChangeUserPasswordRequest) (*ChangeUserPasswordResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ChangeUserPassword not implemented")
+}
+func (UnimplementedUserServiceServer) VerifyPassword(context.Context, *VerifyPasswordRequest) (*VerifyPasswordResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method VerifyPassword not implemented")
 }
 func (UnimplementedUserServiceServer) InviteUser(context.Context, *InviteUserRequest) (*InviteUserResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method InviteUser not implemented")
@@ -507,6 +527,24 @@ func _UserService_ChangeUserPassword_Handler(srv interface{}, ctx context.Contex
 	return interceptor(ctx, in, info, handler)
 }
 
+func _UserService_VerifyPassword_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(VerifyPasswordRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServiceServer).VerifyPassword(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: UserService_VerifyPassword_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServiceServer).VerifyPassword(ctx, req.(*VerifyPasswordRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _UserService_InviteUser_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(InviteUserRequest)
 	if err := dec(in); err != nil {
@@ -579,6 +617,10 @@ var UserService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "ChangeUserPassword",
 			Handler:    _UserService_ChangeUserPassword_Handler,
+		},
+		{
+			MethodName: "VerifyPassword",
+			Handler:    _UserService_VerifyPassword_Handler,
 		},
 		{
 			MethodName: "InviteUser",

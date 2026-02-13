@@ -47,7 +47,12 @@ func wireApp(rt *runtime.App, bootstrap *conf.Config) (initializer.Initializer, 
 	resourceUseCase := biz.NewResourceUseCase(resourceRepo)
 	viewRepo := dal.NewViewRepo(database, v)
 	viewUseCase := biz.NewViewUseCase(viewRepo)
-	seederSeeder, err := seeder.NewSeeder(userUseCase, resourceUseCase, viewUseCase, bootstrap, v)
+	crypto, err := providers.ProvideHasher()
+	if err != nil {
+		cleanup()
+		return nil, nil, err
+	}
+	seederSeeder, err := seeder.NewSeeder(userUseCase, resourceUseCase, viewUseCase, crypto, bootstrap, v)
 	if err != nil {
 		cleanup()
 		return nil, nil, err

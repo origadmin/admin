@@ -82,6 +82,12 @@ func init() {
 			VersionID:     "eb8711d49747afca3de43510b24fa85588e0baf806143c5f56c9ad384c2cfe05",
 		},
 		{
+			ServiceMethod: "/api.v1.services.system.UserService/VerifyPassword",
+			GatewayPath:   "",
+			Name:          "authz",
+			VersionID:     "99301e3334bea96e7d796b17b54095a9a89ebdb3f378e64001beb527eb634e7a",
+		},
+		{
 			ServiceMethod: "/api.v1.services.system.UserService/InviteUser",
 			GatewayPath:   "POST:/sys/users/invite",
 			Name:          "authz",

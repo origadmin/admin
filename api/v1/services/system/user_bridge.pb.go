@@ -40,6 +40,7 @@ const UserServiceDeleteUserBridgeOperation = "/api.v1.services.system.UserServic
 const UserServiceUpdateUserStatusBridgeOperation = "/api.v1.services.system.UserService/UpdateUserStatus"
 const UserServiceUpdateUserRolesBridgeOperation = "/api.v1.services.system.UserService/UpdateUserRoles"
 const UserServiceChangeUserPasswordBridgeOperation = "/api.v1.services.system.UserService/ChangeUserPassword"
+const UserServiceVerifyPasswordBridgeOperation = "/api.v1.services.system.UserService/VerifyPassword"
 const UserServiceInviteUserBridgeOperation = "/api.v1.services.system.UserService/InviteUser"
 
 type UserServiceBridgeServer interface {
@@ -57,6 +58,9 @@ type UserServiceBridgeServer interface {
 	UpdateUserRoles(context.Context, *UpdateUserRolesRequest) (*UpdateUserRolesResponse, error)
 	// ResetUserPassword reset the user s password
 	ChangeUserPassword(context.Context, *ChangeUserPasswordRequest) (*ChangeUserPasswordResponse, error)
+	// VerifyPassword verifies if the provided password matches the user's password.
+	// This is primarily for internal use by other services (like Identity).
+	VerifyPassword(context.Context, *VerifyPasswordRequest) (*VerifyPasswordResponse, error)
 	// InviteUser invite a new user
 	InviteUser(context.Context, *InviteUserRequest) (*InviteUserResponse, error)
 }
@@ -74,6 +78,7 @@ type UserServiceHooker interface {
 	UserServiceUpdateUserStatusHooker
 	UserServiceUpdateUserRolesHooker
 	UserServiceChangeUserPasswordHooker
+	UserServiceVerifyPasswordHooker
 	UserServiceInviteUserHooker
 }
 
@@ -128,6 +133,10 @@ type UserServiceUpdateUserRolesHooker interface {
 type UserServiceChangeUserPasswordHooker interface {
 	PrepareChangeUserPassword(http.Context, *ChangeUserPasswordRequest) (context.Context, error)
 	CompleteChangeUserPassword(http.Context, *ChangeUserPasswordRequest, *ChangeUserPasswordResponse) error
+}
+type UserServiceVerifyPasswordHooker interface {
+	PrepareVerifyPassword(http.Context, *VerifyPasswordRequest) (context.Context, error)
+	CompleteVerifyPassword(http.Context, *VerifyPasswordRequest, *VerifyPasswordResponse) error
 }
 type UserServiceInviteUserHooker interface {
 	PrepareInviteUser(http.Context, *InviteUserRequest) (context.Context, error)
@@ -601,6 +610,14 @@ func (UnimplementedUserServiceHooked) CompleteChangeUserPassword(ctx http.Contex
 	return ctx.Result(200, out)
 }
 
+func (UnimplementedUserServiceHooked) PrepareVerifyPassword(ctx http.Context, in *VerifyPasswordRequest) (context.Context, error) {
+	return ctx, nil
+}
+
+func (UnimplementedUserServiceHooked) CompleteVerifyPassword(ctx http.Context, in *VerifyPasswordRequest, out *VerifyPasswordResponse) error {
+	return ctx.Result(200, out)
+}
+
 func (UnimplementedUserServiceHooked) PrepareInviteUser(ctx http.Context, in *InviteUserRequest) (context.Context, error) {
 	return ctx, nil
 }
@@ -739,6 +756,10 @@ func (c *UserServiceBridgeImpl) ChangeUserPassword(ctx context.Context, in *Chan
 	return c.client.ChangeUserPassword(ctx, in)
 }
 
+func (c *UserServiceBridgeImpl) VerifyPassword(ctx context.Context, in *VerifyPasswordRequest) (*VerifyPasswordResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method VerifyPassword not implemented")
+}
+
 func (c *UserServiceBridgeImpl) InviteUser(ctx context.Context, in *InviteUserRequest) (*InviteUserResponse, error) {
 	return c.client.InviteUser(ctx, in)
 }
@@ -859,6 +880,10 @@ func (c *UserServiceHTTP2GRPCBridgeImpl) UpdateUserRoles(ctx context.Context, in
 
 func (c *UserServiceHTTP2GRPCBridgeImpl) ChangeUserPassword(ctx context.Context, in *ChangeUserPasswordRequest) (*ChangeUserPasswordResponse, error) {
 	return c.client.ChangeUserPassword(ctx, in)
+}
+
+func (c *UserServiceHTTP2GRPCBridgeImpl) VerifyPassword(ctx context.Context, in *VerifyPasswordRequest) (*VerifyPasswordResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method VerifyPassword not implemented")
 }
 
 func (c *UserServiceHTTP2GRPCBridgeImpl) InviteUser(ctx context.Context, in *InviteUserRequest) (*InviteUserResponse, error) {

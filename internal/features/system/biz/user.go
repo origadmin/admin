@@ -64,6 +64,12 @@ func (uc *UserUseCase) UpdateUserPassword(ctx context.Context, userID int64, has
 	return uc.repo.ChangeUserPassword(ctx, userID, hashedPassword)
 }
 
+// GetUserPasswordHash retrieves the encrypted password hash for a user.
+func (uc *UserUseCase) GetUserPasswordHash(ctx context.Context, id int64) (string, error) {
+	_, hash, err := uc.repo.GetUserAndPassword(ctx, id)
+	return hash, err
+}
+
 func (uc *UserUseCase) ListUsers(ctx context.Context, opts ...*dto.UserQueryOption) ([]*types.User, int32, error) {
 	return uc.repo.List(ctx, opts...)
 }

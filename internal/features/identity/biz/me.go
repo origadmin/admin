@@ -100,6 +100,7 @@ func (uc *MeUseCase) UpdatePreferences(ctx context.Context, preferences map[stri
 }
 
 // ChangePassword changes the current user's password after verifying the old one.
+// The oldPassword is used for verification, newPassword is passed as plain text to System service for hashing.
 func (uc *MeUseCase) ChangePassword(ctx context.Context, oldPassword, newPassword string) error {
 	userID, err := uc.getUserID(ctx)
 	if err != nil {
@@ -109,7 +110,8 @@ func (uc *MeUseCase) ChangePassword(ctx context.Context, oldPassword, newPasswor
 	// Get the authenticated user to verify the old password
 	authedUser, err := uc.authnRepo.GetUserByCredential(ctx, strconv.FormatInt(userID, 10))
 	if err != nil {
-		return err
+		uc.log.Errorf("failed to verify old password via system service: %v", err)
+		return errors.InternalServer("PASSWORD_VERIFICATION_FAILED", "Failed to verify password")
 	}
 
 	// Verify the old password

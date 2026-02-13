@@ -6,6 +6,7 @@ package biz
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/go-kratos/kratos/v2/log"
 	"github.com/google/wire"
@@ -52,6 +53,7 @@ func (uc *FileUseCase) UploadFile(ctx context.Context, name string, data []byte,
 		Name:     name,
 		ObjectId: objResp.Object.Id,
 		OwnerId:  ownerID,
+		Size:     objResp.Object.Size, // Correctly assign the size from the object store response
 	}
 
 	createdFile, err := uc.repo.Create(ctx, fileMeta)
@@ -64,11 +66,19 @@ func (uc *FileUseCase) UploadFile(ctx context.Context, name string, data []byte,
 	return createdFile, nil
 }
 
-// GetFile retrieves file metadata.
-func (uc *FileUseCase) GetFile(ctx context.Context, id int64) (*types.FileMetadata, error) {
+// GetFile retrieves file metadata and a download URL.
+func (uc *FileUseCase) GetFile(ctx context.Context, id int64) (*types.FileMetadata, string, error) {
+	uc.log.Info(">>>>>> [FINGERPRINT] Entering GetFile use case with new logic. <<<<<<")
+	// 1. Get file metadata from our DB
 	file, err := uc.repo.Get(ctx, id)
 	if err != nil {
-		return nil, err
+		return nil, "", err
 	}
-	return file, nil
+
+	// 2. Construct the download URL pointing to the Gateway's dedicated download proxy endpoint.
+	// We use a distinct path /api/v1/download/objects/... to avoid conflict with gRPC gateway routes.
+	downloadURL := fmt.Sprintf("/api/v1/objects/%s", file.ObjectId)
+	uc.log.Infof(">>>>>> [FINGERPRINT] Constructed download URL: %s <<<<<<", downloadURL)
+
+	return file, downloadURL, nil
 }

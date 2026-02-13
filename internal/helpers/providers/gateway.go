@@ -59,7 +59,7 @@ func ProvideGatewayMiddlewares(app *runtime.App, authenticator *jwt.Authenticato
 	if err != nil {
 		return nil, err
 	}
-	m := factory.NewGateway(authenticator, skip, log.WithLogger(app.Logger()))
+	m := factory.NewAuthnGateway(authenticator, skip, log.WithLogger(app.Logger()))
 	provider.RegisterServerMiddleware("authn", m)
 	provider.RegisterClientMiddleware("authn", middleware.Noop())
 	log.NewHelper(app.Logger()).Infof("registered %+v middlewares", provider.Names())
@@ -72,9 +72,8 @@ func ProvideClientMiddlewares(app *runtime.App) (container.ClientMiddlewareProvi
 	if err != nil {
 		return nil, err
 	}
-	m := factory.NewClient()
+	m := factory.NewPropagationClient(log.WithLogger(app.Logger()))
 	provider.RegisterClientMiddleware("propagation", m)
-	provider.RegisterServerMiddleware("propagation", middleware.Noop())
 	log.NewHelper(app.Logger()).Infof("registered %+v client middlewares", provider.Names())
 	return provider, nil
 }

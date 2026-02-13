@@ -6,12 +6,12 @@ package client
 
 import (
 	"github.com/google/wire"
-	"google.golang.org/grpc"
 
 	"github.com/origadmin/runtime"
 	"github.com/origadmin/runtime/container"
 	"origadmin/application/admin/api/v1/services/filemanager"
 	"origadmin/application/admin/api/v1/services/identity"
+	"origadmin/application/admin/api/v1/services/objectstore"
 	"origadmin/application/admin/api/v1/services/system"
 	"origadmin/application/admin/internal/conf"
 	"origadmin/application/admin/internal/helpers/grpcclient"
@@ -22,6 +22,7 @@ var ProviderSet = wire.NewSet(
 	NewIdentityBridgeSet,
 	NewSystemBridgeSet,
 	NewFileManagerBridgeSet,
+	NewObjectStoreBridgeSet,
 )
 
 const (
@@ -31,6 +32,8 @@ const (
 	ServiceNameSystem = "system"
 	// ServiceNameFileManager is the short name for the filemanager service.
 	ServiceNameFileManager = "filemanager"
+	// ServiceNameObjectStore is the short name for the objectstore service.
+	ServiceNameObjectStore = "objectstore"
 )
 
 // IdentityBridgeSet holds all the clients for the 'auth' service.
@@ -54,24 +57,16 @@ type FileManagerBridgeSet struct {
 	FileManager filemanager.FileManagerServiceHTTPServer
 }
 
-// NewGRPCConn finds a client configuration by service name or convention
-// and establishes a gRPC connection.
-//
-// The provided context is used for the client lifecycle.
-// This function now uses the shared helper from helpers/grpcclient.
-func NewGRPCConn(app *runtime.App, bootstrap *conf.Config, name string, middlewareProvider container.ClientMiddlewareProvider) (*grpc.ClientConn, error) {
-	conn, err := grpcclient.NewConn(app, bootstrap, name, middlewareProvider)
-	if err != nil {
-		return nil, err
-	}
-	return conn.(*grpc.ClientConn), nil
+// ObjectStoreBridgeSet holds all the clients for the 'objectstore' service.
+type ObjectStoreBridgeSet struct {
+	ObjectStore objectstore.ObjectStoreServiceHTTPServer
 }
 
 // NewIdentityBridgeSet creates a set of clients for the auth service.
 func NewIdentityBridgeSet(app *runtime.App, bootstrap *conf.Config, middlewareProvider container.ClientMiddlewareProvider) (*IdentityBridgeSet, error) {
 	// Use the application's root context. This ensures that the client's lifecycle
 	// is tied to the application's lifecycle.
-	conn, err := NewGRPCConn(app, bootstrap, ServiceNameIdentity, middlewareProvider)
+	conn, err := grpcclient.NewConn(app, bootstrap, ServiceNameIdentity, middlewareProvider)
 	if err != nil {
 		return nil, err
 	}
@@ -85,7 +80,7 @@ func NewIdentityBridgeSet(app *runtime.App, bootstrap *conf.Config, middlewarePr
 // NewSystemBridgeSet creates a set of clients for the system service.
 func NewSystemBridgeSet(app *runtime.App, bootstrap *conf.Config, middlewareProvider container.ClientMiddlewareProvider) (*SystemBridgeSet, error) {
 	// Use the application's root context.
-	conn, err := NewGRPCConn(app, bootstrap, ServiceNameSystem, middlewareProvider)
+	conn, err := grpcclient.NewConn(app, bootstrap, ServiceNameSystem, middlewareProvider)
 	if err != nil {
 		return nil, err
 	}
@@ -101,11 +96,23 @@ func NewSystemBridgeSet(app *runtime.App, bootstrap *conf.Config, middlewareProv
 // NewFileManagerBridgeSet creates a set of clients for the filemanager service.
 func NewFileManagerBridgeSet(app *runtime.App, bootstrap *conf.Config, middlewareProvider container.ClientMiddlewareProvider) (*FileManagerBridgeSet, error) {
 	// Use the application's root context.
-	conn, err := NewGRPCConn(app, bootstrap, ServiceNameFileManager, middlewareProvider)
+	conn, err := grpcclient.NewConn(app, bootstrap, ServiceNameFileManager, middlewareProvider)
 	if err != nil {
 		return nil, err
 	}
 	return &FileManagerBridgeSet{
 		FileManager: filemanager.NewFileManagerServiceGRPC2HTTP(conn),
+	}, nil
+}
+
+// NewObjectStoreBridgeSet creates a set of clients for the objectstore service.
+func NewObjectStoreBridgeSet(app *runtime.App, bootstrap *conf.Config, middlewareProvider container.ClientMiddlewareProvider) (*ObjectStoreBridgeSet, error) {
+	// Use the application's root context.
+	conn, err := grpcclient.NewConn(app, bootstrap, ServiceNameObjectStore, middlewareProvider)
+	if err != nil {
+		return nil, err
+	}
+	return &ObjectStoreBridgeSet{
+		ObjectStore: objectstore.NewObjectStoreServiceGRPC2HTTP(conn),
 	}, nil
 }

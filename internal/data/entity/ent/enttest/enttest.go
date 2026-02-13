@@ -65,7 +65,7 @@ func Open(t TestingT, driverName, dataSourceName string, opts ...Option) *ent.Cl
 	return c
 }
 
-// NewClient calls ent.NewClient and auto-run migration.
+// NewClient calls ent.NewPropagationClient and auto-run migration.
 func NewClient(t TestingT, opts ...Option) *ent.Client {
 	o := newOptions(opts)
 	c := ent.NewClient(o.opts...)

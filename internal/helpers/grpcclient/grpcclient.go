@@ -7,6 +7,10 @@ package grpcclient
 import (
 	"fmt"
 
+	"github.com/go-kratos/kratos/v2/log"
+	"github.com/goexts/generic/maps"
+	"google.golang.org/grpc"
+
 	"github.com/origadmin/runtime"
 	transportv1 "github.com/origadmin/runtime/api/gen/go/config/transport/v1"
 	"github.com/origadmin/runtime/container"
@@ -32,7 +36,7 @@ func NewConn(
 	bootstrap *conf.Config,
 	name string,
 	middlewareProvider container.ClientMiddlewareProvider,
-) (interface{}, error) {
+) (*grpc.ClientConn, error) {
 	var clientConfig *transportv1.Client
 
 	// The conventional name for gRPC clients
@@ -77,7 +81,8 @@ func NewConn(
 	if err != nil {
 		return nil, fmt.Errorf("failed to get client middlewares: %w", err)
 	}
-
+	ks := maps.Keys(middlewares)
+	log.NewHelper(app.Logger()).Debugf("Creating gRPC client for service: %s with middlewares: %+v", name, ks)
 	// Create and return the gRPC connection
 	return runtimegrpc.NewClient(app.Context(), clientConfig.GetGrpc(), &runtimegrpc.ClientOptions{
 		Discoveries:       discoveries,

@@ -69,6 +69,7 @@ func login(t *testing.T, username, password string) string {
 // doRequest sends an HTTP request with JSON body (backward compatibility)
 func doRequest(t *testing.T, method, path string, body interface{}, token string) *http.Response {
 	client := tools.NewTestHTTPClient(baseURL)
+	client.SetPrefix("/api/v1")
 	return client.Request(t, method, path, body, token)
 }
 

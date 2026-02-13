@@ -3,6 +3,7 @@ syntax = "proto3";
 package api.v1.services.filemanager;
 
 import "google/api/annotations.proto";
+import "policy/v1/policy.proto";
 import "types/filemanager.proto";
 
 option go_package = "origadmin/application/admin/api/v1/services/filemanager;filemanager";
@@ -18,6 +19,7 @@ service FileManagerService {
       post: "/fm/files"
       body: "*"
     };
+    option (contrib.api.policy.v1.policy) = {name: "authn"};
   }
 
   // Initiates a multipart upload for large files.
@@ -26,6 +28,7 @@ service FileManagerService {
       post: "/fm/files/multipart"
       body: "*"
     };
+    option (contrib.api.policy.v1.policy) = {name: "authn"};
   }
 
   // Gets a presigned URL for a specific part of a multipart upload.
@@ -33,6 +36,7 @@ service FileManagerService {
     option (google.api.http) = {
       get: "/fm/files/multipart/{upload_id}/parts/{part_number}"
     };
+    option (contrib.api.policy.v1.policy) = {name: "authn"};
   }
 
   // Completes a multipart upload.
@@ -41,6 +45,7 @@ service FileManagerService {
       post: "/fm/files/multipart/{upload_id}/complete"
       body: "*"
     };
+    option (contrib.api.policy.v1.policy) = {name: "authn"};
   }
 
   // Aborts a multipart upload.
@@ -48,6 +53,7 @@ service FileManagerService {
     option (google.api.http) = {
       delete: "/fm/files/multipart/{upload_id}"
     };
+    option (contrib.api.policy.v1.policy) = {name: "authn"};
   }
 
   // Gets file metadata.
@@ -55,6 +61,7 @@ service FileManagerService {
     option (google.api.http) = {
       get: "/fm/files/{id}"
     };
+    option (contrib.api.policy.v1.policy) = {name: "authn"};
   }
 
   // Lists files with pagination and filtering.
@@ -62,6 +69,7 @@ service FileManagerService {
     option (google.api.http) = {
       get: "/fm/files"
     };
+    option (contrib.api.policy.v1.policy) = {name: "authn"};
   }
 
   // Updates file metadata.
@@ -70,6 +78,7 @@ service FileManagerService {
       put: "/fm/files/{id}"
       body: "*"
     };
+    option (contrib.api.policy.v1.policy) = {name: "authn"};
   }
 
   // Deletes a file and its metadata.
@@ -77,6 +86,7 @@ service FileManagerService {
     option (google.api.http) = {
       delete: "/fm/files/{id}"
     };
+    option (contrib.api.policy.v1.policy) = {name: "authn"};
   }
 }
 

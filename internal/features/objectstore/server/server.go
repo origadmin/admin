@@ -21,6 +21,7 @@ import (
 	"github.com/origadmin/runtime/service/transport/http"
 
 	objPb "origadmin/application/admin/api/v1/services/objectstore"
+	"origadmin/application/admin/internal/features/objectstore/dal"
 	objSvc "origadmin/application/admin/internal/features/objectstore/service"
 )
 
@@ -33,6 +34,7 @@ func NewServers(
 	cfg *transportv1.Servers,
 	objectStoreSvc *objSvc.ObjectStoreService,
 	middlewareProvider container.ServerMiddlewareProvider,
+	storageCfg *dal.LocalStorageConfig, // Inject storage config
 ) ([]transport.Server, error) {
 	if cfg == nil {
 		return nil, errors.New("servers config is nil")
@@ -45,7 +47,7 @@ func NewServers(
 		}
 		switch serverCfg.GetProtocol() {
 		case "http":
-			srv, err := NewHTTPServer(app, serverCfg.GetHttp(), objectStoreSvc, middlewareProvider)
+			srv, err := NewHTTPServer(app, serverCfg.GetHttp(), objectStoreSvc, middlewareProvider, storageCfg)
 			if err != nil {
 				return nil, err
 			}
@@ -69,6 +71,7 @@ func NewHTTPServer(
 	cfg *httpv1.Server,
 	objectStoreSvc *objSvc.ObjectStoreService,
 	provider container.ServerMiddlewareProvider,
+	storageCfg *dal.LocalStorageConfig, // Inject storage config
 ) (*transport.HTTPServer, error) {
 	if cfg == nil {
 		return nil, errors.New("http config is nil")
@@ -87,7 +90,14 @@ func NewHTTPServer(
 		return nil, err
 	}
 
+	// Register gRPC Gateway
 	objPb.RegisterObjectStoreServiceHTTPServer(srv, objectStoreSvc)
+
+	// Register static file handler for downloads
+	staticPath := "/objects/"
+	fs := stdhttp.FileServer(stdhttp.Dir(storageCfg.BasePath))
+	srv.HandlePrefix(staticPath, stdhttp.StripPrefix(staticPath, fs))
+	log.Infof("Serving static files from %s at %s", storageCfg.BasePath, staticPath)
 
 	srv.WalkHandle(func(method, path string, handler stdhttp.HandlerFunc) {
 		log.Infof("HTTP %s %s", method, path)

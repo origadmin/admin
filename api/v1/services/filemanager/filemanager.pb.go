@@ -7,6 +7,7 @@
 package filemanager
 
 import (
+	_ "github.com/origadmin/contrib/api/gen/go/policy/v1"
 	_ "google.golang.org/genproto/googleapis/api/annotations"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
@@ -993,7 +994,7 @@ var File_filemanager_filemanager_proto protoreflect.FileDescriptor
 
 const file_filemanager_filemanager_proto_rawDesc = "" +
 	"\n" +
-	"\x1dfilemanager/filemanager.proto\x12\x1bapi.v1.services.filemanager\x1a\x1cgoogle/api/annotations.proto\x1a\x17types/filemanager.proto\"~\n" +
+	"\x1dfilemanager/filemanager.proto\x12\x1bapi.v1.services.filemanager\x1a\x1cgoogle/api/annotations.proto\x1a\x16policy/v1/policy.proto\x1a\x17types/filemanager.proto\"~\n" +
 	"\x11UploadFileRequest\x12\x12\n" +
 	"\x04data\x18\x01 \x01(\fR\x04data\x12\x12\n" +
 	"\x04name\x18\x02 \x01(\tR\x04name\x12!\n" +
@@ -1057,20 +1058,29 @@ const file_filemanager_filemanager_proto_rawDesc = "" +
 	"\rfile_metadata\x18\x01 \x01(\v2#.api.v1.services.types.FileMetadataR\ffileMetadata\"#\n" +
 	"\x11DeleteFileRequest\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\x03R\x02id\"\x14\n" +
-	"\x12DeleteFileResponse2\xb2\v\n" +
-	"\x12FileManagerService\x12\x83\x01\n" +
+	"\x12DeleteFileResponse2\x97\f\n" +
+	"\x12FileManagerService\x12\x8e\x01\n" +
 	"\n" +
-	"UploadFile\x12..api.v1.services.filemanager.UploadFileRequest\x1a/.api.v1.services.filemanager.UploadFileResponse\"\x14\x82\xd3\xe4\x93\x02\x0e:\x01*\"\t/fm/files\x12\xb4\x01\n" +
-	"\x17InitiateMultipartUpload\x12;.api.v1.services.filemanager.InitiateMultipartUploadRequest\x1a<.api.v1.services.filemanager.InitiateMultipartUploadResponse\"\x1e\x82\xd3\xe4\x93\x02\x18:\x01*\"\x13/fm/files/multipart\x12\xcb\x01\n" +
-	"\x15GetMultipartUploadUrl\x129.api.v1.services.filemanager.GetMultipartUploadUrlRequest\x1a:.api.v1.services.filemanager.GetMultipartUploadUrlResponse\";\x82\xd3\xe4\x93\x025\x123/fm/files/multipart/{upload_id}/parts/{part_number}\x12\xc9\x01\n" +
-	"\x17CompleteMultipartUpload\x12;.api.v1.services.filemanager.CompleteMultipartUploadRequest\x1a<.api.v1.services.filemanager.CompleteMultipartUploadResponse\"3\x82\xd3\xe4\x93\x02-:\x01*\"(/fm/files/multipart/{upload_id}/complete\x12\xb4\x01\n" +
-	"\x14AbortMultipartUpload\x128.api.v1.services.filemanager.AbortMultipartUploadRequest\x1a9.api.v1.services.filemanager.AbortMultipartUploadResponse\"'\x82\xd3\xe4\x93\x02!*\x1f/fm/files/multipart/{upload_id}\x12|\n" +
-	"\aGetFile\x12+.api.v1.services.filemanager.GetFileRequest\x1a,.api.v1.services.filemanager.GetFileResponse\"\x16\x82\xd3\xe4\x93\x02\x10\x12\x0e/fm/files/{id}\x12}\n" +
-	"\tListFiles\x12-.api.v1.services.filemanager.ListFilesRequest\x1a..api.v1.services.filemanager.ListFilesResponse\"\x11\x82\xd3\xe4\x93\x02\v\x12\t/fm/files\x12\x88\x01\n" +
+	"UploadFile\x12..api.v1.services.filemanager.UploadFileRequest\x1a/.api.v1.services.filemanager.UploadFileResponse\"\x1f\xea\xea\x1b\a\n" +
+	"\x05authn\x82\xd3\xe4\x93\x02\x0e:\x01*\"\t/fm/files\x12\xbf\x01\n" +
+	"\x17InitiateMultipartUpload\x12;.api.v1.services.filemanager.InitiateMultipartUploadRequest\x1a<.api.v1.services.filemanager.InitiateMultipartUploadResponse\")\xea\xea\x1b\a\n" +
+	"\x05authn\x82\xd3\xe4\x93\x02\x18:\x01*\"\x13/fm/files/multipart\x12\xd6\x01\n" +
+	"\x15GetMultipartUploadUrl\x129.api.v1.services.filemanager.GetMultipartUploadUrlRequest\x1a:.api.v1.services.filemanager.GetMultipartUploadUrlResponse\"F\xea\xea\x1b\a\n" +
+	"\x05authn\x82\xd3\xe4\x93\x025\x123/fm/files/multipart/{upload_id}/parts/{part_number}\x12\xd4\x01\n" +
+	"\x17CompleteMultipartUpload\x12;.api.v1.services.filemanager.CompleteMultipartUploadRequest\x1a<.api.v1.services.filemanager.CompleteMultipartUploadResponse\">\xea\xea\x1b\a\n" +
+	"\x05authn\x82\xd3\xe4\x93\x02-:\x01*\"(/fm/files/multipart/{upload_id}/complete\x12\xbf\x01\n" +
+	"\x14AbortMultipartUpload\x128.api.v1.services.filemanager.AbortMultipartUploadRequest\x1a9.api.v1.services.filemanager.AbortMultipartUploadResponse\"2\xea\xea\x1b\a\n" +
+	"\x05authn\x82\xd3\xe4\x93\x02!*\x1f/fm/files/multipart/{upload_id}\x12\x87\x01\n" +
+	"\aGetFile\x12+.api.v1.services.filemanager.GetFileRequest\x1a,.api.v1.services.filemanager.GetFileResponse\"!\xea\xea\x1b\a\n" +
+	"\x05authn\x82\xd3\xe4\x93\x02\x10\x12\x0e/fm/files/{id}\x12\x88\x01\n" +
+	"\tListFiles\x12-.api.v1.services.filemanager.ListFilesRequest\x1a..api.v1.services.filemanager.ListFilesResponse\"\x1c\xea\xea\x1b\a\n" +
+	"\x05authn\x82\xd3\xe4\x93\x02\v\x12\t/fm/files\x12\x93\x01\n" +
 	"\n" +
-	"UpdateFile\x12..api.v1.services.filemanager.UpdateFileRequest\x1a/.api.v1.services.filemanager.UpdateFileResponse\"\x19\x82\xd3\xe4\x93\x02\x13:\x01*\x1a\x0e/fm/files/{id}\x12\x85\x01\n" +
+	"UpdateFile\x12..api.v1.services.filemanager.UpdateFileRequest\x1a/.api.v1.services.filemanager.UpdateFileResponse\"$\xea\xea\x1b\a\n" +
+	"\x05authn\x82\xd3\xe4\x93\x02\x13:\x01*\x1a\x0e/fm/files/{id}\x12\x90\x01\n" +
 	"\n" +
-	"DeleteFile\x12..api.v1.services.filemanager.DeleteFileRequest\x1a/.api.v1.services.filemanager.DeleteFileResponse\"\x16\x82\xd3\xe4\x93\x02\x10*\x0e/fm/files/{id}B\x88\x02\n" +
+	"DeleteFile\x12..api.v1.services.filemanager.DeleteFileRequest\x1a/.api.v1.services.filemanager.DeleteFileResponse\"!\xea\xea\x1b\a\n" +
+	"\x05authn\x82\xd3\xe4\x93\x02\x10*\x0e/fm/files/{id}B\x88\x02\n" +
 	"\x1fcom.api.v1.services.filemanagerB\x10FilemanagerProtoP\x01ZCorigadmin/application/admin/api/v1/services/filemanager;filemanager\xa2\x02\x04AVSF\xaa\x02\x1bApi.V1.Services.Filemanager\xca\x02\x1bApi\\V1\\Services\\Filemanager\xe2\x02'Api\\V1\\Services\\Filemanager\\GPBMetadata\xea\x02\x1eApi::V1::Services::Filemanagerb\x06proto3"
 
 var (

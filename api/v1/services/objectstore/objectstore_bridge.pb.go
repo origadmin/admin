@@ -9,6 +9,7 @@ package objectstore
 import (
 	context "context"
 	http "github.com/go-kratos/kratos/v2/transport/http"
+	httpbody "google.golang.org/genproto/googleapis/api/httpbody"
 	grpc "google.golang.org/grpc"
 	codes "google.golang.org/grpc/codes"
 	status "google.golang.org/grpc/status"
@@ -30,6 +31,7 @@ var (
 
 const ObjectStoreServiceUploadObjectBridgeOperation = "/api.v1.services.objectstore.ObjectStoreService/UploadObject"
 const ObjectStoreServiceGetObjectBridgeOperation = "/api.v1.services.objectstore.ObjectStoreService/GetObject"
+const ObjectStoreServiceDownloadObjectBridgeOperation = "/api.v1.services.objectstore.ObjectStoreService/DownloadObject"
 const ObjectStoreServiceDeleteObjectBridgeOperation = "/api.v1.services.objectstore.ObjectStoreService/DeleteObject"
 const ObjectStoreServiceInitiateMultipartUploadBridgeOperation = "/api.v1.services.objectstore.ObjectStoreService/InitiateMultipartUpload"
 const ObjectStoreServiceGetMultipartUploadUrlBridgeOperation = "/api.v1.services.objectstore.ObjectStoreService/GetMultipartUploadUrl"
@@ -40,8 +42,11 @@ const ObjectStoreServiceAbortMultipartUploadBridgeOperation = "/api.v1.services.
 type ObjectStoreServiceBridgeServer interface {
 	// Uploads an object in a single request. Suitable for small files.
 	UploadObject(context.Context, *UploadObjectRequest) (*UploadObjectResponse, error)
-	// Downloads an object.
+	// Downloads an object metadata.
 	GetObject(context.Context, *GetObjectRequest) (*GetObjectResponse, error)
+	// Downloads the object content.
+	// This is used for local storage or when proxying content through the gateway.
+	DownloadObject(context.Context, *DownloadObjectRequest) (*httpbody.HttpBody, error)
 	// Deletes an object.
 	DeleteObject(context.Context, *DeleteObjectRequest) (*DeleteObjectResponse, error)
 	// Initiates a multipart upload and returns an upload ID.
@@ -59,6 +64,7 @@ type ObjectStoreServiceBridgeServer interface {
 type ObjectStoreServiceHooker interface {
 	ObjectStoreServiceUploadObjectHooker
 	ObjectStoreServiceGetObjectHooker
+	ObjectStoreServiceDownloadObjectHooker
 	ObjectStoreServiceDeleteObjectHooker
 	ObjectStoreServiceInitiateMultipartUploadHooker
 	ObjectStoreServiceGetMultipartUploadUrlHooker
@@ -78,6 +84,10 @@ type ObjectStoreServiceUploadObjectHooker interface {
 type ObjectStoreServiceGetObjectHooker interface {
 	PrepareGetObject(http.Context, *GetObjectRequest) (context.Context, error)
 	CompleteGetObject(http.Context, *GetObjectRequest, *GetObjectResponse) error
+}
+type ObjectStoreServiceDownloadObjectHooker interface {
+	PrepareDownloadObject(http.Context, *DownloadObjectRequest) (context.Context, error)
+	CompleteDownloadObject(http.Context, *DownloadObjectRequest, *httpbody.HttpBody) error
 }
 type ObjectStoreServiceDeleteObjectHooker interface {
 	PrepareDeleteObject(http.Context, *DeleteObjectRequest) (context.Context, error)
@@ -108,6 +118,7 @@ func RegisterObjectStoreServiceBridgeServer(s *http.Server, srv ObjectStoreServi
 	r := s.Route("/")
 	r.POST("/obs/objects", _ObjectStoreService_UploadObject0_Bridge_Handler(srv))
 	r.GET("/obs/objects/:id", _ObjectStoreService_GetObject0_Bridge_Handler(srv))
+	r.GET("/obs/objects/:id/download", _ObjectStoreService_DownloadObject0_Bridge_Handler(srv))
 	r.DELETE("/obs/objects/:id", _ObjectStoreService_DeleteObject0_Bridge_Handler(srv))
 	r.POST("/obs/objects/multipart", _ObjectStoreService_InitiateMultipartUpload0_Bridge_Handler(srv))
 	r.GET("/obs/objects/multipart/:object_id/uploads/:upload_id/parts/:part_number", _ObjectStoreService_GetMultipartUploadUrl0_Bridge_Handler(srv))
@@ -165,6 +176,32 @@ func _ObjectStoreService_GetObject0_Bridge_Handler(srv ObjectStoreServiceHookedB
 			return err
 		}
 		return srv.CompleteGetObject(ctx, &in, out.(*GetObjectResponse))
+	}
+}
+
+func _ObjectStoreService_DownloadObject0_Bridge_Handler(srv ObjectStoreServiceHookedBridger) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in DownloadObjectRequest
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		if err := ctx.BindVars(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationObjectStoreServiceDownloadObject)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.DownloadObject(ctx, req.(*DownloadObjectRequest))
+		})
+
+		newctx, err := srv.PrepareDownloadObject(ctx, &in)
+		if err != nil {
+			return err
+		}
+		out, err := h(newctx, &in)
+		if err != nil {
+			return err
+		}
+		return srv.CompleteDownloadObject(ctx, &in, out.(*httpbody.HttpBody))
 	}
 }
 
@@ -350,6 +387,14 @@ func (UnimplementedObjectStoreServiceHooked) CompleteGetObject(ctx http.Context,
 	return ctx.Result(200, out)
 }
 
+func (UnimplementedObjectStoreServiceHooked) PrepareDownloadObject(ctx http.Context, in *DownloadObjectRequest) (context.Context, error) {
+	return ctx, nil
+}
+
+func (UnimplementedObjectStoreServiceHooked) CompleteDownloadObject(ctx http.Context, in *DownloadObjectRequest, out *httpbody.HttpBody) error {
+	return ctx.Result(200, out)
+}
+
 func (UnimplementedObjectStoreServiceHooked) PrepareDeleteObject(ctx http.Context, in *DeleteObjectRequest) (context.Context, error) {
 	return ctx, nil
 }
@@ -428,6 +473,10 @@ func (c *ObjectStoreServiceHTTPBridgeImpl) GetObject(ctx context.Context, in *Ge
 	return c.client.GetObject(ctx, in)
 }
 
+func (c *ObjectStoreServiceHTTPBridgeImpl) DownloadObject(ctx context.Context, in *DownloadObjectRequest) (*httpbody.HttpBody, error) {
+	return c.client.DownloadObject(ctx, in)
+}
+
 func (c *ObjectStoreServiceHTTPBridgeImpl) DeleteObject(ctx context.Context, in *DeleteObjectRequest) (*DeleteObjectResponse, error) {
 	return c.client.DeleteObject(ctx, in)
 }
@@ -466,6 +515,10 @@ func (c *ObjectStoreServiceBridgeImpl) UploadObject(ctx context.Context, in *Upl
 
 func (c *ObjectStoreServiceBridgeImpl) GetObject(ctx context.Context, in *GetObjectRequest) (*GetObjectResponse, error) {
 	return c.client.GetObject(ctx, in)
+}
+
+func (c *ObjectStoreServiceBridgeImpl) DownloadObject(ctx context.Context, in *DownloadObjectRequest) (*httpbody.HttpBody, error) {
+	return c.client.DownloadObject(ctx, in)
 }
 
 func (c *ObjectStoreServiceBridgeImpl) DeleteObject(ctx context.Context, in *DeleteObjectRequest) (*DeleteObjectResponse, error) {
@@ -510,6 +563,10 @@ func (c *ObjectStoreServiceGRPC2HTTPBridgeImpl) GetObject(ctx context.Context, i
 	return c.client.GetObject(ctx, in)
 }
 
+func (c *ObjectStoreServiceGRPC2HTTPBridgeImpl) DownloadObject(ctx context.Context, in *DownloadObjectRequest) (*httpbody.HttpBody, error) {
+	return c.client.DownloadObject(ctx, in)
+}
+
 func (c *ObjectStoreServiceGRPC2HTTPBridgeImpl) DeleteObject(ctx context.Context, in *DeleteObjectRequest) (*DeleteObjectResponse, error) {
 	return c.client.DeleteObject(ctx, in)
 }
@@ -548,6 +605,10 @@ func (c *ObjectStoreServiceHTTP2GRPCBridgeImpl) UploadObject(ctx context.Context
 
 func (c *ObjectStoreServiceHTTP2GRPCBridgeImpl) GetObject(ctx context.Context, in *GetObjectRequest) (*GetObjectResponse, error) {
 	return c.client.GetObject(ctx, in)
+}
+
+func (c *ObjectStoreServiceHTTP2GRPCBridgeImpl) DownloadObject(ctx context.Context, in *DownloadObjectRequest) (*httpbody.HttpBody, error) {
+	return c.client.DownloadObject(ctx, in)
 }
 
 func (c *ObjectStoreServiceHTTP2GRPCBridgeImpl) DeleteObject(ctx context.Context, in *DeleteObjectRequest) (*DeleteObjectResponse, error) {

@@ -8,6 +8,7 @@ package objectstore
 
 import (
 	context "context"
+	httpbody "google.golang.org/genproto/googleapis/api/httpbody"
 	grpc "google.golang.org/grpc"
 	codes "google.golang.org/grpc/codes"
 	status "google.golang.org/grpc/status"
@@ -21,6 +22,7 @@ const _ = grpc.SupportPackageIsVersion9
 const (
 	ObjectStoreService_UploadObject_FullMethodName            = "/api.v1.services.objectstore.ObjectStoreService/UploadObject"
 	ObjectStoreService_GetObject_FullMethodName               = "/api.v1.services.objectstore.ObjectStoreService/GetObject"
+	ObjectStoreService_DownloadObject_FullMethodName          = "/api.v1.services.objectstore.ObjectStoreService/DownloadObject"
 	ObjectStoreService_DeleteObject_FullMethodName            = "/api.v1.services.objectstore.ObjectStoreService/DeleteObject"
 	ObjectStoreService_InitiateMultipartUpload_FullMethodName = "/api.v1.services.objectstore.ObjectStoreService/InitiateMultipartUpload"
 	ObjectStoreService_GetMultipartUploadUrl_FullMethodName   = "/api.v1.services.objectstore.ObjectStoreService/GetMultipartUploadUrl"
@@ -40,8 +42,11 @@ const (
 type ObjectStoreServiceClient interface {
 	// Uploads an object in a single request. Suitable for small files.
 	UploadObject(ctx context.Context, in *UploadObjectRequest, opts ...grpc.CallOption) (*UploadObjectResponse, error)
-	// Downloads an object.
+	// Downloads an object metadata.
 	GetObject(ctx context.Context, in *GetObjectRequest, opts ...grpc.CallOption) (*GetObjectResponse, error)
+	// Downloads the object content.
+	// This is used for local storage or when proxying content through the gateway.
+	DownloadObject(ctx context.Context, in *DownloadObjectRequest, opts ...grpc.CallOption) (*httpbody.HttpBody, error)
 	// Deletes an object.
 	DeleteObject(ctx context.Context, in *DeleteObjectRequest, opts ...grpc.CallOption) (*DeleteObjectResponse, error)
 	// Initiates a multipart upload and returns an upload ID.
@@ -78,6 +83,16 @@ func (c *objectStoreServiceClient) GetObject(ctx context.Context, in *GetObjectR
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(GetObjectResponse)
 	err := c.cc.Invoke(ctx, ObjectStoreService_GetObject_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *objectStoreServiceClient) DownloadObject(ctx context.Context, in *DownloadObjectRequest, opts ...grpc.CallOption) (*httpbody.HttpBody, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(httpbody.HttpBody)
+	err := c.cc.Invoke(ctx, ObjectStoreService_DownloadObject_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -155,8 +170,11 @@ func (c *objectStoreServiceClient) AbortMultipartUpload(ctx context.Context, in 
 type ObjectStoreServiceServer interface {
 	// Uploads an object in a single request. Suitable for small files.
 	UploadObject(context.Context, *UploadObjectRequest) (*UploadObjectResponse, error)
-	// Downloads an object.
+	// Downloads an object metadata.
 	GetObject(context.Context, *GetObjectRequest) (*GetObjectResponse, error)
+	// Downloads the object content.
+	// This is used for local storage or when proxying content through the gateway.
+	DownloadObject(context.Context, *DownloadObjectRequest) (*httpbody.HttpBody, error)
 	// Deletes an object.
 	DeleteObject(context.Context, *DeleteObjectRequest) (*DeleteObjectResponse, error)
 	// Initiates a multipart upload and returns an upload ID.
@@ -184,6 +202,9 @@ func (UnimplementedObjectStoreServiceServer) UploadObject(context.Context, *Uplo
 }
 func (UnimplementedObjectStoreServiceServer) GetObject(context.Context, *GetObjectRequest) (*GetObjectResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetObject not implemented")
+}
+func (UnimplementedObjectStoreServiceServer) DownloadObject(context.Context, *DownloadObjectRequest) (*httpbody.HttpBody, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method DownloadObject not implemented")
 }
 func (UnimplementedObjectStoreServiceServer) DeleteObject(context.Context, *DeleteObjectRequest) (*DeleteObjectResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DeleteObject not implemented")
@@ -256,6 +277,24 @@ func _ObjectStoreService_GetObject_Handler(srv interface{}, ctx context.Context,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(ObjectStoreServiceServer).GetObject(ctx, req.(*GetObjectRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _ObjectStoreService_DownloadObject_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DownloadObjectRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ObjectStoreServiceServer).DownloadObject(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: ObjectStoreService_DownloadObject_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ObjectStoreServiceServer).DownloadObject(ctx, req.(*DownloadObjectRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -382,6 +421,10 @@ var ObjectStoreService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GetObject",
 			Handler:    _ObjectStoreService_GetObject_Handler,
+		},
+		{
+			MethodName: "DownloadObject",
+			Handler:    _ObjectStoreService_DownloadObject_Handler,
 		},
 		{
 			MethodName: "DeleteObject",

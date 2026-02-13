@@ -5,7 +5,7 @@ servers:
       protocol: "http"
       http:
         addr: "0.0.0.0:8000"
-        timeout: 5s
+        timeout: 10s
         cors:
           allowed_origins:
             - "*"
@@ -82,20 +82,36 @@ servers:
       grpc:
         addr: "0.0.0.0:18021"
         timeout: 5s
-        # Apply middlewares by name. These names must correspond to entries
-        # in the middlewares.yaml configuration file.
+        # Use the same middleware chain as other backend services
         middlewares:
           - "recovery"
           - "propagation"
-    #          - "authz"
     # System Service HTTP Server
     - name: "filemanager"
       protocol: "http"
       http:
         addr: "0.0.0.0:18022"
         timeout: 5s
-        # Apply middlewares by name.
+        # Use the same middleware chain as other backend services
         middlewares:
           - "recovery"
           - "propagation"
-#          - "authz"
+    - name: "objectstore"
+      protocol: "grpc"
+      grpc:
+        addr: "0.0.0.0:18031"
+        timeout: 5s
+        # Use the same middleware chain as other backend services
+        middlewares:
+          - "recovery"
+          - "propagation"
+    # System Service HTTP Server
+    - name: "objectstore"
+      protocol: "http"
+      http:
+        addr: "0.0.0.0:18032"
+        timeout: 5s
+        # Use the same middleware chain as other backend services
+        middlewares:
+          - "recovery"
+          - "propagation"

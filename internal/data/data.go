@@ -13,6 +13,7 @@ import (
 	"entgo.io/ent/dialect/sql/schema"
 	"github.com/google/wire"
 
+	"github.com/origadmin/entslog/v3"
 	"github.com/origadmin/runtime"
 	"github.com/origadmin/runtime/data/storage"
 	"github.com/origadmin/runtime/log"
@@ -46,8 +47,9 @@ func ProvideDatabase(pv storage.Provider, logger log.Logger) (*ent.Database, fun
 	}
 
 	activeDB := entsql.OpenDB(db.Dialect(), db.DB())
+
 	logHelper.Infof("Database dialect: %s", db.Dialect())
-	database := ent.NewDatabase(activeDB, ent.Debug())
+	database := ent.NewDatabase(entslog.New(activeDB, entslog.WithLogger(log.GetSlogLogger())))
 	ctx := context.Background()
 	// === The migration logic is moved here ===
 	if err := database.Migration(ctx,

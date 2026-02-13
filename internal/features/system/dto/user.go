@@ -28,6 +28,9 @@ type UserRepo interface {
 	GetUserAndPassword(context.Context, int64) (*types.User, string, error)
 
 	ChangeUserPassword(context.Context, int64, string) error
+	// VerifyPassword verifies if the provided password matches the user's password.
+	//VerifyPassword(context.Context, int64, string) (bool, error)
+
 	UpdateUserProfile(context.Context, int64, *types.UserProfile) error
 	GetUserProfile(context.Context, int64) (*types.UserProfile, error)
 	UpdateUserSetting(context.Context, int64, *types.UserSetting) error

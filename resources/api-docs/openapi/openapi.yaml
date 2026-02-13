@@ -1123,7 +1123,7 @@ paths:
     get:
       tags:
         - ObjectStoreService
-      description: Downloads an object.
+      description: Downloads an object metadata.
       operationId: ObjectStoreService_GetObject
       parameters:
         - name: id
@@ -1162,6 +1162,29 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/api.v1.services.objectstore.DeleteObjectResponse'
+        default:
+          description: Default error response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/google.rpc.Status'
+  /obs/objects/{id}/download:
+    get:
+      tags:
+        - ObjectStoreService
+      description: "Downloads the object content.\r\n This is used for local storage or when proxying content through the gateway."
+      operationId: ObjectStoreService_DownloadObject
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*': { }
         default:
           description: Default error response
           content:
@@ -2836,8 +2859,15 @@ components:
       api.v1.services.identity.LoginResponse:
             type: object
             properties:
-              token:
-                $ref: '#/components/schemas/api.v1.services.identity.Token'
+              access_token:
+                type: string
+              refresh_token:
+                type: string
+              token_type:
+                type: string
+              expires_in:
+                type: string
+            description: The response message for the Login RPC.
       api.v1.services.identity.LogoutRequest:
             type: object
             properties:
@@ -2884,18 +2914,6 @@ components:
             type: object
             properties: {}
             description: The response message for the Register RPC.
-      api.v1.services.identity.Token:
-        type: object
-        properties:
-          access_token:
-            type: string
-          refresh_token:
-            type: string
-          token_type:
-            type: string
-          expires_in:
-            type: string
-        description: The response message for the Login RPC.
       api.v1.services.identity.UpdatePasswordRequest:
             type: object
             properties:

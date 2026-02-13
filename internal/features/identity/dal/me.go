@@ -10,6 +10,8 @@ import (
 	"github.com/go-kratos/kratos/v2/errors"
 	"github.com/go-kratos/kratos/v2/log"
 
+	"github.com/origadmin/toolkits/crypto/hash"
+
 	"origadmin/application/admin/internal/data/entity/ent"
 	"origadmin/application/admin/internal/data/entity/ent/user"
 	"origadmin/application/admin/internal/data/entity/ent/userprofile"
@@ -19,15 +21,17 @@ import (
 
 // MeRepo implements the dto.MeRepo interface for handling "me" (current user) related data operations.
 type MeRepo struct {
-	db  *ent.Database
-	log *log.Helper
+	db     *ent.Database
+	hasher hash.Crypto
+	log    *log.Helper
 }
 
 // NewMeRepo creates a new MeRepo with the given database client and logger.
-func NewMeRepo(db *ent.Database, logger log.Logger) identitydto.MeRepo {
+func NewMeRepo(db *ent.Database, hasher hash.Crypto, logger log.Logger) identitydto.MeRepo {
 	return &MeRepo{
-		db:  db,
-		log: log.NewHelper(log.With(logger, "module", "dal.me")),
+		db:     db,
+		hasher: hasher,
+		log:    log.NewHelper(log.With(logger, "module", "dal.me")),
 	}
 }
 
@@ -145,8 +149,16 @@ func (r *MeRepo) UpdateProfile(ctx context.Context, userID int64, profileData *i
 }
 
 // UpdatePassword updates the user's encrypted password in the database.
-func (r *MeRepo) UpdatePassword(ctx context.Context, userID int64, hashedPassword string) error {
-	err := r.db.User(ctx).UpdateOneID(userID).SetEncryptedPassword(hashedPassword).Exec(ctx)
+// Hashes the plain text password before storing it.
+func (r *MeRepo) UpdatePassword(ctx context.Context, userID int64, plainPassword string) error {
+	// Hash the plain text password
+	hashedPassword, err := r.hasher.Hash(plainPassword)
+	if err != nil {
+		r.log.WithContext(ctx).Errorf("failed to hash password for user_id %d: %v", userID, err)
+		return errors.InternalServer("PASSWORD_HASH_FAILED", "failed to process password")
+	}
+
+	err = r.db.User(ctx).UpdateOneID(userID).SetEncryptedPassword(hashedPassword).Exec(ctx)
 	if err != nil {
 		r.log.WithContext(ctx).Errorf("failed to update password for user_id %d: %v", userID, err)
 		return errors.InternalServer("DATABASE_ERROR", "failed to update password")

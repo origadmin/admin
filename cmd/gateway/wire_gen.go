@@ -46,7 +46,11 @@ func wireApp(app *runtime.App, bootstrap *conf.Config) (*kratos.App, func(), err
 	if err != nil {
 		return nil, nil, err
 	}
-	gatewayService, err := service.NewGatewayService(identityBridgeSet, systemBridgeSet, fileManagerBridgeSet)
+	objectStoreBridgeSet, err := client.NewObjectStoreBridgeSet(app, bootstrap, clientMiddlewareProvider)
+	if err != nil {
+		return nil, nil, err
+	}
+	gatewayService, err := service.NewGatewayService(identityBridgeSet, systemBridgeSet, fileManagerBridgeSet, objectStoreBridgeSet)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -59,7 +63,7 @@ func wireApp(app *runtime.App, bootstrap *conf.Config) (*kratos.App, func(), err
 	if err != nil {
 		return nil, nil, err
 	}
-	v, err := server.NewServers(app, servers, gatewayService, serverMiddlewareProvider)
+	v, err := server.NewServers(app, bootstrap, servers, gatewayService, serverMiddlewareProvider)
 	if err != nil {
 		return nil, nil, err
 	}

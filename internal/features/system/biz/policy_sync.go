@@ -272,6 +272,13 @@ func (s *PolicySyncUseCase) sync(ctx context.Context) error {
 	s.log.WithContext(ctx).Infof("DIAGNOSIS: Fetched %d access rules ('p' rules) and %d grouping rules ('g' rules) from provider.",
 		len(rolePerms), len(userRoles))
 
+	// DEBUG: Print all fetched role permissions
+	for _, rp := range rolePerms {
+		if rp.Role != nil && rp.Permission != nil {
+			s.log.WithContext(ctx).Infof("DEBUG: Role: %s, Permission: %s", rp.Role.Keyword, rp.Permission.Keyword)
+		}
+	}
+
 	// Clear existing policies in Casbin storage
 	if _, err := s.modifier.ClearPolicies(ctx); err != nil {
 		s.log.WithContext(ctx).Errorf("Failed to clear all policies during sync: %v", err)

@@ -3,16 +3,49 @@
 
 package dto
 
-// ConvertStringToStringMapToString is a custom conversion function stub.
+import (
+	"origadmin/application/admin/internal/data/entity/ent/userprofile"
+	"origadmin/application/admin/internal/data/entity/ent/view"
+)
+
+// ConvertGenderToString is a custom conversion function stub.
 // Please implement this function to complete the conversion.
-func ConvertStringToStringMapToString(from map[string]string) string {
+func ConvertGenderToString(from userprofile.Gender) string {
 	// TODO: Implement this custom conversion
 	panic("stub! not implemented")
 }
 
-// ConvertStringToStringToStringMap is a custom conversion function stub.
+// ConvertStringToGender is a custom conversion function stub.
 // Please implement this function to complete the conversion.
-func ConvertStringToStringToStringMap(from string) map[string]string {
+func ConvertStringToGender(from string) userprofile.Gender {
+	// TODO: Implement this custom conversion
+	panic("stub! not implemented")
+}
+
+// ConvertStringToObjectMapToStringToStringMap is a custom conversion function stub.
+// Please implement this function to complete the conversion.
+func ConvertStringToObjectMapToStringToStringMap(from map[string]any) map[string]string {
+	// TODO: Implement this custom conversion
+	panic("stub! not implemented")
+}
+
+// ConvertStringToStringMapToStringToObjectMap is a custom conversion function stub.
+// Please implement this function to complete the conversion.
+func ConvertStringToStringMapToStringToObjectMap(from map[string]string) map[string]any {
+	// TODO: Implement this custom conversion
+	panic("stub! not implemented")
+}
+
+// ConvertStringToType is a custom conversion function stub.
+// Please implement this function to complete the conversion.
+func ConvertStringToType(from string) view.Type {
+	// TODO: Implement this custom conversion
+	panic("stub! not implemented")
+}
+
+// ConvertTypeToString is a custom conversion function stub.
+// Please implement this function to complete the conversion.
+func ConvertTypeToString(from view.Type) string {
 	// TODO: Implement this custom conversion
 	panic("stub! not implemented")
 }

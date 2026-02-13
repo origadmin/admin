@@ -10,6 +10,7 @@ import (
 	context "context"
 	http "github.com/go-kratos/kratos/v2/transport/http"
 	binding "github.com/go-kratos/kratos/v2/transport/http/binding"
+	httpbody "google.golang.org/genproto/googleapis/api/httpbody"
 )
 
 // This is a compile-time assertion to ensure that this generated file
@@ -22,6 +23,7 @@ const _ = http.SupportPackageIsVersion1
 const OperationObjectStoreServiceAbortMultipartUpload = "/api.v1.services.objectstore.ObjectStoreService/AbortMultipartUpload"
 const OperationObjectStoreServiceCompleteMultipartUpload = "/api.v1.services.objectstore.ObjectStoreService/CompleteMultipartUpload"
 const OperationObjectStoreServiceDeleteObject = "/api.v1.services.objectstore.ObjectStoreService/DeleteObject"
+const OperationObjectStoreServiceDownloadObject = "/api.v1.services.objectstore.ObjectStoreService/DownloadObject"
 const OperationObjectStoreServiceGetMultipartUploadUrl = "/api.v1.services.objectstore.ObjectStoreService/GetMultipartUploadUrl"
 const OperationObjectStoreServiceGetObject = "/api.v1.services.objectstore.ObjectStoreService/GetObject"
 const OperationObjectStoreServiceInitiateMultipartUpload = "/api.v1.services.objectstore.ObjectStoreService/InitiateMultipartUpload"
@@ -35,9 +37,12 @@ type ObjectStoreServiceHTTPServer interface {
 	CompleteMultipartUpload(context.Context, *CompleteMultipartUploadRequest) (*CompleteMultipartUploadResponse, error)
 	// DeleteObject Deletes an object.
 	DeleteObject(context.Context, *DeleteObjectRequest) (*DeleteObjectResponse, error)
+	// DownloadObject Downloads the object content.
+	// This is used for local storage or when proxying content through the gateway.
+	DownloadObject(context.Context, *DownloadObjectRequest) (*httpbody.HttpBody, error)
 	// GetMultipartUploadUrl Generates a presigned URL for uploading a part.
 	GetMultipartUploadUrl(context.Context, *GetMultipartUploadUrlRequest) (*GetMultipartUploadUrlResponse, error)
-	// GetObject Downloads an object.
+	// GetObject Downloads an object metadata.
 	GetObject(context.Context, *GetObjectRequest) (*GetObjectResponse, error)
 	// InitiateMultipartUpload Initiates a multipart upload and returns an upload ID.
 	InitiateMultipartUpload(context.Context, *InitiateMultipartUploadRequest) (*InitiateMultipartUploadResponse, error)
@@ -51,6 +56,7 @@ func RegisterObjectStoreServiceHTTPServer(s *http.Server, srv ObjectStoreService
 	r := s.Route("/")
 	r.POST("/obs/objects", _ObjectStoreService_UploadObject0_HTTP_Handler(srv))
 	r.GET("/obs/objects/{id}", _ObjectStoreService_GetObject0_HTTP_Handler(srv))
+	r.GET("/obs/objects/{id}/download", _ObjectStoreService_DownloadObject0_HTTP_Handler(srv))
 	r.DELETE("/obs/objects/{id}", _ObjectStoreService_DeleteObject0_HTTP_Handler(srv))
 	r.POST("/obs/objects/multipart", _ObjectStoreService_InitiateMultipartUpload0_HTTP_Handler(srv))
 	r.GET("/obs/objects/multipart/{object_id}/uploads/{upload_id}/parts/{part_number}", _ObjectStoreService_GetMultipartUploadUrl0_HTTP_Handler(srv))
@@ -99,6 +105,28 @@ func _ObjectStoreService_GetObject0_HTTP_Handler(srv ObjectStoreServiceHTTPServe
 			return err
 		}
 		reply := out.(*GetObjectResponse)
+		return ctx.Result(200, reply)
+	}
+}
+
+func _ObjectStoreService_DownloadObject0_HTTP_Handler(srv ObjectStoreServiceHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in DownloadObjectRequest
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		if err := ctx.BindVars(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationObjectStoreServiceDownloadObject)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.DownloadObject(ctx, req.(*DownloadObjectRequest))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*httpbody.HttpBody)
 		return ctx.Result(200, reply)
 	}
 }
@@ -245,9 +273,12 @@ type ObjectStoreServiceHTTPClient interface {
 	CompleteMultipartUpload(ctx context.Context, req *CompleteMultipartUploadRequest, opts ...http.CallOption) (rsp *CompleteMultipartUploadResponse, err error)
 	// DeleteObject Deletes an object.
 	DeleteObject(ctx context.Context, req *DeleteObjectRequest, opts ...http.CallOption) (rsp *DeleteObjectResponse, err error)
+	// DownloadObject Downloads the object content.
+	// This is used for local storage or when proxying content through the gateway.
+	DownloadObject(ctx context.Context, req *DownloadObjectRequest, opts ...http.CallOption) (rsp *httpbody.HttpBody, err error)
 	// GetMultipartUploadUrl Generates a presigned URL for uploading a part.
 	GetMultipartUploadUrl(ctx context.Context, req *GetMultipartUploadUrlRequest, opts ...http.CallOption) (rsp *GetMultipartUploadUrlResponse, err error)
-	// GetObject Downloads an object.
+	// GetObject Downloads an object metadata.
 	GetObject(ctx context.Context, req *GetObjectRequest, opts ...http.CallOption) (rsp *GetObjectResponse, err error)
 	// InitiateMultipartUpload Initiates a multipart upload and returns an upload ID.
 	InitiateMultipartUpload(ctx context.Context, req *InitiateMultipartUploadRequest, opts ...http.CallOption) (rsp *InitiateMultipartUploadResponse, err error)
@@ -307,6 +338,21 @@ func (c *ObjectStoreServiceHTTPClientImpl) DeleteObject(ctx context.Context, in 
 	return &out, nil
 }
 
+// DownloadObject Downloads the object content.
+// This is used for local storage or when proxying content through the gateway.
+func (c *ObjectStoreServiceHTTPClientImpl) DownloadObject(ctx context.Context, in *DownloadObjectRequest, opts ...http.CallOption) (*httpbody.HttpBody, error) {
+	var out httpbody.HttpBody
+	pattern := "/obs/objects/{id}/download"
+	path := binding.EncodeURL(pattern, in, true)
+	opts = append(opts, http.Operation(OperationObjectStoreServiceDownloadObject))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "GET", path, nil, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, nil
+}
+
 // GetMultipartUploadUrl Generates a presigned URL for uploading a part.
 func (c *ObjectStoreServiceHTTPClientImpl) GetMultipartUploadUrl(ctx context.Context, in *GetMultipartUploadUrlRequest, opts ...http.CallOption) (*GetMultipartUploadUrlResponse, error) {
 	var out GetMultipartUploadUrlResponse
@@ -321,7 +367,7 @@ func (c *ObjectStoreServiceHTTPClientImpl) GetMultipartUploadUrl(ctx context.Con
 	return &out, nil
 }
 
-// GetObject Downloads an object.
+// GetObject Downloads an object metadata.
 func (c *ObjectStoreServiceHTTPClientImpl) GetObject(ctx context.Context, in *GetObjectRequest, opts ...http.CallOption) (*GetObjectResponse, error) {
 	var out GetObjectResponse
 	pattern := "/obs/objects/{id}"

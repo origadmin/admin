@@ -14,6 +14,7 @@ import (
 
 	"github.com/origadmin/runtime/errors"
 	"github.com/origadmin/runtime/log"
+	"github.com/origadmin/toolkits/crypto/hash"
 	"origadmin/application/admin/api/v1/services/system"
 	"origadmin/application/admin/api/v1/services/types"
 	"origadmin/application/admin/internal/broker"
@@ -28,14 +29,16 @@ type UserService struct {
 	system.UnimplementedUserServiceServer
 	uc        *biz.UserUseCase
 	publisher broker.Publisher
+	hasher    hash.Crypto
 	log       *log.Helper
 }
 
 // NewUserService creates a new UserService.
-func NewUserService(uc *biz.UserUseCase, publisher broker.Publisher, logger log.Logger) *UserService {
+func NewUserService(uc *biz.UserUseCase, publisher broker.Publisher, hasher hash.Crypto, logger log.Logger) *UserService {
 	return &UserService{
 		uc:        uc,
 		publisher: publisher,
+		hasher:    hasher,
 		log:       log.NewHelper(log.With(logger, "module", "system.service.user")),
 	}
 }
@@ -140,10 +143,16 @@ func (s *UserService) UpdateUserStatus(ctx context.Context, req *system.UpdateUs
 }
 
 // ChangeUserPassword updates a user's password.
-// The `password` field in the request MUST contain an already hashed password.
-// The identity service is responsible for any hashing logic.
+// The `password` field in the request contains plain text password which will be hashed here.
 func (s *UserService) ChangeUserPassword(ctx context.Context, req *system.ChangeUserPasswordRequest) (*system.ChangeUserPasswordResponse, error) {
-	err := s.uc.UpdateUserPassword(ctx, req.GetId(), req.GetPassword())
+	// Hash the plain text password before storing it
+	hashedPassword, err := s.hasher.Hash(req.GetPassword())
+	if err != nil {
+		s.log.Errorf("Failed to hash password: %v", err)
+		return nil, errors.InternalServer("PASSWORD_HASH_FAILED", "Failed to process password")
+	}
+
+	err = s.uc.UpdateUserPassword(ctx, req.GetId(), hashedPassword)
 	if err != nil {
 		if ent.IsNotFound(err) {
 			return nil, errors.NotFound("USER_NOT_FOUND", "User not found")
@@ -151,6 +160,23 @@ func (s *UserService) ChangeUserPassword(ctx context.Context, req *system.Change
 		return nil, err
 	}
 	return &system.ChangeUserPasswordResponse{}, nil
+}
+
+// VerifyPassword verifies if the provided password matches the user's password.
+func (s *UserService) VerifyPassword(ctx context.Context, req *system.VerifyPasswordRequest) (*system.VerifyPasswordResponse, error) {
+	hashedPassword, err := s.uc.GetUserPasswordHash(ctx, req.GetUserId())
+	if err != nil {
+		if ent.IsNotFound(err) {
+			return nil, errors.NotFound("USER_NOT_FOUND", "User not found")
+		}
+		return nil, err
+	}
+
+	validErr := s.hasher.Verify(hashedPassword, req.GetPassword())
+	if validErr != nil {
+		return nil, errors.BadRequest("INVALID_PASSWORD", "Invalid old password")
+	}
+	return &system.VerifyPasswordResponse{Valid: true}, nil
 }
 
 func (s *UserService) ListUsers(ctx context.Context, req *system.ListUsersRequest) (*system.ListUsersResponse, error) {
@@ -187,12 +213,19 @@ func (s *UserService) GetUser(ctx context.Context, req *system.GetUserRequest) (
 }
 
 // CreateUser creates a new user.
-// The `password` field in the request MUST contain an already hashed password.
-// The identity service is responsible for any hashing logic.
+// CreateUser creates a new user with password hashing.
+// The password field in the request contains plain text password which will be hashed here.
 func (s *UserService) CreateUser(ctx context.Context, req *system.CreateUserRequest) (*system.CreateUserResponse, error) {
 	opts := dto.CreateUserOptionsFromRequest(req)
-	// The password from the request is expected to be already hashed by the caller (e.g., identity service).
-	user, err := s.uc.CreateUser(ctx, req.GetUser(), req.GetPassword(), opts)
+
+	// Hash the plain text password before storing it
+	hashedPassword, err := s.hasher.Hash(req.GetPassword())
+	if err != nil {
+		s.log.Errorf("Failed to hash password: %v", err)
+		return nil, errors.InternalServer("PASSWORD_HASH_FAILED", "Failed to process password")
+	}
+
+	user, err := s.uc.CreateUser(ctx, req.GetUser(), hashedPassword, opts)
 	if err != nil {
 		return nil, err
 	}

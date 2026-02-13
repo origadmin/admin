@@ -10,6 +10,7 @@ import (
 	"github.com/origadmin/runtime/service/transport"
 	"origadmin/application/admin/api/v1/services/filemanager"
 	"origadmin/application/admin/api/v1/services/identity"
+	"origadmin/application/admin/api/v1/services/objectstore"
 	"origadmin/application/admin/api/v1/services/system"
 	"origadmin/application/admin/internal/gateway/client"
 )
@@ -25,15 +26,22 @@ type GatewayService struct {
 	Identity    *client.IdentityBridgeSet
 	System      *client.SystemBridgeSet
 	FileManager *client.FileManagerBridgeSet
+	ObjectStore *client.ObjectStoreBridgeSet
 }
 
 // NewGatewayService creates a new GatewayService, aggregating the generated
 // bridge clients for all downstream services.
-func NewGatewayService(identityClient *client.IdentityBridgeSet, systemClient *client.SystemBridgeSet, fileManagerClient *client.FileManagerBridgeSet) (*GatewayService, error) {
+func NewGatewayService(
+	identityClient *client.IdentityBridgeSet,
+	systemClient *client.SystemBridgeSet,
+	fileManagerClient *client.FileManagerBridgeSet,
+	objectStoreClient *client.ObjectStoreBridgeSet,
+) (*GatewayService, error) {
 	return &GatewayService{
 		Identity:    identityClient,
 		System:      systemClient,
 		FileManager: fileManagerClient,
+		ObjectStore: objectStoreClient,
 	}, nil
 }
 
@@ -54,4 +62,7 @@ func (s *GatewayService) RegisterHTTPHandlers(srv *transport.HTTPServer) {
 
 	// Register handlers for the 'filemanager' service
 	filemanager.RegisterFileManagerServiceHTTPServer(srv, s.FileManager.FileManager)
+
+	// Register handlers for the 'objectstore' service
+	objectstore.RegisterObjectStoreServiceHTTPServer(srv, s.ObjectStore.ObjectStore)
 }

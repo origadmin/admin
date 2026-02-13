@@ -26,8 +26,13 @@ import (
 	"github.com/origadmin/runtime/container"
 	"github.com/origadmin/runtime/extensions/configutil"
 	"github.com/origadmin/runtime/log"
-	"github.com/origadmin/runtime/middleware"
 	"github.com/origadmin/runtime/security"
+	_ "origadmin/application/admin/api/v1/services/admin"
+	_ "origadmin/application/admin/api/v1/services/filemanager"
+	_ "origadmin/application/admin/api/v1/services/identity"
+	_ "origadmin/application/admin/api/v1/services/notification"
+	_ "origadmin/application/admin/api/v1/services/objectstore"
+	_ "origadmin/application/admin/api/v1/services/system"
 	"origadmin/application/admin/internal/broker"
 	"origadmin/application/admin/internal/conf"
 	"origadmin/application/admin/internal/data"
@@ -141,12 +146,10 @@ func ProvideServiceMiddlewares(app *runtime.App, authorizer *casbin.Authorizer, 
 	if err != nil {
 		return nil, err
 	}
-	authzM := factory.NewBackend(authorizer, skip, log.WithLogger(app.Logger()), authzmiddleware.WithRuleSpec(ruleSpec))
+	authzM := factory.NewAuthzBackend(authorizer, skip, log.WithLogger(app.Logger()), authzmiddleware.WithRuleSpec(ruleSpec))
 	provider.RegisterServerMiddleware("authz", authzM)
-	provider.RegisterClientMiddleware("authz", middleware.Noop())
-	propagationM := factory.NewPropagationOnly(log.WithLogger(app.Logger()))
+	propagationM := factory.NewPropagationBackend(log.WithLogger(app.Logger()))
 	provider.RegisterServerMiddleware("propagation", propagationM)
-	provider.RegisterClientMiddleware("propagation", middleware.Noop())
 	log.NewHelper(app.Logger()).Infof("registered %+v middlewares", provider.Names())
 	return provider, nil
 }

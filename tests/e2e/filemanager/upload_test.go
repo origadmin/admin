@@ -10,6 +10,7 @@ import (
 	"io"
 	"net/http"
 	"strconv"
+	"strings"
 	"testing"
 	"time"
 
@@ -45,6 +46,7 @@ func TestSimpleUploadAndDownload(t *testing.T) {
 	client := tools.NewSystemTestClient("http://localhost:8000")
 	client.SetPrefix("/api/v1") // Ensure prefix is correct
 
+	// The prefix is now handled automatically by the client, so we pass the relative path.
 	resp := client.Post(t, "/fm/files", uploadReq, token)
 	defer resp.Body.Close()
 
@@ -80,9 +82,20 @@ func TestSimpleUploadAndDownload(t *testing.T) {
 
 	// 5. Download the file content
 	downloadURL := getFileResp.DownloadUrl
+	// If the URL is relative, prepend the gateway base URL
+	if strings.HasPrefix(downloadURL, "/") {
+		downloadURL = client.GetBaseURL() + downloadURL
+	}
+
 	// Use a client with a longer timeout for downloads if necessary
 	downloadClient := http.Client{Timeout: 30 * time.Second}
-	downloadHTTPResp, err := downloadClient.Get(downloadURL)
+	t.Logf("downloadURL: %s", downloadURL)
+	// Create request manually to add Authorization header
+	req, err := http.NewRequest("GET", downloadURL, nil)
+	require.NoError(t, err)
+	req.Header.Set("Authorization", "Bearer "+token)
+
+	downloadHTTPResp, err := downloadClient.Do(req)
 	require.NoError(t, err)
 	defer downloadHTTPResp.Body.Close()
 
@@ -91,6 +104,13 @@ func TestSimpleUploadAndDownload(t *testing.T) {
 	require.NoError(t, err)
 
 	// 6. Verify content
+	if !bytes.Equal(fileContent, downloadedContent) {
+		t.Logf("Uploaded size: %d, Downloaded size: %d", len(fileContent), len(downloadedContent))
+		if len(fileContent) > 0 && len(downloadedContent) > 0 {
+			t.Logf("Uploaded first 10 bytes: %x", fileContent[:10])
+			t.Logf("Downloaded first 10 bytes: %x", downloadedContent[:10])
+		}
+	}
 	require.True(t, bytes.Equal(fileContent, downloadedContent), "Downloaded content does not match uploaded content")
 
 	// 7. Delete the file

@@ -18,6 +18,7 @@ import (
 	"github.com/google/wire"
 	"google.golang.org/protobuf/types/known/timestamppb"
 
+	"github.com/origadmin/runtime/extensions/configutil"
 	"origadmin/application/admin/api/v1/services/types"
 	"origadmin/application/admin/internal/conf"
 	"origadmin/application/admin/internal/features/objectstore/dto"
@@ -37,13 +38,34 @@ var ProviderSet = wire.NewSet(
 )
 
 // NewLocalStorageConfig creates a local storage config from the main config.
-// For now, returns default config as the full protobuf integration is complex.
 func NewLocalStorageConfig(c *conf.Config) (*LocalStorageConfig, error) {
-	// Return default config for now
-	// TODO: Integrate with full protobuf configuration when needed
+	// Default absolute path
+	defaultBasePath := filepath.Join(os.TempDir(), "origadmin", "objects")
+	absPath, err := filepath.Abs(defaultBasePath)
+	if err != nil {
+		return nil, fmt.Errorf("failed to get absolute path for storage: %w", err)
+	}
+
+	// Try to load from config, but don't fail if missing
+	objectStores := c.GetBootstrap().GetData().GetObjectStores()
+	if objectStores != nil {
+		store, _, err := configutil.Normalize(objectStores.GetActive(), objectStores.GetDefault(), objectStores.GetConfigs())
+		if err == nil && store != nil && store.GetLocal() != nil {
+			if store.GetLocal().GetRoot() != "" {
+				// If config exists, use it (and ensure it's absolute)
+				configPath, err := filepath.Abs(store.GetLocal().GetRoot())
+				if err == nil {
+					absPath = configPath
+				}
+			}
+		}
+	}
+
+	fmt.Printf("LocalStorageConfig: BasePath=%s\n", absPath)
+
 	return &LocalStorageConfig{
-		BasePath: "./tmp/objects",
-		BaseURL:  "http://localhost:8080/objects",
+		BasePath: absPath,
+		BaseURL:  "", // Not used
 	}, nil
 }
 
@@ -75,6 +97,8 @@ func (s *LocalStorage) Put(ctx context.Context, name string, data io.Reader, siz
 	id := uuid.New().String()
 	filePath := filepath.Join(s.basePath, id)
 
+	fmt.Printf("LocalStorage Put: Writing to %s\n", filePath)
+
 	file, err := os.Create(filePath)
 	if err != nil {
 		return nil, fmt.Errorf("failed to create file: %w", err)
@@ -85,6 +109,8 @@ func (s *LocalStorage) Put(ctx context.Context, name string, data io.Reader, siz
 	if err != nil {
 		return nil, fmt.Errorf("failed to write file content: %w", err)
 	}
+
+	fmt.Printf("LocalStorage Put: Written %d bytes to %s\n", written, filePath)
 
 	return &types.Object{
 		Id:          id,

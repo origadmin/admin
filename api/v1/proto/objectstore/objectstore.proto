@@ -3,6 +3,7 @@ syntax = "proto3";
 package api.v1.services.objectstore;
 
 import "google/api/annotations.proto";
+import "google/api/httpbody.proto";
 import "types/objectstore.proto";
 
 option go_package = "origadmin/application/admin/api/v1/services/objectstore;objectstore";
@@ -23,10 +24,18 @@ service ObjectStoreService {
     };
   }
 
-  // Downloads an object.
+  // Downloads an object metadata.
   rpc GetObject(GetObjectRequest) returns (GetObjectResponse) {
     option (google.api.http) = {
       get: "/obs/objects/{id}"
+    };
+  }
+
+  // Downloads the object content.
+  // This is used for local storage or when proxying content through the gateway.
+  rpc DownloadObject(DownloadObjectRequest) returns (google.api.HttpBody) {
+    option (google.api.http) = {
+      get: "/obs/objects/{id}/download"
     };
   }
 
@@ -151,6 +160,15 @@ message GetObjectRequest {
 // Response message for getting an object.
 message GetObjectResponse {
   api.v1.services.types.Object object = 1;
+}
+
+// Request message for downloading an object.
+message DownloadObjectRequest {
+  string id = 1;
+  // The byte range to download (e.g., "bytes=0-1023").
+  // If empty, the entire object is downloaded.
+  // This allows for resumable downloads and parallel chunk downloading.
+  string range = 2;
 }
 
 // Request message for deleting an object.

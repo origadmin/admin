@@ -20,6 +20,8 @@ import (
 	"github.com/google/wire"
 
 	"github.com/origadmin/runtime/security"
+	"github.com/origadmin/toolkits/crypto/hash"
+
 	"origadmin/application/admin/api/v1/services/types"
 	"origadmin/application/admin/internal/conf"
 	confpb "origadmin/application/admin/internal/conf/pb"
@@ -42,16 +44,18 @@ type Seeder struct {
 	userUseCase     *biz.UserUseCase
 	resourceUseCase *biz.ResourceUseCase
 	viewUseCase     *biz.ViewUseCase
+	hasher          hash.Crypto
 	rootUserCfg     *confpb.RootUser
 	log             *log.Helper
 }
 
 // NewSeeder creates a new Seeder.
-func NewSeeder(userUseCase *biz.UserUseCase, resourceUseCase *biz.ResourceUseCase, viewUseCase *biz.ViewUseCase, cfg *conf.Config, logger log.Logger) (*Seeder, error) {
+func NewSeeder(userUseCase *biz.UserUseCase, resourceUseCase *biz.ResourceUseCase, viewUseCase *biz.ViewUseCase, hasher hash.Crypto, cfg *conf.Config, logger log.Logger) (*Seeder, error) {
 	return &Seeder{
 		userUseCase:     userUseCase,
 		resourceUseCase: resourceUseCase,
 		viewUseCase:     viewUseCase,
+		hasher:          hasher,
 		rootUserCfg:     cfg.RootUser(),
 		log:             log.NewHelper(log.With(logger, "module", "seeder")),
 	}, nil
@@ -124,9 +128,16 @@ func (s *Seeder) createRootUser() error {
 		Email:    s.rootUserCfg.GetEmail(),
 	}
 
+	// Hash the plain text password before creating the user
+	hashedPassword, err := s.hasher.Hash(password)
+	if err != nil {
+		s.log.Errorf("Failed to hash password for root user '%s': %v", username, err)
+		return err
+	}
+
 	// Use contextutil.NewSystemUser to mark this operation as creating a system user.
 	systemCtx := contextutil.NewSystemUser(ctx)
-	createdUser, err := s.userUseCase.CreateUser(systemCtx, newUser, password)
+	createdUser, err := s.userUseCase.CreateUser(systemCtx, newUser, hashedPassword)
 	if err != nil {
 		s.log.Errorf("Failed to create root user '%s': %v", username, err)
 		return err

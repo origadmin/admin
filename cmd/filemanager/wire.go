@@ -4,12 +4,11 @@
 package main
 
 import (
-	"context"
 	"github.com/go-kratos/kratos/v2"
-	"github.com/go-kratos/kratos/v2/transport/grpc"
 	"github.com/google/wire"
 
 	"github.com/origadmin/runtime"
+	"github.com/origadmin/runtime/container"
 	objclient "origadmin/application/admin/api/v1/services/objectstore"
 	"origadmin/application/admin/internal/conf"
 	"origadmin/application/admin/internal/data"
@@ -17,17 +16,17 @@ import (
 	"origadmin/application/admin/internal/features/filemanager/dal"
 	"origadmin/application/admin/internal/features/filemanager/server"
 	"origadmin/application/admin/internal/features/filemanager/service"
+	"origadmin/application/admin/internal/helpers/grpcclient"
 	"origadmin/application/admin/internal/helpers/providers"
 )
 
-// NewObjectStoreServiceClient creates a new ObjectStoreService client.
-func NewObjectStoreServiceClient(c *conf.Config) (objclient.ObjectStoreServiceClient, func(), error) {
-	// TODO: Get address from config 'c.Clients.Objectstore.Grpc.Addr'
-	// For now, we hardcode the address.
-	conn, err := grpc.DialInsecure(
-		context.Background(),
-		grpc.WithEndpoint(":9001"), // Assuming objectstore runs on port 9001
-	)
+// NewObjectStoreServiceClient creates a new ObjectStoreService client using service discovery.
+func NewObjectStoreServiceClient(
+	app *runtime.App,
+	bootstrap *conf.Config,
+	middlewareProvider container.ClientMiddlewareProvider,
+) (objclient.ObjectStoreServiceClient, func(), error) {
+	conn, err := grpcclient.NewConn(app, bootstrap, "objectstore", middlewareProvider)
 	if err != nil {
 		return nil, nil, err
 	}

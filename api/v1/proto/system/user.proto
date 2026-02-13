@@ -95,6 +95,12 @@ service UserService {
     option (contrib.api.policy.v1.policy) = {name: "authz"};
   }
 
+  // VerifyPassword verifies if the provided password matches the user's password.
+  // This is primarily for internal use by other services (like Identity).
+  rpc VerifyPassword(VerifyPasswordRequest) returns (VerifyPasswordResponse) {
+    option (contrib.api.policy.v1.policy) = {name: "authz"};
+  }
+
   // InviteUser invite a new user
   rpc InviteUser(InviteUserRequest) returns (InviteUserResponse) {
     option (google.api.http) = {
@@ -170,6 +176,18 @@ message ChangeUserPasswordRequest {
 }
 
 message ChangeUserPasswordResponse {}
+
+message VerifyPasswordRequest {
+  // The user ID.
+  int64 user_id = 1 [json_name = "user_id"];
+  // The plain text password to verify.
+  string password = 2 [json_name = "password"];
+}
+
+message VerifyPasswordResponse {
+  // True if the password is valid, false otherwise.
+  bool valid = 1 [json_name = "valid"];
+}
 
 message ListUsersRequest {
   // The page number.

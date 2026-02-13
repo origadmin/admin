@@ -137,12 +137,12 @@ func (r *meGRPCRepo) UpdatePreferences(ctx context.Context, userID int64, prefer
 }
 
 // UpdatePassword changes the current user's password via gRPC.
-// Passes plain text passwords to system's ChangeUserPassword which handles verification and hashing.
-func (r *meGRPCRepo) UpdatePassword(ctx context.Context, userID int64, hashedPassword string) error {
+// Passes plain text password to system's ChangeUserPassword which handles hashing.
+func (r *meGRPCRepo) UpdatePassword(ctx context.Context, userID int64, plainPassword string) error {
 	r.log.WithContext(ctx).Debugf("Changing password for user ID %d via gRPC", userID)
 	_, err := r.userClient.ChangeUserPassword(ctx, &systemv1.ChangeUserPasswordRequest{
 		Id:       userID,
-		Password: hashedPassword,
+		Password: plainPassword,
 	})
 	return err
 }

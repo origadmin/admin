@@ -7,7 +7,6 @@ import (
 	"github.com/go-kratos/kratos/v2/log"
 
 	"github.com/origadmin/toolkits/crypto/hash"
-
 	"origadmin/application/admin/api/v1/services/types"
 	"origadmin/application/admin/internal/features/identity/dto"
 )

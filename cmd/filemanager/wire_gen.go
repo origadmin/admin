@@ -7,10 +7,9 @@
 package main
 
 import (
-	"context"
 	"github.com/go-kratos/kratos/v2"
-	"github.com/go-kratos/kratos/v2/transport/grpc"
 	"github.com/origadmin/runtime"
+	"github.com/origadmin/runtime/container"
 	"origadmin/application/admin/api/v1/services/objectstore"
 	"origadmin/application/admin/internal/conf"
 	"origadmin/application/admin/internal/data"
@@ -18,6 +17,7 @@ import (
 	"origadmin/application/admin/internal/features/filemanager/dal"
 	"origadmin/application/admin/internal/features/filemanager/server"
 	"origadmin/application/admin/internal/features/filemanager/service"
+	"origadmin/application/admin/internal/helpers/grpcclient"
 	"origadmin/application/admin/internal/helpers/providers"
 )
 
@@ -45,13 +45,18 @@ func wireApp(app *runtime.App, c *conf.Config) (*kratos.App, func(), error) {
 		return nil, nil, err
 	}
 	fileRepo := dal.NewFileRepo(database)
-	objectStoreServiceClient, cleanup2, err := NewObjectStoreServiceClient(c)
+	clientMiddlewareProvider, err := providers.ProvideClientMiddlewares(app)
+	if err != nil {
+		cleanup()
+		return nil, nil, err
+	}
+	objectStoreServiceClient, cleanup2, err := NewObjectStoreServiceClient(app, c, clientMiddlewareProvider)
 	if err != nil {
 		cleanup()
 		return nil, nil, err
 	}
 	fileUseCase := biz.NewFileUseCase(fileRepo, objectStoreServiceClient, v)
-	fileManagerService := service.NewFileManagerService(fileUseCase)
+	fileManagerService := service.NewFileManagerService(fileUseCase, v)
 	adapter, err := data.NewAdapterFromApp(app, database)
 	if err != nil {
 		cleanup2()
@@ -92,10 +97,13 @@ func wireApp(app *runtime.App, c *conf.Config) (*kratos.App, func(), error) {
 
 // wire.go:
 
-// NewObjectStoreServiceClient creates a new ObjectStoreService client.
-func NewObjectStoreServiceClient(c *conf.Config) (objectstore.ObjectStoreServiceClient, func(), error) {
-
-	conn, err := grpc.DialInsecure(context.Background(), grpc.WithEndpoint(":9001"))
+// NewObjectStoreServiceClient creates a new ObjectStoreService client using service discovery.
+func NewObjectStoreServiceClient(
+	app *runtime.App,
+	bootstrap *conf.Config,
+	middlewareProvider container.ClientMiddlewareProvider,
+) (objectstore.ObjectStoreServiceClient, func(), error) {
+	conn, err := grpcclient.NewConn(app, bootstrap, "objectstore", middlewareProvider)
 	if err != nil {
 		return nil, nil, err
 	}

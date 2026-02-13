@@ -42,7 +42,7 @@ func wireApp(app *runtime.App, c *conf.Config) (*kratos.App, func(), error) {
 	}
 	logger := providers.ProvideLogger(app)
 	objectUseCase := biz.NewObjectUseCase(localStorage, logger)
-	objectStoreService := service.NewObjectStoreService(objectUseCase)
+	objectStoreService := service.NewObjectStoreService(objectUseCase, logger)
 	provider, err := data.NewStorageProvider(app)
 	if err != nil {
 		return nil, nil, err
@@ -72,7 +72,7 @@ func wireApp(app *runtime.App, c *conf.Config) (*kratos.App, func(), error) {
 		cleanup()
 		return nil, nil, err
 	}
-	v, err := server.NewServers(app, servers, objectStoreService, serverMiddlewareProvider)
+	v, err := server.NewServers(app, servers, objectStoreService, serverMiddlewareProvider, localStorageConfig)
 	if err != nil {
 		cleanup()
 		return nil, nil, err

@@ -10,6 +10,9 @@ sources:
       path: databases.yaml
     type: file
   - file:
+      path: objectstore.yaml
+    type: file
+  - file:
       path: logger.yaml
     type: file
   - file:
