@@ -82,3 +82,127 @@ func (uc *FileUseCase) GetFile(ctx context.Context, id int64) (*types.FileMetada
 
 	return file, downloadURL, nil
 }
+
+// InitiateMultipartUpload initiates a multipart upload for large files.
+func (uc *FileUseCase) InitiateMultipartUpload(ctx context.Context, name, contentType, visibility string, size int64, ownerID int64) (string, error) {
+	uc.log.Infof("InitiateMultipartUpload: name=%s, size=%d, visibility=%s", name, size, visibility)
+
+	// 1. Initiate multipart upload in ObjectStore
+	req := &objclient.InitiateMultipartUploadRequest{
+		Name:        name,
+		ContentType: contentType,
+	}
+	resp, err := uc.obj.InitiateMultipartUpload(ctx, req)
+	if err != nil {
+		uc.log.Errorf("failed to initiate multipart upload: %v", err)
+		return "", err
+	}
+
+	// 2. Create file metadata with upload_id stored temporarily
+	// Note: We'll update ObjectId after completing the upload
+	fileMeta := &types.FileMetadata{
+		Name:       name,
+		ObjectId:   resp.UploadId, // Store upload_id temporarily in ObjectId
+		OwnerId:    ownerID,
+		Size:       size,
+		Visibility: visibility,
+	}
+
+	_, err = uc.repo.Create(ctx, fileMeta)
+	if err != nil {
+		uc.log.Errorf("failed to create file metadata: %v", err)
+		return "", err
+	}
+
+	return resp.UploadId, nil
+}
+
+// GetMultipartUploadUrl generates a presigned URL for uploading a part.
+func (uc *FileUseCase) GetMultipartUploadUrl(ctx context.Context, uploadID string, partNumber int32) (string, error) {
+	uc.log.Infof("GetMultipartUploadUrl: uploadID=%s, partNumber=%d", uploadID, partNumber)
+
+	req := &objclient.GetMultipartUploadUrlRequest{
+		UploadId:   uploadID,
+		PartNumber: partNumber,
+	}
+	resp, err := uc.obj.GetMultipartUploadUrl(ctx, req)
+	if err != nil {
+		uc.log.Errorf("failed to get multipart upload URL: %v", err)
+		return "", err
+	}
+
+	return resp.UploadUrl, nil
+}
+
+// CompleteMultipartUpload completes a multipart upload.
+func (uc *FileUseCase) CompleteMultipartUpload(ctx context.Context, uploadID string, parts []*types.PartInfo) (*types.FileMetadata, error) {
+	uc.log.Infof("CompleteMultipartUpload: uploadID=%s, partsCount=%d", uploadID, len(parts))
+
+	// Convert to proto PartInfo
+	protoParts := make([]*types.PartInfo, len(parts))
+	for i, p := range parts {
+		protoParts[i] = &types.PartInfo{
+			PartNumber: p.PartNumber,
+			Etag:       p.Etag,
+		}
+	}
+
+	req := &objclient.CompleteMultipartUploadRequest{
+		UploadId: uploadID,
+		Parts:    protoParts,
+	}
+	resp, err := uc.obj.CompleteMultipartUpload(ctx, req)
+	if err != nil {
+		uc.log.Errorf("failed to complete multipart upload: %v", err)
+		return nil, err
+	}
+
+	// Update file metadata with the actual object ID
+	// Find the file by ObjectId (which contains uploadID temporarily)
+	files, _, err := uc.repo.List(ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	var fileID int64
+	for _, f := range files {
+		if f.ObjectId == uploadID {
+			fileID = f.Id
+			break
+		}
+	}
+
+	if fileID == 0 {
+		return nil, fmt.Errorf("file not found with uploadID: %s", uploadID)
+	}
+
+	// Update file with actual object ID
+	fileMeta := &types.FileMetadata{
+		Id:       fileID,
+		ObjectId: resp.Object.Id, // Update with actual object ID from response
+	}
+
+	updated, err := uc.repo.Update(ctx, fileMeta)
+	if err != nil {
+		uc.log.Errorf("failed to update file metadata: %v", err)
+		return nil, err
+	}
+
+	return updated, nil
+}
+
+// AbortMultipartUpload aborts a multipart upload.
+func (uc *FileUseCase) AbortMultipartUpload(ctx context.Context, uploadID string) error {
+	uc.log.Infof("AbortMultipartUpload: uploadID=%s", uploadID)
+
+	req := &objclient.AbortMultipartUploadRequest{
+		UploadId: uploadID,
+	}
+	_, err := uc.obj.AbortMultipartUpload(ctx, req)
+	if err != nil {
+		uc.log.Errorf("failed to abort multipart upload: %v", err)
+		return err
+	}
+
+	return nil
+}

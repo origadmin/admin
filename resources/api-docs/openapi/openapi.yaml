@@ -1180,6 +1180,11 @@ paths:
           required: true
           schema:
             type: string
+        - name: range
+          in: query
+          description: "The byte range to download (e.g., \"bytes=0-1023\").\r\n If empty, the entire object is downloaded.\r\n This allows for resumable downloads and parallel chunk downloading."
+          schema:
+            type: string
       responses:
         "200":
           description: OK
@@ -3992,6 +3997,18 @@ components:
             allOf:
               - $ref: '#/components/schemas/api.v1.services.types.Object'
             description: 'Optional: Detailed object info from ObjectStore (not stored in DB)'
+          is_permanent:
+            type: boolean
+            description: Access control fields
+          expires_at:
+            type: string
+            format: date-time
+          max_downloads:
+            type: integer
+            format: int32
+          download_count:
+            type: integer
+            format: int32
         description: Represents file metadata managed by the filemanager service.
       api.v1.services.types.Notification:
         type: object

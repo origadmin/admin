@@ -2263,28 +2263,34 @@ func (m *DepartmentMutation) ResetEdge(name string) error {
 // FileMutation represents an operation that mutates the File nodes in the graph.
 type FileMutation struct {
 	config
-	op               Op
-	typ              string
-	id               *int64
-	create_author    *int64
-	addcreate_author *int64
-	update_author    *int64
-	addupdate_author *int64
-	create_time      *time.Time
-	update_time      *time.Time
-	delete_time      *time.Time
-	owner_id         *int64
-	addowner_id      *int64
-	name             *string
-	object_id        *string
-	visibility       *string
-	mime_type        *string
-	size             *int64
-	addsize          *int64
-	clearedFields    map[string]struct{}
-	done             bool
-	oldValue         func(context.Context) (*File, error)
-	predicates       []predicate.File
+	op                Op
+	typ               string
+	id                *int64
+	create_author     *int64
+	addcreate_author  *int64
+	update_author     *int64
+	addupdate_author  *int64
+	create_time       *time.Time
+	update_time       *time.Time
+	delete_time       *time.Time
+	owner_id          *int64
+	addowner_id       *int64
+	name              *string
+	object_id         *string
+	visibility        *string
+	mime_type         *string
+	size              *int64
+	addsize           *int64
+	is_permanent      *bool
+	expires_at        *time.Time
+	max_downloads     *int
+	addmax_downloads  *int
+	download_count    *int
+	adddownload_count *int
+	clearedFields     map[string]struct{}
+	done              bool
+	oldValue          func(context.Context) (*File, error)
+	predicates        []predicate.File
 }
 
 var _ ent.Mutation = (*FileMutation)(nil)
@@ -2935,6 +2941,203 @@ func (m *FileMutation) ResetSize() {
 	m.addsize = nil
 }
 
+// SetIsPermanent sets the "is_permanent" field.
+func (m *FileMutation) SetIsPermanent(b bool) {
+	m.is_permanent = &b
+}
+
+// IsPermanent returns the value of the "is_permanent" field in the mutation.
+func (m *FileMutation) IsPermanent() (r bool, exists bool) {
+	v := m.is_permanent
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldIsPermanent returns the old "is_permanent" field's value of the File entity.
+// If the File object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *FileMutation) OldIsPermanent(ctx context.Context) (v bool, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldIsPermanent is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldIsPermanent requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldIsPermanent: %w", err)
+	}
+	return oldValue.IsPermanent, nil
+}
+
+// ResetIsPermanent resets all changes to the "is_permanent" field.
+func (m *FileMutation) ResetIsPermanent() {
+	m.is_permanent = nil
+}
+
+// SetExpiresAt sets the "expires_at" field.
+func (m *FileMutation) SetExpiresAt(t time.Time) {
+	m.expires_at = &t
+}
+
+// ExpiresAt returns the value of the "expires_at" field in the mutation.
+func (m *FileMutation) ExpiresAt() (r time.Time, exists bool) {
+	v := m.expires_at
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldExpiresAt returns the old "expires_at" field's value of the File entity.
+// If the File object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *FileMutation) OldExpiresAt(ctx context.Context) (v time.Time, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldExpiresAt is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldExpiresAt requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldExpiresAt: %w", err)
+	}
+	return oldValue.ExpiresAt, nil
+}
+
+// ClearExpiresAt clears the value of the "expires_at" field.
+func (m *FileMutation) ClearExpiresAt() {
+	m.expires_at = nil
+	m.clearedFields[file.FieldExpiresAt] = struct{}{}
+}
+
+// ExpiresAtCleared returns if the "expires_at" field was cleared in this mutation.
+func (m *FileMutation) ExpiresAtCleared() bool {
+	_, ok := m.clearedFields[file.FieldExpiresAt]
+	return ok
+}
+
+// ResetExpiresAt resets all changes to the "expires_at" field.
+func (m *FileMutation) ResetExpiresAt() {
+	m.expires_at = nil
+	delete(m.clearedFields, file.FieldExpiresAt)
+}
+
+// SetMaxDownloads sets the "max_downloads" field.
+func (m *FileMutation) SetMaxDownloads(i int) {
+	m.max_downloads = &i
+	m.addmax_downloads = nil
+}
+
+// MaxDownloads returns the value of the "max_downloads" field in the mutation.
+func (m *FileMutation) MaxDownloads() (r int, exists bool) {
+	v := m.max_downloads
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldMaxDownloads returns the old "max_downloads" field's value of the File entity.
+// If the File object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *FileMutation) OldMaxDownloads(ctx context.Context) (v int, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldMaxDownloads is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldMaxDownloads requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldMaxDownloads: %w", err)
+	}
+	return oldValue.MaxDownloads, nil
+}
+
+// AddMaxDownloads adds i to the "max_downloads" field.
+func (m *FileMutation) AddMaxDownloads(i int) {
+	if m.addmax_downloads != nil {
+		*m.addmax_downloads += i
+	} else {
+		m.addmax_downloads = &i
+	}
+}
+
+// AddedMaxDownloads returns the value that was added to the "max_downloads" field in this mutation.
+func (m *FileMutation) AddedMaxDownloads() (r int, exists bool) {
+	v := m.addmax_downloads
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// ResetMaxDownloads resets all changes to the "max_downloads" field.
+func (m *FileMutation) ResetMaxDownloads() {
+	m.max_downloads = nil
+	m.addmax_downloads = nil
+}
+
+// SetDownloadCount sets the "download_count" field.
+func (m *FileMutation) SetDownloadCount(i int) {
+	m.download_count = &i
+	m.adddownload_count = nil
+}
+
+// DownloadCount returns the value of the "download_count" field in the mutation.
+func (m *FileMutation) DownloadCount() (r int, exists bool) {
+	v := m.download_count
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldDownloadCount returns the old "download_count" field's value of the File entity.
+// If the File object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *FileMutation) OldDownloadCount(ctx context.Context) (v int, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldDownloadCount is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldDownloadCount requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldDownloadCount: %w", err)
+	}
+	return oldValue.DownloadCount, nil
+}
+
+// AddDownloadCount adds i to the "download_count" field.
+func (m *FileMutation) AddDownloadCount(i int) {
+	if m.adddownload_count != nil {
+		*m.adddownload_count += i
+	} else {
+		m.adddownload_count = &i
+	}
+}
+
+// AddedDownloadCount returns the value that was added to the "download_count" field in this mutation.
+func (m *FileMutation) AddedDownloadCount() (r int, exists bool) {
+	v := m.adddownload_count
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// ResetDownloadCount resets all changes to the "download_count" field.
+func (m *FileMutation) ResetDownloadCount() {
+	m.download_count = nil
+	m.adddownload_count = nil
+}
+
 // Where appends a list predicates to the FileMutation builder.
 func (m *FileMutation) Where(ps ...predicate.File) {
 	m.predicates = append(m.predicates, ps...)
@@ -2969,7 +3172,7 @@ func (m *FileMutation) Type() string {
 // order to get all numeric fields that were incremented/decremented, call
 // AddedFields().
 func (m *FileMutation) Fields() []string {
-	fields := make([]string, 0, 11)
+	fields := make([]string, 0, 15)
 	if m.create_author != nil {
 		fields = append(fields, file.FieldCreateAuthor)
 	}
@@ -3003,6 +3206,18 @@ func (m *FileMutation) Fields() []string {
 	if m.size != nil {
 		fields = append(fields, file.FieldSize)
 	}
+	if m.is_permanent != nil {
+		fields = append(fields, file.FieldIsPermanent)
+	}
+	if m.expires_at != nil {
+		fields = append(fields, file.FieldExpiresAt)
+	}
+	if m.max_downloads != nil {
+		fields = append(fields, file.FieldMaxDownloads)
+	}
+	if m.download_count != nil {
+		fields = append(fields, file.FieldDownloadCount)
+	}
 	return fields
 }
 
@@ -3033,6 +3248,14 @@ func (m *FileMutation) Field(name string) (ent.Value, bool) {
 		return m.MimeType()
 	case file.FieldSize:
 		return m.Size()
+	case file.FieldIsPermanent:
+		return m.IsPermanent()
+	case file.FieldExpiresAt:
+		return m.ExpiresAt()
+	case file.FieldMaxDownloads:
+		return m.MaxDownloads()
+	case file.FieldDownloadCount:
+		return m.DownloadCount()
 	}
 	return nil, false
 }
@@ -3064,6 +3287,14 @@ func (m *FileMutation) OldField(ctx context.Context, name string) (ent.Value, er
 		return m.OldMimeType(ctx)
 	case file.FieldSize:
 		return m.OldSize(ctx)
+	case file.FieldIsPermanent:
+		return m.OldIsPermanent(ctx)
+	case file.FieldExpiresAt:
+		return m.OldExpiresAt(ctx)
+	case file.FieldMaxDownloads:
+		return m.OldMaxDownloads(ctx)
+	case file.FieldDownloadCount:
+		return m.OldDownloadCount(ctx)
 	}
 	return nil, fmt.Errorf("unknown File field %s", name)
 }
@@ -3150,6 +3381,34 @@ func (m *FileMutation) SetField(name string, value ent.Value) error {
 		}
 		m.SetSize(v)
 		return nil
+	case file.FieldIsPermanent:
+		v, ok := value.(bool)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetIsPermanent(v)
+		return nil
+	case file.FieldExpiresAt:
+		v, ok := value.(time.Time)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetExpiresAt(v)
+		return nil
+	case file.FieldMaxDownloads:
+		v, ok := value.(int)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetMaxDownloads(v)
+		return nil
+	case file.FieldDownloadCount:
+		v, ok := value.(int)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetDownloadCount(v)
+		return nil
 	}
 	return fmt.Errorf("unknown File field %s", name)
 }
@@ -3170,6 +3429,12 @@ func (m *FileMutation) AddedFields() []string {
 	if m.addsize != nil {
 		fields = append(fields, file.FieldSize)
 	}
+	if m.addmax_downloads != nil {
+		fields = append(fields, file.FieldMaxDownloads)
+	}
+	if m.adddownload_count != nil {
+		fields = append(fields, file.FieldDownloadCount)
+	}
 	return fields
 }
 
@@ -3186,6 +3451,10 @@ func (m *FileMutation) AddedField(name string) (ent.Value, bool) {
 		return m.AddedOwnerID()
 	case file.FieldSize:
 		return m.AddedSize()
+	case file.FieldMaxDownloads:
+		return m.AddedMaxDownloads()
+	case file.FieldDownloadCount:
+		return m.AddedDownloadCount()
 	}
 	return nil, false
 }
@@ -3223,6 +3492,20 @@ func (m *FileMutation) AddField(name string, value ent.Value) error {
 		}
 		m.AddSize(v)
 		return nil
+	case file.FieldMaxDownloads:
+		v, ok := value.(int)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.AddMaxDownloads(v)
+		return nil
+	case file.FieldDownloadCount:
+		v, ok := value.(int)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.AddDownloadCount(v)
+		return nil
 	}
 	return fmt.Errorf("unknown File numeric field %s", name)
 }
@@ -3245,6 +3528,9 @@ func (m *FileMutation) ClearedFields() []string {
 	}
 	if m.FieldCleared(file.FieldMimeType) {
 		fields = append(fields, file.FieldMimeType)
+	}
+	if m.FieldCleared(file.FieldExpiresAt) {
+		fields = append(fields, file.FieldExpiresAt)
 	}
 	return fields
 }
@@ -3274,6 +3560,9 @@ func (m *FileMutation) ClearField(name string) error {
 		return nil
 	case file.FieldMimeType:
 		m.ClearMimeType()
+		return nil
+	case file.FieldExpiresAt:
+		m.ClearExpiresAt()
 		return nil
 	}
 	return fmt.Errorf("unknown File nullable field %s", name)
@@ -3315,6 +3604,18 @@ func (m *FileMutation) ResetField(name string) error {
 		return nil
 	case file.FieldSize:
 		m.ResetSize()
+		return nil
+	case file.FieldIsPermanent:
+		m.ResetIsPermanent()
+		return nil
+	case file.FieldExpiresAt:
+		m.ResetExpiresAt()
+		return nil
+	case file.FieldMaxDownloads:
+		m.ResetMaxDownloads()
+		return nil
+	case file.FieldDownloadCount:
+		m.ResetDownloadCount()
 		return nil
 	}
 	return fmt.Errorf("unknown File field %s", name)

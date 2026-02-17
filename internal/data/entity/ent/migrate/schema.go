@@ -114,6 +114,10 @@ var (
 		{Name: "visibility", Type: field.TypeString, Comment: "entity.filemanager.field.visibility", Default: "private"},
 		{Name: "mime_type", Type: field.TypeString, Nullable: true, Comment: "entity.filemanager.field.mime_type"},
 		{Name: "size", Type: field.TypeInt64, Comment: "entity.filemanager.field.size", Default: 0},
+		{Name: "is_permanent", Type: field.TypeBool, Comment: "Whether the file access is permanent", Default: true},
+		{Name: "expires_at", Type: field.TypeTime, Nullable: true, Comment: "Access expiration time (nullable, means no expiration)"},
+		{Name: "max_downloads", Type: field.TypeInt, Comment: "Maximum download count (0 means unlimited)", Default: 0},
+		{Name: "download_count", Type: field.TypeInt, Comment: "Current download count", Default: 0},
 	}
 	// FmFilesTable holds the schema information for the "fm_files" table.
 	FmFilesTable = &schema.Table{

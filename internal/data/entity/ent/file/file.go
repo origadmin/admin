@@ -36,6 +36,14 @@ const (
 	FieldMimeType = "mime_type"
 	// FieldSize holds the string denoting the size field in the database.
 	FieldSize = "size"
+	// FieldIsPermanent holds the string denoting the is_permanent field in the database.
+	FieldIsPermanent = "is_permanent"
+	// FieldExpiresAt holds the string denoting the expires_at field in the database.
+	FieldExpiresAt = "expires_at"
+	// FieldMaxDownloads holds the string denoting the max_downloads field in the database.
+	FieldMaxDownloads = "max_downloads"
+	// FieldDownloadCount holds the string denoting the download_count field in the database.
+	FieldDownloadCount = "download_count"
 	// Table holds the table name of the file in the database.
 	Table = "fm_files"
 )
@@ -54,6 +62,10 @@ var Columns = []string{
 	FieldVisibility,
 	FieldMimeType,
 	FieldSize,
+	FieldIsPermanent,
+	FieldExpiresAt,
+	FieldMaxDownloads,
+	FieldDownloadCount,
 }
 
 // ValidColumn reports if the column name is valid (part of the table columns).
@@ -84,6 +96,12 @@ var (
 	DefaultVisibility string
 	// DefaultSize holds the default value on creation for the "size" field.
 	DefaultSize int64
+	// DefaultIsPermanent holds the default value on creation for the "is_permanent" field.
+	DefaultIsPermanent bool
+	// DefaultMaxDownloads holds the default value on creation for the "max_downloads" field.
+	DefaultMaxDownloads int
+	// DefaultDownloadCount holds the default value on creation for the "download_count" field.
+	DefaultDownloadCount int
 	// DefaultID holds the default value on creation for the "id" field.
 	DefaultID func() int64
 	// IDValidator is a validator for the "id" field. It is called by the builders before save.
@@ -151,6 +169,26 @@ func ByMimeType(opts ...sql.OrderTermOption) OrderOption {
 // BySize orders the results by the size field.
 func BySize(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldSize, opts...).ToFunc()
+}
+
+// ByIsPermanent orders the results by the is_permanent field.
+func ByIsPermanent(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldIsPermanent, opts...).ToFunc()
+}
+
+// ByExpiresAt orders the results by the expires_at field.
+func ByExpiresAt(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldExpiresAt, opts...).ToFunc()
+}
+
+// ByMaxDownloads orders the results by the max_downloads field.
+func ByMaxDownloads(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldMaxDownloads, opts...).ToFunc()
+}
+
+// ByDownloadCount orders the results by the download_count field.
+func ByDownloadCount(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldDownloadCount, opts...).ToFunc()
 }
 
 // SelectColumns returns all selected fields excluding the ID field.

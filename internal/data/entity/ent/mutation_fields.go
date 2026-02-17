@@ -251,6 +251,14 @@ func (m *FileMutation) SetFields(input *File, fields ...string) error {
 			m.SetMimeType(input.MimeType)
 		case file.FieldSize:
 			m.SetSize(input.Size)
+		case file.FieldIsPermanent:
+			m.SetIsPermanent(input.IsPermanent)
+		case file.FieldExpiresAt:
+			m.SetExpiresAt(input.ExpiresAt)
+		case file.FieldMaxDownloads:
+			m.SetMaxDownloads(input.MaxDownloads)
+		case file.FieldDownloadCount:
+			m.SetDownloadCount(input.DownloadCount)
 		case file.FieldID:
 			m.SetID(input.ID)
 		default:
@@ -319,6 +327,24 @@ func (m *FileMutation) SetFieldsSkipZero(input *File, fields ...string) error {
 			// check int64 with sql.NullInt64 if it is zero
 			if input.Size != 0 {
 				m.SetSize(input.Size)
+			}
+		case file.FieldIsPermanent:
+			if input.IsPermanent {
+				m.SetIsPermanent(input.IsPermanent)
+			}
+		case file.FieldExpiresAt:
+			if !input.ExpiresAt.IsZero() {
+				m.SetExpiresAt(input.ExpiresAt)
+			}
+		case file.FieldMaxDownloads:
+			// check int with sql.NullInt64 if it is zero
+			if input.MaxDownloads != 0 {
+				m.SetMaxDownloads(input.MaxDownloads)
+			}
+		case file.FieldDownloadCount:
+			// check int with sql.NullInt64 if it is zero
+			if input.DownloadCount != 0 {
+				m.SetDownloadCount(input.DownloadCount)
 			}
 		case file.FieldID:
 			// check int64 with sql.NullInt64 if it is zero

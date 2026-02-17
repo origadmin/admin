@@ -12,6 +12,7 @@ import (
 	"google.golang.org/grpc/metadata"
 
 	pb "origadmin/application/admin/api/v1/services/filemanager"
+	"origadmin/application/admin/api/v1/services/types"
 	"origadmin/application/admin/internal/features/filemanager/biz"
 	"origadmin/application/admin/internal/helpers/contextutil"
 )
@@ -79,28 +80,75 @@ func (s *FileManagerService) DeleteFile(ctx context.Context, req *pb.DeleteFileR
 
 // InitiateMultipartUpload initiates a multipart upload.
 func (s *FileManagerService) InitiateMultipartUpload(ctx context.Context, req *pb.InitiateMultipartUploadRequest) (*pb.InitiateMultipartUploadResponse, error) {
-	s.log.Infof("InitiateMultipartUpload called: name=%s", req.Name)
-	// TODO: Implement multipart upload
-	return nil, nil
+	md, _ := metadata.FromIncomingContext(ctx)
+	s.log.Infof(">>>>>> [METADATA] InitiateMultipartUpload: %+v", md)
+
+	s.log.Infof("InitiateMultipartUpload called: name=%s, size=%d, visibility=%s", req.Name, req.Size, req.Visibility)
+	ownerID, err := contextutil.GetUserID(ctx)
+	if err != nil {
+		s.log.Errorf("InitiateMultipartUpload failed to get user ID: %v", err)
+		return nil, err
+	}
+
+	uploadID, err := s.uc.InitiateMultipartUpload(ctx, req.Name, req.ContentType, req.Visibility, req.Size, ownerID)
+	if err != nil {
+		s.log.Errorf("InitiateMultipartUpload failed: %v", err)
+		return nil, err
+	}
+
+	return &pb.InitiateMultipartUploadResponse{
+		UploadId: uploadID,
+	}, nil
 }
 
 // GetMultipartUploadUrl gets a presigned URL for a part.
 func (s *FileManagerService) GetMultipartUploadUrl(ctx context.Context, req *pb.GetMultipartUploadUrlRequest) (*pb.GetMultipartUploadUrlResponse, error) {
 	s.log.Infof("GetMultipartUploadUrl called: uploadID=%s, partNumber=%d", req.UploadId, req.PartNumber)
-	// TODO: Implement multipart upload
-	return nil, nil
+
+	uploadURL, err := s.uc.GetMultipartUploadUrl(ctx, req.UploadId, req.PartNumber)
+	if err != nil {
+		s.log.Errorf("GetMultipartUploadUrl failed: %v", err)
+		return nil, err
+	}
+
+	return &pb.GetMultipartUploadUrlResponse{
+		UploadUrl: uploadURL,
+	}, nil
 }
 
 // CompleteMultipartUpload completes a multipart upload.
 func (s *FileManagerService) CompleteMultipartUpload(ctx context.Context, req *pb.CompleteMultipartUploadRequest) (*pb.CompleteMultipartUploadResponse, error) {
 	s.log.Infof("CompleteMultipartUpload called: uploadID=%s, partsCount=%d", req.UploadId, len(req.Parts))
-	// TODO: Implement multipart upload
-	return nil, nil
+
+	// Convert proto PartInfo to types PartInfo
+	parts := make([]*types.PartInfo, len(req.Parts))
+	for i, p := range req.Parts {
+		parts[i] = &types.PartInfo{
+			PartNumber: p.PartNumber,
+			Etag:       p.Etag,
+		}
+	}
+
+	fileMeta, err := s.uc.CompleteMultipartUpload(ctx, req.UploadId, parts)
+	if err != nil {
+		s.log.Errorf("CompleteMultipartUpload failed: %v", err)
+		return nil, err
+	}
+
+	return &pb.CompleteMultipartUploadResponse{
+		FileMetadata: fileMeta,
+	}, nil
 }
 
 // AbortMultipartUpload aborts a multipart upload.
 func (s *FileManagerService) AbortMultipartUpload(ctx context.Context, req *pb.AbortMultipartUploadRequest) (*pb.AbortMultipartUploadResponse, error) {
 	s.log.Infof("AbortMultipartUpload called: uploadID=%s", req.UploadId)
-	// TODO: Implement multipart upload
-	return nil, nil
+
+	err := s.uc.AbortMultipartUpload(ctx, req.UploadId)
+	if err != nil {
+		s.log.Errorf("AbortMultipartUpload failed: %v", err)
+		return nil, err
+	}
+
+	return &pb.AbortMultipartUploadResponse{}, nil
 }

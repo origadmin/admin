@@ -156,6 +156,18 @@ func init() {
 	fileDescSize := fileFields[4].Descriptor()
 	// file.DefaultSize holds the default value on creation for the size field.
 	file.DefaultSize = fileDescSize.Default.(int64)
+	// fileDescIsPermanent is the schema descriptor for is_permanent field.
+	fileDescIsPermanent := fileFields[5].Descriptor()
+	// file.DefaultIsPermanent holds the default value on creation for the is_permanent field.
+	file.DefaultIsPermanent = fileDescIsPermanent.Default.(bool)
+	// fileDescMaxDownloads is the schema descriptor for max_downloads field.
+	fileDescMaxDownloads := fileFields[7].Descriptor()
+	// file.DefaultMaxDownloads holds the default value on creation for the max_downloads field.
+	file.DefaultMaxDownloads = fileDescMaxDownloads.Default.(int)
+	// fileDescDownloadCount is the schema descriptor for download_count field.
+	fileDescDownloadCount := fileFields[8].Descriptor()
+	// file.DefaultDownloadCount holds the default value on creation for the download_count field.
+	file.DefaultDownloadCount = fileDescDownloadCount.Default.(int)
 	// fileDescID is the schema descriptor for id field.
 	fileDescID := fileMixinFields0[0].Descriptor()
 	// file.DefaultID holds the default value on creation for the id field.

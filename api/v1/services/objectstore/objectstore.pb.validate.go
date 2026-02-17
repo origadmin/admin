@@ -1682,6 +1682,8 @@ func (m *DownloadObjectRequest) validate(all bool) error {
 
 	// no validation rules for Id
 
+	// no validation rules for Range
+
 	if len(errors) > 0 {
 		return DownloadObjectRequestMultiError(errors)
 	}

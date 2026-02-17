@@ -30,4 +30,10 @@ message FileMetadata {
 
   // Optional: Detailed object info from ObjectStore (not stored in DB)
   Object object_info = 10 [json_name = "object_info"];
+
+  // Access control fields
+  bool is_permanent = 11 [json_name = "is_permanent"];
+  google.protobuf.Timestamp expires_at = 12 [json_name = "expires_at"];
+  int32 max_downloads = 13 [json_name = "max_downloads"];
+  int32 download_count = 14 [json_name = "download_count"];
 }

@@ -39,8 +39,16 @@ type File struct {
 	// entity.filemanager.field.mime_type
 	MimeType string `json:"mime_type,omitempty"`
 	// entity.filemanager.field.size
-	Size         int64 `json:"size,omitempty"`
-	selectValues sql.SelectValues
+	Size int64 `json:"size,omitempty"`
+	// Whether the file access is permanent
+	IsPermanent bool `json:"is_permanent,omitempty"`
+	// Access expiration time (nullable, means no expiration)
+	ExpiresAt time.Time `json:"expires_at,omitempty"`
+	// Maximum download count (0 means unlimited)
+	MaxDownloads int `json:"max_downloads,omitempty"`
+	// Current download count
+	DownloadCount int `json:"download_count,omitempty"`
+	selectValues  sql.SelectValues
 }
 
 // scanValues returns the types for scanning values from sql.Rows.
@@ -48,11 +56,13 @@ func (*File) scanValues(columns []string) ([]any, error) {
 	values := make([]any, len(columns))
 	for i := range columns {
 		switch columns[i] {
-		case file.FieldID, file.FieldCreateAuthor, file.FieldUpdateAuthor, file.FieldOwnerID, file.FieldSize:
+		case file.FieldIsPermanent:
+			values[i] = new(sql.NullBool)
+		case file.FieldID, file.FieldCreateAuthor, file.FieldUpdateAuthor, file.FieldOwnerID, file.FieldSize, file.FieldMaxDownloads, file.FieldDownloadCount:
 			values[i] = new(sql.NullInt64)
 		case file.FieldName, file.FieldObjectID, file.FieldVisibility, file.FieldMimeType:
 			values[i] = new(sql.NullString)
-		case file.FieldCreateTime, file.FieldUpdateTime, file.FieldDeleteTime:
+		case file.FieldCreateTime, file.FieldUpdateTime, file.FieldDeleteTime, file.FieldExpiresAt:
 			values[i] = new(sql.NullTime)
 		default:
 			values[i] = new(sql.UnknownType)
@@ -142,6 +152,30 @@ func (_m *File) assignValues(columns []string, values []any) error {
 			} else if value.Valid {
 				_m.Size = value.Int64
 			}
+		case file.FieldIsPermanent:
+			if value, ok := values[i].(*sql.NullBool); !ok {
+				return fmt.Errorf("unexpected type %T for field is_permanent", values[i])
+			} else if value.Valid {
+				_m.IsPermanent = value.Bool
+			}
+		case file.FieldExpiresAt:
+			if value, ok := values[i].(*sql.NullTime); !ok {
+				return fmt.Errorf("unexpected type %T for field expires_at", values[i])
+			} else if value.Valid {
+				_m.ExpiresAt = value.Time
+			}
+		case file.FieldMaxDownloads:
+			if value, ok := values[i].(*sql.NullInt64); !ok {
+				return fmt.Errorf("unexpected type %T for field max_downloads", values[i])
+			} else if value.Valid {
+				_m.MaxDownloads = int(value.Int64)
+			}
+		case file.FieldDownloadCount:
+			if value, ok := values[i].(*sql.NullInt64); !ok {
+				return fmt.Errorf("unexpected type %T for field download_count", values[i])
+			} else if value.Valid {
+				_m.DownloadCount = int(value.Int64)
+			}
 		default:
 			_m.selectValues.Set(columns[i], values[i])
 		}
@@ -212,6 +246,18 @@ func (_m *File) String() string {
 	builder.WriteString(", ")
 	builder.WriteString("size=")
 	builder.WriteString(fmt.Sprintf("%v", _m.Size))
+	builder.WriteString(", ")
+	builder.WriteString("is_permanent=")
+	builder.WriteString(fmt.Sprintf("%v", _m.IsPermanent))
+	builder.WriteString(", ")
+	builder.WriteString("expires_at=")
+	builder.WriteString(_m.ExpiresAt.Format(time.ANSIC))
+	builder.WriteString(", ")
+	builder.WriteString("max_downloads=")
+	builder.WriteString(fmt.Sprintf("%v", _m.MaxDownloads))
+	builder.WriteString(", ")
+	builder.WriteString("download_count=")
+	builder.WriteString(fmt.Sprintf("%v", _m.DownloadCount))
 	builder.WriteByte(')')
 	return builder.String()
 }

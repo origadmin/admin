@@ -497,6 +497,10 @@ func (_q *FileQuery) Modify(modifiers ...func(s *sql.Selector)) *FileSelect {
 //	  Visibility string `json:"visibility,omitempty"`
 //	  MimeType string `json:"mime_type,omitempty"`
 //	  Size int64 `json:"size,omitempty"`
+//	  IsPermanent bool `json:"is_permanent,omitempty"`
+//	  ExpiresAt time.Time `json:"expires_at,omitempty"`
+//	  MaxDownloads int `json:"max_downloads,omitempty"`
+//	  DownloadCount int `json:"download_count,omitempty"`
 //	}
 //
 //	client.File.Query().
@@ -512,6 +516,10 @@ func (_q *FileQuery) Modify(modifiers ...func(s *sql.Selector)) *FileSelect {
 //	  file.FieldVisibility,
 //	  file.FieldMimeType,
 //	  file.FieldSize,
+//	  file.FieldIsPermanent,
+//	  file.FieldExpiresAt,
+//	  file.FieldMaxDownloads,
+//	  file.FieldDownloadCount,
 //	  ).
 //	  Scan(ctx, &v)
 func (fq *FileQuery) Omit(fields ...string) *FileSelect {

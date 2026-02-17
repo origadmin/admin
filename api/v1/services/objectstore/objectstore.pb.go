@@ -728,8 +728,12 @@ func (x *GetObjectResponse) GetObject() *types.Object {
 
 // Request message for downloading an object.
 type DownloadObjectRequest struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Id            string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
+	state protoimpl.MessageState `protogen:"open.v1"`
+	Id    string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
+	// The byte range to download (e.g., "bytes=0-1023").
+	// If empty, the entire object is downloaded.
+	// This allows for resumable downloads and parallel chunk downloading.
+	Range         string `protobuf:"bytes,2,opt,name=range,proto3" json:"range,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -767,6 +771,13 @@ func (*DownloadObjectRequest) Descriptor() ([]byte, []int) {
 func (x *DownloadObjectRequest) GetId() string {
 	if x != nil {
 		return x.Id
+	}
+	return ""
+}
+
+func (x *DownloadObjectRequest) GetRange() string {
+	if x != nil {
+		return x.Range
 	}
 	return ""
 }
@@ -896,9 +907,10 @@ const file_objectstore_objectstore_proto_rawDesc = "" +
 	"\x10GetObjectRequest\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\tR\x02id\"J\n" +
 	"\x11GetObjectResponse\x125\n" +
-	"\x06object\x18\x01 \x01(\v2\x1d.api.v1.services.types.ObjectR\x06object\"'\n" +
+	"\x06object\x18\x01 \x01(\v2\x1d.api.v1.services.types.ObjectR\x06object\"=\n" +
 	"\x15DownloadObjectRequest\x12\x0e\n" +
-	"\x02id\x18\x01 \x01(\tR\x02id\"%\n" +
+	"\x02id\x18\x01 \x01(\tR\x02id\x12\x14\n" +
+	"\x05range\x18\x02 \x01(\tR\x05range\"%\n" +
 	"\x13DeleteObjectRequest\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\tR\x02id\"\x16\n" +
 	"\x14DeleteObjectResponse2\xbf\f\n" +

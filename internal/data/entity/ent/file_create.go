@@ -158,6 +158,62 @@ func (_c *FileCreate) SetNillableSize(v *int64) *FileCreate {
 	return _c
 }
 
+// SetIsPermanent sets the "is_permanent" field.
+func (_c *FileCreate) SetIsPermanent(v bool) *FileCreate {
+	_c.mutation.SetIsPermanent(v)
+	return _c
+}
+
+// SetNillableIsPermanent sets the "is_permanent" field if the given value is not nil.
+func (_c *FileCreate) SetNillableIsPermanent(v *bool) *FileCreate {
+	if v != nil {
+		_c.SetIsPermanent(*v)
+	}
+	return _c
+}
+
+// SetExpiresAt sets the "expires_at" field.
+func (_c *FileCreate) SetExpiresAt(v time.Time) *FileCreate {
+	_c.mutation.SetExpiresAt(v)
+	return _c
+}
+
+// SetNillableExpiresAt sets the "expires_at" field if the given value is not nil.
+func (_c *FileCreate) SetNillableExpiresAt(v *time.Time) *FileCreate {
+	if v != nil {
+		_c.SetExpiresAt(*v)
+	}
+	return _c
+}
+
+// SetMaxDownloads sets the "max_downloads" field.
+func (_c *FileCreate) SetMaxDownloads(v int) *FileCreate {
+	_c.mutation.SetMaxDownloads(v)
+	return _c
+}
+
+// SetNillableMaxDownloads sets the "max_downloads" field if the given value is not nil.
+func (_c *FileCreate) SetNillableMaxDownloads(v *int) *FileCreate {
+	if v != nil {
+		_c.SetMaxDownloads(*v)
+	}
+	return _c
+}
+
+// SetDownloadCount sets the "download_count" field.
+func (_c *FileCreate) SetDownloadCount(v int) *FileCreate {
+	_c.mutation.SetDownloadCount(v)
+	return _c
+}
+
+// SetNillableDownloadCount sets the "download_count" field if the given value is not nil.
+func (_c *FileCreate) SetNillableDownloadCount(v *int) *FileCreate {
+	if v != nil {
+		_c.SetDownloadCount(*v)
+	}
+	return _c
+}
+
 // SetID sets the "id" field.
 func (_c *FileCreate) SetID(v int64) *FileCreate {
 	_c.mutation.SetID(v)
@@ -231,6 +287,18 @@ func (_c *FileCreate) defaults() error {
 		v := file.DefaultSize
 		_c.mutation.SetSize(v)
 	}
+	if _, ok := _c.mutation.IsPermanent(); !ok {
+		v := file.DefaultIsPermanent
+		_c.mutation.SetIsPermanent(v)
+	}
+	if _, ok := _c.mutation.MaxDownloads(); !ok {
+		v := file.DefaultMaxDownloads
+		_c.mutation.SetMaxDownloads(v)
+	}
+	if _, ok := _c.mutation.DownloadCount(); !ok {
+		v := file.DefaultDownloadCount
+		_c.mutation.SetDownloadCount(v)
+	}
 	if _, ok := _c.mutation.ID(); !ok {
 		if file.DefaultID == nil {
 			return fmt.Errorf("ent: uninitialized file.DefaultID (forgotten import ent/runtime?)")
@@ -260,6 +328,15 @@ func (_c *FileCreate) check() error {
 	}
 	if _, ok := _c.mutation.Size(); !ok {
 		return &ValidationError{Name: "size", err: errors.New(`ent: missing required field "File.size"`)}
+	}
+	if _, ok := _c.mutation.IsPermanent(); !ok {
+		return &ValidationError{Name: "is_permanent", err: errors.New(`ent: missing required field "File.is_permanent"`)}
+	}
+	if _, ok := _c.mutation.MaxDownloads(); !ok {
+		return &ValidationError{Name: "max_downloads", err: errors.New(`ent: missing required field "File.max_downloads"`)}
+	}
+	if _, ok := _c.mutation.DownloadCount(); !ok {
+		return &ValidationError{Name: "download_count", err: errors.New(`ent: missing required field "File.download_count"`)}
 	}
 	if v, ok := _c.mutation.ID(); ok {
 		if err := file.IDValidator(v); err != nil {
@@ -341,6 +418,22 @@ func (_c *FileCreate) createSpec() (*File, *sqlgraph.CreateSpec) {
 	if value, ok := _c.mutation.Size(); ok {
 		_spec.SetField(file.FieldSize, field.TypeInt64, value)
 		_node.Size = value
+	}
+	if value, ok := _c.mutation.IsPermanent(); ok {
+		_spec.SetField(file.FieldIsPermanent, field.TypeBool, value)
+		_node.IsPermanent = value
+	}
+	if value, ok := _c.mutation.ExpiresAt(); ok {
+		_spec.SetField(file.FieldExpiresAt, field.TypeTime, value)
+		_node.ExpiresAt = value
+	}
+	if value, ok := _c.mutation.MaxDownloads(); ok {
+		_spec.SetField(file.FieldMaxDownloads, field.TypeInt, value)
+		_node.MaxDownloads = value
+	}
+	if value, ok := _c.mutation.DownloadCount(); ok {
+		_spec.SetField(file.FieldDownloadCount, field.TypeInt, value)
+		_node.DownloadCount = value
 	}
 	return _node, _spec
 }

@@ -109,6 +109,26 @@ func Size(v int64) predicate.File {
 	return predicate.File(sql.FieldEQ(FieldSize, v))
 }
 
+// IsPermanent applies equality check predicate on the "is_permanent" field. It's identical to IsPermanentEQ.
+func IsPermanent(v bool) predicate.File {
+	return predicate.File(sql.FieldEQ(FieldIsPermanent, v))
+}
+
+// ExpiresAt applies equality check predicate on the "expires_at" field. It's identical to ExpiresAtEQ.
+func ExpiresAt(v time.Time) predicate.File {
+	return predicate.File(sql.FieldEQ(FieldExpiresAt, v))
+}
+
+// MaxDownloads applies equality check predicate on the "max_downloads" field. It's identical to MaxDownloadsEQ.
+func MaxDownloads(v int) predicate.File {
+	return predicate.File(sql.FieldEQ(FieldMaxDownloads, v))
+}
+
+// DownloadCount applies equality check predicate on the "download_count" field. It's identical to DownloadCountEQ.
+func DownloadCount(v int) predicate.File {
+	return predicate.File(sql.FieldEQ(FieldDownloadCount, v))
+}
+
 // CreateAuthorEQ applies the EQ predicate on the "create_author" field.
 func CreateAuthorEQ(v int64) predicate.File {
 	return predicate.File(sql.FieldEQ(FieldCreateAuthor, v))
@@ -697,6 +717,146 @@ func SizeLT(v int64) predicate.File {
 // SizeLTE applies the LTE predicate on the "size" field.
 func SizeLTE(v int64) predicate.File {
 	return predicate.File(sql.FieldLTE(FieldSize, v))
+}
+
+// IsPermanentEQ applies the EQ predicate on the "is_permanent" field.
+func IsPermanentEQ(v bool) predicate.File {
+	return predicate.File(sql.FieldEQ(FieldIsPermanent, v))
+}
+
+// IsPermanentNEQ applies the NEQ predicate on the "is_permanent" field.
+func IsPermanentNEQ(v bool) predicate.File {
+	return predicate.File(sql.FieldNEQ(FieldIsPermanent, v))
+}
+
+// ExpiresAtEQ applies the EQ predicate on the "expires_at" field.
+func ExpiresAtEQ(v time.Time) predicate.File {
+	return predicate.File(sql.FieldEQ(FieldExpiresAt, v))
+}
+
+// ExpiresAtNEQ applies the NEQ predicate on the "expires_at" field.
+func ExpiresAtNEQ(v time.Time) predicate.File {
+	return predicate.File(sql.FieldNEQ(FieldExpiresAt, v))
+}
+
+// ExpiresAtIn applies the In predicate on the "expires_at" field.
+func ExpiresAtIn(vs ...time.Time) predicate.File {
+	return predicate.File(sql.FieldIn(FieldExpiresAt, vs...))
+}
+
+// ExpiresAtNotIn applies the NotIn predicate on the "expires_at" field.
+func ExpiresAtNotIn(vs ...time.Time) predicate.File {
+	return predicate.File(sql.FieldNotIn(FieldExpiresAt, vs...))
+}
+
+// ExpiresAtGT applies the GT predicate on the "expires_at" field.
+func ExpiresAtGT(v time.Time) predicate.File {
+	return predicate.File(sql.FieldGT(FieldExpiresAt, v))
+}
+
+// ExpiresAtGTE applies the GTE predicate on the "expires_at" field.
+func ExpiresAtGTE(v time.Time) predicate.File {
+	return predicate.File(sql.FieldGTE(FieldExpiresAt, v))
+}
+
+// ExpiresAtLT applies the LT predicate on the "expires_at" field.
+func ExpiresAtLT(v time.Time) predicate.File {
+	return predicate.File(sql.FieldLT(FieldExpiresAt, v))
+}
+
+// ExpiresAtLTE applies the LTE predicate on the "expires_at" field.
+func ExpiresAtLTE(v time.Time) predicate.File {
+	return predicate.File(sql.FieldLTE(FieldExpiresAt, v))
+}
+
+// ExpiresAtIsNil applies the IsNil predicate on the "expires_at" field.
+func ExpiresAtIsNil() predicate.File {
+	return predicate.File(sql.FieldIsNull(FieldExpiresAt))
+}
+
+// ExpiresAtNotNil applies the NotNil predicate on the "expires_at" field.
+func ExpiresAtNotNil() predicate.File {
+	return predicate.File(sql.FieldNotNull(FieldExpiresAt))
+}
+
+// MaxDownloadsEQ applies the EQ predicate on the "max_downloads" field.
+func MaxDownloadsEQ(v int) predicate.File {
+	return predicate.File(sql.FieldEQ(FieldMaxDownloads, v))
+}
+
+// MaxDownloadsNEQ applies the NEQ predicate on the "max_downloads" field.
+func MaxDownloadsNEQ(v int) predicate.File {
+	return predicate.File(sql.FieldNEQ(FieldMaxDownloads, v))
+}
+
+// MaxDownloadsIn applies the In predicate on the "max_downloads" field.
+func MaxDownloadsIn(vs ...int) predicate.File {
+	return predicate.File(sql.FieldIn(FieldMaxDownloads, vs...))
+}
+
+// MaxDownloadsNotIn applies the NotIn predicate on the "max_downloads" field.
+func MaxDownloadsNotIn(vs ...int) predicate.File {
+	return predicate.File(sql.FieldNotIn(FieldMaxDownloads, vs...))
+}
+
+// MaxDownloadsGT applies the GT predicate on the "max_downloads" field.
+func MaxDownloadsGT(v int) predicate.File {
+	return predicate.File(sql.FieldGT(FieldMaxDownloads, v))
+}
+
+// MaxDownloadsGTE applies the GTE predicate on the "max_downloads" field.
+func MaxDownloadsGTE(v int) predicate.File {
+	return predicate.File(sql.FieldGTE(FieldMaxDownloads, v))
+}
+
+// MaxDownloadsLT applies the LT predicate on the "max_downloads" field.
+func MaxDownloadsLT(v int) predicate.File {
+	return predicate.File(sql.FieldLT(FieldMaxDownloads, v))
+}
+
+// MaxDownloadsLTE applies the LTE predicate on the "max_downloads" field.
+func MaxDownloadsLTE(v int) predicate.File {
+	return predicate.File(sql.FieldLTE(FieldMaxDownloads, v))
+}
+
+// DownloadCountEQ applies the EQ predicate on the "download_count" field.
+func DownloadCountEQ(v int) predicate.File {
+	return predicate.File(sql.FieldEQ(FieldDownloadCount, v))
+}
+
+// DownloadCountNEQ applies the NEQ predicate on the "download_count" field.
+func DownloadCountNEQ(v int) predicate.File {
+	return predicate.File(sql.FieldNEQ(FieldDownloadCount, v))
+}
+
+// DownloadCountIn applies the In predicate on the "download_count" field.
+func DownloadCountIn(vs ...int) predicate.File {
+	return predicate.File(sql.FieldIn(FieldDownloadCount, vs...))
+}
+
+// DownloadCountNotIn applies the NotIn predicate on the "download_count" field.
+func DownloadCountNotIn(vs ...int) predicate.File {
+	return predicate.File(sql.FieldNotIn(FieldDownloadCount, vs...))
+}
+
+// DownloadCountGT applies the GT predicate on the "download_count" field.
+func DownloadCountGT(v int) predicate.File {
+	return predicate.File(sql.FieldGT(FieldDownloadCount, v))
+}
+
+// DownloadCountGTE applies the GTE predicate on the "download_count" field.
+func DownloadCountGTE(v int) predicate.File {
+	return predicate.File(sql.FieldGTE(FieldDownloadCount, v))
+}
+
+// DownloadCountLT applies the LT predicate on the "download_count" field.
+func DownloadCountLT(v int) predicate.File {
+	return predicate.File(sql.FieldLT(FieldDownloadCount, v))
+}
+
+// DownloadCountLTE applies the LTE predicate on the "download_count" field.
+func DownloadCountLTE(v int) predicate.File {
+	return predicate.File(sql.FieldLTE(FieldDownloadCount, v))
 }
 
 // And groups predicates with the AND operator between them.

@@ -8,6 +8,7 @@ import (
 	"fmt"
 
 	"github.com/go-kratos/kratos/v2/log"
+	"github.com/go-kratos/kratos/v2/middleware"
 	"github.com/goexts/generic/maps"
 	"google.golang.org/grpc"
 
@@ -76,13 +77,19 @@ func NewConn(
 		return nil, fmt.Errorf("failed to get discoveries: %w", err)
 	}
 
-	// Get client middlewares
-	middlewares, err := middlewareProvider.ClientMiddlewares()
-	if err != nil {
-		return nil, fmt.Errorf("failed to get client middlewares: %w", err)
+	// Get client middlewares (if middlewareProvider is provided)
+	var middlewares map[string]middleware.Middleware
+	if middlewareProvider != nil {
+		var err error
+		middlewares, err = middlewareProvider.ClientMiddlewares()
+		if err != nil {
+			return nil, fmt.Errorf("failed to get client middlewares: %w", err)
+		}
+		ks := maps.Keys(middlewares)
+		log.NewHelper(app.Logger()).Debugf("Creating gRPC client for service: %s with middlewares: %+v", name, ks)
+	} else {
+		log.NewHelper(app.Logger()).Debugf("Creating gRPC client for service: %s without middlewares", name)
 	}
-	ks := maps.Keys(middlewares)
-	log.NewHelper(app.Logger()).Debugf("Creating gRPC client for service: %s with middlewares: %+v", name, ks)
 	// Create and return the gRPC connection
 	return runtimegrpc.NewClient(app.Context(), clientConfig.GetGrpc(), &runtimegrpc.ClientOptions{
 		Discoveries:       discoveries,

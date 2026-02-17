@@ -38,7 +38,12 @@ type FileMetadata struct {
 	// Size of the file in bytes
 	Size int64 `protobuf:"varint,9,opt,name=size,proto3" json:"size,omitempty"`
 	// Optional: Detailed object info from ObjectStore (not stored in DB)
-	ObjectInfo    *Object `protobuf:"bytes,10,opt,name=object_info,proto3" json:"object_info,omitempty"`
+	ObjectInfo *Object `protobuf:"bytes,10,opt,name=object_info,proto3" json:"object_info,omitempty"`
+	// Access control fields
+	IsPermanent   bool                   `protobuf:"varint,11,opt,name=is_permanent,proto3" json:"is_permanent,omitempty"`
+	ExpiresAt     *timestamppb.Timestamp `protobuf:"bytes,12,opt,name=expires_at,proto3" json:"expires_at,omitempty"`
+	MaxDownloads  int32                  `protobuf:"varint,13,opt,name=max_downloads,proto3" json:"max_downloads,omitempty"`
+	DownloadCount int32                  `protobuf:"varint,14,opt,name=download_count,proto3" json:"download_count,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -143,11 +148,39 @@ func (x *FileMetadata) GetObjectInfo() *Object {
 	return nil
 }
 
+func (x *FileMetadata) GetIsPermanent() bool {
+	if x != nil {
+		return x.IsPermanent
+	}
+	return false
+}
+
+func (x *FileMetadata) GetExpiresAt() *timestamppb.Timestamp {
+	if x != nil {
+		return x.ExpiresAt
+	}
+	return nil
+}
+
+func (x *FileMetadata) GetMaxDownloads() int32 {
+	if x != nil {
+		return x.MaxDownloads
+	}
+	return 0
+}
+
+func (x *FileMetadata) GetDownloadCount() int32 {
+	if x != nil {
+		return x.DownloadCount
+	}
+	return 0
+}
+
 var File_types_filemanager_proto protoreflect.FileDescriptor
 
 const file_types_filemanager_proto_rawDesc = "" +
 	"\n" +
-	"\x17types/filemanager.proto\x12\x15api.v1.services.types\x1a\x1fgoogle/protobuf/timestamp.proto\x1a\x17types/objectstore.proto\"\xff\x02\n" +
+	"\x17types/filemanager.proto\x12\x15api.v1.services.types\x1a\x1fgoogle/protobuf/timestamp.proto\x1a\x17types/objectstore.proto\"\xad\x04\n" +
 	"\fFileMetadata\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\x03R\x02id\x12\x12\n" +
 	"\x04name\x18\x02 \x01(\tR\x04name\x12\x1c\n" +
@@ -161,7 +194,13 @@ const file_types_filemanager_proto_rawDesc = "" +
 	"\tmime_type\x18\b \x01(\tR\tmime_type\x12\x12\n" +
 	"\x04size\x18\t \x01(\x03R\x04size\x12?\n" +
 	"\vobject_info\x18\n" +
-	" \x01(\v2\x1d.api.v1.services.types.ObjectR\vobject_infoB\xde\x01\n" +
+	" \x01(\v2\x1d.api.v1.services.types.ObjectR\vobject_info\x12\"\n" +
+	"\fis_permanent\x18\v \x01(\bR\fis_permanent\x12:\n" +
+	"\n" +
+	"expires_at\x18\f \x01(\v2\x1a.google.protobuf.TimestampR\n" +
+	"expires_at\x12$\n" +
+	"\rmax_downloads\x18\r \x01(\x05R\rmax_downloads\x12&\n" +
+	"\x0edownload_count\x18\x0e \x01(\x05R\x0edownload_countB\xde\x01\n" +
 	"\x19com.api.v1.services.typesB\x10FilemanagerProtoP\x01Z7origadmin/application/admin/api/v1/services/types;types\xa2\x02\x04AVST\xaa\x02\x15Api.V1.Services.Types\xca\x02\x15Api\\V1\\Services\\Types\xe2\x02!Api\\V1\\Services\\Types\\GPBMetadata\xea\x02\x18Api::V1::Services::Typesb\x06proto3"
 
 var (
@@ -186,11 +225,12 @@ var file_types_filemanager_proto_depIdxs = []int32{
 	1, // 0: api.v1.services.types.FileMetadata.created_time:type_name -> google.protobuf.Timestamp
 	1, // 1: api.v1.services.types.FileMetadata.updated_time:type_name -> google.protobuf.Timestamp
 	2, // 2: api.v1.services.types.FileMetadata.object_info:type_name -> api.v1.services.types.Object
-	3, // [3:3] is the sub-list for method output_type
-	3, // [3:3] is the sub-list for method input_type
-	3, // [3:3] is the sub-list for extension type_name
-	3, // [3:3] is the sub-list for extension extendee
-	0, // [0:3] is the sub-list for field type_name
+	1, // 3: api.v1.services.types.FileMetadata.expires_at:type_name -> google.protobuf.Timestamp
+	4, // [4:4] is the sub-list for method output_type
+	4, // [4:4] is the sub-list for method input_type
+	4, // [4:4] is the sub-list for extension type_name
+	4, // [4:4] is the sub-list for extension extendee
+	0, // [0:4] is the sub-list for field type_name
 }
 
 func init() { file_types_filemanager_proto_init() }

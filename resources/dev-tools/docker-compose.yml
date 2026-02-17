@@ -2,13 +2,15 @@ services:
   consul:
     image: hashicorp/consul:1.22.2
     container_name: backend_consul
-    command: "agent -server -bootstrap-expect=1 -dev -client=0.0.0.0"
+    command: "agent -server -bootstrap-expect=1 -dev -ui -client=0.0.0.0 -bind=0.0.0.0"
     ports:
       - "8500:8500" # HTTP API
       - "8600:8600/tcp" # DNS API (TCP)
       - "8600:8600/udp" # DNS API (UDP)
     networks:
       - tools-network
+    extra_hosts:
+      - "host.docker.internal:host-gateway" # 允许容器访问宿主机
 
   nats:
     image: nats:2.12.3-alpine

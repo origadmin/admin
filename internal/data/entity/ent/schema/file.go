@@ -36,6 +36,18 @@ func (File) Fields() []ent.Field {
 		field.Int64("size").
 			Comment(i18n.Text("entity.filemanager.field.size")).
 			Default(0),
+		field.Bool("is_permanent").
+			Comment("Whether the file access is permanent").
+			Default(true),
+		field.Time("expires_at").
+			Comment("Access expiration time (nullable, means no expiration)").
+			Optional(),
+		field.Int("max_downloads").
+			Comment("Maximum download count (0 means unlimited)").
+			Default(0),
+		field.Int("download_count").
+			Comment("Current download count").
+			Default(0),
 	}
 }
 

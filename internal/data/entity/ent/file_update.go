@@ -165,6 +165,82 @@ func (_u *FileUpdate) AddSize(v int64) *FileUpdate {
 	return _u
 }
 
+// SetIsPermanent sets the "is_permanent" field.
+func (_u *FileUpdate) SetIsPermanent(v bool) *FileUpdate {
+	_u.mutation.SetIsPermanent(v)
+	return _u
+}
+
+// SetNillableIsPermanent sets the "is_permanent" field if the given value is not nil.
+func (_u *FileUpdate) SetNillableIsPermanent(v *bool) *FileUpdate {
+	if v != nil {
+		_u.SetIsPermanent(*v)
+	}
+	return _u
+}
+
+// SetExpiresAt sets the "expires_at" field.
+func (_u *FileUpdate) SetExpiresAt(v time.Time) *FileUpdate {
+	_u.mutation.SetExpiresAt(v)
+	return _u
+}
+
+// SetNillableExpiresAt sets the "expires_at" field if the given value is not nil.
+func (_u *FileUpdate) SetNillableExpiresAt(v *time.Time) *FileUpdate {
+	if v != nil {
+		_u.SetExpiresAt(*v)
+	}
+	return _u
+}
+
+// ClearExpiresAt clears the value of the "expires_at" field.
+func (_u *FileUpdate) ClearExpiresAt() *FileUpdate {
+	_u.mutation.ClearExpiresAt()
+	return _u
+}
+
+// SetMaxDownloads sets the "max_downloads" field.
+func (_u *FileUpdate) SetMaxDownloads(v int) *FileUpdate {
+	_u.mutation.ResetMaxDownloads()
+	_u.mutation.SetMaxDownloads(v)
+	return _u
+}
+
+// SetNillableMaxDownloads sets the "max_downloads" field if the given value is not nil.
+func (_u *FileUpdate) SetNillableMaxDownloads(v *int) *FileUpdate {
+	if v != nil {
+		_u.SetMaxDownloads(*v)
+	}
+	return _u
+}
+
+// AddMaxDownloads adds value to the "max_downloads" field.
+func (_u *FileUpdate) AddMaxDownloads(v int) *FileUpdate {
+	_u.mutation.AddMaxDownloads(v)
+	return _u
+}
+
+// SetDownloadCount sets the "download_count" field.
+func (_u *FileUpdate) SetDownloadCount(v int) *FileUpdate {
+	_u.mutation.ResetDownloadCount()
+	_u.mutation.SetDownloadCount(v)
+	return _u
+}
+
+// SetNillableDownloadCount sets the "download_count" field if the given value is not nil.
+func (_u *FileUpdate) SetNillableDownloadCount(v *int) *FileUpdate {
+	if v != nil {
+		_u.SetDownloadCount(*v)
+	}
+	return _u
+}
+
+// AddDownloadCount adds value to the "download_count" field.
+func (_u *FileUpdate) AddDownloadCount(v int) *FileUpdate {
+	_u.mutation.AddDownloadCount(v)
+	return _u
+}
+
 // Mutation returns the FileMutation object of the builder.
 func (_u *FileUpdate) Mutation() *FileMutation {
 	return _u.mutation
@@ -271,6 +347,27 @@ func (_u *FileUpdate) sqlSave(ctx context.Context) (_node int, err error) {
 	}
 	if value, ok := _u.mutation.AddedSize(); ok {
 		_spec.AddField(file.FieldSize, field.TypeInt64, value)
+	}
+	if value, ok := _u.mutation.IsPermanent(); ok {
+		_spec.SetField(file.FieldIsPermanent, field.TypeBool, value)
+	}
+	if value, ok := _u.mutation.ExpiresAt(); ok {
+		_spec.SetField(file.FieldExpiresAt, field.TypeTime, value)
+	}
+	if _u.mutation.ExpiresAtCleared() {
+		_spec.ClearField(file.FieldExpiresAt, field.TypeTime)
+	}
+	if value, ok := _u.mutation.MaxDownloads(); ok {
+		_spec.SetField(file.FieldMaxDownloads, field.TypeInt, value)
+	}
+	if value, ok := _u.mutation.AddedMaxDownloads(); ok {
+		_spec.AddField(file.FieldMaxDownloads, field.TypeInt, value)
+	}
+	if value, ok := _u.mutation.DownloadCount(); ok {
+		_spec.SetField(file.FieldDownloadCount, field.TypeInt, value)
+	}
+	if value, ok := _u.mutation.AddedDownloadCount(); ok {
+		_spec.AddField(file.FieldDownloadCount, field.TypeInt, value)
 	}
 	_spec.AddModifiers(_u.modifiers...)
 	if _node, err = sqlgraph.UpdateNodes(ctx, _u.driver, _spec); err != nil {
@@ -430,6 +527,82 @@ func (_u *FileUpdateOne) AddSize(v int64) *FileUpdateOne {
 	return _u
 }
 
+// SetIsPermanent sets the "is_permanent" field.
+func (_u *FileUpdateOne) SetIsPermanent(v bool) *FileUpdateOne {
+	_u.mutation.SetIsPermanent(v)
+	return _u
+}
+
+// SetNillableIsPermanent sets the "is_permanent" field if the given value is not nil.
+func (_u *FileUpdateOne) SetNillableIsPermanent(v *bool) *FileUpdateOne {
+	if v != nil {
+		_u.SetIsPermanent(*v)
+	}
+	return _u
+}
+
+// SetExpiresAt sets the "expires_at" field.
+func (_u *FileUpdateOne) SetExpiresAt(v time.Time) *FileUpdateOne {
+	_u.mutation.SetExpiresAt(v)
+	return _u
+}
+
+// SetNillableExpiresAt sets the "expires_at" field if the given value is not nil.
+func (_u *FileUpdateOne) SetNillableExpiresAt(v *time.Time) *FileUpdateOne {
+	if v != nil {
+		_u.SetExpiresAt(*v)
+	}
+	return _u
+}
+
+// ClearExpiresAt clears the value of the "expires_at" field.
+func (_u *FileUpdateOne) ClearExpiresAt() *FileUpdateOne {
+	_u.mutation.ClearExpiresAt()
+	return _u
+}
+
+// SetMaxDownloads sets the "max_downloads" field.
+func (_u *FileUpdateOne) SetMaxDownloads(v int) *FileUpdateOne {
+	_u.mutation.ResetMaxDownloads()
+	_u.mutation.SetMaxDownloads(v)
+	return _u
+}
+
+// SetNillableMaxDownloads sets the "max_downloads" field if the given value is not nil.
+func (_u *FileUpdateOne) SetNillableMaxDownloads(v *int) *FileUpdateOne {
+	if v != nil {
+		_u.SetMaxDownloads(*v)
+	}
+	return _u
+}
+
+// AddMaxDownloads adds value to the "max_downloads" field.
+func (_u *FileUpdateOne) AddMaxDownloads(v int) *FileUpdateOne {
+	_u.mutation.AddMaxDownloads(v)
+	return _u
+}
+
+// SetDownloadCount sets the "download_count" field.
+func (_u *FileUpdateOne) SetDownloadCount(v int) *FileUpdateOne {
+	_u.mutation.ResetDownloadCount()
+	_u.mutation.SetDownloadCount(v)
+	return _u
+}
+
+// SetNillableDownloadCount sets the "download_count" field if the given value is not nil.
+func (_u *FileUpdateOne) SetNillableDownloadCount(v *int) *FileUpdateOne {
+	if v != nil {
+		_u.SetDownloadCount(*v)
+	}
+	return _u
+}
+
+// AddDownloadCount adds value to the "download_count" field.
+func (_u *FileUpdateOne) AddDownloadCount(v int) *FileUpdateOne {
+	_u.mutation.AddDownloadCount(v)
+	return _u
+}
+
 // Mutation returns the FileMutation object of the builder.
 func (_u *FileUpdateOne) Mutation() *FileMutation {
 	return _u.mutation
@@ -566,6 +739,27 @@ func (_u *FileUpdateOne) sqlSave(ctx context.Context) (_node *File, err error) {
 	}
 	if value, ok := _u.mutation.AddedSize(); ok {
 		_spec.AddField(file.FieldSize, field.TypeInt64, value)
+	}
+	if value, ok := _u.mutation.IsPermanent(); ok {
+		_spec.SetField(file.FieldIsPermanent, field.TypeBool, value)
+	}
+	if value, ok := _u.mutation.ExpiresAt(); ok {
+		_spec.SetField(file.FieldExpiresAt, field.TypeTime, value)
+	}
+	if _u.mutation.ExpiresAtCleared() {
+		_spec.ClearField(file.FieldExpiresAt, field.TypeTime)
+	}
+	if value, ok := _u.mutation.MaxDownloads(); ok {
+		_spec.SetField(file.FieldMaxDownloads, field.TypeInt, value)
+	}
+	if value, ok := _u.mutation.AddedMaxDownloads(); ok {
+		_spec.AddField(file.FieldMaxDownloads, field.TypeInt, value)
+	}
+	if value, ok := _u.mutation.DownloadCount(); ok {
+		_spec.SetField(file.FieldDownloadCount, field.TypeInt, value)
+	}
+	if value, ok := _u.mutation.AddedDownloadCount(); ok {
+		_spec.AddField(file.FieldDownloadCount, field.TypeInt, value)
 	}
 	_spec.AddModifiers(_u.modifiers...)
 	_node = &File{config: _u.config}
