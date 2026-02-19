@@ -71,10 +71,30 @@ func (s *FileManagerService) GetFile(ctx context.Context, req *pb.GetFileRequest
 	}, nil
 }
 
+// ListFiles lists files.
+func (s *FileManagerService) ListFiles(ctx context.Context, req *pb.ListFilesRequest) (*pb.ListFilesResponse, error) {
+	s.log.Infof("ListFiles called: page=%d, pageSize=%d", req.Page, req.PageSize)
+	files, total, err := s.uc.ListFiles(ctx, req.Page, req.PageSize, req.OwnerId, req.Visibility)
+	if err != nil {
+		s.log.Errorf("ListFiles failed: %v", err)
+		return nil, err
+	}
+	return &pb.ListFilesResponse{
+		Files:      files,
+		TotalCount: total,
+	}, nil
+}
+
 // DeleteFile deletes a file.
 func (s *FileManagerService) DeleteFile(ctx context.Context, req *pb.DeleteFileRequest) (*pb.DeleteFileResponse, error) {
 	s.log.Infof("DeleteFile called: id=%d", req.Id)
-	// TODO: Implement delete logic in usecase
+
+	err := s.uc.DeleteFile(ctx, req.Id)
+	if err != nil {
+		s.log.Errorf("DeleteFile failed: %v", err)
+		return nil, err
+	}
+
 	return &pb.DeleteFileResponse{}, nil
 }
 

@@ -15,6 +15,7 @@ import (
 	"time"
 
 	"github.com/stretchr/testify/require"
+	"google.golang.org/genproto/googleapis/api/httpbody"
 	"google.golang.org/protobuf/encoding/protojson"
 
 	fmv1 "origadmin/application/admin/api/v1/services/filemanager"
@@ -100,8 +101,18 @@ func TestSimpleUploadAndDownload(t *testing.T) {
 	defer downloadHTTPResp.Body.Close()
 
 	tools.AssertHTTPStatusCode(t, downloadHTTPResp, http.StatusOK)
-	downloadedContent, err := io.ReadAll(downloadHTTPResp.Body)
+
+	// Read the raw response body
+	downloadedRawBody, err := io.ReadAll(downloadHTTPResp.Body)
 	require.NoError(t, err)
+
+	// Unmarshal the raw response body into google.api.HttpBody
+	var httpBody httpbody.HttpBody
+	err = protojson.Unmarshal(downloadedRawBody, &httpBody)
+	require.NoError(t, err, "Failed to unmarshal downloaded content into HttpBody")
+
+	// The actual file content is in the Data field of HttpBody
+	downloadedContent := httpBody.Data
 
 	// 6. Verify content
 	if !bytes.Equal(fileContent, downloadedContent) {
@@ -118,9 +129,11 @@ func TestSimpleUploadAndDownload(t *testing.T) {
 	defer deleteResp.Body.Close()
 	tools.AssertHTTPStatusCode(t, deleteResp, http.StatusOK)
 
-	// 8. Verify deletion
-	verifyResp := client.Get(t, "/fm/files/"+strconv.FormatInt(fileID, 10), token)
-	defer verifyResp.Body.Close()
-	// Expecting Not Found after deletion
-	tools.AssertHTTPStatusCode(t, verifyResp, http.StatusNotFound)
+	// 8. Verify deletion (with retry to handle potential eventual consistency)
+	require.Eventually(t, func() bool {
+		verifyResp := client.Get(t, "/fm/files/"+strconv.FormatInt(fileID, 10), token)
+		defer verifyResp.Body.Close()
+		// Keep trying until we get a 404
+		return verifyResp.StatusCode == http.StatusNotFound
+	}, 5*time.Second, 500*time.Millisecond, "File was not deleted within the time limit. Last status was not 404.")
 }

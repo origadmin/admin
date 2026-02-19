@@ -7,8 +7,8 @@ services:
       - "8500:8500" # HTTP API
       - "8600:8600/tcp" # DNS API (TCP)
       - "8600:8600/udp" # DNS API (UDP)
-    networks:
-      - tools-network
+    #    networks:
+    #      - tools-network
     extra_hosts:
       - "host.docker.internal:host-gateway" # 允许容器访问宿主机
 
@@ -21,8 +21,8 @@ services:
       - "8222:8222" # NATS monitoring port
     volumes:
       - ./nats/nats.conf:/etc/nats/nats.conf # Mount the local config file
-    networks:
-      - tools-network
+  #    networks:
+  #      - tools-network
 
   #  valkey:
   #    image: ghcr.io/valkey-io/valkey:9.0.2-alpine
@@ -39,8 +39,8 @@ services:
     container_name: backend_redis
     ports:
       - "6379:6379"
-    networks:
-      - tools-network
+  #    networks:
+  #      - tools-network
 
   postgres:
     image: postgres:18.1-alpine
@@ -53,14 +53,14 @@ services:
       - "5432:5432" # PostgreSQL client port
     volumes:
       - postgres_data:/var/lib/postgresql/data
-    networks:
-      - tools-network
+#    networks:
+#      - tools-network
 
 volumes:
   postgres_data:
 #  valkey_data:
 
-networks:
-  tools-network:
-    driver: bridge
-    name: tools-network
+#networks:
+#  tools-network:
+#    driver: bridge
+#    name: tools-network

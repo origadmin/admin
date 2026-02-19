@@ -54,6 +54,10 @@ func wireApp(app *runtime.App, bootstrap *conf.Config) (*kratos.App, func(), err
 	if err != nil {
 		return nil, nil, err
 	}
+	objectStoreProxy, err := server.NewObjectStoreProxy(app, bootstrap)
+	if err != nil {
+		return nil, nil, err
+	}
 	authenticator, err := providers.ProvideAuthenticator(app, bootstrap)
 	if err != nil {
 		return nil, nil, err
@@ -63,7 +67,7 @@ func wireApp(app *runtime.App, bootstrap *conf.Config) (*kratos.App, func(), err
 	if err != nil {
 		return nil, nil, err
 	}
-	v, err := server.NewServers(app, bootstrap, servers, gatewayService, serverMiddlewareProvider)
+	v, err := server.NewServers(app, bootstrap, servers, gatewayService, objectStoreProxy, serverMiddlewareProvider)
 	if err != nil {
 		return nil, nil, err
 	}

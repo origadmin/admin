@@ -26,7 +26,10 @@ import (
 )
 
 // ProviderSet is server providers.
-var ProviderSet = wire.NewSet(NewServers)
+var ProviderSet = wire.NewSet(
+	NewServers,
+	NewObjectStoreProxy, // Register the Proxy provider
+)
 
 // NewServers creates and configures the gateway service servers (HTTP).
 func NewServers(
@@ -34,6 +37,7 @@ func NewServers(
 	bootstrap *conf.Config, // Pass bootstrap config
 	serversCfg *transportv1.Servers,
 	svc *service.GatewayService,
+	proxy *ObjectStoreProxy, // Inject the Proxy
 	middlewareProvider container.ServerMiddlewareProvider,
 ) ([]transport.Server, error) {
 	if serversCfg == nil {
@@ -49,7 +53,8 @@ func NewServers(
 
 		switch serverCfg.GetProtocol() {
 		case "http":
-			srv, err := NewHTTPServer(app, bootstrap, serverCfg.GetHttp(), svc, middlewareProvider)
+			// Pass proxy to NewHTTPServer
+			srv, err := NewHTTPServer(app, bootstrap, serverCfg.GetHttp(), svc, proxy, middlewareProvider)
 			if err != nil {
 				return nil, err
 			}
@@ -72,6 +77,7 @@ func NewHTTPServer(
 	bootstrap *conf.Config, // Pass bootstrap config
 	cfg *httpv1.Server,
 	svc *service.GatewayService,
+	proxy *ObjectStoreProxy, // Inject the Proxy
 	middlewareProvider container.ServerMiddlewareProvider,
 ) (transport.Server, error) {
 	if cfg == nil {
@@ -83,21 +89,8 @@ func NewHTTPServer(
 		return nil, err
 	}
 
-	// Add a logging middleware to debug request paths
-	//debugLogMiddleware := func(handler middleware.Handler) middleware.Handler {
-	//	return func(ctx context.Context, req interface{}) (reply interface{}, err error) {
-	//		if tr, ok := transport.FromServerContext(ctx); ok {
-	//			log.Infof("[Gateway Debug] Request: %s %s", tr.Operation(), tr.Operation())
-	//		}
-	//		return handler(ctx, req)
-	//	}
-	//}
-	// Prepend debug middleware
-	// Note: Kratos middleware order matters.
-
 	serverOpts := []kratoshttp.ServerOption{
 		kratoshttp.PathPrefix(conf.APIPrefix),
-		//kratoshttp.Middleware(debugLogMiddleware), // Add debug logging
 	}
 
 	logger := log.NewHelper(app.Logger())
@@ -112,21 +105,22 @@ func NewHTTPServer(
 		return nil, err
 	}
 
-	// Register ObjectStore Proxy FIRST
-	// This handles /api/v1/objects/{id} requests by proxying to objectstore service's HTTP endpoint via service discovery.
-	// This bypasses gRPC to support streaming and Range requests for file downloads.
-	proxy, err := NewObjectStoreProxy(app, bootstrap)
-	if err != nil {
-		logger.Errorf("Failed to create objectstore proxy: %v", err)
-	} else {
-		// Register the proxy handler for the specific download path pattern.
-		// Use HandlePrefix to match any path starting with /api/v1/objects/
-		srv.HandlePrefix("/api/v1/objects/", proxy)
-		logger.Infof("Registered objectstore proxy at /api/v1/objects/ using service discovery")
-	}
-
-	// Register all services using the GatewayService method.
+	// 1. Register generated gRPC-Gateway handlers (standard API)
 	svc.RegisterHTTPHandlers(srv)
+
+	// 2. Register Custom Proxy Handlers (Frontend-friendly API)
+	// We register this under a specific prefix to avoid conflict with gRPC-Gateway if needed,
+	// or we can let it handle specific paths.
+	// Here we register it to handle /api/v1/proxy/files or similar,
+	// BUT since the user wants it to be THE way to access files, let's map it carefully.
+
+	// Let's register the proxy to handle specific file operations.
+	// Assuming the proxy implements ServeHTTP, we can mount it.
+	// Note: Kratos http.Server HandlePrefix mounts a standard http.Handler.
+
+	// Mount the proxy at /api/v1/storage
+	// This means requests like /api/v1/storage/upload, /api/v1/storage/download/{id} will go to proxy.
+	srv.HandlePrefix("/api/v1/storage", proxy)
 
 	// Try to get the handler for the embedded Web UI.
 	webUIHandler, err := web.GetHandler()

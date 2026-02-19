@@ -14,6 +14,7 @@ import (
 	objclient "origadmin/application/admin/api/v1/services/objectstore"
 	"origadmin/application/admin/api/v1/services/types"
 	"origadmin/application/admin/internal/features/filemanager/dto"
+	"origadmin/application/admin/internal/helpers/repo"
 )
 
 // ProviderSet is biz providers for filemanager.
@@ -75,12 +76,56 @@ func (uc *FileUseCase) GetFile(ctx context.Context, id int64) (*types.FileMetada
 		return nil, "", err
 	}
 
-	// 2. Construct the download URL pointing to the Gateway's dedicated download proxy endpoint.
-	// We use a distinct path /api/v1/download/objects/... to avoid conflict with gRPC gateway routes.
-	downloadURL := fmt.Sprintf("/api/v1/objects/%s", file.ObjectId)
-	uc.log.Infof(">>>>>> [FINGERPRINT] Constructed download URL: %s <<<<<<", downloadURL)
+	// 2. Construct the download URL pointing to the objectstore service via gRPC Gateway.
+	// The endpoint /api/v1/obs/objects/{id}/download handles streaming downloads with Range support.
+	downloadURL := fmt.Sprintf("/api/v1/obs/objects/%s/download", file.ObjectId)
+	uc.log.Infof("Constructed download URL: %s", downloadURL)
 
 	return file, downloadURL, nil
+}
+
+// ListFiles retrieves a list of files.
+func (uc *FileUseCase) ListFiles(ctx context.Context, page, pageSize int32, ownerID int64, visibility string) ([]*types.FileMetadata, int32, error) {
+	opts := &dto.FileQueryOption{
+		QueryOption: repo.QueryOption{
+			Page:     int(page),
+			PageSize: int(pageSize),
+		},
+		OwnerID:    ownerID,
+		Visibility: visibility,
+	}
+	files, total, err := uc.repo.List(ctx, opts)
+	if err != nil {
+		return nil, 0, err
+	}
+	return files, int32(total), nil
+}
+
+// DeleteFile deletes a file from both the database and the object store.
+func (uc *FileUseCase) DeleteFile(ctx context.Context, id int64) error {
+	// 1. Get file metadata to find the object ID
+	file, err := uc.repo.Get(ctx, id)
+	if err != nil {
+		uc.log.Errorf("failed to get file metadata for deletion: %v", err)
+		return err
+	}
+
+	// 2. Delete the object from the object store
+	_, err = uc.obj.DeleteObject(ctx, &objclient.DeleteObjectRequest{Id: file.ObjectId})
+	if err != nil {
+		// Log the error but continue to delete the metadata entry
+		uc.log.Errorf("failed to delete object from objectstore: %v. Continuing to delete metadata.", err)
+	}
+
+	// 3. Delete the file metadata from the database
+	err = uc.repo.Delete(ctx, id)
+	if err != nil {
+		uc.log.Errorf("failed to delete file metadata: %v", err)
+		return err
+	}
+
+	uc.log.Infof("Successfully deleted file with ID: %d and Object ID: %s", id, file.ObjectId)
+	return nil
 }
 
 // InitiateMultipartUpload initiates a multipart upload for large files.
