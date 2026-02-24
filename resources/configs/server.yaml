@@ -53,7 +53,7 @@ servers:
         broker:
           type: "nats"
           nats:
-            address: "nats://localhost:4222"  # 使用容器网络名称
+            address: "nats://${NATS_HOST:localhost}:${NATS_PORT:4222}"  # 使用容器网络名称
             jetstream_enabled: true
             jetstream_stream_name: "system_events"
             # 添加连接超时配置

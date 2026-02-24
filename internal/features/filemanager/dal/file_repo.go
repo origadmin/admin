@@ -51,7 +51,11 @@ func (r *FileRepo) Create(ctx context.Context, in *types.FileMetadata, opts ...*
 
 // Get retrieves a file metadata record by its ID.
 func (r *FileRepo) Get(ctx context.Context, id int64, opts ...*dto.FileQueryOption) (*types.FileMetadata, error) {
-	found, err := r.db.File(ctx).Query().Where(file.ID(id)).Only(ctx)
+	found, err := r.db.File(ctx).Query().
+		Where(
+			file.ID(id),
+		).
+		Only(ctx)
 	if err != nil {
 		return nil, err
 	}

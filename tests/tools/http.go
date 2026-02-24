@@ -6,6 +6,7 @@ import (
 	"bytes"
 	"encoding/json"
 	"io"
+	"mime/multipart"
 	"net/http"
 	"strconv"
 	"testing"
@@ -170,10 +171,50 @@ func (c *TestHTTPClient) Put(t *testing.T, path string, body interface{}, token 
 	return c.Request(t, "PUT", path, body, token)
 }
 
-// Delete overrides BaseHTTPClient.Delete to use TestHTTPClient.Request
+// Delete sends DELETE request
 func (c *TestHTTPClient) Delete(t *testing.T, path, token string) *http.Response {
 	t.Helper()
 	return c.Request(t, "DELETE", path, nil, token)
+}
+
+// Upload sends a multipart/form-data request for file uploads.
+func (c *TestHTTPClient) Upload(t *testing.T, path string, fileContent []byte, fileName string, formFields map[string]string, token string) *http.Response {
+	t.Helper()
+
+	body := &bytes.Buffer{}
+	writer := multipart.NewWriter(body)
+
+	// Add file to the multipart request
+	part, err := writer.CreateFormFile("file", fileName)
+	require.NoError(t, err)
+	_, err = part.Write(fileContent)
+	require.NoError(t, err)
+
+	// Add other form fields
+	for key, val := range formFields {
+		err = writer.WriteField(key, val)
+		require.NoError(t, err)
+	}
+
+	err = writer.Close()
+	require.NoError(t, err)
+
+	// Prepend the prefix to the path
+	fullPath := c.prefix + path
+	req, err := http.NewRequest("POST", c.baseURL+fullPath, body)
+	require.NoError(t, err)
+
+	// Set headers
+	req.Header.Set("Content-Type", writer.FormDataContentType())
+	if token != "" {
+		req.Header.Set("Authorization", "Bearer "+token)
+	}
+
+	// Execute the request
+	resp, err := c.client.Do(req)
+	require.NoError(t, err)
+
+	return resp
 }
 
 // SetPrefix updates the API prefix for the client

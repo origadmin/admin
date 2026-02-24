@@ -6,7 +6,9 @@ package service
 
 import (
 	"context"
+	"strings"
 
+	"github.com/go-kratos/kratos/v2/errors"
 	"github.com/go-kratos/kratos/v2/log"
 	"github.com/google/wire"
 	"google.golang.org/grpc/metadata"
@@ -63,6 +65,9 @@ func (s *FileManagerService) GetFile(ctx context.Context, req *pb.GetFileRequest
 	fileMeta, downloadURL, err := s.uc.GetFile(ctx, req.Id)
 	if err != nil {
 		s.log.Errorf("GetFile failed: %v", err)
+		if strings.Contains(err.Error(), "not found") {
+			return nil, errors.NotFound("FILE_NOT_FOUND", "file not found")
+		}
 		return nil, err
 	}
 	return &pb.GetFileResponse{
@@ -92,6 +97,9 @@ func (s *FileManagerService) DeleteFile(ctx context.Context, req *pb.DeleteFileR
 	err := s.uc.DeleteFile(ctx, req.Id)
 	if err != nil {
 		s.log.Errorf("DeleteFile failed: %v", err)
+		if strings.Contains(err.Error(), "not found") {
+			return nil, errors.NotFound("FILE_NOT_FOUND", "file not found")
+		}
 		return nil, err
 	}
 

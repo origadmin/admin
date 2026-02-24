@@ -54,7 +54,7 @@ func wireApp(app *runtime.App, bootstrap *conf.Config) (*kratos.App, func(), err
 	if err != nil {
 		return nil, nil, err
 	}
-	objectStoreProxy, err := server.NewObjectStoreProxy(app, bootstrap)
+	objectStoreProxy, err := server.NewObjectStoreProxy(app, bootstrap, clientMiddlewareProvider)
 	if err != nil {
 		return nil, nil, err
 	}

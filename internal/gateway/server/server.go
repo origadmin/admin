@@ -8,11 +8,13 @@ import (
 	"errors"
 	"fmt"
 	stdhttp "net/http"
+	"time"
 
 	"github.com/go-kratos/kratos/v2/log"
 	kratoshttp "github.com/go-kratos/kratos/v2/transport/http"
 	"github.com/goexts/generic/maps"
 	"github.com/google/wire"
+	"google.golang.org/protobuf/types/known/durationpb"
 
 	"github.com/origadmin/runtime"
 	httpv1 "github.com/origadmin/runtime/api/gen/go/config/transport/http/v1"
@@ -84,6 +86,9 @@ func NewHTTPServer(
 		return nil, errors.New("http config is nil")
 	}
 
+	// Set a longer timeout for the HTTP server to accommodate file operations.
+	cfg.Timeout = durationpb.New(30 * time.Second)
+
 	mws, err := middlewareProvider.ServerMiddlewares()
 	if err != nil {
 		return nil, err
@@ -109,18 +114,8 @@ func NewHTTPServer(
 	svc.RegisterHTTPHandlers(srv)
 
 	// 2. Register Custom Proxy Handlers (Frontend-friendly API)
-	// We register this under a specific prefix to avoid conflict with gRPC-Gateway if needed,
-	// or we can let it handle specific paths.
-	// Here we register it to handle /api/v1/proxy/files or similar,
-	// BUT since the user wants it to be THE way to access files, let's map it carefully.
-
-	// Let's register the proxy to handle specific file operations.
-	// Assuming the proxy implements ServeHTTP, we can mount it.
-	// Note: Kratos http.Server HandlePrefix mounts a standard http.Handler.
-
-	// Mount the proxy at /api/v1/storage
-	// This means requests like /api/v1/storage/upload, /api/v1/storage/download/{id} will go to proxy.
-	srv.HandlePrefix("/api/v1/storage", proxy)
+	// Register each handler separately with proper middleware support
+	proxy.RegisterHandlers(srv)
 
 	// Try to get the handler for the embedded Web UI.
 	webUIHandler, err := web.GetHandler()

@@ -17,7 +17,7 @@ services:
     container_name: backend_nats
     command: "--config /etc/nats/nats.conf" # Use the mounted config file
     ports:
-      - "4222:4222" # NATS client port
+      - "14222:4222" # NATS client port
       - "8222:8222" # NATS monitoring port
     volumes:
       - ./nats/nats.conf:/etc/nats/nats.conf # Mount the local config file
