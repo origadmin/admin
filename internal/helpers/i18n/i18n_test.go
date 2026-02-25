@@ -2,7 +2,7 @@
  * Copyright (c) 2024 OrigAdmin. All rights reserved.
  */
 
-// Package i18n implements the functions, types, and interfaces for the module.
+// Package i18n implements the functions, types, and contracts for the module.
 package i18n
 
 import (

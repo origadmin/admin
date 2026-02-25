@@ -1,4 +1,4 @@
-// Package conf implements the functions, types, and interfaces for the module.
+// Package conf implements the functions, types, and contracts for the module.
 package conf
 
 import (
@@ -11,7 +11,7 @@ import (
 	middlewarev1 "github.com/origadmin/runtime/api/gen/go/config/middleware/v1"
 	transportv1 "github.com/origadmin/runtime/api/gen/go/config/transport/v1"
 	"github.com/origadmin/runtime/bootstrap"
-	"github.com/origadmin/runtime/interfaces"
+	"github.com/origadmin/runtime/contracts"
 	confpb "origadmin/application/admin/internal/conf/pb"
 )
 
@@ -146,7 +146,7 @@ func (c *Config) DecodedConfig() any {
 	return &c.Bootstrap
 }
 
-func (c *Config) Transform(config interfaces.ConfigLoader, sc interfaces.StructuredConfig) (interfaces.StructuredConfig, error) {
+func (c *Config) Transform(config contracts.ConfigLoader, sc contracts.StructuredConfig) (contracts.StructuredConfig, error) {
 	err := config.Decode("", &c.Bootstrap)
 	if err != nil {
 		return nil, err

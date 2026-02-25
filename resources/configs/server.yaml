@@ -19,10 +19,10 @@ servers:
             - "*"
           allow_credentials: true
         middlewares:
-          - recovery
-          #          - tracing
-          - logging
-          - authn
+          - "recovery"
+          - "circuitbreaker"
+          - "logging"
+          - "authn"
 
 
     # System Service gRPC Server

@@ -1,4 +1,4 @@
-// Package broker implements the functions, types, and interfaces for the module.
+// Package broker implements the functions, types, and contracts for the module.
 package broker
 
 // Define topic constants for system-related events.

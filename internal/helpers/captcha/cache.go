@@ -1,4 +1,4 @@
-// Package captcha implements the functions, types, and interfaces for the module.
+// Package captcha implements the functions, types, and contracts for the module.
 package captcha
 
 import (
@@ -7,7 +7,7 @@ import (
 
 	"github.com/mojocn/base64Captcha"
 
-	storageiface "github.com/origadmin/runtime/interfaces/storage"
+	storageiface "github.com/origadmin/runtime/contracts/storage"
 	"github.com/origadmin/runtime/log"
 	"origadmin/application/admin/internal/helpers/contextutil"
 )

@@ -66,7 +66,7 @@ type QueryOption struct {
 }
 
 // QueryOptionFromRequest creates a QueryOption with common details
-// extracted from any request that satisfies the supported interfaces.
+// extracted from any request that satisfies the supported contracts.
 func QueryOptionFromRequest(req interface{}) QueryOption {
 	opt := QueryOption{}
 

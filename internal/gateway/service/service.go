@@ -21,7 +21,7 @@ var ProviderSet = wire.NewSet(NewGatewayService)
 // GatewayService acts as a dependency injection container for the various
 // generated bridge sets. Each bridge set contains the client-side logic
 // to forward requests to a specific downstream gRPC service.
-// This approach avoids implementing downstream service interfaces directly in the gateway.
+// This approach avoids implementing downstream service contracts directly in the gateway.
 type GatewayService struct {
 	Identity    *client.IdentityBridgeSet
 	System      *client.SystemBridgeSet

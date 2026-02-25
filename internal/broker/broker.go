@@ -1,4 +1,4 @@
-// Package broker defines the interfaces for message broker interactions.
+// Package broker defines the contracts for message broker interactions.
 package broker
 
 import (
@@ -19,7 +19,7 @@ type Subscriber interface {
 	Close() error
 }
 
-// PubSub combines Publisher and Subscriber interfaces.
+// PubSub combines Publisher and Subscriber contracts.
 type PubSub interface {
 	Publisher
 	Subscriber

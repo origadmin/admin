@@ -4,40 +4,42 @@
 sources:
   # File sources are loaded first to provide default values.
   - file:
-      path: server.yaml
+      path: .
+      ignores:
+        - "bootstrap.yaml"
     type: file
-  - file:
-      path: databases.yaml
-    type: file
-  - file:
-      path: objectstore.yaml
-    type: file
-  - file:
-      path: logger.yaml
-    type: file
-  - file:
-      path: cache.yaml
-    type: file
-  - file:
-      path: security.yaml
-    type: file
-  - file:
-      path: clients.yaml
-    type: file
-  - file:
-      path: discovery.yaml
-    type: file
-  - file:
-      path: root_user.yaml
-    type: file
-  - file:
-      path: middlewares.yaml
-    type: file
-  - file:
-      path: captcha.yaml
-    type: file
-  - file:
-      path: auth.yaml
-    type: file
+  #  - file:
+  #      path: databases.yaml
+  #    type: file
+  #  - file:
+  #      path: objectstore.yaml
+  #    type: file
+  #  - file:
+  #      path: logger.yaml
+  #    type: file
+  #  - file:
+  #      path: cache.yaml
+  #    type: file
+  #  - file:
+  #      path: security.yaml
+  #    type: file
+  #  - file:
+  #      path: clients.yaml
+  #    type: file
+  #  - file:
+  #      path: discovery.yaml
+  #    type: file
+  #  - file:
+  #      path: root_user.yaml
+  #    type: file
+  #  - file:
+  #      path: middlewares.yaml
+  #    type: file
+  #  - file:
+  #      path: captcha.yaml
+  #    type: file
+  #  - file:
+  #      path: auth.yaml
+  #    type: file
   # Environment variables are loaded last to override file settings.
   - type: env

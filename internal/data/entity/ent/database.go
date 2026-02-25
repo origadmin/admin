@@ -11,7 +11,7 @@ import (
 	"entgo.io/ent/dialect"
 	"entgo.io/ent/dialect/sql"
 	"entgo.io/ent/dialect/sql/schema"
-	"github.com/origadmin/runtime/interfaces/storage/database"
+	"github.com/origadmin/runtime/contracts/storage/database"
 )
 
 // Database is the client that holds all ent builders.

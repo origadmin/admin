@@ -70,7 +70,7 @@ func main() {
 		log.Fatalf("failed to create runtime: %v", err)
 	}
 	defer rt.Config().Close()
-	log.Infof("Starting %s %s (ID: %s)\n", rt.AppInfo().Name(), rt.AppInfo().Version(), rt.AppInfo().ID())
+	rt.ShowAppInfo()
 
 	// Get bootstrap config
 	bootstrapConfig, ok := rt.StructuredConfig().(*conf.Config)

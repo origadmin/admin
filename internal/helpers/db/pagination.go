@@ -75,7 +75,7 @@ func CalculatePagination[T any](results []T, queryOpt *repo.QueryOption) (page i
 }
 
 // generateNextPageToken creates a compact, Protobuf-based pagination token.
-// It uses type assertions on interfaces to extract field values, avoiding reflection.
+// It uses type assertions on contracts to extract field values, avoiding reflection.
 func generateNextPageToken[T any](results []T, opt *repo.QueryOption) (string, error) {
 	if len(results) == 0 {
 		return "", nil // No results, no next page token
@@ -242,7 +242,7 @@ func BuildCursorWhere[P ~func(*sql.Selector)](cursor *Cursor) P {
 	}
 }
 
-// Pageable, Selector, etc. interfaces remain the same.
+// Pageable, Selector, etc. contracts remain the same.
 type Pageable[T any, W any, O any, R any] interface {
 	Counter[T]
 	Cloner[T]

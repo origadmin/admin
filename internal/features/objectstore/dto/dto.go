@@ -2,7 +2,7 @@
  * Copyright (c) 2024 OrigAdmin. All rights reserved.
  */
 
-// Package dto provides data transfer objects and repository interfaces for the objectstore module.
+// Package dto provides data transfer objects and repository contracts for the objectstore module.
 package dto
 
 import (

@@ -2,7 +2,7 @@
  * Copyright (c) 2024 OrigAdmin. All rights reserved.
  */
 
-// Package service implements the functions, types, and interfaces for the module.
+// Package service implements the functions, types, and contracts for the module.
 package service
 
 import (

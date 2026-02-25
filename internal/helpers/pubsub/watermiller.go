@@ -1,4 +1,4 @@
-// Package pubsub implements the functions, types, and interfaces for the module.
+// Package pubsub implements the functions, types, and contracts for the module.
 package pubsub
 
 import (
