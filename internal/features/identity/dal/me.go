@@ -56,7 +56,7 @@ func (r *MeRepo) GetSetting(ctx context.Context, userID int64) (*identitydto.Use
 		Only(ctx)
 	if err != nil {
 		if ent.IsNotFound(err) {
-			return nil, errors.NotFound("USER_SETTINGS_NOT_FOUND", "User settings not found")
+			return &identitydto.UserSettingPB{}, nil
 		}
 		r.log.WithContext(ctx).Errorf("failed to get settings for user_id %d: %v", userID, err)
 		return nil, errors.InternalServer("DATABASE_ERROR", "failed to retrieve user settings")
@@ -105,7 +105,7 @@ func (r *MeRepo) GetProfile(ctx context.Context, userID int64) (*identitydto.Use
 		Only(ctx)
 	if err != nil {
 		if ent.IsNotFound(err) {
-			return nil, errors.NotFound("USER_PROFILE_NOT_FOUND", "User profile not found")
+			return &identitydto.UserProfilePB{}, nil
 		}
 		r.log.WithContext(ctx).Errorf("failed to get profile for user_id %d: %v", userID, err)
 		return nil, errors.InternalServer("DATABASE_ERROR", "failed to retrieve user profile")

@@ -55,6 +55,33 @@ func (s *MeService) UpdatePassword(ctx context.Context, req *pb.UpdatePasswordRe
 	return &pb.UpdatePasswordResponse{}, nil
 }
 
+// ListMyViews retrieves the current user's view tree.
+func (s *MeService) ListMyViews(ctx context.Context, req *pb.ListMyViewsRequest) (*pb.ListMyViewsResponse, error) {
+	views, err := s.meUseCase.ListMyViews(ctx)
+	if err != nil {
+		return nil, err
+	}
+	return &pb.ListMyViewsResponse{Views: views}, nil
+}
+
+// GetUserResources retrieves the current user's resources.
+func (s *MeService) GetUserResources(ctx context.Context, req *pb.GetUserResourcesRequest) (*pb.GetUserResourcesResponse, error) {
+	resources, err := s.meUseCase.ListMyResources(ctx)
+	if err != nil {
+		return nil, err
+	}
+	return &pb.GetUserResourcesResponse{Resources: resources}, nil
+}
+
+// GetUserRoles retrieves the current user's roles.
+func (s *MeService) GetUserRoles(ctx context.Context, req *pb.GetUserRolesRequest) (*pb.GetUserRolesResponse, error) {
+	roles, err := s.meUseCase.ListMyRoles(ctx)
+	if err != nil {
+		return nil, err
+	}
+	return &pb.GetUserRolesResponse{Roles: roles}, nil
+}
+
 // UpdatePreferences updates the current user's preferences (P2).
 func (s *MeService) UpdatePreferences(ctx context.Context, req *pb.UpdatePreferencesRequest) (*pb.UpdatePreferencesResponse, error) {
 	err := s.meUseCase.UpdatePreferences(ctx, req.GetPreferences())
@@ -71,4 +98,13 @@ func (s *MeService) GetUserSettings(ctx context.Context, req *pb.GetUserSettings
 		return nil, err
 	}
 	return &pb.GetUserSettingsResponse{Setting: settings}, nil
+}
+
+// UpdateSettings updates the current user's settings.
+func (s *MeService) UpdateSettings(ctx context.Context, req *pb.UpdateSettingsRequest) (*pb.UpdateSettingsResponse, error) {
+	err := s.meUseCase.UpdateSettings(ctx, req.GetSetting())
+	if err != nil {
+		return nil, err
+	}
+	return &pb.UpdateSettingsResponse{}, nil
 }
