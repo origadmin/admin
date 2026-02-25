@@ -9,6 +9,7 @@ import (
 
 	"github.com/ThreeDotsLabs/watermill"
 	"github.com/ThreeDotsLabs/watermill-nats/v2/pkg/nats"
+	"github.com/ThreeDotsLabs/watermill/message"
 	"github.com/casbin/casbin/v3/persist"
 	"github.com/google/wire"
 
@@ -33,7 +34,6 @@ import (
 	_ "origadmin/application/admin/api/v1/services/notification"
 	_ "origadmin/application/admin/api/v1/services/objectstore"
 	_ "origadmin/application/admin/api/v1/services/system"
-	"origadmin/application/admin/internal/broker"
 	"origadmin/application/admin/internal/conf"
 	"origadmin/application/admin/internal/data"
 	"origadmin/application/admin/internal/helpers/pubsub"
@@ -158,7 +158,11 @@ func ProvideServiceMiddlewares(app *runtime.App, authorizer *casbin.Authorizer, 
 func ProvideSkipper(app *runtime.App, _ *conf.Config) contribsecurity.Skipper {
 	adminSkipper := skip.Principal(func(principal contribsecurity.Principal) bool {
 		helper := log.NewHelper(log.With(app.Logger()))
-		pid := strconv.Itoa(int(data.SystemUserID))
+		id := data.GetSystemUserID()
+		if id == 0 {
+			return false
+		}
+		pid := strconv.FormatInt(id, 10)
 		if principal.GetID() == pid {
 			helper.Infof("skip admin checker: %s", pid)
 			return true
@@ -178,7 +182,7 @@ func ProvideSkipper(app *runtime.App, _ *conf.Config) contribsecurity.Skipper {
 }
 
 // ProvidePublisher creates a Watermill message.Publisher based on broker configuration.
-func ProvidePublisher(c *conf.Config, wmLogger watermill.LoggerAdapter) (broker.Publisher, error) {
+func ProvidePublisher(c *conf.Config, wmLogger watermill.LoggerAdapter) (message.Publisher, error) {
 	brokerConfig := c.GetBrokers()
 	if brokerConfig == nil {
 		return nil, errors.New("broker configuration not found")

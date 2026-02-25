@@ -8,7 +8,10 @@ package data
 import (
 	"context"
 	"fmt"
+	"sync/atomic"
+	"time"
 
+	"github.com/cenkalti/backoff/v5"
 	entsql "entgo.io/ent/dialect/sql"
 	"entgo.io/ent/dialect/sql/schema"
 	"github.com/google/wire"
@@ -29,8 +32,52 @@ var ProviderSet = wire.NewSet(
 	NewAdapterFromApp,
 )
 
-// SystemUserID holds the ID of the system user. It is 0 if no system user is found.
-var SystemUserID int64
+// systemUserID holds the ID of the system user. It is 0 if no system user is found.
+var systemUserID atomic.Int64
+
+// GetSystemUserID returns the ID of the system user.
+// This is a thread-safe atomic load.
+func GetSystemUserID() int64 {
+	return systemUserID.Load()
+}
+
+// refreshSystemUserID attempts to fetch the system user ID from the database and updates the cache.
+func refreshSystemUserID(ctx context.Context, database *ent.Database) bool {
+	if database == nil {
+		return false
+	}
+	systemUser, err := database.User(ctx).Query().Where(user.IsSystem(true)).Only(ctx)
+	if err != nil {
+		return false
+	}
+	systemUserID.Store(systemUser.ID)
+	return true
+}
+
+// startSystemUserIDWatcher starts a background goroutine to poll for the system user ID using exponential backoff.
+func startSystemUserIDWatcher(ctx context.Context, database *ent.Database, logger log.Logger) {
+	logHelper := log.NewHelper(logger)
+	go func() {
+		// Create a strategy that starts at 1s and backs off to 30s
+		b := backoff.NewExponentialBackOff()
+		b.InitialInterval = 1 * time.Second
+		b.MaxInterval = 30 * time.Second
+		b.Reset()
+
+		_, _ = backoff.Retry(ctx, func() (struct{}, error) {
+			if id := GetSystemUserID(); id != 0 {
+				return struct{}{}, nil // Already found, perhaps by startup grace period
+			}
+
+			if refreshSystemUserID(ctx, database) {
+				logHelper.Infof("System user ID cached from background watcher: %d", GetSystemUserID())
+				return struct{}{}, nil // Found and cached
+			}
+
+			return struct{}{}, fmt.Errorf("system user not found, retrying...")
+		}, backoff.WithBackOff(b), backoff.WithMaxElapsedTime(0))
+	}()
+}
 
 // Data encapsulates the core data access components.
 type Data struct {
@@ -61,15 +108,13 @@ func ProvideDatabase(pv storage.Provider, logger log.Logger) (*ent.Database, fun
 	}
 
 	// Fetch and cache the system user ID on startup.
-	systemUser, err := database.User(ctx).Query().Where(user.IsSystem(true)).Only(ctx)
-	if err != nil {
-		if !ent.IsNotFound(err) {
-			return nil, nil, fmt.Errorf("failed to query system user: %w", err)
-		}
-		logHelper.Info("System user not found, this is expected on initial startup.")
+	// If it's not found (e.g., because the initializer hasn't run yet), 
+	// start a background watcher to keep trying without blocking the app startup.
+	if !refreshSystemUserID(ctx, database) {
+		logHelper.Info("System user not found on startup, starting background watcher.")
+		startSystemUserIDWatcher(context.Background(), database, logger)
 	} else {
-		SystemUserID = systemUser.ID
-		logHelper.Infof("System user ID cached: %d", SystemUserID)
+		logHelper.Infof("System user ID cached on startup: %d", GetSystemUserID())
 	}
 
 	return database, func() {

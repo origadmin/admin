@@ -27,11 +27,11 @@ import (
 type RoleService struct {
 	system.UnimplementedRoleServiceServer
 	uc        *biz.RoleUseCase
-	publisher broker.Publisher
+	publisher message.Publisher
 	log       *log.Helper
 }
 
-func NewRoleService(uc *biz.RoleUseCase, publisher broker.Publisher, logger log.Logger) *RoleService {
+func NewRoleService(uc *biz.RoleUseCase, publisher message.Publisher, logger log.Logger) *RoleService {
 	return &RoleService{
 		uc:        uc,
 		publisher: publisher,

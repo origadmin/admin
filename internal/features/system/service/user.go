@@ -28,13 +28,13 @@ import (
 type UserService struct {
 	system.UnimplementedUserServiceServer
 	uc        *biz.UserUseCase
-	publisher broker.Publisher
+	publisher message.Publisher
 	hasher    hash.Crypto
 	log       *log.Helper
 }
 
 // NewUserService creates a new UserService.
-func NewUserService(uc *biz.UserUseCase, publisher broker.Publisher, hasher hash.Crypto, logger log.Logger) *UserService {
+func NewUserService(uc *biz.UserUseCase, publisher message.Publisher, hasher hash.Crypto, logger log.Logger) *UserService {
 	return &UserService{
 		uc:        uc,
 		publisher: publisher,

@@ -20,7 +20,7 @@ servers:
           allow_credentials: true
         middlewares:
           - "recovery"
-          - "circuitbreaker"
+          #          - "circuitbreaker"
           - "logging"
           - "authn"
 
