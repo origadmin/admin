@@ -295,6 +295,12 @@ func (p *ObjectStoreProxy) handleCompleteMultipart(ctx httptransport.Context) er
 	return ctx.Result(200, resp)
 }
 
+// Carrier for Download result
+type downloadCarrier struct {
+	Body *httpbody.HttpBody
+	Meta *filemanager.GetFileResponse
+}
+
 func (p *ObjectStoreProxy) handleDownload(ctx httptransport.Context) error {
 	id, _ := strconv.ParseInt(ctx.Vars().Get("id"), 10, 64)
 	metadataOnly := ctx.Request().URL.Query().Get("metadata") == "true"
@@ -309,17 +315,11 @@ func (p *ObjectStoreProxy) handleDownload(ctx httptransport.Context) error {
 			}
 			return fileResp, nil
 		}
-		// FETCH WITH CONTENT TYPE
 		body, err := p.objClient.DownloadObject(ctx, &objectstore.DownloadObjectRequest{Id: fileResp.FileMetadata.ObjectId})
 		if err != nil {
 			return nil, err
 		}
-
-		// Map the metadata back so we can use it in the outer scope
-		return struct {
-			Body *httpbody.HttpBody
-			Meta *filemanager.GetFileResponse
-		}{Body: body, Meta: fileResp}, nil
+		return &downloadCarrier{Body: body, Meta: fileResp}, nil
 	})
 	out, err := h(ctx, nil)
 	if err != nil {
@@ -329,19 +329,13 @@ func (p *ObjectStoreProxy) handleDownload(ctx httptransport.Context) error {
 		return ctx.Result(200, out)
 	}
 
-	data := out.(struct {
-		Body *httpbody.HttpBody
-		Meta *filemanager.GetFileResponse
-	})
-
-	// FIX: Force Content-Type from database/objectstore metadata
+	data := out.(*downloadCarrier)
 	contentType := data.Body.ContentType
 	if contentType == "" || contentType == "application/octet-stream" {
 		if data.Meta.FileMetadata.MimeType != "" {
 			contentType = data.Meta.FileMetadata.MimeType
 		}
 	}
-
 	ctx.Response().Header().Set("Content-Type", contentType)
 	_, err = ctx.Response().Write(data.Body.Data)
 	return err

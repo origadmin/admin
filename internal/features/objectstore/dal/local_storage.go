@@ -128,15 +128,68 @@ func (s *LocalStorage) Get(ctx context.Context, id string) (io.ReadCloser, *type
 		return nil, nil, err
 	}
 	stat, _ := file.Stat()
-	return file, &types.Object{
-		Id:          id,
-		Size:        stat.Size(),
-		ContentType: "application/octet-stream", // Default fallback
-	}, nil
+	return file, &types.Object{Id: id, Size: stat.Size(), ContentType: "application/octet-stream"}, nil
 }
 
 func (s *LocalStorage) Delete(ctx context.Context, id string) error {
 	return os.Remove(filepath.Join(s.basePath, id))
+}
+
+func (s *LocalStorage) List(ctx context.Context, prefix string, page, pageSize int32) ([]*types.Object, int32, error) {
+	entries, err := os.ReadDir(s.basePath)
+	if err != nil {
+		return nil, 0, err
+	}
+
+	var objects []*types.Object
+	for _, entry := range entries {
+		// Ignore special directories
+		if entry.IsDir() || entry.Name() == "multipart" {
+			continue
+		}
+		if prefix != "" && !strings.HasPrefix(entry.Name(), prefix) {
+			continue
+		}
+
+		info, err := entry.Info()
+		if err != nil {
+			continue
+		}
+
+		objects = append(objects, &types.Object{
+			Id:         entry.Name(),
+			Size:       info.Size(),
+			CreateTime: timestamppb.New(info.ModTime()),
+		})
+	}
+
+	// Sort by newest first
+	sort.Slice(objects, func(i, j int) bool {
+		return objects[i].CreateTime.AsTime().After(objects[j].CreateTime.AsTime())
+	})
+
+	total := int32(len(objects))
+
+	// FIXED PAGING LOGIC
+	p, ps := page, pageSize
+	if p < 1 {
+		p = 1
+	}
+	if ps < 1 {
+		ps = 20
+	}
+
+	start := (p - 1) * ps
+	if start >= total {
+		return []*types.Object{}, total, nil
+	}
+
+	end := start + ps
+	if end > total {
+		end = total
+	}
+
+	return objects[start:end], total, nil
 }
 
 func (s *LocalStorage) GetPresignedURL(ctx context.Context, id string, expires time.Duration) (string, error) {

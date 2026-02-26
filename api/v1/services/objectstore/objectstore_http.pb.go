@@ -27,6 +27,7 @@ const OperationObjectStoreServiceDownloadObject = "/api.v1.services.objectstore.
 const OperationObjectStoreServiceGetMultipartUploadUrl = "/api.v1.services.objectstore.ObjectStoreService/GetMultipartUploadUrl"
 const OperationObjectStoreServiceGetObject = "/api.v1.services.objectstore.ObjectStoreService/GetObject"
 const OperationObjectStoreServiceInitiateMultipartUpload = "/api.v1.services.objectstore.ObjectStoreService/InitiateMultipartUpload"
+const OperationObjectStoreServiceListObjects = "/api.v1.services.objectstore.ObjectStoreService/ListObjects"
 const OperationObjectStoreServiceListParts = "/api.v1.services.objectstore.ObjectStoreService/ListParts"
 const OperationObjectStoreServiceUploadObject = "/api.v1.services.objectstore.ObjectStoreService/UploadObject"
 
@@ -46,6 +47,8 @@ type ObjectStoreServiceHTTPServer interface {
 	GetObject(context.Context, *GetObjectRequest) (*GetObjectResponse, error)
 	// InitiateMultipartUpload Initiates a multipart upload and returns an upload ID.
 	InitiateMultipartUpload(context.Context, *InitiateMultipartUploadRequest) (*InitiateMultipartUploadResponse, error)
+	// ListObjects Lists objects in the store.
+	ListObjects(context.Context, *ListObjectsRequest) (*ListObjectsResponse, error)
 	// ListParts Lists the parts that have been uploaded for a specific multipart upload.
 	ListParts(context.Context, *ListPartsRequest) (*ListPartsResponse, error)
 	// UploadObject Uploads an object in a single request. Suitable for small files.
@@ -58,6 +61,7 @@ func RegisterObjectStoreServiceHTTPServer(s *http.Server, srv ObjectStoreService
 	r.GET("/obs/objects/{id}", _ObjectStoreService_GetObject0_HTTP_Handler(srv))
 	r.GET("/obs/objects/{id}/download", _ObjectStoreService_DownloadObject0_HTTP_Handler(srv))
 	r.DELETE("/obs/objects/{id}", _ObjectStoreService_DeleteObject0_HTTP_Handler(srv))
+	r.GET("/obs/objects", _ObjectStoreService_ListObjects0_HTTP_Handler(srv))
 	r.POST("/obs/objects/multipart", _ObjectStoreService_InitiateMultipartUpload0_HTTP_Handler(srv))
 	r.GET("/obs/objects/multipart/{object_id}/uploads/{upload_id}/parts/{part_number}", _ObjectStoreService_GetMultipartUploadUrl0_HTTP_Handler(srv))
 	r.GET("/obs/objects/multipart/{object_id}/uploads/{upload_id}/parts", _ObjectStoreService_ListParts0_HTTP_Handler(srv))
@@ -149,6 +153,25 @@ func _ObjectStoreService_DeleteObject0_HTTP_Handler(srv ObjectStoreServiceHTTPSe
 			return err
 		}
 		reply := out.(*DeleteObjectResponse)
+		return ctx.Result(200, reply)
+	}
+}
+
+func _ObjectStoreService_ListObjects0_HTTP_Handler(srv ObjectStoreServiceHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in ListObjectsRequest
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationObjectStoreServiceListObjects)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.ListObjects(ctx, req.(*ListObjectsRequest))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*ListObjectsResponse)
 		return ctx.Result(200, reply)
 	}
 }
@@ -282,6 +305,8 @@ type ObjectStoreServiceHTTPClient interface {
 	GetObject(ctx context.Context, req *GetObjectRequest, opts ...http.CallOption) (rsp *GetObjectResponse, err error)
 	// InitiateMultipartUpload Initiates a multipart upload and returns an upload ID.
 	InitiateMultipartUpload(ctx context.Context, req *InitiateMultipartUploadRequest, opts ...http.CallOption) (rsp *InitiateMultipartUploadResponse, err error)
+	// ListObjects Lists objects in the store.
+	ListObjects(ctx context.Context, req *ListObjectsRequest, opts ...http.CallOption) (rsp *ListObjectsResponse, err error)
 	// ListParts Lists the parts that have been uploaded for a specific multipart upload.
 	ListParts(ctx context.Context, req *ListPartsRequest, opts ...http.CallOption) (rsp *ListPartsResponse, err error)
 	// UploadObject Uploads an object in a single request. Suitable for small files.
@@ -389,6 +414,20 @@ func (c *ObjectStoreServiceHTTPClientImpl) InitiateMultipartUpload(ctx context.C
 	opts = append(opts, http.Operation(OperationObjectStoreServiceInitiateMultipartUpload))
 	opts = append(opts, http.PathTemplate(pattern))
 	err := c.cc.Invoke(ctx, "POST", path, in, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, nil
+}
+
+// ListObjects Lists objects in the store.
+func (c *ObjectStoreServiceHTTPClientImpl) ListObjects(ctx context.Context, in *ListObjectsRequest, opts ...http.CallOption) (*ListObjectsResponse, error) {
+	var out ListObjectsResponse
+	pattern := "/obs/objects"
+	path := binding.EncodeURL(pattern, in, true)
+	opts = append(opts, http.Operation(OperationObjectStoreServiceListObjects))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "GET", path, nil, &out, opts...)
 	if err != nil {
 		return nil, err
 	}

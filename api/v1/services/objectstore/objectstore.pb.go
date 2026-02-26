@@ -864,6 +864,120 @@ func (*DeleteObjectResponse) Descriptor() ([]byte, []int) {
 	return file_objectstore_objectstore_proto_rawDescGZIP(), []int{16}
 }
 
+// Request message for listing objects.
+type ListObjectsRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Prefix        string                 `protobuf:"bytes,1,opt,name=prefix,proto3" json:"prefix,omitempty"`
+	Page          int32                  `protobuf:"varint,2,opt,name=page,proto3" json:"page,omitempty"`
+	PageSize      int32                  `protobuf:"varint,3,opt,name=page_size,proto3" json:"page_size,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *ListObjectsRequest) Reset() {
+	*x = ListObjectsRequest{}
+	mi := &file_objectstore_objectstore_proto_msgTypes[17]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *ListObjectsRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ListObjectsRequest) ProtoMessage() {}
+
+func (x *ListObjectsRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_objectstore_objectstore_proto_msgTypes[17]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ListObjectsRequest.ProtoReflect.Descriptor instead.
+func (*ListObjectsRequest) Descriptor() ([]byte, []int) {
+	return file_objectstore_objectstore_proto_rawDescGZIP(), []int{17}
+}
+
+func (x *ListObjectsRequest) GetPrefix() string {
+	if x != nil {
+		return x.Prefix
+	}
+	return ""
+}
+
+func (x *ListObjectsRequest) GetPage() int32 {
+	if x != nil {
+		return x.Page
+	}
+	return 0
+}
+
+func (x *ListObjectsRequest) GetPageSize() int32 {
+	if x != nil {
+		return x.PageSize
+	}
+	return 0
+}
+
+// Response message for listing objects.
+type ListObjectsResponse struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Objects       []*types.Object        `protobuf:"bytes,1,rep,name=objects,proto3" json:"objects,omitempty"`
+	Total         int32                  `protobuf:"varint,2,opt,name=total,proto3" json:"total,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *ListObjectsResponse) Reset() {
+	*x = ListObjectsResponse{}
+	mi := &file_objectstore_objectstore_proto_msgTypes[18]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *ListObjectsResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ListObjectsResponse) ProtoMessage() {}
+
+func (x *ListObjectsResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_objectstore_objectstore_proto_msgTypes[18]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ListObjectsResponse.ProtoReflect.Descriptor instead.
+func (*ListObjectsResponse) Descriptor() ([]byte, []int) {
+	return file_objectstore_objectstore_proto_rawDescGZIP(), []int{18}
+}
+
+func (x *ListObjectsResponse) GetObjects() []*types.Object {
+	if x != nil {
+		return x.Objects
+	}
+	return nil
+}
+
+func (x *ListObjectsResponse) GetTotal() int32 {
+	if x != nil {
+		return x.Total
+	}
+	return 0
+}
+
 var File_objectstore_objectstore_proto protoreflect.FileDescriptor
 
 const file_objectstore_objectstore_proto_rawDesc = "" +
@@ -913,12 +1027,20 @@ const file_objectstore_objectstore_proto_rawDesc = "" +
 	"\x05range\x18\x02 \x01(\tR\x05range\"%\n" +
 	"\x13DeleteObjectRequest\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\tR\x02id\"\x16\n" +
-	"\x14DeleteObjectResponse2\xbf\f\n" +
+	"\x14DeleteObjectResponse\"^\n" +
+	"\x12ListObjectsRequest\x12\x16\n" +
+	"\x06prefix\x18\x01 \x01(\tR\x06prefix\x12\x12\n" +
+	"\x04page\x18\x02 \x01(\x05R\x04page\x12\x1c\n" +
+	"\tpage_size\x18\x03 \x01(\x05R\tpage_size\"d\n" +
+	"\x13ListObjectsResponse\x127\n" +
+	"\aobjects\x18\x01 \x03(\v2\x1d.api.v1.services.types.ObjectR\aobjects\x12\x14\n" +
+	"\x05total\x18\x02 \x01(\x05R\x05total2\xc8\r\n" +
 	"\x12ObjectStoreService\x12\x8c\x01\n" +
 	"\fUploadObject\x120.api.v1.services.objectstore.UploadObjectRequest\x1a1.api.v1.services.objectstore.UploadObjectResponse\"\x17\x82\xd3\xe4\x93\x02\x11:\x01*\"\f/obs/objects\x12\x85\x01\n" +
 	"\tGetObject\x12-.api.v1.services.objectstore.GetObjectRequest\x1a..api.v1.services.objectstore.GetObjectResponse\"\x19\x82\xd3\xe4\x93\x02\x13\x12\x11/obs/objects/{id}\x12~\n" +
 	"\x0eDownloadObject\x122.api.v1.services.objectstore.DownloadObjectRequest\x1a\x14.google.api.HttpBody\"\"\x82\xd3\xe4\x93\x02\x1c\x12\x1a/obs/objects/{id}/download\x12\x8e\x01\n" +
-	"\fDeleteObject\x120.api.v1.services.objectstore.DeleteObjectRequest\x1a1.api.v1.services.objectstore.DeleteObjectResponse\"\x19\x82\xd3\xe4\x93\x02\x13*\x11/obs/objects/{id}\x12\xb7\x01\n" +
+	"\fDeleteObject\x120.api.v1.services.objectstore.DeleteObjectRequest\x1a1.api.v1.services.objectstore.DeleteObjectResponse\"\x19\x82\xd3\xe4\x93\x02\x13*\x11/obs/objects/{id}\x12\x86\x01\n" +
+	"\vListObjects\x12/.api.v1.services.objectstore.ListObjectsRequest\x1a0.api.v1.services.objectstore.ListObjectsResponse\"\x14\x82\xd3\xe4\x93\x02\x0e\x12\f/obs/objects\x12\xb7\x01\n" +
 	"\x17InitiateMultipartUpload\x12;.api.v1.services.objectstore.InitiateMultipartUploadRequest\x1a<.api.v1.services.objectstore.InitiateMultipartUploadResponse\"!\x82\xd3\xe4\x93\x02\x1b:\x01*\"\x16/obs/objects/multipart\x12\xe2\x01\n" +
 	"\x15GetMultipartUploadUrl\x129.api.v1.services.objectstore.GetMultipartUploadUrlRequest\x1a:.api.v1.services.objectstore.GetMultipartUploadUrlResponse\"R\x82\xd3\xe4\x93\x02L\x12J/obs/objects/multipart/{object_id}/uploads/{upload_id}/parts/{part_number}\x12\xb0\x01\n" +
 	"\tListParts\x12-.api.v1.services.objectstore.ListPartsRequest\x1a..api.v1.services.objectstore.ListPartsResponse\"D\x82\xd3\xe4\x93\x02>\x12</obs/objects/multipart/{object_id}/uploads/{upload_id}/parts\x12\xe0\x01\n" +
@@ -938,7 +1060,7 @@ func file_objectstore_objectstore_proto_rawDescGZIP() []byte {
 	return file_objectstore_objectstore_proto_rawDescData
 }
 
-var file_objectstore_objectstore_proto_msgTypes = make([]protoimpl.MessageInfo, 17)
+var file_objectstore_objectstore_proto_msgTypes = make([]protoimpl.MessageInfo, 19)
 var file_objectstore_objectstore_proto_goTypes = []any{
 	(*InitiateMultipartUploadRequest)(nil),  // 0: api.v1.services.objectstore.InitiateMultipartUploadRequest
 	(*InitiateMultipartUploadResponse)(nil), // 1: api.v1.services.objectstore.InitiateMultipartUploadResponse
@@ -957,39 +1079,44 @@ var file_objectstore_objectstore_proto_goTypes = []any{
 	(*DownloadObjectRequest)(nil),           // 14: api.v1.services.objectstore.DownloadObjectRequest
 	(*DeleteObjectRequest)(nil),             // 15: api.v1.services.objectstore.DeleteObjectRequest
 	(*DeleteObjectResponse)(nil),            // 16: api.v1.services.objectstore.DeleteObjectResponse
-	(*types.PartInfo)(nil),                  // 17: api.v1.services.types.PartInfo
-	(*types.Object)(nil),                    // 18: api.v1.services.types.Object
-	(*httpbody.HttpBody)(nil),               // 19: google.api.HttpBody
+	(*ListObjectsRequest)(nil),              // 17: api.v1.services.objectstore.ListObjectsRequest
+	(*ListObjectsResponse)(nil),             // 18: api.v1.services.objectstore.ListObjectsResponse
+	(*types.PartInfo)(nil),                  // 19: api.v1.services.types.PartInfo
+	(*types.Object)(nil),                    // 20: api.v1.services.types.Object
+	(*httpbody.HttpBody)(nil),               // 21: google.api.HttpBody
 }
 var file_objectstore_objectstore_proto_depIdxs = []int32{
-	17, // 0: api.v1.services.objectstore.ListPartsResponse.parts:type_name -> api.v1.services.types.PartInfo
-	17, // 1: api.v1.services.objectstore.CompleteMultipartUploadRequest.parts:type_name -> api.v1.services.types.PartInfo
-	18, // 2: api.v1.services.objectstore.CompleteMultipartUploadResponse.object:type_name -> api.v1.services.types.Object
-	18, // 3: api.v1.services.objectstore.UploadObjectResponse.object:type_name -> api.v1.services.types.Object
-	18, // 4: api.v1.services.objectstore.GetObjectResponse.object:type_name -> api.v1.services.types.Object
-	10, // 5: api.v1.services.objectstore.ObjectStoreService.UploadObject:input_type -> api.v1.services.objectstore.UploadObjectRequest
-	12, // 6: api.v1.services.objectstore.ObjectStoreService.GetObject:input_type -> api.v1.services.objectstore.GetObjectRequest
-	14, // 7: api.v1.services.objectstore.ObjectStoreService.DownloadObject:input_type -> api.v1.services.objectstore.DownloadObjectRequest
-	15, // 8: api.v1.services.objectstore.ObjectStoreService.DeleteObject:input_type -> api.v1.services.objectstore.DeleteObjectRequest
-	0,  // 9: api.v1.services.objectstore.ObjectStoreService.InitiateMultipartUpload:input_type -> api.v1.services.objectstore.InitiateMultipartUploadRequest
-	2,  // 10: api.v1.services.objectstore.ObjectStoreService.GetMultipartUploadUrl:input_type -> api.v1.services.objectstore.GetMultipartUploadUrlRequest
-	4,  // 11: api.v1.services.objectstore.ObjectStoreService.ListParts:input_type -> api.v1.services.objectstore.ListPartsRequest
-	6,  // 12: api.v1.services.objectstore.ObjectStoreService.CompleteMultipartUpload:input_type -> api.v1.services.objectstore.CompleteMultipartUploadRequest
-	8,  // 13: api.v1.services.objectstore.ObjectStoreService.AbortMultipartUpload:input_type -> api.v1.services.objectstore.AbortMultipartUploadRequest
-	11, // 14: api.v1.services.objectstore.ObjectStoreService.UploadObject:output_type -> api.v1.services.objectstore.UploadObjectResponse
-	13, // 15: api.v1.services.objectstore.ObjectStoreService.GetObject:output_type -> api.v1.services.objectstore.GetObjectResponse
-	19, // 16: api.v1.services.objectstore.ObjectStoreService.DownloadObject:output_type -> google.api.HttpBody
-	16, // 17: api.v1.services.objectstore.ObjectStoreService.DeleteObject:output_type -> api.v1.services.objectstore.DeleteObjectResponse
-	1,  // 18: api.v1.services.objectstore.ObjectStoreService.InitiateMultipartUpload:output_type -> api.v1.services.objectstore.InitiateMultipartUploadResponse
-	3,  // 19: api.v1.services.objectstore.ObjectStoreService.GetMultipartUploadUrl:output_type -> api.v1.services.objectstore.GetMultipartUploadUrlResponse
-	5,  // 20: api.v1.services.objectstore.ObjectStoreService.ListParts:output_type -> api.v1.services.objectstore.ListPartsResponse
-	7,  // 21: api.v1.services.objectstore.ObjectStoreService.CompleteMultipartUpload:output_type -> api.v1.services.objectstore.CompleteMultipartUploadResponse
-	9,  // 22: api.v1.services.objectstore.ObjectStoreService.AbortMultipartUpload:output_type -> api.v1.services.objectstore.AbortMultipartUploadResponse
-	14, // [14:23] is the sub-list for method output_type
-	5,  // [5:14] is the sub-list for method input_type
-	5,  // [5:5] is the sub-list for extension type_name
-	5,  // [5:5] is the sub-list for extension extendee
-	0,  // [0:5] is the sub-list for field type_name
+	19, // 0: api.v1.services.objectstore.ListPartsResponse.parts:type_name -> api.v1.services.types.PartInfo
+	19, // 1: api.v1.services.objectstore.CompleteMultipartUploadRequest.parts:type_name -> api.v1.services.types.PartInfo
+	20, // 2: api.v1.services.objectstore.CompleteMultipartUploadResponse.object:type_name -> api.v1.services.types.Object
+	20, // 3: api.v1.services.objectstore.UploadObjectResponse.object:type_name -> api.v1.services.types.Object
+	20, // 4: api.v1.services.objectstore.GetObjectResponse.object:type_name -> api.v1.services.types.Object
+	20, // 5: api.v1.services.objectstore.ListObjectsResponse.objects:type_name -> api.v1.services.types.Object
+	10, // 6: api.v1.services.objectstore.ObjectStoreService.UploadObject:input_type -> api.v1.services.objectstore.UploadObjectRequest
+	12, // 7: api.v1.services.objectstore.ObjectStoreService.GetObject:input_type -> api.v1.services.objectstore.GetObjectRequest
+	14, // 8: api.v1.services.objectstore.ObjectStoreService.DownloadObject:input_type -> api.v1.services.objectstore.DownloadObjectRequest
+	15, // 9: api.v1.services.objectstore.ObjectStoreService.DeleteObject:input_type -> api.v1.services.objectstore.DeleteObjectRequest
+	17, // 10: api.v1.services.objectstore.ObjectStoreService.ListObjects:input_type -> api.v1.services.objectstore.ListObjectsRequest
+	0,  // 11: api.v1.services.objectstore.ObjectStoreService.InitiateMultipartUpload:input_type -> api.v1.services.objectstore.InitiateMultipartUploadRequest
+	2,  // 12: api.v1.services.objectstore.ObjectStoreService.GetMultipartUploadUrl:input_type -> api.v1.services.objectstore.GetMultipartUploadUrlRequest
+	4,  // 13: api.v1.services.objectstore.ObjectStoreService.ListParts:input_type -> api.v1.services.objectstore.ListPartsRequest
+	6,  // 14: api.v1.services.objectstore.ObjectStoreService.CompleteMultipartUpload:input_type -> api.v1.services.objectstore.CompleteMultipartUploadRequest
+	8,  // 15: api.v1.services.objectstore.ObjectStoreService.AbortMultipartUpload:input_type -> api.v1.services.objectstore.AbortMultipartUploadRequest
+	11, // 16: api.v1.services.objectstore.ObjectStoreService.UploadObject:output_type -> api.v1.services.objectstore.UploadObjectResponse
+	13, // 17: api.v1.services.objectstore.ObjectStoreService.GetObject:output_type -> api.v1.services.objectstore.GetObjectResponse
+	21, // 18: api.v1.services.objectstore.ObjectStoreService.DownloadObject:output_type -> google.api.HttpBody
+	16, // 19: api.v1.services.objectstore.ObjectStoreService.DeleteObject:output_type -> api.v1.services.objectstore.DeleteObjectResponse
+	18, // 20: api.v1.services.objectstore.ObjectStoreService.ListObjects:output_type -> api.v1.services.objectstore.ListObjectsResponse
+	1,  // 21: api.v1.services.objectstore.ObjectStoreService.InitiateMultipartUpload:output_type -> api.v1.services.objectstore.InitiateMultipartUploadResponse
+	3,  // 22: api.v1.services.objectstore.ObjectStoreService.GetMultipartUploadUrl:output_type -> api.v1.services.objectstore.GetMultipartUploadUrlResponse
+	5,  // 23: api.v1.services.objectstore.ObjectStoreService.ListParts:output_type -> api.v1.services.objectstore.ListPartsResponse
+	7,  // 24: api.v1.services.objectstore.ObjectStoreService.CompleteMultipartUpload:output_type -> api.v1.services.objectstore.CompleteMultipartUploadResponse
+	9,  // 25: api.v1.services.objectstore.ObjectStoreService.AbortMultipartUpload:output_type -> api.v1.services.objectstore.AbortMultipartUploadResponse
+	16, // [16:26] is the sub-list for method output_type
+	6,  // [6:16] is the sub-list for method input_type
+	6,  // [6:6] is the sub-list for extension type_name
+	6,  // [6:6] is the sub-list for extension extendee
+	0,  // [0:6] is the sub-list for field type_name
 }
 
 func init() { file_objectstore_objectstore_proto_init() }
@@ -1003,7 +1130,7 @@ func file_objectstore_objectstore_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_objectstore_objectstore_proto_rawDesc), len(file_objectstore_objectstore_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   17,
+			NumMessages:   19,
 			NumExtensions: 0,
 			NumServices:   1,
 		},

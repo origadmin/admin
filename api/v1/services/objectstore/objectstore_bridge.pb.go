@@ -33,6 +33,7 @@ const ObjectStoreServiceUploadObjectBridgeOperation = "/api.v1.services.objectst
 const ObjectStoreServiceGetObjectBridgeOperation = "/api.v1.services.objectstore.ObjectStoreService/GetObject"
 const ObjectStoreServiceDownloadObjectBridgeOperation = "/api.v1.services.objectstore.ObjectStoreService/DownloadObject"
 const ObjectStoreServiceDeleteObjectBridgeOperation = "/api.v1.services.objectstore.ObjectStoreService/DeleteObject"
+const ObjectStoreServiceListObjectsBridgeOperation = "/api.v1.services.objectstore.ObjectStoreService/ListObjects"
 const ObjectStoreServiceInitiateMultipartUploadBridgeOperation = "/api.v1.services.objectstore.ObjectStoreService/InitiateMultipartUpload"
 const ObjectStoreServiceGetMultipartUploadUrlBridgeOperation = "/api.v1.services.objectstore.ObjectStoreService/GetMultipartUploadUrl"
 const ObjectStoreServiceListPartsBridgeOperation = "/api.v1.services.objectstore.ObjectStoreService/ListParts"
@@ -49,6 +50,8 @@ type ObjectStoreServiceBridgeServer interface {
 	DownloadObject(context.Context, *DownloadObjectRequest) (*httpbody.HttpBody, error)
 	// Deletes an object.
 	DeleteObject(context.Context, *DeleteObjectRequest) (*DeleteObjectResponse, error)
+	// Lists objects in the store.
+	ListObjects(context.Context, *ListObjectsRequest) (*ListObjectsResponse, error)
 	// Initiates a multipart upload and returns an upload ID.
 	InitiateMultipartUpload(context.Context, *InitiateMultipartUploadRequest) (*InitiateMultipartUploadResponse, error)
 	// Generates a presigned URL for uploading a part.
@@ -66,6 +69,7 @@ type ObjectStoreServiceHooker interface {
 	ObjectStoreServiceGetObjectHooker
 	ObjectStoreServiceDownloadObjectHooker
 	ObjectStoreServiceDeleteObjectHooker
+	ObjectStoreServiceListObjectsHooker
 	ObjectStoreServiceInitiateMultipartUploadHooker
 	ObjectStoreServiceGetMultipartUploadUrlHooker
 	ObjectStoreServiceListPartsHooker
@@ -92,6 +96,10 @@ type ObjectStoreServiceDownloadObjectHooker interface {
 type ObjectStoreServiceDeleteObjectHooker interface {
 	PrepareDeleteObject(http.Context, *DeleteObjectRequest) (context.Context, error)
 	CompleteDeleteObject(http.Context, *DeleteObjectRequest, *DeleteObjectResponse) error
+}
+type ObjectStoreServiceListObjectsHooker interface {
+	PrepareListObjects(http.Context, *ListObjectsRequest) (context.Context, error)
+	CompleteListObjects(http.Context, *ListObjectsRequest, *ListObjectsResponse) error
 }
 type ObjectStoreServiceInitiateMultipartUploadHooker interface {
 	PrepareInitiateMultipartUpload(http.Context, *InitiateMultipartUploadRequest) (context.Context, error)
@@ -120,6 +128,7 @@ func RegisterObjectStoreServiceBridgeServer(s *http.Server, srv ObjectStoreServi
 	r.GET("/obs/objects/:id", _ObjectStoreService_GetObject0_Bridge_Handler(srv))
 	r.GET("/obs/objects/:id/download", _ObjectStoreService_DownloadObject0_Bridge_Handler(srv))
 	r.DELETE("/obs/objects/:id", _ObjectStoreService_DeleteObject0_Bridge_Handler(srv))
+	r.GET("/obs/objects", _ObjectStoreService_ListObjects0_Bridge_Handler(srv))
 	r.POST("/obs/objects/multipart", _ObjectStoreService_InitiateMultipartUpload0_Bridge_Handler(srv))
 	r.GET("/obs/objects/multipart/:object_id/uploads/:upload_id/parts/:part_number", _ObjectStoreService_GetMultipartUploadUrl0_Bridge_Handler(srv))
 	r.GET("/obs/objects/multipart/:object_id/uploads/:upload_id/parts", _ObjectStoreService_ListParts0_Bridge_Handler(srv))
@@ -228,6 +237,29 @@ func _ObjectStoreService_DeleteObject0_Bridge_Handler(srv ObjectStoreServiceHook
 			return err
 		}
 		return srv.CompleteDeleteObject(ctx, &in, out.(*DeleteObjectResponse))
+	}
+}
+
+func _ObjectStoreService_ListObjects0_Bridge_Handler(srv ObjectStoreServiceHookedBridger) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in ListObjectsRequest
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationObjectStoreServiceListObjects)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.ListObjects(ctx, req.(*ListObjectsRequest))
+		})
+
+		newctx, err := srv.PrepareListObjects(ctx, &in)
+		if err != nil {
+			return err
+		}
+		out, err := h(newctx, &in)
+		if err != nil {
+			return err
+		}
+		return srv.CompleteListObjects(ctx, &in, out.(*ListObjectsResponse))
 	}
 }
 
@@ -403,6 +435,14 @@ func (UnimplementedObjectStoreServiceHooked) CompleteDeleteObject(ctx http.Conte
 	return ctx.Result(200, out)
 }
 
+func (UnimplementedObjectStoreServiceHooked) PrepareListObjects(ctx http.Context, in *ListObjectsRequest) (context.Context, error) {
+	return ctx, nil
+}
+
+func (UnimplementedObjectStoreServiceHooked) CompleteListObjects(ctx http.Context, in *ListObjectsRequest, out *ListObjectsResponse) error {
+	return ctx.Result(200, out)
+}
+
 func (UnimplementedObjectStoreServiceHooked) PrepareInitiateMultipartUpload(ctx http.Context, in *InitiateMultipartUploadRequest) (context.Context, error) {
 	return ctx, nil
 }
@@ -481,6 +521,10 @@ func (c *ObjectStoreServiceHTTPBridgeImpl) DeleteObject(ctx context.Context, in 
 	return c.client.DeleteObject(ctx, in)
 }
 
+func (c *ObjectStoreServiceHTTPBridgeImpl) ListObjects(ctx context.Context, in *ListObjectsRequest) (*ListObjectsResponse, error) {
+	return c.client.ListObjects(ctx, in)
+}
+
 func (c *ObjectStoreServiceHTTPBridgeImpl) InitiateMultipartUpload(ctx context.Context, in *InitiateMultipartUploadRequest) (*InitiateMultipartUploadResponse, error) {
 	return c.client.InitiateMultipartUpload(ctx, in)
 }
@@ -523,6 +567,10 @@ func (c *ObjectStoreServiceBridgeImpl) DownloadObject(ctx context.Context, in *D
 
 func (c *ObjectStoreServiceBridgeImpl) DeleteObject(ctx context.Context, in *DeleteObjectRequest) (*DeleteObjectResponse, error) {
 	return c.client.DeleteObject(ctx, in)
+}
+
+func (c *ObjectStoreServiceBridgeImpl) ListObjects(ctx context.Context, in *ListObjectsRequest) (*ListObjectsResponse, error) {
+	return c.client.ListObjects(ctx, in)
 }
 
 func (c *ObjectStoreServiceBridgeImpl) InitiateMultipartUpload(ctx context.Context, in *InitiateMultipartUploadRequest) (*InitiateMultipartUploadResponse, error) {
@@ -571,6 +619,10 @@ func (c *ObjectStoreServiceGRPC2HTTPBridgeImpl) DeleteObject(ctx context.Context
 	return c.client.DeleteObject(ctx, in)
 }
 
+func (c *ObjectStoreServiceGRPC2HTTPBridgeImpl) ListObjects(ctx context.Context, in *ListObjectsRequest) (*ListObjectsResponse, error) {
+	return c.client.ListObjects(ctx, in)
+}
+
 func (c *ObjectStoreServiceGRPC2HTTPBridgeImpl) InitiateMultipartUpload(ctx context.Context, in *InitiateMultipartUploadRequest) (*InitiateMultipartUploadResponse, error) {
 	return c.client.InitiateMultipartUpload(ctx, in)
 }
@@ -613,6 +665,10 @@ func (c *ObjectStoreServiceHTTP2GRPCBridgeImpl) DownloadObject(ctx context.Conte
 
 func (c *ObjectStoreServiceHTTP2GRPCBridgeImpl) DeleteObject(ctx context.Context, in *DeleteObjectRequest) (*DeleteObjectResponse, error) {
 	return c.client.DeleteObject(ctx, in)
+}
+
+func (c *ObjectStoreServiceHTTP2GRPCBridgeImpl) ListObjects(ctx context.Context, in *ListObjectsRequest) (*ListObjectsResponse, error) {
+	return c.client.ListObjects(ctx, in)
 }
 
 func (c *ObjectStoreServiceHTTP2GRPCBridgeImpl) InitiateMultipartUpload(ctx context.Context, in *InitiateMultipartUploadRequest) (*InitiateMultipartUploadResponse, error) {

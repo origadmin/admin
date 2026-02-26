@@ -945,6 +945,39 @@ paths:
               schema:
                 $ref: '#/components/schemas/google.rpc.Status'
   /obs/objects:
+    get:
+      tags:
+        - ObjectStoreService
+      description: Lists objects in the store.
+      operationId: ObjectStoreService_ListObjects
+      parameters:
+        - name: prefix
+          in: query
+          schema:
+            type: string
+        - name: page
+          in: query
+          schema:
+            type: integer
+            format: int32
+        - name: page_size
+          in: query
+          schema:
+            type: integer
+            format: int32
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/api.v1.services.objectstore.ListObjectsResponse'
+        default:
+          description: Default error response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/google.rpc.Status'
     post:
       tags:
         - ObjectStoreService
@@ -3133,6 +3166,17 @@ components:
           object_id:
             type: string
         description: Response message for initiating a multipart upload.
+      api.v1.services.objectstore.ListObjectsResponse:
+        type: object
+        properties:
+          objects:
+            type: array
+            items:
+              $ref: '#/components/schemas/api.v1.services.types.Object'
+          total:
+            type: integer
+            format: int32
+        description: Response message for listing objects.
       api.v1.services.objectstore.ListPartsResponse:
         type: object
         properties:

@@ -46,6 +46,13 @@ service ObjectStoreService {
     };
   }
 
+  // Lists objects in the store.
+  rpc ListObjects(ListObjectsRequest) returns (ListObjectsResponse) {
+    option (google.api.http) = {
+      get: "/obs/objects"
+    };
+  }
+
   // Initiates a multipart upload and returns an upload ID.
   rpc InitiateMultipartUpload(InitiateMultipartUploadRequest) returns (InitiateMultipartUploadResponse) {
     option (google.api.http) = {
@@ -178,3 +185,16 @@ message DeleteObjectRequest {
 
 // Response message for deleting an object.
 message DeleteObjectResponse {}
+
+// Request message for listing objects.
+message ListObjectsRequest {
+  string prefix = 1 [json_name = "prefix"];
+  int32 page = 2 [json_name = "page"];
+  int32 page_size = 3 [json_name = "page_size"];
+}
+
+// Response message for listing objects.
+message ListObjectsResponse {
+  repeated api.v1.services.types.Object objects = 1 [json_name = "objects"];
+  int32 total = 2 [json_name = "total"];
+}
