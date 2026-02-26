@@ -28,7 +28,7 @@ const (
 type InitiateMultipartUploadRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Name          string                 `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
-	ContentType   string                 `protobuf:"bytes,2,opt,name=content_type,json=contentType,proto3" json:"content_type,omitempty"`
+	ContentType   string                 `protobuf:"bytes,2,opt,name=content_type,proto3" json:"content_type,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -80,8 +80,8 @@ func (x *InitiateMultipartUploadRequest) GetContentType() string {
 // Response message for initiating a multipart upload.
 type InitiateMultipartUploadResponse struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	UploadId      string                 `protobuf:"bytes,1,opt,name=upload_id,json=uploadId,proto3" json:"upload_id,omitempty"`
-	ObjectId      string                 `protobuf:"bytes,2,opt,name=object_id,json=objectId,proto3" json:"object_id,omitempty"` // The final object ID/key in the storage.
+	UploadId      string                 `protobuf:"bytes,1,opt,name=upload_id,proto3" json:"upload_id,omitempty"`
+	ObjectId      string                 `protobuf:"bytes,2,opt,name=object_id,proto3" json:"object_id,omitempty"` // The final object ID/key in the storage.
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -133,9 +133,9 @@ func (x *InitiateMultipartUploadResponse) GetObjectId() string {
 // Request message for getting a multipart upload URL.
 type GetMultipartUploadUrlRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	UploadId      string                 `protobuf:"bytes,1,opt,name=upload_id,json=uploadId,proto3" json:"upload_id,omitempty"`
-	ObjectId      string                 `protobuf:"bytes,2,opt,name=object_id,json=objectId,proto3" json:"object_id,omitempty"`
-	PartNumber    int32                  `protobuf:"varint,3,opt,name=part_number,json=partNumber,proto3" json:"part_number,omitempty"`
+	UploadId      string                 `protobuf:"bytes,1,opt,name=upload_id,proto3" json:"upload_id,omitempty"`
+	ObjectId      string                 `protobuf:"bytes,2,opt,name=object_id,proto3" json:"object_id,omitempty"`
+	PartNumber    int32                  `protobuf:"varint,3,opt,name=part_number,proto3" json:"part_number,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -194,7 +194,7 @@ func (x *GetMultipartUploadUrlRequest) GetPartNumber() int32 {
 // Response message for getting a multipart upload URL.
 type GetMultipartUploadUrlResponse struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	UploadUrl     string                 `protobuf:"bytes,1,opt,name=upload_url,json=uploadUrl,proto3" json:"upload_url,omitempty"`
+	UploadUrl     string                 `protobuf:"bytes,1,opt,name=upload_url,proto3" json:"upload_url,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -239,8 +239,8 @@ func (x *GetMultipartUploadUrlResponse) GetUploadUrl() string {
 // Request message for listing uploaded parts.
 type ListPartsRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	UploadId      string                 `protobuf:"bytes,1,opt,name=upload_id,json=uploadId,proto3" json:"upload_id,omitempty"`
-	ObjectId      string                 `protobuf:"bytes,2,opt,name=object_id,json=objectId,proto3" json:"object_id,omitempty"`
+	UploadId      string                 `protobuf:"bytes,1,opt,name=upload_id,proto3" json:"upload_id,omitempty"`
+	ObjectId      string                 `protobuf:"bytes,2,opt,name=object_id,proto3" json:"object_id,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -337,8 +337,8 @@ func (x *ListPartsResponse) GetParts() []*types.PartInfo {
 // Request message for completing a multipart upload.
 type CompleteMultipartUploadRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	UploadId      string                 `protobuf:"bytes,1,opt,name=upload_id,json=uploadId,proto3" json:"upload_id,omitempty"`
-	ObjectId      string                 `protobuf:"bytes,2,opt,name=object_id,json=objectId,proto3" json:"object_id,omitempty"`
+	UploadId      string                 `protobuf:"bytes,1,opt,name=upload_id,proto3" json:"upload_id,omitempty"`
+	ObjectId      string                 `protobuf:"bytes,2,opt,name=object_id,proto3" json:"object_id,omitempty"`
 	Parts         []*types.PartInfo      `protobuf:"bytes,3,rep,name=parts,proto3" json:"parts,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
@@ -443,8 +443,8 @@ func (x *CompleteMultipartUploadResponse) GetObject() *types.Object {
 // Request message for aborting a multipart upload.
 type AbortMultipartUploadRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	UploadId      string                 `protobuf:"bytes,1,opt,name=upload_id,json=uploadId,proto3" json:"upload_id,omitempty"`
-	ObjectId      string                 `protobuf:"bytes,2,opt,name=object_id,json=objectId,proto3" json:"object_id,omitempty"`
+	UploadId      string                 `protobuf:"bytes,1,opt,name=upload_id,proto3" json:"upload_id,omitempty"`
+	ObjectId      string                 `protobuf:"bytes,2,opt,name=object_id,proto3" json:"object_id,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -535,7 +535,7 @@ type UploadObjectRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Data          []byte                 `protobuf:"bytes,1,opt,name=data,proto3" json:"data,omitempty"`
 	Name          string                 `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`
-	ContentType   string                 `protobuf:"bytes,3,opt,name=content_type,json=contentType,proto3" json:"content_type,omitempty"`
+	ContentType   string                 `protobuf:"bytes,3,opt,name=content_type,proto3" json:"content_type,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -868,40 +868,40 @@ var File_objectstore_objectstore_proto protoreflect.FileDescriptor
 
 const file_objectstore_objectstore_proto_rawDesc = "" +
 	"\n" +
-	"\x1dobjectstore/objectstore.proto\x12\x1bapi.v1.services.objectstore\x1a\x1cgoogle/api/annotations.proto\x1a\x19google/api/httpbody.proto\x1a\x17types/objectstore.proto\"W\n" +
+	"\x1dobjectstore/objectstore.proto\x12\x1bapi.v1.services.objectstore\x1a\x1cgoogle/api/annotations.proto\x1a\x19google/api/httpbody.proto\x1a\x17types/objectstore.proto\"X\n" +
 	"\x1eInitiateMultipartUploadRequest\x12\x12\n" +
-	"\x04name\x18\x01 \x01(\tR\x04name\x12!\n" +
-	"\fcontent_type\x18\x02 \x01(\tR\vcontentType\"[\n" +
-	"\x1fInitiateMultipartUploadResponse\x12\x1b\n" +
-	"\tupload_id\x18\x01 \x01(\tR\buploadId\x12\x1b\n" +
-	"\tobject_id\x18\x02 \x01(\tR\bobjectId\"y\n" +
-	"\x1cGetMultipartUploadUrlRequest\x12\x1b\n" +
-	"\tupload_id\x18\x01 \x01(\tR\buploadId\x12\x1b\n" +
-	"\tobject_id\x18\x02 \x01(\tR\bobjectId\x12\x1f\n" +
-	"\vpart_number\x18\x03 \x01(\x05R\n" +
-	"partNumber\">\n" +
-	"\x1dGetMultipartUploadUrlResponse\x12\x1d\n" +
+	"\x04name\x18\x01 \x01(\tR\x04name\x12\"\n" +
+	"\fcontent_type\x18\x02 \x01(\tR\fcontent_type\"]\n" +
+	"\x1fInitiateMultipartUploadResponse\x12\x1c\n" +
+	"\tupload_id\x18\x01 \x01(\tR\tupload_id\x12\x1c\n" +
+	"\tobject_id\x18\x02 \x01(\tR\tobject_id\"|\n" +
+	"\x1cGetMultipartUploadUrlRequest\x12\x1c\n" +
+	"\tupload_id\x18\x01 \x01(\tR\tupload_id\x12\x1c\n" +
+	"\tobject_id\x18\x02 \x01(\tR\tobject_id\x12 \n" +
+	"\vpart_number\x18\x03 \x01(\x05R\vpart_number\"?\n" +
+	"\x1dGetMultipartUploadUrlResponse\x12\x1e\n" +
 	"\n" +
-	"upload_url\x18\x01 \x01(\tR\tuploadUrl\"L\n" +
-	"\x10ListPartsRequest\x12\x1b\n" +
-	"\tupload_id\x18\x01 \x01(\tR\buploadId\x12\x1b\n" +
-	"\tobject_id\x18\x02 \x01(\tR\bobjectId\"J\n" +
+	"upload_url\x18\x01 \x01(\tR\n" +
+	"upload_url\"N\n" +
+	"\x10ListPartsRequest\x12\x1c\n" +
+	"\tupload_id\x18\x01 \x01(\tR\tupload_id\x12\x1c\n" +
+	"\tobject_id\x18\x02 \x01(\tR\tobject_id\"J\n" +
 	"\x11ListPartsResponse\x125\n" +
-	"\x05parts\x18\x01 \x03(\v2\x1f.api.v1.services.types.PartInfoR\x05parts\"\x91\x01\n" +
-	"\x1eCompleteMultipartUploadRequest\x12\x1b\n" +
-	"\tupload_id\x18\x01 \x01(\tR\buploadId\x12\x1b\n" +
-	"\tobject_id\x18\x02 \x01(\tR\bobjectId\x125\n" +
+	"\x05parts\x18\x01 \x03(\v2\x1f.api.v1.services.types.PartInfoR\x05parts\"\x93\x01\n" +
+	"\x1eCompleteMultipartUploadRequest\x12\x1c\n" +
+	"\tupload_id\x18\x01 \x01(\tR\tupload_id\x12\x1c\n" +
+	"\tobject_id\x18\x02 \x01(\tR\tobject_id\x125\n" +
 	"\x05parts\x18\x03 \x03(\v2\x1f.api.v1.services.types.PartInfoR\x05parts\"X\n" +
 	"\x1fCompleteMultipartUploadResponse\x125\n" +
-	"\x06object\x18\x01 \x01(\v2\x1d.api.v1.services.types.ObjectR\x06object\"W\n" +
-	"\x1bAbortMultipartUploadRequest\x12\x1b\n" +
-	"\tupload_id\x18\x01 \x01(\tR\buploadId\x12\x1b\n" +
-	"\tobject_id\x18\x02 \x01(\tR\bobjectId\"\x1e\n" +
-	"\x1cAbortMultipartUploadResponse\"`\n" +
+	"\x06object\x18\x01 \x01(\v2\x1d.api.v1.services.types.ObjectR\x06object\"Y\n" +
+	"\x1bAbortMultipartUploadRequest\x12\x1c\n" +
+	"\tupload_id\x18\x01 \x01(\tR\tupload_id\x12\x1c\n" +
+	"\tobject_id\x18\x02 \x01(\tR\tobject_id\"\x1e\n" +
+	"\x1cAbortMultipartUploadResponse\"a\n" +
 	"\x13UploadObjectRequest\x12\x12\n" +
 	"\x04data\x18\x01 \x01(\fR\x04data\x12\x12\n" +
-	"\x04name\x18\x02 \x01(\tR\x04name\x12!\n" +
-	"\fcontent_type\x18\x03 \x01(\tR\vcontentType\"M\n" +
+	"\x04name\x18\x02 \x01(\tR\x04name\x12\"\n" +
+	"\fcontent_type\x18\x03 \x01(\tR\fcontent_type\"M\n" +
 	"\x14UploadObjectResponse\x125\n" +
 	"\x06object\x18\x01 \x01(\v2\x1d.api.v1.services.types.ObjectR\x06object\"\"\n" +
 	"\x10GetObjectRequest\x12\x0e\n" +

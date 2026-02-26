@@ -33,26 +33,15 @@ const (
 // FileManagerServiceClient is the client API for FileManagerService service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
-//
-// The FileManager service definition.
 type FileManagerServiceClient interface {
-	// Simple upload for small files (e.g. avatars, images).
 	UploadFile(ctx context.Context, in *UploadFileRequest, opts ...grpc.CallOption) (*UploadFileResponse, error)
-	// Initiates a multipart upload for large files.
 	InitiateMultipartUpload(ctx context.Context, in *InitiateMultipartUploadRequest, opts ...grpc.CallOption) (*InitiateMultipartUploadResponse, error)
-	// Gets a presigned URL for a specific part of a multipart upload.
 	GetMultipartUploadUrl(ctx context.Context, in *GetMultipartUploadUrlRequest, opts ...grpc.CallOption) (*GetMultipartUploadUrlResponse, error)
-	// Completes a multipart upload.
 	CompleteMultipartUpload(ctx context.Context, in *CompleteMultipartUploadRequest, opts ...grpc.CallOption) (*CompleteMultipartUploadResponse, error)
-	// Aborts a multipart upload.
 	AbortMultipartUpload(ctx context.Context, in *AbortMultipartUploadRequest, opts ...grpc.CallOption) (*AbortMultipartUploadResponse, error)
-	// Gets file metadata.
 	GetFile(ctx context.Context, in *GetFileRequest, opts ...grpc.CallOption) (*GetFileResponse, error)
-	// Lists files with pagination and filtering.
 	ListFiles(ctx context.Context, in *ListFilesRequest, opts ...grpc.CallOption) (*ListFilesResponse, error)
-	// Updates file metadata.
 	UpdateFile(ctx context.Context, in *UpdateFileRequest, opts ...grpc.CallOption) (*UpdateFileResponse, error)
-	// Deletes a file and its metadata.
 	DeleteFile(ctx context.Context, in *DeleteFileRequest, opts ...grpc.CallOption) (*DeleteFileResponse, error)
 }
 
@@ -157,26 +146,15 @@ func (c *fileManagerServiceClient) DeleteFile(ctx context.Context, in *DeleteFil
 // FileManagerServiceServer is the server API for FileManagerService service.
 // All implementations must embed UnimplementedFileManagerServiceServer
 // for forward compatibility.
-//
-// The FileManager service definition.
 type FileManagerServiceServer interface {
-	// Simple upload for small files (e.g. avatars, images).
 	UploadFile(context.Context, *UploadFileRequest) (*UploadFileResponse, error)
-	// Initiates a multipart upload for large files.
 	InitiateMultipartUpload(context.Context, *InitiateMultipartUploadRequest) (*InitiateMultipartUploadResponse, error)
-	// Gets a presigned URL for a specific part of a multipart upload.
 	GetMultipartUploadUrl(context.Context, *GetMultipartUploadUrlRequest) (*GetMultipartUploadUrlResponse, error)
-	// Completes a multipart upload.
 	CompleteMultipartUpload(context.Context, *CompleteMultipartUploadRequest) (*CompleteMultipartUploadResponse, error)
-	// Aborts a multipart upload.
 	AbortMultipartUpload(context.Context, *AbortMultipartUploadRequest) (*AbortMultipartUploadResponse, error)
-	// Gets file metadata.
 	GetFile(context.Context, *GetFileRequest) (*GetFileResponse, error)
-	// Lists files with pagination and filtering.
 	ListFiles(context.Context, *ListFilesRequest) (*ListFilesResponse, error)
-	// Updates file metadata.
 	UpdateFile(context.Context, *UpdateFileRequest) (*UpdateFileResponse, error)
-	// Deletes a file and its metadata.
 	DeleteFile(context.Context, *DeleteFileRequest) (*DeleteFileResponse, error)
 	mustEmbedUnimplementedFileManagerServiceServer()
 }

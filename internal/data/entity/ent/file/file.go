@@ -44,6 +44,8 @@ const (
 	FieldMaxDownloads = "max_downloads"
 	// FieldDownloadCount holds the string denoting the download_count field in the database.
 	FieldDownloadCount = "download_count"
+	// FieldSha256 holds the string denoting the sha256 field in the database.
+	FieldSha256 = "sha256"
 	// Table holds the table name of the file in the database.
 	Table = "fm_files"
 )
@@ -66,6 +68,7 @@ var Columns = []string{
 	FieldExpiresAt,
 	FieldMaxDownloads,
 	FieldDownloadCount,
+	FieldSha256,
 }
 
 // ValidColumn reports if the column name is valid (part of the table columns).
@@ -189,6 +192,11 @@ func ByMaxDownloads(opts ...sql.OrderTermOption) OrderOption {
 // ByDownloadCount orders the results by the download_count field.
 func ByDownloadCount(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldDownloadCount, opts...).ToFunc()
+}
+
+// BySha256 orders the results by the sha256 field.
+func BySha256(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldSha256, opts...).ToFunc()
 }
 
 // SelectColumns returns all selected fields excluding the ID field.

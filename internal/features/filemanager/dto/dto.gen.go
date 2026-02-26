@@ -161,13 +161,20 @@ func ConvertFileMetadataPBToFile(from *FileMetadataPB) *File {
 	}
 
 	to := &File{
-		ID:         from.Id,
-		OwnerID:    from.OwnerId,
-		Name:       from.Name,
-		ObjectID:   from.ObjectId,
-		Visibility: from.Visibility,
-		MimeType:   from.MimeType,
-		Size:       from.Size,
+		ID:            from.Id,
+		CreateTime:    ConvertTimestampToTime(from.CreateTime),
+		UpdateTime:    ConvertTimestampToTime(from.UpdateTime),
+		OwnerID:       from.OwnerId,
+		Name:          from.Name,
+		ObjectID:      from.ObjectId,
+		Visibility:    from.Visibility,
+		MimeType:      from.MimeType,
+		Size:          from.Size,
+		IsPermanent:   from.IsPermanent,
+		ExpiresAt:     ConvertTimestampToTime(from.ExpiresAt),
+		MaxDownloads:  int(from.MaxDownloads),
+		DownloadCount: int(from.DownloadCount),
+		Sha256:        from.Sha256,
 	}
 	return to
 }
@@ -179,13 +186,20 @@ func ConvertFileToFileMetadataPB(from *File) *FileMetadataPB {
 	}
 
 	to := &FileMetadataPB{
-		Id:         from.ID,
-		Name:       from.Name,
-		ObjectId:   from.ObjectID,
-		OwnerId:    from.OwnerID,
-		Visibility: from.Visibility,
-		MimeType:   from.MimeType,
-		Size:       from.Size,
+		Id:            from.ID,
+		Name:          from.Name,
+		ObjectId:      from.ObjectID,
+		OwnerId:       from.OwnerID,
+		Sha256:        from.Sha256,
+		Visibility:    from.Visibility,
+		MimeType:      from.MimeType,
+		Size:          from.Size,
+		IsPermanent:   from.IsPermanent,
+		ExpiresAt:     ConvertTimeToTimestamp(from.ExpiresAt),
+		MaxDownloads:  int32(from.MaxDownloads),
+		DownloadCount: int32(from.DownloadCount),
+		CreateTime:    ConvertTimeToTimestamp(from.CreateTime),
+		UpdateTime:    ConvertTimeToTimestamp(from.UpdateTime),
 	}
 	return to
 }

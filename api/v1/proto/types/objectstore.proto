@@ -17,7 +17,7 @@ message Object {
   string url = 3 [json_name = "url"];
   int64 size = 4 [json_name = "size"];
   string content_type = 5 [json_name = "content_type"];
-  google.protobuf.Timestamp created_time = 6 [json_name = "created_time"];
+  google.protobuf.Timestamp create_time = 6 [json_name = "create_time"];
 }
 
 // Represents information about a part of a multipart upload.

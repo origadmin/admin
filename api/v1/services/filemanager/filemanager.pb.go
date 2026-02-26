@@ -11,6 +11,7 @@ import (
 	_ "google.golang.org/genproto/googleapis/api/annotations"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
+	anypb "google.golang.org/protobuf/types/known/anypb"
 	types "origadmin/application/admin/api/v1/services/types"
 	reflect "reflect"
 	sync "sync"
@@ -24,13 +25,12 @@ const (
 	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
 )
 
-// Request message for uploading a small file directly.
 type UploadFileRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Data          []byte                 `protobuf:"bytes,1,opt,name=data,proto3" json:"data,omitempty"`
 	Name          string                 `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`
-	ContentType   string                 `protobuf:"bytes,3,opt,name=content_type,json=contentType,proto3" json:"content_type,omitempty"`
-	Visibility    string                 `protobuf:"bytes,4,opt,name=visibility,proto3" json:"visibility,omitempty"` // "public" or "private"
+	ContentType   string                 `protobuf:"bytes,3,opt,name=content_type,proto3" json:"content_type,omitempty"`
+	Visibility    string                 `protobuf:"bytes,4,opt,name=visibility,proto3" json:"visibility,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -93,10 +93,9 @@ func (x *UploadFileRequest) GetVisibility() string {
 	return ""
 }
 
-// Response message for uploading a file.
 type UploadFileResponse struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	FileMetadata  *types.FileMetadata    `protobuf:"bytes,1,opt,name=file_metadata,json=fileMetadata,proto3" json:"file_metadata,omitempty"`
+	FileMetadata  *types.FileMetadata    `protobuf:"bytes,1,opt,name=file_metadata,proto3" json:"file_metadata,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -138,13 +137,12 @@ func (x *UploadFileResponse) GetFileMetadata() *types.FileMetadata {
 	return nil
 }
 
-// Request message for initiating a multipart upload.
 type InitiateMultipartUploadRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Name          string                 `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
 	Size          int64                  `protobuf:"varint,2,opt,name=size,proto3" json:"size,omitempty"`
-	ContentType   string                 `protobuf:"bytes,3,opt,name=content_type,json=contentType,proto3" json:"content_type,omitempty"`
-	Visibility    string                 `protobuf:"bytes,4,opt,name=visibility,proto3" json:"visibility,omitempty"` // "public" or "private"
+	ContentType   string                 `protobuf:"bytes,3,opt,name=content_type,proto3" json:"content_type,omitempty"`
+	Visibility    string                 `protobuf:"bytes,4,opt,name=visibility,proto3" json:"visibility,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -207,10 +205,9 @@ func (x *InitiateMultipartUploadRequest) GetVisibility() string {
 	return ""
 }
 
-// Response message for initiating a multipart upload.
 type InitiateMultipartUploadResponse struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	UploadId      string                 `protobuf:"bytes,1,opt,name=upload_id,json=uploadId,proto3" json:"upload_id,omitempty"`
+	UploadId      string                 `protobuf:"bytes,1,opt,name=upload_id,proto3" json:"upload_id,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -252,11 +249,10 @@ func (x *InitiateMultipartUploadResponse) GetUploadId() string {
 	return ""
 }
 
-// Request message for getting a multipart upload URL.
 type GetMultipartUploadUrlRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	UploadId      string                 `protobuf:"bytes,1,opt,name=upload_id,json=uploadId,proto3" json:"upload_id,omitempty"`
-	PartNumber    int32                  `protobuf:"varint,2,opt,name=part_number,json=partNumber,proto3" json:"part_number,omitempty"`
+	UploadId      string                 `protobuf:"bytes,1,opt,name=upload_id,proto3" json:"upload_id,omitempty"`
+	PartNumber    int32                  `protobuf:"varint,2,opt,name=part_number,proto3" json:"part_number,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -305,10 +301,9 @@ func (x *GetMultipartUploadUrlRequest) GetPartNumber() int32 {
 	return 0
 }
 
-// Response message for getting a multipart upload URL.
 type GetMultipartUploadUrlResponse struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	UploadUrl     string                 `protobuf:"bytes,1,opt,name=upload_url,json=uploadUrl,proto3" json:"upload_url,omitempty"`
+	UploadUrl     string                 `protobuf:"bytes,1,opt,name=upload_url,proto3" json:"upload_url,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -350,11 +345,11 @@ func (x *GetMultipartUploadUrlResponse) GetUploadUrl() string {
 	return ""
 }
 
-// Request message for completing a multipart upload.
 type CompleteMultipartUploadRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	UploadId      string                 `protobuf:"bytes,1,opt,name=upload_id,json=uploadId,proto3" json:"upload_id,omitempty"`
+	UploadId      string                 `protobuf:"bytes,1,opt,name=upload_id,proto3" json:"upload_id,omitempty"`
 	Parts         []*PartInfo            `protobuf:"bytes,2,rep,name=parts,proto3" json:"parts,omitempty"`
+	Sha256        string                 `protobuf:"bytes,3,opt,name=sha256,proto3" json:"sha256,omitempty"` // ADDED: For end-to-end verification
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -403,9 +398,16 @@ func (x *CompleteMultipartUploadRequest) GetParts() []*PartInfo {
 	return nil
 }
 
+func (x *CompleteMultipartUploadRequest) GetSha256() string {
+	if x != nil {
+		return x.Sha256
+	}
+	return ""
+}
+
 type PartInfo struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	PartNumber    int32                  `protobuf:"varint,1,opt,name=part_number,json=partNumber,proto3" json:"part_number,omitempty"`
+	PartNumber    int32                  `protobuf:"varint,1,opt,name=part_number,proto3" json:"part_number,omitempty"`
 	Etag          string                 `protobuf:"bytes,2,opt,name=etag,proto3" json:"etag,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
@@ -455,10 +457,9 @@ func (x *PartInfo) GetEtag() string {
 	return ""
 }
 
-// Response message for completing a multipart upload.
 type CompleteMultipartUploadResponse struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	FileMetadata  *types.FileMetadata    `protobuf:"bytes,1,opt,name=file_metadata,json=fileMetadata,proto3" json:"file_metadata,omitempty"`
+	FileMetadata  *types.FileMetadata    `protobuf:"bytes,1,opt,name=file_metadata,proto3" json:"file_metadata,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -500,10 +501,9 @@ func (x *CompleteMultipartUploadResponse) GetFileMetadata() *types.FileMetadata 
 	return nil
 }
 
-// Request message for aborting a multipart upload.
 type AbortMultipartUploadRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	UploadId      string                 `protobuf:"bytes,1,opt,name=upload_id,json=uploadId,proto3" json:"upload_id,omitempty"`
+	UploadId      string                 `protobuf:"bytes,1,opt,name=upload_id,proto3" json:"upload_id,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -545,7 +545,6 @@ func (x *AbortMultipartUploadRequest) GetUploadId() string {
 	return ""
 }
 
-// Response message for aborting a multipart upload.
 type AbortMultipartUploadResponse struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	unknownFields protoimpl.UnknownFields
@@ -582,7 +581,6 @@ func (*AbortMultipartUploadResponse) Descriptor() ([]byte, []int) {
 	return file_filemanager_filemanager_proto_rawDescGZIP(), []int{10}
 }
 
-// Request message for getting file metadata.
 type GetFileRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Id            int64                  `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
@@ -627,11 +625,10 @@ func (x *GetFileRequest) GetId() int64 {
 	return 0
 }
 
-// Response message for getting file metadata.
 type GetFileResponse struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	FileMetadata  *types.FileMetadata    `protobuf:"bytes,1,opt,name=file_metadata,json=fileMetadata,proto3" json:"file_metadata,omitempty"`
-	DownloadUrl   string                 `protobuf:"bytes,2,opt,name=download_url,json=downloadUrl,proto3" json:"download_url,omitempty"` // Presigned URL or public URL
+	FileMetadata  *types.FileMetadata    `protobuf:"bytes,1,opt,name=file_metadata,proto3" json:"file_metadata,omitempty"`
+	DownloadUrl   string                 `protobuf:"bytes,2,opt,name=download_url,proto3" json:"download_url,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -680,13 +677,16 @@ func (x *GetFileResponse) GetDownloadUrl() string {
 	return ""
 }
 
-// Request message for listing files.
 type ListFilesRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Page          int32                  `protobuf:"varint,1,opt,name=page,proto3" json:"page,omitempty"`
-	PageSize      int32                  `protobuf:"varint,2,opt,name=page_size,json=pageSize,proto3" json:"page_size,omitempty"`
-	OwnerId       int64                  `protobuf:"varint,3,opt,name=owner_id,json=ownerId,proto3" json:"owner_id,omitempty"`
-	Visibility    string                 `protobuf:"bytes,4,opt,name=visibility,proto3" json:"visibility,omitempty"`
+	PageSize      int32                  `protobuf:"varint,2,opt,name=page_size,proto3" json:"page_size,omitempty"`
+	PageToken     string                 `protobuf:"bytes,3,opt,name=page_token,proto3" json:"page_token,omitempty"`
+	PagingMode    *string                `protobuf:"bytes,4,opt,name=paging_mode,proto3,oneof" json:"paging_mode,omitempty"`
+	OnlyCount     bool                   `protobuf:"varint,5,opt,name=only_count,proto3" json:"only_count,omitempty"`
+	Keyword       string                 `protobuf:"bytes,6,opt,name=keyword,proto3" json:"keyword,omitempty"`
+	OwnerId       int64                  `protobuf:"varint,7,opt,name=owner_id,proto3" json:"owner_id,omitempty"`
+	Visibility    string                 `protobuf:"bytes,8,opt,name=visibility,proto3" json:"visibility,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -735,6 +735,34 @@ func (x *ListFilesRequest) GetPageSize() int32 {
 	return 0
 }
 
+func (x *ListFilesRequest) GetPageToken() string {
+	if x != nil {
+		return x.PageToken
+	}
+	return ""
+}
+
+func (x *ListFilesRequest) GetPagingMode() string {
+	if x != nil && x.PagingMode != nil {
+		return *x.PagingMode
+	}
+	return ""
+}
+
+func (x *ListFilesRequest) GetOnlyCount() bool {
+	if x != nil {
+		return x.OnlyCount
+	}
+	return false
+}
+
+func (x *ListFilesRequest) GetKeyword() string {
+	if x != nil {
+		return x.Keyword
+	}
+	return ""
+}
+
 func (x *ListFilesRequest) GetOwnerId() int64 {
 	if x != nil {
 		return x.OwnerId
@@ -749,11 +777,14 @@ func (x *ListFilesRequest) GetVisibility() string {
 	return ""
 }
 
-// Response message for listing files.
 type ListFilesResponse struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Files         []*types.FileMetadata  `protobuf:"bytes,1,rep,name=files,proto3" json:"files,omitempty"`
-	TotalCount    int32                  `protobuf:"varint,2,opt,name=total_count,json=totalCount,proto3" json:"total_count,omitempty"`
+	Total         int32                  `protobuf:"varint,1,opt,name=total,proto3" json:"total,omitempty"`
+	Files         []*types.FileMetadata  `protobuf:"bytes,2,rep,name=files,proto3" json:"files,omitempty"`
+	Page          int32                  `protobuf:"varint,3,opt,name=page,proto3" json:"page,omitempty"`
+	PageSize      int32                  `protobuf:"varint,4,opt,name=page_size,proto3" json:"page_size,omitempty"`
+	NextPageToken string                 `protobuf:"bytes,5,opt,name=next_page_token,proto3" json:"next_page_token,omitempty"`
+	Extra         *anypb.Any             `protobuf:"bytes,6,opt,name=extra,proto3,oneof" json:"extra,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -788,6 +819,13 @@ func (*ListFilesResponse) Descriptor() ([]byte, []int) {
 	return file_filemanager_filemanager_proto_rawDescGZIP(), []int{14}
 }
 
+func (x *ListFilesResponse) GetTotal() int32 {
+	if x != nil {
+		return x.Total
+	}
+	return 0
+}
+
 func (x *ListFilesResponse) GetFiles() []*types.FileMetadata {
 	if x != nil {
 		return x.Files
@@ -795,14 +833,34 @@ func (x *ListFilesResponse) GetFiles() []*types.FileMetadata {
 	return nil
 }
 
-func (x *ListFilesResponse) GetTotalCount() int32 {
+func (x *ListFilesResponse) GetPage() int32 {
 	if x != nil {
-		return x.TotalCount
+		return x.Page
 	}
 	return 0
 }
 
-// Request message for updating file metadata.
+func (x *ListFilesResponse) GetPageSize() int32 {
+	if x != nil {
+		return x.PageSize
+	}
+	return 0
+}
+
+func (x *ListFilesResponse) GetNextPageToken() string {
+	if x != nil {
+		return x.NextPageToken
+	}
+	return ""
+}
+
+func (x *ListFilesResponse) GetExtra() *anypb.Any {
+	if x != nil {
+		return x.Extra
+	}
+	return nil
+}
+
 type UpdateFileRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Id            int64                  `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
@@ -863,10 +921,9 @@ func (x *UpdateFileRequest) GetVisibility() string {
 	return ""
 }
 
-// Response message for updating file metadata.
 type UpdateFileResponse struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	FileMetadata  *types.FileMetadata    `protobuf:"bytes,1,opt,name=file_metadata,json=fileMetadata,proto3" json:"file_metadata,omitempty"`
+	FileMetadata  *types.FileMetadata    `protobuf:"bytes,1,opt,name=file_metadata,proto3" json:"file_metadata,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -908,7 +965,6 @@ func (x *UpdateFileResponse) GetFileMetadata() *types.FileMetadata {
 	return nil
 }
 
-// Request message for deleting a file.
 type DeleteFileRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Id            int64                  `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
@@ -953,7 +1009,6 @@ func (x *DeleteFileRequest) GetId() int64 {
 	return 0
 }
 
-// Response message for deleting a file.
 type DeleteFileResponse struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	unknownFields protoimpl.UnknownFields
@@ -994,68 +1049,81 @@ var File_filemanager_filemanager_proto protoreflect.FileDescriptor
 
 const file_filemanager_filemanager_proto_rawDesc = "" +
 	"\n" +
-	"\x1dfilemanager/filemanager.proto\x12\x1bapi.v1.services.filemanager\x1a\x1cgoogle/api/annotations.proto\x1a\x16policy/v1/policy.proto\x1a\x17types/filemanager.proto\"~\n" +
+	"\x1dfilemanager/filemanager.proto\x12\x1bapi.v1.services.filemanager\x1a\x1cgoogle/api/annotations.proto\x1a\x19google/protobuf/any.proto\x1a\x16policy/v1/policy.proto\x1a\x17types/filemanager.proto\"\x7f\n" +
 	"\x11UploadFileRequest\x12\x12\n" +
 	"\x04data\x18\x01 \x01(\fR\x04data\x12\x12\n" +
-	"\x04name\x18\x02 \x01(\tR\x04name\x12!\n" +
-	"\fcontent_type\x18\x03 \x01(\tR\vcontentType\x12\x1e\n" +
+	"\x04name\x18\x02 \x01(\tR\x04name\x12\"\n" +
+	"\fcontent_type\x18\x03 \x01(\tR\fcontent_type\x12\x1e\n" +
 	"\n" +
 	"visibility\x18\x04 \x01(\tR\n" +
-	"visibility\"^\n" +
-	"\x12UploadFileResponse\x12H\n" +
-	"\rfile_metadata\x18\x01 \x01(\v2#.api.v1.services.types.FileMetadataR\ffileMetadata\"\x8b\x01\n" +
+	"visibility\"_\n" +
+	"\x12UploadFileResponse\x12I\n" +
+	"\rfile_metadata\x18\x01 \x01(\v2#.api.v1.services.types.FileMetadataR\rfile_metadata\"\x8c\x01\n" +
 	"\x1eInitiateMultipartUploadRequest\x12\x12\n" +
 	"\x04name\x18\x01 \x01(\tR\x04name\x12\x12\n" +
-	"\x04size\x18\x02 \x01(\x03R\x04size\x12!\n" +
-	"\fcontent_type\x18\x03 \x01(\tR\vcontentType\x12\x1e\n" +
+	"\x04size\x18\x02 \x01(\x03R\x04size\x12\"\n" +
+	"\fcontent_type\x18\x03 \x01(\tR\fcontent_type\x12\x1e\n" +
 	"\n" +
 	"visibility\x18\x04 \x01(\tR\n" +
-	"visibility\">\n" +
-	"\x1fInitiateMultipartUploadResponse\x12\x1b\n" +
-	"\tupload_id\x18\x01 \x01(\tR\buploadId\"\\\n" +
-	"\x1cGetMultipartUploadUrlRequest\x12\x1b\n" +
-	"\tupload_id\x18\x01 \x01(\tR\buploadId\x12\x1f\n" +
-	"\vpart_number\x18\x02 \x01(\x05R\n" +
-	"partNumber\">\n" +
-	"\x1dGetMultipartUploadUrlResponse\x12\x1d\n" +
+	"visibility\"?\n" +
+	"\x1fInitiateMultipartUploadResponse\x12\x1c\n" +
+	"\tupload_id\x18\x01 \x01(\tR\tupload_id\"^\n" +
+	"\x1cGetMultipartUploadUrlRequest\x12\x1c\n" +
+	"\tupload_id\x18\x01 \x01(\tR\tupload_id\x12 \n" +
+	"\vpart_number\x18\x02 \x01(\x05R\vpart_number\"?\n" +
+	"\x1dGetMultipartUploadUrlResponse\x12\x1e\n" +
 	"\n" +
-	"upload_url\x18\x01 \x01(\tR\tuploadUrl\"z\n" +
-	"\x1eCompleteMultipartUploadRequest\x12\x1b\n" +
-	"\tupload_id\x18\x01 \x01(\tR\buploadId\x12;\n" +
-	"\x05parts\x18\x02 \x03(\v2%.api.v1.services.filemanager.PartInfoR\x05parts\"?\n" +
-	"\bPartInfo\x12\x1f\n" +
-	"\vpart_number\x18\x01 \x01(\x05R\n" +
-	"partNumber\x12\x12\n" +
-	"\x04etag\x18\x02 \x01(\tR\x04etag\"k\n" +
-	"\x1fCompleteMultipartUploadResponse\x12H\n" +
-	"\rfile_metadata\x18\x01 \x01(\v2#.api.v1.services.types.FileMetadataR\ffileMetadata\":\n" +
-	"\x1bAbortMultipartUploadRequest\x12\x1b\n" +
-	"\tupload_id\x18\x01 \x01(\tR\buploadId\"\x1e\n" +
+	"upload_url\x18\x01 \x01(\tR\n" +
+	"upload_url\"\x93\x01\n" +
+	"\x1eCompleteMultipartUploadRequest\x12\x1c\n" +
+	"\tupload_id\x18\x01 \x01(\tR\tupload_id\x12;\n" +
+	"\x05parts\x18\x02 \x03(\v2%.api.v1.services.filemanager.PartInfoR\x05parts\x12\x16\n" +
+	"\x06sha256\x18\x03 \x01(\tR\x06sha256\"@\n" +
+	"\bPartInfo\x12 \n" +
+	"\vpart_number\x18\x01 \x01(\x05R\vpart_number\x12\x12\n" +
+	"\x04etag\x18\x02 \x01(\tR\x04etag\"l\n" +
+	"\x1fCompleteMultipartUploadResponse\x12I\n" +
+	"\rfile_metadata\x18\x01 \x01(\v2#.api.v1.services.types.FileMetadataR\rfile_metadata\";\n" +
+	"\x1bAbortMultipartUploadRequest\x12\x1c\n" +
+	"\tupload_id\x18\x01 \x01(\tR\tupload_id\"\x1e\n" +
 	"\x1cAbortMultipartUploadResponse\" \n" +
 	"\x0eGetFileRequest\x12\x0e\n" +
-	"\x02id\x18\x01 \x01(\x03R\x02id\"~\n" +
-	"\x0fGetFileResponse\x12H\n" +
-	"\rfile_metadata\x18\x01 \x01(\v2#.api.v1.services.types.FileMetadataR\ffileMetadata\x12!\n" +
-	"\fdownload_url\x18\x02 \x01(\tR\vdownloadUrl\"~\n" +
+	"\x02id\x18\x01 \x01(\x03R\x02id\"\x80\x01\n" +
+	"\x0fGetFileResponse\x12I\n" +
+	"\rfile_metadata\x18\x01 \x01(\v2#.api.v1.services.types.FileMetadataR\rfile_metadata\x12\"\n" +
+	"\fdownload_url\x18\x02 \x01(\tR\fdownload_url\"\x91\x02\n" +
 	"\x10ListFilesRequest\x12\x12\n" +
-	"\x04page\x18\x01 \x01(\x05R\x04page\x12\x1b\n" +
-	"\tpage_size\x18\x02 \x01(\x05R\bpageSize\x12\x19\n" +
-	"\bowner_id\x18\x03 \x01(\x03R\aownerId\x12\x1e\n" +
+	"\x04page\x18\x01 \x01(\x05R\x04page\x12\x1c\n" +
+	"\tpage_size\x18\x02 \x01(\x05R\tpage_size\x12\x1e\n" +
 	"\n" +
-	"visibility\x18\x04 \x01(\tR\n" +
-	"visibility\"o\n" +
-	"\x11ListFilesResponse\x129\n" +
-	"\x05files\x18\x01 \x03(\v2#.api.v1.services.types.FileMetadataR\x05files\x12\x1f\n" +
-	"\vtotal_count\x18\x02 \x01(\x05R\n" +
-	"totalCount\"W\n" +
+	"page_token\x18\x03 \x01(\tR\n" +
+	"page_token\x12%\n" +
+	"\vpaging_mode\x18\x04 \x01(\tH\x00R\vpaging_mode\x88\x01\x01\x12\x1e\n" +
+	"\n" +
+	"only_count\x18\x05 \x01(\bR\n" +
+	"only_count\x12\x18\n" +
+	"\akeyword\x18\x06 \x01(\tR\akeyword\x12\x1a\n" +
+	"\bowner_id\x18\a \x01(\x03R\bowner_id\x12\x1e\n" +
+	"\n" +
+	"visibility\x18\b \x01(\tR\n" +
+	"visibilityB\x0e\n" +
+	"\f_paging_mode\"\xfb\x01\n" +
+	"\x11ListFilesResponse\x12\x14\n" +
+	"\x05total\x18\x01 \x01(\x05R\x05total\x129\n" +
+	"\x05files\x18\x02 \x03(\v2#.api.v1.services.types.FileMetadataR\x05files\x12\x12\n" +
+	"\x04page\x18\x03 \x01(\x05R\x04page\x12\x1c\n" +
+	"\tpage_size\x18\x04 \x01(\x05R\tpage_size\x12(\n" +
+	"\x0fnext_page_token\x18\x05 \x01(\tR\x0fnext_page_token\x12/\n" +
+	"\x05extra\x18\x06 \x01(\v2\x14.google.protobuf.AnyH\x00R\x05extra\x88\x01\x01B\b\n" +
+	"\x06_extra\"W\n" +
 	"\x11UpdateFileRequest\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\x03R\x02id\x12\x12\n" +
 	"\x04name\x18\x02 \x01(\tR\x04name\x12\x1e\n" +
 	"\n" +
 	"visibility\x18\x03 \x01(\tR\n" +
-	"visibility\"^\n" +
-	"\x12UpdateFileResponse\x12H\n" +
-	"\rfile_metadata\x18\x01 \x01(\v2#.api.v1.services.types.FileMetadataR\ffileMetadata\"#\n" +
+	"visibility\"_\n" +
+	"\x12UpdateFileResponse\x12I\n" +
+	"\rfile_metadata\x18\x01 \x01(\v2#.api.v1.services.types.FileMetadataR\rfile_metadata\"#\n" +
 	"\x11DeleteFileRequest\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\x03R\x02id\"\x14\n" +
 	"\x12DeleteFileResponse2\x97\f\n" +
@@ -1117,6 +1185,7 @@ var file_filemanager_filemanager_proto_goTypes = []any{
 	(*DeleteFileRequest)(nil),               // 17: api.v1.services.filemanager.DeleteFileRequest
 	(*DeleteFileResponse)(nil),              // 18: api.v1.services.filemanager.DeleteFileResponse
 	(*types.FileMetadata)(nil),              // 19: api.v1.services.types.FileMetadata
+	(*anypb.Any)(nil),                       // 20: google.protobuf.Any
 }
 var file_filemanager_filemanager_proto_depIdxs = []int32{
 	19, // 0: api.v1.services.filemanager.UploadFileResponse.file_metadata:type_name -> api.v1.services.types.FileMetadata
@@ -1124,30 +1193,31 @@ var file_filemanager_filemanager_proto_depIdxs = []int32{
 	19, // 2: api.v1.services.filemanager.CompleteMultipartUploadResponse.file_metadata:type_name -> api.v1.services.types.FileMetadata
 	19, // 3: api.v1.services.filemanager.GetFileResponse.file_metadata:type_name -> api.v1.services.types.FileMetadata
 	19, // 4: api.v1.services.filemanager.ListFilesResponse.files:type_name -> api.v1.services.types.FileMetadata
-	19, // 5: api.v1.services.filemanager.UpdateFileResponse.file_metadata:type_name -> api.v1.services.types.FileMetadata
-	0,  // 6: api.v1.services.filemanager.FileManagerService.UploadFile:input_type -> api.v1.services.filemanager.UploadFileRequest
-	2,  // 7: api.v1.services.filemanager.FileManagerService.InitiateMultipartUpload:input_type -> api.v1.services.filemanager.InitiateMultipartUploadRequest
-	4,  // 8: api.v1.services.filemanager.FileManagerService.GetMultipartUploadUrl:input_type -> api.v1.services.filemanager.GetMultipartUploadUrlRequest
-	6,  // 9: api.v1.services.filemanager.FileManagerService.CompleteMultipartUpload:input_type -> api.v1.services.filemanager.CompleteMultipartUploadRequest
-	9,  // 10: api.v1.services.filemanager.FileManagerService.AbortMultipartUpload:input_type -> api.v1.services.filemanager.AbortMultipartUploadRequest
-	11, // 11: api.v1.services.filemanager.FileManagerService.GetFile:input_type -> api.v1.services.filemanager.GetFileRequest
-	13, // 12: api.v1.services.filemanager.FileManagerService.ListFiles:input_type -> api.v1.services.filemanager.ListFilesRequest
-	15, // 13: api.v1.services.filemanager.FileManagerService.UpdateFile:input_type -> api.v1.services.filemanager.UpdateFileRequest
-	17, // 14: api.v1.services.filemanager.FileManagerService.DeleteFile:input_type -> api.v1.services.filemanager.DeleteFileRequest
-	1,  // 15: api.v1.services.filemanager.FileManagerService.UploadFile:output_type -> api.v1.services.filemanager.UploadFileResponse
-	3,  // 16: api.v1.services.filemanager.FileManagerService.InitiateMultipartUpload:output_type -> api.v1.services.filemanager.InitiateMultipartUploadResponse
-	5,  // 17: api.v1.services.filemanager.FileManagerService.GetMultipartUploadUrl:output_type -> api.v1.services.filemanager.GetMultipartUploadUrlResponse
-	8,  // 18: api.v1.services.filemanager.FileManagerService.CompleteMultipartUpload:output_type -> api.v1.services.filemanager.CompleteMultipartUploadResponse
-	10, // 19: api.v1.services.filemanager.FileManagerService.AbortMultipartUpload:output_type -> api.v1.services.filemanager.AbortMultipartUploadResponse
-	12, // 20: api.v1.services.filemanager.FileManagerService.GetFile:output_type -> api.v1.services.filemanager.GetFileResponse
-	14, // 21: api.v1.services.filemanager.FileManagerService.ListFiles:output_type -> api.v1.services.filemanager.ListFilesResponse
-	16, // 22: api.v1.services.filemanager.FileManagerService.UpdateFile:output_type -> api.v1.services.filemanager.UpdateFileResponse
-	18, // 23: api.v1.services.filemanager.FileManagerService.DeleteFile:output_type -> api.v1.services.filemanager.DeleteFileResponse
-	15, // [15:24] is the sub-list for method output_type
-	6,  // [6:15] is the sub-list for method input_type
-	6,  // [6:6] is the sub-list for extension type_name
-	6,  // [6:6] is the sub-list for extension extendee
-	0,  // [0:6] is the sub-list for field type_name
+	20, // 5: api.v1.services.filemanager.ListFilesResponse.extra:type_name -> google.protobuf.Any
+	19, // 6: api.v1.services.filemanager.UpdateFileResponse.file_metadata:type_name -> api.v1.services.types.FileMetadata
+	0,  // 7: api.v1.services.filemanager.FileManagerService.UploadFile:input_type -> api.v1.services.filemanager.UploadFileRequest
+	2,  // 8: api.v1.services.filemanager.FileManagerService.InitiateMultipartUpload:input_type -> api.v1.services.filemanager.InitiateMultipartUploadRequest
+	4,  // 9: api.v1.services.filemanager.FileManagerService.GetMultipartUploadUrl:input_type -> api.v1.services.filemanager.GetMultipartUploadUrlRequest
+	6,  // 10: api.v1.services.filemanager.FileManagerService.CompleteMultipartUpload:input_type -> api.v1.services.filemanager.CompleteMultipartUploadRequest
+	9,  // 11: api.v1.services.filemanager.FileManagerService.AbortMultipartUpload:input_type -> api.v1.services.filemanager.AbortMultipartUploadRequest
+	11, // 12: api.v1.services.filemanager.FileManagerService.GetFile:input_type -> api.v1.services.filemanager.GetFileRequest
+	13, // 13: api.v1.services.filemanager.FileManagerService.ListFiles:input_type -> api.v1.services.filemanager.ListFilesRequest
+	15, // 14: api.v1.services.filemanager.FileManagerService.UpdateFile:input_type -> api.v1.services.filemanager.UpdateFileRequest
+	17, // 15: api.v1.services.filemanager.FileManagerService.DeleteFile:input_type -> api.v1.services.filemanager.DeleteFileRequest
+	1,  // 16: api.v1.services.filemanager.FileManagerService.UploadFile:output_type -> api.v1.services.filemanager.UploadFileResponse
+	3,  // 17: api.v1.services.filemanager.FileManagerService.InitiateMultipartUpload:output_type -> api.v1.services.filemanager.InitiateMultipartUploadResponse
+	5,  // 18: api.v1.services.filemanager.FileManagerService.GetMultipartUploadUrl:output_type -> api.v1.services.filemanager.GetMultipartUploadUrlResponse
+	8,  // 19: api.v1.services.filemanager.FileManagerService.CompleteMultipartUpload:output_type -> api.v1.services.filemanager.CompleteMultipartUploadResponse
+	10, // 20: api.v1.services.filemanager.FileManagerService.AbortMultipartUpload:output_type -> api.v1.services.filemanager.AbortMultipartUploadResponse
+	12, // 21: api.v1.services.filemanager.FileManagerService.GetFile:output_type -> api.v1.services.filemanager.GetFileResponse
+	14, // 22: api.v1.services.filemanager.FileManagerService.ListFiles:output_type -> api.v1.services.filemanager.ListFilesResponse
+	16, // 23: api.v1.services.filemanager.FileManagerService.UpdateFile:output_type -> api.v1.services.filemanager.UpdateFileResponse
+	18, // 24: api.v1.services.filemanager.FileManagerService.DeleteFile:output_type -> api.v1.services.filemanager.DeleteFileResponse
+	16, // [16:25] is the sub-list for method output_type
+	7,  // [7:16] is the sub-list for method input_type
+	7,  // [7:7] is the sub-list for extension type_name
+	7,  // [7:7] is the sub-list for extension extendee
+	0,  // [0:7] is the sub-list for field type_name
 }
 
 func init() { file_filemanager_filemanager_proto_init() }
@@ -1155,6 +1225,8 @@ func file_filemanager_filemanager_proto_init() {
 	if File_filemanager_filemanager_proto != nil {
 		return
 	}
+	file_filemanager_filemanager_proto_msgTypes[13].OneofWrappers = []any{}
+	file_filemanager_filemanager_proto_msgTypes[14].OneofWrappers = []any{}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{

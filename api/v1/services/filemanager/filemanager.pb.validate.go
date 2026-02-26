@@ -762,6 +762,8 @@ func (m *CompleteMultipartUploadRequest) validate(all bool) error {
 
 	}
 
+	// no validation rules for Sha256
+
 	if len(errors) > 0 {
 		return CompleteMultipartUploadRequestMultiError(errors)
 	}
@@ -1545,9 +1547,19 @@ func (m *ListFilesRequest) validate(all bool) error {
 
 	// no validation rules for PageSize
 
+	// no validation rules for PageToken
+
+	// no validation rules for OnlyCount
+
+	// no validation rules for Keyword
+
 	// no validation rules for OwnerId
 
 	// no validation rules for Visibility
+
+	if m.PagingMode != nil {
+		// no validation rules for PagingMode
+	}
 
 	if len(errors) > 0 {
 		return ListFilesRequestMultiError(errors)
@@ -1649,6 +1661,8 @@ func (m *ListFilesResponse) validate(all bool) error {
 
 	var errors []error
 
+	// no validation rules for Total
+
 	for idx, item := range m.GetFiles() {
 		_, _ = idx, item
 
@@ -1683,7 +1697,44 @@ func (m *ListFilesResponse) validate(all bool) error {
 
 	}
 
-	// no validation rules for TotalCount
+	// no validation rules for Page
+
+	// no validation rules for PageSize
+
+	// no validation rules for NextPageToken
+
+	if m.Extra != nil {
+
+		if all {
+			switch v := interface{}(m.GetExtra()).(type) {
+			case interface{ ValidateAll() error }:
+				if err := v.ValidateAll(); err != nil {
+					errors = append(errors, ListFilesResponseValidationError{
+						field:  "Extra",
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			case interface{ Validate() error }:
+				if err := v.Validate(); err != nil {
+					errors = append(errors, ListFilesResponseValidationError{
+						field:  "Extra",
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			}
+		} else if v, ok := interface{}(m.GetExtra()).(interface{ Validate() error }); ok {
+			if err := v.Validate(); err != nil {
+				return ListFilesResponseValidationError{
+					field:  "Extra",
+					reason: "embedded message failed validation",
+					cause:  err,
+				}
+			}
+		}
+
+	}
 
 	if len(errors) > 0 {
 		return ListFilesResponseMultiError(errors)

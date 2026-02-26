@@ -30,7 +30,7 @@ type Object struct {
 	Url           string                 `protobuf:"bytes,3,opt,name=url,proto3" json:"url,omitempty"`
 	Size          int64                  `protobuf:"varint,4,opt,name=size,proto3" json:"size,omitempty"`
 	ContentType   string                 `protobuf:"bytes,5,opt,name=content_type,proto3" json:"content_type,omitempty"`
-	CreatedTime   *timestamppb.Timestamp `protobuf:"bytes,6,opt,name=created_time,proto3" json:"created_time,omitempty"`
+	CreateTime    *timestamppb.Timestamp `protobuf:"bytes,6,opt,name=create_time,proto3" json:"create_time,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -100,9 +100,9 @@ func (x *Object) GetContentType() string {
 	return ""
 }
 
-func (x *Object) GetCreatedTime() *timestamppb.Timestamp {
+func (x *Object) GetCreateTime() *timestamppb.Timestamp {
 	if x != nil {
-		return x.CreatedTime
+		return x.CreateTime
 	}
 	return nil
 }
@@ -164,14 +164,14 @@ var File_types_objectstore_proto protoreflect.FileDescriptor
 
 const file_types_objectstore_proto_rawDesc = "" +
 	"\n" +
-	"\x17types/objectstore.proto\x12\x15api.v1.services.types\x1a\x1fgoogle/protobuf/timestamp.proto\"\xb6\x01\n" +
+	"\x17types/objectstore.proto\x12\x15api.v1.services.types\x1a\x1fgoogle/protobuf/timestamp.proto\"\xb4\x01\n" +
 	"\x06Object\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\tR\x02id\x12\x12\n" +
 	"\x04name\x18\x02 \x01(\tR\x04name\x12\x10\n" +
 	"\x03url\x18\x03 \x01(\tR\x03url\x12\x12\n" +
 	"\x04size\x18\x04 \x01(\x03R\x04size\x12\"\n" +
-	"\fcontent_type\x18\x05 \x01(\tR\fcontent_type\x12>\n" +
-	"\fcreated_time\x18\x06 \x01(\v2\x1a.google.protobuf.TimestampR\fcreated_time\"@\n" +
+	"\fcontent_type\x18\x05 \x01(\tR\fcontent_type\x12<\n" +
+	"\vcreate_time\x18\x06 \x01(\v2\x1a.google.protobuf.TimestampR\vcreate_time\"@\n" +
 	"\bPartInfo\x12 \n" +
 	"\vpart_number\x18\x01 \x01(\x05R\vpart_number\x12\x12\n" +
 	"\x04etag\x18\x02 \x01(\tR\x04etagB\xde\x01\n" +
@@ -196,7 +196,7 @@ var file_types_objectstore_proto_goTypes = []any{
 	(*timestamppb.Timestamp)(nil), // 2: google.protobuf.Timestamp
 }
 var file_types_objectstore_proto_depIdxs = []int32{
-	2, // 0: api.v1.services.types.Object.created_time:type_name -> google.protobuf.Timestamp
+	2, // 0: api.v1.services.types.Object.create_time:type_name -> google.protobuf.Timestamp
 	1, // [1:1] is the sub-list for method output_type
 	1, // [1:1] is the sub-list for method input_type
 	1, // [1:1] is the sub-list for extension type_name

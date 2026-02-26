@@ -1,12 +1,7 @@
 data:
-  databases:
+  object_stores:
     default:
-      name: ${DATABASE_NAME:test_db}
-      dialect: ${DATABASE_DIALECT:sqlite3} # 从环境变量获取数据库方言，默认值为 sqlite3
-      source: ${DATABASE_SOURCE:file:test.db?cache=shared&_foreign_keys=1} # 从环境变量获取连接字符串
-  # object_stores:
-  #   local:
-  #     type: local
-  #     local:
-  #       base_path: ${OBJECTSTORE_BASE_PATH:./tmp/objects}
-  #       base_url: ${OBJECTSTORE_BASE_URL:http://localhost:8000/api/v1/download/objects}
+      type: local
+      local:
+        root: ${OBJECTSTORE_BASE_PATH:./tmp/objects}
+#         base_url: ${OBJECTSTORE_BASE_URL:http://localhost:8000/api/v1/download/objects}

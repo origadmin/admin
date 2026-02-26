@@ -259,6 +259,8 @@ func (m *FileMutation) SetFields(input *File, fields ...string) error {
 			m.SetMaxDownloads(input.MaxDownloads)
 		case file.FieldDownloadCount:
 			m.SetDownloadCount(input.DownloadCount)
+		case file.FieldSha256:
+			m.SetSha256(input.Sha256)
 		case file.FieldID:
 			m.SetID(input.ID)
 		default:
@@ -345,6 +347,11 @@ func (m *FileMutation) SetFieldsSkipZero(input *File, fields ...string) error {
 			// check int with sql.NullInt64 if it is zero
 			if input.DownloadCount != 0 {
 				m.SetDownloadCount(input.DownloadCount)
+			}
+		case file.FieldSha256:
+			// check string with sql.NullString if it is empty
+			if input.Sha256 != "" {
+				m.SetSha256(input.Sha256)
 			}
 		case file.FieldID:
 			// check int64 with sql.NullInt64 if it is zero

@@ -22,28 +22,26 @@ const (
 	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
 )
 
-// Represents file metadata managed by the filemanager service.
+// Represents metadata for a file managed by the FileManager.
 type FileMetadata struct {
-	state       protoimpl.MessageState `protogen:"open.v1"`
-	Id          int64                  `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
-	Name        string                 `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`
-	ObjectId    string                 `protobuf:"bytes,3,opt,name=object_id,proto3" json:"object_id,omitempty"`
-	OwnerId     int64                  `protobuf:"varint,4,opt,name=owner_id,proto3" json:"owner_id,omitempty"`
-	CreatedTime *timestamppb.Timestamp `protobuf:"bytes,5,opt,name=created_time,proto3" json:"created_time,omitempty"`
-	UpdatedTime *timestamppb.Timestamp `protobuf:"bytes,6,opt,name=updated_time,proto3" json:"updated_time,omitempty"`
-	// Visibility of the file: "public" or "private"
-	Visibility string `protobuf:"bytes,7,opt,name=visibility,proto3" json:"visibility,omitempty"`
-	// MIME type of the file (e.g., "image/jpeg")
-	MimeType string `protobuf:"bytes,8,opt,name=mime_type,proto3" json:"mime_type,omitempty"`
-	// Size of the file in bytes
-	Size int64 `protobuf:"varint,9,opt,name=size,proto3" json:"size,omitempty"`
-	// Optional: Detailed object info from ObjectStore (not stored in DB)
-	ObjectInfo *Object `protobuf:"bytes,10,opt,name=object_info,proto3" json:"object_info,omitempty"`
-	// Access control fields
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Id            int64                  `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
+	Name          string                 `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`
+	ObjectId      string                 `protobuf:"bytes,3,opt,name=object_id,proto3" json:"object_id,omitempty"`
+	OwnerId       int64                  `protobuf:"varint,4,opt,name=owner_id,proto3" json:"owner_id,omitempty"`
+	Sha256        string                 `protobuf:"bytes,5,opt,name=sha256,proto3" json:"sha256,omitempty"`
+	Visibility    string                 `protobuf:"bytes,7,opt,name=visibility,proto3" json:"visibility,omitempty"`
+	MimeType      string                 `protobuf:"bytes,8,opt,name=mime_type,proto3" json:"mime_type,omitempty"`
+	Size          int64                  `protobuf:"varint,9,opt,name=size,proto3" json:"size,omitempty"`
+	ObjectInfo    *Object                `protobuf:"bytes,10,opt,name=object_info,proto3" json:"object_info,omitempty"`
 	IsPermanent   bool                   `protobuf:"varint,11,opt,name=is_permanent,proto3" json:"is_permanent,omitempty"`
 	ExpiresAt     *timestamppb.Timestamp `protobuf:"bytes,12,opt,name=expires_at,proto3" json:"expires_at,omitempty"`
 	MaxDownloads  int32                  `protobuf:"varint,13,opt,name=max_downloads,proto3" json:"max_downloads,omitempty"`
 	DownloadCount int32                  `protobuf:"varint,14,opt,name=download_count,proto3" json:"download_count,omitempty"`
+	// Matches ent's CreateTime field for automatic DTO mapping
+	CreateTime *timestamppb.Timestamp `protobuf:"bytes,15,opt,name=create_time,proto3" json:"create_time,omitempty"`
+	// Matches ent's UpdateTime field for automatic DTO mapping
+	UpdateTime    *timestamppb.Timestamp `protobuf:"bytes,16,opt,name=update_time,proto3" json:"update_time,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -106,18 +104,11 @@ func (x *FileMetadata) GetOwnerId() int64 {
 	return 0
 }
 
-func (x *FileMetadata) GetCreatedTime() *timestamppb.Timestamp {
+func (x *FileMetadata) GetSha256() string {
 	if x != nil {
-		return x.CreatedTime
+		return x.Sha256
 	}
-	return nil
-}
-
-func (x *FileMetadata) GetUpdatedTime() *timestamppb.Timestamp {
-	if x != nil {
-		return x.UpdatedTime
-	}
-	return nil
+	return ""
 }
 
 func (x *FileMetadata) GetVisibility() string {
@@ -176,18 +167,31 @@ func (x *FileMetadata) GetDownloadCount() int32 {
 	return 0
 }
 
+func (x *FileMetadata) GetCreateTime() *timestamppb.Timestamp {
+	if x != nil {
+		return x.CreateTime
+	}
+	return nil
+}
+
+func (x *FileMetadata) GetUpdateTime() *timestamppb.Timestamp {
+	if x != nil {
+		return x.UpdateTime
+	}
+	return nil
+}
+
 var File_types_filemanager_proto protoreflect.FileDescriptor
 
 const file_types_filemanager_proto_rawDesc = "" +
 	"\n" +
-	"\x17types/filemanager.proto\x12\x15api.v1.services.types\x1a\x1fgoogle/protobuf/timestamp.proto\x1a\x17types/objectstore.proto\"\xad\x04\n" +
+	"\x17types/filemanager.proto\x12\x15api.v1.services.types\x1a\x1fgoogle/protobuf/timestamp.proto\x1a\x17types/objectstore.proto\"\xc1\x04\n" +
 	"\fFileMetadata\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\x03R\x02id\x12\x12\n" +
 	"\x04name\x18\x02 \x01(\tR\x04name\x12\x1c\n" +
 	"\tobject_id\x18\x03 \x01(\tR\tobject_id\x12\x1a\n" +
-	"\bowner_id\x18\x04 \x01(\x03R\bowner_id\x12>\n" +
-	"\fcreated_time\x18\x05 \x01(\v2\x1a.google.protobuf.TimestampR\fcreated_time\x12>\n" +
-	"\fupdated_time\x18\x06 \x01(\v2\x1a.google.protobuf.TimestampR\fupdated_time\x12\x1e\n" +
+	"\bowner_id\x18\x04 \x01(\x03R\bowner_id\x12\x16\n" +
+	"\x06sha256\x18\x05 \x01(\tR\x06sha256\x12\x1e\n" +
 	"\n" +
 	"visibility\x18\a \x01(\tR\n" +
 	"visibility\x12\x1c\n" +
@@ -200,7 +204,9 @@ const file_types_filemanager_proto_rawDesc = "" +
 	"expires_at\x18\f \x01(\v2\x1a.google.protobuf.TimestampR\n" +
 	"expires_at\x12$\n" +
 	"\rmax_downloads\x18\r \x01(\x05R\rmax_downloads\x12&\n" +
-	"\x0edownload_count\x18\x0e \x01(\x05R\x0edownload_countB\xde\x01\n" +
+	"\x0edownload_count\x18\x0e \x01(\x05R\x0edownload_count\x12<\n" +
+	"\vcreate_time\x18\x0f \x01(\v2\x1a.google.protobuf.TimestampR\vcreate_time\x12<\n" +
+	"\vupdate_time\x18\x10 \x01(\v2\x1a.google.protobuf.TimestampR\vupdate_timeB\xde\x01\n" +
 	"\x19com.api.v1.services.typesB\x10FilemanagerProtoP\x01Z7origadmin/application/admin/api/v1/services/types;types\xa2\x02\x04AVST\xaa\x02\x15Api.V1.Services.Types\xca\x02\x15Api\\V1\\Services\\Types\xe2\x02!Api\\V1\\Services\\Types\\GPBMetadata\xea\x02\x18Api::V1::Services::Typesb\x06proto3"
 
 var (
@@ -218,14 +224,14 @@ func file_types_filemanager_proto_rawDescGZIP() []byte {
 var file_types_filemanager_proto_msgTypes = make([]protoimpl.MessageInfo, 1)
 var file_types_filemanager_proto_goTypes = []any{
 	(*FileMetadata)(nil),          // 0: api.v1.services.types.FileMetadata
-	(*timestamppb.Timestamp)(nil), // 1: google.protobuf.Timestamp
-	(*Object)(nil),                // 2: api.v1.services.types.Object
+	(*Object)(nil),                // 1: api.v1.services.types.Object
+	(*timestamppb.Timestamp)(nil), // 2: google.protobuf.Timestamp
 }
 var file_types_filemanager_proto_depIdxs = []int32{
-	1, // 0: api.v1.services.types.FileMetadata.created_time:type_name -> google.protobuf.Timestamp
-	1, // 1: api.v1.services.types.FileMetadata.updated_time:type_name -> google.protobuf.Timestamp
-	2, // 2: api.v1.services.types.FileMetadata.object_info:type_name -> api.v1.services.types.Object
-	1, // 3: api.v1.services.types.FileMetadata.expires_at:type_name -> google.protobuf.Timestamp
+	1, // 0: api.v1.services.types.FileMetadata.object_info:type_name -> api.v1.services.types.Object
+	2, // 1: api.v1.services.types.FileMetadata.expires_at:type_name -> google.protobuf.Timestamp
+	2, // 2: api.v1.services.types.FileMetadata.create_time:type_name -> google.protobuf.Timestamp
+	2, // 3: api.v1.services.types.FileMetadata.update_time:type_name -> google.protobuf.Timestamp
 	4, // [4:4] is the sub-list for method output_type
 	4, // [4:4] is the sub-list for method input_type
 	4, // [4:4] is the sub-list for extension type_name

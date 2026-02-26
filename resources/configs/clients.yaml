@@ -3,14 +3,14 @@ clients:
     - name: "origadmin.service.identity.client.grpc"
       grpc:
         endpoint: "discovery:///origadmin.service.identity"
-        timeout: 5s
+        timeout: 3s
         discovery_name: "default_consul"
         middlewares:
           - "propagation"
     - name: "origadmin.service.system.client.grpc"
       grpc:
         endpoint: "discovery:///origadmin.service.system"
-        timeout: 5s
+        timeout: 3s
         discovery_name: "default_consul"
         middlewares:
           - "propagation"
@@ -26,5 +26,12 @@ clients:
         endpoint: "discovery:///origadmin.service.objectstore"
         timeout: 5s
         discovery_name: "default_consul"
+        middlewares:
+          - "propagation"
+    - name: "origadmin.service.objectstore.client.http"
+      http:
+        endpoint: "discovery:///origadmin.service.objectstore"
+        discovery_name: "default_consul"
+        timeout: 5s
         middlewares:
           - "propagation"

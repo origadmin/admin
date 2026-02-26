@@ -501,6 +501,7 @@ func (_q *FileQuery) Modify(modifiers ...func(s *sql.Selector)) *FileSelect {
 //	  ExpiresAt time.Time `json:"expires_at,omitempty"`
 //	  MaxDownloads int `json:"max_downloads,omitempty"`
 //	  DownloadCount int `json:"download_count,omitempty"`
+//	  Sha256 string `json:"sha256,omitempty"`
 //	}
 //
 //	client.File.Query().
@@ -520,6 +521,7 @@ func (_q *FileQuery) Modify(modifiers ...func(s *sql.Selector)) *FileSelect {
 //	  file.FieldExpiresAt,
 //	  file.FieldMaxDownloads,
 //	  file.FieldDownloadCount,
+//	  file.FieldSha256,
 //	  ).
 //	  Scan(ctx, &v)
 func (fq *FileQuery) Omit(fields ...string) *FileSelect {

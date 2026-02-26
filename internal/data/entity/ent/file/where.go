@@ -129,6 +129,11 @@ func DownloadCount(v int) predicate.File {
 	return predicate.File(sql.FieldEQ(FieldDownloadCount, v))
 }
 
+// Sha256 applies equality check predicate on the "sha256" field. It's identical to Sha256EQ.
+func Sha256(v string) predicate.File {
+	return predicate.File(sql.FieldEQ(FieldSha256, v))
+}
+
 // CreateAuthorEQ applies the EQ predicate on the "create_author" field.
 func CreateAuthorEQ(v int64) predicate.File {
 	return predicate.File(sql.FieldEQ(FieldCreateAuthor, v))
@@ -857,6 +862,81 @@ func DownloadCountLT(v int) predicate.File {
 // DownloadCountLTE applies the LTE predicate on the "download_count" field.
 func DownloadCountLTE(v int) predicate.File {
 	return predicate.File(sql.FieldLTE(FieldDownloadCount, v))
+}
+
+// Sha256EQ applies the EQ predicate on the "sha256" field.
+func Sha256EQ(v string) predicate.File {
+	return predicate.File(sql.FieldEQ(FieldSha256, v))
+}
+
+// Sha256NEQ applies the NEQ predicate on the "sha256" field.
+func Sha256NEQ(v string) predicate.File {
+	return predicate.File(sql.FieldNEQ(FieldSha256, v))
+}
+
+// Sha256In applies the In predicate on the "sha256" field.
+func Sha256In(vs ...string) predicate.File {
+	return predicate.File(sql.FieldIn(FieldSha256, vs...))
+}
+
+// Sha256NotIn applies the NotIn predicate on the "sha256" field.
+func Sha256NotIn(vs ...string) predicate.File {
+	return predicate.File(sql.FieldNotIn(FieldSha256, vs...))
+}
+
+// Sha256GT applies the GT predicate on the "sha256" field.
+func Sha256GT(v string) predicate.File {
+	return predicate.File(sql.FieldGT(FieldSha256, v))
+}
+
+// Sha256GTE applies the GTE predicate on the "sha256" field.
+func Sha256GTE(v string) predicate.File {
+	return predicate.File(sql.FieldGTE(FieldSha256, v))
+}
+
+// Sha256LT applies the LT predicate on the "sha256" field.
+func Sha256LT(v string) predicate.File {
+	return predicate.File(sql.FieldLT(FieldSha256, v))
+}
+
+// Sha256LTE applies the LTE predicate on the "sha256" field.
+func Sha256LTE(v string) predicate.File {
+	return predicate.File(sql.FieldLTE(FieldSha256, v))
+}
+
+// Sha256Contains applies the Contains predicate on the "sha256" field.
+func Sha256Contains(v string) predicate.File {
+	return predicate.File(sql.FieldContains(FieldSha256, v))
+}
+
+// Sha256HasPrefix applies the HasPrefix predicate on the "sha256" field.
+func Sha256HasPrefix(v string) predicate.File {
+	return predicate.File(sql.FieldHasPrefix(FieldSha256, v))
+}
+
+// Sha256HasSuffix applies the HasSuffix predicate on the "sha256" field.
+func Sha256HasSuffix(v string) predicate.File {
+	return predicate.File(sql.FieldHasSuffix(FieldSha256, v))
+}
+
+// Sha256IsNil applies the IsNil predicate on the "sha256" field.
+func Sha256IsNil() predicate.File {
+	return predicate.File(sql.FieldIsNull(FieldSha256))
+}
+
+// Sha256NotNil applies the NotNil predicate on the "sha256" field.
+func Sha256NotNil() predicate.File {
+	return predicate.File(sql.FieldNotNull(FieldSha256))
+}
+
+// Sha256EqualFold applies the EqualFold predicate on the "sha256" field.
+func Sha256EqualFold(v string) predicate.File {
+	return predicate.File(sql.FieldEqualFold(FieldSha256, v))
+}
+
+// Sha256ContainsFold applies the ContainsFold predicate on the "sha256" field.
+func Sha256ContainsFold(v string) predicate.File {
+	return predicate.File(sql.FieldContainsFold(FieldSha256, v))
 }
 
 // And groups predicates with the AND operator between them.

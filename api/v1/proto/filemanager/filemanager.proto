@@ -3,6 +3,7 @@ syntax = "proto3";
 package api.v1.services.filemanager;
 
 import "google/api/annotations.proto";
+import "google/protobuf/any.proto";
 import "policy/v1/policy.proto";
 import "types/filemanager.proto";
 
@@ -11,187 +12,126 @@ option java_multiple_files = true;
 option java_outer_classname = "APIServiceFileManagerProto";
 option java_package = "com.origadmin.api.v1.services.filemanager";
 
-// The FileManager service definition.
 service FileManagerService {
-  // Simple upload for small files (e.g. avatars, images).
   rpc UploadFile(UploadFileRequest) returns (UploadFileResponse) {
-    option (google.api.http) = {
-      post: "/fm/files"
-      body: "*"
-    };
+    option (google.api.http) = {post: "/fm/files"; body: "*"};
     option (contrib.api.policy.v1.policy) = {name: "authn"};
   }
-
-  // Initiates a multipart upload for large files.
   rpc InitiateMultipartUpload(InitiateMultipartUploadRequest) returns (InitiateMultipartUploadResponse) {
-    option (google.api.http) = {
-      post: "/fm/files/multipart"
-      body: "*"
-    };
+    option (google.api.http) = {post: "/fm/files/multipart"; body: "*"};
     option (contrib.api.policy.v1.policy) = {name: "authn"};
   }
-
-  // Gets a presigned URL for a specific part of a multipart upload.
   rpc GetMultipartUploadUrl(GetMultipartUploadUrlRequest) returns (GetMultipartUploadUrlResponse) {
-    option (google.api.http) = {
-      get: "/fm/files/multipart/{upload_id}/parts/{part_number}"
-    };
+    option (google.api.http) = {get: "/fm/files/multipart/{upload_id}/parts/{part_number}"};
     option (contrib.api.policy.v1.policy) = {name: "authn"};
   }
-
-  // Completes a multipart upload.
   rpc CompleteMultipartUpload(CompleteMultipartUploadRequest) returns (CompleteMultipartUploadResponse) {
-    option (google.api.http) = {
-      post: "/fm/files/multipart/{upload_id}/complete"
-      body: "*"
-    };
+    option (google.api.http) = {post: "/fm/files/multipart/{upload_id}/complete"; body: "*"};
     option (contrib.api.policy.v1.policy) = {name: "authn"};
   }
-
-  // Aborts a multipart upload.
   rpc AbortMultipartUpload(AbortMultipartUploadRequest) returns (AbortMultipartUploadResponse) {
-    option (google.api.http) = {
-      delete: "/fm/files/multipart/{upload_id}"
-    };
+    option (google.api.http) = {delete: "/fm/files/multipart/{upload_id}"};
     option (contrib.api.policy.v1.policy) = {name: "authn"};
   }
-
-  // Gets file metadata.
   rpc GetFile(GetFileRequest) returns (GetFileResponse) {
-    option (google.api.http) = {
-      get: "/fm/files/{id}"
-    };
+    option (google.api.http) = {get: "/fm/files/{id}"};
     option (contrib.api.policy.v1.policy) = {name: "authn"};
   }
-
-  // Lists files with pagination and filtering.
   rpc ListFiles(ListFilesRequest) returns (ListFilesResponse) {
-    option (google.api.http) = {
-      get: "/fm/files"
-    };
+    option (google.api.http) = {get: "/fm/files"};
     option (contrib.api.policy.v1.policy) = {name: "authn"};
   }
-
-  // Updates file metadata.
   rpc UpdateFile(UpdateFileRequest) returns (UpdateFileResponse) {
-    option (google.api.http) = {
-      put: "/fm/files/{id}"
-      body: "*"
-    };
+    option (google.api.http) = {put: "/fm/files/{id}"; body: "*"};
     option (contrib.api.policy.v1.policy) = {name: "authn"};
   }
-
-  // Deletes a file and its metadata.
   rpc DeleteFile(DeleteFileRequest) returns (DeleteFileResponse) {
-    option (google.api.http) = {
-      delete: "/fm/files/{id}"
-    };
+    option (google.api.http) = {delete: "/fm/files/{id}"};
     option (contrib.api.policy.v1.policy) = {name: "authn"};
   }
 }
 
-// Request message for uploading a small file directly.
 message UploadFileRequest {
-  bytes data = 1;
-  string name = 2;
-  string content_type = 3;
-  string visibility = 4; // "public" or "private"
+  bytes data = 1 [json_name = "data"];
+  string name = 2 [json_name = "name"];
+  string content_type = 3 [json_name = "content_type"];
+  string visibility = 4 [json_name = "visibility"];
 }
 
-// Response message for uploading a file.
 message UploadFileResponse {
-  api.v1.services.types.FileMetadata file_metadata = 1;
+  api.v1.services.types.FileMetadata file_metadata = 1 [json_name = "file_metadata"];
 }
 
-// Request message for initiating a multipart upload.
 message InitiateMultipartUploadRequest {
-  string name = 1;
-  int64 size = 2;
-  string content_type = 3;
-  string visibility = 4; // "public" or "private"
+  string name = 1 [json_name = "name"];
+  int64 size = 2 [json_name = "size"];
+  string content_type = 3 [json_name = "content_type"];
+  string visibility = 4 [json_name = "visibility"];
 }
 
-// Response message for initiating a multipart upload.
 message InitiateMultipartUploadResponse {
-  string upload_id = 1;
+  string upload_id = 1 [json_name = "upload_id"];
 }
 
-// Request message for getting a multipart upload URL.
 message GetMultipartUploadUrlRequest {
-  string upload_id = 1;
-  int32 part_number = 2;
+  string upload_id = 1 [json_name = "upload_id"];
+  int32 part_number = 2 [json_name = "part_number"];
 }
 
-// Response message for getting a multipart upload URL.
 message GetMultipartUploadUrlResponse {
-  string upload_url = 1;
+  string upload_url = 1 [json_name = "upload_url"];
 }
 
-// Request message for completing a multipart upload.
 message CompleteMultipartUploadRequest {
-  string upload_id = 1;
-  repeated PartInfo parts = 2;
+  string upload_id = 1 [json_name = "upload_id"];
+  repeated PartInfo parts = 2 [json_name = "parts"];
+  string sha256 = 3 [json_name = "sha256"]; // ADDED: For end-to-end verification
 }
 
 message PartInfo {
-  int32 part_number = 1;
-  string etag = 2;
+  int32 part_number = 1 [json_name = "part_number"];
+  string etag = 2 [json_name = "etag"];
 }
 
-// Response message for completing a multipart upload.
 message CompleteMultipartUploadResponse {
-  api.v1.services.types.FileMetadata file_metadata = 1;
+  api.v1.services.types.FileMetadata file_metadata = 1 [json_name = "file_metadata"];
 }
 
-// Request message for aborting a multipart upload.
-message AbortMultipartUploadRequest {
-  string upload_id = 1;
-}
-
-// Response message for aborting a multipart upload.
+message AbortMultipartUploadRequest {string upload_id = 1 [json_name = "upload_id"];}
 message AbortMultipartUploadResponse {}
 
-// Request message for getting file metadata.
-message GetFileRequest {
-  int64 id = 1;
-}
-
-// Response message for getting file metadata.
+message GetFileRequest {int64 id = 1 [json_name = "id"];}
 message GetFileResponse {
-  api.v1.services.types.FileMetadata file_metadata = 1;
-  string download_url = 2; // Presigned URL or public URL
+  api.v1.services.types.FileMetadata file_metadata = 1 [json_name = "file_metadata"];
+  string download_url = 2 [json_name = "download_url"];
 }
 
-// Request message for listing files.
 message ListFilesRequest {
-  int32 page = 1;
-  int32 page_size = 2;
-  int64 owner_id = 3;
-  string visibility = 4;
+  int32 page = 1 [json_name = "page"];
+  int32 page_size = 2 [json_name = "page_size"];
+  string page_token = 3 [json_name = "page_token"];
+  optional string paging_mode = 4 [json_name = "paging_mode"];
+  bool only_count = 5 [json_name = "only_count"];
+  string keyword = 6 [json_name = "keyword"];
+  int64 owner_id = 7 [json_name = "owner_id"];
+  string visibility = 8 [json_name = "visibility"];
 }
 
-// Response message for listing files.
 message ListFilesResponse {
-  repeated api.v1.services.types.FileMetadata files = 1;
-  int32 total_count = 2;
+  int32 total = 1 [json_name = "total"];
+  repeated api.v1.services.types.FileMetadata files = 2 [json_name = "files"];
+  int32 page = 3 [json_name = "page"];
+  int32 page_size = 4 [json_name = "page_size"];
+  string next_page_token = 5 [json_name = "next_page_token"];
+  optional google.protobuf.Any extra = 6 [json_name = "extra"];
 }
 
-// Request message for updating file metadata.
 message UpdateFileRequest {
-  int64 id = 1;
-  string name = 2;
-  string visibility = 3;
+  int64 id = 1 [json_name = "id"];
+  string name = 2 [json_name = "name"];
+  string visibility = 3 [json_name = "visibility"];
 }
 
-// Response message for updating file metadata.
-message UpdateFileResponse {
-  api.v1.services.types.FileMetadata file_metadata = 1;
-}
-
-// Request message for deleting a file.
-message DeleteFileRequest {
-  int64 id = 1;
-}
-
-// Response message for deleting a file.
+message UpdateFileResponse {api.v1.services.types.FileMetadata file_metadata = 1 [json_name = "file_metadata"];}
+message DeleteFileRequest {int64 id = 1 [json_name = "id"];}
 message DeleteFileResponse {}

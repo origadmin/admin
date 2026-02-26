@@ -6,289 +6,238 @@ package dal
 
 import (
 	"context"
+	"crypto/md5"
+	"crypto/sha256"
+	"encoding/hex"
+	"encoding/json"
 	"fmt"
 	"io"
 	"os"
 	"path/filepath"
 	"sort"
 	"strconv"
+	"strings"
 	"time"
 
-	"github.com/google/uuid"
 	"github.com/google/wire"
+	"google.golang.org/grpc/metadata"
 	"google.golang.org/protobuf/types/known/timestamppb"
 
 	"github.com/origadmin/runtime/extensions/configutil"
 	"origadmin/application/admin/api/v1/services/types"
 	"origadmin/application/admin/internal/conf"
 	"origadmin/application/admin/internal/features/objectstore/dto"
+	"origadmin/application/admin/internal/helpers/idutil"
 )
 
-// LocalStorageConfig holds the configuration for local file storage.
-type LocalStorageConfig struct {
-	BasePath string
-	BaseURL  string
+type uploadSession struct {
+	Name        string `json:"name"`
+	ContentType string `json:"content_type"`
+	ObjectID    string `json:"object_id"`
+	Visibility  string `json:"visibility"`
 }
 
-// ProviderSet is dal providers.
-var ProviderSet = wire.NewSet(
-	NewLocalStorage,
-	NewLocalStorageConfig,
-	wire.Bind(new(dto.ObjectRepo), new(*LocalStorage)),
-)
+type LocalStorageConfig struct {
+	BasePath, MultipartPath string
+	ExpirationAge           time.Duration
+}
 
-// NewLocalStorageConfig creates a local storage config from the main config.
+var ProviderSet = wire.NewSet(NewLocalStorage, NewLocalStorageConfig, wire.Bind(new(dto.ObjectRepo), new(*LocalStorage)))
+
 func NewLocalStorageConfig(c *conf.Config) (*LocalStorageConfig, error) {
-	// Default absolute path
-	defaultBasePath := filepath.Join(os.TempDir(), "origadmin", "objects")
-	absPath, err := filepath.Abs(defaultBasePath)
-	if err != nil {
-		return nil, fmt.Errorf("failed to get absolute path for storage: %w", err)
-	}
-
-	// Try to load from config, but don't fail if missing
+	o, m := filepath.Join("tmp", "objects"), filepath.Join("tmp", "multipart")
 	objectStores := c.GetBootstrap().GetData().GetObjectStores()
 	if objectStores != nil {
 		store, _, err := configutil.Normalize(objectStores.GetActive(), objectStores.GetDefault(), objectStores.GetConfigs())
 		if err == nil && store != nil && store.GetLocal() != nil {
-			if store.GetLocal().GetRoot() != "" {
-				// If config exists, use it (and ensure it's absolute)
-				configPath, err := filepath.Abs(store.GetLocal().GetRoot())
-				if err == nil {
-					absPath = configPath
-				}
+			if root := store.GetLocal().GetRoot(); root != "" {
+				o = root
 			}
 		}
 	}
-
-	fmt.Printf("LocalStorageConfig: BasePath=%s\n", absPath)
-
-	return &LocalStorageConfig{
-		BasePath: absPath,
-		BaseURL:  "", // Not used
-	}, nil
+	if envObj := os.Getenv("OBJECTSTORE_OBJECTS_ROOT"); envObj != "" {
+		o = envObj
+	}
+	if envMulti := os.Getenv("OBJECTSTORE_MULTIPART_ROOT"); envMulti != "" {
+		m = envMulti
+	}
+	absO, _ := filepath.Abs(o)
+	absM, _ := filepath.Abs(m)
+	return &LocalStorageConfig{BasePath: absO, MultipartPath: absM, ExpirationAge: 24 * time.Hour}, nil
 }
 
-// LocalStorage implements ObjectRepo for the local file system.
 type LocalStorage struct {
-	basePath string
-	baseURL  string
+	basePath, multipartPath string
+	expiration              time.Duration
 }
 
-// NewLocalStorage creates a new LocalStorage instance.
 func NewLocalStorage(cfg *LocalStorageConfig) (*LocalStorage, error) {
-	if err := os.MkdirAll(cfg.BasePath, 0755); err != nil {
-		return nil, fmt.Errorf("failed to create storage directory: %w", err)
-	}
-	// Create a directory for multipart uploads
-	multipartPath := filepath.Join(cfg.BasePath, "multipart")
-	if err := os.MkdirAll(multipartPath, 0755); err != nil {
-		return nil, fmt.Errorf("failed to create multipart directory: %w", err)
-	}
-
-	return &LocalStorage{
-		basePath: cfg.BasePath,
-		baseURL:  cfg.BaseURL,
-	}, nil
+	_ = os.MkdirAll(cfg.BasePath, 0755)
+	_ = os.MkdirAll(cfg.MultipartPath, 0755)
+	s := &LocalStorage{basePath: cfg.BasePath, multipartPath: cfg.MultipartPath, expiration: cfg.ExpirationAge}
+	go s.runInternalCleanup(context.Background())
+	return s, nil
 }
 
-// Put stores data to the local file system.
-func (s *LocalStorage) Put(ctx context.Context, name string, data io.Reader, size int64) (*types.Object, error) {
-	id := uuid.New().String()
-	filePath := filepath.Join(s.basePath, id)
-
-	fmt.Printf("LocalStorage Put: Writing to %s\n", filePath)
-
-	file, err := os.Create(filePath)
-	if err != nil {
-		return nil, fmt.Errorf("failed to create file: %w", err)
-	}
-	defer file.Close()
-
-	written, err := io.Copy(file, data)
-	if err != nil {
-		return nil, fmt.Errorf("failed to write file content: %w", err)
-	}
-
-	fmt.Printf("LocalStorage Put: Written %d bytes to %s\n", written, filePath)
-
-	return &types.Object{
-		Id:          id,
-		Name:        name,
-		Size:        written,
-		Url:         fmt.Sprintf("%s/%s", s.baseURL, id),
-		CreatedTime: timestamppb.New(time.Now()),
-		ContentType: "application/octet-stream", // Default content type
-	}, nil
-}
-
-// Get retrieves data from the local file system.
-func (s *LocalStorage) Get(ctx context.Context, id string) (io.ReadCloser, *types.Object, error) {
-	filePath := filepath.Join(s.basePath, id)
-
-	file, err := os.Open(filePath)
-	if err != nil {
-		if os.IsNotExist(err) {
-			return nil, nil, fmt.Errorf("object not found: %s", id)
+func (s *LocalStorage) Cleanup(ctx context.Context) error {
+	entries, _ := os.ReadDir(s.multipartPath)
+	now := time.Now()
+	for _, entry := range entries {
+		if !entry.IsDir() {
+			continue
 		}
-		return nil, nil, fmt.Errorf("failed to open file: %w", err)
-	}
-
-	stat, err := file.Stat()
-	if err != nil {
-		file.Close()
-		return nil, nil, fmt.Errorf("failed to stat file: %w", err)
-	}
-
-	info := &types.Object{
-		Id:          id,
-		Name:        id, // Local storage doesn't store original name, use ID as name
-		Size:        stat.Size(),
-		Url:         fmt.Sprintf("%s/%s", s.baseURL, id),
-		CreatedTime: timestamppb.New(stat.ModTime()),
-		ContentType: "application/octet-stream", // Default content type
-	}
-
-	return file, info, nil
-}
-
-// Delete removes data from the local file system.
-func (s *LocalStorage) Delete(ctx context.Context, id string) error {
-	filePath := filepath.Join(s.basePath, id)
-	if err := os.Remove(filePath); err != nil && !os.IsNotExist(err) {
-		return fmt.Errorf("failed to delete file: %w", err)
+		p := filepath.Join(s.multipartPath, entry.Name())
+		if info, err := entry.Info(); err == nil {
+			_, errAbort := os.Stat(filepath.Join(p, ".aborted"))
+			if errAbort == nil || now.Sub(info.ModTime()) > s.expiration {
+				_ = os.RemoveAll(p)
+			}
+		}
 	}
 	return nil
 }
 
-// GetPresignedURL generates a presigned URL for downloading the object.
-func (s *LocalStorage) GetPresignedURL(ctx context.Context, id string, expires time.Duration) (string, error) {
-	// For local storage, we just return the direct URL.
-	// In a real implementation, this would generate a signed URL with expiration.
-	return fmt.Sprintf("%s/%s?expires=%d", s.baseURL, id, time.Now().Add(expires).Unix()), nil
-}
-
-// InitiateMultipartUpload initiates a multipart upload.
-func (s *LocalStorage) InitiateMultipartUpload(ctx context.Context, name string, contentType string) (string, string, error) {
-	uploadID := uuid.New().String()
-	objectID := uuid.New().String() // Pre-allocate object ID
-
-	// Create a directory for this upload
-	uploadPath := filepath.Join(s.basePath, "multipart", uploadID)
-	if err := os.MkdirAll(uploadPath, 0755); err != nil {
-		return "", "", fmt.Errorf("failed to create upload directory: %w", err)
+func (s *LocalStorage) runInternalCleanup(ctx context.Context) {
+	ticker := time.NewTicker(time.Hour)
+	for {
+		select {
+		case <-ctx.Done():
+			return
+		case <-ticker.C:
+			_ = s.Cleanup(ctx)
+		}
 	}
-
-	return uploadID, objectID, nil
 }
 
-// GetMultipartUploadURL generates a presigned URL for uploading a specific part.
+func (s *LocalStorage) Put(ctx context.Context, name string, data io.Reader, size int64) (*types.Object, error) {
+	id := idutil.GenUUID()
+	file, err := os.Create(filepath.Join(s.basePath, id))
+	if err != nil {
+		return nil, err
+	}
+	defer file.Close()
+	h := sha256.New()
+	mw := io.MultiWriter(file, h)
+	n, _ := io.Copy(mw, data)
+	return &types.Object{Id: id, Name: name, Size: n, Url: fmt.Sprintf("/objects/%s?sha256=%s", id, hex.EncodeToString(h.Sum(nil))), CreateTime: timestamppb.New(time.Now())}, nil
+}
+
+func (s *LocalStorage) Get(ctx context.Context, id string) (io.ReadCloser, *types.Object, error) {
+	file, err := os.Open(filepath.Join(s.basePath, id))
+	if err != nil {
+		return nil, nil, err
+	}
+	stat, _ := file.Stat()
+	return file, &types.Object{
+		Id:          id,
+		Size:        stat.Size(),
+		ContentType: "application/octet-stream", // Default fallback
+	}, nil
+}
+
+func (s *LocalStorage) Delete(ctx context.Context, id string) error {
+	return os.Remove(filepath.Join(s.basePath, id))
+}
+
+func (s *LocalStorage) GetPresignedURL(ctx context.Context, id string, expires time.Duration) (string, error) {
+	return fmt.Sprintf("/objects/%s", id), nil
+}
+
+func (s *LocalStorage) InitiateMultipartUpload(ctx context.Context, name string, contentType string) (string, string, error) {
+	uID, oID := idutil.GenUUID(), idutil.GenUUID()
+	vis := "private"
+	if md, ok := metadata.FromIncomingContext(ctx); ok {
+		if val := md.Get("x-file-visibility"); len(val) > 0 {
+			vis = val[0]
+		}
+	}
+	p := filepath.Join(s.multipartPath, uID)
+	_ = os.MkdirAll(p, 0755)
+	info, _ := json.Marshal(uploadSession{Name: name, ContentType: contentType, ObjectID: oID, Visibility: vis})
+	_ = os.WriteFile(filepath.Join(p, "session.json"), info, 0644)
+	return uID, uID, nil
+}
+
 func (s *LocalStorage) GetMultipartUploadURL(ctx context.Context, objectID string, uploadID string, partNumber int32, expires time.Duration) (string, error) {
-	// For local storage simulation, we return a URL that points to where the part *should* be uploaded.
-	// Note: This requires an HTTP handler to actually accept the PUT request and write to this path.
-	return fmt.Sprintf("%s/multipart/%s/%d", s.baseURL, uploadID, partNumber), nil
+	return fmt.Sprintf("/multipart/%s/%d", uploadID, partNumber), nil
 }
 
-// ListParts lists the parts that have been uploaded for a specific multipart upload.
 func (s *LocalStorage) ListParts(ctx context.Context, objectID string, uploadID string) ([]*types.PartInfo, error) {
-	uploadPath := filepath.Join(s.basePath, "multipart", uploadID)
-	dirEntries, err := os.ReadDir(uploadPath)
+	p := filepath.Join(s.multipartPath, uploadID)
+	entries, err := os.ReadDir(p)
 	if err != nil {
 		if os.IsNotExist(err) {
-			return nil, fmt.Errorf("upload not found: %s", uploadID)
+			return nil, nil
 		}
-		return nil, fmt.Errorf("failed to list parts for upload %s: %w", uploadID, err)
+		return nil, err
 	}
-
 	var parts []*types.PartInfo
-	for _, entry := range dirEntries {
-		if entry.IsDir() {
-			continue
+	for _, entry := range entries {
+		if !entry.IsDir() && !strings.HasPrefix(entry.Name(), ".") && entry.Name() != "session.json" {
+			partNum, _ := strconv.Atoi(entry.Name())
+			content, _ := os.ReadFile(filepath.Join(p, entry.Name()))
+			h := md5.Sum(content)
+			parts = append(parts, &types.PartInfo{PartNumber: int32(partNum), Etag: hex.EncodeToString(h[:])})
 		}
-		// Assuming part files are named just by their number, e.g., "1", "2", etc.
-		partNum, err := strconv.Atoi(entry.Name())
-		if err != nil {
-			// Ignore files that are not valid part numbers
-			continue
-		}
-
-		// In a real implementation, ETag would be calculated on upload and stored.
-		// For ListParts, we can either re-calculate it or, if not strictly needed for the client, return an empty string.
-		parts = append(parts, &types.PartInfo{
-			PartNumber: int32(partNum),
-			Etag:       "", // Placeholder for ETag
-		})
 	}
-
-	// Sort parts by part number to ensure consistent order
-	sort.Slice(parts, func(i, j int) bool {
-		return parts[i].PartNumber < parts[j].PartNumber
-	})
-
+	sort.Slice(parts, func(i, j int) bool { return parts[i].PartNumber < parts[j].PartNumber })
 	return parts, nil
 }
 
-// CompleteMultipartUpload completes a multipart upload by assembling the parts.
 func (s *LocalStorage) CompleteMultipartUpload(ctx context.Context, objectID string, uploadID string, parts []*types.PartInfo) (*types.Object, error) {
-	uploadPath := filepath.Join(s.basePath, "multipart", uploadID)
-	finalPath := filepath.Join(s.basePath, objectID)
-
-	// Sort parts by part number to ensure correct order
-	sort.Slice(parts, func(i, j int) bool {
-		return parts[i].PartNumber < parts[j].PartNumber
-	})
-
-	// Create the final file
-	finalFile, err := os.Create(finalPath)
+	p := filepath.Join(s.multipartPath, uploadID)
+	if _, err := os.Stat(filepath.Join(p, ".aborted")); err == nil {
+		return nil, fmt.Errorf("aborted")
+	}
+	var info uploadSession
+	infoD, _ := os.ReadFile(filepath.Join(p, "session.json"))
+	_ = json.Unmarshal(infoD, &info)
+	fID := objectID
+	if fID == "" {
+		fID = info.ObjectID
+	}
+	if fID == "" {
+		fID = uploadID
+	}
+	fPath := filepath.Join(s.basePath, fID)
+	fFile, err := os.Create(fPath)
 	if err != nil {
-		return nil, fmt.Errorf("failed to create final file: %w", err)
+		return nil, err
 	}
-	defer finalFile.Close()
+	defer fFile.Close()
 
-	var totalSize int64
-
-	// Append each part to the final file
+	h := sha256.New()
+	mw := io.MultiWriter(fFile, h)
+	var tSize int64
 	for _, part := range parts {
-		// In a real S3 implementation, we don't read local files.
-		// But for this local simulation, we assume the parts have been uploaded to the uploadPath.
-		// The filename of the part is assumed to be just the part number.
-		partPath := filepath.Join(uploadPath, fmt.Sprintf("%d", part.PartNumber))
-
-		partFile, err := os.Open(partPath)
+		pPath := filepath.Join(p, fmt.Sprintf("%d", part.PartNumber))
+		pContent, err := os.ReadFile(pPath)
 		if err != nil {
-			// If part file is missing, it means the upload failed or wasn't done correctly
-			return nil, fmt.Errorf("missing part %d: %w", part.PartNumber, err)
+			_ = fFile.Close()
+			_ = os.Remove(fPath)
+			return nil, fmt.Errorf("part %d missing", part.PartNumber)
 		}
-
-		n, err := io.Copy(finalFile, partFile)
-		partFile.Close()
-		if err != nil {
-			return nil, fmt.Errorf("failed to append part %d: %w", part.PartNumber, err)
+		pMD5 := md5.Sum(pContent)
+		if hex.EncodeToString(pMD5[:]) != part.Etag && part.Etag != "" {
+			_ = fFile.Close()
+			_ = os.Remove(fPath)
+			return nil, fmt.Errorf("part %d corrupted", part.PartNumber)
 		}
-		totalSize += n
+		n, _ := mw.Write(pContent)
+		tSize += int64(n)
 	}
-
-	// Cleanup multipart directory
-	if err := os.RemoveAll(uploadPath); err != nil {
-		// Log error but don't fail the operation
-		fmt.Printf("failed to cleanup multipart directory: %v\n", err)
-	}
-
+	_ = os.RemoveAll(p)
 	return &types.Object{
-		Id:          objectID,
-		Name:        objectID, // Use ID as name
-		Size:        totalSize,
-		Url:         fmt.Sprintf("%s/%s", s.baseURL, objectID),
-		CreatedTime: timestamppb.New(time.Now()),
-		ContentType: "application/octet-stream",
+		Id: fID, Name: info.Name, Size: tSize, ContentType: info.ContentType,
+		Url:        fmt.Sprintf("/objects/%s?visibility=%s&sha256=%s", fID, info.Visibility, hex.EncodeToString(h.Sum(nil))),
+		CreateTime: timestamppb.New(time.Now()),
 	}, nil
 }
 
-// AbortMultipartUpload aborts a multipart upload and cleans up resources.
 func (s *LocalStorage) AbortMultipartUpload(ctx context.Context, objectID string, uploadID string) error {
-	uploadPath := filepath.Join(s.basePath, "multipart", uploadID)
-	if err := os.RemoveAll(uploadPath); err != nil {
-		return fmt.Errorf("failed to remove upload directory: %w", err)
+	p := filepath.Join(s.multipartPath, uploadID)
+	if _, err := os.Stat(p); os.IsNotExist(err) {
+		return nil
 	}
-	return nil
+	return os.WriteFile(filepath.Join(p, ".aborted"), []byte(time.Now().Format(time.RFC3339)), 0644)
 }

@@ -86,55 +86,55 @@ service ObjectStoreService {
 
 // Request message for initiating a multipart upload.
 message InitiateMultipartUploadRequest {
-  string name = 1;
-  string content_type = 2;
+  string name = 1 [json_name = "name"];
+  string content_type = 2 [json_name = "content_type"];
 }
 
 // Response message for initiating a multipart upload.
 message InitiateMultipartUploadResponse {
-  string upload_id = 1;
-  string object_id = 2; // The final object ID/key in the storage.
+  string upload_id = 1 [json_name = "upload_id"];
+  string object_id = 2 [json_name = "object_id"]; // The final object ID/key in the storage.
 }
 
 // Request message for getting a multipart upload URL.
 message GetMultipartUploadUrlRequest {
-  string upload_id = 1;
-  string object_id = 2;
-  int32 part_number = 3;
+  string upload_id = 1 [json_name = "upload_id"];
+  string object_id = 2 [json_name = "object_id"];
+  int32 part_number = 3 [json_name = "part_number"];
 }
 
 // Response message for getting a multipart upload URL.
 message GetMultipartUploadUrlResponse {
-  string upload_url = 1;
+  string upload_url = 1 [json_name = "upload_url"];
 }
 
 // Request message for listing uploaded parts.
 message ListPartsRequest {
-  string upload_id = 1;
-  string object_id = 2;
+  string upload_id = 1 [json_name = "upload_id"];
+  string object_id = 2 [json_name = "object_id"];
 }
 
 // Response message for listing uploaded parts.
 message ListPartsResponse {
-  repeated api.v1.services.types.PartInfo parts = 1;
+  repeated api.v1.services.types.PartInfo parts = 1 [json_name = "parts"];
 }
 
 // Request message for completing a multipart upload.
 message CompleteMultipartUploadRequest {
-  string upload_id = 1;
-  string object_id = 2;
-  repeated api.v1.services.types.PartInfo parts = 3;
+  string upload_id = 1 [json_name = "upload_id"];
+  string object_id = 2 [json_name = "object_id"];
+  repeated api.v1.services.types.PartInfo parts = 3 [json_name = "parts"];
 }
 
 // Response message for completing a multipart upload.
 message CompleteMultipartUploadResponse {
-  api.v1.services.types.Object object = 1;
+  api.v1.services.types.Object object = 1 [json_name = "object"];
 }
 
 // Request message for aborting a multipart upload.
 message AbortMultipartUploadRequest {
-  string upload_id = 1;
-  string object_id = 2;
+  string upload_id = 1 [json_name = "upload_id"];
+  string object_id = 2 [json_name = "object_id"];
 }
 
 // Response message for aborting a multipart upload.
@@ -142,38 +142,38 @@ message AbortMultipartUploadResponse {}
 
 // Request message for uploading an object in a single request.
 message UploadObjectRequest {
-  bytes data = 1;
-  string name = 2;
-  string content_type = 3;
+  bytes data = 1 [json_name = "data"];
+  string name = 2 [json_name = "name"];
+  string content_type = 3 [json_name = "content_type"];
 }
 
 // Response message for uploading an object.
 message UploadObjectResponse {
-  api.v1.services.types.Object object = 1;
+  api.v1.services.types.Object object = 1 [json_name = "object"];
 }
 
 // Request message for getting an object.
 message GetObjectRequest {
-  string id = 1;
+  string id = 1 [json_name = "id"];
 }
 
 // Response message for getting an object.
 message GetObjectResponse {
-  api.v1.services.types.Object object = 1;
+  api.v1.services.types.Object object = 1 [json_name = "object"];
 }
 
 // Request message for downloading an object.
 message DownloadObjectRequest {
-  string id = 1;
+  string id = 1 [json_name = "id"];
   // The byte range to download (e.g., "bytes=0-1023").
   // If empty, the entire object is downloaded.
   // This allows for resumable downloads and parallel chunk downloading.
-  string range = 2;
+  string range = 2 [json_name = "range"];
 }
 
 // Request message for deleting an object.
 message DeleteObjectRequest {
-  string id = 1;
+  string id = 1 [json_name = "id"];
 }
 
 // Response message for deleting an object.

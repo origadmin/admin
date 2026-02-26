@@ -9,31 +9,25 @@ option go_package = "origadmin/application/admin/api/v1/services/types;types";
 option java_multiple_files = true;
 option java_outer_classname = "APIServiceTypeFileManagerProto";
 option java_package = "com.origadmin.api.v1.services.types";
+option objc_class_prefix = "APIServiceType";
 
-// Represents file metadata managed by the filemanager service.
+// Represents metadata for a file managed by the FileManager.
 message FileMetadata {
   int64 id = 1 [json_name = "id"];
   string name = 2 [json_name = "name"];
   string object_id = 3 [json_name = "object_id"];
   int64 owner_id = 4 [json_name = "owner_id"];
-  google.protobuf.Timestamp created_time = 5 [json_name = "created_time"];
-  google.protobuf.Timestamp updated_time = 6 [json_name = "updated_time"];
-
-  // Visibility of the file: "public" or "private"
+  string sha256 = 5 [json_name = "sha256"];
   string visibility = 7 [json_name = "visibility"];
-
-  // MIME type of the file (e.g., "image/jpeg")
   string mime_type = 8 [json_name = "mime_type"];
-
-  // Size of the file in bytes
   int64 size = 9 [json_name = "size"];
-
-  // Optional: Detailed object info from ObjectStore (not stored in DB)
   Object object_info = 10 [json_name = "object_info"];
-
-  // Access control fields
   bool is_permanent = 11 [json_name = "is_permanent"];
   google.protobuf.Timestamp expires_at = 12 [json_name = "expires_at"];
   int32 max_downloads = 13 [json_name = "max_downloads"];
   int32 download_count = 14 [json_name = "download_count"];
+  // Matches ent's CreateTime field for automatic DTO mapping
+  google.protobuf.Timestamp create_time = 15 [json_name = "create_time"];
+  // Matches ent's UpdateTime field for automatic DTO mapping
+  google.protobuf.Timestamp update_time = 16 [json_name = "update_time"];
 }

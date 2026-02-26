@@ -2,9 +2,9 @@
   <configuration default="false" name="backend" type="CompoundRunConfigurationType">
     <toRun name="filemanager" type="GoApplicationRunConfiguration"/>
     <toRun name="gateway" type="GoApplicationRunConfiguration"/>
-    <toRun name="objectstore" type="GoApplicationRunConfiguration"/>
     <toRun name="identity" type="GoApplicationRunConfiguration"/>
     <toRun name="initializer" type="GoApplicationRunConfiguration"/>
+    <toRun name="objectstore" type="GoApplicationRunConfiguration"/>
     <toRun name="system" type="GoApplicationRunConfiguration"/>
     <method v="2"/>
   </configuration>

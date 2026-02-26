@@ -118,6 +118,7 @@ var (
 		{Name: "expires_at", Type: field.TypeTime, Nullable: true, Comment: "Access expiration time (nullable, means no expiration)"},
 		{Name: "max_downloads", Type: field.TypeInt, Comment: "Maximum download count (0 means unlimited)", Default: 0},
 		{Name: "download_count", Type: field.TypeInt, Comment: "Current download count", Default: 0},
+		{Name: "sha256", Type: field.TypeString, Nullable: true, Comment: "SHA-256 hash of the file for integrity verification"},
 	}
 	// FmFilesTable holds the schema information for the "fm_files" table.
 	FmFilesTable = &schema.Table{

@@ -237,7 +237,6 @@ paths:
     get:
       tags:
         - FileManagerService
-      description: Lists files with pagination and filtering.
       operationId: FileManagerService_ListFiles
       parameters:
         - name: page
@@ -250,6 +249,22 @@ paths:
           schema:
             type: integer
             format: int32
+        - name: page_token
+          in: query
+          schema:
+            type: string
+        - name: paging_mode
+          in: query
+          schema:
+            type: string
+        - name: only_count
+          in: query
+          schema:
+            type: boolean
+        - name: keyword
+          in: query
+          schema:
+            type: string
         - name: owner_id
           in: query
           schema:
@@ -274,7 +289,6 @@ paths:
     post:
       tags:
         - FileManagerService
-      description: Simple upload for small files (e.g. avatars, images).
       operationId: FileManagerService_UploadFile
             requestBody:
                 content:
@@ -299,7 +313,6 @@ paths:
     post:
       tags:
         - FileManagerService
-      description: Initiates a multipart upload for large files.
       operationId: FileManagerService_InitiateMultipartUpload
       requestBody:
         content:
@@ -324,7 +337,6 @@ paths:
     delete:
       tags:
         - FileManagerService
-      description: Aborts a multipart upload.
       operationId: FileManagerService_AbortMultipartUpload
       parameters:
         - name: upload_id
@@ -349,7 +361,6 @@ paths:
     post:
             tags:
               - FileManagerService
-            description: Completes a multipart upload.
             operationId: FileManagerService_CompleteMultipartUpload
             parameters:
               - name: upload_id
@@ -380,7 +391,6 @@ paths:
         get:
             tags:
               - FileManagerService
-            description: Gets a presigned URL for a specific part of a multipart upload.
             operationId: FileManagerService_GetMultipartUploadUrl
             parameters:
               - name: upload_id
@@ -411,7 +421,6 @@ paths:
     get:
       tags:
         - FileManagerService
-      description: Gets file metadata.
       operationId: FileManagerService_GetFile
       parameters:
         - name: id
@@ -435,7 +444,6 @@ paths:
     put:
       tags:
         - FileManagerService
-      description: Updates file metadata.
       operationId: FileManagerService_UpdateFile
       parameters:
         - name: id
@@ -465,7 +473,6 @@ paths:
     delete:
       tags:
         - FileManagerService
-      description: Deletes a file and its metadata.
       operationId: FileManagerService_DeleteFile
       parameters:
         - name: id
@@ -2637,7 +2644,6 @@ components:
       api.v1.services.filemanager.AbortMultipartUploadResponse:
         type: object
         properties: { }
-        description: Response message for aborting a multipart upload.
       api.v1.services.filemanager.CompleteMultipartUploadRequest:
         type: object
         properties:
@@ -2647,17 +2653,16 @@ components:
             type: array
             items:
               $ref: '#/components/schemas/api.v1.services.filemanager.PartInfo'
-        description: Request message for completing a multipart upload.
+          sha256:
+            type: string
       api.v1.services.filemanager.CompleteMultipartUploadResponse:
         type: object
         properties:
           file_metadata:
             $ref: '#/components/schemas/api.v1.services.types.FileMetadata'
-        description: Response message for completing a multipart upload.
       api.v1.services.filemanager.DeleteFileResponse:
         type: object
         properties: { }
-        description: Response message for deleting a file.
       api.v1.services.filemanager.GetFileResponse:
         type: object
         properties:
@@ -2665,13 +2670,11 @@ components:
             $ref: '#/components/schemas/api.v1.services.types.FileMetadata'
           download_url:
             type: string
-        description: Response message for getting file metadata.
       api.v1.services.filemanager.GetMultipartUploadUrlResponse:
         type: object
         properties:
           upload_url:
             type: string
-        description: Response message for getting a multipart upload URL.
       api.v1.services.filemanager.InitiateMultipartUploadRequest:
         type: object
         properties:
@@ -2683,24 +2686,31 @@ components:
             type: string
           visibility:
             type: string
-        description: Request message for initiating a multipart upload.
       api.v1.services.filemanager.InitiateMultipartUploadResponse:
             type: object
             properties:
               upload_id:
                 type: string
-            description: Response message for initiating a multipart upload.
       api.v1.services.filemanager.ListFilesResponse:
         type: object
         properties:
+          total:
+            type: integer
+            format: int32
           files:
             type: array
             items:
               $ref: '#/components/schemas/api.v1.services.types.FileMetadata'
-          total_count:
+          page:
             type: integer
             format: int32
-        description: Response message for listing files.
+          page_size:
+            type: integer
+            format: int32
+          next_page_token:
+            type: string
+          extra:
+            $ref: '#/components/schemas/google.protobuf.Any'
       api.v1.services.filemanager.PartInfo:
         type: object
         properties:
@@ -2718,13 +2728,11 @@ components:
             type: string
           visibility:
             type: string
-        description: Request message for updating file metadata.
       api.v1.services.filemanager.UpdateFileResponse:
         type: object
         properties:
           file_metadata:
             $ref: '#/components/schemas/api.v1.services.types.FileMetadata'
-        description: Response message for updating file metadata.
       api.v1.services.filemanager.UploadFileRequest:
         type: object
         properties:
@@ -2737,13 +2745,11 @@ components:
             type: string
           visibility:
             type: string
-        description: Request message for uploading a small file directly.
       api.v1.services.filemanager.UploadFileResponse:
         type: object
         properties:
           file_metadata:
             $ref: '#/components/schemas/api.v1.services.types.FileMetadata'
-        description: Response message for uploading a file.
       api.v1.services.identity.CasbinRule:
         type: object
         properties:
@@ -3978,28 +3984,18 @@ components:
             type: string
           owner_id:
             type: string
-          created_time:
+          sha256:
             type: string
-            format: date-time
-          updated_time:
-            type: string
-            format: date-time
           visibility:
             type: string
-            description: 'Visibility of the file: "public" or "private"'
           mime_type:
             type: string
-            description: MIME type of the file (e.g., "image/jpeg")
           size:
             type: string
-            description: Size of the file in bytes
           object_info:
-            allOf:
-              - $ref: '#/components/schemas/api.v1.services.types.Object'
-            description: 'Optional: Detailed object info from ObjectStore (not stored in DB)'
+            $ref: '#/components/schemas/api.v1.services.types.Object'
           is_permanent:
             type: boolean
-            description: Access control fields
           expires_at:
             type: string
             format: date-time
@@ -4009,7 +4005,15 @@ components:
           download_count:
             type: integer
             format: int32
-        description: Represents file metadata managed by the filemanager service.
+          create_time:
+            type: string
+            description: Matches ent's CreateTime field for automatic DTO mapping
+            format: date-time
+          update_time:
+            type: string
+            description: Matches ent's UpdateTime field for automatic DTO mapping
+            format: date-time
+        description: Represents metadata for a file managed by the FileManager.
       api.v1.services.types.Notification:
         type: object
         properties:
@@ -4059,7 +4063,7 @@ components:
             type: string
           content_type:
             type: string
-          created_time:
+          create_time:
             type: string
             format: date-time
         description: Represents a stored object.
@@ -4646,7 +4650,6 @@ tags:
     - name: DepartmentService
       description: The organization department service definition.
   - name: FileManagerService
-    description: The FileManager service definition.
     - name: MeService
       description: Service MeService provides APIs for currently authenticated user to manage their own profile and data.
   - name: NotificationService

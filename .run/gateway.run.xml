@@ -5,6 +5,7 @@
     <kind value="PACKAGE" />
     <package value="origadmin/application/admin/cmd/gateway" />
     <directory value="$PROJECT_DIR$" />
+      <pty_enabled value="true"/>
     <method v="2" />
   </configuration>
 </component>

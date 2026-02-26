@@ -241,6 +241,26 @@ func (_u *FileUpdate) AddDownloadCount(v int) *FileUpdate {
 	return _u
 }
 
+// SetSha256 sets the "sha256" field.
+func (_u *FileUpdate) SetSha256(v string) *FileUpdate {
+	_u.mutation.SetSha256(v)
+	return _u
+}
+
+// SetNillableSha256 sets the "sha256" field if the given value is not nil.
+func (_u *FileUpdate) SetNillableSha256(v *string) *FileUpdate {
+	if v != nil {
+		_u.SetSha256(*v)
+	}
+	return _u
+}
+
+// ClearSha256 clears the value of the "sha256" field.
+func (_u *FileUpdate) ClearSha256() *FileUpdate {
+	_u.mutation.ClearSha256()
+	return _u
+}
+
 // Mutation returns the FileMutation object of the builder.
 func (_u *FileUpdate) Mutation() *FileMutation {
 	return _u.mutation
@@ -368,6 +388,12 @@ func (_u *FileUpdate) sqlSave(ctx context.Context) (_node int, err error) {
 	}
 	if value, ok := _u.mutation.AddedDownloadCount(); ok {
 		_spec.AddField(file.FieldDownloadCount, field.TypeInt, value)
+	}
+	if value, ok := _u.mutation.Sha256(); ok {
+		_spec.SetField(file.FieldSha256, field.TypeString, value)
+	}
+	if _u.mutation.Sha256Cleared() {
+		_spec.ClearField(file.FieldSha256, field.TypeString)
 	}
 	_spec.AddModifiers(_u.modifiers...)
 	if _node, err = sqlgraph.UpdateNodes(ctx, _u.driver, _spec); err != nil {
@@ -603,6 +629,26 @@ func (_u *FileUpdateOne) AddDownloadCount(v int) *FileUpdateOne {
 	return _u
 }
 
+// SetSha256 sets the "sha256" field.
+func (_u *FileUpdateOne) SetSha256(v string) *FileUpdateOne {
+	_u.mutation.SetSha256(v)
+	return _u
+}
+
+// SetNillableSha256 sets the "sha256" field if the given value is not nil.
+func (_u *FileUpdateOne) SetNillableSha256(v *string) *FileUpdateOne {
+	if v != nil {
+		_u.SetSha256(*v)
+	}
+	return _u
+}
+
+// ClearSha256 clears the value of the "sha256" field.
+func (_u *FileUpdateOne) ClearSha256() *FileUpdateOne {
+	_u.mutation.ClearSha256()
+	return _u
+}
+
 // Mutation returns the FileMutation object of the builder.
 func (_u *FileUpdateOne) Mutation() *FileMutation {
 	return _u.mutation
@@ -760,6 +806,12 @@ func (_u *FileUpdateOne) sqlSave(ctx context.Context) (_node *File, err error) {
 	}
 	if value, ok := _u.mutation.AddedDownloadCount(); ok {
 		_spec.AddField(file.FieldDownloadCount, field.TypeInt, value)
+	}
+	if value, ok := _u.mutation.Sha256(); ok {
+		_spec.SetField(file.FieldSha256, field.TypeString, value)
+	}
+	if _u.mutation.Sha256Cleared() {
+		_spec.ClearField(file.FieldSha256, field.TypeString)
 	}
 	_spec.AddModifiers(_u.modifiers...)
 	_node = &File{config: _u.config}

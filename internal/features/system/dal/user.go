@@ -9,7 +9,6 @@ import (
 	"errors"
 
 	"entgo.io/ent/dialect/sql"
-	"github.com/google/uuid"
 
 	"github.com/origadmin/runtime/log"
 	"origadmin/application/admin/api/v1/services/types"
@@ -23,6 +22,7 @@ import (
 	"origadmin/application/admin/internal/features/system/dto"
 	"origadmin/application/admin/internal/helpers/contextutil"
 	"origadmin/application/admin/internal/helpers/db"
+	"origadmin/application/admin/internal/helpers/idutil"
 	"origadmin/application/admin/internal/helpers/repo"
 )
 
@@ -491,12 +491,12 @@ func (r *userRepo) Create(ctx context.Context, u *types.User, password string, o
 	}
 
 	entUser := dto.ConvertUserPBToUser(u)
-	uid, err := uuid.NewRandom()
+	uid, err := idutil.GenStringUUID()
 	if err != nil {
 		r.log.WithContext(ctx).Errorw("msg", "Create.NewRandom", "err", err)
 		return nil, err
 	}
-	entUser.UUID = uid.String()
+	entUser.UUID = uid
 	if password != "" {
 		entUser.EncryptedPassword = password
 	}

@@ -48,6 +48,9 @@ func (File) Fields() []ent.Field {
 		field.Int("download_count").
 			Comment("Current download count").
 			Default(0),
+		field.String("sha256").
+			Comment("SHA-256 hash of the file for integrity verification").
+			Optional(),
 	}
 }
 

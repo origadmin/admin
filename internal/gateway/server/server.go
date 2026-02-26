@@ -8,13 +8,11 @@ import (
 	"errors"
 	"fmt"
 	stdhttp "net/http"
-	"time"
 
 	"github.com/go-kratos/kratos/v2/log"
 	kratoshttp "github.com/go-kratos/kratos/v2/transport/http"
 	"github.com/goexts/generic/maps"
 	"github.com/google/wire"
-	"google.golang.org/protobuf/types/known/durationpb"
 
 	"github.com/origadmin/runtime"
 	httpv1 "github.com/origadmin/runtime/api/gen/go/config/transport/http/v1"
@@ -85,9 +83,6 @@ func NewHTTPServer(
 	if cfg == nil {
 		return nil, errors.New("http config is nil")
 	}
-
-	// Set a longer timeout for the HTTP server to accommodate file operations.
-	cfg.Timeout = durationpb.New(30 * time.Second)
 
 	mws, err := middlewareProvider.ServerMiddlewares()
 	if err != nil {

@@ -5,7 +5,7 @@ servers:
       protocol: "http"
       http:
         addr: "0.0.0.0:8000"
-        timeout: 10s
+        timeout: 60s
         cors:
           allowed_origins:
             - "*"
@@ -56,7 +56,7 @@ servers:
             address: "nats://${NATS_HOST:localhost}:${NATS_PORT:4222}"  # 使用容器网络名称
             jetstream_enabled: true
             jetstream_stream_name: "system_events"
-            # 添加连接超时配置
+            # Add a connection timeout configuration
             connect_timeout: 15s
             reconnect_wait: 2s
             max_reconnects: 10
@@ -81,7 +81,7 @@ servers:
       protocol: "grpc"
       grpc:
         addr: "0.0.0.0:18021"
-        timeout: 5s
+        timeout: 60s
         # Use the same middleware chain as other backend services
         middlewares:
           - "recovery"
@@ -91,7 +91,7 @@ servers:
       protocol: "http"
       http:
         addr: "0.0.0.0:18022"
-        timeout: 5s
+        timeout: 60s
         # Use the same middleware chain as other backend services
         middlewares:
           - "recovery"
@@ -100,7 +100,7 @@ servers:
       protocol: "grpc"
       grpc:
         addr: "0.0.0.0:18031"
-        timeout: 5s
+        timeout: 60s
         # Use the same middleware chain as other backend services
         middlewares:
           - "recovery"
@@ -110,7 +110,7 @@ servers:
       protocol: "http"
       http:
         addr: "0.0.0.0:18032"
-        timeout: 5s
+        timeout: 60s
         # Use the same middleware chain as other backend services
         middlewares:
           - "recovery"

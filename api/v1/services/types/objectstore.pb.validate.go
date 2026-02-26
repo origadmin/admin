@@ -67,11 +67,11 @@ func (m *Object) validate(all bool) error {
 	// no validation rules for ContentType
 
 	if all {
-		switch v := interface{}(m.GetCreatedTime()).(type) {
+		switch v := interface{}(m.GetCreateTime()).(type) {
 		case interface{ ValidateAll() error }:
 			if err := v.ValidateAll(); err != nil {
 				errors = append(errors, ObjectValidationError{
-					field:  "CreatedTime",
+					field:  "CreateTime",
 					reason: "embedded message failed validation",
 					cause:  err,
 				})
@@ -79,16 +79,16 @@ func (m *Object) validate(all bool) error {
 		case interface{ Validate() error }:
 			if err := v.Validate(); err != nil {
 				errors = append(errors, ObjectValidationError{
-					field:  "CreatedTime",
+					field:  "CreateTime",
 					reason: "embedded message failed validation",
 					cause:  err,
 				})
 			}
 		}
-	} else if v, ok := interface{}(m.GetCreatedTime()).(interface{ Validate() error }); ok {
+	} else if v, ok := interface{}(m.GetCreateTime()).(interface{ Validate() error }); ok {
 		if err := v.Validate(); err != nil {
 			return ObjectValidationError{
-				field:  "CreatedTime",
+				field:  "CreateTime",
 				reason: "embedded message failed validation",
 				cause:  err,
 			}

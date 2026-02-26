@@ -214,6 +214,20 @@ func (_c *FileCreate) SetNillableDownloadCount(v *int) *FileCreate {
 	return _c
 }
 
+// SetSha256 sets the "sha256" field.
+func (_c *FileCreate) SetSha256(v string) *FileCreate {
+	_c.mutation.SetSha256(v)
+	return _c
+}
+
+// SetNillableSha256 sets the "sha256" field if the given value is not nil.
+func (_c *FileCreate) SetNillableSha256(v *string) *FileCreate {
+	if v != nil {
+		_c.SetSha256(*v)
+	}
+	return _c
+}
+
 // SetID sets the "id" field.
 func (_c *FileCreate) SetID(v int64) *FileCreate {
 	_c.mutation.SetID(v)
@@ -434,6 +448,10 @@ func (_c *FileCreate) createSpec() (*File, *sqlgraph.CreateSpec) {
 	if value, ok := _c.mutation.DownloadCount(); ok {
 		_spec.SetField(file.FieldDownloadCount, field.TypeInt, value)
 		_node.DownloadCount = value
+	}
+	if value, ok := _c.mutation.Sha256(); ok {
+		_spec.SetField(file.FieldSha256, field.TypeString, value)
+		_node.Sha256 = value
 	}
 	return _node, _spec
 }

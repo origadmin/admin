@@ -6,13 +6,11 @@ package grpcclient
 
 import (
 	"fmt"
-	"time" // Explicitly add time here to be safe
 
 	"github.com/go-kratos/kratos/v2/log"
 	"github.com/go-kratos/kratos/v2/middleware"
 	"github.com/goexts/generic/maps"
 	"google.golang.org/grpc"
-	"google.golang.org/protobuf/types/known/durationpb"
 
 	"github.com/origadmin/runtime"
 	transportv1 "github.com/origadmin/runtime/api/gen/go/config/transport/v1"
@@ -66,10 +64,6 @@ func NewConn(
 		return nil, fmt.Errorf("gRPC client config not found for service: %s (checked name: '%s' and '%s')",
 			name, name, convention)
 	}
-
-	// For e2e tests, ensure gRPC client timeout is sufficient.
-	// This overrides any configured timeout in bootstrap config for this client.
-	clientConfig.GetGrpc().Timeout = durationpb.New(30 * time.Second)
 
 	// Get registry provider for service discovery
 	registryProvider, err := app.RegistryProvider()

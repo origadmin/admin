@@ -14,6 +14,8 @@ import (
 	runtimebootstrap "github.com/origadmin/runtime/bootstrap"
 	"github.com/origadmin/runtime/log"
 	_ "github.com/sqlite3ent/sqlite3"
+	_ "origadmin/application/admin/api/v1/services/filemanager"
+	_ "origadmin/application/admin/api/v1/services/objectstore"
 	"origadmin/application/admin/internal/conf"
 	_ "origadmin/application/admin/internal/data/entity/ent/runtime"
 	confhelper "origadmin/application/admin/internal/helpers/conf"

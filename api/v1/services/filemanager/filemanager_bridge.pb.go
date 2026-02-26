@@ -39,23 +39,14 @@ const FileManagerServiceUpdateFileBridgeOperation = "/api.v1.services.filemanage
 const FileManagerServiceDeleteFileBridgeOperation = "/api.v1.services.filemanager.FileManagerService/DeleteFile"
 
 type FileManagerServiceBridgeServer interface {
-	// Simple upload for small files (e.g. avatars, images).
 	UploadFile(context.Context, *UploadFileRequest) (*UploadFileResponse, error)
-	// Initiates a multipart upload for large files.
 	InitiateMultipartUpload(context.Context, *InitiateMultipartUploadRequest) (*InitiateMultipartUploadResponse, error)
-	// Gets a presigned URL for a specific part of a multipart upload.
 	GetMultipartUploadUrl(context.Context, *GetMultipartUploadUrlRequest) (*GetMultipartUploadUrlResponse, error)
-	// Completes a multipart upload.
 	CompleteMultipartUpload(context.Context, *CompleteMultipartUploadRequest) (*CompleteMultipartUploadResponse, error)
-	// Aborts a multipart upload.
 	AbortMultipartUpload(context.Context, *AbortMultipartUploadRequest) (*AbortMultipartUploadResponse, error)
-	// Gets file metadata.
 	GetFile(context.Context, *GetFileRequest) (*GetFileResponse, error)
-	// Lists files with pagination and filtering.
 	ListFiles(context.Context, *ListFilesRequest) (*ListFilesResponse, error)
-	// Updates file metadata.
 	UpdateFile(context.Context, *UpdateFileRequest) (*UpdateFileResponse, error)
-	// Deletes a file and its metadata.
 	DeleteFile(context.Context, *DeleteFileRequest) (*DeleteFileResponse, error)
 }
 

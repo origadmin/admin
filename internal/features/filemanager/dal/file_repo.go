@@ -42,6 +42,7 @@ func (r *FileRepo) Create(ctx context.Context, in *types.FileMetadata, opts ...*
 		SetVisibility(in.Visibility).
 		SetMimeType(in.MimeType).
 		SetSize(in.Size).
+		SetSha256(in.Sha256).
 		Save(ctx)
 	if err != nil {
 		return nil, err
@@ -107,6 +108,15 @@ func (r *FileRepo) Update(ctx context.Context, in *types.FileMetadata, opts ...*
 	}
 	if in.Visibility != "" {
 		updater.SetVisibility(in.Visibility)
+	}
+	if in.ObjectId != "" {
+		updater.SetObjectID(in.ObjectId)
+	}
+	if in.Size > 0 {
+		updater.SetSize(in.Size)
+	}
+	if in.Sha256 != "" {
+		updater.SetSha256(in.Sha256)
 	}
 
 	if err := updater.Exec(ctx); err != nil {

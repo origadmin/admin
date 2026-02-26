@@ -36,6 +36,35 @@
         ]
       },
       {
+        "name": "File Management",
+        "keyword": "file_management",
+        "path": "/file-management",
+        "icon": "folder",
+        "scope": "sidebar",
+        "type": "GROUP",
+        "sequence": 15,
+        "children": [
+          {
+            "name": "File Manager",
+            "keyword": "file_management:file-manager",
+            "path": "/file-manager",
+            "icon": "folder",
+            "scope": "sidebar",
+            "type": "MENU",
+            "sequence": 16
+          },
+          {
+            "name": "Object Store",
+            "keyword": "file_management:object-store",
+            "path": "/object-store",
+            "icon": "database",
+            "scope": "sidebar",
+            "type": "MENU",
+            "sequence": 17
+          }
+        ]
+      },
+      {
         "name": "System",
         "keyword": "system",
         "path": "/system",

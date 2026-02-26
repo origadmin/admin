@@ -48,7 +48,9 @@ type File struct {
 	MaxDownloads int `json:"max_downloads,omitempty"`
 	// Current download count
 	DownloadCount int `json:"download_count,omitempty"`
-	selectValues  sql.SelectValues
+	// SHA-256 hash of the file for integrity verification
+	Sha256       string `json:"sha256,omitempty"`
+	selectValues sql.SelectValues
 }
 
 // scanValues returns the types for scanning values from sql.Rows.
@@ -60,7 +62,7 @@ func (*File) scanValues(columns []string) ([]any, error) {
 			values[i] = new(sql.NullBool)
 		case file.FieldID, file.FieldCreateAuthor, file.FieldUpdateAuthor, file.FieldOwnerID, file.FieldSize, file.FieldMaxDownloads, file.FieldDownloadCount:
 			values[i] = new(sql.NullInt64)
-		case file.FieldName, file.FieldObjectID, file.FieldVisibility, file.FieldMimeType:
+		case file.FieldName, file.FieldObjectID, file.FieldVisibility, file.FieldMimeType, file.FieldSha256:
 			values[i] = new(sql.NullString)
 		case file.FieldCreateTime, file.FieldUpdateTime, file.FieldDeleteTime, file.FieldExpiresAt:
 			values[i] = new(sql.NullTime)
@@ -176,6 +178,12 @@ func (_m *File) assignValues(columns []string, values []any) error {
 			} else if value.Valid {
 				_m.DownloadCount = int(value.Int64)
 			}
+		case file.FieldSha256:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field sha256", values[i])
+			} else if value.Valid {
+				_m.Sha256 = value.String
+			}
 		default:
 			_m.selectValues.Set(columns[i], values[i])
 		}
@@ -258,6 +266,9 @@ func (_m *File) String() string {
 	builder.WriteString(", ")
 	builder.WriteString("download_count=")
 	builder.WriteString(fmt.Sprintf("%v", _m.DownloadCount))
+	builder.WriteString(", ")
+	builder.WriteString("sha256=")
+	builder.WriteString(_m.Sha256)
 	builder.WriteByte(')')
 	return builder.String()
 }
