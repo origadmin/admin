@@ -17,6 +17,7 @@ import (
 	httpv1 "github.com/origadmin/runtime/api/gen/go/config/transport/http/v1"
 	transportv1 "github.com/origadmin/runtime/api/gen/go/config/transport/v1"
 	"github.com/origadmin/runtime/container"
+	"github.com/origadmin/runtime/log"
 	"github.com/origadmin/runtime/service/transport"
 	runtimegrpc "github.com/origadmin/runtime/service/transport/grpc"
 	runtimehttp "github.com/origadmin/runtime/service/transport/http"
@@ -66,7 +67,7 @@ func NewServers(
 
 // NewHTTPServer new an HTTP server.
 func NewHTTPServer(
-	_ *runtime.App,
+	app *runtime.App,
 	cfg *httpv1.Server,
 	objectStoreSvc *objSvc.ObjectStoreService,
 	provider container.ServerMiddlewareProvider,
@@ -85,10 +86,13 @@ func NewHTTPServer(
 	}
 
 	objPb.RegisterObjectStoreServiceHTTPServer(srv, objectStoreSvc)
+	// Manually register handlers for paths not covered by proto (e.g., PUT for multipart)
+	objectStoreSvc.RegisterHandlers(srv)
 
-	// Register static file handler for local simulation downloads
-	staticPath := "/objects/"
-	srv.HandlePrefix(staticPath, stdhttp.StripPrefix(staticPath, stdhttp.FileServer(stdhttp.Dir(storageCfg.BasePath))))
+	helper := log.NewHelper(app.Logger())
+	srv.WalkHandle(func(method, path string, handler stdhttp.HandlerFunc) {
+		helper.Infow(log.DefaultMessageKey, "Registered http handler", "method", method, "path", path)
+	})
 
 	return srv, nil
 }

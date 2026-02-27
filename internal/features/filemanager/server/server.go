@@ -68,7 +68,7 @@ func NewServers(
 
 // NewHTTPServer new an HTTP server.
 func NewHTTPServer(
-	_ *runtime.App,
+	app *runtime.App,
 	cfg *httpv1.Server,
 	fileManagerSvc *fmSvc.FileManagerService,
 	provider container.ServerMiddlewareProvider,
@@ -92,8 +92,9 @@ func NewHTTPServer(
 
 	fmPb.RegisterFileManagerServiceHTTPServer(srv, fileManagerSvc)
 
+	helper := log.NewHelper(app.Logger())
 	srv.WalkHandle(func(method, path string, handler stdhttp.HandlerFunc) {
-		log.Infof("HTTP %s %s", method, path)
+		helper.Infow(log.DefaultMessageKey, "Registered http handler", "method", method, "path", path)
 	})
 	return srv, nil
 }

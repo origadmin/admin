@@ -4,6 +4,7 @@ package conf
 import (
 	"fmt"
 
+	securityv1 "github.com/origadmin/contrib/api/gen/go/security/v1"
 	brokerv1 "github.com/origadmin/runtime/api/gen/go/config/broker/v1"
 	datav1 "github.com/origadmin/runtime/api/gen/go/config/data/v1"
 	discoveryv1 "github.com/origadmin/runtime/api/gen/go/config/discovery/v1"
@@ -72,6 +73,11 @@ func (c *Config) Servers() *transportv1.Servers {
 // Clients returns the clients configuration.
 func (c *Config) Clients() *transportv1.Clients {
 	return c.Bootstrap.GetClients()
+}
+
+// Security returns the security configuration.
+func (c *Config) Security() *securityv1.Security {
+	return c.Bootstrap.GetSecurity()
 }
 
 // Captcha returns the captcha configuration.

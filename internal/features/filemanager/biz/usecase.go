@@ -160,7 +160,12 @@ func (uc *FileUseCase) DeleteFile(ctx context.Context, id int64) error {
 	return uc.repo.Delete(ctx, id)
 }
 func (uc *FileUseCase) GetMultipartUploadUrl(ctx context.Context, uploadID string, partNumber int32) (string, error) {
-	resp, err := uc.obj.GetMultipartUploadUrl(ctx, &objclient.GetMultipartUploadUrlRequest{UploadId: uploadID, PartNumber: partNumber})
+	// FIX: Must pass ObjectId to satisfy ObjectStore's route requirements
+	resp, err := uc.obj.GetMultipartUploadUrl(ctx, &objclient.GetMultipartUploadUrlRequest{
+		UploadId:   uploadID,
+		ObjectId:   uploadID, // Fallback to uploadID as objectID for local storage
+		PartNumber: partNumber,
+	})
 	if err != nil {
 		return "", err
 	}

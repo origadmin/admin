@@ -5,6 +5,7 @@
  * Copyright (c) 2024 OrigAdmin. All rights reserved.
  */
 
+// The build tag makes sure the stub is not built in the final build.
 package main
 
 import (
@@ -13,7 +14,6 @@ import (
 
 	"github.com/origadmin/runtime"
 	"origadmin/application/admin/internal/conf"
-	"origadmin/application/admin/internal/data"
 	"origadmin/application/admin/internal/features/objectstore/biz"
 	"origadmin/application/admin/internal/features/objectstore/dal"
 	"origadmin/application/admin/internal/features/objectstore/server"
@@ -22,19 +22,16 @@ import (
 )
 
 // wireApp init kratos application.
-func wireApp(app *runtime.App, c *conf.Config) (*kratos.App, func(), error) {
+func wireApp(*runtime.App, *conf.Config) (*kratos.App, func(), error) {
 	panic(wire.Build(
-		// Shared infrastructure providers
+		// Common providers
 		providers.ProviderBackendSet,
-		data.ProviderSet, // Provides database connection
 
-		// Server
-		server.ProviderSet,
-
-		// ObjectStore Feature
-		biz.ProviderSet,
+		// Feature-specific providers
 		dal.ProviderSet,
+		biz.ProviderSet,
 		service.ProviderSet,
+		server.ProviderSet,
 
 		NewApp,
 	))

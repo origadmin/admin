@@ -6,12 +6,8 @@ package server
 
 import (
 	"errors"
-	"fmt"
-	stdhttp "net/http"
 
-	"github.com/go-kratos/kratos/v2/log"
 	kratoshttp "github.com/go-kratos/kratos/v2/transport/http"
-	"github.com/goexts/generic/maps"
 	"github.com/google/wire"
 
 	"github.com/origadmin/runtime"
@@ -19,7 +15,7 @@ import (
 	transportv1 "github.com/origadmin/runtime/api/gen/go/config/transport/v1"
 	"github.com/origadmin/runtime/container"
 	"github.com/origadmin/runtime/service/transport"
-	"github.com/origadmin/runtime/service/transport/http"
+	runtimehttp "github.com/origadmin/runtime/service/transport/http"
 	"origadmin/application/admin/internal/conf"
 	"origadmin/application/admin/internal/gateway/service"
 	"origadmin/application/admin/internal/gateway/web"
@@ -28,58 +24,46 @@ import (
 // ProviderSet is server providers.
 var ProviderSet = wire.NewSet(
 	NewServers,
-	NewObjectStoreProxy, // Register the Proxy provider
+	NewObjectStoreProxy,
 )
 
-// NewServers creates and configures the gateway service servers (HTTP).
+// NewServers creates and configures the gateway service servers.
 func NewServers(
 	app *runtime.App,
-	bootstrap *conf.Config, // Pass bootstrap config
-	serversCfg *transportv1.Servers,
-	svc *service.GatewayService,
-	proxy *ObjectStoreProxy, // Inject the Proxy
+	bootstrap *conf.Config,
+	cfg *transportv1.Servers,
+	gatewayService *service.GatewayService,
+	objectStoreProxy *ObjectStoreProxy,
 	middlewareProvider container.ServerMiddlewareProvider,
 ) ([]transport.Server, error) {
-	if serversCfg == nil {
+	if cfg == nil {
 		return nil, errors.New("servers config is nil")
 	}
 
 	var transportServers []transport.Server
-	for _, serverCfg := range serversCfg.GetConfigs() {
-		// Filter server configurations by name.
-		if serverCfg.GetName() != "gateway" && serverCfg.GetName() != "origadmin.server.gateway" {
+	for _, serverCfg := range cfg.GetConfigs() {
+		if serverCfg.GetName() != "gateway" {
 			continue
 		}
-
-		switch serverCfg.GetProtocol() {
-		case "http":
-			// Pass proxy to NewHTTPServer
-			srv, err := NewHTTPServer(app, bootstrap, serverCfg.GetHttp(), svc, proxy, middlewareProvider)
+		if serverCfg.GetProtocol() == "http" {
+			srv, err := NewHTTPServer(app, bootstrap, serverCfg.GetHttp(), gatewayService, objectStoreProxy, middlewareProvider)
 			if err != nil {
 				return nil, err
 			}
 			transportServers = append(transportServers, srv)
-		default:
-			log.NewHelper(app.Logger()).Warn("protocol", serverCfg.GetProtocol(), "msg", "protocol is not supported")
 		}
 	}
-
-	if len(transportServers) == 0 {
-		return nil, errors.New("no servers named 'gateway' or 'origadmin.server.gateway' were created")
-	}
-
 	return transportServers, nil
 }
 
-// NewHTTPServer creates a new HTTP server and registers all downstream service handlers.
 func NewHTTPServer(
 	app *runtime.App,
-	bootstrap *conf.Config, // Pass bootstrap config
+	_ *conf.Config,
 	cfg *httpv1.Server,
-	svc *service.GatewayService,
-	proxy *ObjectStoreProxy, // Inject the Proxy
+	gatewayService *service.GatewayService,
+	objectStoreProxy *ObjectStoreProxy,
 	middlewareProvider container.ServerMiddlewareProvider,
-) (transport.Server, error) {
+) (*transport.HTTPServer, error) {
 	if cfg == nil {
 		return nil, errors.New("http config is nil")
 	}
@@ -88,42 +72,29 @@ func NewHTTPServer(
 	if err != nil {
 		return nil, err
 	}
-
 	serverOpts := []kratoshttp.ServerOption{
 		kratoshttp.PathPrefix(conf.APIPrefix),
 	}
 
-	logger := log.NewHelper(app.Logger())
-	logger.Infow("msg", "Registering middleware", "middlewares", maps.Keys(mws))
-	opts := &http.ServerOptions{
-		ServerOptions:     serverOpts,
+	// Use standard runtime server creation
+	srv, err := runtimehttp.NewServer(cfg, &runtimehttp.ServerOptions{
 		ServerMiddlewares: mws,
-	}
-
-	srv, err := http.NewServer(cfg, opts)
+		ServerOptions:     serverOpts,
+	})
 	if err != nil {
 		return nil, err
 	}
 
-	// 1. Register generated gRPC-Gateway handlers (standard API)
-	svc.RegisterHTTPHandlers(srv)
+	// 1. Register generated service handlers
+	gatewayService.RegisterHTTPHandlers(srv)
 
-	// 2. Register Custom Proxy Handlers (Frontend-friendly API)
-	// Register each handler separately with proper middleware support
-	proxy.RegisterHandlers(srv)
+	// 2. Register custom storage proxy handlers
+	objectStoreProxy.RegisterHandlers(srv)
 
-	// Try to get the handler for the embedded Web UI.
-	webUIHandler, err := web.GetHandler()
-	if err == nil {
-		logger.Infow("msg", "Embedded Web UI is enabled and will be served.")
+	// 3. UI Handler (Conditional)
+	if webUIHandler, err := web.GetHandler(); err == nil && webUIHandler != nil {
 		srv.HandlePrefix("/", webUIHandler)
-	} else {
-		logger.Warnw("msg", "Embedded Web UI is disabled. To enable, build with '-tags embed_ui'.")
 	}
 
-	// Log all registered HTTP routes for debugging and verification
-	srv.WalkHandle(func(method, path string, handler stdhttp.HandlerFunc) {
-		fmt.Printf("HTTP %s %s\n", method, path)
-	})
 	return srv, nil
 }

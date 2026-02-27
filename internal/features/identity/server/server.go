@@ -76,7 +76,7 @@ func NewServers(
 
 // NewHTTPServer new an HTTP server.
 func NewHTTPServer(
-	_ *runtime.App,
+	app *runtime.App,
 	cfg *httpv1.Server,
 	identitySvc *service.AuthService,
 	meSvc *service.MeService,
@@ -103,8 +103,9 @@ func NewHTTPServer(
 	identityv1.RegisterAuthServiceHTTPServer(srv, identitySvc)
 	identityv1.RegisterMeServiceHTTPServer(srv, meSvc)
 	identityv1.RegisterAdminServiceHTTPServer(srv, adminSvc)
+	helper := log.NewHelper(app.Logger())
 	srv.WalkHandle(func(method, path string, handler stdhttp.HandlerFunc) {
-		log.Infof("HTTP %s %s", method, path)
+		helper.Infow(log.DefaultMessageKey, "Registered http handler", "method", method, "path", path)
 	})
 	return srv, nil
 }

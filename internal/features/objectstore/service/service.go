@@ -8,16 +8,49 @@ import (
 	"bytes"
 	"context"
 	"io"
+	"net/http"
+	"strconv"
 	"time"
 
 	"github.com/go-kratos/kratos/v2/log"
 	"github.com/go-kratos/kratos/v2/transport"
+	httptransport "github.com/go-kratos/kratos/v2/transport/http"
 	"github.com/google/wire"
 	"google.golang.org/genproto/googleapis/api/httpbody"
 
 	pb "origadmin/application/admin/api/v1/services/objectstore"
 	"origadmin/application/admin/internal/features/objectstore/biz"
 )
+
+// ... (ObjectStoreService struct definition)
+
+func (s *ObjectStoreService) RegisterHandlers(srv *httptransport.Server) {
+	// FIX: Use '/obs/multipart' to align with physical directory separation
+	srv.Route("/").PUT("/obs/multipart/{object_id}/uploads/{upload_id}/parts/{part_number}", s.handleUploadPart)
+}
+
+func (s *ObjectStoreService) handleUploadPart(ctx httptransport.Context) error {
+	oID := ctx.Vars().Get("object_id")
+	uID := ctx.Vars().Get("upload_id")
+	pNumStr := ctx.Vars().Get("part_number")
+	pNum, _ := strconv.Atoi(pNumStr)
+
+	s.log.Infof("[ObjectStore] handleUploadPart: oID=%s, uID=%s, pNum=%d, Length=%d", oID, uID, pNum, ctx.Request().ContentLength)
+
+	// Stream the body directly to the usecase (which calls LocalStorage.UploadPart)
+	etag, err := s.uc.UploadPart(ctx, oID, uID, int32(pNum), ctx.Request().Body)
+	if err != nil {
+		s.log.Errorf("[ObjectStore] UploadPart execution failed: %v", err)
+		return err
+	}
+
+	// Set ETag header required for successful multipart completion
+	if etag != "" {
+		ctx.Response().Header().Set("ETag", etag)
+	}
+
+	return ctx.Result(http.StatusOK, nil)
+}
 
 // ProviderSet is service providers.
 var ProviderSet = wire.NewSet(NewObjectStoreService)

@@ -17,96 +17,96 @@ servers:
     - url: http://localhost:8000
     - url: https://localhost:8000
 paths:
-  /admin/health:
-    get:
-      tags:
-        - AdminService
-      description: HealthCheck provides a simple health check endpoint.
-      operationId: AdminService_HealthCheck
-      responses:
-        "200":
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/api.v1.services.admin.HealthCheckResponse'
-        default:
-          description: Default error response
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/google.rpc.Status'
-  /auth/admin/enforcer/policies:
-    get:
-      tags:
-        - AdminService
-      description: |-
-        GetEnforcerPolicies retrieves all policy rules currently loaded into Casbin Enforcer's memory.
-         This is primarily for debugging and auditing purposes.
-      operationId: AdminService_GetEnforcerPolicies
-      responses:
-        "200":
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/api.v1.services.identity.GetEnforcerPoliciesResponse'
-        default:
-          description: Default error response
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/google.rpc.Status'
-  /auth/admin/sync:
-    post:
-      tags:
-        - AdminService
-      description: |-
-        ForcePolicySync triggers an immediate, full synchronization of all authorization policies.
-         This bypasses any debouncing or scheduled syncs and is a high-risk operation.
-      operationId: AdminService_ForcePolicySync
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/api.v1.services.identity.ForcePolicySyncRequest'
-        required: true
-      responses:
-        "200":
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/api.v1.services.identity.ForcePolicySyncResponse'
-        default:
-          description: Default error response
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/google.rpc.Status'
-  /auth/admin/sync/status:
-    get:
-      tags:
-        - AdminService
-      description: GetPolicySyncStatus retrieves current status and metrics of policy synchronization service.
-      operationId: AdminService_GetPolicySyncStatus
-      responses:
-        "200":
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/api.v1.services.identity.GetPolicySyncStatusResponse'
-        default:
-          description: Default error response
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/google.rpc.Status'
+    /admin/health:
+        get:
+            tags:
+                - AdminService
+            description: HealthCheck provides a simple health check endpoint.
+            operationId: AdminService_HealthCheck
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.v1.services.admin.HealthCheckResponse'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/google.rpc.Status'
+    /auth/admin/enforcer/policies:
+        get:
+            tags:
+                - AdminService
+            description: |-
+                GetEnforcerPolicies retrieves all policy rules currently loaded into Casbin Enforcer's memory.
+                 This is primarily for debugging and auditing purposes.
+            operationId: AdminService_GetEnforcerPolicies
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.v1.services.identity.GetEnforcerPoliciesResponse'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/google.rpc.Status'
+    /auth/admin/sync:
+        post:
+            tags:
+                - AdminService
+            description: |-
+                ForcePolicySync triggers an immediate, full synchronization of all authorization policies.
+                 This bypasses any debouncing or scheduled syncs and is a high-risk operation.
+            operationId: AdminService_ForcePolicySync
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/api.v1.services.identity.ForcePolicySyncRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.v1.services.identity.ForcePolicySyncResponse'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/google.rpc.Status'
+    /auth/admin/sync/status:
+        get:
+            tags:
+                - AdminService
+            description: GetPolicySyncStatus retrieves current status and metrics of policy synchronization service.
+            operationId: AdminService_GetPolicySyncStatus
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.v1.services.identity.GetPolicySyncStatusResponse'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/google.rpc.Status'
     /auth/captcha:
         get:
             tags:
-              - AuthService
+                - AuthService
             description: GetCaptcha generates a new captcha.
             operationId: AuthService_GetCaptcha
             parameters:
@@ -126,7 +126,7 @@ paths:
                     content:
                         application/json:
                             schema:
-                              $ref: '#/components/schemas/api.v1.services.identity.GetCaptchaResponse'
+                                $ref: '#/components/schemas/api.v1.services.identity.GetCaptchaResponse'
                 default:
                     description: Default error response
                     content:
@@ -136,14 +136,14 @@ paths:
     /auth/login:
         post:
             tags:
-              - AuthService
+                - AuthService
             description: Login authenticates a user and returns a token pair.
             operationId: AuthService_Login
             requestBody:
                 content:
                     application/json:
                         schema:
-                          $ref: '#/components/schemas/api.v1.services.identity.LoginRequest'
+                            $ref: '#/components/schemas/api.v1.services.identity.LoginRequest'
                 required: true
             responses:
                 "200":
@@ -151,7 +151,7 @@ paths:
                     content:
                         application/json:
                             schema:
-                              $ref: '#/components/schemas/api.v1.services.identity.LoginResponse'
+                                $ref: '#/components/schemas/api.v1.services.identity.LoginResponse'
                 default:
                     description: Default error response
                     content:
@@ -161,14 +161,14 @@ paths:
     /auth/logout:
         post:
             tags:
-              - AuthService
+                - AuthService
             description: Logout invalidates user's session.
             operationId: AuthService_Logout
             requestBody:
                 content:
                     application/json:
                         schema:
-                          $ref: '#/components/schemas/api.v1.services.identity.LogoutRequest'
+                            $ref: '#/components/schemas/api.v1.services.identity.LogoutRequest'
                 required: true
             responses:
                 "200":
@@ -176,7 +176,7 @@ paths:
                     content:
                         application/json:
                             schema:
-                              $ref: '#/components/schemas/api.v1.services.identity.LogoutResponse'
+                                $ref: '#/components/schemas/api.v1.services.identity.LogoutResponse'
                 default:
                     description: Default error response
                     content:
@@ -186,14 +186,14 @@ paths:
     /auth/refresh:
         post:
             tags:
-              - AuthService
+                - AuthService
             description: RefreshToken provides a new access token.
             operationId: AuthService_RefreshToken
             requestBody:
                 content:
                     application/json:
                         schema:
-                          $ref: '#/components/schemas/api.v1.services.identity.RefreshTokenRequest'
+                            $ref: '#/components/schemas/api.v1.services.identity.RefreshTokenRequest'
                 required: true
             responses:
                 "200":
@@ -201,7 +201,7 @@ paths:
                     content:
                         application/json:
                             schema:
-                              $ref: '#/components/schemas/api.v1.services.identity.RefreshTokenResponse'
+                                $ref: '#/components/schemas/api.v1.services.identity.RefreshTokenResponse'
                 default:
                     description: Default error response
                     content:
@@ -211,90 +211,14 @@ paths:
     /auth/register:
         post:
             tags:
-              - AuthService
+                - AuthService
             description: Register creates a new user account.
             operationId: AuthService_Register
             requestBody:
-              content:
-                application/json:
-                  schema:
-                    $ref: '#/components/schemas/api.v1.services.identity.RegisterRequest'
-              required: true
-            responses:
-              "200":
-                description: OK
-                content:
-                  application/json:
-                    schema:
-                      $ref: '#/components/schemas/api.v1.services.identity.RegisterResponse'
-              default:
-                description: Default error response
-                content:
-                  application/json:
-                    schema:
-                      $ref: '#/components/schemas/google.rpc.Status'
-  /fm/files:
-    get:
-      tags:
-        - FileManagerService
-      operationId: FileManagerService_ListFiles
-      parameters:
-        - name: page
-          in: query
-          schema:
-            type: integer
-            format: int32
-        - name: page_size
-          in: query
-          schema:
-            type: integer
-            format: int32
-        - name: page_token
-          in: query
-          schema:
-            type: string
-        - name: paging_mode
-          in: query
-          schema:
-            type: string
-        - name: only_count
-          in: query
-          schema:
-            type: boolean
-        - name: keyword
-          in: query
-          schema:
-            type: string
-        - name: owner_id
-          in: query
-          schema:
-            type: string
-        - name: visibility
-          in: query
-          schema:
-            type: string
-      responses:
-        "200":
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/api.v1.services.filemanager.ListFilesResponse'
-        default:
-          description: Default error response
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/google.rpc.Status'
-    post:
-      tags:
-        - FileManagerService
-      operationId: FileManagerService_UploadFile
-            requestBody:
                 content:
                     application/json:
                         schema:
-                          $ref: '#/components/schemas/api.v1.services.filemanager.UploadFileRequest'
+                            $ref: '#/components/schemas/api.v1.services.identity.RegisterRequest'
                 required: true
             responses:
                 "200":
@@ -302,191 +226,267 @@ paths:
                     content:
                         application/json:
                             schema:
-                              $ref: '#/components/schemas/api.v1.services.filemanager.UploadFileResponse'
-                default:
-                  description: Default error response
-                  content:
-                    application/json:
-                      schema:
-                        $ref: '#/components/schemas/google.rpc.Status'
-  /fm/files/multipart:
-    post:
-      tags:
-        - FileManagerService
-      operationId: FileManagerService_InitiateMultipartUpload
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/api.v1.services.filemanager.InitiateMultipartUploadRequest'
-                required: true
-            responses:
-              "200":
-                description: OK
-                content:
-                  application/json:
-                    schema:
-                      $ref: '#/components/schemas/api.v1.services.filemanager.InitiateMultipartUploadResponse'
-              default:
-                description: Default error response
-                content:
-                  application/json:
-                    schema:
-                      $ref: '#/components/schemas/google.rpc.Status'
-  /fm/files/multipart/{upload_id}:
-    delete:
-      tags:
-        - FileManagerService
-      operationId: FileManagerService_AbortMultipartUpload
-      parameters:
-        - name: upload_id
-          in: path
-          required: true
-          schema:
-            type: string
-            responses:
-                "200":
-                    description: OK
-                    content:
-                        application/json:
-                            schema:
-                              $ref: '#/components/schemas/api.v1.services.filemanager.AbortMultipartUploadResponse'
+                                $ref: '#/components/schemas/api.v1.services.identity.RegisterResponse'
                 default:
                     description: Default error response
                     content:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/google.rpc.Status'
-  /fm/files/multipart/{upload_id}/complete:
-    post:
-            tags:
-              - FileManagerService
-            operationId: FileManagerService_CompleteMultipartUpload
-            parameters:
-              - name: upload_id
-                  in: path
-                  required: true
-                  schema:
-                    type: string
-            requestBody:
-                content:
-                    application/json:
-                        schema:
-                          $ref: '#/components/schemas/api.v1.services.filemanager.CompleteMultipartUploadRequest'
-                required: true
-            responses:
-                "200":
-                    description: OK
-                    content:
-                        application/json:
-                            schema:
-                              $ref: '#/components/schemas/api.v1.services.filemanager.CompleteMultipartUploadResponse'
-                default:
-                    description: Default error response
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/google.rpc.Status'
-  /fm/files/multipart/{upload_id}/parts/{part_number}:
+    /fm/files:
         get:
             tags:
-              - FileManagerService
-            operationId: FileManagerService_GetMultipartUploadUrl
+                - FileManagerService
+            operationId: FileManagerService_ListFiles
             parameters:
-              - name: upload_id
+                - name: page
+                  in: query
+                  schema:
+                      type: integer
+                      format: int32
+                - name: page_size
+                  in: query
+                  schema:
+                      type: integer
+                      format: int32
+                - name: page_token
+                  in: query
+                  schema:
+                      type: string
+                - name: paging_mode
+                  in: query
+                  schema:
+                      type: string
+                - name: only_count
+                  in: query
+                  schema:
+                      type: boolean
+                - name: keyword
+                  in: query
+                  schema:
+                      type: string
+                - name: owner_id
+                  in: query
+                  schema:
+                      type: string
+                - name: visibility
+                  in: query
+                  schema:
+                      type: string
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.v1.services.filemanager.ListFilesResponse'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/google.rpc.Status'
+        post:
+            tags:
+                - FileManagerService
+            operationId: FileManagerService_UploadFile
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/api.v1.services.filemanager.UploadFileRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.v1.services.filemanager.UploadFileResponse'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/google.rpc.Status'
+    /fm/files/multipart:
+        post:
+            tags:
+                - FileManagerService
+            operationId: FileManagerService_InitiateMultipartUpload
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/api.v1.services.filemanager.InitiateMultipartUploadRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.v1.services.filemanager.InitiateMultipartUploadResponse'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/google.rpc.Status'
+    /fm/files/multipart/{upload_id}:
+        delete:
+            tags:
+                - FileManagerService
+            operationId: FileManagerService_AbortMultipartUpload
+            parameters:
+                - name: upload_id
+                  in: path
+                  required: true
+                  schema:
+                      type: string
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.v1.services.filemanager.AbortMultipartUploadResponse'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/google.rpc.Status'
+    /fm/files/multipart/{upload_id}/complete:
+        post:
+            tags:
+                - FileManagerService
+            operationId: FileManagerService_CompleteMultipartUpload
+            parameters:
+                - name: upload_id
                   in: path
                   required: true
                   schema:
                     type: string
-              - name: part_number
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/api.v1.services.filemanager.CompleteMultipartUploadRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.v1.services.filemanager.CompleteMultipartUploadResponse'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/google.rpc.Status'
+    /fm/files/multipart/{upload_id}/parts/{part_number}:
+        get:
+            tags:
+                - FileManagerService
+            operationId: FileManagerService_GetMultipartUploadUrl
+            parameters:
+                - name: upload_id
+                  in: path
+                  required: true
+                  schema:
+                    type: string
+                - name: part_number
                   in: path
                   required: true
                   schema:
                     type: integer
                     format: int32
             responses:
-              "200":
-                description: OK
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.v1.services.filemanager.GetMultipartUploadUrlResponse'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/google.rpc.Status'
+    /fm/files/{id}:
+        get:
+            tags:
+                - FileManagerService
+            operationId: FileManagerService_GetFile
+            parameters:
+                - name: id
+                  in: path
+                  required: true
+                  schema:
+                      type: string
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.v1.services.filemanager.GetFileResponse'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/google.rpc.Status'
+        put:
+            tags:
+                - FileManagerService
+            operationId: FileManagerService_UpdateFile
+            parameters:
+                - name: id
+                  in: path
+                  required: true
+                  schema:
+                      type: string
+            requestBody:
                 content:
-                  application/json:
-                    schema:
-                      $ref: '#/components/schemas/api.v1.services.filemanager.GetMultipartUploadUrlResponse'
-              default:
-                description: Default error response
-                content:
-                  application/json:
-                    schema:
-                      $ref: '#/components/schemas/google.rpc.Status'
-  /fm/files/{id}:
-    get:
-      tags:
-        - FileManagerService
-      operationId: FileManagerService_GetFile
-      parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: string
-      responses:
-        "200":
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/api.v1.services.filemanager.GetFileResponse'
-        default:
-          description: Default error response
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/google.rpc.Status'
-    put:
-      tags:
-        - FileManagerService
-      operationId: FileManagerService_UpdateFile
-      parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: string
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/api.v1.services.filemanager.UpdateFileRequest'
-        required: true
-      responses:
-        "200":
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/api.v1.services.filemanager.UpdateFileResponse'
-        default:
-          description: Default error response
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/google.rpc.Status'
-    delete:
-      tags:
-        - FileManagerService
-      operationId: FileManagerService_DeleteFile
-      parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: string
-      responses:
-        "200":
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/api.v1.services.filemanager.DeleteFileResponse'
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/api.v1.services.filemanager.UpdateFileRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.v1.services.filemanager.UpdateFileResponse'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/google.rpc.Status'
+        delete:
+            tags:
+                - FileManagerService
+            operationId: FileManagerService_DeleteFile
+            parameters:
+                - name: id
+                  in: path
+                  required: true
+                  schema:
+                      type: string
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.v1.services.filemanager.DeleteFileResponse'
                 default:
                     description: Default error response
                     content:
@@ -503,7 +503,7 @@ paths:
                 content:
                     application/json:
                         schema:
-                          $ref: '#/components/schemas/api.v1.services.identity.UpdatePasswordRequest'
+                            $ref: '#/components/schemas/api.v1.services.identity.UpdatePasswordRequest'
                 required: true
             responses:
                 "200":
@@ -511,56 +511,56 @@ paths:
                     content:
                         application/json:
                             schema:
-                              $ref: '#/components/schemas/api.v1.services.identity.UpdatePasswordResponse'
+                                $ref: '#/components/schemas/api.v1.services.identity.UpdatePasswordResponse'
                 default:
                     description: Default error response
                     content:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/google.rpc.Status'
-  /me/preferences:
-    get:
-      tags:
-        - MeService
-      description: GetUserPreferences retrieves user preferences (P2).
-      operationId: MeService_GetUserPreferences
-      responses:
-        "200":
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/api.v1.services.identity.GetUserPreferencesResponse'
-        default:
-          description: Default error response
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/google.rpc.Status'
-    put:
-      tags:
-        - MeService
-      description: UpdatePreferences updates user preferences (P2).
-      operationId: MeService_UpdatePreferences
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/api.v1.services.identity.UpdatePreferencesRequest'
-        required: true
-      responses:
-        "200":
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/api.v1.services.identity.UpdatePreferencesResponse'
-        default:
-          description: Default error response
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/google.rpc.Status'
+    /me/preferences:
+        get:
+            tags:
+                - MeService
+            description: GetUserPreferences retrieves user preferences (P2).
+            operationId: MeService_GetUserPreferences
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.v1.services.identity.GetUserPreferencesResponse'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/google.rpc.Status'
+        put:
+            tags:
+                - MeService
+            description: UpdatePreferences updates user preferences (P2).
+            operationId: MeService_UpdatePreferences
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/api.v1.services.identity.UpdatePreferencesRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.v1.services.identity.UpdatePreferencesResponse'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/google.rpc.Status'
     /me/profile:
         get:
             tags:
@@ -573,7 +573,7 @@ paths:
                     content:
                         application/json:
                             schema:
-                              $ref: '#/components/schemas/api.v1.services.identity.GetProfileResponse'
+                                $ref: '#/components/schemas/api.v1.services.identity.GetProfileResponse'
                 default:
                     description: Default error response
                     content:
@@ -589,7 +589,7 @@ paths:
                 content:
                     application/json:
                         schema:
-                          $ref: '#/components/schemas/api.v1.services.identity.UpdateProfileRequest'
+                            $ref: '#/components/schemas/api.v1.services.identity.UpdateProfileRequest'
                 required: true
             responses:
                 "200":
@@ -597,7 +597,7 @@ paths:
                     content:
                         application/json:
                             schema:
-                              $ref: '#/components/schemas/api.v1.services.identity.UpdateProfileResponse'
+                                $ref: '#/components/schemas/api.v1.services.identity.UpdateProfileResponse'
                 default:
                     description: Default error response
                     content:
@@ -616,7 +616,7 @@ paths:
                     content:
                         application/json:
                             schema:
-                              $ref: '#/components/schemas/api.v1.services.identity.GetUserResourcesResponse'
+                                $ref: '#/components/schemas/api.v1.services.identity.GetUserResourcesResponse'
                 default:
                     description: Default error response
                     content:
@@ -635,56 +635,56 @@ paths:
                     content:
                         application/json:
                             schema:
-                              $ref: '#/components/schemas/api.v1.services.identity.GetUserRolesResponse'
+                                $ref: '#/components/schemas/api.v1.services.identity.GetUserRolesResponse'
                 default:
                     description: Default error response
                     content:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/google.rpc.Status'
-  /me/settings:
-    get:
-      tags:
-        - MeService
-      description: GetUserSettings retrieves user settings (P2).
-      operationId: MeService_GetUserSettings
-      responses:
-        "200":
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/api.v1.services.identity.GetUserSettingsResponse'
-        default:
-          description: Default error response
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/google.rpc.Status'
-    put:
-      tags:
-        - MeService
-      description: UpdateSettings updates user settings (P2).
-      operationId: MeService_UpdateSettings
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/api.v1.services.identity.UpdateSettingsRequest'
-        required: true
-      responses:
-        "200":
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/api.v1.services.identity.UpdateSettingsResponse'
-        default:
-          description: Default error response
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/google.rpc.Status'
+    /me/settings:
+        get:
+            tags:
+                - MeService
+            description: GetUserSettings retrieves user settings (P2).
+            operationId: MeService_GetUserSettings
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.v1.services.identity.GetUserSettingsResponse'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/google.rpc.Status'
+        put:
+            tags:
+                - MeService
+            description: UpdateSettings updates user settings (P2).
+            operationId: MeService_UpdateSettings
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/api.v1.services.identity.UpdateSettingsRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.v1.services.identity.UpdateSettingsResponse'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/google.rpc.Status'
     /me/views:
         get:
             tags:
@@ -697,546 +697,546 @@ paths:
                     content:
                         application/json:
                             schema:
-                              $ref: '#/components/schemas/api.v1.services.identity.ListMyViewsResponse'
+                                $ref: '#/components/schemas/api.v1.services.identity.ListMyViewsResponse'
                 default:
-                  description: Default error response
-                  content:
-                    application/json:
-                      schema:
-                        $ref: '#/components/schemas/google.rpc.Status'
-  /ntf:
-    get:
-      tags:
-        - NotificationService
-      description: ListNotifications retrieves notifications for the current user.
-      operationId: NotificationService_ListNotifications
-      parameters:
-        - name: recipient_id
-          in: query
-          description: The recipient user ID. If zero, uses current user.
-          schema:
-            type: string
-        - name: type
-          in: query
-          description: Filter by notification type.
-          schema:
-            type: integer
-            format: enum
-        - name: is_read
-          in: query
-          description: Filter by read status.
-          schema:
-            type: boolean
-        - name: channel
-          in: query
-          description: Filter by channel.
-          schema:
-            type: integer
-            format: enum
-        - name: page
-          in: query
-          description: Page number.
-          schema:
-            type: integer
-            format: int32
-        - name: page_size
-          in: query
-          description: Page size.
-          schema:
-            type: integer
-            format: int32
-      responses:
-        "200":
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/api.v1.services.notification.ListNotificationsResponse'
-        default:
-          description: Default error response
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/google.rpc.Status'
-  /ntf/send:
-    post:
-      tags:
-        - NotificationService
-      description: SendNotification sends a notification to specified recipients.
-      operationId: NotificationService_SendNotification
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/api.v1.services.notification.SendNotificationRequest'
-        required: true
-      responses:
-        "200":
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/api.v1.services.notification.SendNotificationResponse'
-        default:
-          description: Default error response
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/google.rpc.Status'
-  /ntf/templates:
-    get:
-      tags:
-        - NotificationService
-      description: ListTemplates retrieves notification templates.
-      operationId: NotificationService_ListTemplates
-      parameters:
-        - name: channel
-          in: query
-          description: Filter by channel.
-          schema:
-            type: integer
-            format: enum
-        - name: is_active
-          in: query
-          description: Filter by active status.
-          schema:
-            type: boolean
-        - name: page
-          in: query
-          description: Page number.
-          schema:
-            type: integer
-            format: int32
-        - name: page_size
-          in: query
-          description: Page size.
-          schema:
-            type: integer
-            format: int32
-      responses:
-        "200":
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/api.v1.services.notification.ListTemplatesResponse'
-        default:
-          description: Default error response
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/google.rpc.Status'
-    post:
-      tags:
-        - NotificationService
-      description: CreateTemplate creates a notification template.
-      operationId: NotificationService_CreateTemplate
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/api.v1.services.types.Template'
-        required: true
-      responses:
-        "200":
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/api.v1.services.notification.CreateTemplateResponse'
-        default:
-          description: Default error response
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/google.rpc.Status'
-  /ntf/templates/{template.id}:
-    put:
-      tags:
-        - NotificationService
-      description: UpdateTemplate updates a notification template.
-      operationId: NotificationService_UpdateTemplate
-      parameters:
-        - name: template.id
-          in: path
-          required: true
-          schema:
-            type: string
-        - name: template_id
-          in: query
-          description: The template ID.
-          schema:
-            type: string
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/api.v1.services.types.Template'
-        required: true
-      responses:
-        "200":
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/api.v1.services.notification.UpdateTemplateResponse'
-        default:
-          description: Default error response
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/google.rpc.Status'
-  /ntf/templates/{template_id}:
-    delete:
-      tags:
-        - NotificationService
-      description: DeleteTemplate deletes a notification template.
-      operationId: NotificationService_DeleteTemplate
-      parameters:
-        - name: template_id
-          in: path
-          description: The template ID.
-          required: true
-          schema:
-            type: string
-      responses:
-        "200":
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/api.v1.services.notification.DeleteTemplateResponse'
-        default:
-          description: Default error response
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/google.rpc.Status'
-  /ntf/{notification_id}/read:
-    post:
-      tags:
-        - NotificationService
-      description: MarkAsRead marks a notification as read.
-      operationId: NotificationService_MarkAsRead
-      parameters:
-        - name: notification_id
-          in: path
-          description: The notification ID.
-          required: true
-          schema:
-            type: string
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/api.v1.services.notification.MarkAsReadRequest'
-        required: true
-      responses:
-        "200":
-          description: OK
+                    description: Default error response
                     content:
                         application/json:
                             schema:
-                              $ref: '#/components/schemas/api.v1.services.notification.MarkAsReadResponse'
-        default:
-          description: Default error response
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/google.rpc.Status'
-  /obs/objects:
-    get:
-      tags:
-        - ObjectStoreService
-      description: Lists objects in the store.
-      operationId: ObjectStoreService_ListObjects
-      parameters:
-        - name: prefix
-          in: query
-          schema:
-            type: string
-        - name: page
-          in: query
-          schema:
-            type: integer
-            format: int32
-        - name: page_size
-          in: query
-          schema:
-            type: integer
-            format: int32
-      responses:
-        "200":
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/api.v1.services.objectstore.ListObjectsResponse'
-        default:
-          description: Default error response
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/google.rpc.Status'
-    post:
-      tags:
-        - ObjectStoreService
-      description: Uploads an object in a single request. Suitable for small files.
-      operationId: ObjectStoreService_UploadObject
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/api.v1.services.objectstore.UploadObjectRequest'
-        required: true
-      responses:
-        "200":
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/api.v1.services.objectstore.UploadObjectResponse'
-        default:
-          description: Default error response
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/google.rpc.Status'
-  /obs/objects/multipart:
-    post:
-      tags:
-        - ObjectStoreService
-      description: Initiates a multipart upload and returns an upload ID.
-      operationId: ObjectStoreService_InitiateMultipartUpload
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/api.v1.services.objectstore.InitiateMultipartUploadRequest'
-        required: true
-      responses:
-        "200":
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/api.v1.services.objectstore.InitiateMultipartUploadResponse'
-        default:
-          description: Default error response
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/google.rpc.Status'
-  /obs/objects/multipart/{object_id}/uploads/{upload_id}:
-    delete:
-      tags:
-        - ObjectStoreService
-      description: Aborts a multipart upload.
-      operationId: ObjectStoreService_AbortMultipartUpload
-      parameters:
-        - name: object_id
-          in: path
-          required: true
-          schema:
-            type: string
-        - name: upload_id
-          in: path
-          required: true
-          schema:
-            type: string
-      responses:
-        "200":
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/api.v1.services.objectstore.AbortMultipartUploadResponse'
-        default:
-          description: Default error response
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/google.rpc.Status'
-  /obs/objects/multipart/{object_id}/uploads/{upload_id}/parts:
-    get:
-      tags:
-        - ObjectStoreService
-      description: Lists the parts that have been uploaded for a specific multipart upload.
-      operationId: ObjectStoreService_ListParts
-      parameters:
-        - name: object_id
-          in: path
-          required: true
-          schema:
-            type: string
-        - name: upload_id
-          in: path
-          required: true
-          schema:
-            type: string
-      responses:
-        "200":
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/api.v1.services.objectstore.ListPartsResponse'
-        default:
-          description: Default error response
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/google.rpc.Status'
-  /obs/objects/multipart/{object_id}/uploads/{upload_id}/parts/{part_number}:
-    get:
-      tags:
-        - ObjectStoreService
-      description: Generates a presigned URL for uploading a part.
-      operationId: ObjectStoreService_GetMultipartUploadUrl
-      parameters:
-        - name: object_id
-          in: path
-          required: true
-          schema:
-            type: string
-        - name: upload_id
-          in: path
-          required: true
-          schema:
-            type: string
-        - name: part_number
-          in: path
-          required: true
-          schema:
-            type: integer
-            format: int32
-      responses:
-        "200":
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/api.v1.services.objectstore.GetMultipartUploadUrlResponse'
-        default:
-          description: Default error response
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/google.rpc.Status'
-  /obs/objects/multipart/{object_id}/uploads/{upload_id}:complete:
-    post:
-      tags:
-        - ObjectStoreService
-      description: Completes a multipart upload.
-      operationId: ObjectStoreService_CompleteMultipartUpload
-      parameters:
-        - name: object_id
-          in: path
-          required: true
-          schema:
-            type: string
-        - name: upload_id
-          in: path
-          required: true
-          schema:
-            type: string
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/api.v1.services.objectstore.CompleteMultipartUploadRequest'
-        required: true
-      responses:
-        "200":
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/api.v1.services.objectstore.CompleteMultipartUploadResponse'
-        default:
-          description: Default error response
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/google.rpc.Status'
-  /obs/objects/{id}:
-    get:
-      tags:
-        - ObjectStoreService
-      description: Downloads an object metadata.
-      operationId: ObjectStoreService_GetObject
-      parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: string
-      responses:
-        "200":
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/api.v1.services.objectstore.GetObjectResponse'
-        default:
-          description: Default error response
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/google.rpc.Status'
-    delete:
-      tags:
-        - ObjectStoreService
-      description: Deletes an object.
-      operationId: ObjectStoreService_DeleteObject
-      parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: string
-      responses:
-        "200":
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/api.v1.services.objectstore.DeleteObjectResponse'
-        default:
-          description: Default error response
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/google.rpc.Status'
-  /obs/objects/{id}/download:
-    get:
-      tags:
-        - ObjectStoreService
-      description: "Downloads the object content.\r\n This is used for local storage or when proxying content through the gateway."
-      operationId: ObjectStoreService_DownloadObject
-      parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: string
-        - name: range
-          in: query
-          description: "The byte range to download (e.g., \"bytes=0-1023\").\r\n If empty, the entire object is downloaded.\r\n This allows for resumable downloads and parallel chunk downloading."
-          schema:
-            type: string
-      responses:
-        "200":
-          description: OK
-          content:
-            '*/*': { }
-        default:
-          description: Default error response
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/google.rpc.Status'
-  /org/departments:
+                                $ref: '#/components/schemas/google.rpc.Status'
+    /ntf:
+        get:
+            tags:
+                - NotificationService
+            description: ListNotifications retrieves notifications for the current user.
+            operationId: NotificationService_ListNotifications
+            parameters:
+                - name: recipient_id
+                  in: query
+                  description: The recipient user ID. If zero, uses current user.
+                  schema:
+                      type: string
+                - name: type
+                  in: query
+                  description: Filter by notification type.
+                  schema:
+                      type: integer
+                      format: enum
+                - name: is_read
+                  in: query
+                  description: Filter by read status.
+                  schema:
+                      type: boolean
+                - name: channel
+                  in: query
+                  description: Filter by channel.
+                  schema:
+                      type: integer
+                      format: enum
+                - name: page
+                  in: query
+                  description: Page number.
+                  schema:
+                      type: integer
+                      format: int32
+                - name: page_size
+                  in: query
+                  description: Page size.
+                  schema:
+                      type: integer
+                      format: int32
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.v1.services.notification.ListNotificationsResponse'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/google.rpc.Status'
+    /ntf/send:
+        post:
+            tags:
+                - NotificationService
+            description: SendNotification sends a notification to specified recipients.
+            operationId: NotificationService_SendNotification
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/api.v1.services.notification.SendNotificationRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.v1.services.notification.SendNotificationResponse'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/google.rpc.Status'
+    /ntf/templates:
+        get:
+            tags:
+                - NotificationService
+            description: ListTemplates retrieves notification templates.
+            operationId: NotificationService_ListTemplates
+            parameters:
+                - name: channel
+                  in: query
+                  description: Filter by channel.
+                  schema:
+                      type: integer
+                      format: enum
+                - name: is_active
+                  in: query
+                  description: Filter by active status.
+                  schema:
+                      type: boolean
+                - name: page
+                  in: query
+                  description: Page number.
+                  schema:
+                      type: integer
+                      format: int32
+                - name: page_size
+                  in: query
+                  description: Page size.
+                  schema:
+                      type: integer
+                      format: int32
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.v1.services.notification.ListTemplatesResponse'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/google.rpc.Status'
+        post:
+            tags:
+                - NotificationService
+            description: CreateTemplate creates a notification template.
+            operationId: NotificationService_CreateTemplate
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/api.v1.services.types.Template'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.v1.services.notification.CreateTemplateResponse'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/google.rpc.Status'
+    /ntf/templates/{template.id}:
+        put:
+            tags:
+                - NotificationService
+            description: UpdateTemplate updates a notification template.
+            operationId: NotificationService_UpdateTemplate
+            parameters:
+                - name: template.id
+                  in: path
+                  required: true
+                  schema:
+                      type: string
+                - name: template_id
+                  in: query
+                  description: The template ID.
+                  schema:
+                      type: string
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/api.v1.services.types.Template'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.v1.services.notification.UpdateTemplateResponse'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/google.rpc.Status'
+    /ntf/templates/{template_id}:
+        delete:
+            tags:
+                - NotificationService
+            description: DeleteTemplate deletes a notification template.
+            operationId: NotificationService_DeleteTemplate
+            parameters:
+                - name: template_id
+                  in: path
+                  description: The template ID.
+                  required: true
+                  schema:
+                      type: string
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.v1.services.notification.DeleteTemplateResponse'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/google.rpc.Status'
+    /ntf/{notification_id}/read:
+        post:
+            tags:
+                - NotificationService
+            description: MarkAsRead marks a notification as read.
+            operationId: NotificationService_MarkAsRead
+            parameters:
+                - name: notification_id
+                  in: path
+                  description: The notification ID.
+                  required: true
+                  schema:
+                      type: string
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/api.v1.services.notification.MarkAsReadRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.v1.services.notification.MarkAsReadResponse'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/google.rpc.Status'
+    /obs/objects:
+        get:
+            tags:
+                - ObjectStoreService
+            description: Lists objects in the store.
+            operationId: ObjectStoreService_ListObjects
+            parameters:
+                - name: prefix
+                  in: query
+                  schema:
+                      type: string
+                - name: page
+                  in: query
+                  schema:
+                      type: integer
+                      format: int32
+                - name: page_size
+                  in: query
+                  schema:
+                      type: integer
+                      format: int32
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.v1.services.objectstore.ListObjectsResponse'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/google.rpc.Status'
+        post:
+            tags:
+                - ObjectStoreService
+            description: Uploads an object in a single request. Suitable for small files.
+            operationId: ObjectStoreService_UploadObject
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/api.v1.services.objectstore.UploadObjectRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.v1.services.objectstore.UploadObjectResponse'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/google.rpc.Status'
+    /obs/objects/multipart:
+        post:
+            tags:
+                - ObjectStoreService
+            description: Initiates a multipart upload and returns an upload ID.
+            operationId: ObjectStoreService_InitiateMultipartUpload
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/api.v1.services.objectstore.InitiateMultipartUploadRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.v1.services.objectstore.InitiateMultipartUploadResponse'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/google.rpc.Status'
+    /obs/objects/multipart/{object_id}/uploads/{upload_id}:
+        delete:
+            tags:
+                - ObjectStoreService
+            description: Aborts a multipart upload.
+            operationId: ObjectStoreService_AbortMultipartUpload
+            parameters:
+                - name: object_id
+                  in: path
+                  required: true
+                  schema:
+                      type: string
+                - name: upload_id
+                  in: path
+                  required: true
+                  schema:
+                      type: string
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.v1.services.objectstore.AbortMultipartUploadResponse'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/google.rpc.Status'
+    /obs/objects/multipart/{object_id}/uploads/{upload_id}/parts:
+        get:
+            tags:
+                - ObjectStoreService
+            description: Lists the parts that have been uploaded for a specific multipart upload.
+            operationId: ObjectStoreService_ListParts
+            parameters:
+                - name: object_id
+                  in: path
+                  required: true
+                  schema:
+                      type: string
+                - name: upload_id
+                  in: path
+                  required: true
+                  schema:
+                      type: string
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.v1.services.objectstore.ListPartsResponse'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/google.rpc.Status'
+    /obs/objects/multipart/{object_id}/uploads/{upload_id}/parts/{part_number}:
+        get:
+            tags:
+                - ObjectStoreService
+            description: Generates a presigned URL for uploading a part.
+            operationId: ObjectStoreService_GetMultipartUploadUrl
+            parameters:
+                - name: object_id
+                  in: path
+                  required: true
+                  schema:
+                      type: string
+                - name: upload_id
+                  in: path
+                  required: true
+                  schema:
+                      type: string
+                - name: part_number
+                  in: path
+                  required: true
+                  schema:
+                      type: integer
+                      format: int32
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.v1.services.objectstore.GetMultipartUploadUrlResponse'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/google.rpc.Status'
+    /obs/objects/multipart/{object_id}/uploads/{upload_id}:complete:
+        post:
+            tags:
+                - ObjectStoreService
+            description: Completes a multipart upload.
+            operationId: ObjectStoreService_CompleteMultipartUpload
+            parameters:
+                - name: object_id
+                  in: path
+                  required: true
+                  schema:
+                      type: string
+                - name: upload_id
+                  in: path
+                  required: true
+                  schema:
+                      type: string
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/api.v1.services.objectstore.CompleteMultipartUploadRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.v1.services.objectstore.CompleteMultipartUploadResponse'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/google.rpc.Status'
+    /obs/objects/{id}:
+        get:
+            tags:
+                - ObjectStoreService
+            description: Downloads an object metadata.
+            operationId: ObjectStoreService_GetObject
+            parameters:
+                - name: id
+                  in: path
+                  required: true
+                  schema:
+                      type: string
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.v1.services.objectstore.GetObjectResponse'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/google.rpc.Status'
+        delete:
+            tags:
+                - ObjectStoreService
+            description: Deletes an object.
+            operationId: ObjectStoreService_DeleteObject
+            parameters:
+                - name: id
+                  in: path
+                  required: true
+                  schema:
+                      type: string
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.v1.services.objectstore.DeleteObjectResponse'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/google.rpc.Status'
+    /obs/objects/{id}/download:
+        get:
+            tags:
+                - ObjectStoreService
+            description: "Downloads the object content.\r\n This is used for local storage or when proxying content through the gateway."
+            operationId: ObjectStoreService_DownloadObject
+            parameters:
+                - name: id
+                  in: path
+                  required: true
+                  schema:
+                      type: string
+                - name: range
+                  in: query
+                  description: "The byte range to download (e.g., \"bytes=0-1023\").\r\n If empty, the entire object is downloaded.\r\n This allows for resumable downloads and parallel chunk downloading."
+                  schema:
+                      type: string
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        '*/*': { }
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/google.rpc.Status'
+    /org/departments:
         get:
             tags:
                 - DepartmentService
@@ -1280,7 +1280,7 @@ paths:
                     content:
                         application/json:
                             schema:
-                              $ref: '#/components/schemas/api.v1.services.organization.ListDepartmentsResponse'
+                                $ref: '#/components/schemas/api.v1.services.organization.ListDepartmentsResponse'
                 default:
                     description: Default error response
                     content:
@@ -1295,7 +1295,7 @@ paths:
                 content:
                     application/json:
                         schema:
-                          $ref: '#/components/schemas/api.v1.services.organization.CreateDepartmentRequest'
+                            $ref: '#/components/schemas/api.v1.services.organization.CreateDepartmentRequest'
                 required: true
             responses:
                 "200":
@@ -1303,14 +1303,14 @@ paths:
                     content:
                         application/json:
                             schema:
-                              $ref: '#/components/schemas/api.v1.services.organization.CreateDepartmentResponse'
+                                $ref: '#/components/schemas/api.v1.services.organization.CreateDepartmentResponse'
                 default:
                     description: Default error response
                     content:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/google.rpc.Status'
-  /org/departments/{department.id}:
+    /org/departments/{department.id}:
         put:
             tags:
                 - DepartmentService
@@ -1325,7 +1325,7 @@ paths:
                 content:
                     application/json:
                         schema:
-                          $ref: '#/components/schemas/api.v1.services.organization.UpdateDepartmentRequest'
+                            $ref: '#/components/schemas/api.v1.services.organization.UpdateDepartmentRequest'
                 required: true
             responses:
                 "200":
@@ -1333,14 +1333,14 @@ paths:
                     content:
                         application/json:
                             schema:
-                              $ref: '#/components/schemas/api.v1.services.organization.UpdateDepartmentResponse'
+                                $ref: '#/components/schemas/api.v1.services.organization.UpdateDepartmentResponse'
                 default:
                     description: Default error response
                     content:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/google.rpc.Status'
-  /org/departments/{id}:
+    /org/departments/{id}:
         get:
             tags:
                 - DepartmentService
@@ -1358,7 +1358,7 @@ paths:
                     content:
                         application/json:
                             schema:
-                              $ref: '#/components/schemas/api.v1.services.organization.GetDepartmentResponse'
+                                $ref: '#/components/schemas/api.v1.services.organization.GetDepartmentResponse'
                 default:
                     description: Default error response
                     content:
@@ -1382,17 +1382,17 @@ paths:
                     content:
                         application/json:
                             schema:
-                              $ref: '#/components/schemas/api.v1.services.organization.DeleteDepartmentResponse'
+                                $ref: '#/components/schemas/api.v1.services.organization.DeleteDepartmentResponse'
                 default:
                     description: Default error response
                     content:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/google.rpc.Status'
-  /org/positions:
+    /org/positions:
         get:
             tags:
-              - PositionService
+                - PositionService
             operationId: PositionService_ListPositions
             parameters:
                 - name: page
@@ -1433,7 +1433,7 @@ paths:
                     content:
                         application/json:
                             schema:
-                              $ref: '#/components/schemas/api.v1.services.organization.ListPositionsResponse'
+                                $ref: '#/components/schemas/api.v1.services.organization.ListPositionsResponse'
                 default:
                     description: Default error response
                     content:
@@ -1442,13 +1442,13 @@ paths:
                                 $ref: '#/components/schemas/google.rpc.Status'
         post:
             tags:
-              - PositionService
+                - PositionService
             operationId: PositionService_CreatePosition
             requestBody:
                 content:
                     application/json:
                         schema:
-                          $ref: '#/components/schemas/api.v1.services.organization.CreatePositionRequest'
+                            $ref: '#/components/schemas/api.v1.services.organization.CreatePositionRequest'
                 required: true
             responses:
                 "200":
@@ -1456,17 +1456,17 @@ paths:
                     content:
                         application/json:
                             schema:
-                              $ref: '#/components/schemas/api.v1.services.organization.CreatePositionResponse'
+                                $ref: '#/components/schemas/api.v1.services.organization.CreatePositionResponse'
                 default:
                     description: Default error response
                     content:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/google.rpc.Status'
-  /org/positions/{id}:
+    /org/positions/{id}:
         get:
             tags:
-              - PositionService
+                - PositionService
             operationId: PositionService_GetPosition
             parameters:
                 - name: id
@@ -1481,7 +1481,7 @@ paths:
                     content:
                         application/json:
                             schema:
-                              $ref: '#/components/schemas/api.v1.services.organization.GetPositionResponse'
+                                $ref: '#/components/schemas/api.v1.services.organization.GetPositionResponse'
                 default:
                     description: Default error response
                     content:
@@ -1490,7 +1490,7 @@ paths:
                                 $ref: '#/components/schemas/google.rpc.Status'
         delete:
             tags:
-              - PositionService
+                - PositionService
             operationId: PositionService_DeletePosition
             parameters:
                 - name: id
@@ -1505,20 +1505,20 @@ paths:
                     content:
                         application/json:
                             schema:
-                              $ref: '#/components/schemas/api.v1.services.organization.DeletePositionResponse'
+                                $ref: '#/components/schemas/api.v1.services.organization.DeletePositionResponse'
                 default:
                     description: Default error response
                     content:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/google.rpc.Status'
-  /org/positions/{position.id}:
+    /org/positions/{position.id}:
         put:
             tags:
-              - PositionService
+                - PositionService
             operationId: PositionService_UpdatePosition
             parameters:
-              - name: position.id
+                - name: position.id
                   in: path
                   required: true
                   schema:
@@ -1527,7 +1527,7 @@ paths:
                 content:
                     application/json:
                         schema:
-                          $ref: '#/components/schemas/api.v1.services.organization.UpdatePositionRequest'
+                            $ref: '#/components/schemas/api.v1.services.organization.UpdatePositionRequest'
                 required: true
             responses:
                 "200":
@@ -1535,17 +1535,17 @@ paths:
                     content:
                         application/json:
                             schema:
-                              $ref: '#/components/schemas/api.v1.services.organization.UpdatePositionResponse'
+                                $ref: '#/components/schemas/api.v1.services.organization.UpdatePositionResponse'
                 default:
                     description: Default error response
                     content:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/google.rpc.Status'
-  /sys/permissions:
+    /sys/permissions:
         get:
             tags:
-              - PermissionService
+                - PermissionService
             operationId: PermissionService_ListPermissions
             parameters:
                 - name: page
@@ -1581,7 +1581,7 @@ paths:
                   schema:
                     type: array
                     items:
-                      type: string
+                        type: string
                 - name: keyword
                   in: query
                   description: The keyword is the query parameter for set only to query the permission by keyword
@@ -1608,7 +1608,7 @@ paths:
                     content:
                         application/json:
                             schema:
-                              $ref: '#/components/schemas/api.v1.services.system.ListPermissionsResponse'
+                                $ref: '#/components/schemas/api.v1.services.system.ListPermissionsResponse'
                 default:
                     description: Default error response
                     content:
@@ -1617,13 +1617,13 @@ paths:
                                 $ref: '#/components/schemas/google.rpc.Status'
         post:
             tags:
-              - PermissionService
+                - PermissionService
             operationId: PermissionService_CreatePermission
             requestBody:
                 content:
                     application/json:
                         schema:
-                          $ref: '#/components/schemas/api.v1.services.system.CreatePermissionRequest'
+                            $ref: '#/components/schemas/api.v1.services.system.CreatePermissionRequest'
                 required: true
             responses:
                 "200":
@@ -1631,17 +1631,17 @@ paths:
                     content:
                         application/json:
                             schema:
-                              $ref: '#/components/schemas/api.v1.services.system.CreatePermissionResponse'
+                                $ref: '#/components/schemas/api.v1.services.system.CreatePermissionResponse'
                 default:
                     description: Default error response
                     content:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/google.rpc.Status'
-  /sys/permissions/{id}:
+    /sys/permissions/{id}:
         get:
             tags:
-              - PermissionService
+                - PermissionService
             operationId: PermissionService_GetPermission
             parameters:
                 - name: id
@@ -1656,7 +1656,7 @@ paths:
                     content:
                         application/json:
                             schema:
-                              $ref: '#/components/schemas/api.v1.services.system.GetPermissionResponse'
+                                $ref: '#/components/schemas/api.v1.services.system.GetPermissionResponse'
                 default:
                     description: Default error response
                     content:
@@ -1665,7 +1665,7 @@ paths:
                                 $ref: '#/components/schemas/google.rpc.Status'
         delete:
             tags:
-              - PermissionService
+                - PermissionService
             operationId: PermissionService_DeletePermission
             parameters:
                 - name: id
@@ -1680,20 +1680,20 @@ paths:
                     content:
                         application/json:
                             schema:
-                              $ref: '#/components/schemas/api.v1.services.system.DeletePermissionResponse'
+                                $ref: '#/components/schemas/api.v1.services.system.DeletePermissionResponse'
                 default:
                     description: Default error response
                     content:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/google.rpc.Status'
-  /sys/permissions/{permission.id}:
+    /sys/permissions/{permission.id}:
         put:
             tags:
-              - PermissionService
+                - PermissionService
             operationId: PermissionService_UpdatePermission
             parameters:
-              - name: permission.id
+                - name: permission.id
                   in: path
                   required: true
                   schema:
@@ -1702,7 +1702,7 @@ paths:
                 content:
                     application/json:
                         schema:
-                          $ref: '#/components/schemas/api.v1.services.system.UpdatePermissionRequest'
+                            $ref: '#/components/schemas/api.v1.services.system.UpdatePermissionRequest'
                 required: true
             responses:
                 "200":
@@ -1710,38 +1710,38 @@ paths:
                     content:
                         application/json:
                             schema:
-                              $ref: '#/components/schemas/api.v1.services.system.UpdatePermissionResponse'
+                                $ref: '#/components/schemas/api.v1.services.system.UpdatePermissionResponse'
                 default:
                     description: Default error response
                     content:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/google.rpc.Status'
-  /sys/policies/list:
-    post:
-      tags:
-        - PolicyQueryService
-      description: "ListPolicies retrieves authorization policies from casbin_rule table.\r\n This is the ONLY data source interface for providing policy data to other services."
-      operationId: PolicyQueryService_ListPolicies
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/api.v1.services.system.ListPoliciesRequest'
-        required: true
-      responses:
-        "200":
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/api.v1.services.system.ListPoliciesResponse'
-        default:
-          description: Default error response
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/google.rpc.Status'
+    /sys/policies/list:
+        post:
+            tags:
+                - PolicyQueryService
+            description: "ListPolicies retrieves authorization policies from casbin_rule table.\r\n This is the ONLY data source interface for providing policy data to other services."
+            operationId: PolicyQueryService_ListPolicies
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/api.v1.services.system.ListPoliciesRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.v1.services.system.ListPoliciesResponse'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/google.rpc.Status'
     /sys/resources:
         get:
             tags:
@@ -2263,7 +2263,7 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/google.rpc.Status'
-  /sys/users/{id}/password:
+    /sys/users/{id}/password:
         post:
             tags:
                 - UserService
@@ -2280,7 +2280,7 @@ paths:
                 content:
                     application/json:
                         schema:
-                          $ref: '#/components/schemas/api.v1.services.system.ChangeUserPasswordRequest'
+                            $ref: '#/components/schemas/api.v1.services.system.ChangeUserPasswordRequest'
                 required: true
             responses:
                 "200":
@@ -2288,32 +2288,32 @@ paths:
                     content:
                         application/json:
                             schema:
-                              $ref: '#/components/schemas/api.v1.services.system.ChangeUserPasswordResponse'
+                                $ref: '#/components/schemas/api.v1.services.system.ChangeUserPasswordResponse'
                 default:
-                  description: Default error response
-                  content:
-                    application/json:
-                      schema:
-                        $ref: '#/components/schemas/google.rpc.Status'
-  /sys/users/{id}/permissions:
-    get:
-      tags:
-        - UserService
-      operationId: UserService_ListUserPermissions
-      parameters:
-        - name: id
-          in: path
-          description: The field will contain id of the user requested.
-          required: true
-          schema:
-            type: string
-      responses:
-        "200":
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/api.v1.services.system.ListUserPermissionsResponse'
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/google.rpc.Status'
+    /sys/users/{id}/permissions:
+        get:
+            tags:
+                - UserService
+            operationId: UserService_ListUserPermissions
+            parameters:
+                - name: id
+                  in: path
+                  description: The field will contain id of the user requested.
+                  required: true
+                  schema:
+                      type: string
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.v1.services.system.ListUserPermissionsResponse'
                 default:
                     description: Default error response
                     content:
@@ -2346,30 +2346,30 @@ paths:
                             schema:
                                 $ref: '#/components/schemas/google.rpc.Status'
     /sys/users/{id}/roles:
-      get:
-        tags:
-          - UserService
-        operationId: UserService_ListUserRoles
-        parameters:
-          - name: id
-            in: path
-            description: The field will contain id of the user requested.
-            required: true
-            schema:
-              type: string
-        responses:
-          "200":
-            description: OK
-            content:
-              application/json:
-                schema:
-                  $ref: '#/components/schemas/api.v1.services.system.ListUserRolesResponse'
-          default:
-            description: Default error response
-            content:
-              application/json:
-                schema:
-                  $ref: '#/components/schemas/google.rpc.Status'
+        get:
+            tags:
+                - UserService
+            operationId: UserService_ListUserRoles
+            parameters:
+                - name: id
+                  in: path
+                  description: The field will contain id of the user requested.
+                  required: true
+                  schema:
+                      type: string
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.v1.services.system.ListUserRolesResponse'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/google.rpc.Status'
         put:
             tags:
                 - UserService
@@ -2432,31 +2432,31 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/google.rpc.Status'
-  /sys/users/{id}/views:
-    get:
-      tags:
-        - UserService
-      operationId: UserService_ListUserViews
-      parameters:
-        - name: id
-          in: path
-          description: The field will contain id of the user requested.
-          required: true
-          schema:
-            type: string
-      responses:
-        "200":
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/api.v1.services.system.ListUserViewsResponse'
-        default:
-          description: Default error response
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/google.rpc.Status'
+    /sys/users/{id}/views:
+        get:
+            tags:
+                - UserService
+            operationId: UserService_ListUserViews
+            parameters:
+                - name: id
+                  in: path
+                  description: The field will contain id of the user requested.
+                  required: true
+                  schema:
+                      type: string
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.v1.services.system.ListUserViewsResponse'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/google.rpc.Status'
     /sys/users/{user.id}:
         put:
             tags:
@@ -2662,146 +2662,146 @@ paths:
                                 $ref: '#/components/schemas/google.rpc.Status'
 components:
     schemas:
-      api.v1.services.admin.HealthCheckResponse:
-        type: object
-        properties:
-          status:
-            type: string
-            description: The health status of the service.
-          info:
-            type: object
-            additionalProperties:
-              type: string
-            description: Additional information about the service.
-        description: HealthCheckResponse is the response for AdminService.HealthCheck.
-      api.v1.services.filemanager.AbortMultipartUploadResponse:
-        type: object
-        properties: { }
-      api.v1.services.filemanager.CompleteMultipartUploadRequest:
-        type: object
-        properties:
-          upload_id:
-            type: string
-          parts:
-            type: array
-            items:
-              $ref: '#/components/schemas/api.v1.services.filemanager.PartInfo'
-          sha256:
-            type: string
-      api.v1.services.filemanager.CompleteMultipartUploadResponse:
-        type: object
-        properties:
-          file_metadata:
-            $ref: '#/components/schemas/api.v1.services.types.FileMetadata'
-      api.v1.services.filemanager.DeleteFileResponse:
-        type: object
-        properties: { }
-      api.v1.services.filemanager.GetFileResponse:
-        type: object
-        properties:
-          file_metadata:
-            $ref: '#/components/schemas/api.v1.services.types.FileMetadata'
-          download_url:
-            type: string
-      api.v1.services.filemanager.GetMultipartUploadUrlResponse:
-        type: object
-        properties:
-          upload_url:
-            type: string
-      api.v1.services.filemanager.InitiateMultipartUploadRequest:
-        type: object
-        properties:
-          name:
-            type: string
-          size:
-            type: string
-          content_type:
-            type: string
-          visibility:
-            type: string
-      api.v1.services.filemanager.InitiateMultipartUploadResponse:
+        api.v1.services.admin.HealthCheckResponse:
             type: object
             properties:
-              upload_id:
-                type: string
-      api.v1.services.filemanager.ListFilesResponse:
-        type: object
-        properties:
-          total:
-            type: integer
-            format: int32
-          files:
-            type: array
-            items:
-              $ref: '#/components/schemas/api.v1.services.types.FileMetadata'
-          page:
-            type: integer
-            format: int32
-          page_size:
-            type: integer
-            format: int32
-          next_page_token:
-            type: string
-          extra:
-            $ref: '#/components/schemas/google.protobuf.Any'
-      api.v1.services.filemanager.PartInfo:
-        type: object
-        properties:
-          part_number:
-            type: integer
-            format: int32
-          etag:
-            type: string
-      api.v1.services.filemanager.UpdateFileRequest:
-        type: object
-        properties:
-          id:
-            type: string
-          name:
-            type: string
-          visibility:
-            type: string
-      api.v1.services.filemanager.UpdateFileResponse:
-        type: object
-        properties:
-          file_metadata:
-            $ref: '#/components/schemas/api.v1.services.types.FileMetadata'
-      api.v1.services.filemanager.UploadFileRequest:
-        type: object
-        properties:
-          data:
-            type: string
-            format: bytes
-          name:
-            type: string
-          content_type:
-            type: string
-          visibility:
-            type: string
-      api.v1.services.filemanager.UploadFileResponse:
-        type: object
-        properties:
-          file_metadata:
-            $ref: '#/components/schemas/api.v1.services.types.FileMetadata'
-      api.v1.services.identity.CasbinRule:
-        type: object
-        properties:
-          ptype:
-            type: string
-          v:
-            type: array
-            items:
-              type: string
-        description: CasbinRule represents a single policy rule (p-rule or g-rule) from Casbin Enforcer.
-      api.v1.services.identity.ForcePolicySyncRequest:
-        type: object
-        properties: { }
-        description: ForcePolicySyncRequest is the request for AdminService.ForcePolicySync.
-      api.v1.services.identity.ForcePolicySyncResponse:
-        type: object
-        properties: { }
-        description: ForcePolicySyncResponse is the response for AdminService.ForcePolicySync.
-      api.v1.services.identity.GetCaptchaResponse:
+                status:
+                    type: string
+                    description: The health status of the service.
+                info:
+                    type: object
+                    additionalProperties:
+                        type: string
+                    description: Additional information about the service.
+            description: HealthCheckResponse is the response for AdminService.HealthCheck.
+        api.v1.services.filemanager.AbortMultipartUploadResponse:
+            type: object
+            properties: { }
+        api.v1.services.filemanager.CompleteMultipartUploadRequest:
+            type: object
+            properties:
+                upload_id:
+                    type: string
+                parts:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/api.v1.services.filemanager.PartInfo'
+                sha256:
+                    type: string
+        api.v1.services.filemanager.CompleteMultipartUploadResponse:
+            type: object
+            properties:
+                file_metadata:
+                    $ref: '#/components/schemas/api.v1.services.types.FileMetadata'
+        api.v1.services.filemanager.DeleteFileResponse:
+            type: object
+            properties: { }
+        api.v1.services.filemanager.GetFileResponse:
+            type: object
+            properties:
+                file_metadata:
+                    $ref: '#/components/schemas/api.v1.services.types.FileMetadata'
+                download_url:
+                    type: string
+        api.v1.services.filemanager.GetMultipartUploadUrlResponse:
+            type: object
+            properties:
+                upload_url:
+                    type: string
+        api.v1.services.filemanager.InitiateMultipartUploadRequest:
+            type: object
+            properties:
+                name:
+                    type: string
+                size:
+                    type: string
+                content_type:
+                    type: string
+                visibility:
+                    type: string
+        api.v1.services.filemanager.InitiateMultipartUploadResponse:
+            type: object
+            properties:
+                upload_id:
+                    type: string
+        api.v1.services.filemanager.ListFilesResponse:
+            type: object
+            properties:
+                total:
+                    type: integer
+                    format: int32
+                files:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/api.v1.services.types.FileMetadata'
+                page:
+                    type: integer
+                    format: int32
+                page_size:
+                    type: integer
+                    format: int32
+                next_page_token:
+                    type: string
+                extra:
+                    $ref: '#/components/schemas/google.protobuf.Any'
+        api.v1.services.filemanager.PartInfo:
+            type: object
+            properties:
+                part_number:
+                    type: integer
+                    format: int32
+                etag:
+                    type: string
+        api.v1.services.filemanager.UpdateFileRequest:
+            type: object
+            properties:
+                id:
+                    type: string
+                name:
+                    type: string
+                visibility:
+                    type: string
+        api.v1.services.filemanager.UpdateFileResponse:
+            type: object
+            properties:
+                file_metadata:
+                    $ref: '#/components/schemas/api.v1.services.types.FileMetadata'
+        api.v1.services.filemanager.UploadFileRequest:
+            type: object
+            properties:
+                data:
+                    type: string
+                    format: bytes
+                name:
+                    type: string
+                content_type:
+                    type: string
+                visibility:
+                    type: string
+        api.v1.services.filemanager.UploadFileResponse:
+            type: object
+            properties:
+                file_metadata:
+                    $ref: '#/components/schemas/api.v1.services.types.FileMetadata'
+        api.v1.services.identity.CasbinRule:
+            type: object
+            properties:
+                ptype:
+                    type: string
+                v:
+                    type: array
+                    items:
+                        type: string
+            description: CasbinRule represents a single policy rule (p-rule or g-rule) from Casbin Enforcer.
+        api.v1.services.identity.ForcePolicySyncRequest:
+            type: object
+            properties: { }
+            description: ForcePolicySyncRequest is the request for AdminService.ForcePolicySync.
+        api.v1.services.identity.ForcePolicySyncResponse:
+            type: object
+            properties: { }
+            description: ForcePolicySyncResponse is the response for AdminService.ForcePolicySync.
+        api.v1.services.identity.GetCaptchaResponse:
             type: object
             properties:
                 captcha_id:
@@ -2814,51 +2814,51 @@ components:
                     type: string
                     description: The MIME type of captcha data (e.g., "image/png", "audio/wav").
             description: The response message for the GetCaptcha RPC.
-      api.v1.services.identity.GetEnforcerPoliciesResponse:
-        type: object
-        properties:
-          policies:
-            type: array
-            items:
-              $ref: '#/components/schemas/api.v1.services.identity.CasbinRule'
-        description: GetEnforcerPoliciesResponse contains all policy rules loaded into Casbin Enforcer's memory.
-      api.v1.services.identity.GetPolicySyncStatusResponse:
-        type: object
-        properties:
-          sync_pending:
-            type: boolean
-          last_sync_time:
-            type: string
-            format: date-time
-          last_sync_duration:
-            type: string
-          total_events:
-            type: string
-          successful_syncs:
-            type: string
-          failed_syncs:
-            type: string
-          duplicate_events:
-            type: string
-          failure_rate:
-            type: number
-            format: double
-        description: GetPolicySyncStatusResponse contains status and metrics of policy synchronization service.
-      api.v1.services.identity.GetProfileResponse:
+        api.v1.services.identity.GetEnforcerPoliciesResponse:
             type: object
             properties:
-              profile:
-                $ref: '#/components/schemas/api.v1.services.types.UserProfile'
-            description: The response message for the GetProfile RPC.
-      api.v1.services.identity.GetUserPreferencesResponse:
-        type: object
-        properties:
-          preferences:
+                policies:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/api.v1.services.identity.CasbinRule'
+            description: GetEnforcerPoliciesResponse contains all policy rules loaded into Casbin Enforcer's memory.
+        api.v1.services.identity.GetPolicySyncStatusResponse:
             type: object
-            additionalProperties:
-              type: string
-        description: The response message for the GetUserPreferences RPC (P2).
-      api.v1.services.identity.GetUserResourcesResponse:
+            properties:
+                sync_pending:
+                    type: boolean
+                last_sync_time:
+                    type: string
+                    format: date-time
+                last_sync_duration:
+                    type: string
+                total_events:
+                    type: string
+                successful_syncs:
+                    type: string
+                failed_syncs:
+                    type: string
+                duplicate_events:
+                    type: string
+                failure_rate:
+                    type: number
+                    format: double
+            description: GetPolicySyncStatusResponse contains status and metrics of policy synchronization service.
+        api.v1.services.identity.GetProfileResponse:
+            type: object
+            properties:
+                profile:
+                    $ref: '#/components/schemas/api.v1.services.types.UserProfile'
+            description: The response message for the GetProfile RPC.
+        api.v1.services.identity.GetUserPreferencesResponse:
+            type: object
+            properties:
+                preferences:
+                    type: object
+                    additionalProperties:
+                        type: string
+            description: The response message for the GetUserPreferences RPC (P2).
+        api.v1.services.identity.GetUserResourcesResponse:
             type: object
             properties:
                 resources:
@@ -2866,7 +2866,7 @@ components:
                     items:
                         $ref: '#/components/schemas/api.v1.services.types.Resource'
             description: The response message for the GetUserResources RPC.
-      api.v1.services.identity.GetUserRolesResponse:
+        api.v1.services.identity.GetUserRolesResponse:
             type: object
             properties:
                 roles:
@@ -2874,13 +2874,13 @@ components:
                     items:
                         $ref: '#/components/schemas/api.v1.services.types.Role'
             description: The response message for the GetUserRoles RPC.
-      api.v1.services.identity.GetUserSettingsResponse:
-        type: object
-        properties:
-          setting:
-            $ref: '#/components/schemas/api.v1.services.types.UserSetting'
-        description: The response message for the GetUserSettings RPC (P2).
-      api.v1.services.identity.ListMyViewsResponse:
+        api.v1.services.identity.GetUserSettingsResponse:
+            type: object
+            properties:
+                setting:
+                    $ref: '#/components/schemas/api.v1.services.types.UserSetting'
+            description: The response message for the GetUserSettings RPC (P2).
+        api.v1.services.identity.ListMyViewsResponse:
             type: object
             properties:
                 views:
@@ -2888,7 +2888,7 @@ components:
                     items:
                         $ref: '#/components/schemas/api.v1.services.types.View'
             description: The response message for the ListMyViews RPC.
-      api.v1.services.identity.LoginRequest:
+        api.v1.services.identity.LoginRequest:
             type: object
             properties:
                 username:
@@ -2900,35 +2900,35 @@ components:
                 captcha_code:
                     type: string
             description: The request message for the Login RPC.
-      api.v1.services.identity.LoginResponse:
+        api.v1.services.identity.LoginResponse:
             type: object
             properties:
-              access_token:
-                type: string
-              refresh_token:
-                type: string
-              token_type:
-                type: string
-              expires_in:
-                type: string
+                access_token:
+                    type: string
+                refresh_token:
+                    type: string
+                token_type:
+                    type: string
+                expires_in:
+                    type: string
             description: The response message for the Login RPC.
-      api.v1.services.identity.LogoutRequest:
+        api.v1.services.identity.LogoutRequest:
             type: object
             properties:
                 refresh_token:
                     type: string
             description: The request message for the Logout RPC.
-      api.v1.services.identity.LogoutResponse:
+        api.v1.services.identity.LogoutResponse:
             type: object
             properties: {}
             description: The response message for the Logout RPC.
-      api.v1.services.identity.RefreshTokenRequest:
+        api.v1.services.identity.RefreshTokenRequest:
             type: object
             properties:
                 refresh_token:
                     type: string
             description: The request message for the RefreshToken RPC.
-      api.v1.services.identity.RefreshTokenResponse:
+        api.v1.services.identity.RefreshTokenResponse:
             type: object
             properties:
                 access_token:
@@ -2940,7 +2940,7 @@ components:
                 expires_in:
                     type: string
             description: The response message for the RefreshToken RPC.
-      api.v1.services.identity.RegisterRequest:
+        api.v1.services.identity.RegisterRequest:
             type: object
             properties:
                 username:
@@ -2954,11 +2954,11 @@ components:
                 captcha_code:
                     type: string
             description: The request message for the Register RPC.
-      api.v1.services.identity.RegisterResponse:
+        api.v1.services.identity.RegisterResponse:
             type: object
             properties: {}
             description: The response message for the Register RPC.
-      api.v1.services.identity.UpdatePasswordRequest:
+        api.v1.services.identity.UpdatePasswordRequest:
             type: object
             properties:
                 old_password:
@@ -2966,297 +2966,297 @@ components:
                 new_password:
                     type: string
             description: The request message for the UpdatePassword RPC.
-      api.v1.services.identity.UpdatePasswordResponse:
+        api.v1.services.identity.UpdatePasswordResponse:
             type: object
             properties: {}
             description: The response message for the UpdatePassword RPC.
-      api.v1.services.identity.UpdatePreferencesRequest:
-        type: object
-        properties:
-          preferences:
-            type: object
-            additionalProperties:
-              type: string
-        description: The request message for the UpdatePreferences RPC (P2).
-      api.v1.services.identity.UpdatePreferencesResponse:
-        type: object
-        properties: { }
-        description: The response message for the UpdatePreferences RPC (P2).
-      api.v1.services.identity.UpdateProfileRequest:
+        api.v1.services.identity.UpdatePreferencesRequest:
             type: object
             properties:
-              profile:
+                preferences:
+                    type: object
+                    additionalProperties:
+                        type: string
+            description: The request message for the UpdatePreferences RPC (P2).
+        api.v1.services.identity.UpdatePreferencesResponse:
+            type: object
+            properties: { }
+            description: The response message for the UpdatePreferences RPC (P2).
+        api.v1.services.identity.UpdateProfileRequest:
+            type: object
+            properties:
+                profile:
                     allOf:
-                      - $ref: '#/components/schemas/api.v1.services.types.UserProfile'
+                        - $ref: '#/components/schemas/api.v1.services.types.UserProfile'
                     description: The fields to update.
             description: The request message for the UpdateProfile RPC.
-      api.v1.services.identity.UpdateProfileResponse:
+        api.v1.services.identity.UpdateProfileResponse:
             type: object
             properties: {}
             description: The response message for the UpdateProfile RPC.
-      api.v1.services.identity.UpdateSettingsRequest:
-        type: object
-        properties:
-          setting:
-            $ref: '#/components/schemas/api.v1.services.types.UserSetting'
-        description: The request message for the UpdateSettings RPC (P2).
-      api.v1.services.identity.UpdateSettingsResponse:
-        type: object
-        properties: { }
-        description: The response message for the UpdateSettings RPC (P2).
-      api.v1.services.notification.CreateTemplateResponse:
-        type: object
-        properties:
-          template:
-            allOf:
-              - $ref: '#/components/schemas/api.v1.services.types.Template'
-            description: The created template.
-        description: CreateTemplateResponse is the response for NotificationService.CreateTemplate.
-      api.v1.services.notification.DeleteTemplateResponse:
-        type: object
-        properties: { }
-        description: DeleteTemplateResponse is the response for NotificationService.DeleteTemplate.
-      api.v1.services.notification.ListNotificationsResponse:
+        api.v1.services.identity.UpdateSettingsRequest:
             type: object
             properties:
-              notifications:
-                type: array
-                items:
-                  $ref: '#/components/schemas/api.v1.services.types.Notification'
-                description: The list of notifications.
-              total:
-                type: integer
-                description: Total count.
-                format: int32
-              page:
-                type: integer
-                description: Current page.
-                format: int32
-              page_size:
-                type: integer
-                description: Page size.
-                format: int32
+                setting:
+                    $ref: '#/components/schemas/api.v1.services.types.UserSetting'
+            description: The request message for the UpdateSettings RPC (P2).
+        api.v1.services.identity.UpdateSettingsResponse:
+            type: object
+            properties: { }
+            description: The response message for the UpdateSettings RPC (P2).
+        api.v1.services.notification.CreateTemplateResponse:
+            type: object
+            properties:
+                template:
+                    allOf:
+                        - $ref: '#/components/schemas/api.v1.services.types.Template'
+                    description: The created template.
+            description: CreateTemplateResponse is the response for NotificationService.CreateTemplate.
+        api.v1.services.notification.DeleteTemplateResponse:
+            type: object
+            properties: { }
+            description: DeleteTemplateResponse is the response for NotificationService.DeleteTemplate.
+        api.v1.services.notification.ListNotificationsResponse:
+            type: object
+            properties:
+                notifications:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/api.v1.services.types.Notification'
+                    description: The list of notifications.
+                total:
+                    type: integer
+                    description: Total count.
+                    format: int32
+                page:
+                    type: integer
+                    description: Current page.
+                    format: int32
+                page_size:
+                    type: integer
+                    description: Page size.
+                    format: int32
             description: ListNotificationsResponse is the response for NotificationService.ListNotifications.
-      api.v1.services.notification.ListTemplatesResponse:
+        api.v1.services.notification.ListTemplatesResponse:
             type: object
             properties:
-              templates:
-                type: array
-                items:
-                  $ref: '#/components/schemas/api.v1.services.types.Template'
-                description: The list of templates.
-              total:
-                type: integer
-                description: Total count.
-                format: int32
-              page:
-                type: integer
-                description: Current page.
-                format: int32
-              page_size:
-                type: integer
-                description: Page size.
-                format: int32
+                templates:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/api.v1.services.types.Template'
+                    description: The list of templates.
+                total:
+                    type: integer
+                    description: Total count.
+                    format: int32
+                page:
+                    type: integer
+                    description: Current page.
+                    format: int32
+                page_size:
+                    type: integer
+                    description: Page size.
+                    format: int32
             description: ListTemplatesResponse is the response for NotificationService.ListTemplates.
-      api.v1.services.notification.MarkAsReadRequest:
-        type: object
-        properties:
-          notification_id:
-            type: string
-            description: The notification ID.
-        description: MarkAsReadRequest is the request for NotificationService.MarkAsRead.
-      api.v1.services.notification.MarkAsReadResponse:
-        type: object
-        properties: { }
-        description: MarkAsReadResponse is the response for NotificationService.MarkAsRead.
-      api.v1.services.notification.SendNotificationRequest:
-        type: object
-        properties:
-          title:
-            type: string
-            description: The notification title.
-          content:
-            type: string
-            description: The notification content.
-          type:
-            type: integer
-            description: The notification type.
-            format: enum
-          channel:
-            type: integer
-            description: The delivery channel.
-            format: enum
-          recipient_ids:
-            type: array
-            items:
-              type: string
-            description: The recipient user IDs. Empty means broadcast to all users.
-          metadata:
-            type: object
-            additionalProperties:
-              type: string
-            description: Additional metadata.
-        description: SendNotificationRequest is the request for NotificationService.SendNotification.
-      api.v1.services.notification.SendNotificationResponse:
-        type: object
-        properties:
-          notification_id:
-            type: string
-            description: The created notification ID.
-        description: SendNotificationResponse is the response for NotificationService.SendNotification.
-      api.v1.services.notification.UpdateTemplateResponse:
-        type: object
-        properties:
-          template:
-            allOf:
-              - $ref: '#/components/schemas/api.v1.services.types.Template'
-            description: The updated template.
-        description: UpdateTemplateResponse is the response for NotificationService.UpdateTemplate.
-      api.v1.services.objectstore.AbortMultipartUploadResponse:
-        type: object
-        properties: { }
-        description: Response message for aborting a multipart upload.
-      api.v1.services.objectstore.CompleteMultipartUploadRequest:
-        type: object
-        properties:
-          upload_id:
-            type: string
-          object_id:
-            type: string
-          parts:
-            type: array
-            items:
-              $ref: '#/components/schemas/api.v1.services.types.PartInfo'
-        description: Request message for completing a multipart upload.
-      api.v1.services.objectstore.CompleteMultipartUploadResponse:
-        type: object
-        properties:
-          object:
-            $ref: '#/components/schemas/api.v1.services.types.Object'
-        description: Response message for completing a multipart upload.
-      api.v1.services.objectstore.DeleteObjectResponse:
-        type: object
-        properties: { }
-        description: Response message for deleting an object.
-      api.v1.services.objectstore.GetMultipartUploadUrlResponse:
-        type: object
-        properties:
-          upload_url:
-            type: string
-        description: Response message for getting a multipart upload URL.
-      api.v1.services.objectstore.GetObjectResponse:
-        type: object
-        properties:
-          object:
-            $ref: '#/components/schemas/api.v1.services.types.Object'
-        description: Response message for getting an object.
-      api.v1.services.objectstore.InitiateMultipartUploadRequest:
-        type: object
-        properties:
-          name:
-            type: string
-          content_type:
-            type: string
-        description: Request message for initiating a multipart upload.
-      api.v1.services.objectstore.InitiateMultipartUploadResponse:
-        type: object
-        properties:
-          upload_id:
-            type: string
-          object_id:
-            type: string
-        description: Response message for initiating a multipart upload.
-      api.v1.services.objectstore.ListObjectsResponse:
-        type: object
-        properties:
-          objects:
-            type: array
-            items:
-              $ref: '#/components/schemas/api.v1.services.types.Object'
-          total:
-            type: integer
-            format: int32
-        description: Response message for listing objects.
-      api.v1.services.objectstore.ListPartsResponse:
-        type: object
-        properties:
-          parts:
-            type: array
-            items:
-              $ref: '#/components/schemas/api.v1.services.types.PartInfo'
-        description: Response message for listing uploaded parts.
-      api.v1.services.objectstore.UploadObjectRequest:
-        type: object
-        properties:
-          data:
-            type: string
-            format: bytes
-          name:
-            type: string
-          content_type:
-            type: string
-        description: Request message for uploading an object in a single request.
-      api.v1.services.objectstore.UploadObjectResponse:
-        type: object
-        properties:
-          object:
-            $ref: '#/components/schemas/api.v1.services.types.Object'
-        description: Response message for uploading an object.
-      api.v1.services.organization.CreateDepartmentRequest:
-        type: object
-        properties:
-          department:
-            allOf:
-              - $ref: '#/components/schemas/api.v1.services.types.Department'
-            description: The department resource to create.
-      api.v1.services.organization.CreateDepartmentResponse:
-        type: object
-        properties:
-          department:
-            $ref: '#/components/schemas/api.v1.services.types.Department'
-      api.v1.services.organization.CreatePositionRequest:
-        type: object
-        properties:
-          position:
-            allOf:
-              - $ref: '#/components/schemas/api.v1.services.types.Position'
-            description: The position object to create.
-      api.v1.services.organization.CreatePositionResponse:
-        type: object
-        properties:
-          position:
-            $ref: '#/components/schemas/api.v1.services.types.Position'
-      api.v1.services.organization.DeleteDepartmentResponse:
-            type: object
-            properties: {}
-      api.v1.services.organization.DeletePositionResponse:
-            type: object
-            properties: {}
-      api.v1.services.organization.GetDepartmentResponse:
+        api.v1.services.notification.MarkAsReadRequest:
             type: object
             properties:
-              department:
-                $ref: '#/components/schemas/api.v1.services.types.Department'
-      api.v1.services.organization.GetPositionResponse:
+                notification_id:
+                    type: string
+                    description: The notification ID.
+            description: MarkAsReadRequest is the request for NotificationService.MarkAsRead.
+        api.v1.services.notification.MarkAsReadResponse:
+            type: object
+            properties: { }
+            description: MarkAsReadResponse is the response for NotificationService.MarkAsRead.
+        api.v1.services.notification.SendNotificationRequest:
             type: object
             properties:
-              position:
+                title:
+                    type: string
+                    description: The notification title.
+                content:
+                    type: string
+                    description: The notification content.
+                type:
+                    type: integer
+                    description: The notification type.
+                    format: enum
+                channel:
+                    type: integer
+                    description: The delivery channel.
+                    format: enum
+                recipient_ids:
+                    type: array
+                    items:
+                        type: string
+                    description: The recipient user IDs. Empty means broadcast to all users.
+                metadata:
+                    type: object
+                    additionalProperties:
+                        type: string
+                    description: Additional metadata.
+            description: SendNotificationRequest is the request for NotificationService.SendNotification.
+        api.v1.services.notification.SendNotificationResponse:
+            type: object
+            properties:
+                notification_id:
+                    type: string
+                    description: The created notification ID.
+            description: SendNotificationResponse is the response for NotificationService.SendNotification.
+        api.v1.services.notification.UpdateTemplateResponse:
+            type: object
+            properties:
+                template:
                     allOf:
-                      - $ref: '#/components/schemas/api.v1.services.types.Position'
+                        - $ref: '#/components/schemas/api.v1.services.types.Template'
+                    description: The updated template.
+            description: UpdateTemplateResponse is the response for NotificationService.UpdateTemplate.
+        api.v1.services.objectstore.AbortMultipartUploadResponse:
+            type: object
+            properties: { }
+            description: Response message for aborting a multipart upload.
+        api.v1.services.objectstore.CompleteMultipartUploadRequest:
+            type: object
+            properties:
+                upload_id:
+                    type: string
+                object_id:
+                    type: string
+                parts:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/api.v1.services.types.PartInfo'
+            description: Request message for completing a multipart upload.
+        api.v1.services.objectstore.CompleteMultipartUploadResponse:
+            type: object
+            properties:
+                object:
+                    $ref: '#/components/schemas/api.v1.services.types.Object'
+            description: Response message for completing a multipart upload.
+        api.v1.services.objectstore.DeleteObjectResponse:
+            type: object
+            properties: { }
+            description: Response message for deleting an object.
+        api.v1.services.objectstore.GetMultipartUploadUrlResponse:
+            type: object
+            properties:
+                upload_url:
+                    type: string
+            description: Response message for getting a multipart upload URL.
+        api.v1.services.objectstore.GetObjectResponse:
+            type: object
+            properties:
+                object:
+                    $ref: '#/components/schemas/api.v1.services.types.Object'
+            description: Response message for getting an object.
+        api.v1.services.objectstore.InitiateMultipartUploadRequest:
+            type: object
+            properties:
+                name:
+                    type: string
+                content_type:
+                    type: string
+            description: Request message for initiating a multipart upload.
+        api.v1.services.objectstore.InitiateMultipartUploadResponse:
+            type: object
+            properties:
+                upload_id:
+                    type: string
+                object_id:
+                    type: string
+            description: Response message for initiating a multipart upload.
+        api.v1.services.objectstore.ListObjectsResponse:
+            type: object
+            properties:
+                objects:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/api.v1.services.types.Object'
+                total:
+                    type: integer
+                    format: int32
+            description: Response message for listing objects.
+        api.v1.services.objectstore.ListPartsResponse:
+            type: object
+            properties:
+                parts:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/api.v1.services.types.PartInfo'
+            description: Response message for listing uploaded parts.
+        api.v1.services.objectstore.UploadObjectRequest:
+            type: object
+            properties:
+                data:
+                    type: string
+                    format: bytes
+                name:
+                    type: string
+                content_type:
+                    type: string
+            description: Request message for uploading an object in a single request.
+        api.v1.services.objectstore.UploadObjectResponse:
+            type: object
+            properties:
+                object:
+                    $ref: '#/components/schemas/api.v1.services.types.Object'
+            description: Response message for uploading an object.
+        api.v1.services.organization.CreateDepartmentRequest:
+            type: object
+            properties:
+                department:
+                    allOf:
+                        - $ref: '#/components/schemas/api.v1.services.types.Department'
+                    description: The department resource to create.
+        api.v1.services.organization.CreateDepartmentResponse:
+            type: object
+            properties:
+                department:
+                    $ref: '#/components/schemas/api.v1.services.types.Department'
+        api.v1.services.organization.CreatePositionRequest:
+            type: object
+            properties:
+                position:
+                    allOf:
+                        - $ref: '#/components/schemas/api.v1.services.types.Position'
+                    description: The position object to create.
+        api.v1.services.organization.CreatePositionResponse:
+            type: object
+            properties:
+                position:
+                    $ref: '#/components/schemas/api.v1.services.types.Position'
+        api.v1.services.organization.DeleteDepartmentResponse:
+            type: object
+            properties: {}
+        api.v1.services.organization.DeletePositionResponse:
+            type: object
+            properties: {}
+        api.v1.services.organization.GetDepartmentResponse:
+            type: object
+            properties:
+                department:
+                    $ref: '#/components/schemas/api.v1.services.types.Department'
+        api.v1.services.organization.GetPositionResponse:
+            type: object
+            properties:
+                position:
+                    allOf:
+                        - $ref: '#/components/schemas/api.v1.services.types.Position'
                     description: The position resource for get.
-      api.v1.services.organization.ListDepartmentsResponse:
+        api.v1.services.organization.ListDepartmentsResponse:
             type: object
             properties:
-              total:
+                total:
                     type: integer
                     description: The total number of items in the list.
                     format: int32
-              departments:
+                departments:
                     type: array
                     items:
-                      $ref: '#/components/schemas/api.v1.services.types.Department'
+                        $ref: '#/components/schemas/api.v1.services.types.Department'
                     description: The paging departments
-              page:
+                page:
                     type: integer
                     description: The page number.
                     format: int32
@@ -3267,27 +3267,27 @@ components:
                 next_page_token:
                     type: string
                     description: |-
-                      Token to retrieve the next page of results, or empty if there are no
-                       more results in the list.
+                        Token to retrieve the next page of results, or empty if there are no
+                         more results in the list.
                 extra:
                     allOf:
                         - $ref: '#/components/schemas/google.protobuf.Any'
                     description: |-
-                      Additional information about this response.
-                       content to be added without destroying the page data format
-      api.v1.services.organization.ListPositionsResponse:
+                        Additional information about this response.
+                         content to be added without destroying the page data format
+        api.v1.services.organization.ListPositionsResponse:
             type: object
             properties:
-              total:
+                total:
                     type: integer
                     description: The total number of items in the list.
                     format: int32
-              positions:
+                positions:
                     type: array
                     items:
-                      $ref: '#/components/schemas/api.v1.services.types.Position'
+                        $ref: '#/components/schemas/api.v1.services.types.Position'
                     description: The paging positions
-              page:
+                page:
                     type: integer
                     description: The page number.
                     format: int32
@@ -3298,52 +3298,52 @@ components:
                 next_page_token:
                     type: string
                     description: |-
-                      Token to retrieve the next page of results, or empty if there are no
-                       more results in the list.
+                        Token to retrieve the next page of results, or empty if there are no
+                         more results in the list.
                 extra:
                     allOf:
                         - $ref: '#/components/schemas/google.protobuf.Any'
                     description: |-
-                      Additional information about this response.
-                       content to be added without destroying the page data format
-      api.v1.services.organization.UpdateDepartmentRequest:
+                        Additional information about this response.
+                         content to be added without destroying the page data format
+        api.v1.services.organization.UpdateDepartmentRequest:
             type: object
             properties:
                 department:
                     allOf:
                         - $ref: '#/components/schemas/api.v1.services.types.Department'
                     description: The department resource which replaces the resource on the server.
-      api.v1.services.organization.UpdateDepartmentResponse:
+        api.v1.services.organization.UpdateDepartmentResponse:
             type: object
             properties:
                 department:
                     $ref: '#/components/schemas/api.v1.services.types.Department'
-      api.v1.services.organization.UpdatePositionRequest:
-        type: object
-        properties:
-          position:
-            allOf:
-              - $ref: '#/components/schemas/api.v1.services.types.Position'
-            description: The position resource which replaces the resource on the server.
-      api.v1.services.organization.UpdatePositionResponse:
-        type: object
-        properties:
-          position:
-            allOf:
-              - $ref: '#/components/schemas/api.v1.services.types.Position'
-            description: The position resource for update.
-      api.v1.services.system.ChangeUserPasswordRequest:
-        type: object
-        properties:
-          id:
-            type: string
-            description: The field will contain id of the resource requested.
-          password:
-            type: string
-            description: The password to use for this user (plain text, will be hashed).
-      api.v1.services.system.ChangeUserPasswordResponse:
-        type: object
-        properties: { }
+        api.v1.services.organization.UpdatePositionRequest:
+            type: object
+            properties:
+                position:
+                    allOf:
+                        - $ref: '#/components/schemas/api.v1.services.types.Position'
+                    description: The position resource which replaces the resource on the server.
+        api.v1.services.organization.UpdatePositionResponse:
+            type: object
+            properties:
+                position:
+                    allOf:
+                        - $ref: '#/components/schemas/api.v1.services.types.Position'
+                    description: The position resource for update.
+        api.v1.services.system.ChangeUserPasswordRequest:
+            type: object
+            properties:
+                id:
+                    type: string
+                    description: The field will contain id of the resource requested.
+                password:
+                    type: string
+                    description: The password to use for this user (plain text, will be hashed).
+        api.v1.services.system.ChangeUserPasswordResponse:
+            type: object
+            properties: { }
         api.v1.services.system.CreatePermissionRequest:
             type: object
             properties:
@@ -3567,79 +3567,79 @@ components:
                     description: |-
                         Additional information about this response.
                          content to be added without destroying the page data format
-      api.v1.services.system.ListPoliciesRequest:
-        type: object
-        properties:
-          type:
-            type: string
-            description: Filter by policy type (e.g., "p", "g", "opa:rego", "iam:statement")
-          subject:
-            type: string
-            description: Filter by subject (e.g., "user:123", "role:admin")
-          actions:
-            type: array
-            items:
-              type: string
-            description: Filter by actions (e.g., ["read", "write"])
-          resources:
-            type: array
-            items:
-              type: string
-            description: Filter by resources (e.g., ["s3:*", "s3:bucket/*"])
-          effect:
-            type: string
-            description: Filter by effect (e.g., "allow", "deny")
-          domain:
-            type: string
-            description: Filter by domain/namespace
-          disabled:
-            type: boolean
-            description: Filter by disabled status
-          page:
-            type: integer
-            description: Standard pagination fields
-            format: int32
-          page_size:
-            type: integer
-            format: int32
-          page_token:
-            type: string
-          paging_mode:
-            type: string
-          only_count:
-            type: boolean
-          keyword:
-            type: string
-          sorting:
-            type: array
-            items:
-              type: string
-            description: Sort criteria (e.g., ["type", "-created_at"])
-        description: "ListPoliciesRequest specifies filter criteria for policy retrieval.\r\n All fields are optional; omitted fields act as wildcards (match any value)."
-      api.v1.services.system.ListPoliciesResponse:
-        type: object
-        properties:
-          policies:
-            type: array
-            items:
-              $ref: '#/components/schemas/contrib.api.security.authz.v1.PolicySpec'
-            description: The list of policies in authz.PolicySpec format.
-          total:
-            type: integer
-            description: The total number of policies matching the filter.
-            format: int32
-          page:
-            type: integer
-            description: The current page number.
-            format: int32
-          page_size:
-            type: integer
-            description: The number of items per page.
-            format: int32
-          next_page_token:
-            type: string
-            description: Token to retrieve next page of results, or empty if there are no more results.
-        description: "ListPoliciesResponse contains authorization policies from casbin_rule table.\r\n The policies are converted from casbin_rule format to authz.PolicySpec format."
+        api.v1.services.system.ListPoliciesRequest:
+            type: object
+            properties:
+                type:
+                    type: string
+                    description: Filter by policy type (e.g., "p", "g", "opa:rego", "iam:statement")
+                subject:
+                    type: string
+                    description: Filter by subject (e.g., "user:123", "role:admin")
+                actions:
+                    type: array
+                    items:
+                        type: string
+                    description: Filter by actions (e.g., ["read", "write"])
+                resources:
+                    type: array
+                    items:
+                        type: string
+                    description: Filter by resources (e.g., ["s3:*", "s3:bucket/*"])
+                effect:
+                    type: string
+                    description: Filter by effect (e.g., "allow", "deny")
+                domain:
+                    type: string
+                    description: Filter by domain/namespace
+                disabled:
+                    type: boolean
+                    description: Filter by disabled status
+                page:
+                    type: integer
+                    description: Standard pagination fields
+                    format: int32
+                page_size:
+                    type: integer
+                    format: int32
+                page_token:
+                    type: string
+                paging_mode:
+                    type: string
+                only_count:
+                    type: boolean
+                keyword:
+                    type: string
+                sorting:
+                    type: array
+                    items:
+                        type: string
+                    description: Sort criteria (e.g., ["type", "-created_at"])
+            description: "ListPoliciesRequest specifies filter criteria for policy retrieval.\r\n All fields are optional; omitted fields act as wildcards (match any value)."
+        api.v1.services.system.ListPoliciesResponse:
+            type: object
+            properties:
+                policies:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/contrib.api.security.authz.v1.PolicySpec'
+                    description: The list of policies in authz.PolicySpec format.
+                total:
+                    type: integer
+                    description: The total number of policies matching the filter.
+                    format: int32
+                page:
+                    type: integer
+                    description: The current page number.
+                    format: int32
+                page_size:
+                    type: integer
+                    description: The number of items per page.
+                    format: int32
+                next_page_token:
+                    type: string
+                    description: Token to retrieve next page of results, or empty if there are no more results.
+            description: "ListPoliciesResponse contains authorization policies from casbin_rule table.\r\n The policies are converted from casbin_rule format to authz.PolicySpec format."
         api.v1.services.system.ListResourcesResponse:
             type: object
             properties:
@@ -3699,18 +3699,18 @@ components:
                     description: |-
                         Additional information about this response.
                          content to be added without destroying the page data format
-      api.v1.services.system.ListUserPermissionsResponse:
-        type: object
-        properties:
-          total:
-            type: integer
-            description: The total number of items in the list.
-            format: int32
-          permissions:
-            type: array
-            items:
-              $ref: '#/components/schemas/api.v1.services.types.Permission'
-            description: The list of permissions
+        api.v1.services.system.ListUserPermissionsResponse:
+            type: object
+            properties:
+                total:
+                    type: integer
+                    description: The total number of items in the list.
+                    format: int32
+                permissions:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/api.v1.services.types.Permission'
+                    description: The list of permissions
         api.v1.services.system.ListUserResourcesResponse:
             type: object
             properties:
@@ -3723,30 +3723,30 @@ components:
                     items:
                         $ref: '#/components/schemas/api.v1.services.types.Resource'
                     description: The paging resources
-      api.v1.services.system.ListUserRolesResponse:
-        type: object
-        properties:
-          total:
-            type: integer
-            description: The total number of items in the list.
-            format: int32
-          roles:
-            type: array
-            items:
-              $ref: '#/components/schemas/api.v1.services.types.Role'
-            description: The list of roles
-      api.v1.services.system.ListUserViewsResponse:
-        type: object
-        properties:
-          total:
-            type: integer
-            description: The total number of items in the list.
-            format: int32
-          views:
-            type: array
-            items:
-              $ref: '#/components/schemas/api.v1.services.types.View'
-            description: The list of views
+        api.v1.services.system.ListUserRolesResponse:
+            type: object
+            properties:
+                total:
+                    type: integer
+                    description: The total number of items in the list.
+                    format: int32
+                roles:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/api.v1.services.types.Role'
+                    description: The list of roles
+        api.v1.services.system.ListUserViewsResponse:
+            type: object
+            properties:
+                total:
+                    type: integer
+                    description: The total number of items in the list.
+                    format: int32
+                views:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/api.v1.services.types.View'
+                    description: The list of views
         api.v1.services.system.ListUsersResponse:
             type: object
             properties:
@@ -4017,109 +4017,109 @@ components:
                         - $ref: '#/components/schemas/api.v1.services.types.Department'
                     description: Parent holds the value of the parent edge.
             description: department.table.comment
-      api.v1.services.types.FileMetadata:
-        type: object
-        properties:
-          id:
-            type: string
-          name:
-            type: string
-          object_id:
-            type: string
-          owner_id:
-            type: string
-          sha256:
-            type: string
-          visibility:
-            type: string
-          mime_type:
-            type: string
-          size:
-            type: string
-          object_info:
-            $ref: '#/components/schemas/api.v1.services.types.Object'
-          is_permanent:
-            type: boolean
-          expires_at:
-            type: string
-            format: date-time
-          max_downloads:
-            type: integer
-            format: int32
-          download_count:
-            type: integer
-            format: int32
-          create_time:
-            type: string
-            description: Matches ent's CreateTime field for automatic DTO mapping
-            format: date-time
-          update_time:
-            type: string
-            description: Matches ent's UpdateTime field for automatic DTO mapping
-            format: date-time
-        description: Represents metadata for a file managed by the FileManager.
-      api.v1.services.types.Notification:
-        type: object
-        properties:
-          id:
-            type: string
-            description: The notification ID.
-          title:
-            type: string
-            description: The notification title.
-          content:
-            type: string
-            description: The notification content.
-          type:
-            type: integer
-            description: The notification type.
-            format: enum
-          channel:
-            type: integer
-            description: The delivery channel.
-            format: enum
-          recipient_id:
-            type: string
-            description: The recipient user ID.
-          is_read:
-            type: boolean
-            description: Whether the notification has been read.
-          created_at:
-            type: string
-            description: The time when the notification was created.
-            format: date-time
-          metadata:
+        api.v1.services.types.FileMetadata:
             type: object
-            additionalProperties:
-              type: string
-            description: Additional metadata.
-        description: Notification represents a notification message.
-      api.v1.services.types.Object:
-        type: object
-        properties:
-          id:
-            type: string
-          name:
-            type: string
-          url:
-            type: string
-          size:
-            type: string
-          content_type:
-            type: string
-          create_time:
-            type: string
-            format: date-time
-        description: Represents a stored object.
-      api.v1.services.types.PartInfo:
-        type: object
-        properties:
-          part_number:
-            type: integer
-            format: int32
-          etag:
-            type: string
-        description: Represents information about a part of a multipart upload.
+            properties:
+                id:
+                    type: string
+                name:
+                    type: string
+                object_id:
+                    type: string
+                owner_id:
+                    type: string
+                sha256:
+                    type: string
+                visibility:
+                    type: string
+                mime_type:
+                    type: string
+                size:
+                    type: string
+                object_info:
+                    $ref: '#/components/schemas/api.v1.services.types.Object'
+                is_permanent:
+                    type: boolean
+                expires_at:
+                    type: string
+                    format: date-time
+                max_downloads:
+                    type: integer
+                    format: int32
+                download_count:
+                    type: integer
+                    format: int32
+                create_time:
+                    type: string
+                    description: Matches ent's CreateTime field for automatic DTO mapping
+                    format: date-time
+                update_time:
+                    type: string
+                    description: Matches ent's UpdateTime field for automatic DTO mapping
+                    format: date-time
+            description: Represents metadata for a file managed by the FileManager.
+        api.v1.services.types.Notification:
+            type: object
+            properties:
+                id:
+                    type: string
+                    description: The notification ID.
+                title:
+                    type: string
+                    description: The notification title.
+                content:
+                    type: string
+                    description: The notification content.
+                type:
+                    type: integer
+                    description: The notification type.
+                    format: enum
+                channel:
+                    type: integer
+                    description: The delivery channel.
+                    format: enum
+                recipient_id:
+                    type: string
+                    description: The recipient user ID.
+                is_read:
+                    type: boolean
+                    description: Whether the notification has been read.
+                created_at:
+                    type: string
+                    description: The time when the notification was created.
+                    format: date-time
+                metadata:
+                    type: object
+                    additionalProperties:
+                        type: string
+                    description: Additional metadata.
+            description: Notification represents a notification message.
+        api.v1.services.types.Object:
+            type: object
+            properties:
+                id:
+                    type: string
+                name:
+                    type: string
+                url:
+                    type: string
+                size:
+                    type: string
+                content_type:
+                    type: string
+                create_time:
+                    type: string
+                    format: date-time
+            description: Represents a stored object.
+        api.v1.services.types.PartInfo:
+            type: object
+            properties:
+                part_number:
+                    type: integer
+                    format: int32
+                etag:
+                    type: string
+            description: Represents information about a part of a multipart upload.
         api.v1.services.types.Permission:
             type: object
             properties:
@@ -4336,45 +4336,45 @@ components:
                         $ref: '#/components/schemas/api.v1.services.types.Permission'
                     description: 'For responses: This field is populated with full permission details.'
             description: Role is the model entity for the Role schema.
-      api.v1.services.types.Template:
-        type: object
-        properties:
-          id:
-            type: string
-            description: The template ID.
-          name:
-            type: string
-            description: The template name.
-          code:
-            type: string
-            description: The template code.
-          subject:
-            type: string
-            description: The template subject.
-          content:
-            type: string
-            description: The template content.
-          channel:
-            type: integer
-            description: The delivery channel.
-            format: enum
-          is_active:
-            type: boolean
-            description: Whether the template is active.
-          created_at:
-            type: string
-            description: The time when the template was created.
-            format: date-time
-          updated_at:
-            type: string
-            description: The time when the template was last updated.
-            format: date-time
-          metadata:
+        api.v1.services.types.Template:
             type: object
-            additionalProperties:
-              type: string
-            description: Additional metadata.
-        description: Template represents a notification template.
+            properties:
+                id:
+                    type: string
+                    description: The template ID.
+                name:
+                    type: string
+                    description: The template name.
+                code:
+                    type: string
+                    description: The template code.
+                subject:
+                    type: string
+                    description: The template subject.
+                content:
+                    type: string
+                    description: The template content.
+                channel:
+                    type: integer
+                    description: The delivery channel.
+                    format: enum
+                is_active:
+                    type: boolean
+                    description: Whether the template is active.
+                created_at:
+                    type: string
+                    description: The time when the template was created.
+                    format: date-time
+                updated_at:
+                    type: string
+                    description: The time when the template was last updated.
+                    format: date-time
+                metadata:
+                    type: object
+                    additionalProperties:
+                        type: string
+                    description: Additional metadata.
+            description: Template represents a notification template.
         api.v1.services.types.User:
             type: object
             properties:
@@ -4405,8 +4405,8 @@ components:
                     type: string
                     description: user.field.username
                 nickname:
-                  type: string
-                  description: user.field.nickname
+                    type: string
+                    description: user.field.nickname
                 phone:
                     type: string
                     description: user.field.phone
@@ -4439,48 +4439,48 @@ components:
                     description: user.field.sanction_date
                     format: date-time
                 profile:
-                  allOf:
-                    - $ref: '#/components/schemas/api.v1.services.types.UserProfile'
-                  description: The user's profile information.
+                    allOf:
+                        - $ref: '#/components/schemas/api.v1.services.types.UserProfile'
+                    description: The user's profile information.
                 setting:
-                  allOf:
-                    - $ref: '#/components/schemas/api.v1.services.types.UserSetting'
-                  description: The user's settings.
+                    allOf:
+                        - $ref: '#/components/schemas/api.v1.services.types.UserSetting'
+                    description: The user's settings.
                 roles:
                     type: array
                     items:
                         $ref: '#/components/schemas/api.v1.services.types.Role'
                     description: 'For responses: This field is populated with full role details.'
             description: User is the model entity for the User schema.
-      api.v1.services.types.UserProfile:
-        type: object
-        properties:
-          avatar:
-            type: string
-          gender:
-            type: string
-          name:
-            type: string
-          department:
-            type: string
-          remark:
-            type: string
-        description: UserProfile holds the profile information of a user.
-      api.v1.services.types.UserSetting:
-        type: object
-        properties:
-          theme:
-            type: string
-          language:
-            type: string
-          timezone:
-            type: string
-          preferences:
+        api.v1.services.types.UserProfile:
             type: object
-            additionalProperties:
-              type: string
-            description: Flexible JSON field for various settings
-        description: UserSetting holds the personalized settings of a user.
+            properties:
+                avatar:
+                    type: string
+                gender:
+                    type: string
+                name:
+                    type: string
+                department:
+                    type: string
+                remark:
+                    type: string
+            description: UserProfile holds the profile information of a user.
+        api.v1.services.types.UserSetting:
+            type: object
+            properties:
+                theme:
+                    type: string
+                language:
+                    type: string
+                timezone:
+                    type: string
+                preferences:
+                    type: object
+                    additionalProperties:
+                        type: string
+                    description: Flexible JSON field for various settings
+            description: UserSetting holds the personalized settings of a user.
         api.v1.services.types.View:
             type: object
             properties:
@@ -4559,95 +4559,95 @@ components:
                         $ref: '#/components/schemas/api.v1.services.types.Role'
                     description: 'For responses: This field is populated with full role details.'
             description: View is the model entity for the View schema.
-      contrib.api.security.authz.v1.PolicySpec:
-        type: object
-        properties:
-          type:
-            type: string
-            description: |-
-              Policy type identifier.
-               For Casbin: "p" (policy/permission), "g" (grouping/role), "g2", "g3", etc.
-               For OPA: "opa:rego"
-               For IAM: "iam:statement"
-               For Zanzibar: "zanzibar:relation"
-          subject:
-            type: string
-            description: |-
-              The subject of this policy (who the policy applies to).
-               e.g., "user:123", "role:admin", "service:payment-service"
-               NOTE: During authorization checks, this field is ignored and replaced with Principal's identity.
-          actions:
-            type: array
-            items:
-              type: string
-            description: |-
-              Actions that this policy grants or restricts.
-               Used for type="p" (permission) policies.
-               Multiple actions can be specified (e.g., ["read", "write"] for IAM-style policies).
-          resources:
-            type: array
-            items:
-              type: string
-            description: |-
-              Resources that this policy applies to.
-               Used for type="p" (permission) policies.
-               Multiple resources can be specified (e.g., ["s3:*", "s3:bucket/*"] for IAM-style policies).
-          roles:
-            type: array
-            items:
-              type: string
-            description: |-
-              Roles that the subject is assigned to.
-               Used for type="g" (grouping/role) policies in RBAC.
-               Multiple roles can be specified (e.g., ["admin", "editor", "viewer"]).
-          effect:
-            type: string
-            description: |-
-              Effect of the policy (e.g., "allow", "deny").
-               Recommended values: "allow", "deny"
-          domain:
-            type: string
-            description: |-
-              Domain or namespace for this policy.
-               Used for multi-tenant isolation (Casbin) or resource namespacing (Zanzibar).
-          condition:
-            type: string
-            description: |-
-              Condition expression for the policy.
-               Supports multiple formats:
-               - Casbin: simple conditions (e.g., "r.sub == p.sub")
-               - OPA: Rego code (e.g., "allow { input.user == data.roles.admin }")
-               - IAM: JSON conditions (e.g., {"StringEquals": {"aws:UserAgent": "MyApp"}})
-          valid_from:
-            type: string
-            description: Valid from timestamp (Unix epoch in seconds).
-          expires_at:
-            type: string
-            description: Expires at timestamp (Unix epoch in seconds).
-          priority:
-            type: integer
-            description: |-
-              Priority of the policy.
-               Default is 0 (lowest priority). Higher numbers have higher priority.
-            format: int32
-          disabled:
-            type: boolean
-            description: |-
-              Whether the policy is disabled.
-               Default is false (policy is enabled).
-          metadata:
+        contrib.api.security.authz.v1.PolicySpec:
             type: object
+            properties:
+                type:
+                    type: string
+                    description: |-
+                        Policy type identifier.
+                         For Casbin: "p" (policy/permission), "g" (grouping/role), "g2", "g3", etc.
+                         For OPA: "opa:rego"
+                         For IAM: "iam:statement"
+                         For Zanzibar: "zanzibar:relation"
+                subject:
+                    type: string
+                    description: |-
+                        The subject of this policy (who the policy applies to).
+                         e.g., "user:123", "role:admin", "service:payment-service"
+                         NOTE: During authorization checks, this field is ignored and replaced with Principal's identity.
+                actions:
+                    type: array
+                    items:
+                        type: string
+                    description: |-
+                        Actions that this policy grants or restricts.
+                         Used for type="p" (permission) policies.
+                         Multiple actions can be specified (e.g., ["read", "write"] for IAM-style policies).
+                resources:
+                    type: array
+                    items:
+                        type: string
+                    description: |-
+                        Resources that this policy applies to.
+                         Used for type="p" (permission) policies.
+                         Multiple resources can be specified (e.g., ["s3:*", "s3:bucket/*"] for IAM-style policies).
+                roles:
+                    type: array
+                    items:
+                        type: string
+                    description: |-
+                        Roles that the subject is assigned to.
+                         Used for type="g" (grouping/role) policies in RBAC.
+                         Multiple roles can be specified (e.g., ["admin", "editor", "viewer"]).
+                effect:
+                    type: string
+                    description: |-
+                        Effect of the policy (e.g., "allow", "deny").
+                         Recommended values: "allow", "deny"
+                domain:
+                    type: string
+                    description: |-
+                        Domain or namespace for this policy.
+                         Used for multi-tenant isolation (Casbin) or resource namespacing (Zanzibar).
+                condition:
+                    type: string
+                    description: |-
+                        Condition expression for the policy.
+                         Supports multiple formats:
+                         - Casbin: simple conditions (e.g., "r.sub == p.sub")
+                         - OPA: Rego code (e.g., "allow { input.user == data.roles.admin }")
+                         - IAM: JSON conditions (e.g., {"StringEquals": {"aws:UserAgent": "MyApp"}})
+                valid_from:
+                    type: string
+                    description: Valid from timestamp (Unix epoch in seconds).
+                expires_at:
+                    type: string
+                    description: Expires at timestamp (Unix epoch in seconds).
+                priority:
+                    type: integer
+                    description: |-
+                        Priority of the policy.
+                         Default is 0 (lowest priority). Higher numbers have higher priority.
+                    format: int32
+                disabled:
+                    type: boolean
+                    description: |-
+                        Whether the policy is disabled.
+                         Default is false (policy is enabled).
+                metadata:
+                    type: object
+                    description: |-
+                        Metadata for framework-specific extensions.
+                         This field allows arbitrary key-value pairs for framework-specific data.
+                         Examples:
+                         - OPA: {"rego_package": "auth", "rego_entrypoint": "allow", "data": {...}}
+                         - Zanzibar: {"namespace": "document", "object_id": "123", "relation": "viewer"}
+                         - Custom: any additional fields needed by specific implementations
             description: |-
-              Metadata for framework-specific extensions.
-               This field allows arbitrary key-value pairs for framework-specific data.
-               Examples:
-               - OPA: {"rego_package": "auth", "rego_entrypoint": "allow", "data": {...}}
-               - Zanzibar: {"namespace": "document", "object_id": "123", "relation": "viewer"}
-               - Custom: any additional fields needed by specific implementations
-        description: |-
-          PolicySpec is the data transfer object for a complete policy specification.
-           Unlike RuleSpec (used for authorization checks without subject),
-           PolicySpec includes subject and is used for storage and retrieval.
+                PolicySpec is the data transfer object for a complete policy specification.
+                 Unlike RuleSpec (used for authorization checks without subject),
+                 PolicySpec includes subject and is used for storage and retrieval.
         google.protobuf.Any:
             type: object
             properties:
@@ -4681,29 +4681,29 @@ components:
             name: Authorization
             in: header
 tags:
-  - name: AdminService
-    description: |-
-      AdminService provides administrative and operational endpoints for identity service.
-       These endpoints are intended for system administrators, operators, and for use in testing.
-  - name: AdminService
-    description: |-
-      AdminService provides administrative and operational endpoints.
-       Note: This service is a placeholder for future administrative features.
-  - name: AuthService
-    description: Service AuthService provides APIs for the identity lifecycle.
+    - name: AdminService
+      description: |-
+          AdminService provides administrative and operational endpoints for identity service.
+           These endpoints are intended for system administrators, operators, and for use in testing.
+    - name: AdminService
+      description: |-
+          AdminService provides administrative and operational endpoints.
+           Note: This service is a placeholder for future administrative features.
+    - name: AuthService
+      description: Service AuthService provides APIs for the identity lifecycle.
     - name: DepartmentService
       description: The organization department service definition.
-  - name: FileManagerService
+    - name: FileManagerService
     - name: MeService
       description: Service MeService provides APIs for currently authenticated user to manage their own profile and data.
-  - name: NotificationService
-    description: "NotificationService provides notification capabilities.\r\n Note: This service is not yet implemented, proto definitions are prepared for future use."
-  - name: ObjectStoreService
-    description: "The ObjectStore service definition.\r\n This service provides a generic interface for object storage.\r\n While HTTP bindings are provided for flexibility and internal use,\r\n it's primarily designed to be consumed by other backend services like FileManager."
+    - name: NotificationService
+      description: "NotificationService provides notification capabilities.\r\n Note: This service is not yet implemented, proto definitions are prepared for future use."
+    - name: ObjectStoreService
+      description: "The ObjectStore service definition.\r\n This service provides a generic interface for object storage.\r\n While HTTP bindings are provided for flexibility and internal use,\r\n it's primarily designed to be consumed by other backend services like FileManager."
     - name: PermissionService
       description: The login service definition.
-  - name: PolicyQueryService
-    description: "PolicyQueryService provides read access to authorization policies from casbin_rule table.\r\n This service is consumed by other modules (like auth) to query policy data."
+    - name: PolicyQueryService
+      description: "PolicyQueryService provides read access to authorization policies from casbin_rule table.\r\n This service is consumed by other modules (like auth) to query policy data."
     - name: PositionService
       description: The organization position service definition.
     - name: ResourceService

@@ -21,6 +21,7 @@ type ObjectRepo interface {
 	GetPresignedURL(ctx context.Context, id string, expires time.Duration) (string, error)
 	InitiateMultipartUpload(ctx context.Context, name string, contentType string) (string, string, error)
 	GetMultipartUploadURL(ctx context.Context, objectID string, uploadID string, partNumber int32, expires time.Duration) (string, error)
+	UploadPart(ctx context.Context, objectID string, uploadID string, partNumber int32, data io.Reader) (string, error)
 	ListParts(ctx context.Context, objectID string, uploadID string) ([]*types.PartInfo, error)
 	CompleteMultipartUpload(ctx context.Context, objectID string, uploadID string, parts []*types.PartInfo) (*types.Object, error)
 	AbortMultipartUpload(ctx context.Context, objectID string, uploadID string) error

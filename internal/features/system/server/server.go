@@ -21,7 +21,6 @@ import (
 	"github.com/origadmin/runtime/service/transport"
 	"github.com/origadmin/runtime/service/transport/grpc"
 	"github.com/origadmin/runtime/service/transport/http"
-	systemv1 "origadmin/application/admin/api/v1/services/system"
 	"origadmin/application/admin/internal/broker"
 	"origadmin/application/admin/internal/features/system/service"
 )
@@ -77,7 +76,7 @@ func NewServers(
 }
 
 // NewHTTPServer new an HTTP server.
-func NewHTTPServer(_ *runtime.App, cfg *httpv1.Server, svc *service.SystemService, provider container.ServerMiddlewareProvider) (*transport.HTTPServer, error) {
+func NewHTTPServer(app *runtime.App, cfg *httpv1.Server, svc *service.SystemService, provider container.ServerMiddlewareProvider) (*transport.HTTPServer, error) {
 	if cfg == nil {
 		return nil, errors.New("http config is nil")
 	}
@@ -95,20 +94,18 @@ func NewHTTPServer(_ *runtime.App, cfg *httpv1.Server, svc *service.SystemServic
 		return nil, err
 	}
 
-	// Register HTTP handlers
-	systemv1.RegisterUserServiceHTTPServer(srv, svc.User)
-	systemv1.RegisterRoleServiceHTTPServer(srv, svc.Role)
-	systemv1.RegisterPermissionServiceHTTPServer(srv, svc.Permission)
-	systemv1.RegisterResourceServiceHTTPServer(srv, svc.Resource)
-	systemv1.RegisterViewServiceHTTPServer(srv, svc.View)
-	srv.WalkHandle(func(method, path string, handler stdhttp.HandlerFunc) {
-		log.Infof("HTTP %s %s", method, path)
+	_ = svc.RegisterHTTP(app.Context(), srv)
+
+	helper := log.NewHelper(app.Logger())
+	_ = srv.WalkHandle(func(method, path string, handler stdhttp.HandlerFunc) {
+		helper.Infow(log.DefaultMessageKey, "Registered http handler", "method", method, "path", path)
 	})
 	return srv, nil
 }
 
 // NewGRPCServer new a gRPC server.
-func NewGRPCServer(_ *runtime.App, cfg *grpcv1.Server, svc *service.SystemService, provider container.ServerMiddlewareProvider) (*transport.GRPCServer, error) {
+func NewGRPCServer(app *runtime.App, cfg *grpcv1.Server, svc *service.SystemService,
+	provider container.ServerMiddlewareProvider) (*transport.GRPCServer, error) {
 	if cfg == nil {
 		return nil, errors.New("grpc config is nil")
 	}
@@ -125,13 +122,7 @@ func NewGRPCServer(_ *runtime.App, cfg *grpcv1.Server, svc *service.SystemServic
 		return nil, err
 	}
 
-	// Register gRPC handlers
-	systemv1.RegisterUserServiceServer(srv, svc.User)
-	systemv1.RegisterRoleServiceServer(srv, svc.Role)
-	systemv1.RegisterPermissionServiceServer(srv, svc.Permission)
-	systemv1.RegisterResourceServiceServer(srv, svc.Resource)
-	systemv1.RegisterViewServiceServer(srv, svc.View)
-	systemv1.RegisterPolicyQueryServiceServer(srv, svc.PolicyQuery)
+	_ = svc.RegisterGRPC(app.Context(), srv)
 
 	return srv, nil
 }

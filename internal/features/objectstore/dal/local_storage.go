@@ -19,6 +19,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/go-kratos/kratos/v2/log"
 	"github.com/google/wire"
 	"google.golang.org/grpc/metadata"
 	"google.golang.org/protobuf/types/known/timestamppb"
@@ -212,7 +213,36 @@ func (s *LocalStorage) InitiateMultipartUpload(ctx context.Context, name string,
 }
 
 func (s *LocalStorage) GetMultipartUploadURL(ctx context.Context, objectID string, uploadID string, partNumber int32, expires time.Duration) (string, error) {
-	return fmt.Sprintf("/multipart/%s/%d", uploadID, partNumber), nil
+	// FIX: Use '/obs/multipart' to align with physical directory separation
+	return fmt.Sprintf("/obs/multipart/%s/uploads/%s/parts/%d", objectID, uploadID, partNumber), nil
+}
+
+// UploadPart uploads a part of a multipart upload.
+func (s *LocalStorage) UploadPart(ctx context.Context, objectID string, uploadID string, partNumber int32, data io.Reader) (string, error) {
+	uploadPath := filepath.Join(s.multipartPath, uploadID)
+	if err := os.MkdirAll(uploadPath, 0755); err != nil {
+		return "", err
+	}
+
+	partFile := filepath.Join(uploadPath, fmt.Sprintf("%d", partNumber))
+	file, err := os.Create(partFile)
+	if err != nil {
+		return "", err
+	}
+	defer file.Close()
+
+	// Initialize MD5 for ETag calculation (S3 standard)
+	partHasher := md5.New()
+	multiWriter := io.MultiWriter(file, partHasher)
+
+	n, err := io.Copy(multiWriter, data)
+	if err != nil {
+		return "", err
+	}
+
+	calculatedMD5 := hex.EncodeToString(partHasher.Sum(nil))
+	log.Context(ctx).Infof("[Storage] Saved part %d for upload %s: %d bytes, ETag: %s", partNumber, uploadID, n, calculatedMD5)
+	return calculatedMD5, nil
 }
 
 func (s *LocalStorage) ListParts(ctx context.Context, objectID string, uploadID string) ([]*types.PartInfo, error) {

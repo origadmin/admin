@@ -79,6 +79,11 @@ func (uc *ObjectStoreUseCase) ListParts(ctx context.Context, objectID string, up
 	return uc.repo.ListParts(ctx, objectID, uploadID)
 }
 
+// UploadPart uploads a part.
+func (uc *ObjectStoreUseCase) UploadPart(ctx context.Context, objectID string, uploadID string, partNumber int32, data io.Reader) (string, error) {
+	return uc.repo.UploadPart(ctx, objectID, uploadID, partNumber, data)
+}
+
 // CompleteMultipartUpload completes a multipart upload.
 func (uc *ObjectStoreUseCase) CompleteMultipartUpload(ctx context.Context, objectID string, uploadID string, parts []*types.PartInfo) (*types.Object, error) {
 	return uc.repo.CompleteMultipartUpload(ctx, objectID, uploadID, parts)
