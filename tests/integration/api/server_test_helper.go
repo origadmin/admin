@@ -49,12 +49,11 @@ func (n *noopPublisher) Close() error {
 
 // setupTestServer initializes a test server with an in-memory SQLite database
 // and all necessary dependencies for integration testing.
-// 修正了数据库初始化: 正确使用 enttest.Open 的参数
-func setupTestServer(t *testing.T) *testServerComponents {
+// 修正了数据库初始�? 正确使用 enttest.Open 的参�?func setupTestServer(t *testing.T) *testServerComponents {
 	t.Helper()
 
 	// 1. Initialize in-memory SQLite database
-	// 修正: enttest.Open 的第二个参数是 dialect，第三个参数才是 DSN
+// 修正: enttest.Open 的第二个参数�?dialect，第三个参数才是 DSN
 	client := enttest.Open(t, "sqlite3", "file:ent?mode=memory&cache=shared&_fk=1")
 	t.Cleanup(func() { client.Close() })
 	database := ent.NewDatabaseWithClient(client)
@@ -124,8 +123,7 @@ func handleServiceError(c *gin.Context, err error) {
 		return
 	}
 
-	// 导入 errors 包检查错误类型
-	switch {
+// 导入 errors 包检查错误类�?	switch {
 	case err.Error() == "not found":
 		c.JSON(http.StatusNotFound, gin.H{"error": err.Error()})
 	case err.Error() == "bad request":

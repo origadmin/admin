@@ -11,7 +11,7 @@ import (
 	loggerv1 "github.com/origadmin/runtime/api/gen/go/config/logger/v1"
 	middlewarev1 "github.com/origadmin/runtime/api/gen/go/config/middleware/v1"
 	transportv1 "github.com/origadmin/runtime/api/gen/go/config/transport/v1"
-	"github.com/origadmin/runtime/bootstrap"
+	"github.com/origadmin/runtime/engine/bootstrap"
 	"github.com/origadmin/runtime/contracts"
 	confpb "origadmin/application/admin/internal/conf/pb"
 )

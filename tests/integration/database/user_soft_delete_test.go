@@ -54,7 +54,7 @@ func TestUserSoftDeleteAndRestore(t *testing.T) {
 	})
 	require.NoError(t, err)
 	require.NotNil(t, testRole)
-	t.Logf("✓ Created test role: ID=%d, Name=%s", testRole.Id, testRole.Name)
+	t.Logf("�?Created test role: ID=%d, Name=%s", testRole.Id, testRole.Name)
 
 	// Step 2: Create a test user with role
 	testUser, err := userRepo.Create(ctx, &types.User{
@@ -65,37 +65,37 @@ func TestUserSoftDeleteAndRestore(t *testing.T) {
 	}, "")
 	require.NoError(t, err)
 	require.NotNil(t, testUser)
-	t.Logf("✓ Created test user: ID=%d, Username=%s", testUser.Id, testUser.Username)
+	t.Logf("�?Created test user: ID=%d, Username=%s", testUser.Id, testUser.Username)
 
 	// Add role to user
 	_, err = userRepo.AddRoleIDs(ctx, testUser.Id, []int64{testRole.Id})
 	require.NoError(t, err)
 	require.NoError(t, err)
 	require.NotNil(t, testUser)
-	t.Logf("✓ Created test user: ID=%d, Username=%s", testUser.Id, testUser.Username)
+	t.Logf("�?Created test user: ID=%d, Username=%s", testUser.Id, testUser.Username)
 
 	// Step 3: Verify user has role association
 	userWithRoles, err := userRepo.Get(ctx, testUser.Id, &dto.UserQueryOption{WithRoles: true})
 	require.NoError(t, err)
 	require.NotNil(t, userWithRoles)
 	require.Len(t, userWithRoles.Roles, 1, "User should have 1 role before deletion")
-	t.Logf("✓ User has %d role(s) before deletion", len(userWithRoles.Roles))
+	t.Logf("�?User has %d role(s) before deletion", len(userWithRoles.Roles))
 
 	// Step 4: Soft delete the user
 	err = userRepo.Delete(ctx, testUser.Id)
 	require.NoError(t, err)
-	t.Logf("✓ Soft deleted user: ID=%d", testUser.Id)
+	t.Logf("�?Soft deleted user: ID=%d", testUser.Id)
 
 	// Step 5: Verify user is soft deleted (delete_time is set)
 	// Note: User should not be found in normal query after soft delete
 	_, err = userRepo.Get(ctx, testUser.Id, &dto.UserQueryOption{WithRoles: true})
 	assert.Error(t, err, "Should get error when querying soft-deleted user normally")
-	t.Logf("✓ User is not found in normal query (as expected for soft-deleted records)")
+	t.Logf("�?User is not found in normal query (as expected for soft-deleted records)")
 
 	// Step 6: Restore the user
 	err = userRepo.Restore(ctx, testUser.Id)
 	require.NoError(t, err)
-	t.Logf("✓ Restored user: ID=%d", testUser.Id)
+	t.Logf("�?Restored user: ID=%d", testUser.Id)
 
 	// Step 7: Verify user is restored and still has role association
 	restoredUser, err := userRepo.Get(ctx, testUser.Id, &dto.UserQueryOption{WithRoles: true})
@@ -103,7 +103,7 @@ func TestUserSoftDeleteAndRestore(t *testing.T) {
 	require.NotNil(t, restoredUser)
 	require.Len(t, restoredUser.Roles, 1, "User should still have 1 role after restoration")
 	assert.Equal(t, testRole.Id, restoredUser.Roles[0].Id, "Role ID should match")
-	t.Logf("✓ User restored with %d role(s) intact", len(restoredUser.Roles))
+	t.Logf("�?User restored with %d role(s) intact", len(restoredUser.Roles))
 }
 
 // TestUserSoftDeleteDoesNotClearAssociations verifies that soft delete
@@ -148,23 +148,23 @@ func TestUserSoftDeleteDoesNotClearAssociations(t *testing.T) {
 	require.NoError(t, err)
 	initialRoleCount := len(userBefore.Roles)
 	require.Equal(t, 2, initialRoleCount, "User should have 2 roles initially")
-	t.Logf("✓ User initially has %d roles", initialRoleCount)
+	t.Logf("�?User initially has %d roles", initialRoleCount)
 
 	// Soft delete user
 	err = userRepo.Delete(ctx, testUser.Id)
 	require.NoError(t, err)
-	t.Logf("✓ User soft deleted")
+	t.Logf("�?User soft deleted")
 
 	// Restore user
 	err = userRepo.Restore(ctx, testUser.Id)
 	require.NoError(t, err)
-	t.Logf("✓ User restored")
+	t.Logf("�?User restored")
 
 	// Verify role associations are preserved
 	userAfter, err := userRepo.Get(ctx, testUser.Id, &dto.UserQueryOption{WithRoles: true})
 	require.NoError(t, err)
 	require.Len(t, userAfter.Roles, initialRoleCount, "Role associations should be preserved after soft delete and restore")
-	t.Logf("✓ User still has %d roles after deletion and restoration", len(userAfter.Roles))
+	t.Logf("�?User still has %d roles after deletion and restoration", len(userAfter.Roles))
 
 	// Verify role IDs match
 	roleIDs := make(map[int64]bool)
@@ -173,7 +173,7 @@ func TestUserSoftDeleteDoesNotClearAssociations(t *testing.T) {
 	}
 	assert.True(t, roleIDs[role1.Id], "Role 1 should be present")
 	assert.True(t, roleIDs[role2.Id], "Role 2 should be present")
-	t.Logf("✓ All role associations preserved correctly")
+	t.Logf("�?All role associations preserved correctly")
 }
 
 // TestHardDeleteClearsAssociations verifies that entities without soft delete
@@ -210,18 +210,18 @@ func TestHardDeleteClearsAssociations(t *testing.T) {
 	userBefore, err := userRepo.Get(ctx, testUser.Id, &dto.UserQueryOption{WithRoles: true})
 	require.NoError(t, err)
 	require.Len(t, userBefore.Roles, 1, "User should have 1 role initially")
-	t.Logf("✓ User has 1 role before role deletion")
+	t.Logf("�?User has 1 role before role deletion")
 
 	// Hard delete the role (should clear user_roles association)
 	err = roleRepo.Delete(ctx, testRole.Id)
 	require.NoError(t, err)
-	t.Logf("✓ Role hard deleted: ID=%d", testRole.Id)
+	t.Logf("�?Role hard deleted: ID=%d", testRole.Id)
 
 	// Verify user's role association is cleared
 	userAfter, err := userRepo.Get(ctx, testUser.Id, &dto.UserQueryOption{WithRoles: true})
 	require.NoError(t, err)
 	require.Len(t, userAfter.Roles, 0, "User should have 0 roles after role deletion (association cleared)")
-	t.Logf("✓ User's role associations properly cleared after role hard deletion")
+	t.Logf("�?User's role associations properly cleared after role hard deletion")
 }
 
 // TestSoftDeletedUserDoesNotAffectOtherUsers verifies that
@@ -249,12 +249,12 @@ func TestSoftDeletedUserDoesNotAffectOtherUsers(t *testing.T) {
 	}, "")
 	require.NoError(t, err)
 
-	t.Logf("✓ Created test users: ID1=%d, ID2=%d", user1.Id, user2.Id)
+	t.Logf("�?Created test users: ID1=%d, ID2=%d", user1.Id, user2.Id)
 
 	// Soft delete first user
 	err = userRepo.Delete(ctx, user1.Id)
 	require.NoError(t, err)
-	t.Logf("✓ Soft deleted user1: ID=%d", user1.Id)
+	t.Logf("�?Soft deleted user1: ID=%d", user1.Id)
 
 	// Verify user1 is not accessible
 	_, err = userRepo.Get(ctx, user1.Id, &dto.UserQueryOption{WithRoles: true})
@@ -265,7 +265,7 @@ func TestSoftDeletedUserDoesNotAffectOtherUsers(t *testing.T) {
 	require.NoError(t, err)
 	require.NotNil(t, user2After)
 	assert.Equal(t, user2.Id, user2After.Id, "User2 should still be accessible")
-	t.Logf("✓ User2 is still accessible after user1 is deleted")
+	t.Logf("�?User2 is still accessible after user1 is deleted")
 }
 
 // TestListUsersExcludesSoftDeleted verifies that listing users
@@ -293,18 +293,18 @@ func TestListUsersExcludesSoftDeleted(t *testing.T) {
 	allUsers, _, err := userRepo.List(ctx, &dto.UserQueryOption{})
 	require.NoError(t, err)
 	require.Len(t, allUsers, 3, "Should have 3 users initially")
-	t.Logf("✓ Initial list has %d users", len(allUsers))
+	t.Logf("�?Initial list has %d users", len(allUsers))
 
 	// Soft delete one user
 	err = userRepo.Delete(ctx, users[0].Id)
 	require.NoError(t, err)
-	t.Logf("✓ Soft deleted user: ID=%d", users[0].Id)
+	t.Logf("�?Soft deleted user: ID=%d", users[0].Id)
 
 	// List users again
 	remainingUsers, _, err := userRepo.List(ctx, &dto.UserQueryOption{})
 	require.NoError(t, err)
 	require.Len(t, remainingUsers, 2, "Should have 2 users after one is soft deleted")
-	t.Logf("✓ List now has %d users", len(remainingUsers))
+	t.Logf("�?List now has %d users", len(remainingUsers))
 
 	// Verify the soft-deleted user is not in the list
 	userIDs := make(map[int64]bool)
@@ -314,7 +314,7 @@ func TestListUsersExcludesSoftDeleted(t *testing.T) {
 	assert.False(t, userIDs[users[0].Id], "Soft-deleted user should not be in list")
 	assert.True(t, userIDs[users[1].Id], "User 1 should still be in list")
 	assert.True(t, userIDs[users[2].Id], "User 2 should still be in list")
-	t.Logf("✓ Soft-deleted user properly excluded from list")
+	t.Logf("�?Soft-deleted user properly excluded from list")
 }
 
 // TestRestoreNonExistentUser verifies that restoring a non-existent user
@@ -328,7 +328,7 @@ func TestRestoreNonExistentUser(t *testing.T) {
 	// Try to restore a non-existent user
 	err := userRepo.Restore(ctx, 999999)
 	assert.Error(t, err, "Should return error for non-existent user")
-	t.Logf("✓ Correctly returns error when trying to restore non-existent user")
+	t.Logf("�?Correctly returns error when trying to restore non-existent user")
 }
 
 // TestSoftDeleteMultipleTimes verifies that soft-deleting
@@ -351,11 +351,11 @@ func TestSoftDeleteMultipleTimes(t *testing.T) {
 	// First delete
 	err = userRepo.Delete(ctx, testUser.Id)
 	require.NoError(t, err)
-	t.Logf("✓ First soft delete successful")
+	t.Logf("�?First soft delete successful")
 
 	// Try to delete again (user is already soft-deleted)
 	err = userRepo.Delete(ctx, testUser.Id)
 	// This might succeed or error depending on implementation
 	// The important thing is that it doesn't cause a crash
-	t.Logf("✓ Second soft delete handled gracefully: %v", err)
+	t.Logf("�?Second soft delete handled gracefully: %v", err)
 }

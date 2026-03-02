@@ -24,11 +24,9 @@ type Permission struct {
 
 // DataScope 数据范围
 const (
-	DataScopeSelf string = "SELF" // 仅本人数据
-	DataScopeDept string = "DEPT" // 部门数据
+	DataScopeSelf string = "SELF" // 仅本人数�?	DataScopeDept string = "DEPT" // 部门数据
 	DataScopeRole string = "ROLE" // 角色数据
-	DataScopeAll  string = "ALL"  // 所有数据
-)
+	DataScopeAll  string = "ALL"  // 所有数�?)
 
 // Fields of the Permission.
 func (Permission) Fields() []ent.Field {

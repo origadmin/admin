@@ -12,7 +12,7 @@ import (
 	_ "github.com/origadmin/contrib/config/consul"
 	_ "github.com/origadmin/contrib/registry/consul"
 	"github.com/origadmin/runtime"
-	runtimebootstrap "github.com/origadmin/runtime/bootstrap"
+	runtimebootstrap "github.com/origadmin/runtime/engine/bootstrap"
 	"github.com/origadmin/runtime/log"
 	_ "github.com/sqlite3ent/sqlite3"
 	"origadmin/application/admin/internal/conf"
@@ -63,7 +63,7 @@ func main() {
 	defer rt.Config().Close()
 	rt.ShowAppInfo()
 
-	bootstrapConfig, ok := rt.StructuredConfig().(*conf.Config)
+	bootstrapConfig, ok := rt.BusinessConfig().(*conf.Config)
 	if !ok {
 		log.Fatalf("failed to get bootstrap config")
 	}
