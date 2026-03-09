@@ -8,12 +8,11 @@ import (
 	"github.com/google/wire"
 
 	"github.com/origadmin/runtime"
-	"github.com/origadmin/runtime/container"
 	"origadmin/application/admin/api/v1/services/filemanager"
 	"origadmin/application/admin/api/v1/services/identity"
 	"origadmin/application/admin/api/v1/services/objectstore"
 	"origadmin/application/admin/api/v1/services/system"
-	"origadmin/application/admin/internal/conf"
+	confpb "origadmin/application/admin/internal/conf/pb"
 	"origadmin/application/admin/internal/helpers/grpcclient"
 )
 
@@ -63,10 +62,10 @@ type ObjectStoreBridgeSet struct {
 }
 
 // NewIdentityBridgeSet creates a set of clients for the auth service.
-func NewIdentityBridgeSet(app *runtime.App, bootstrap *conf.Config, middlewareProvider container.ClientMiddlewareProvider) (*IdentityBridgeSet, error) {
+func NewIdentityBridgeSet(app *runtime.App, bootstrap *confpb.Bootstrap) (*IdentityBridgeSet, error) {
 	// Use the application's root context. This ensures that the client's lifecycle
 	// is tied to the application's lifecycle.
-	conn, err := grpcclient.NewConn(app, bootstrap, ServiceNameIdentity, middlewareProvider)
+	conn, err := grpcclient.NewConn(app, bootstrap, ServiceNameIdentity)
 	if err != nil {
 		return nil, err
 	}
@@ -78,9 +77,9 @@ func NewIdentityBridgeSet(app *runtime.App, bootstrap *conf.Config, middlewarePr
 }
 
 // NewSystemBridgeSet creates a set of clients for the system service.
-func NewSystemBridgeSet(app *runtime.App, bootstrap *conf.Config, middlewareProvider container.ClientMiddlewareProvider) (*SystemBridgeSet, error) {
+func NewSystemBridgeSet(app *runtime.App, bootstrap *confpb.Bootstrap) (*SystemBridgeSet, error) {
 	// Use the application's root context.
-	conn, err := grpcclient.NewConn(app, bootstrap, ServiceNameSystem, middlewareProvider)
+	conn, err := grpcclient.NewConn(app, bootstrap, ServiceNameSystem)
 	if err != nil {
 		return nil, err
 	}
@@ -94,9 +93,9 @@ func NewSystemBridgeSet(app *runtime.App, bootstrap *conf.Config, middlewareProv
 }
 
 // NewFileManagerBridgeSet creates a set of clients for the filemanager service.
-func NewFileManagerBridgeSet(app *runtime.App, bootstrap *conf.Config, middlewareProvider container.ClientMiddlewareProvider) (*FileManagerBridgeSet, error) {
+func NewFileManagerBridgeSet(app *runtime.App, bootstrap *confpb.Bootstrap) (*FileManagerBridgeSet, error) {
 	// Use the application's root context.
-	conn, err := grpcclient.NewConn(app, bootstrap, ServiceNameFileManager, middlewareProvider)
+	conn, err := grpcclient.NewConn(app, bootstrap, ServiceNameFileManager)
 	if err != nil {
 		return nil, err
 	}
@@ -106,9 +105,9 @@ func NewFileManagerBridgeSet(app *runtime.App, bootstrap *conf.Config, middlewar
 }
 
 // NewObjectStoreBridgeSet creates a set of clients for the objectstore service.
-func NewObjectStoreBridgeSet(app *runtime.App, bootstrap *conf.Config, middlewareProvider container.ClientMiddlewareProvider) (*ObjectStoreBridgeSet, error) {
+func NewObjectStoreBridgeSet(app *runtime.App, bootstrap *confpb.Bootstrap) (*ObjectStoreBridgeSet, error) {
 	// Use the application's root context.
-	conn, err := grpcclient.NewConn(app, bootstrap, ServiceNameObjectStore, middlewareProvider)
+	conn, err := grpcclient.NewConn(app, bootstrap, ServiceNameObjectStore)
 	if err != nil {
 		return nil, err
 	}

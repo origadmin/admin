@@ -8,7 +8,7 @@ package main
 
 import (
 	"github.com/origadmin/runtime"
-	"origadmin/application/admin/internal/conf"
+	"origadmin/application/admin/internal/conf/pb"
 	"origadmin/application/admin/internal/data"
 	"origadmin/application/admin/internal/features/system/biz"
 	"origadmin/application/admin/internal/features/system/dal"
@@ -24,20 +24,18 @@ import (
 	_ "github.com/origadmin/contrib/config/consul"
 	_ "github.com/origadmin/contrib/registry/consul"
 	_ "github.com/sqlite3ent/sqlite3"
+	_ "origadmin/application/admin/api/v1/services/filemanager"
+	_ "origadmin/application/admin/api/v1/services/objectstore"
 	_ "origadmin/application/admin/internal/data/entity/ent/runtime"
 )
 
 // Injectors from wire.go:
 
 // wireApp init the initializer service.
-func wireApp(rt *runtime.App, bootstrap *conf.Config) (initializer.Initializer, func(), error) {
+func wireApp(rt *runtime.App, b *confpb.Bootstrap) (initializer.Initializer, func(), error) {
 	v := providers.ProvideLogger(rt)
-	brokerInitializer := broker.NewInitializer(bootstrap, v)
-	provider, err := data.NewStorageProvider(rt)
-	if err != nil {
-		return nil, nil, err
-	}
-	database, cleanup, err := data.ProvideDatabase(provider, v)
+	brokerInitializer := broker.NewInitializer(b, v)
+	database, cleanup, err := data.ProvideDatabase(rt)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -52,7 +50,8 @@ func wireApp(rt *runtime.App, bootstrap *conf.Config) (initializer.Initializer, 
 		cleanup()
 		return nil, nil, err
 	}
-	seederSeeder, err := seeder.NewSeeder(userUseCase, resourceUseCase, viewUseCase, crypto, bootstrap, v)
+	config := providers.ProvideConfig(b)
+	seederSeeder, err := seeder.NewSeeder(userUseCase, resourceUseCase, viewUseCase, crypto, config, v)
 	if err != nil {
 		cleanup()
 		return nil, nil, err

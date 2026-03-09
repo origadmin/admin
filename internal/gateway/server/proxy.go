@@ -21,11 +21,11 @@ import (
 
 	"github.com/origadmin/runtime"
 	transportv1 "github.com/origadmin/runtime/api/gen/go/config/transport/v1"
-	"github.com/origadmin/runtime/container"
+	"github.com/origadmin/runtime/middleware"
 	runtimehttp "github.com/origadmin/runtime/service/transport/http"
 	"origadmin/application/admin/api/v1/services/filemanager"
 	"origadmin/application/admin/api/v1/services/objectstore"
-	"origadmin/application/admin/internal/conf"
+	confpb "origadmin/application/admin/internal/conf/pb"
 	"origadmin/application/admin/internal/helpers/grpcclient"
 )
 
@@ -37,15 +37,15 @@ type ObjectStoreProxy struct {
 	objHTTPClient *httptransport.Client
 }
 
-// NewObjectStoreProxy MUST use ClientMiddlewareProvider to match gateway requirements
-func NewObjectStoreProxy(app *runtime.App, bootstrap *conf.Config, middlewareProvider container.ClientMiddlewareProvider) (*ObjectStoreProxy, error) {
-	objConn, err := grpcclient.NewConn(app, bootstrap, "objectstore", middlewareProvider)
+// NewObjectStoreProxy creates a new proxy for object store and file manager services.
+func NewObjectStoreProxy(app *runtime.App, bootstrap *confpb.Bootstrap) (*ObjectStoreProxy, error) {
+	objConn, err := grpcclient.NewConn(app, bootstrap, "objectstore")
 	if err != nil {
 		return nil, fmt.Errorf("failed to create objectstore grpc client: %w", err)
 	}
 	objClient := objectstore.NewObjectStoreServiceClient(objConn)
 
-	fileConn, err := grpcclient.NewConn(app, bootstrap, "filemanager", middlewareProvider)
+	fileConn, err := grpcclient.NewConn(app, bootstrap, "filemanager")
 	if err != nil {
 		return nil, fmt.Errorf("failed to create filemanager grpc client: %w", err)
 	}
@@ -55,7 +55,7 @@ func NewObjectStoreProxy(app *runtime.App, bootstrap *conf.Config, middlewarePro
 	name := "objectstore"
 	convention := fmt.Sprintf("origadmin.service.%s.client.http", name)
 
-	clients := bootstrap.Clients()
+	clients := bootstrap.GetClients()
 	if clients != nil {
 		for _, cli := range clients.Configs {
 			if cli.GetHttp() == nil {
@@ -72,18 +72,17 @@ func NewObjectStoreProxy(app *runtime.App, bootstrap *conf.Config, middlewarePro
 		return nil, fmt.Errorf("HTTP client config not found for service: %s", name)
 	}
 
-	registryProvider, err := app.RegistryProvider()
+	discoveries, err := app.Discoveries()
 	if err != nil {
-		return nil, err
-	}
-	discoveries, err := registryProvider.Discoveries()
-	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("failed to get discoveries: %w", err)
 	}
 
-	mws, err := middlewareProvider.ClientMiddlewares()
+	// Get client middlewares from container (ClientScope)
+	h := app.Container().In(runtime.CategoryMiddleware,
+		runtime.WithScope(runtime.ClientScope))
+	mws, err := middleware.GetMiddlewares(app.Context(), h)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("failed to get client middlewares: %w", err)
 	}
 
 	endpoint := clientConfig.GetHttp().GetEndpoint()

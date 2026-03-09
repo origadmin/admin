@@ -5,8 +5,9 @@ package main
 
 import (
 	"github.com/google/wire"
+
 	"github.com/origadmin/runtime"
-	"origadmin/application/admin/internal/conf"
+	confpb "origadmin/application/admin/internal/conf/pb"
 	"origadmin/application/admin/internal/data"
 	"origadmin/application/admin/internal/features/system/biz"
 	"origadmin/application/admin/internal/features/system/dal"
@@ -15,7 +16,7 @@ import (
 )
 
 // wireApp init the initializer service.
-func wireApp(rt *runtime.App, bootstrap *conf.Config) (initializer.Initializer, func(), error) {
+func wireApp(rt *runtime.App, b *confpb.Bootstrap) (initializer.Initializer, func(), error) {
 	panic(wire.Build(
 		// Shared providers needed for data access and other common components.
 		providers.ProviderCommonSet,

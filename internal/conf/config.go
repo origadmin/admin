@@ -1,18 +1,15 @@
+/*
+ * Copyright (c) 2024 OrigAdmin. All rights reserved.
+ */
+
 // Package conf implements the functions, types, and contracts for the module.
 package conf
 
 import (
 	"fmt"
 
-	securityv1 "github.com/origadmin/contrib/api/gen/go/security/v1"
-	brokerv1 "github.com/origadmin/runtime/api/gen/go/config/broker/v1"
-	datav1 "github.com/origadmin/runtime/api/gen/go/config/data/v1"
-	discoveryv1 "github.com/origadmin/runtime/api/gen/go/config/discovery/v1"
-	loggerv1 "github.com/origadmin/runtime/api/gen/go/config/logger/v1"
-	middlewarev1 "github.com/origadmin/runtime/api/gen/go/config/middleware/v1"
-	transportv1 "github.com/origadmin/runtime/api/gen/go/config/transport/v1"
+	"github.com/origadmin/runtime/config"
 	"github.com/origadmin/runtime/engine/bootstrap"
-	"github.com/origadmin/runtime/contracts"
 	confpb "origadmin/application/admin/internal/conf/pb"
 )
 
@@ -21,146 +18,24 @@ const (
 	APIPrefix = "/api/v1"
 )
 
+// Config is the business configuration.
+// It embeds confpb.Bootstrap to provide direct access to all configuration fields
+// and satisfy the component.Config interfaces automatically.
 type Config struct {
-	Bootstrap confpb.Bootstrap
+	confpb.Bootstrap
 }
 
-// Data returns the data configuration.
-func (c *Config) Data() *datav1.Data {
-	return c.Bootstrap.GetData()
-}
+// --- Runtime Interface Adapters ---
 
-// Caches returns the caches configuration.
-func (c *Config) Caches() *datav1.Caches {
-	return c.Bootstrap.GetData().GetCaches()
-}
-
-// Databases returns the databases configuration.
-func (c *Config) Databases() *datav1.Databases {
-	return c.Bootstrap.GetData().GetDatabases()
-}
-
-// ObjectStores returns the object stores configuration.
-func (c *Config) ObjectStores() *datav1.ObjectStores {
-	return c.Bootstrap.GetData().GetObjectStores()
-}
-
-// DefaultDiscovery returns the default discovery name.
-func (c *Config) DefaultDiscovery() string {
-	return c.Bootstrap.GetDefaultDiscovery()
-}
-
-// Discoveries returns the discoveries configuration.
-func (c *Config) Discoveries() *discoveryv1.Discoveries {
-	return c.Bootstrap.GetDiscoveries()
-}
-
-// Logger returns the logger configuration.
-func (c *Config) Logger() *loggerv1.Logger {
-	return c.Bootstrap.GetLogger()
-}
-
-// Middlewares returns the middlewares configuration.
-func (c *Config) Middlewares() *middlewarev1.Middlewares {
-	return c.Bootstrap.GetMiddlewares()
-}
-
-// Servers returns the servers configuration.
-func (c *Config) Servers() *transportv1.Servers {
-	return c.Bootstrap.GetServers()
-}
-
-// Clients returns the clients configuration.
-func (c *Config) Clients() *transportv1.Clients {
-	return c.Bootstrap.GetClients()
-}
-
-// Security returns the security configuration.
-func (c *Config) Security() *securityv1.Security {
-	return c.Bootstrap.GetSecurity()
-}
-
-// Captcha returns the captcha configuration.
-func (c *Config) Captcha() *confpb.Captcha {
-	return c.Bootstrap.GetCaptcha()
-}
-
-// RootUser returns the root user configuration.
-func (c *Config) RootUser() *confpb.RootUser {
-	return c.Bootstrap.GetRootUser()
-}
-
-// --- Runtime Interface Adapters (Deprecated: Use direct getters above) ---
-
-func (c *Config) DecodeData() (*datav1.Data, error) {
-	return c.Data(), nil
-}
-
-func (c *Config) DecodeCaches() (*datav1.Caches, error) {
-	return c.Caches(), nil
-}
-
-func (c *Config) DecodeDatabases() (*datav1.Databases, error) {
-	return c.Databases(), nil
-}
-
-func (c *Config) DecodeObjectStores() (*datav1.ObjectStores, error) {
-	return c.ObjectStores(), nil
-}
-
-func (c *Config) DecodeDefaultDiscovery() (string, error) {
-	return c.DefaultDiscovery(), nil
-}
-
-func (c *Config) DecodeDiscoveries() (*discoveryv1.Discoveries, error) {
-	return c.Discoveries(), nil
-}
-
-func (c *Config) DecodeLogger() (*loggerv1.Logger, error) {
-	return c.Logger(), nil
-}
-
-func (c *Config) DecodeMiddlewares() (*middlewarev1.Middlewares, error) {
-	return c.Middlewares(), nil
-}
-
-func (c *Config) DecodeServers() (*transportv1.Servers, error) {
-	return c.Servers(), nil
-}
-
-func (c *Config) DecodeClients() (*transportv1.Clients, error) {
-	return c.Clients(), nil
-}
-
-func (c *Config) GetCaptcha() (*confpb.Captcha, error) {
-	return c.Captcha(), nil
-}
-
-func (c *Config) GetRootUser() (*confpb.RootUser, error) {
-	return c.RootUser(), nil
-}
-
-func (c *Config) GetBootstrap() *confpb.Bootstrap {
-	return &c.Bootstrap
-}
-
-func (c *Config) GetBrokers() *brokerv1.Brokers {
-	return c.Bootstrap.GetBrokers()
-}
-
-func (c *Config) DecodedConfig() any {
-	return &c.Bootstrap
-}
-
-func (c *Config) Transform(config contracts.ConfigLoader, sc contracts.StructuredConfig) (contracts.StructuredConfig, error) {
-	err := config.Decode("", &c.Bootstrap)
-	if err != nil {
-		return nil, err
+// Transform scans the configuration from the source and performs any necessary transformations.
+func (c *Config) Transform(cfg config.KConfig) (any, error) {
+	if err := cfg.Scan(&c.Bootstrap); err != nil {
+		return nil, fmt.Errorf("failed to scan config: %w", err)
 	}
-	fmt.Printf("database: %v\n", c.Databases())
-	return c, nil
+	return &c.Bootstrap, nil
 }
 
+// New creates a new Config transformer.
 func New() bootstrap.ConfigTransformer {
 	return &Config{}
 }

@@ -9,14 +9,13 @@ package main
 import (
 	"github.com/go-kratos/kratos/v2"
 	"github.com/origadmin/runtime"
-	"origadmin/application/admin/internal/conf"
+	"origadmin/application/admin/internal/conf/pb"
 	"origadmin/application/admin/internal/data"
 	"origadmin/application/admin/internal/features/system/biz"
 	"origadmin/application/admin/internal/features/system/dal"
 	"origadmin/application/admin/internal/features/system/server"
 	"origadmin/application/admin/internal/features/system/service"
 	"origadmin/application/admin/internal/helpers/providers"
-	"origadmin/application/admin/internal/helpers/pubsub"
 )
 
 import (
@@ -30,38 +29,32 @@ import (
 // Injectors from wire.go:
 
 // wireApp init kratos application.
-func wireApp(app *runtime.App, bootstrap *conf.Config) (*kratos.App, func(), error) {
-	confpbBootstrap := &bootstrap.Bootstrap
-	servers := confpbBootstrap.Servers
-	provider, err := data.NewStorageProvider(app)
+func wireApp(app *runtime.App, bootstrap *confpb.Bootstrap) (*kratos.App, func(), error) {
+	servers := providers.ProvideServers(bootstrap)
+	database, cleanup, err := data.ProvideDatabase(app)
 	if err != nil {
 		return nil, nil, err
 	}
 	v := providers.ProvideLogger(app)
-	database, cleanup, err := data.ProvideDatabase(provider, v)
-	if err != nil {
-		return nil, nil, err
-	}
 	resourceRepo := dal.NewResourceRepo(database, v)
 	resourceUseCase := biz.NewResourceUseCase(resourceRepo)
 	resourceService := service.NewResourceService(resourceUseCase)
 	roleRepo := dal.NewRoleRepo(database, v)
 	roleUseCase := biz.NewRoleUseCase(roleRepo)
-	loggerAdapter := pubsub.NewWatermillLogger(v)
-	publisher, err := providers.ProvidePublisher(bootstrap, loggerAdapter)
+	publisher, err := providers.ProvidePublisher(app)
 	if err != nil {
 		cleanup()
 		return nil, nil, err
 	}
 	roleService := service.NewRoleService(roleUseCase, publisher, v)
-	hasher, err := providers.ProvideHasher()
+	userRepo := dal.NewUserRepo(database, v)
+	userUseCase := biz.NewUserUseCase(userRepo, v)
+	crypto, err := providers.ProvideHasher()
 	if err != nil {
 		cleanup()
 		return nil, nil, err
 	}
-	userRepo := dal.NewUserRepo(database, v)
-	userUseCase := biz.NewUserUseCase(userRepo, v)
-	userService := service.NewUserService(userUseCase, publisher, hasher, v)
+	userService := service.NewUserService(userUseCase, publisher, crypto, v)
 	permissionRepo := dal.NewPermissionRepo(database, v)
 	permissionUseCase := biz.NewPermissionUseCase(permissionRepo)
 	permissionService := service.NewPermissionService(permissionUseCase)
@@ -77,17 +70,12 @@ func wireApp(app *runtime.App, bootstrap *conf.Config) (*kratos.App, func(), err
 		cleanup()
 		return nil, nil, err
 	}
-	adapter, err := data.NewAdapterFromApp(app, database)
+	authorizer, err := providers.ProvideAuthorizer(app)
 	if err != nil {
 		cleanup()
 		return nil, nil, err
 	}
-	watcher, err := providers.ProvideWatcher(app, bootstrap)
-	if err != nil {
-		cleanup()
-		return nil, nil, err
-	}
-	authorizer, err := providers.ProvideAuthorizer(app, bootstrap, adapter, watcher)
+	watcher, err := providers.ProvideWatcher(app)
 	if err != nil {
 		cleanup()
 		return nil, nil, err
@@ -95,13 +83,7 @@ func wireApp(app *runtime.App, bootstrap *conf.Config) (*kratos.App, func(), err
 	executor := providers.NewDebounceExecutor(bootstrap)
 	policySyncUseCase := biz.NewPolicySyncUseCase(policyRepo, policyModifier, authorizer, watcher, executor, v)
 	policySyncHandler := service.NewPolicySyncHandler(policySyncUseCase, v)
-	skipper := providers.ProvideSkipper(app, bootstrap)
-	serverMiddlewareProvider, err := providers.ProvideServiceMiddlewares(app, authorizer, skipper)
-	if err != nil {
-		cleanup()
-		return nil, nil, err
-	}
-	v2, err := server.NewServers(app, servers, systemService, policySyncHandler, serverMiddlewareProvider)
+	v2, err := server.NewServers(app, servers, systemService, policySyncHandler)
 	if err != nil {
 		cleanup()
 		return nil, nil, err

@@ -8,9 +8,8 @@ import (
 	"github.com/google/wire"
 
 	"github.com/origadmin/runtime"
-	"github.com/origadmin/runtime/container"
 	objclient "origadmin/application/admin/api/v1/services/objectstore"
-	"origadmin/application/admin/internal/conf"
+	confpb "origadmin/application/admin/internal/conf/pb"
 	"origadmin/application/admin/internal/data"
 	"origadmin/application/admin/internal/features/filemanager/biz"
 	"origadmin/application/admin/internal/features/filemanager/dal"
@@ -23,10 +22,9 @@ import (
 // NewObjectStoreServiceClient creates a new ObjectStoreService client using service discovery.
 func NewObjectStoreServiceClient(
 	app *runtime.App,
-	bootstrap *conf.Config,
-	middlewareProvider container.ClientMiddlewareProvider,
+	bootstrap *confpb.Bootstrap,
 ) (objclient.ObjectStoreServiceClient, func(), error) {
-	conn, err := grpcclient.NewConn(app, bootstrap, "objectstore", middlewareProvider)
+	conn, err := grpcclient.NewConn(app, bootstrap, "objectstore")
 	if err != nil {
 		return nil, nil, err
 	}
@@ -37,7 +35,7 @@ func NewObjectStoreServiceClient(
 }
 
 // wireApp init kratos application.
-func wireApp(app *runtime.App, c *conf.Config) (*kratos.App, func(), error) {
+func wireApp(app *runtime.App, b *confpb.Bootstrap) (*kratos.App, func(), error) {
 	panic(wire.Build(
 		// Shared infrastructure providers
 		providers.ProviderBackendSet,

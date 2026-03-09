@@ -5,6 +5,7 @@
 package data
 
 import (
+	"context"
 	"fmt"
 
 	"github.com/casbin/casbin/v3/model"
@@ -12,7 +13,6 @@ import (
 	kratosLog "github.com/go-kratos/kratos/v2/log"
 
 	"github.com/origadmin/runtime"
-	"github.com/origadmin/runtime/context"
 	"github.com/origadmin/runtime/log"
 	"origadmin/application/admin/internal/data/entity/ent"
 )

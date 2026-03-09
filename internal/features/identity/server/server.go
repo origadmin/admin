@@ -14,8 +14,8 @@ import (
 	grpcv1 "github.com/origadmin/runtime/api/gen/go/config/transport/grpc/v1"
 	httpv1 "github.com/origadmin/runtime/api/gen/go/config/transport/http/v1"
 	transportv1 "github.com/origadmin/runtime/api/gen/go/config/transport/v1"
-	"github.com/origadmin/runtime/container"
 	"github.com/origadmin/runtime/log"
+	"github.com/origadmin/runtime/middleware"
 	"github.com/origadmin/runtime/service/transport"
 	"github.com/origadmin/runtime/service/transport/grpc"
 	"github.com/origadmin/runtime/service/transport/http"
@@ -33,7 +33,6 @@ func NewServers(
 	identitySvc *service.AuthService,
 	meSvc *service.MeService,
 	adminSvc *service.AdminService,
-	middlewareProvider container.ServerMiddlewareProvider,
 ) ([]transport.Server, error) {
 	if cfg == nil {
 		return nil, errors.New("servers config is nil")
@@ -46,23 +45,17 @@ func NewServers(
 		}
 		switch serverCfg.GetProtocol() {
 		case "http":
-			srv, err := NewHTTPServer(app, serverCfg.GetHttp(), identitySvc, meSvc, adminSvc, middlewareProvider)
+			srv, err := NewHTTPServer(app, serverCfg.GetHttp(), identitySvc, meSvc, adminSvc)
 			if err != nil {
 				return nil, err
 			}
 			transportServers = append(transportServers, srv)
 		case "grpc":
-			srv, err := NewGRPCServer(app, serverCfg.GetGrpc(), identitySvc, meSvc, adminSvc, middlewareProvider)
+			srv, err := NewGRPCServer(app, serverCfg.GetGrpc(), identitySvc, meSvc, adminSvc)
 			if err != nil {
 				return nil, err
 			}
 			transportServers = append(transportServers, srv)
-		//case "watermill":
-		//	srv, err := NewWatermillServer(app, serverCfg.GetWatermill(), policySyncSvc)
-		//	if err != nil {
-		//		return nil, err
-		//	}
-		//	transportServers = append(transportServers, srv)
 		default:
 			// Gracefully ignore unsupported protocols for this service
 			log.Warnf("protocol '%s' is not supported by the system service, skipping", serverCfg.GetProtocol())
@@ -81,18 +74,22 @@ func NewHTTPServer(
 	identitySvc *service.AuthService,
 	meSvc *service.MeService,
 	adminSvc *service.AdminService,
-	provider container.ServerMiddlewareProvider,
 ) (*transport.HTTPServer, error) {
 	if cfg == nil {
 		return nil, errors.New("http config is nil")
 	}
 
-	mws, err := provider.ServerMiddlewares()
+	// Fetch middlewares from container with 'feature' tag
+	h := app.Container().In(runtime.CategoryMiddleware,
+		runtime.WithScope(runtime.ServerScope),
+		runtime.WithInTags("feature"))
+	mwMap, err := middleware.GetMiddlewares(app.Context(), h)
 	if err != nil {
 		return nil, err
 	}
+
 	opts := &http.ServerOptions{
-		ServerMiddlewares: mws,
+		ServerMiddlewares: mwMap,
 	}
 
 	srv, err := http.NewServer(cfg, opts)
@@ -112,23 +109,27 @@ func NewHTTPServer(
 
 // NewGRPCServer new a gRPC server.
 func NewGRPCServer(
-	_ *runtime.App,
+	app *runtime.App,
 	cfg *grpcv1.Server,
 	identitySvc *service.AuthService,
 	meSvc *service.MeService,
 	adminSvc *service.AdminService,
-	provider container.ServerMiddlewareProvider,
 ) (*transport.GRPCServer, error) {
 	if cfg == nil {
 		return nil, errors.New("grpc config is nil")
 	}
 
-	mws, err := provider.ServerMiddlewares()
+	// Fetch middlewares from container with 'feature' tag
+	h := app.Container().In(runtime.CategoryMiddleware,
+		runtime.WithScope(runtime.ServerScope),
+		runtime.WithInTags("feature"))
+	mwMap, err := middleware.GetMiddlewares(app.Context(), h)
 	if err != nil {
 		return nil, err
 	}
+
 	opts := &grpc.ServerOptions{
-		ServerMiddlewares: mws,
+		ServerMiddlewares: mwMap,
 	}
 	srv, err := grpc.NewServer(cfg, opts)
 	if err != nil {
@@ -141,38 +142,3 @@ func NewGRPCServer(
 
 	return srv, nil
 }
-
-//
-//// NewWatermillServer creates a new Watermill server and registers event handlers.
-//func NewWatermillServer(
-//	app *runtime.App,
-//	cfg *watermillv1.Watermill,
-//	policySyncSvc *service.PolicyService,
-//) (transport.Server, error) {
-//	if cfg == nil {
-//		return nil, errors.New("watermill config is nil")
-//	}
-//
-//	logger := log.NewHelper(app.Logger())
-//	srv, err := watermill.NewServer(cfg, log.WithLogger(app.Logger()))
-//	if err != nil {
-//		return nil, err
-//	}
-//
-//	// Register the handler for user-role changes.
-//	srv.AddConsumerHandler(
-//		"PolicySyncUserRoleChanged",
-//		broker.UserRoleAssignedTopic,
-//		policySyncSvc.HandleUserRoleAssigned,
-//	)
-//
-//	// Register the policy sync handler for role-permission changes.
-//	srv.AddConsumerHandler(
-//		"PolicySyncRolePolicyChanged",
-//		broker.RolePolicyChangedTopic,
-//		policySyncSvc.HandleRolePolicyChanged,
-//	)
-//
-//	logger.Info("System Watermill server and policy sync handlers initialized.")
-//	return srv, nil
-//}

@@ -9,11 +9,10 @@ package main
 import (
 	"github.com/go-kratos/kratos/v2"
 	"github.com/origadmin/runtime"
-	"origadmin/application/admin/internal/conf"
+	"origadmin/application/admin/internal/conf/pb"
 	"origadmin/application/admin/internal/gateway/client"
 	"origadmin/application/admin/internal/gateway/server"
 	"origadmin/application/admin/internal/gateway/service"
-	"origadmin/application/admin/internal/helpers/providers"
 )
 
 import (
@@ -27,26 +26,20 @@ import (
 // Injectors from wire.go:
 
 // wireApp init kratos application.
-func wireApp(app *runtime.App, bootstrap *conf.Config) (*kratos.App, func(), error) {
-	confpbBootstrap := &bootstrap.Bootstrap
-	servers := confpbBootstrap.Servers
-	clientMiddlewareProvider, err := providers.ProvideClientMiddlewares(app)
+func wireApp(app *runtime.App, b *confpb.Bootstrap) (*kratos.App, func(), error) {
+	identityBridgeSet, err := client.NewIdentityBridgeSet(app, b)
 	if err != nil {
 		return nil, nil, err
 	}
-	identityBridgeSet, err := client.NewIdentityBridgeSet(app, bootstrap, clientMiddlewareProvider)
+	systemBridgeSet, err := client.NewSystemBridgeSet(app, b)
 	if err != nil {
 		return nil, nil, err
 	}
-	systemBridgeSet, err := client.NewSystemBridgeSet(app, bootstrap, clientMiddlewareProvider)
+	fileManagerBridgeSet, err := client.NewFileManagerBridgeSet(app, b)
 	if err != nil {
 		return nil, nil, err
 	}
-	fileManagerBridgeSet, err := client.NewFileManagerBridgeSet(app, bootstrap, clientMiddlewareProvider)
-	if err != nil {
-		return nil, nil, err
-	}
-	objectStoreBridgeSet, err := client.NewObjectStoreBridgeSet(app, bootstrap, clientMiddlewareProvider)
+	objectStoreBridgeSet, err := client.NewObjectStoreBridgeSet(app, b)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -54,20 +47,11 @@ func wireApp(app *runtime.App, bootstrap *conf.Config) (*kratos.App, func(), err
 	if err != nil {
 		return nil, nil, err
 	}
-	objectStoreProxy, err := server.NewObjectStoreProxy(app, bootstrap, clientMiddlewareProvider)
+	objectStoreProxy, err := server.NewObjectStoreProxy(app, b)
 	if err != nil {
 		return nil, nil, err
 	}
-	authenticator, err := providers.ProvideAuthenticator(app, bootstrap)
-	if err != nil {
-		return nil, nil, err
-	}
-	skipper := providers.ProvideGatewaySkipper(app, bootstrap)
-	serverMiddlewareProvider, err := providers.ProvideGatewayMiddlewares(app, authenticator, skipper)
-	if err != nil {
-		return nil, nil, err
-	}
-	v, err := server.NewServers(app, bootstrap, servers, gatewayService, objectStoreProxy, serverMiddlewareProvider)
+	v, err := server.NewServers(app, b, gatewayService, objectStoreProxy)
 	if err != nil {
 		return nil, nil, err
 	}

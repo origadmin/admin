@@ -8,15 +8,14 @@ import (
 	"fmt"
 
 	"github.com/go-kratos/kratos/v2/log"
-	"github.com/go-kratos/kratos/v2/middleware"
 	"github.com/goexts/generic/maps"
 	"google.golang.org/grpc"
 
 	"github.com/origadmin/runtime"
 	transportv1 "github.com/origadmin/runtime/api/gen/go/config/transport/v1"
-	"github.com/origadmin/runtime/container"
+	"github.com/origadmin/runtime/middleware"
 	runtimegrpc "github.com/origadmin/runtime/service/transport/grpc"
-	"origadmin/application/admin/internal/conf"
+	confpb "origadmin/application/admin/internal/conf/pb"
 )
 
 // NewConn finds a client configuration by service name or convention
@@ -29,14 +28,12 @@ import (
 //   - app: The runtime application instance
 //   - bootstrap: Configuration containing client settings
 //   - name: Service name (e.g., "auth", "system")
-//   - middlewareProvider: Provider for client middlewares
 //
 // Returns a gRPC connection or an error if configuration is not found.
 func NewConn(
 	app *runtime.App,
-	bootstrap *conf.Config,
+	bootstrap *confpb.Bootstrap,
 	name string,
-	middlewareProvider container.ClientMiddlewareProvider,
 ) (*grpc.ClientConn, error) {
 	var clientConfig *transportv1.Client
 
@@ -44,7 +41,7 @@ func NewConn(
 	convention := fmt.Sprintf("origadmin.service.%s.client.grpc", name)
 
 	// Find the client configuration
-	clients := bootstrap.Clients()
+	clients := bootstrap.GetClients()
 	if clients != nil {
 		for _, cli := range clients.Configs {
 			// Capability Check: Must have gRPC config
@@ -65,34 +62,26 @@ func NewConn(
 			name, name, convention)
 	}
 
-	// Get registry provider for service discovery
-	registryProvider, err := app.RegistryProvider()
-	if err != nil {
-		return nil, fmt.Errorf("failed to get registry provider: %w", err)
-	}
-
-	// Get discoveries
-	discoveries, err := registryProvider.Discoveries()
+	// Get all available discoveries from the app
+	discoveries, err := app.Discoveries()
 	if err != nil {
 		return nil, fmt.Errorf("failed to get discoveries: %w", err)
 	}
 
-	// Get client middlewares (if middlewareProvider is provided)
-	var middlewares map[string]middleware.Middleware
-	if middlewareProvider != nil {
-		var err error
-		middlewares, err = middlewareProvider.ClientMiddlewares()
-		if err != nil {
-			return nil, fmt.Errorf("failed to get client middlewares: %w", err)
-		}
-		ks := maps.Keys(middlewares)
-		log.NewHelper(app.Logger()).Debugf("Creating gRPC client for service: %s with middlewares: %+v", name, ks)
-	} else {
-		log.NewHelper(app.Logger()).Debugf("Creating gRPC client for service: %s without middlewares", name)
+	// Get client middlewares from container (ClientScope)
+	h := app.Container().In(runtime.CategoryMiddleware,
+		runtime.WithScope(runtime.ClientScope))
+	mwMap, err := middleware.GetMiddlewares(app.Context(), h)
+	if err != nil {
+		return nil, fmt.Errorf("failed to get client middlewares: %w", err)
 	}
+
+	ks := maps.Keys(mwMap)
+	log.NewHelper(app.Logger()).Debugf("Creating gRPC client for service: %s with middlewares: %+v", name, ks)
+
 	// Create and return the gRPC connection
 	return runtimegrpc.NewClient(app.Context(), clientConfig.GetGrpc(), &runtimegrpc.ClientOptions{
 		Discoveries:       discoveries,
-		ClientMiddlewares: middlewares,
+		ClientMiddlewares: mwMap,
 	})
 }

@@ -13,14 +13,16 @@ import (
 	"origadmin/application/admin/internal/data/entity/ent/enttest"
 )
 
-// SetupTestDatabase 创建测试数据�?// 修正了参数顺�? dialect 在第二个参数,DSN 在第三个参数
+// SetupTestDatabase 创建测试数据库
+// 修正了参数顺序: dialect 在第二个参数,DSN 在第三个参数
 func SetupTestDatabase(t *testing.T, opts ...enttest.Option) *ent.Client {
 	client := enttest.Open(t, "sqlite3", "file:ent?mode=memory&cache=shared&_fk=1", opts...)
 	t.Cleanup(func() { client.Close() })
 	return client
 }
 
-// SetupTestDatabaseWithPostgreSQL 使用PostgreSQL创建测试数据�?func SetupTestDatabaseWithPostgreSQL(t *testing.T, dsn string) *ent.Client {
+// SetupTestDatabaseWithPostgreSQL 使用PostgreSQL创建测试数据库
+func SetupTestDatabaseWithPostgreSQL(t *testing.T, dsn string) *ent.Client {
 	drv, err := sql.Open("postgres", dsn)
 	if err != nil {
 		t.Fatalf("failed opening database: %v", err)
@@ -44,9 +46,11 @@ func SetupTestDatabase(t *testing.T, opts ...enttest.Option) *ent.Client {
 	return client
 }
 
-	// TruncateTables 清空指定�?func TruncateTables(ctx context.Context, database *ent.Database, tables ...string) error {
-	// 按外键依赖顺序清�?	for _, table := range tables {
-	// 使用 ent.Database �?Exec 方法执行原生 SQL
+// TruncateTables 清空指定表
+func TruncateTables(ctx context.Context, database *ent.Database, tables ...string) error {
+	// 按外键依赖顺序清空
+	for _, table := range tables {
+		// 使用 ent.Database 的 Exec 方法执行原生 SQL
 		_, err := database.Exec(ctx, "DELETE FROM "+table)
 		if err != nil {
 			return err
@@ -55,7 +59,8 @@ func SetupTestDatabase(t *testing.T, opts ...enttest.Option) *ent.Client {
 	return nil
 }
 
-	// InTransaction 在事务中执行操作并自动回�?func InTransaction(ctx context.Context, client *ent.Client, fn func(context.Context, *ent.Tx) error) error {
+// InTransaction 在事务中执行操作并自动回滚
+func InTransaction(ctx context.Context, client *ent.Client, fn func(context.Context, *ent.Tx) error) error {
 	tx, err := client.Tx(ctx)
 	if err != nil {
 		return err

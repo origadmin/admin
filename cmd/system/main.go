@@ -21,6 +21,7 @@ import (
 	"github.com/origadmin/runtime/log"
 	_ "github.com/sqlite3ent/sqlite3"
 	"origadmin/application/admin/internal/conf"
+	confpb "origadmin/application/admin/internal/conf/pb"
 	_ "origadmin/application/admin/internal/data/entity/ent/runtime"
 	"origadmin/application/admin/internal/features/system/service"
 	confhelper "origadmin/application/admin/internal/helpers/conf"
@@ -83,8 +84,12 @@ func main() {
 	defer rt.Config().Close()
 	rt.ShowAppInfo()
 
+	if err := rt.WarmUp(); err != nil {
+		log.Fatalf("failed to warm up runtime: %v", err)
+	}
+
 	// Get bootstrap config
-	bootstrapConfig, ok := rt.StructuredConfig().(*conf.Config)
+	bootstrapConfig, ok := rt.BusinessConfig().(*confpb.Bootstrap)
 	if !ok {
 		log.Fatalf("failed to get bootstrap config")
 	}

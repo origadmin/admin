@@ -9,9 +9,8 @@ package main
 import (
 	"github.com/go-kratos/kratos/v2"
 	"github.com/origadmin/runtime"
-	"github.com/origadmin/runtime/container"
 	"origadmin/application/admin/api/v1/services/objectstore"
-	"origadmin/application/admin/internal/conf"
+	"origadmin/application/admin/internal/conf/pb"
 	"origadmin/application/admin/internal/data"
 	"origadmin/application/admin/internal/features/filemanager/biz"
 	"origadmin/application/admin/internal/features/filemanager/dal"
@@ -32,63 +31,28 @@ import (
 // Injectors from wire.go:
 
 // wireApp init kratos application.
-func wireApp(app *runtime.App, c *conf.Config) (*kratos.App, func(), error) {
-	bootstrap := &c.Bootstrap
-	servers := bootstrap.Servers
-	provider, err := data.NewStorageProvider(app)
-	if err != nil {
-		return nil, nil, err
-	}
-	v := providers.ProvideLogger(app)
-	database, cleanup, err := data.ProvideDatabase(provider, v)
+func wireApp(app *runtime.App, b *confpb.Bootstrap) (*kratos.App, func(), error) {
+	servers := providers.ProvideServers(b)
+	database, cleanup, err := data.ProvideDatabase(app)
 	if err != nil {
 		return nil, nil, err
 	}
 	fileRepo := dal.NewFileRepo(database)
-	clientMiddlewareProvider, err := providers.ProvideClientMiddlewares(app)
+	objectStoreServiceClient, cleanup2, err := NewObjectStoreServiceClient(app, b)
 	if err != nil {
 		cleanup()
 		return nil, nil, err
 	}
-	objectStoreServiceClient, cleanup2, err := NewObjectStoreServiceClient(app, c, clientMiddlewareProvider)
-	if err != nil {
-		cleanup()
-		return nil, nil, err
-	}
-	fileUseCase := biz.NewFileUseCase(fileRepo, objectStoreServiceClient, v)
-	fileManagerService := service.NewFileManagerService(fileUseCase, v)
-	adapter, err := data.NewAdapterFromApp(app, database)
+	logger := providers.ProvideLogger(app)
+	fileUseCase := biz.NewFileUseCase(fileRepo, objectStoreServiceClient, logger)
+	fileManagerService := service.NewFileManagerService(fileUseCase, logger)
+	v, err := server.NewServers(app, servers, fileManagerService)
 	if err != nil {
 		cleanup2()
 		cleanup()
 		return nil, nil, err
 	}
-	watcher, err := providers.ProvideWatcher(app, c)
-	if err != nil {
-		cleanup2()
-		cleanup()
-		return nil, nil, err
-	}
-	authorizer, err := providers.ProvideAuthorizer(app, c, adapter, watcher)
-	if err != nil {
-		cleanup2()
-		cleanup()
-		return nil, nil, err
-	}
-	skipper := providers.ProvideSkipper(app, c)
-	serverMiddlewareProvider, err := providers.ProvideServiceMiddlewares(app, authorizer, skipper)
-	if err != nil {
-		cleanup2()
-		cleanup()
-		return nil, nil, err
-	}
-	v2, err := server.NewServers(app, servers, fileManagerService, serverMiddlewareProvider)
-	if err != nil {
-		cleanup2()
-		cleanup()
-		return nil, nil, err
-	}
-	kratosApp := NewApp(app, v2)
+	kratosApp := NewApp(app, v)
 	return kratosApp, func() {
 		cleanup2()
 		cleanup()
@@ -100,10 +64,9 @@ func wireApp(app *runtime.App, c *conf.Config) (*kratos.App, func(), error) {
 // NewObjectStoreServiceClient creates a new ObjectStoreService client using service discovery.
 func NewObjectStoreServiceClient(
 	app *runtime.App,
-	bootstrap *conf.Config,
-	middlewareProvider container.ClientMiddlewareProvider,
+	bootstrap *confpb.Bootstrap,
 ) (objectstore.ObjectStoreServiceClient, func(), error) {
-	conn, err := grpcclient.NewConn(app, bootstrap, "objectstore", middlewareProvider)
+	conn, err := grpcclient.NewConn(app, bootstrap, "objectstore")
 	if err != nil {
 		return nil, nil, err
 	}

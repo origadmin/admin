@@ -5,13 +5,13 @@
 package data
 
 import (
+	"context"
 	"fmt"
 	"reflect"
 
 	"github.com/casbin/casbin/v3/model"
 
 	"github.com/origadmin/runtime"
-	"github.com/origadmin/runtime/context"
 	"github.com/origadmin/runtime/log"
 	"origadmin/application/admin/internal/data/entity/ent"
 	"origadmin/application/admin/internal/data/entity/ent/casbinrule"

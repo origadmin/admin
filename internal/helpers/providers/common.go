@@ -1,10 +1,17 @@
+/*
+ * Copyright (c) 2024 OrigAdmin. All rights reserved.
+ */
+
 package providers
 
 import (
 	"github.com/google/wire"
 
 	"github.com/origadmin/runtime"
-	"github.com/origadmin/runtime/container"
+	transportv1 "github.com/origadmin/runtime/api/gen/go/config/transport/v1"
+	"github.com/origadmin/runtime/contracts/component"
+	"github.com/origadmin/runtime/data/storage"
+	"github.com/origadmin/runtime/helpers/comp"
 	"github.com/origadmin/runtime/log"
 	"github.com/origadmin/toolkits/crypto/hash"
 	"github.com/origadmin/toolkits/crypto/hash/algorithms/bcrypt"
@@ -14,28 +21,33 @@ import (
 	"origadmin/application/admin/internal/helpers/captcha"
 )
 
-// ProviderCommonSet provides common dependencies that are safe for all modules.
+// ProviderCommonSet provides common dependencies for all modules.
 var ProviderCommonSet = wire.NewSet(
+	ProvideConfig,
 	ProvideLogger,
-	ProvideCache,
 	ProvideHasher,
 	ProvideCaptcha,
-	wire.FieldsOf(new(*conf.Config), "Bootstrap"),
-	wire.FieldsOf(new(*confpb.Bootstrap), "Auth"),
-	wire.FieldsOf(new(*confpb.Bootstrap), "Security"),
-	wire.FieldsOf(new(*confpb.Bootstrap), "Servers"),
-	wire.FieldsOf(new(*confpb.Bootstrap), "Captcha"),
-	wire.FieldsOf(new(*confpb.Bootstrap), "Brokers"),
+	ProvideServers,
 )
 
-// ProvideLogger provides a logger instance from the runtime App.
+// ProvideConfig bridges the PB-based Bootstrap config to the internal business Config.
+func ProvideConfig(b *confpb.Bootstrap) *conf.Config {
+	return &conf.Config{Bootstrap: *b}
+}
+
+// ProvideLogger provides the project's runtime logger.
 func ProvideLogger(app *runtime.App) log.Logger {
 	return app.Logger()
 }
 
+// ProvideServers extracts the server configuration from bootstrap.
+func ProvideServers(cfg *confpb.Bootstrap) *transportv1.Servers {
+	return cfg.GetServers()
+}
+
 // ProvideCache provides a cache provider from the runtime App.
-func ProvideCache(app *runtime.App) (container.CacheProvider, error) {
-	return app.CacheProvider()
+func ProvideCache(app *runtime.App) storage.Provider {
+	return storage.NewProvider(app.Container().In(""))
 }
 
 // ProvideHasher provides a password hasher.
@@ -43,39 +55,7 @@ func ProvideHasher() (hash.Crypto, error) {
 	return hash.NewCrypto(types.BCRYPT, bcrypt.WithCost(bcrypt.DefaultCost))
 }
 
-// ProvideCaptcha provides a captcha instance.
-func ProvideCaptcha(app *runtime.App, p container.CacheProvider, cfg *confpb.Bootstrap) (*captcha.Captcha, error) {
-	captchaConfig := cfg.GetCaptcha()
-	if captchaConfig == nil {
-		captchaConfig = &confpb.Captcha{}
-	}
-	if captchaConfig.CacheName == "" {
-		captchaConfig.CacheName = "default"
-	}
-	if captchaConfig.Height == 0 {
-		captchaConfig.Height = 80
-	}
-	if captchaConfig.Width == 0 {
-		captchaConfig.Width = 240
-	}
-	if captchaConfig.Length == 0 {
-		captchaConfig.Length = 6
-	}
-	if captchaConfig.MaxSkew == 0 {
-		captchaConfig.MaxSkew = 0.7
-	}
-	if captchaConfig.DotCount == 0 {
-		captchaConfig.DotCount = 80
-	}
-
-	cache, err := p.Cache(captchaConfig.CacheName)
-	if err != nil {
-		return nil, err
-	}
-
-	c := &captcha.Config{
-		Store:   captcha.NewStore(cache),
-		Captcha: captchaConfig,
-	}
-	return captcha.NewCaptcha(c), nil
+// ProvideCaptcha provides a captcha instance from the runtime container.
+func ProvideCaptcha(app *runtime.App) (*captcha.Captcha, error) {
+	return comp.GetDefault[*captcha.Captcha](app.Context(), app.Container().In(component.CategorySecurity))
 }

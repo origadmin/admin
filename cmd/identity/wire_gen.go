@@ -9,12 +9,14 @@ package main
 import (
 	"github.com/go-kratos/kratos/v2"
 	"github.com/origadmin/runtime"
-	"origadmin/application/admin/internal/conf"
+	"origadmin/application/admin/api/v1/services/system"
+	"origadmin/application/admin/internal/conf/pb"
 	"origadmin/application/admin/internal/data"
 	"origadmin/application/admin/internal/features/identity/biz"
 	"origadmin/application/admin/internal/features/identity/dal"
 	"origadmin/application/admin/internal/features/identity/server"
 	"origadmin/application/admin/internal/features/identity/service"
+	"origadmin/application/admin/internal/helpers/grpcclient"
 	"origadmin/application/admin/internal/helpers/providers"
 )
 
@@ -29,75 +31,66 @@ import (
 // Injectors from wire.go:
 
 // wireApp init kratos application.
-func wireApp(app *runtime.App, bootstrap *conf.Config) (*kratos.App, func(), error) {
-	confpbBootstrap := &bootstrap.Bootstrap
-	servers := confpbBootstrap.Servers
-	provider, err := data.NewStorageProvider(app)
+func wireApp(app *runtime.App, b *confpb.Bootstrap) (*kratos.App, func(), error) {
+	servers := providers.ProvideServers(b)
+	database, cleanup, err := data.ProvideDatabase(app)
 	if err != nil {
 		return nil, nil, err
 	}
-	v := providers.ProvideLogger(app)
-	database, cleanup, err := data.ProvideDatabase(provider, v)
-	if err != nil {
-		return nil, nil, err
-	}
-	authnRepo := dal.NewAuthnRepo(database, v)
+	logger := providers.ProvideLogger(app)
+	authnRepo := dal.NewAuthnRepo(database, logger)
 	crypto, err := providers.ProvideHasher()
 	if err != nil {
 		cleanup()
 		return nil, nil, err
 	}
-	authUseCase := biz.NewAuthUseCase(authnRepo, crypto, v)
-	cacheProvider, err := providers.ProvideCache(app)
+	authUseCase := biz.NewAuthUseCase(authnRepo, crypto, logger)
+	captcha, err := providers.ProvideCaptcha(app)
 	if err != nil {
 		cleanup()
 		return nil, nil, err
 	}
-	captcha, err := providers.ProvideCaptcha(app, cacheProvider, confpbBootstrap)
+	captchaUseCase := biz.NewCaptchaUseCase(captcha, logger)
+	authenticator, err := providers.ProvideAuthenticator(app)
 	if err != nil {
 		cleanup()
 		return nil, nil, err
 	}
-	captchaUseCase := biz.NewCaptchaUseCase(captcha, v)
-	authenticator, err := providers.ProvideAuthenticator(app, bootstrap)
+	authService := service.NewAuthService(authUseCase, captchaUseCase, authenticator, logger)
+	meRepo := dal.NewMeRepo(database, crypto, logger)
+	authzRepo := dal.NewAuthzRepo(database, logger)
+	meUseCase := biz.NewMeUseCase(meRepo, authnRepo, authzRepo, crypto, logger)
+	meService := service.NewMeService(meUseCase, logger)
+	authorizer, err := providers.ProvideAuthorizer(app)
 	if err != nil {
 		cleanup()
 		return nil, nil, err
 	}
-	authService := service.NewAuthService(authUseCase, captchaUseCase, authenticator, v)
-	meRepo := dal.NewMeRepo(database, crypto, v)
-	authzRepo := dal.NewAuthzRepo(database, v)
-	meUseCase := biz.NewMeUseCase(meRepo, authnRepo, authzRepo, crypto, v)
-	meService := service.NewMeService(meUseCase, v)
-	adapter, err := data.NewAdapterFromApp(app, database)
+	adminService := service.NewAdminService(authorizer, logger)
+	v, err := server.NewServers(app, servers, authService, meService, adminService)
 	if err != nil {
 		cleanup()
 		return nil, nil, err
 	}
-	watcher, err := providers.ProvideWatcher(app, bootstrap)
-	if err != nil {
-		cleanup()
-		return nil, nil, err
-	}
-	authorizer, err := providers.ProvideAuthorizer(app, bootstrap, adapter, watcher)
-	if err != nil {
-		cleanup()
-		return nil, nil, err
-	}
-	adminService := service.NewAdminService(authorizer, v)
-	skipper := providers.ProvideSkipper(app, bootstrap)
-	serverMiddlewareProvider, err := providers.ProvideServiceMiddlewares(app, authorizer, skipper)
-	if err != nil {
-		cleanup()
-		return nil, nil, err
-	}
-	v2, err := server.NewServers(app, servers, authService, meService, adminService, serverMiddlewareProvider)
-	if err != nil {
-		cleanup()
-		return nil, nil, err
-	}
-	kratosApp := NewApp(app, v2)
+	kratosApp := NewApp(app, v)
 	return kratosApp, func() {
 		cleanup()
 	}, nil
+}
+
+// wire.go:
+
+// NewSystemServiceClient creates a new SystemService client using service discovery.
+func NewSystemServiceClient(
+	app *runtime.App,
+	bootstrap *confpb.Bootstrap,
+) (system.UserServiceClient, func(), error) {
+	conn, err := grpcclient.NewConn(app, bootstrap, "system")
+	if err != nil {
+		return nil, nil, err
+	}
+	cleanup := func() {
+		conn.Close()
+	}
+	return system.NewUserServiceClient(conn), cleanup, nil
 }

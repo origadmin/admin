@@ -14,8 +14,8 @@ import (
 	grpcv1 "github.com/origadmin/runtime/api/gen/go/config/transport/grpc/v1"
 	httpv1 "github.com/origadmin/runtime/api/gen/go/config/transport/http/v1"
 	transportv1 "github.com/origadmin/runtime/api/gen/go/config/transport/v1"
-	"github.com/origadmin/runtime/container"
 	"github.com/origadmin/runtime/log"
+	"github.com/origadmin/runtime/middleware"
 	"github.com/origadmin/runtime/service/transport"
 	"github.com/origadmin/runtime/service/transport/grpc"
 	"github.com/origadmin/runtime/service/transport/http"
@@ -32,7 +32,6 @@ func NewServers(
 	app *runtime.App,
 	cfg *transportv1.Servers,
 	fileManagerSvc *fmSvc.FileManagerService,
-	middlewareProvider container.ServerMiddlewareProvider,
 ) ([]transport.Server, error) {
 	if cfg == nil {
 		return nil, errors.New("servers config is nil")
@@ -45,13 +44,13 @@ func NewServers(
 		}
 		switch serverCfg.GetProtocol() {
 		case "http":
-			srv, err := NewHTTPServer(app, serverCfg.GetHttp(), fileManagerSvc, middlewareProvider)
+			srv, err := NewHTTPServer(app, serverCfg.GetHttp(), fileManagerSvc)
 			if err != nil {
 				return nil, err
 			}
 			transportServers = append(transportServers, srv)
 		case "grpc":
-			srv, err := NewGRPCServer(app, serverCfg.GetGrpc(), fileManagerSvc, middlewareProvider)
+			srv, err := NewGRPCServer(app, serverCfg.GetGrpc(), fileManagerSvc)
 			if err != nil {
 				return nil, err
 			}
@@ -71,21 +70,23 @@ func NewHTTPServer(
 	app *runtime.App,
 	cfg *httpv1.Server,
 	fileManagerSvc *fmSvc.FileManagerService,
-	provider container.ServerMiddlewareProvider,
 ) (*transport.HTTPServer, error) {
 	if cfg == nil {
 		return nil, errors.New("http config is nil")
 	}
 
-	mws, err := provider.ServerMiddlewares()
+	// Fetch middlewares from container with 'feature' tag
+	h := app.Container().In(runtime.CategoryMiddleware,
+		runtime.WithScope(runtime.ServerScope),
+		runtime.WithInTags("feature"))
+	mwMap, err := middleware.GetMiddlewares(app.Context(), h)
 	if err != nil {
 		return nil, err
 	}
-	opts := &http.ServerOptions{
-		ServerMiddlewares: mws,
-	}
 
-	srv, err := http.NewServer(cfg, opts)
+	srv, err := http.NewServer(cfg, &http.ServerOptions{
+		ServerMiddlewares: mwMap,
+	})
 	if err != nil {
 		return nil, err
 	}
@@ -101,23 +102,26 @@ func NewHTTPServer(
 
 // NewGRPCServer new a gRPC server.
 func NewGRPCServer(
-	_ *runtime.App,
+	app *runtime.App,
 	cfg *grpcv1.Server,
 	fileManagerSvc *fmSvc.FileManagerService,
-	provider container.ServerMiddlewareProvider,
 ) (*transport.GRPCServer, error) {
 	if cfg == nil {
 		return nil, errors.New("grpc config is nil")
 	}
 
-	mws, err := provider.ServerMiddlewares()
+	// Fetch middlewares from container with 'feature' tag
+	h := app.Container().In(runtime.CategoryMiddleware,
+		runtime.WithScope(runtime.ServerScope),
+		runtime.WithInTags("feature"))
+	mwMap, err := middleware.GetMiddlewares(app.Context(), h)
 	if err != nil {
 		return nil, err
 	}
-	opts := &grpc.ServerOptions{
-		ServerMiddlewares: mws,
-	}
-	srv, err := grpc.NewServer(cfg, opts)
+
+	srv, err := grpc.NewServer(cfg, &grpc.ServerOptions{
+		ServerMiddlewares: mwMap,
+	})
 	if err != nil {
 		return nil, err
 	}

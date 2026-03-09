@@ -118,7 +118,7 @@ func NewCaptcha(config *Config) *Captcha {
 			NoiseCount:      int(config.Captcha.GetDotCount()),
 			ShowLineOptions: base64Captcha.OptionShowSlimeLine,
 			Length:          int(config.Captcha.GetLength()),
-			Source: "的一是在不了有和人这中大为上个国我以要他时来用们生到作地于出就分对成会可主发年动同工也能下过子说产种面而方后多定行学法所民得经十三之进着�?,,
+			Source:          "的一是在不了有和人这中大为上个国我以要他时来用们生到作地于出就分对成会可主发年动同工也能下过子说产种面而方后多定行学法所民得经十三之进着等",
 		}
 	}
 	drivers[TypeChinese] = config.DriverChinese

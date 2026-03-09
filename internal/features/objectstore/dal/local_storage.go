@@ -24,9 +24,9 @@ import (
 	"google.golang.org/grpc/metadata"
 	"google.golang.org/protobuf/types/known/timestamppb"
 
-	"github.com/origadmin/runtime/extensions/configutil"
+	"github.com/origadmin/runtime/helpers/configutil"
 	"origadmin/application/admin/api/v1/services/types"
-	"origadmin/application/admin/internal/conf"
+	confpb "origadmin/application/admin/internal/conf/pb"
 	"origadmin/application/admin/internal/features/objectstore/dto"
 	"origadmin/application/admin/internal/helpers/idutil"
 )
@@ -45,9 +45,9 @@ type LocalStorageConfig struct {
 
 var ProviderSet = wire.NewSet(NewLocalStorage, NewLocalStorageConfig, wire.Bind(new(dto.ObjectRepo), new(*LocalStorage)))
 
-func NewLocalStorageConfig(c *conf.Config) (*LocalStorageConfig, error) {
+func NewLocalStorageConfig(c *confpb.Bootstrap) (*LocalStorageConfig, error) {
 	o, m := filepath.Join("tmp", "objects"), filepath.Join("tmp", "multipart")
-	objectStores := c.GetBootstrap().GetData().GetObjectStores()
+	objectStores := c.GetData().GetObjectStores()
 	if objectStores != nil {
 		store, _, err := configutil.Normalize(objectStores.GetActive(), objectStores.GetDefault(), objectStores.GetConfigs())
 		if err == nil && store != nil && store.GetLocal() != nil {

@@ -10,7 +10,7 @@ import (
 	natsio "github.com/nats-io/nats.go"
 
 	"github.com/origadmin/runtime/log"
-	"origadmin/application/admin/internal/conf"
+	confpb "origadmin/application/admin/internal/conf/pb"
 	"origadmin/application/admin/internal/helpers/pubsub"
 )
 
@@ -18,17 +18,17 @@ import (
 // For now, it specifically handles NATS JetStream provisioning to ensure
 // streams and consumers exist before the application starts subscribing.
 type Initializer struct {
-	conf   *conf.Config
-	logger log.Logger
-	log    *log.Helper
+	bootstrap *confpb.Bootstrap
+	logger    log.Logger
+	log       *log.Helper
 }
 
 // NewInitializer creates a new broker Initializer.
-func NewInitializer(c *conf.Config, logger log.Logger) *Initializer {
+func NewInitializer(b *confpb.Bootstrap, logger log.Logger) *Initializer {
 	return &Initializer{
-		conf:   c,
-		logger: logger,
-		log:    log.NewHelper(log.With(logger, "module", "initializer.broker")),
+		bootstrap: b,
+		logger:    logger,
+		log:       log.NewHelper(log.With(logger, "module", "initializer.broker")),
 	}
 }
 
@@ -36,8 +36,8 @@ func NewInitializer(c *conf.Config, logger log.Logger) *Initializer {
 func (i *Initializer) Init(_ context.Context) error {
 	i.log.Info("Starting broker initialization...")
 
-	allBrokers := i.conf.GetBrokers().GetConfigs()
-	if def := i.conf.GetBrokers().GetDefault(); def != nil {
+	allBrokers := i.bootstrap.GetBrokers().GetConfigs()
+	if def := i.bootstrap.GetBrokers().GetDefault(); def != nil {
 		isDup := false
 		for _, b := range allBrokers {
 			if b.GetName() == def.GetName() && def.GetName() != "" {

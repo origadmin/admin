@@ -9,8 +9,7 @@ package main
 import (
 	"github.com/go-kratos/kratos/v2"
 	"github.com/origadmin/runtime"
-	"origadmin/application/admin/internal/conf"
-	"origadmin/application/admin/internal/data"
+	"origadmin/application/admin/internal/conf/pb"
 	"origadmin/application/admin/internal/features/objectstore/biz"
 	"origadmin/application/admin/internal/features/objectstore/dal"
 	"origadmin/application/admin/internal/features/objectstore/server"
@@ -29,10 +28,9 @@ import (
 // Injectors from wire.go:
 
 // wireApp init kratos application.
-func wireApp(app *runtime.App, c *conf.Config) (*kratos.App, func(), error) {
-	bootstrap := &c.Bootstrap
-	servers := bootstrap.Servers
-	localStorageConfig, err := dal.NewLocalStorageConfig(c)
+func wireApp(app *runtime.App, b *confpb.Bootstrap) (*kratos.App, func(), error) {
+	servers := providers.ProvideServers(b)
+	localStorageConfig, err := dal.NewLocalStorageConfig(b)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -43,42 +41,11 @@ func wireApp(app *runtime.App, c *conf.Config) (*kratos.App, func(), error) {
 	logger := providers.ProvideLogger(app)
 	objectStoreUseCase := biz.NewObjectStoreUseCase(localStorage, logger)
 	objectStoreService := service.NewObjectStoreService(objectStoreUseCase, logger)
-	provider, err := data.NewStorageProvider(app)
+	v, err := server.NewServers(app, servers, objectStoreService, localStorageConfig)
 	if err != nil {
-		return nil, nil, err
-	}
-	database, cleanup, err := data.ProvideDatabase(provider, logger)
-	if err != nil {
-		return nil, nil, err
-	}
-	adapter, err := data.NewAdapterFromApp(app, database)
-	if err != nil {
-		cleanup()
-		return nil, nil, err
-	}
-	watcher, err := providers.ProvideWatcher(app, c)
-	if err != nil {
-		cleanup()
-		return nil, nil, err
-	}
-	authorizer, err := providers.ProvideAuthorizer(app, c, adapter, watcher)
-	if err != nil {
-		cleanup()
-		return nil, nil, err
-	}
-	skipper := providers.ProvideSkipper(app, c)
-	serverMiddlewareProvider, err := providers.ProvideServiceMiddlewares(app, authorizer, skipper)
-	if err != nil {
-		cleanup()
-		return nil, nil, err
-	}
-	v, err := server.NewServers(app, servers, objectStoreService, serverMiddlewareProvider, localStorageConfig)
-	if err != nil {
-		cleanup()
 		return nil, nil, err
 	}
 	kratosApp := NewApp(app, v)
 	return kratosApp, func() {
-		cleanup()
 	}, nil
 }

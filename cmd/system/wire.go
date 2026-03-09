@@ -13,7 +13,7 @@ import (
 	"github.com/google/wire"
 
 	"github.com/origadmin/runtime"
-	"origadmin/application/admin/internal/conf"
+	confpb "origadmin/application/admin/internal/conf/pb"
 	"origadmin/application/admin/internal/data"
 	"origadmin/application/admin/internal/features/system/biz"
 	"origadmin/application/admin/internal/features/system/dal"
@@ -23,7 +23,7 @@ import (
 )
 
 // wireApp init kratos application.
-func wireApp(app *runtime.App, bootstrap *conf.Config) (*kratos.App, func(), error) {
+func wireApp(app *runtime.App, bootstrap *confpb.Bootstrap) (*kratos.App, func(), error) {
 	panic(wire.Build(
 		// Shared infrastructure providers
 		providers.ProviderBackendSet,

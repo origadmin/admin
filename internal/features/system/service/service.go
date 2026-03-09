@@ -7,7 +7,6 @@ package service
 import (
 	"context"
 
-	projectContext "github.com/origadmin/runtime/context"
 	"github.com/origadmin/runtime/service/transport"
 	systemv1 "origadmin/application/admin/api/v1/services/system"
 )
@@ -31,7 +30,7 @@ func (s *SystemService) RegisterHTTP(_ context.Context, srv *transport.HTTPServe
 	return nil
 }
 
-func (s *SystemService) RegisterGRPC(c projectContext.Context, srv *transport.GRPCServer) error {
+func (s *SystemService) RegisterGRPC(ctx context.Context, srv *transport.GRPCServer) error {
 	// Register gRPC handlers
 	systemv1.RegisterUserServiceServer(srv, s.User)
 	systemv1.RegisterRoleServiceServer(srv, s.Role)

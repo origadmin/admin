@@ -13,19 +13,15 @@ import (
 	"github.com/google/wire"
 
 	"github.com/origadmin/runtime"
-	"origadmin/application/admin/internal/conf"
+	confpb "origadmin/application/admin/internal/conf/pb"
 	"origadmin/application/admin/internal/gateway/client"
 	"origadmin/application/admin/internal/gateway/server"
 	"origadmin/application/admin/internal/gateway/service"
-	"origadmin/application/admin/internal/helpers/providers"
 )
 
 // wireApp init kratos application.
-func wireApp(app *runtime.App, bootstrap *conf.Config) (*kratos.App, func(), error) {
+func wireApp(app *runtime.App, b *confpb.Bootstrap) (*kratos.App, func(), error) {
 	panic(wire.Build(
-		// Gateway-specific providers, which includes common providers.
-		providers.ProviderGatewaySet,
-
 		// Service-specific providers
 		server.ProviderSet,
 		service.ProviderSet,
