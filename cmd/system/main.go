@@ -25,6 +25,7 @@ import (
 	_ "origadmin/application/admin/internal/data/entity/ent/runtime"
 	"origadmin/application/admin/internal/features/system/service"
 	confhelper "origadmin/application/admin/internal/helpers/conf"
+	_ "origadmin/application/admin/internal/helpers/providers"
 )
 
 var (

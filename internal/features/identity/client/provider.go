@@ -8,12 +8,10 @@ import (
 	"fmt"
 
 	"github.com/google/wire"
-	"google.golang.org/grpc"
 
 	"github.com/origadmin/runtime"
-	"github.com/origadmin/runtime/container"
 	systemv1 "origadmin/application/admin/api/v1/services/system"
-	"origadmin/application/admin/internal/conf"
+	confpb "origadmin/application/admin/internal/conf/pb"
 	"origadmin/application/admin/internal/helpers/grpcclient"
 )
 
@@ -32,38 +30,35 @@ var ProviderSet = wire.NewSet(
 // NewAuthorizationServiceClient creates a gRPC client for the system's AuthorizationService.
 func NewAuthorizationServiceClient(
 	app *runtime.App,
-	bootstrap *conf.Config,
-	middlewareProvider container.ClientMiddlewareProvider,
+	bootstrap *confpb.Bootstrap,
 ) (systemv1.PolicyQueryServiceClient, error) {
-	conn, err := grpcclient.NewConn(app, bootstrap, ServiceNameSystem, middlewareProvider)
+	conn, err := grpcclient.NewConn(app, bootstrap, ServiceNameSystem)
 	if err != nil {
 		return nil, fmt.Errorf("failed to create gRPC connection to system service for AuthorizationService: %w", err)
 	}
-	return systemv1.NewPolicyQueryServiceClient(conn.(*grpc.ClientConn)), nil
+	return systemv1.NewPolicyQueryServiceClient(conn), nil
 }
 
 // NewUserServiceClient creates a gRPC client for the system's UserService.
 func NewUserServiceClient(
 	app *runtime.App,
-	bootstrap *conf.Config,
-	middlewareProvider container.ClientMiddlewareProvider,
+	bootstrap *confpb.Bootstrap,
 ) (systemv1.UserServiceClient, error) {
-	conn, err := grpcclient.NewConn(app, bootstrap, ServiceNameSystem, middlewareProvider)
+	conn, err := grpcclient.NewConn(app, bootstrap, ServiceNameSystem)
 	if err != nil {
 		return nil, fmt.Errorf("failed to create gRPC connection to system service for UserService: %w", err)
 	}
-	return systemv1.NewUserServiceClient(conn.(*grpc.ClientConn)), nil
+	return systemv1.NewUserServiceClient(conn), nil
 }
 
 // NewViewServiceClient creates a gRPC client for the system's ViewService.
 func NewViewServiceClient(
 	app *runtime.App,
-	bootstrap *conf.Config,
-	middlewareProvider container.ClientMiddlewareProvider,
+	bootstrap *confpb.Bootstrap,
 ) (systemv1.ViewServiceClient, error) {
-	conn, err := grpcclient.NewConn(app, bootstrap, ServiceNameSystem, middlewareProvider)
+	conn, err := grpcclient.NewConn(app, bootstrap, ServiceNameSystem)
 	if err != nil {
 		return nil, fmt.Errorf("failed to create gRPC connection to system service for ViewService: %w", err)
 	}
-	return systemv1.NewViewServiceClient(conn.(*grpc.ClientConn)), nil
+	return systemv1.NewViewServiceClient(conn), nil
 }

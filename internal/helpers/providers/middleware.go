@@ -21,6 +21,7 @@ import (
 	"github.com/origadmin/runtime/log"
 	"github.com/origadmin/runtime/middleware"
 	_ "github.com/origadmin/runtime/middleware"
+	_ "github.com/origadmin/contrib/security/middleware/propagation"
 )
 
 var (

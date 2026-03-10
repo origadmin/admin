@@ -19,6 +19,7 @@ import (
 	confpb "origadmin/application/admin/internal/conf/pb"
 	_ "origadmin/application/admin/internal/data/entity/ent/runtime"
 	confhelper "origadmin/application/admin/internal/helpers/conf"
+	_ "origadmin/application/admin/internal/helpers/providers"
 )
 
 var (
@@ -58,7 +59,7 @@ func main() {
 	log.Infof("Loading configuration from: %s\n", confPath)
 
 	rt := runtime.New(Name, Version)
-	err := rt.Load(confPath, runtimebootstrap.WithConfigTransformer(conf.New()))
+	err := rt.Load(confPath, runtimebootstrap.WithConfigTransformer(conf.Transformer))
 	if err != nil {
 		log.Fatalf("failed to create runtime: %v", err)
 	}

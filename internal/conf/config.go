@@ -39,3 +39,13 @@ func (c *Config) Transform(cfg config.KConfig) (any, error) {
 func New() bootstrap.ConfigTransformer {
 	return &Config{}
 }
+
+func transformer(cfg config.KConfig) (any, error) {
+	var b confpb.Bootstrap
+	if err := cfg.Scan(&b); err != nil {
+		return nil, fmt.Errorf("failed to scan config: %w", err)
+	}
+	return &b, nil
+}
+
+var Transformer bootstrap.ConfigTransformFunc = transformer
