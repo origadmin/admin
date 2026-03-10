@@ -129,11 +129,21 @@ func (s *LocalStorage) Get(ctx context.Context, id string) (io.ReadCloser, *type
 		return nil, nil, err
 	}
 	stat, _ := file.Stat()
-	return file, &types.Object{Id: id, Size: stat.Size(), ContentType: "application/octet-stream"}, nil
+	return file, &types.Object{
+		Id:          id,
+		Name:        id,
+		Size:        stat.Size(),
+		Url:         fmt.Sprintf("/objects/%s", id),
+		ContentType: "application/octet-stream",
+	}, nil
 }
 
 func (s *LocalStorage) Delete(ctx context.Context, id string) error {
-	return os.Remove(filepath.Join(s.basePath, id))
+	err := os.Remove(filepath.Join(s.basePath, id))
+	if err != nil && os.IsNotExist(err) {
+		return nil
+	}
+	return err
 }
 
 func (s *LocalStorage) List(ctx context.Context, prefix string, page, pageSize int32) ([]*types.Object, int32, error) {

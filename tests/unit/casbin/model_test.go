@@ -16,12 +16,13 @@ func TestCasbinModel(t *testing.T) {
 	// 加载模型
 	modelPath := "../../../resources/casbin_model.conf"
 
-	// 创建内存适配�?	adapter := adapter.NewMemory()
-	enforcer, err := casbin.NewEnforcer(modelPath, adapter)
+	// 创建内存适配器
+	memAdapter := adapter.NewMemory()
+	enforcer, err := casbin.NewEnforcer(modelPath, memAdapter)
 	require.NoError(t, err, "Failed to create enforcer")
 
 	t.Run("TestBasicPermission", func(t *testing.T) {
-		// 添加策略: role1 可以访问 resource1 �?read 操作
+		// 添加策略: role1 可以访问 resource1 的 read 操作
 		_, err := enforcer.AddPolicy("role1", "domain1", "system:user:list", "read")
 		require.NoError(t, err)
 
@@ -37,11 +38,11 @@ func TestCasbinModel(t *testing.T) {
 	})
 
 	t.Run("TestWildcardMatching", func(t *testing.T) {
-		// 添加通配符策�? domain使用通配�?匹配所有domain
+		// 添加通配符策略: domain使用通配符匹配所有domain
 		_, err := enforcer.AddPolicy("admin", "*", "system:*", "ANY")
 		require.NoError(t, err)
 
-		// 验证通配符权�? 测试不同domain都能匹配
+		// 验证通配符权限: 测试不同domain都能匹配
 		tests := []struct {
 			sub  string
 			dom  string
@@ -84,23 +85,25 @@ func TestCasbinModel(t *testing.T) {
 	})
 
 	t.Run("TestDomainIsolation", func(t *testing.T) {
-		// 域隔离测�?		_, err := enforcer.AddPolicy("user1", "domain1", "resource1", "read")
+		// 域隔离测试
+		_, err := enforcer.AddPolicy("user1", "domain1", "resource1", "read")
 		require.NoError(t, err)
 
 		_, err = enforcer.AddPolicy("user1", "domain2", "resource1", "read")
 		require.NoError(t, err)
 
-		// user1 �?domain1 有权�?		allowed, err := enforcer.Enforce("user1", "domain1", "resource1", "read")
+		// user1 对 domain1 有权限
+		allowed, err := enforcer.Enforce("user1", "domain1", "resource1", "read")
 		require.NoError(t, err)
 		assert.True(t, allowed)
 
-		// user1 �?domain2 也有权限
+		// user1 对 domain2 也有权限
 		allowed, err = enforcer.Enforce("user1", "domain2", "resource1", "read")
 		require.NoError(t, err)
 		assert.True(t, allowed)
 
-		// user1 �?domain3 没有权限
-		allowed, err = enforcer.Enforce("user1", "resource1", "read", "domain3")
+		// user1 对 domain3 没有权限
+		allowed, err = enforcer.Enforce("user1", "domain3", "resource1", "read")
 		require.NoError(t, err)
 		assert.False(t, allowed)
 	})

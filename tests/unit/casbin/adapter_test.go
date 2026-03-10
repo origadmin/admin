@@ -5,6 +5,7 @@
 package casbin
 
 import (
+	"context"
 	"log"
 	"testing"
 
@@ -12,7 +13,6 @@ import (
 	"github.com/casbin/casbin/v3/util"
 	"github.com/stretchr/testify/assert"
 
-	"github.com/origadmin/runtime/context"
 	runtimelog "github.com/origadmin/runtime/log"
 	_ "github.com/sqlite3ent/sqlite3"
 	"origadmin/application/admin/internal/data"

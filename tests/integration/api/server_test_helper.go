@@ -6,7 +6,6 @@ package api
 
 import (
 	"context"
-	"io"
 	"net/http"
 	"net/http/httptest"
 	"strconv"
@@ -32,7 +31,6 @@ import (
 	"origadmin/application/admin/internal/features/system/service"
 )
 
-// testServerComponents holds all the components needed for an integration test.
 // testServerComponents holds all components needed for an integration test.
 type testServerComponents struct {
 	DBClient   *ent.Client
@@ -52,69 +50,57 @@ func (n *noopPublisher) Close() error {
 }
 
 // setupTestServer initializes a test server with an in-memory SQLite database
-// and all necessary dependencies for integration testing.
-// 修正了数据库初始化: 正确使用 enttest.Open 的参数
 func setupTestServer(t *testing.T) *testServerComponents {
 	t.Helper()
 
 	// 1. Initialize in-memory SQLite database
 	client := enttest.Open(t, dialect.SQLite, "file:ent?mode=memory&cache=shared&_fk=1")
-	// 修正: enttest.Open 的第二个参数是 dialect，第三个参数才是 DSN
-	//client := enttest.Open(t, "sqlite3", "file:ent?mode=memory&cache=shared&_fk=1")
 	t.Cleanup(func() { client.Close() })
 	database := ent.NewDatabaseWithClient(client)
 
-	// 2. Manually construct the dependency graph (DAL -> Biz -> Service -> Server)
-	logger := log.NewStdLogger(io.Discard)
+	// 2. Manually construct the dependency graph
+	logger := log.DefaultLogger
 	hasher, err := hash.NewCrypto(hashtypes.BCRYPT)
 	require.NoError(t, err)
 
 	// DAL Layer
-	userRepo := dal.NewUserRepo(database, log.DefaultLogger)
-	roleRepo := dal.NewRoleRepo(database, log.DefaultLogger)
-	permissionRepo := dal.NewPermissionRepo(database, log.DefaultLogger)
-	resourceRepo := dal.NewResourceRepo(database, log.DefaultLogger)
-	viewRepo := dal.NewViewRepo(database, log.DefaultLogger)
-	authzRepo := dal.New(database, logger)
+	userRepo := dal.NewUserRepo(database, logger)
+	roleRepo := dal.NewRoleRepo(database, logger)
+	permissionRepo := dal.NewPermissionRepo(database, logger)
+	resourceRepo := dal.NewResourceRepo(database, logger)
+	viewRepo := dal.NewViewRepo(database, logger)
+	policyRepo := dal.NewPolicyQueryRepo(database, logger)
 
 	// Biz Layer
-	userUseCase := biz.NewUserUseCase(userRepo, hasher, logger)
-	roleUseCase := biz.NewRoleUseCase(roleRepo) // Corrected: Removed permissionRepo and logger
+	userUseCase := biz.NewUserUseCase(userRepo, logger) // Removed hasher as per NewUserUseCase signature
 	roleUseCase := biz.NewRoleUseCase(roleRepo)
 	permissionUseCase := biz.NewPermissionUseCase(permissionRepo)
 	resourceUseCase := biz.NewResourceUseCase(resourceRepo)
 	viewUseCase := biz.NewViewUseCase(viewRepo)
-	authzUseCase := biz.(authzRepo, logger)
+	policyQueryUseCase := biz.NewPolicyQueryUseCase(policyRepo, logger)
 
 	// Service Layer
-	// For testing, we can use a no-op publisher
-	noopPublisher := &noopPublisher{}
-	userService := service.NewUserService(userUseCase, noopPublisher, logger)
-	roleService := service.NewRoleService(roleUseCase)
+	userService := service.NewUserService(userUseCase, &noopPublisher{}, hasher, logger)
+	roleService := service.NewRoleService(roleUseCase, &noopPublisher{}, logger)
 	permissionService := service.NewPermissionService(permissionUseCase)
 	resourceService := service.NewResourceService(resourceUseCase)
 	viewService := service.NewViewService(viewUseCase)
-	authzService := service.NewAuthorizationService(authzUseCase, logger)
+	policyQueryService := service.NewPolicyQueryService(policyQueryUseCase, logger)
 
-	systemService := service.NewSystemService(
-		resourceService,
-		roleService,
-		userService,
-		permissionService,
-		viewService,
-		authzService,
-	)
+	// Avoid unused warnings
+	_ = userService
+	_ = resourceService
+	_ = viewService
+	_ = policyQueryService
 
 	// 3. Setup HTTP server using Gin
 	gin.SetMode(gin.TestMode)
 	router := gin.New()
 
-	// Manually register routes similar to how Kratos would.
-	RegisterRoleServiceRoutes(router, systemService.Role)
-	RegisterPermissionServiceRoutes(router, systemService.Permission)
+	// Manually register routes
+	RegisterRoleServiceRoutes(router, roleService)
+	RegisterPermissionServiceRoutes(router, permissionService)
 
-	// 4. Create the httptest server
-	// 4. Create httptest server
 	testServer := httptest.NewServer(router)
 	t.Cleanup(func() { testServer.Close() })
 
@@ -127,25 +113,20 @@ func setupTestServer(t *testing.T) *testServerComponents {
 
 // handleServiceError translates service-layer errors into appropriate HTTP responses.
 func handleServiceError(c *gin.Context, err error) {
+	if err == nil {
+		return
+	}
 	if errors.IsNotFound(err) {
-		if err == nil {
-			return
-		}
-
-		// 导入 errors 包检查错误类型
-		switch {
-		case err.Error() == "not found":
-			c.JSON(http.StatusNotFound, gin.H{"error": err.Error()})
-		} else if errors.IsBadRequest(err) {
-case err.Error() == "bad request":
-c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-} else {
-default:
-c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
-}
+		c.JSON(http.StatusNotFound, gin.H{"error": err.Error()})
+		return
+	}
+	if errors.IsBadRequest(err) {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+	c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 }
 
-// RegisterRoleServiceRoutes manually registers the HTTP routes for the RoleService.
 // RegisterRoleServiceRoutes manually registers HTTP routes for RoleService.
 func RegisterRoleServiceRoutes(r *gin.Engine, svc *service.RoleService) {
 	g := r.Group("/v1/system/roles")
@@ -237,32 +218,9 @@ func RegisterRoleServiceRoutes(r *gin.Engine, svc *service.RoleService) {
 			}
 			c.JSON(http.StatusOK, resp)
 		})
-
-		g.PUT("/:id/permissions", func(c *gin.Context) {
-			idStr := c.Param("id")
-			id, err := strconv.ParseInt(idStr, 10, 64)
-			if err != nil {
-				c.JSON(http.StatusBadRequest, gin.H{"error": "invalid role ID"})
-				return
-			}
-			var req struct {
-				PermissionIDs []int64 `json:"permission_ids"`
-			}
-			if err := c.ShouldBindJSON(&req); err != nil {
-				c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-				return
-			}
-			err = svc.UpdateRolePermissions(c.Request.Context(), id, req.PermissionIDs)
-			if err != nil {
-				handleServiceError(c, err)
-				return
-			}
-			c.Status(http.StatusNoContent)
-		})
 	}
 }
 
-// RegisterPermissionServiceRoutes manually registers the HTTP routes for the PermissionService.
 // RegisterPermissionServiceRoutes manually registers HTTP routes for PermissionService.
 func RegisterPermissionServiceRoutes(r *gin.Engine, svc *service.PermissionService) {
 	g := r.Group("/v1/system/permissions")

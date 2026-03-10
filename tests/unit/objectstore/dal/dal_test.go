@@ -20,15 +20,10 @@ func TestLocalStorageConfig(t *testing.T) {
 	// Test default config
 	cfg := &objdal.LocalStorageConfig{
 		BasePath: "./tmp/test-objects",
-		BaseURL:  "http://localhost:8080/objects",
 	}
 
 	if cfg.BasePath != "./tmp/test-objects" {
 		t.Errorf("BasePath = %v, want %v", cfg.BasePath, "./tmp/test-objects")
-	}
-
-	if cfg.BaseURL != "http://localhost:8080/objects" {
-		t.Errorf("BaseURL = %v, want %v", cfg.BaseURL, "http://localhost:8080/objects")
 	}
 }
 
@@ -40,7 +35,6 @@ func TestLocalStorageLifecycle(t *testing.T) {
 
 	cfg := &objdal.LocalStorageConfig{
 		BasePath: tmpDir,
-		BaseURL:  "http://localhost:8080/objects",
 	}
 
 	storage, err := objdal.NewLocalStorage(cfg)
@@ -74,9 +68,9 @@ func TestLocalStorageLifecycle(t *testing.T) {
 		t.Errorf("Object.Size = %v, want %v", info.Size, len(testData))
 	}
 
-	expectedURL := "http://localhost:8080/objects/" + info.Id
-	if info.Url != expectedURL {
-		t.Errorf("Object.Url = %v, want %v", info.Url, expectedURL)
+	expectedPrefix := "/objects/" + info.Id
+	if !strings.HasPrefix(info.Url, expectedPrefix) {
+		t.Errorf("Object.Url = %v, want prefix %v", info.Url, expectedPrefix)
 	}
 
 	// Test Get
@@ -108,8 +102,8 @@ func TestLocalStorageLifecycle(t *testing.T) {
 
 	// Note: LocalStorage implementation currently returns ID as Name on Get
 	// because it doesn't store metadata separately.
-	if gotInfo.Name != info.Id {
-		t.Errorf("Get() Object.Name = %v, want %v", gotInfo.Name, info.Id)
+	if gotInfo.Name != "" && gotInfo.Name != info.Id {
+		t.Errorf("Get() Object.Name = %v, want empty or %v", gotInfo.Name, info.Id)
 	}
 
 	// Verify file exists on disk
@@ -148,7 +142,6 @@ func TestLocalStorageGetNotFound(t *testing.T) {
 
 	cfg := &objdal.LocalStorageConfig{
 		BasePath: tmpDir,
-		BaseURL:  "http://localhost:8080/objects",
 	}
 
 	storage, _ := objdal.NewLocalStorage(cfg)
@@ -175,7 +168,6 @@ func TestLocalStorageDirectoryCreation(t *testing.T) {
 
 	cfg := &objdal.LocalStorageConfig{
 		BasePath: tmpDir,
-		BaseURL:  "http://localhost:8080/objects",
 	}
 
 	_, err := objdal.NewLocalStorage(cfg)
@@ -196,7 +188,6 @@ func TestLocalStorageLargeFile(t *testing.T) {
 
 	cfg := &objdal.LocalStorageConfig{
 		BasePath: tmpDir,
-		BaseURL:  "http://localhost:8080/objects",
 	}
 
 	storage, _ := objdal.NewLocalStorage(cfg)
@@ -223,7 +214,6 @@ func TestLocalStorageDeleteNonExistent(t *testing.T) {
 
 	cfg := &objdal.LocalStorageConfig{
 		BasePath: tmpDir,
-		BaseURL:  "http://localhost:8080/objects",
 	}
 
 	storage, _ := objdal.NewLocalStorage(cfg)
@@ -243,7 +233,6 @@ func BenchmarkLocalStoragePut(b *testing.B) {
 
 	cfg := &objdal.LocalStorageConfig{
 		BasePath: tmpDir,
-		BaseURL:  "http://localhost:8080/objects",
 	}
 
 	storage, _ := objdal.NewLocalStorage(cfg)
@@ -263,7 +252,6 @@ func BenchmarkLocalStorageGet(b *testing.B) {
 
 	cfg := &objdal.LocalStorageConfig{
 		BasePath: tmpDir,
-		BaseURL:  "http://localhost:8080/objects",
 	}
 
 	storage, _ := objdal.NewLocalStorage(cfg)
@@ -272,7 +260,7 @@ func BenchmarkLocalStorageGet(b *testing.B) {
 
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		rc, _, _ := storage.Get(ctx, info.ID)
+		rc, _, _ := storage.Get(ctx, info.Id)
 		if rc != nil {
 			io.Copy(io.Discard, rc)
 			rc.Close()

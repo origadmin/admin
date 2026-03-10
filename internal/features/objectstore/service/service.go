@@ -63,6 +63,9 @@ type ObjectStoreService struct {
 }
 
 func NewObjectStoreService(uc *biz.ObjectStoreUseCase, logger log.Logger) *ObjectStoreService {
+	if uc == nil {
+		panic("objectstore.service: UseCase is nil")
+	}
 	return &ObjectStoreService{
 		uc:  uc,
 		log: log.NewHelper(log.With(logger, "module", "objectstore.service")),

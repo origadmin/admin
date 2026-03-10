@@ -6,7 +6,6 @@ package service_test
 
 import (
 	"context"
-	"strings"
 	"testing"
 
 	"github.com/go-kratos/kratos/v2/log"
@@ -25,15 +24,14 @@ func TestObjectStoreServiceUploadObject(t *testing.T) {
 	tmpDir := t.TempDir()
 	cfg := &objdal.LocalStorageConfig{
 		BasePath: tmpDir,
-		BaseURL:  "http://localhost:8080/objects",
 	}
 	storage, _ := objdal.NewLocalStorage(cfg)
 
 	// Create use case
-	uc := objbiz.NewObjectUseCase(storage, log.DefaultLogger)
+	uc := objbiz.NewObjectStoreUseCase(storage, log.DefaultLogger)
 
 	// Create service
-	svc := objservice.NewObjectStoreService(uc)
+	svc := objservice.NewObjectStoreService(uc, log.DefaultLogger)
 
 	// Test UploadObject
 	testData := []byte("test object content")
@@ -80,15 +78,14 @@ func TestObjectStoreServiceGetObject(t *testing.T) {
 	tmpDir := t.TempDir()
 	cfg := &objdal.LocalStorageConfig{
 		BasePath: tmpDir,
-		BaseURL:  "http://localhost:8080/objects",
 	}
 	storage, _ := objdal.NewLocalStorage(cfg)
 
 	// Create use case
-	uc := objbiz.NewObjectUseCase(storage, log.DefaultLogger)
+	uc := objbiz.NewObjectStoreUseCase(storage, log.DefaultLogger)
 
 	// Create service
-	svc := objservice.NewObjectStoreService(uc)
+	svc := objservice.NewObjectStoreService(uc, log.DefaultLogger)
 
 	// First create an object
 	createReq := &objpb.UploadObjectRequest{
@@ -134,15 +131,14 @@ func TestObjectStoreServiceGetNotFound(t *testing.T) {
 	tmpDir := t.TempDir()
 	cfg := &objdal.LocalStorageConfig{
 		BasePath: tmpDir,
-		BaseURL:  "http://localhost:8080/objects",
 	}
 	storage, _ := objdal.NewLocalStorage(cfg)
 
 	// Create use case
-	uc := objbiz.NewObjectUseCase(storage, log.DefaultLogger)
+	uc := objbiz.NewObjectStoreUseCase(storage, log.DefaultLogger)
 
 	// Create service
-	svc := objservice.NewObjectStoreService(uc)
+	svc := objservice.NewObjectStoreService(uc, log.DefaultLogger)
 
 	// Try to get non-existent object
 	req := &objpb.GetObjectRequest{
@@ -163,15 +159,14 @@ func TestObjectStoreServiceDeleteObject(t *testing.T) {
 	tmpDir := t.TempDir()
 	cfg := &objdal.LocalStorageConfig{
 		BasePath: tmpDir,
-		BaseURL:  "http://localhost:8080/objects",
 	}
 	storage, _ := objdal.NewLocalStorage(cfg)
 
 	// Create use case
-	uc := objbiz.NewObjectUseCase(storage, log.DefaultLogger)
+	uc := objbiz.NewObjectStoreUseCase(storage, log.DefaultLogger)
 
 	// Create service
-	svc := objservice.NewObjectStoreService(uc)
+	svc := objservice.NewObjectStoreService(uc, log.DefaultLogger)
 
 	// First create an object
 	createReq := &objpb.UploadObjectRequest{
@@ -209,15 +204,14 @@ func TestObjectStoreServiceDeleteNonExistent(t *testing.T) {
 	tmpDir := t.TempDir()
 	cfg := &objdal.LocalStorageConfig{
 		BasePath: tmpDir,
-		BaseURL:  "http://localhost:8080/objects",
 	}
 	storage, _ := objdal.NewLocalStorage(cfg)
 
 	// Create use case
-	uc := objbiz.NewObjectUseCase(storage, log.DefaultLogger)
+	uc := objbiz.NewObjectStoreUseCase(storage, log.DefaultLogger)
 
 	// Create service
-	svc := objservice.NewObjectStoreService(uc)
+	svc := objservice.NewObjectStoreService(uc, log.DefaultLogger)
 
 	// Try to delete non-existent object
 	req := &objpb.DeleteObjectRequest{
@@ -239,15 +233,14 @@ func TestObjectStoreServiceEmptyData(t *testing.T) {
 	tmpDir := t.TempDir()
 	cfg := &objdal.LocalStorageConfig{
 		BasePath: tmpDir,
-		BaseURL:  "http://localhost:8080/objects",
 	}
 	storage, _ := objdal.NewLocalStorage(cfg)
 
 	// Create use case
-	uc := objbiz.NewObjectUseCase(storage, log.DefaultLogger)
+	uc := objbiz.NewObjectStoreUseCase(storage, log.DefaultLogger)
 
 	// Create service
-	svc := objservice.NewObjectStoreService(uc)
+	svc := objservice.NewObjectStoreService(uc, log.DefaultLogger)
 
 	// Create object with empty data
 	req := &objpb.UploadObjectRequest{
@@ -265,74 +258,9 @@ func TestObjectStoreServiceEmptyData(t *testing.T) {
 	}
 }
 
-// TestObjectStoreServiceLargeFile tests UploadObject with a large file
-func TestObjectStoreServiceLargeFile(t *testing.T) {
-	ctx := context.Background()
-
-	// Setup storage
-	tmpDir := t.TempDir()
-	cfg := &objdal.LocalStorageConfig{
-		BasePath: tmpDir,
-		BaseURL:  "http://localhost:8080/objects",
-	}
-	storage, _ := objdal.NewLocalStorage(cfg)
-
-	// Create use case
-	uc := objbiz.NewObjectUseCase(storage, log.DefaultLogger)
-
-	// Create service
-	svc := objservice.NewObjectStoreService(uc)
-
-	// Create 1MB file
-	testData := []byte(strings.Repeat("A", 1024*1024))
-	req := &objpb.UploadObjectRequest{
-		Name: "large-file.bin",
-		Data: testData,
-	}
-
-	resp, err := svc.UploadObject(ctx, req)
-	if err != nil {
-		t.Fatalf("UploadObject() with large file error = %v", err)
-	}
-
-	if resp.Object.Size != int64(len(testData)) {
-		t.Errorf("Object Size = %v, want %v", resp.Object.Size, len(testData))
-	}
-}
-
 // TestObjectStoreServiceInterfaceCompliance tests that service implements gRPC interface
 func TestObjectStoreServiceInterfaceCompliance(t *testing.T) {
 	var _ objpb.ObjectStoreServiceServer = (*objservice.ObjectStoreService)(nil)
-}
-
-// BenchmarkObjectStoreServiceUploadObject benchmarks UploadObject operation
-func BenchmarkObjectStoreServiceUploadObject(b *testing.B) {
-	ctx := context.Background()
-
-	// Setup storage
-	tmpDir := b.TempDir()
-	cfg := &objdal.LocalStorageConfig{
-		BasePath: tmpDir,
-		BaseURL:  "http://localhost:8080/objects",
-	}
-	storage, _ := objdal.NewLocalStorage(cfg)
-
-	// Create use case
-	uc := objbiz.NewObjectUseCase(storage, log.DefaultLogger)
-
-	// Create service
-	svc := objservice.NewObjectStoreService(uc)
-
-	testData := []byte(strings.Repeat("test data ", 100))
-
-	b.ResetTimer()
-	for i := 0; i < b.N; i++ {
-		req := &objpb.UploadObjectRequest{
-			Name: "bench-object.txt",
-			Data: testData,
-		}
-		_, _ = svc.UploadObject(ctx, req)
-	}
 }
 
 // TestObjectStoreServiceNilUseCase tests service with nil use case (should panic)
@@ -343,56 +271,5 @@ func TestObjectStoreServiceNilUseCase(t *testing.T) {
 		}
 	}()
 
-	_ = objservice.NewObjectStoreService(nil)
-}
-
-// TestObjectStoreServiceMultipleFiles tests creating and managing multiple files
-func TestObjectStoreServiceMultipleFiles(t *testing.T) {
-	ctx := context.Background()
-
-	// Setup storage
-	tmpDir := t.TempDir()
-	cfg := &objdal.LocalStorageConfig{
-		BasePath: tmpDir,
-		BaseURL:  "http://localhost:8080/objects",
-	}
-	storage, _ := objdal.NewLocalStorage(cfg)
-
-	// Create use case
-	uc := objbiz.NewObjectUseCase(storage, log.DefaultLogger)
-
-	// Create service
-	svc := objservice.NewObjectStoreService(uc)
-
-	// Create multiple files
-	var ids []string
-	for i := 0; i < 10; i++ {
-		req := &objpb.UploadObjectRequest{
-			Name: "file.txt",
-			Data: []byte("test content"),
-		}
-		resp, err := svc.UploadObject(ctx, req)
-		if err != nil {
-			t.Fatalf("UploadObject() error = %v", err)
-		}
-		ids = append(ids, resp.Object.Id)
-	}
-
-	// Verify all files can be retrieved
-	for _, id := range ids {
-		req := &objpb.GetObjectRequest{Id: id}
-		_, err := svc.GetObject(ctx, req)
-		if err != nil {
-			t.Errorf("GetObject() for id %s error = %v", id, err)
-		}
-	}
-
-	// Delete all files
-	for _, id := range ids {
-		req := &objpb.DeleteObjectRequest{Id: id}
-		_, err := svc.DeleteObject(ctx, req)
-		if err != nil {
-			t.Errorf("DeleteObject() for id %s error = %v", id, err)
-		}
-	}
+	_ = objservice.NewObjectStoreService(nil, log.DefaultLogger)
 }

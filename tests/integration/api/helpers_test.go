@@ -4,57 +4,15 @@ package api
 
 import (
 	"bytes"
-	"context"
 	"encoding/json"
 	"fmt"
 	"net/http"
 	"net/http/httptest"
 	"testing"
 
-	"entgo.io/ent/dialect"
-	"github.com/gin-gonic/gin"
-	"github.com/stretchr/testify/require"
-
 	systemv1 "origadmin/application/admin/api/v1/services/system"
 	"origadmin/application/admin/api/v1/services/types"
-	"origadmin/application/admin/internal/data/entity/ent"
-	"origadmin/application/admin/internal/data/entity/ent/enttest"
-	"origadmin/application/admin/internal/features/system"
-	"origadmin/application/admin/internal/features/system/server"
 )
-
-// TestComponents holds all the necessary components for running integration tests.
-type TestComponents struct {
-	Ctx        context.Context
-	DBClient   *ent.Client
-	HTTPServer *httptest.Server
-	Router     *gin.Engine
-}
-
-// setupTestServer initializes a test server with an in-memory database and returns the components.
-func setupTestServer(t *testing.T) *TestComponents {
-	t.Helper()
-
-	// Setup in-memory SQLite database
-	client := enttest.Open(t, dialect.SQLite, "file:ent?mode=memory&cache=shared&_fk=1")
-	t.Cleanup(func() { client.Close() })
-
-	// Initialize router and server
-	gin.SetMode(gin.TestMode)
-	router := gin.New()
-	httpServer := httptest.NewServer(router)
-	t.Cleanup(httpServer.Close)
-
-	// Register system routes
-	system.RegisterRoutes(router, client)
-
-	return &TestComponents{
-		Ctx:        context.Background(),
-		DBClient:   client,
-		HTTPServer: httpServer,
-		Router:     router,
-	}
-}
 
 // --- API Helper Functions ---
 

@@ -89,7 +89,7 @@ func TestFileUseCase_UploadFile(t *testing.T) {
 	}, nil)
 
 	// Execute
-	fileMeta, err := uc.UploadFile(ctx, fileName, fileData, ownerID)
+	fileMeta, err := uc.UploadFile(ctx, fileName, fileData, ownerID, "text/plain", "private")
 
 	// Assert
 	assert.NoError(t, err)
