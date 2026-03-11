@@ -10,6 +10,7 @@ import (
 	"crypto/sha256"
 	"encoding/hex"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"io"
 	"os"
@@ -140,7 +141,7 @@ func (s *LocalStorage) Get(ctx context.Context, id string) (io.ReadCloser, *type
 
 func (s *LocalStorage) Delete(ctx context.Context, id string) error {
 	err := os.Remove(filepath.Join(s.basePath, id))
-	if err != nil && os.IsNotExist(err) {
+	if err != nil && errors.Is(err, os.ErrNotExist) {
 		return nil
 	}
 	return err

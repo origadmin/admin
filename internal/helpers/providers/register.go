@@ -7,7 +7,6 @@ package providers
 import (
 	"context"
 	"fmt"
-	"os"
 	"strconv"
 
 	"github.com/casbin/casbin/v3/persist"
@@ -66,7 +65,6 @@ const (
 )
 
 func init() {
-	fmt.Fprintf(os.Stderr, "[STDOUT_DEBUG] providers.init() called\n")
 	// 1. Pre-filter policies
 	ps := security.RegisteredPolicies()
 	for _, p := range ps {
@@ -98,13 +96,10 @@ func init() {
 		engine.WithResolverOption(func(source any, _ component.Category) (*component.ModuleConfig, error) {
 			if b, ok := source.(*confpb.Bootstrap); ok && b.GetSecurity() != nil && b.GetSecurity().GetAuthn() != nil {
 				authn := b.GetSecurity().GetAuthn()
-
-				// Apply authoritative normalization logic: Default -> Active -> First
 				def, configs, err := configutil.Normalize(authn.GetActive(), authn.GetDefault(), authn.GetConfigs())
 				if err != nil {
 					return nil, err
 				}
-
 				res := &component.ModuleConfig{Active: extractName(def)}
 				for _, cfg := range configs {
 					if name := extractName(cfg); name != "" {
@@ -116,16 +111,17 @@ func init() {
 			return nil, nil
 		}))
 
-	// 3. Register Ent Database (Data Layer)
+	// 3. Register Ent Database (Infrastructure)
+	// Ensure this category is ALWAYS loaded by providing a default entry
 	engine.Register(CategoryEnt, NewEnt,
 		engine.WithResolverOption(func(root any, _ component.Category) (*component.ModuleConfig, error) {
 			return &component.ModuleConfig{
-				Entries: []component.ConfigEntry{{Name: "default", Value: nil}},
+				Entries: []component.ConfigEntry{{Name: "default", Value: root}},
 				Active:  "default",
 			}, nil
 		}))
 
-	// 4. Register Casbin Adapter (Service Support)
+	// 4. Register Casbin Adapter
 	engine.Register(component.CategoryStorage,
 		func(ctx context.Context, h component.Handle) (any, error) {
 			dbInst, err := comp.GetDefault[*ent.Database](ctx, h.Locator().In(CategoryEnt))
@@ -162,13 +158,10 @@ func init() {
 		engine.WithResolverOption(func(source any, _ component.Category) (*component.ModuleConfig, error) {
 			if b, ok := source.(*confpb.Bootstrap); ok && b.GetSecurity() != nil && b.GetSecurity().GetAuthz() != nil {
 				authz := b.GetSecurity().GetAuthz()
-
-				// Apply authoritative normalization logic: Default -> Active -> First
 				def, configs, err := configutil.Normalize(authz.GetActive(), authz.GetDefault(), authz.GetConfigs())
 				if err != nil {
 					return nil, err
 				}
-
 				res := &component.ModuleConfig{Active: extractName(def)}
 				for _, cfg := range configs {
 					if name := extractName(cfg); name != "" {
@@ -180,7 +173,7 @@ func init() {
 			return nil, nil
 		}))
 
-	// 6. Register Captcha (Security Layer)
+	// 6. Register Captcha
 	engine.Register(component.CategorySecurity, NewCaptcha)
 
 	// 7. Register NATS Publisher
@@ -231,9 +224,16 @@ func registerSecurityComponents() {
 	engine.Register(component.CategorySkipper,
 		func(ctx context.Context, h component.Handle) (any, error) {
 			adminSkipper := skip.Principal(func(principal contribsecurity.Principal) bool {
+				// 1. Check by System User ID (from memory)
 				id := data.GetSystemUserID()
 				if id != 0 && principal.GetID() == strconv.FormatInt(id, 10) {
 					return true
+				}
+				// 2. Fallback: Check if the principal has 'admin' role
+				for _, role := range principal.GetRoles() {
+					if role == "admin" || role == "system-operator" {
+						return true
+					}
 				}
 				return false
 			})
@@ -252,108 +252,60 @@ func registerSecurityComponents() {
 }
 
 func registerMiddlewares() {
-	// Unified Middleware Resolver: Aggregates all sources and ensures system mandatory ones (propagation)
 	middlewareResolver := func(source any, _ component.Category) (*component.ModuleConfig, error) {
 		res := &component.ModuleConfig{}
 		b, ok := source.(*confpb.Bootstrap)
 		if !ok {
-			fmt.Fprintf(os.Stderr, "[STDOUT_DEBUG] middlewareResolver: type mismatch, source=%T\n", source)
 			return nil, nil
 		}
 
-		fmt.Fprintf(os.Stderr, "[STDOUT_DEBUG] middlewareResolver called\n")
-
-		// 1. Load standard middlewares from middlewares.yaml
 		if b.GetMiddlewares() != nil {
 			for _, cfg := range b.GetMiddlewares().GetConfigs() {
-				name := extractName(cfg)
-				if name != "" {
-					fmt.Fprintf(os.Stderr, "[STDOUT_DEBUG] middlewareResolver: adding %s from config\n", name)
+				if name := extractName(cfg); name != "" {
 					res.Entries = append(res.Entries, component.ConfigEntry{Name: name, Value: cfg})
 				}
 			}
 		}
-
-		// 2. Load Authn if present
-		if b.GetSecurity() != nil && b.GetSecurity().GetAuthn() != nil {
-			authn := b.GetSecurity().GetAuthn()
-			def, _, err := configutil.Normalize(authn.GetActive(), authn.GetDefault(), authn.GetConfigs())
-			if err == nil {
-				fmt.Fprintf(os.Stderr, "[STDOUT_DEBUG] middlewareResolver: adding authn\n")
+		// Authn/Authz are configuration-driven, added only if present
+		if b.GetSecurity() != nil {
+			if authn := b.GetSecurity().GetAuthn(); authn != nil {
+				def, _, _ := configutil.Normalize(authn.GetActive(), authn.GetDefault(), authn.GetConfigs())
 				res.Entries = append(res.Entries, component.ConfigEntry{Name: "authn", Value: def})
 			}
-		}
-
-		// 3. Load Authz if present
-		if b.GetSecurity() != nil && b.GetSecurity().GetAuthz() != nil {
-			authz := b.GetSecurity().GetAuthz()
-			def, _, err := configutil.Normalize(authz.GetActive(), authz.GetDefault(), authz.GetConfigs())
-			if err == nil {
-				fmt.Fprintf(os.Stderr, "[STDOUT_DEBUG] middlewareResolver: adding authz\n")
+			if authz := b.GetSecurity().GetAuthz(); authz != nil {
+				def, _, _ := configutil.Normalize(authz.GetActive(), authz.GetDefault(), authz.GetConfigs())
 				res.Entries = append(res.Entries, component.ConfigEntry{Name: "authz", Value: def})
 			}
 		}
-
-		// 4. Mandatory: Always include propagation for clients/servers
-		fmt.Fprintf(os.Stderr, "[STDOUT_DEBUG] middlewareResolver: FORCE adding propagation\n")
-		res.Entries = append(res.Entries, component.ConfigEntry{
-			Name:  "propagation",
-			Value: &middlewarev1.Middleware{Name: "propagation", Type: "propagation", Enabled: true},
-		})
-
+		// Propagation is mandatory for all nodes
+		res.Entries = append(res.Entries, component.ConfigEntry{Name: "propagation", Value: &middlewarev1.Middleware{Name: "propagation", Type: "propagation", Enabled: true}})
 		return res, nil
 	}
 
-	// Combined Provider for ALL Middlewares to avoid stack interference
-	unifiedProvider := func(ctx context.Context, h component.Handle) (any, error) {
-		name := h.Name()
-		tag := h.Tag()
-		fmt.Fprintf(os.Stderr, "[STDOUT_DEBUG] unifiedProvider: name=%s, tag=%s\n", name, tag)
-
-		// A. Specialized: Propagation
-		if name == "propagation" {
-			return NewPropagationMiddleware(ctx, h)
-		}
-
-		// B. Specialized: Authn
-		if name == "authn" {
-			return NewAuthnMiddleware(ctx, h)
-		}
-
-		// C. Specialized: Authz
-		if name == "authz" {
-			return NewAuthzMiddleware(ctx, h)
-		}
-
-		// D. General: Default (logging, tracing, etc.)
-		return NewDefaultMiddleware(ctx, h)
-	}
-
-	// Register the unified provider
-	engine.Register(component.CategoryMiddleware, unifiedProvider,
+	opts := []engine.RegisterOption{
 		engine.WithScopes(component.ServerScope, component.ClientScope),
 		engine.WithResolverOption(middlewareResolver),
-		engine.WithDefaultEntry("propagation"),
-	)
-}
-
-// NewPropagationMiddleware handles the specialized creation of propagation middleware.
-func NewPropagationMiddleware(ctx context.Context, h component.Handle) (any, error) {
-	tag := h.Tag()
-	scope := h.Locator().Scope()
-	fmt.Fprintf(os.Stderr, "[STDOUT_DEBUG] NewPropagationMiddleware: tag=%s, scope=%s\n", tag, scope)
-
-	// Logic driven by middlewareFactory extension:
-	if scope == component.ServerScope {
-		if tag == GatewayTag {
-			fmt.Fprintf(os.Stderr, "[STDOUT_DEBUG] NewPropagationMiddleware: returning Noop for Gateway Server\n")
-			return middleware.Noop(), nil
-		}
-		fmt.Fprintf(os.Stderr, "[STDOUT_DEBUG] NewPropagationMiddleware: returning Backend for Service Server\n")
-		return middlewareFactory.NewPropagationBackend(), nil
 	}
 
-	fmt.Fprintf(os.Stderr, "[STDOUT_DEBUG] NewPropagationMiddleware: returning Client for %s Client\n", tag)
+	engine.Register(component.CategoryMiddleware, NewDefaultMiddleware, opts...)
+	engine.Register(component.CategoryMiddleware, NewAuthnMiddleware, append(opts, engine.WithTag(GatewayTag))...)
+	engine.Register(component.CategoryMiddleware, NewAuthzMiddleware, append(opts, engine.WithTag(FeatureTag))...)
+	engine.Register(component.CategoryMiddleware, NewPropagationMiddleware, append(opts, engine.WithDefaultEntry("propagation"))...)
+}
+
+func NewPropagationMiddleware(ctx context.Context, h component.Handle) (any, error) {
+	if h.Name() != "propagation" {
+		return nil, nil
+	}
+	tag := h.Tag()
+	scope := h.Locator().Scope()
+
+	if scope == component.ServerScope {
+		if tag == GatewayTag {
+			return middleware.Noop(), nil
+		}
+		return middlewareFactory.NewPropagationBackend(), nil
+	}
 	return middlewareFactory.NewPropagationClient(), nil
 }
 
@@ -361,7 +313,6 @@ func extractName(item any) string {
 	if item == nil {
 		return ""
 	}
-	// Use formalized interfaces for identification
 	if n, ok := item.(component.Named); ok {
 		if name := n.GetName(); name != "" {
 			return name

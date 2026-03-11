@@ -40,7 +40,10 @@ func (uc *ObjectStoreUseCase) UploadObject(ctx context.Context, name string, dat
 
 // GetObject retrieves an object's metadata.
 func (uc *ObjectStoreUseCase) GetObject(ctx context.Context, id string) (*types.Object, error) {
-	_, obj, err := uc.repo.Get(ctx, id)
+	rc, obj, err := uc.repo.Get(ctx, id)
+	if err == nil && rc != nil {
+		_ = rc.Close()
+	}
 	return obj, err
 }
 

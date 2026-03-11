@@ -8,18 +8,23 @@ package main
 
 import (
 	"github.com/origadmin/runtime"
+	"origadmin/application/admin/internal/conf"
 	"origadmin/application/admin/internal/conf/pb"
 	"origadmin/application/admin/internal/data"
 	"origadmin/application/admin/internal/features/system/biz"
 	"origadmin/application/admin/internal/features/system/dal"
-	"origadmin/application/admin/internal/helpers/providers"
+
 	"origadmin/application/admin/internal/jobs/initializer"
 	"origadmin/application/admin/internal/jobs/initializer/broker"
 	seeder2 "origadmin/application/admin/internal/jobs/initializer/seeder"
 	"origadmin/application/admin/internal/jobs/tasks/seeder"
+	"github.com/origadmin/toolkits/crypto/hash"
+	hashtypes "github.com/origadmin/toolkits/crypto/hash/types"
 )
 
 import (
+	_ "origadmin/application/admin/internal/helpers/providers"
+	_ "github.com/joho/godotenv/autoload"
 	_ "github.com/lib/pq"
 	_ "github.com/origadmin/contrib/config/consul"
 	_ "github.com/origadmin/contrib/registry/consul"
@@ -33,32 +38,34 @@ import (
 
 // wireApp init the initializer service.
 func wireApp(rt *runtime.App, b *confpb.Bootstrap) (initializer.Initializer, func(), error) {
-	v := providers.ProvideLogger(rt)
-	brokerInitializer := broker.NewInitializer(b, v)
-	database, cleanup, err := data.ProvideDatabase(rt)
+	logger := rt.Logger()
+	initializerInitializer := broker.NewInitializer(b, logger)
+	entDatabase, cleanup, err := data.ProvideDatabase(rt)
 	if err != nil {
 		return nil, nil, err
 	}
-	userRepo := dal.NewUserRepo(database, v)
-	userUseCase := biz.NewUserUseCase(userRepo, v)
-	resourceRepo := dal.NewResourceRepo(database, v)
+	userRepo := dal.NewUserRepo(entDatabase, logger)
+	userUseCase := biz.NewUserUseCase(userRepo, logger)
+	resourceRepo := dal.NewResourceRepo(entDatabase, logger)
 	resourceUseCase := biz.NewResourceUseCase(resourceRepo)
-	viewRepo := dal.NewViewRepo(database, v)
+	viewRepo := dal.NewViewRepo(entDatabase, logger)
 	viewUseCase := biz.NewViewUseCase(viewRepo)
-	crypto, err := providers.ProvideHasher()
+
+	config := &conf.Config{Bootstrap: *b}
+	crypto, err := hash.NewCrypto(hashtypes.BCRYPT)
 	if err != nil {
 		cleanup()
 		return nil, nil, err
 	}
-	config := providers.ProvideConfig(b)
-	seederSeeder, err := seeder.NewSeeder(userUseCase, resourceUseCase, viewUseCase, crypto, config, v)
+
+	seederSeeder, err := seeder.NewSeeder(userUseCase, resourceUseCase, viewUseCase, crypto, config, logger)
 	if err != nil {
 		cleanup()
 		return nil, nil, err
 	}
-	seederInitializer := seeder2.NewInitializer(seederSeeder, v)
-	initializerInitializer := initializer.ProvideCompositeInitializer(v, brokerInitializer, seederInitializer)
-	return initializerInitializer, func() {
+	seederInitializer := seeder2.NewInitializer(seederSeeder, logger)
+	initializerInitializer2 := initializer.ProvideCompositeInitializer(logger, initializerInitializer, seederInitializer)
+	return initializerInitializer2, func() {
 		cleanup()
 	}, nil
 }

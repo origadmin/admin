@@ -222,6 +222,11 @@ message Resource {
   string service_name = 21 [json_name = "service_name"];
   // resource.field.policy
   string policy = 22 [json_name = "policy"];
+  // resource.field.version_id
+  string version_id = 23 [json_name = "version_id"];
+  // resource.field.last_sync_version_id
+  string last_sync_version_id = 24 [json_name = "last_sync_version_id"];
+
   // Children holds the value of the children edge.
   repeated Resource children = 100 [json_name = "children"];
   // Parent holds the value of the parent edge.

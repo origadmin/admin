@@ -982,6 +982,10 @@ type Resource struct {
 	ServiceName string `protobuf:"bytes,21,opt,name=service_name,proto3" json:"service_name,omitempty"`
 	// resource.field.policy
 	Policy string `protobuf:"bytes,22,opt,name=policy,proto3" json:"policy,omitempty"`
+	// resource.field.version_id
+	VersionId string `protobuf:"bytes,23,opt,name=version_id,proto3" json:"version_id,omitempty"`
+	// resource.field.last_sync_version_id
+	LastSyncVersionId string `protobuf:"bytes,24,opt,name=last_sync_version_id,proto3" json:"last_sync_version_id,omitempty"`
 	// Children holds the value of the children edge.
 	Children []*Resource `protobuf:"bytes,100,rep,name=children,proto3" json:"children,omitempty"`
 	// Parent holds the value of the parent edge.
@@ -1151,6 +1155,20 @@ func (x *Resource) GetServiceName() string {
 func (x *Resource) GetPolicy() string {
 	if x != nil {
 		return x.Policy
+	}
+	return ""
+}
+
+func (x *Resource) GetVersionId() string {
+	if x != nil {
+		return x.VersionId
+	}
+	return ""
+}
+
+func (x *Resource) GetLastSyncVersionId() string {
+	if x != nil {
+		return x.LastSyncVersionId
 	}
 	return ""
 }
@@ -1588,7 +1606,7 @@ const file_types_system_proto_rawDesc = "" +
 	"\arole_id\x18\x02 \x01(\x03R\arole_id\x12\x18\n" +
 	"\aview_id\x18\x03 \x01(\x03R\aview_id\x12/\n" +
 	"\x04role\x18d \x01(\v2\x1b.api.v1.services.types.RoleR\x04role\x12/\n" +
-	"\x04view\x18e \x01(\v2\x1b.api.v1.services.types.ViewR\x04view\"\xf1\x06\n" +
+	"\x04view\x18e \x01(\v2\x1b.api.v1.services.types.ViewR\x04view\"\xc5\a\n" +
 	"\bResource\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\x03R\x02id\x12<\n" +
 	"\vcreate_time\x18\x02 \x01(\v2\x1a.google.protobuf.TimestampR\vcreate_time\x12<\n" +
@@ -1611,7 +1629,11 @@ const file_types_system_proto_rawDesc = "" +
 	"\tparent_id\x18\x13 \x01(\x03R\tparent_id\x12 \n" +
 	"\vsync_status\x18\x14 \x01(\tR\vsync_status\x12\"\n" +
 	"\fservice_name\x18\x15 \x01(\tR\fservice_name\x12\x16\n" +
-	"\x06policy\x18\x16 \x01(\tR\x06policy\x12;\n" +
+	"\x06policy\x18\x16 \x01(\tR\x06policy\x12\x1e\n" +
+	"\n" +
+	"version_id\x18\x17 \x01(\tR\n" +
+	"version_id\x122\n" +
+	"\x14last_sync_version_id\x18\x18 \x01(\tR\x14last_sync_version_id\x12;\n" +
 	"\bchildren\x18d \x03(\v2\x1f.api.v1.services.types.ResourceR\bchildren\x127\n" +
 	"\x06parent\x18e \x01(\v2\x1f.api.v1.services.types.ResourceR\x06parent\x12C\n" +
 	"\vpermissions\x18g \x03(\v2!.api.v1.services.types.PermissionR\vpermissions\x1a=\n" +

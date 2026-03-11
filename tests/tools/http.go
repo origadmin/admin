@@ -68,7 +68,10 @@ func (c *BaseHTTPClient) Request(t *testing.T, method, path string, body interfa
 		bodyReader = http.NoBody
 	}
 
-	req, err := http.NewRequest(method, c.baseURL+path, bodyReader)
+	fullURL := c.baseURL + path
+	t.Logf("HTTP %s %s", method, fullURL)
+
+	req, err := http.NewRequest(method, fullURL, bodyReader)
 	require.NoError(t, err)
 
 	req.Header.Set("Content-Type", "application/json")

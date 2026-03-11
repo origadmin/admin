@@ -1679,6 +1679,10 @@ func (m *Resource) validate(all bool) error {
 
 	// no validation rules for Policy
 
+	// no validation rules for VersionId
+
+	// no validation rules for LastSyncVersionId
+
 	for idx, item := range m.GetChildren() {
 		_, _ = idx, item
 

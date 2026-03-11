@@ -6,14 +6,14 @@ import (
 	"github.com/origadmin/runtime/log"
 
 	jobsbroker "origadmin/application/admin/internal/jobs/initializer/broker"
-	"origadmin/application/admin/internal/jobs/initializer/seeder"
+	jobsseeder "origadmin/application/admin/internal/jobs/initializer/seeder"
 )
 
 // ProviderSet is the main provider set for the initializer job.
 // It aggregates all specific initializer providers and assembles the composite initializer.
 var ProviderSet = wire.NewSet(
 	jobsbroker.ProviderSet,
-	seeder.ProviderSet,
+	jobsseeder.ProviderSet,
 	ProvideCompositeInitializer,
 )
 
@@ -22,7 +22,7 @@ var ProviderSet = wire.NewSet(
 func ProvideCompositeInitializer(
 	logger log.Logger,
 	brokerInit *jobsbroker.Initializer,
-	seederInit *seeder.Initializer,
+	seederInit *jobsseeder.Initializer,
 ) Initializer {
 	// The order of initializers is explicitly defined here.
 	// 1. Infrastructure (Broker)

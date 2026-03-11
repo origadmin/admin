@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) 2024 OrigAdmin. All rights reserved.
+ */
+
 package seeder
 
 import (
@@ -33,7 +37,7 @@ func NewInitializer(s *taskseeder.Seeder, logger log.Logger) *Initializer {
 func (d *Initializer) Init(ctx context.Context) error {
 	d.log.Info("Starting data seeding initialization...")
 	if err := d.seeder.Run(); err != nil {
-		return fmt.Errorf("failed to seed initial data: %w", err)
+		return fmt.Errorf("seeder failed: %w", err)
 	}
 	d.log.Info("Data seeding initialization completed successfully.")
 	return nil

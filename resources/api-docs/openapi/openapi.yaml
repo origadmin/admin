@@ -242,37 +242,37 @@ paths:
                 - name: page
                   in: query
                   schema:
-                      type: integer
-                      format: int32
+                    type: integer
+                    format: int32
                 - name: page_size
                   in: query
                   schema:
-                      type: integer
-                      format: int32
+                    type: integer
+                    format: int32
                 - name: page_token
                   in: query
                   schema:
-                      type: string
+                    type: string
                 - name: paging_mode
                   in: query
                   schema:
-                      type: string
+                    type: string
                 - name: only_count
                   in: query
                   schema:
-                      type: boolean
+                    type: boolean
                 - name: keyword
                   in: query
                   schema:
-                      type: string
+                    type: string
                 - name: owner_id
                   in: query
                   schema:
-                      type: string
+                    type: string
                 - name: visibility
                   in: query
                   schema:
-                      type: string
+                    type: string
             responses:
                 "200":
                     description: OK
@@ -343,7 +343,7 @@ paths:
                   in: path
                   required: true
                   schema:
-                      type: string
+                    type: string
             responses:
                 "200":
                     description: OK
@@ -427,7 +427,7 @@ paths:
                   in: path
                   required: true
                   schema:
-                      type: string
+                    type: string
             responses:
                 "200":
                     description: OK
@@ -450,7 +450,7 @@ paths:
                   in: path
                   required: true
                   schema:
-                      type: string
+                    type: string
             requestBody:
                 content:
                     application/json:
@@ -479,7 +479,7 @@ paths:
                   in: path
                   required: true
                   schema:
-                      type: string
+                    type: string
             responses:
                 "200":
                     description: OK
@@ -715,36 +715,36 @@ paths:
                   in: query
                   description: The recipient user ID. If zero, uses current user.
                   schema:
-                      type: string
+                    type: string
                 - name: type
                   in: query
                   description: Filter by notification type.
                   schema:
-                      type: integer
-                      format: enum
+                    type: integer
+                    format: enum
                 - name: is_read
                   in: query
                   description: Filter by read status.
                   schema:
-                      type: boolean
+                    type: boolean
                 - name: channel
                   in: query
                   description: Filter by channel.
                   schema:
-                      type: integer
-                      format: enum
+                    type: integer
+                    format: enum
                 - name: page
                   in: query
                   description: Page number.
                   schema:
-                      type: integer
-                      format: int32
+                    type: integer
+                    format: int32
                 - name: page_size
                   in: query
                   description: Page size.
                   schema:
-                      type: integer
-                      format: int32
+                    type: integer
+                    format: int32
             responses:
                 "200":
                     description: OK
@@ -794,25 +794,25 @@ paths:
                   in: query
                   description: Filter by channel.
                   schema:
-                      type: integer
-                      format: enum
+                    type: integer
+                    format: enum
                 - name: is_active
                   in: query
                   description: Filter by active status.
                   schema:
-                      type: boolean
+                    type: boolean
                 - name: page
                   in: query
                   description: Page number.
                   schema:
-                      type: integer
-                      format: int32
+                    type: integer
+                    format: int32
                 - name: page_size
                   in: query
                   description: Page size.
                   schema:
-                      type: integer
-                      format: int32
+                    type: integer
+                    format: int32
             responses:
                 "200":
                     description: OK
@@ -861,12 +861,12 @@ paths:
                   in: path
                   required: true
                   schema:
-                      type: string
+                    type: string
                 - name: template_id
                   in: query
                   description: The template ID.
                   schema:
-                      type: string
+                    type: string
             requestBody:
                 content:
                     application/json:
@@ -898,7 +898,7 @@ paths:
                   description: The template ID.
                   required: true
                   schema:
-                      type: string
+                    type: string
             responses:
                 "200":
                     description: OK
@@ -924,7 +924,7 @@ paths:
                   description: The notification ID.
                   required: true
                   schema:
-                      type: string
+                    type: string
             requestBody:
                 content:
                     application/json:
@@ -954,17 +954,17 @@ paths:
                 - name: prefix
                   in: query
                   schema:
-                      type: string
+                    type: string
                 - name: page
                   in: query
                   schema:
-                      type: integer
-                      format: int32
+                    type: integer
+                    format: int32
                 - name: page_size
                   in: query
                   schema:
-                      type: integer
-                      format: int32
+                    type: integer
+                    format: int32
             responses:
                 "200":
                     description: OK
@@ -1038,12 +1038,12 @@ paths:
                   in: path
                   required: true
                   schema:
-                      type: string
+                    type: string
                 - name: upload_id
                   in: path
                   required: true
                   schema:
-                      type: string
+                    type: string
             responses:
                 "200":
                     description: OK
@@ -1068,12 +1068,12 @@ paths:
                   in: path
                   required: true
                   schema:
-                      type: string
+                    type: string
                 - name: upload_id
                   in: path
                   required: true
                   schema:
-                      type: string
+                    type: string
             responses:
                 "200":
                     description: OK
@@ -1098,18 +1098,18 @@ paths:
                   in: path
                   required: true
                   schema:
-                      type: string
+                    type: string
                 - name: upload_id
                   in: path
                   required: true
                   schema:
-                      type: string
+                    type: string
                 - name: part_number
                   in: path
                   required: true
                   schema:
-                      type: integer
-                      format: int32
+                    type: integer
+                    format: int32
             responses:
                 "200":
                     description: OK
@@ -1134,12 +1134,12 @@ paths:
                   in: path
                   required: true
                   schema:
-                      type: string
+                    type: string
                 - name: upload_id
                   in: path
                   required: true
                   schema:
-                      type: string
+                    type: string
             requestBody:
                 content:
                     application/json:
@@ -1170,7 +1170,7 @@ paths:
                   in: path
                   required: true
                   schema:
-                      type: string
+                    type: string
             responses:
                 "200":
                     description: OK
@@ -1194,7 +1194,7 @@ paths:
                   in: path
                   required: true
                   schema:
-                      type: string
+                    type: string
             responses:
                 "200":
                     description: OK
@@ -1219,17 +1219,17 @@ paths:
                   in: path
                   required: true
                   schema:
-                      type: string
+                    type: string
                 - name: range
                   in: query
                   description: "The byte range to download (e.g., \"bytes=0-1023\").\r\n If empty, the entire object is downloaded.\r\n This allows for resumable downloads and parallel chunk downloading."
                   schema:
-                      type: string
+                    type: string
             responses:
                 "200":
                     description: OK
                     content:
-                        '*/*': { }
+                      '*/*': { }
                 default:
                     description: Default error response
                     content:
@@ -2306,7 +2306,7 @@ paths:
                   description: The field will contain id of the user requested.
                   required: true
                   schema:
-                      type: string
+                    type: string
             responses:
                 "200":
                     description: OK
@@ -2356,7 +2356,7 @@ paths:
                   description: The field will contain id of the user requested.
                   required: true
                   schema:
-                      type: string
+                    type: string
             responses:
                 "200":
                     description: OK
@@ -2443,7 +2443,7 @@ paths:
                   description: The field will contain id of the user requested.
                   required: true
                   schema:
-                      type: string
+                    type: string
             responses:
                 "200":
                     description: OK
@@ -4263,6 +4263,12 @@ components:
                 policy:
                     type: string
                     description: resource.field.policy
+                version_id:
+                  type: string
+                  description: resource.field.version_id
+                last_sync_version_id:
+                  type: string
+                  description: resource.field.last_sync_version_id
                 children:
                     type: array
                     items:
@@ -4683,12 +4689,12 @@ components:
 tags:
     - name: AdminService
       description: |-
-          AdminService provides administrative and operational endpoints for identity service.
-           These endpoints are intended for system administrators, operators, and for use in testing.
+        AdminService provides administrative and operational endpoints for identity service.
+         These endpoints are intended for system administrators, operators, and for use in testing.
     - name: AdminService
       description: |-
-          AdminService provides administrative and operational endpoints.
-           Note: This service is a placeholder for future administrative features.
+        AdminService provides administrative and operational endpoints.
+         Note: This service is a placeholder for future administrative features.
     - name: AuthService
       description: Service AuthService provides APIs for the identity lifecycle.
     - name: DepartmentService

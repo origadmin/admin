@@ -20,6 +20,7 @@ import (
 	confpb "origadmin/application/admin/internal/conf/pb"
 	_ "origadmin/application/admin/internal/data/entity/ent/runtime"
 	confhelper "origadmin/application/admin/internal/helpers/conf"
+	_ "origadmin/application/admin/internal/helpers/providers"
 )
 
 var (
