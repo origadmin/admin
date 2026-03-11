@@ -16,24 +16,17 @@ import (
 	"github.com/origadmin/toolkits/crypto/hash"
 	"github.com/origadmin/toolkits/crypto/hash/algorithms/bcrypt"
 	"github.com/origadmin/toolkits/crypto/hash/types"
-	"origadmin/application/admin/internal/conf"
 	confpb "origadmin/application/admin/internal/conf/pb"
 	"origadmin/application/admin/internal/helpers/captcha"
 )
 
 // ProviderCommonSet provides common dependencies for all modules.
 var ProviderCommonSet = wire.NewSet(
-	ProvideConfig,
 	ProvideLogger,
 	ProvideHasher,
 	ProvideCaptcha,
 	ProvideServers,
 )
-
-// ProvideConfig bridges the PB-based Bootstrap config to the internal business Config.
-func ProvideConfig(b *confpb.Bootstrap) *conf.Config {
-	return &conf.Config{Bootstrap: *b}
-}
 
 // ProvideLogger provides the project's runtime logger.
 func ProvideLogger(app *runtime.App) log.Logger {

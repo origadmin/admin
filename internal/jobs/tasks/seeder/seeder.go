@@ -24,7 +24,6 @@ import (
 	"github.com/origadmin/toolkits/crypto/hash"
 
 	"origadmin/application/admin/api/v1/services/types"
-	"origadmin/application/admin/internal/conf"
 	confpb "origadmin/application/admin/internal/conf/pb"
 	"origadmin/application/admin/internal/data/enums"
 	"origadmin/application/admin/internal/features/system/biz"
@@ -52,7 +51,7 @@ type Seeder struct {
 }
 
 // NewSeeder creates a new Seeder.
-func NewSeeder(userUseCase *biz.UserUseCase, resourceUseCase *biz.ResourceUseCase, viewUseCase *biz.ViewUseCase, hasher hash.Crypto, cfg *conf.Config, logger log.Logger) (*Seeder, error) {
+func NewSeeder(userUseCase *biz.UserUseCase, resourceUseCase *biz.ResourceUseCase, viewUseCase *biz.ViewUseCase, hasher hash.Crypto, cfg *confpb.Bootstrap, logger log.Logger) (*Seeder, error) {
 	return &Seeder{
 		userUseCase:     userUseCase,
 		resourceUseCase: resourceUseCase,

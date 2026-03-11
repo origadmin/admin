@@ -8,12 +8,10 @@ package main
 
 import (
 	"github.com/origadmin/runtime"
-	"origadmin/application/admin/internal/conf"
 	"origadmin/application/admin/internal/conf/pb"
 	"origadmin/application/admin/internal/data"
 	"origadmin/application/admin/internal/features/system/biz"
 	"origadmin/application/admin/internal/features/system/dal"
-
 	"origadmin/application/admin/internal/jobs/initializer"
 	"origadmin/application/admin/internal/jobs/initializer/broker"
 	seeder2 "origadmin/application/admin/internal/jobs/initializer/seeder"
@@ -23,7 +21,6 @@ import (
 )
 
 import (
-	_ "origadmin/application/admin/internal/helpers/providers"
 	_ "github.com/joho/godotenv/autoload"
 	_ "github.com/lib/pq"
 	_ "github.com/origadmin/contrib/config/consul"
@@ -44,27 +41,30 @@ func wireApp(rt *runtime.App, b *confpb.Bootstrap) (initializer.Initializer, fun
 	if err != nil {
 		return nil, nil, err
 	}
+	// Data layer provides the migrator
+	migrator := data.NewMigrator(entDatabase)
+	
 	userRepo := dal.NewUserRepo(entDatabase, logger)
 	userUseCase := biz.NewUserUseCase(userRepo, logger)
 	resourceRepo := dal.NewResourceRepo(entDatabase, logger)
 	resourceUseCase := biz.NewResourceUseCase(resourceRepo)
 	viewRepo := dal.NewViewRepo(entDatabase, logger)
 	viewUseCase := biz.NewViewUseCase(viewRepo)
-
-	config := &conf.Config{Bootstrap: *b}
 	crypto, err := hash.NewCrypto(hashtypes.BCRYPT)
 	if err != nil {
 		cleanup()
 		return nil, nil, err
 	}
-
-	seederSeeder, err := seeder.NewSeeder(userUseCase, resourceUseCase, viewUseCase, crypto, config, logger)
+	seederSeeder, err := seeder.NewSeeder(userUseCase, resourceUseCase, viewUseCase, crypto, b, logger)
 	if err != nil {
 		cleanup()
 		return nil, nil, err
 	}
+	// Task Seeder remains a pure business wrapper
 	seederInitializer := seeder2.NewInitializer(seederSeeder, logger)
-	initializerInitializer2 := initializer.ProvideCompositeInitializer(logger, initializerInitializer, seederInitializer)
+	
+	// Orchestrator assembly
+	initializerInitializer2 := initializer.New(logger, migrator, initializerInitializer, seederInitializer)
 	return initializerInitializer2, func() {
 		cleanup()
 	}, nil

@@ -18,27 +18,27 @@ const (
 	APIPrefix = "/api/v1"
 )
 
-// Config is the business configuration.
-// It embeds confpb.Bootstrap to provide direct access to all configuration fields
-// and satisfy the component.Config interfaces automatically.
-type Config struct {
-	confpb.Bootstrap
-}
-
-// --- Runtime Interface Adapters ---
-
-// Transform scans the configuration from the source and performs any necessary transformations.
-func (c *Config) Transform(cfg config.KConfig) (any, error) {
-	if err := cfg.Scan(&c.Bootstrap); err != nil {
-		return nil, fmt.Errorf("failed to scan config: %w", err)
-	}
-	return &c.Bootstrap, nil
-}
-
-// New creates a new Config transformer.
-func New() bootstrap.ConfigTransformer {
-	return &Config{}
-}
+//// Config is the business configuration.
+//// It embeds confpb.Bootstrap to provide direct access to all configuration fields
+//// and satisfy the component.Config interfaces automatically.
+//type Config struct {
+//	confpb.Bootstrap
+//}
+//
+//// --- Runtime Interface Adapters ---
+//
+//// Transform scans the configuration from the source and performs any necessary transformations.
+//func (c *Config) Transform(cfg config.KConfig) (any, error) {
+//	if err := cfg.Scan(&c.Bootstrap); err != nil {
+//		return nil, fmt.Errorf("failed to scan config: %w", err)
+//	}
+//	return &c.Bootstrap, nil
+//}
+//
+//// New creates a new Config transformer.
+//func New() bootstrap.ConfigTransformer {
+//	return &Config{}
+//}
 
 func transformer(cfg config.KConfig) (any, error) {
 	var b confpb.Bootstrap

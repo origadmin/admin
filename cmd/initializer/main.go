@@ -55,16 +55,11 @@ func main() {
 	log.Infof("Loading configuration from: %s\n", confPath)
 
 	rt := runtime.New(Name, Version)
-	err := rt.Load(confPath, runtimebootstrap.WithConfigTransformer(conf.New()))
-	if err != nil {
+	if err := rt.Load(confPath, runtimebootstrap.WithConfigTransformer(conf.Transformer)); err != nil {
 		log.Fatalf("failed to create runtime: %v", err)
 	}
 	defer rt.Config().Close()
 	rt.ShowAppInfo()
-
-	if err := rt.WarmUp(); err != nil {
-		log.Fatalf("failed to warm up runtime: %v", err)
-	}
 
 	// Get bootstrap config
 	bootstrapConfig, ok := rt.BusinessConfig().(*confpb.Bootstrap)

@@ -29,7 +29,7 @@ func wireApp(rt *runtime.App, b *confpb.Bootstrap) (initializer.Initializer, fun
 		// The main initializer provider set which includes all sub-initializers (NATS, Seeder, etc.)
 		initializer.ProviderSet,
 
-		// Note: rt (*runtime.App) and bootstrap (*conf.Config) are automatically available
+		// Note: rt (*runtime.App) and b (*confpb.Bootstrap) are automatically available
 		// as providers because they are arguments to this function.
 	))
 }
