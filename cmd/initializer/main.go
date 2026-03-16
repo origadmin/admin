@@ -58,11 +58,13 @@ func main() {
 	if err := rt.Load(confPath, runtimebootstrap.WithConfigTransformer(conf.Transformer)); err != nil {
 		log.Fatalf("failed to create runtime: %v", err)
 	}
-	defer rt.Config().Close()
+	defer func() {
+		_ = rt.Decoder().Close()
+	}()
 	rt.ShowAppInfo()
 
 	// Get bootstrap config
-	bootstrapConfig, ok := rt.BusinessConfig().(*confpb.Bootstrap)
+	bootstrapConfig, ok := rt.Config().(*confpb.Bootstrap)
 	if !ok {
 		log.Fatalf("failed to get bootstrap config")
 	}

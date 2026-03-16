@@ -15,7 +15,6 @@ import (
 	"github.com/origadmin/runtime"
 	systemclient "origadmin/application/admin/api/v1/services/system"
 	confpb "origadmin/application/admin/internal/conf/pb"
-	"origadmin/application/admin/internal/data"
 	identitybiz "origadmin/application/admin/internal/features/identity/biz"
 	identitydal "origadmin/application/admin/internal/features/identity/dal"
 	identityserver "origadmin/application/admin/internal/features/identity/server"
@@ -44,9 +43,6 @@ func wireApp(app *runtime.App, b *confpb.Bootstrap) (*kratos.App, func(), error)
 	panic(wire.Build(
 		// Shared infrastructure providers
 		providers.ProviderBackendSet,
-
-		// Service-specific providers
-		data.ProviderSet,
 
 		// Auth feature module providers
 		identitydal.ProviderSet,

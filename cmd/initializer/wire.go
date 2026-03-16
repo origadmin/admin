@@ -8,7 +8,6 @@ import (
 
 	"github.com/origadmin/runtime"
 	confpb "origadmin/application/admin/internal/conf/pb"
-	"origadmin/application/admin/internal/data"
 	"origadmin/application/admin/internal/features/system/biz"
 	"origadmin/application/admin/internal/features/system/dal"
 	"origadmin/application/admin/internal/helpers/providers"
@@ -16,11 +15,10 @@ import (
 )
 
 // wireApp init the initializer service.
-func wireApp(rt *runtime.App, b *confpb.Bootstrap) (initializer.Initializer, func(), error) {
+func wireApp(rt *runtime.App, b *confpb.Bootstrap) (*initializer.Manager, func(), error) {
 	panic(wire.Build(
 		// Shared providers needed for data access and other common components.
-		providers.ProviderCommonSet,
-		data.ProviderSet,
+		providers.ProviderBackendSet,
 
 		// Add providers from the 'system' feature, which are required by the seeder.
 		dal.ProviderSet,

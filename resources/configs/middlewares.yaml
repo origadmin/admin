@@ -15,9 +15,9 @@ middlewares:
     - name: "recovery"
       type: "recovery"
       enabled: true
-    - name: "validator"
-      type: "validator"
-      enabled: true
+    #    - name: "validator"
+    #      type: "validator"
+    #      enabled: false
     - name: "rate_limiter"
       type: "rate_limiter"
       enabled: true

@@ -21,6 +21,7 @@ import (
 	_ "github.com/origadmin/contrib/registry/consul"
 	_ "github.com/sqlite3ent/sqlite3"
 	_ "origadmin/application/admin/internal/data/entity/ent/runtime"
+	_ "origadmin/application/admin/internal/helpers/providers"
 )
 
 // Injectors from wire.go:

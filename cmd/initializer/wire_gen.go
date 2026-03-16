@@ -9,19 +9,17 @@ package main
 import (
 	"github.com/origadmin/runtime"
 	"origadmin/application/admin/internal/conf/pb"
-	"origadmin/application/admin/internal/data"
 	"origadmin/application/admin/internal/features/system/biz"
 	"origadmin/application/admin/internal/features/system/dal"
+	"origadmin/application/admin/internal/helpers/providers"
 	"origadmin/application/admin/internal/jobs/initializer"
 	"origadmin/application/admin/internal/jobs/initializer/broker"
-	seeder2 "origadmin/application/admin/internal/jobs/initializer/seeder"
-	"origadmin/application/admin/internal/jobs/tasks/seeder"
-	"github.com/origadmin/toolkits/crypto/hash"
-	hashtypes "github.com/origadmin/toolkits/crypto/hash/types"
+	"origadmin/application/admin/internal/jobs/initializer/migration"
+	"origadmin/application/admin/internal/jobs/initializer/seeder"
+	tasksseeder "origadmin/application/admin/internal/jobs/tasks/seeder"
 )
 
 import (
-	_ "github.com/joho/godotenv/autoload"
 	_ "github.com/lib/pq"
 	_ "github.com/origadmin/contrib/config/consul"
 	_ "github.com/origadmin/contrib/registry/consul"
@@ -29,43 +27,36 @@ import (
 	_ "origadmin/application/admin/api/v1/services/filemanager"
 	_ "origadmin/application/admin/api/v1/services/objectstore"
 	_ "origadmin/application/admin/internal/data/entity/ent/runtime"
+	_ "origadmin/application/admin/internal/helpers/providers"
 )
 
 // Injectors from wire.go:
 
 // wireApp init the initializer service.
-func wireApp(rt *runtime.App, b *confpb.Bootstrap) (initializer.Initializer, func(), error) {
-	logger := rt.Logger()
-	initializerInitializer := broker.NewInitializer(b, logger)
-	entDatabase, cleanup, err := data.ProvideDatabase(rt)
+func wireApp(rt *runtime.App, b *confpb.Bootstrap) (*initializer.Manager, func(), error) {
+	v := providers.ProvideLogger(rt)
+	brokerInitializer := broker.NewInitializer(b, v)
+	database, err := providers.ProvideEntDatabase(rt)
 	if err != nil {
 		return nil, nil, err
 	}
-	// Data layer provides the migrator
-	migrator := data.NewMigrator(entDatabase)
-	
-	userRepo := dal.NewUserRepo(entDatabase, logger)
-	userUseCase := biz.NewUserUseCase(userRepo, logger)
-	resourceRepo := dal.NewResourceRepo(entDatabase, logger)
+	migrationInitializer := migration.NewInitializer(database, v)
+	userRepo := dal.NewUserRepo(database, v)
+	userUseCase := biz.NewUserUseCase(userRepo, v)
+	resourceRepo := dal.NewResourceRepo(database, v)
 	resourceUseCase := biz.NewResourceUseCase(resourceRepo)
-	viewRepo := dal.NewViewRepo(entDatabase, logger)
+	viewRepo := dal.NewViewRepo(database, v)
 	viewUseCase := biz.NewViewUseCase(viewRepo)
-	crypto, err := hash.NewCrypto(hashtypes.BCRYPT)
+	crypto, err := providers.ProvideHasher()
 	if err != nil {
-		cleanup()
 		return nil, nil, err
 	}
-	seederSeeder, err := seeder.NewSeeder(userUseCase, resourceUseCase, viewUseCase, crypto, b, logger)
+	seeder2, err := tasksseeder.NewSeeder(userUseCase, resourceUseCase, viewUseCase, crypto, b, v)
 	if err != nil {
-		cleanup()
 		return nil, nil, err
 	}
-	// Task Seeder remains a pure business wrapper
-	seederInitializer := seeder2.NewInitializer(seederSeeder, logger)
-	
-	// Orchestrator assembly
-	initializerInitializer2 := initializer.New(logger, migrator, initializerInitializer, seederInitializer)
-	return initializerInitializer2, func() {
-		cleanup()
+	seederInitializer := seeder.NewInitializer(seeder2, v)
+	initializerManager := initializer.ProvideManager(v, brokerInitializer, migrationInitializer, seederInitializer)
+	return initializerManager, func() {
 	}, nil
 }

@@ -79,7 +79,7 @@ func NewObjectStoreProxy(app *runtime.App, bootstrap *confpb.Bootstrap) (*Object
 
 	// Get client middlewares from container (ClientScope)
 	h := app.Container().In(runtime.CategoryMiddleware,
-		runtime.WithScope(runtime.ClientScope))
+		runtime.WithInScope(runtime.ClientScope))
 	mws, err := middleware.GetMiddlewares(app.Context(), h)
 	if err != nil {
 		return nil, fmt.Errorf("failed to get client middlewares: %w", err)

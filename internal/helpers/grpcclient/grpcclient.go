@@ -7,12 +7,12 @@ package grpcclient
 import (
 	"fmt"
 
-	"github.com/go-kratos/kratos/v2/log"
 	"github.com/goexts/generic/maps"
 	"google.golang.org/grpc"
 
 	"github.com/origadmin/runtime"
 	transportv1 "github.com/origadmin/runtime/api/gen/go/config/transport/v1"
+	"github.com/origadmin/runtime/log"
 	"github.com/origadmin/runtime/middleware"
 	runtimegrpc "github.com/origadmin/runtime/service/transport/grpc"
 	confpb "origadmin/application/admin/internal/conf/pb"
@@ -70,7 +70,8 @@ func NewConn(
 
 	// Get client middlewares from container (ClientScope)
 	h := app.Container().In(runtime.CategoryMiddleware,
-		runtime.WithScope(runtime.ClientScope))
+		runtime.WithInScope(runtime.ClientScope),
+	)
 	mwMap, err := middleware.GetMiddlewares(app.Context(), h)
 	if err != nil {
 		return nil, fmt.Errorf("failed to get client middlewares: %w", err)

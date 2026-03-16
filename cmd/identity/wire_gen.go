@@ -11,7 +11,6 @@ import (
 	"github.com/origadmin/runtime"
 	"origadmin/application/admin/api/v1/services/system"
 	"origadmin/application/admin/internal/conf/pb"
-	"origadmin/application/admin/internal/data"
 	"origadmin/application/admin/internal/features/identity/biz"
 	"origadmin/application/admin/internal/features/identity/dal"
 	"origadmin/application/admin/internal/features/identity/server"
@@ -26,14 +25,15 @@ import (
 	_ "github.com/origadmin/contrib/registry/consul"
 	_ "github.com/sqlite3ent/sqlite3"
 	_ "origadmin/application/admin/internal/data/entity/ent/runtime"
+	_ "origadmin/application/admin/internal/helpers/providers"
 )
 
 // Injectors from wire.go:
 
 // wireApp init kratos application.
 func wireApp(app *runtime.App, b *confpb.Bootstrap) (*kratos.App, func(), error) {
-	servers := providers.ProvideServers(b)
-	database, cleanup, err := data.ProvideDatabase(app)
+	servers := providers.ProvideServers(app)
+	database, err := providers.ProvideEntDatabase(app)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -41,19 +41,16 @@ func wireApp(app *runtime.App, b *confpb.Bootstrap) (*kratos.App, func(), error)
 	authnRepo := dal.NewAuthnRepo(database, logger)
 	crypto, err := providers.ProvideHasher()
 	if err != nil {
-		cleanup()
 		return nil, nil, err
 	}
 	authUseCase := biz.NewAuthUseCase(authnRepo, crypto, logger)
 	captcha, err := providers.ProvideCaptcha(app)
 	if err != nil {
-		cleanup()
 		return nil, nil, err
 	}
 	captchaUseCase := biz.NewCaptchaUseCase(captcha, logger)
 	authenticator, err := providers.ProvideAuthenticator(app)
 	if err != nil {
-		cleanup()
 		return nil, nil, err
 	}
 	authService := service.NewAuthService(authUseCase, captchaUseCase, authenticator, logger)
@@ -63,18 +60,15 @@ func wireApp(app *runtime.App, b *confpb.Bootstrap) (*kratos.App, func(), error)
 	meService := service.NewMeService(meUseCase, logger)
 	authorizer, err := providers.ProvideAuthorizer(app)
 	if err != nil {
-		cleanup()
 		return nil, nil, err
 	}
 	adminService := service.NewAdminService(authorizer, logger)
 	v, err := server.NewServers(app, servers, authService, meService, adminService)
 	if err != nil {
-		cleanup()
 		return nil, nil, err
 	}
 	kratosApp := NewApp(app, v)
 	return kratosApp, func() {
-		cleanup()
 	}, nil
 }
 

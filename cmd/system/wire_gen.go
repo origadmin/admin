@@ -10,7 +10,6 @@ import (
 	"github.com/go-kratos/kratos/v2"
 	"github.com/origadmin/runtime"
 	"origadmin/application/admin/internal/conf/pb"
-	"origadmin/application/admin/internal/data"
 	"origadmin/application/admin/internal/features/system/biz"
 	"origadmin/application/admin/internal/features/system/dal"
 	"origadmin/application/admin/internal/features/system/server"
@@ -24,14 +23,15 @@ import (
 	_ "github.com/origadmin/contrib/registry/consul"
 	_ "github.com/sqlite3ent/sqlite3"
 	_ "origadmin/application/admin/internal/data/entity/ent/runtime"
+	_ "origadmin/application/admin/internal/helpers/providers"
 )
 
 // Injectors from wire.go:
 
 // wireApp init kratos application.
 func wireApp(app *runtime.App, bootstrap *confpb.Bootstrap) (*kratos.App, func(), error) {
-	servers := providers.ProvideServers(bootstrap)
-	database, cleanup, err := data.ProvideDatabase(app)
+	servers := providers.ProvideServers(app)
+	database, err := providers.ProvideEntDatabase(app)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -43,7 +43,6 @@ func wireApp(app *runtime.App, bootstrap *confpb.Bootstrap) (*kratos.App, func()
 	roleUseCase := biz.NewRoleUseCase(roleRepo)
 	publisher, err := providers.ProvidePublisher(app)
 	if err != nil {
-		cleanup()
 		return nil, nil, err
 	}
 	roleService := service.NewRoleService(roleUseCase, publisher, v)
@@ -51,7 +50,6 @@ func wireApp(app *runtime.App, bootstrap *confpb.Bootstrap) (*kratos.App, func()
 	userUseCase := biz.NewUserUseCase(userRepo, v)
 	crypto, err := providers.ProvideHasher()
 	if err != nil {
-		cleanup()
 		return nil, nil, err
 	}
 	userService := service.NewUserService(userUseCase, publisher, crypto, v)
@@ -67,31 +65,29 @@ func wireApp(app *runtime.App, bootstrap *confpb.Bootstrap) (*kratos.App, func()
 	systemService := service.NewSystemService(resourceService, roleService, userService, permissionService, viewService, policyQueryService)
 	policyModifier, err := dal.NewCasbinPolicyModifier(database, v)
 	if err != nil {
-		cleanup()
 		return nil, nil, err
 	}
 	authorizer, err := providers.ProvideAuthorizer(app)
 	if err != nil {
-		cleanup()
 		return nil, nil, err
 	}
 	watcher, err := providers.ProvideWatcher(app)
 	if err != nil {
-		cleanup()
 		return nil, nil, err
 	}
-	executor := providers.NewDebounceExecutor(bootstrap)
+	executor, err := providers.ProvideDebouncer(app)
+	if err != nil {
+		return nil, nil, err
+	}
 	policySyncUseCase := biz.NewPolicySyncUseCase(policyRepo, policyModifier, authorizer, watcher, executor, v)
 	policySyncHandler := service.NewPolicySyncHandler(policySyncUseCase, v)
 	v2, err := server.NewServers(app, servers, systemService, policySyncHandler)
 	if err != nil {
-		cleanup()
 		return nil, nil, err
 	}
 	policyBootstrap := service.NewPolicyBootstrap(policySyncUseCase, v)
 	v3 := NewBootstrapOptions(policyBootstrap)
 	kratosApp := NewApp(app, v2, v3...)
 	return kratosApp, func() {
-		cleanup()
 	}, nil
 }

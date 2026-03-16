@@ -9,9 +9,17 @@ import (
 	"github.com/ThreeDotsLabs/watermill-nats/v2/pkg/nats"
 	natsio "github.com/nats-io/nats.go"
 
+	"github.com/google/wire"
 	"github.com/origadmin/runtime/log"
 	confpb "origadmin/application/admin/internal/conf/pb"
 	"origadmin/application/admin/internal/helpers/pubsub"
+	initizertypes "origadmin/application/admin/internal/jobs/initializer/types"
+)
+
+// ProviderSet exports the Broker initializer and its dependencies.
+var ProviderSet = wire.NewSet(
+	NewInitializer,
+	wire.Bind(new(initizertypes.Task), new(*Initializer)),
 )
 
 // Initializer handles pre-start initialization for message brokers.
@@ -160,4 +168,19 @@ func (i *Initializer) provisionNatsJetStream(brokerURL string) error {
 
 	i.log.Infof("Successfully provisioned JetStream for topic: '%s' with queue group: '%s'", topic, queueGroup)
 	return nil
+}
+
+// Name returns the task name.
+func (i *Initializer) Name() string {
+	return "broker"
+}
+
+// Phase returns the execution phase.
+func (i *Initializer) Phase() initizertypes.Phase {
+	return initizertypes.PhaseInfrastructure
+}
+
+// Priority returns the execution priority within the phase.
+func (i *Initializer) Priority() int {
+	return 100
 }

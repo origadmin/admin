@@ -23,13 +23,14 @@ import (
 	_ "github.com/origadmin/contrib/registry/consul"
 	_ "github.com/sqlite3ent/sqlite3"
 	_ "origadmin/application/admin/internal/data/entity/ent/runtime"
+	_ "origadmin/application/admin/internal/helpers/providers"
 )
 
 // Injectors from wire.go:
 
 // wireApp init kratos application.
 func wireApp(app *runtime.App, b *confpb.Bootstrap) (*kratos.App, func(), error) {
-	servers := providers.ProvideServers(b)
+	servers := providers.ProvideServers(app)
 	localStorageConfig, err := dal.NewLocalStorageConfig(b)
 	if err != nil {
 		return nil, nil, err

@@ -24,7 +24,6 @@ import (
 // ProviderSet is data providers.
 var ProviderSet = wire.NewSet(
 	NewData,
-	ProvideDatabase,
 	NewAdapter,
 )
 
@@ -75,9 +74,9 @@ type Data struct {
 	log *log.Helper
 }
 
-// ProvideDatabase extracts the initialized *ent.Database from the runtime container
+// NewDatabase extracts the initialized *ent.Database from the runtime container
 // and performs business-level initialization (System User caching).
-func ProvideDatabase(app *runtime.App) (*ent.Database, func(), error) {
+func NewDatabase(app *runtime.App) (*ent.Database, func(), error) {
 	db, err := comp.GetDefault[*ent.Database](app.Context(), app.Container().In("infrastructure/ent"))
 	if err != nil {
 		return nil, nil, err

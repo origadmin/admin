@@ -11,15 +11,17 @@ import (
 	"github.com/google/wire"
 	"github.com/origadmin/runtime/log"
 	taskseeder "origadmin/application/admin/internal/jobs/tasks/seeder"
+	initizertypes "origadmin/application/admin/internal/jobs/initializer/types"
 )
 
 // ProviderSet exports the Seeder initializer and its dependencies.
 var ProviderSet = wire.NewSet(
 	taskseeder.ProviderSet, // Include the actual task implementation
 	NewInitializer,
+	wire.Bind(new(initizertypes.Task), new(*Initializer)),
 )
 
-// Initializer implements the Initializer interface for data seeding.
+// Initializer implements the Task interface for data seeding.
 type Initializer struct {
 	seeder *taskseeder.Seeder
 	log    *log.Helper
@@ -31,6 +33,21 @@ func NewInitializer(s *taskseeder.Seeder, logger log.Logger) *Initializer {
 		seeder: s,
 		log:    log.NewHelper(log.With(logger, "module", "initializer.data_seeder")),
 	}
+}
+
+// Name returns the task name.
+func (d *Initializer) Name() string {
+	return "seeder"
+}
+
+// Phase returns the execution phase.
+func (d *Initializer) Phase() initizertypes.Phase {
+	return initizertypes.PhaseData
+}
+
+// Priority returns the execution priority within the phase.
+func (d *Initializer) Priority() int {
+	return 100
 }
 
 // Init executes the data seeding logic by calling the Seeder's Run method.

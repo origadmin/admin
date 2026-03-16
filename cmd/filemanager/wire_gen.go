@@ -11,7 +11,6 @@ import (
 	"github.com/origadmin/runtime"
 	"origadmin/application/admin/api/v1/services/objectstore"
 	"origadmin/application/admin/internal/conf/pb"
-	"origadmin/application/admin/internal/data"
 	"origadmin/application/admin/internal/features/filemanager/biz"
 	"origadmin/application/admin/internal/features/filemanager/dal"
 	"origadmin/application/admin/internal/features/filemanager/server"
@@ -26,21 +25,21 @@ import (
 	_ "github.com/origadmin/contrib/registry/consul"
 	_ "github.com/sqlite3ent/sqlite3"
 	_ "origadmin/application/admin/internal/data/entity/ent/runtime"
+	_ "origadmin/application/admin/internal/helpers/providers"
 )
 
 // Injectors from wire.go:
 
 // wireApp init kratos application.
 func wireApp(app *runtime.App, b *confpb.Bootstrap) (*kratos.App, func(), error) {
-	servers := providers.ProvideServers(b)
-	database, cleanup, err := data.ProvideDatabase(app)
+	servers := providers.ProvideServers(app)
+	database, err := providers.ProvideEntDatabase(app)
 	if err != nil {
 		return nil, nil, err
 	}
 	fileRepo := dal.NewFileRepo(database)
-	objectStoreServiceClient, cleanup2, err := NewObjectStoreServiceClient(app, b)
+	objectStoreServiceClient, cleanup, err := NewObjectStoreServiceClient(app, b)
 	if err != nil {
-		cleanup()
 		return nil, nil, err
 	}
 	logger := providers.ProvideLogger(app)
@@ -48,13 +47,11 @@ func wireApp(app *runtime.App, b *confpb.Bootstrap) (*kratos.App, func(), error)
 	fileManagerService := service.NewFileManagerService(fileUseCase, logger)
 	v, err := server.NewServers(app, servers, fileManagerService)
 	if err != nil {
-		cleanup2()
 		cleanup()
 		return nil, nil, err
 	}
 	kratosApp := NewApp(app, v)
 	return kratosApp, func() {
-		cleanup2()
 		cleanup()
 	}, nil
 }

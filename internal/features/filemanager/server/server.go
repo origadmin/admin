@@ -19,6 +19,7 @@ import (
 	"github.com/origadmin/runtime/service/transport"
 	"github.com/origadmin/runtime/service/transport/grpc"
 	"github.com/origadmin/runtime/service/transport/http"
+	"origadmin/application/admin/internal/helpers/providers"
 
 	fmPb "origadmin/application/admin/api/v1/services/filemanager"
 	fmSvc "origadmin/application/admin/internal/features/filemanager/service"
@@ -77,8 +78,8 @@ func NewHTTPServer(
 
 	// Fetch middlewares from container with 'feature' tag
 	h := app.Container().In(runtime.CategoryMiddleware,
-		runtime.WithScope(runtime.ServerScope),
-		runtime.WithInTags("feature"))
+		runtime.WithInScope(runtime.ServerScope),
+		runtime.WithInTags(providers.FeatureTag))
 	mwMap, err := middleware.GetMiddlewares(app.Context(), h)
 	if err != nil {
 		return nil, err
@@ -112,8 +113,8 @@ func NewGRPCServer(
 
 	// Fetch middlewares from container with 'feature' tag
 	h := app.Container().In(runtime.CategoryMiddleware,
-		runtime.WithScope(runtime.ServerScope),
-		runtime.WithInTags("feature"))
+		runtime.WithInScope(runtime.ServerScope),
+		runtime.WithInTags(providers.FeatureTag))
 	mwMap, err := middleware.GetMiddlewares(app.Context(), h)
 	if err != nil {
 		return nil, err

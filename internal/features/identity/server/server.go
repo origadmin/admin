@@ -81,7 +81,7 @@ func NewHTTPServer(
 
 	// Fetch middlewares from container with 'feature' tag
 	h := app.Container().In(runtime.CategoryMiddleware,
-		runtime.WithScope(runtime.ServerScope),
+		runtime.WithInScope(runtime.ServerScope),
 		runtime.WithInTags("feature"))
 	mwMap, err := middleware.GetMiddlewares(app.Context(), h)
 	if err != nil {
@@ -121,7 +121,7 @@ func NewGRPCServer(
 
 	// Fetch middlewares from container with 'feature' tag
 	h := app.Container().In(runtime.CategoryMiddleware,
-		runtime.WithScope(runtime.ServerScope),
+		runtime.WithInScope(runtime.ServerScope),
 		runtime.WithInTags("feature"))
 	mwMap, err := middleware.GetMiddlewares(app.Context(), h)
 	if err != nil {

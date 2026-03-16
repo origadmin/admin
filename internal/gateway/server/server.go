@@ -8,10 +8,12 @@ import (
 	"errors"
 
 	kratoshttp "github.com/go-kratos/kratos/v2/transport/http"
+	"github.com/goexts/generic/maps"
 	"github.com/google/wire"
 
 	"github.com/origadmin/runtime"
 	httpv1 "github.com/origadmin/runtime/api/gen/go/config/transport/http/v1"
+	"github.com/origadmin/runtime/log"
 	"github.com/origadmin/runtime/middleware"
 	"github.com/origadmin/runtime/service/transport"
 	runtimehttp "github.com/origadmin/runtime/service/transport/http"
@@ -19,6 +21,7 @@ import (
 	confpb "origadmin/application/admin/internal/conf/pb"
 	"origadmin/application/admin/internal/gateway/service"
 	"origadmin/application/admin/internal/gateway/web"
+	"origadmin/application/admin/internal/helpers/providers"
 )
 
 // ProviderSet is server providers.
@@ -68,12 +71,14 @@ func NewHTTPServer(
 
 	// Fetch middlewares from container with 'gateway' tag as a map
 	h := app.Container().In(runtime.CategoryMiddleware,
-		runtime.WithScope(runtime.ServerScope),
-		runtime.WithInTags("gateway"))
+		runtime.WithInScope(runtime.ServerScope),
+		runtime.WithInTags(providers.GatewayTag))
 	mwMap, err := middleware.GetMiddlewares(app.Context(), h)
 	if err != nil {
 		return nil, err
 	}
+
+	log.Debugf("gateway middlewares: %v", maps.Keys(mwMap))
 
 	serverOpts := []kratoshttp.ServerOption{
 		kratoshttp.PathPrefix(conf.APIPrefix),
