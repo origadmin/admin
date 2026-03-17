@@ -19,7 +19,7 @@ import (
 func wireApp(rt *runtime.App, b *confpb.Bootstrap) (*initializer.Manager, func(), error) {
 	panic(wire.Build(
 		// Shared providers needed for data access and other common components.
-		providers.ProviderBackendSet,
+		providers.BackendSet,
 
 		// Add providers from the 'system' feature, which are required by the seeder.
 		data.ProviderSet,

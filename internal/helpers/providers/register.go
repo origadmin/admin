@@ -11,8 +11,8 @@ import (
 	"origadmin/application/admin/internal/helpers/debounce"
 	"origadmin/application/admin/internal/helpers/providers/internal/data"
 	"origadmin/application/admin/internal/helpers/providers/internal/middleware"
-	"origadmin/application/admin/internal/helpers/providers/internal/pubsub"
 	"origadmin/application/admin/internal/helpers/providers/internal/security"
+	"origadmin/application/admin/internal/helpers/pubsub"
 )
 
 const (
@@ -66,10 +66,10 @@ func registerInfrastructure() {
 	runtime.Register(runtime.CategorySecurity, security.NewCaptcha, runtime.WithResolver(security.CaptchaResolver))
 
 	// Register NATS Publisher
-	runtime.Register(CategoryPublisher, pubsub.NewPublisher, runtime.WithResolver(pubsub.Resolver))
+	runtime.Register(CategoryPublisher, pubsub.NewPublisherHandle, runtime.WithResolver(pubsub.Resolver))
 
 	// Register NATS Watcher
-	runtime.Register(CategoryWatcher, pubsub.NewWatcher, runtime.WithResolver(pubsub.Resolver))
+	runtime.Register(CategoryWatcher, pubsub.NewWatcherHandle, runtime.WithResolver(pubsub.Resolver))
 
 	// Register Debounce
 	runtime.Register(debounce.CategoryDebounce, debounce.Provider, runtime.WithResolver(debounce.Resolver))
@@ -92,7 +92,6 @@ func registerMiddlewares() {
 		runtime.WithScopes(runtime.ServerScope, runtime.ClientScope),
 	}
 
-	//engine.Register(runtime.CategoryMiddleware, runtimemiddleware.DefaultProvider, opts...)
 	runtime.Register(runtime.CategoryMiddleware, middleware.NewAuthnMiddleware, append(opts,
 		runtime.WithEntries(middleware.MiddlewareAuthn), runtime.WithTag(GatewayTag))...)
 	runtime.Register(runtime.CategoryMiddleware, middleware.NewAuthzMiddleware, append(opts,

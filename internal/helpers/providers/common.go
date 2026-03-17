@@ -26,16 +26,16 @@ import (
 	"origadmin/application/admin/internal/helpers/providers/internal/security"
 )
 
-// ProviderCommonSet provides common dependencies for all modules.
-var ProviderCommonSet = wire.NewSet(
+// CommonSet provides common dependencies for all modules.
+var CommonSet = wire.NewSet(
 	ProvideLogger,
 	ProvideHasher,
 	ProvideServers,
 )
 
-// ProviderBackendSet provides backend dependencies.
-var ProviderBackendSet = wire.NewSet(
-	ProviderCommonSet,
+// BackendSet provides backend dependencies.
+var BackendSet = wire.NewSet(
+	CommonSet,
 	ProvideAuthenticator,
 	wire.Bind(new(credential.Creator), new(*jwt.Authenticator)),
 	wire.Bind(new(authn.Authenticator), new(*jwt.Authenticator)),
@@ -45,11 +45,6 @@ var ProviderBackendSet = wire.NewSet(
 	ProvideWatcher,
 	ProvidePublisher,
 	ProvideCaptcha,
-)
-
-// ProviderSet combines all provider sets for backend.
-var ProviderSet = wire.NewSet(
-	ProviderBackendSet,
 )
 
 // ProvideServers extracts server configurations from the bootstrap config.

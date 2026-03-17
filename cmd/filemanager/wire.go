@@ -38,7 +38,7 @@ func NewObjectStoreServiceClient(
 func wireApp(app *runtime.App, b *confpb.Bootstrap) (*kratos.App, func(), error) {
 	panic(wire.Build(
 		// Shared infrastructure providers
-		providers.ProviderBackendSet,
+		providers.BackendSet,
 
 		// Clients
 		NewObjectStoreServiceClient,

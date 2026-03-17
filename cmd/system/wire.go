@@ -26,7 +26,7 @@ import (
 func wireApp(app *runtime.App, bootstrap *confpb.Bootstrap) (*kratos.App, func(), error) {
 	panic(wire.Build(
 		// Shared infrastructure providers
-		providers.ProviderBackendSet,
+		providers.BackendSet,
 
 		data.ProviderSet,
 		dal.ProviderSet,

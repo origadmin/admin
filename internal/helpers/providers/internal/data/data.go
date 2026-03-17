@@ -39,7 +39,7 @@ func NewEnt(ctx context.Context, h component.Handle) (any, error) {
 }
 
 // EntResolver resolves Ent configuration.
-func EntResolver(ctx context.Context, root any, opts *component.LoadOptions) (*component.ModuleConfig, error) {
+func EntResolver(_ context.Context, root any, _ *component.LoadOptions) (*component.ModuleConfig, error) {
 	return &component.ModuleConfig{
 		Entries: []component.ConfigEntry{{Name: NameEnt, Value: root}},
 		Active:  NameEnt,

@@ -18,7 +18,6 @@ import (
 	"github.com/origadmin/runtime/helpers/comp"
 	"github.com/origadmin/runtime/log"
 	confpb "origadmin/application/admin/internal/conf/pb"
-	"origadmin/application/admin/internal/helpers/pubsub"
 )
 
 const (
@@ -31,8 +30,8 @@ const (
 	NamePublisher = "publisher"
 )
 
-// NewPublisher is the engine provider for watermill.Publisher (NATS).
-func NewPublisher(ctx context.Context, h component.Handle) (any, error) {
+// NewPublisherHandle is the engine provider for watermill.Publisher (NATS).
+func NewPublisherHandle(ctx context.Context, h component.Handle) (any, error) {
 	cfg, err := comp.AsConfig[confpb.Bootstrap](h)
 	if err != nil {
 		return nil, err
@@ -49,18 +48,18 @@ func NewPublisher(ctx context.Context, h component.Handle) (any, error) {
 	}
 
 	logger, _ := comp.GetDefault[log.Logger](ctx, h.Locator().In(runtime.CategoryLogger))
-	wmLogger := pubsub.NewWatermillLogger(logger)
+	wmLogger := NewWatermillLogger(logger)
 
 	publisherConfig := nats.PublisherConfig{URL: brokerUrl}
 	if brokerConfig.GetDefault().GetType() == "nats" && strings.Contains(brokerUrl, "jetstream=true") {
 		publisherConfig.JetStream = nats.JetStreamConfig{Disabled: false}
 	}
 
-	return pubsub.NewPublisher(publisherConfig, wmLogger)
+	return NewPublisher(publisherConfig, wmLogger)
 }
 
-// NewWatcher is the engine provider for casbin.Watcher (NATS).
-func NewWatcher(ctx context.Context, h component.Handle) (any, error) {
+// NewWatcherHandle is the engine provider for casbin.Watcher (NATS).
+func NewWatcherHandle(ctx context.Context, h component.Handle) (any, error) {
 	cfg, err := comp.AsConfig[confpb.Bootstrap](h)
 	if err != nil {
 		return nil, err
@@ -73,7 +72,7 @@ func NewWatcher(ctx context.Context, h component.Handle) (any, error) {
 
 	url := brokerConfig.GetDefault().GetUrl()
 	logger, _ := comp.GetDefault[log.Logger](ctx, h.Locator().In(runtime.CategoryLogger))
-	wmLogger := pubsub.NewWatermillLogger(logger)
+	wmLogger := NewWatermillLogger(logger)
 
 	return watcher.NewWatcher(ctx, url, watcher.WithLogger(wmLogger))
 }
