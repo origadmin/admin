@@ -23,11 +23,11 @@ import (
 )
 
 const (
-	MiddlewareAuthn       = "authn"
-	MiddlewareAuthz       = "authz"
-	MiddlewarePropagation = "propagation"
-	GatewayTag            = "gateway"
-	FeatureTag            = "feature"
+	NameAuthnMiddleware       = "authn"
+	NameAuthzMiddleware       = "authz"
+	NamePropagationMiddleware = "propagation"
+	GatewayTag                = "gateway"
+	FeatureTag                = "feature"
 )
 
 const (
@@ -41,7 +41,7 @@ var (
 
 // NewPropagationMiddleware is the provider for principal propagation middleware.
 func NewPropagationMiddleware(ctx context.Context, h component.Handle) (any, error) {
-	if h.Name() != MiddlewarePropagation {
+	if h.Name() != NamePropagationMiddleware {
 		return nil, nil
 	}
 	tag := h.Tag()
@@ -59,7 +59,7 @@ func NewPropagationMiddleware(ctx context.Context, h component.Handle) (any, err
 
 // NewAuthnMiddleware is the specific provider for Authn middleware.
 func NewAuthnMiddleware(ctx context.Context, h component.Handle) (any, error) {
-	if h.Name() != MiddlewareAuthn {
+	if h.Name() != NameAuthnMiddleware {
 		return nil, nil
 	}
 	tag := h.Tag()
@@ -94,7 +94,7 @@ func ruleSpec(_ enginecontext.Context, p contribsecurity.Principal, req contribs
 
 // NewAuthzMiddleware is the specific provider for Authz middleware.
 func NewAuthzMiddleware(ctx context.Context, h component.Handle) (any, error) {
-	if h.Name() != MiddlewareAuthz {
+	if h.Name() != NameAuthzMiddleware {
 		return nil, nil
 	}
 	tag := h.Tag()

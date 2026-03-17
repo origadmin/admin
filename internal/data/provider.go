@@ -9,13 +9,13 @@ import (
 	"fmt"
 
 	entsql "entgo.io/ent/dialect/sql"
+	"github.com/google/wire"
 
 	"github.com/origadmin/runtime"
 	"github.com/origadmin/runtime/contracts/component"
 	storageiface "github.com/origadmin/runtime/contracts/storage"
 	"github.com/origadmin/runtime/helpers/comp"
 	"github.com/origadmin/runtime/log"
-	internaldata "origadmin/application/admin/internal/data"
 	"origadmin/application/admin/internal/data/entity/ent"
 )
 
@@ -23,6 +23,13 @@ const (
 	CategoryEnt       component.Category = "ent"
 	NameCasbinAdapter                    = "casbin-adapter"
 	NameEnt                              = "ent"
+)
+
+// ProviderSet is data providers.
+var ProviderSet = wire.NewSet(
+	//NewData,
+	//NewAdapter,
+	NewDatabase,
 )
 
 // NewEnt is the engine provider for *ent.Database.
@@ -58,7 +65,7 @@ func CasbinAdapterProvider(ctx context.Context, h component.Handle) (any, error)
 		return nil, err
 	}
 	logger, _ := comp.GetDefault[log.Logger](ctx, h.Locator().In(runtime.CategoryLogger))
-	return internaldata.NewAdapter(ctx, dbInst, logger)
+	return NewAdapter(ctx, dbInst, logger)
 }
 
 // CasbinAdapterResolver resolves Casbin adapter configuration.

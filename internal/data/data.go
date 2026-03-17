@@ -12,25 +12,12 @@ import (
 	"time"
 
 	"github.com/cenkalti/backoff/v5"
-	"github.com/google/wire"
 
 	"github.com/origadmin/runtime"
-	"github.com/origadmin/runtime/contracts/component"
 	"github.com/origadmin/runtime/helpers/comp"
 	"github.com/origadmin/runtime/log"
 	"origadmin/application/admin/internal/data/entity/ent"
 	"origadmin/application/admin/internal/data/entity/ent/user"
-)
-
-const (
-	CategoryEnt component.Category = "ent"
-)
-
-// ProviderSet is data providers.
-var ProviderSet = wire.NewSet(
-	//NewData,
-	//NewAdapter,
-	NewDatabase,
 )
 
 // systemUserID holds the ID of the system user. It is 0 if no system user is found.

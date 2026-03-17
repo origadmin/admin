@@ -8,10 +8,9 @@ import (
 	"github.com/origadmin/contrib/security/authz/casbin"
 	"github.com/origadmin/runtime"
 	"github.com/origadmin/runtime/contracts/component"
+	"origadmin/application/admin/internal/data"
 	"origadmin/application/admin/internal/helpers/debounce"
-	"origadmin/application/admin/internal/helpers/providers/internal/data"
-	"origadmin/application/admin/internal/helpers/providers/internal/middleware"
-	"origadmin/application/admin/internal/helpers/providers/internal/security"
+	"origadmin/application/admin/internal/helpers/middleware"
 	"origadmin/application/admin/internal/helpers/pubsub"
 )
 
@@ -30,7 +29,7 @@ const (
 
 func init() {
 	// 1. Register filter policies
-	security.RegisterFilterPolicies()
+	middleware.RegisterFilterPolicies()
 
 	// 2. Register Infrastructure
 	registerInfrastructure()
@@ -59,11 +58,11 @@ func registerInfrastructure() {
 	// Register Project Authorizer
 	runtime.Register(CategoryAuthz, casbin.Provider,
 		runtime.WithResolver(authz.ConfigResolver),
-		runtime.WithRequirement(security.AuthzRequirementResolver),
+		runtime.WithRequirement(middleware.AuthzRequirementResolver),
 	)
 
 	// Register Captcha
-	runtime.Register(runtime.CategorySecurity, security.NewCaptcha, runtime.WithResolver(security.CaptchaResolver))
+	runtime.Register(runtime.CategorySecurity, middleware.NewCaptcha, runtime.WithResolver(middleware.CaptchaResolver))
 
 	// Register NATS Publisher
 	runtime.Register(CategoryPublisher, pubsub.NewPublisherHandle, runtime.WithResolver(pubsub.Resolver))
@@ -77,12 +76,12 @@ func registerInfrastructure() {
 
 func registerSecurityComponents() {
 	// Register Gateway Skipper
-	runtime.Register(runtime.CategorySkipper, security.GatewaySkipperProvider,
+	runtime.Register(runtime.CategorySkipper, middleware.GatewaySkipperProvider,
 		runtime.WithTag(GatewayTag),
 	)
 
 	// Register Backend Skipper
-	runtime.Register(runtime.CategorySkipper, security.BackendSkipperProvider,
+	runtime.Register(runtime.CategorySkipper, middleware.BackendSkipperProvider,
 		runtime.WithTag(FeatureTag),
 	)
 }
@@ -93,9 +92,9 @@ func registerMiddlewares() {
 	}
 
 	runtime.Register(runtime.CategoryMiddleware, middleware.NewAuthnMiddleware, append(opts,
-		runtime.WithEntries(middleware.MiddlewareAuthn), runtime.WithTag(GatewayTag))...)
+		runtime.WithEntries(middleware.NameAuthnMiddleware), runtime.WithTag(GatewayTag))...)
 	runtime.Register(runtime.CategoryMiddleware, middleware.NewAuthzMiddleware, append(opts,
-		runtime.WithEntries(middleware.MiddlewareAuthz), runtime.WithTag(FeatureTag))...)
+		runtime.WithEntries(middleware.NameAuthzMiddleware), runtime.WithTag(FeatureTag))...)
 	runtime.Register(runtime.CategoryMiddleware, middleware.NewPropagationMiddleware, append(opts,
-		runtime.WithEntries(middleware.MiddlewarePropagation))...)
+		runtime.WithEntries(middleware.NamePropagationMiddleware))...)
 }
