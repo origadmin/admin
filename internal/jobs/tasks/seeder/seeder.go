@@ -33,15 +33,15 @@ import (
 )
 
 // ProviderSet is for wire injection.
-var ProviderSet = wire.NewSet(NewSeeder)
+var ProviderSet = wire.NewSet(NewTaskSeeder)
 
 const (
 	passwordCharset = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
 	passwordLength  = 16
 )
 
-// Seeder is the container for initialization tasks.
-type Seeder struct {
+// TaskSeeder is the container for initialization tasks.
+type TaskSeeder struct {
 	userUseCase     *biz.UserUseCase
 	resourceUseCase *biz.ResourceUseCase
 	viewUseCase     *biz.ViewUseCase
@@ -50,9 +50,9 @@ type Seeder struct {
 	log             *log.Helper
 }
 
-// NewSeeder creates a new Seeder.
-func NewSeeder(userUseCase *biz.UserUseCase, resourceUseCase *biz.ResourceUseCase, viewUseCase *biz.ViewUseCase, hasher hash.Crypto, cfg *confpb.Bootstrap, logger log.Logger) (*Seeder, error) {
-	return &Seeder{
+// NewTaskSeeder creates a new TaskSeeder.
+func NewTaskSeeder(userUseCase *biz.UserUseCase, resourceUseCase *biz.ResourceUseCase, viewUseCase *biz.ViewUseCase, hasher hash.Crypto, cfg *confpb.Bootstrap, logger log.Logger) (*TaskSeeder, error) {
+	return &TaskSeeder{
 		userUseCase:     userUseCase,
 		resourceUseCase: resourceUseCase,
 		viewUseCase:     viewUseCase,
@@ -63,7 +63,7 @@ func NewSeeder(userUseCase *biz.UserUseCase, resourceUseCase *biz.ResourceUseCas
 }
 
 // Run executes all seeding tasks.
-func (s *Seeder) Run() error {
+func (s *TaskSeeder) Run() error {
 	if err := s.createRootUser(); err != nil {
 		return err
 	}
@@ -77,7 +77,7 @@ func (s *Seeder) Run() error {
 }
 
 // createRootUser creates the initial administrator user if it does not exist.
-func (s *Seeder) createRootUser() error {
+func (s *TaskSeeder) createRootUser() error {
 	if s.rootUserCfg == nil || !s.rootUserCfg.Enabled {
 		s.log.Info("Root user seeding is disabled in config.")
 		return nil
@@ -147,7 +147,7 @@ func (s *Seeder) createRootUser() error {
 	return nil
 }
 
-func (s *Seeder) createInitialResources() error {
+func (s *TaskSeeder) createInitialResources() error {
 	ctx := context.Background()
 	ps := security.RegisteredPolicies()
 	if len(ps) == 0 {
@@ -227,7 +227,7 @@ func (s *Seeder) createInitialResources() error {
 	return nil
 }
 
-func (s *Seeder) createInitialViews() error {
+func (s *TaskSeeder) createInitialViews() error {
 	jsonPath := filepath.Join("resources", "data", "views.json")
 	if _, err := os.Stat(jsonPath); os.IsNotExist(err) {
 		return nil
@@ -244,7 +244,7 @@ func (s *Seeder) createInitialViews() error {
 	return s.createViewsRecursive(ctx, views, nil)
 }
 
-func (s *Seeder) createViewsRecursive(ctx context.Context, views []*types.View, parentID *int64) error {
+func (s *TaskSeeder) createViewsRecursive(ctx context.Context, views []*types.View, parentID *int64) error {
 	for _, view := range views {
 		existing, total, err := s.viewUseCase.ListViews(ctx, &dto.ViewQueryOption{
 			QueryOption: repo.QueryOption{

@@ -14,6 +14,7 @@ import (
 
 	"github.com/origadmin/runtime"
 	confpb "origadmin/application/admin/internal/conf/pb"
+	"origadmin/application/admin/internal/data"
 	"origadmin/application/admin/internal/features/system/biz"
 	"origadmin/application/admin/internal/features/system/dal"
 	"origadmin/application/admin/internal/features/system/server"
@@ -27,6 +28,7 @@ func wireApp(app *runtime.App, bootstrap *confpb.Bootstrap) (*kratos.App, func()
 		// Shared infrastructure providers
 		providers.ProviderBackendSet,
 
+		data.ProviderSet,
 		dal.ProviderSet,
 		biz.ProviderSet,
 		service.ProviderSet,

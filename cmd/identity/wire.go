@@ -15,10 +15,11 @@ import (
 	"github.com/origadmin/runtime"
 	systemclient "origadmin/application/admin/api/v1/services/system"
 	confpb "origadmin/application/admin/internal/conf/pb"
-	identitybiz "origadmin/application/admin/internal/features/identity/biz"
-	identitydal "origadmin/application/admin/internal/features/identity/dal"
-	identityserver "origadmin/application/admin/internal/features/identity/server"
-	identityservice "origadmin/application/admin/internal/features/identity/service"
+	"origadmin/application/admin/internal/data"
+	"origadmin/application/admin/internal/features/identity/biz"
+	"origadmin/application/admin/internal/features/identity/dal"
+	"origadmin/application/admin/internal/features/identity/server"
+	"origadmin/application/admin/internal/features/identity/service"
 	"origadmin/application/admin/internal/helpers/grpcclient"
 	"origadmin/application/admin/internal/helpers/providers"
 )
@@ -45,10 +46,11 @@ func wireApp(app *runtime.App, b *confpb.Bootstrap) (*kratos.App, func(), error)
 		providers.ProviderBackendSet,
 
 		// Auth feature module providers
-		identitydal.ProviderSet,
-		identitybiz.ProviderSet,
-		identityservice.ProviderSet,
-		identityserver.ProviderSet,
+		data.ProviderSet,
+		dal.ProviderSet,
+		biz.ProviderSet,
+		service.ProviderSet,
+		server.ProviderSet,
 
 		NewApp,
 	))

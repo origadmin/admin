@@ -21,7 +21,6 @@ import (
 	"github.com/origadmin/toolkits/crypto/hash"
 	hashtypes "github.com/origadmin/toolkits/crypto/hash/types"
 	confpb "origadmin/application/admin/internal/conf/pb"
-	"origadmin/application/admin/internal/data/entity/ent"
 	"origadmin/application/admin/internal/helpers/captcha"
 	"origadmin/application/admin/internal/helpers/debounce"
 	"origadmin/application/admin/internal/helpers/providers/internal/security"
@@ -42,7 +41,6 @@ var ProviderBackendSet = wire.NewSet(
 	wire.Bind(new(authn.Authenticator), new(*jwt.Authenticator)),
 	ProvideAuthorizer,
 	wire.Bind(new(authz.Authorizer), new(*securitycasbin.Authorizer)),
-	ProvideEntDatabase,
 	ProvideDebouncer,
 	ProvideWatcher,
 	ProvidePublisher,
@@ -87,11 +85,6 @@ func ProvideAuthenticator(app *runtime.App) (*jwt.Authenticator, error) {
 func ProvideAuthorizer(app *runtime.App) (*securitycasbin.Authorizer, error) {
 	return comp.GetDefault[*securitycasbin.Authorizer](app.Context(), app.Container().In(CategoryAuthz).WithInTags(
 		FeatureTag))
-}
-
-// ProvideEntDatabase provides the ent database instance from the engine.
-func ProvideEntDatabase(app *runtime.App) (*ent.Database, error) {
-	return comp.GetDefault[*ent.Database](app.Context(), app.Container().In(CategoryEnt))
 }
 
 // ProvideWatcher provides the watcher instance from the engine.

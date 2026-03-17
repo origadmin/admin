@@ -20,7 +20,7 @@ const (
 	CategoryAuthz     component.Category = "authz"
 	CategoryWatcher   component.Category = "watcher"
 	CategoryPublisher component.Category = "publisher"
-	CategoryEnt       component.Category = "ent"
+	CategoryEnt                          = data.CategoryEnt
 )
 
 const (

@@ -17,7 +17,6 @@ import (
 // ProviderSet exports the Migration initializer and its dependencies.
 var ProviderSet = wire.NewSet(
 	NewInitializer,
-	wire.Bind(new(initizertypes.Task), new(*Initializer)),
 )
 
 // Initializer implements the Task interface for database schema migration.

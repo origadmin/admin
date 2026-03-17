@@ -16,22 +16,30 @@ var ProviderSet = wire.NewSet(
 	jobsbroker.ProviderSet,
 	jobsmigration.ProviderSet,
 	jobsseeder.ProviderSet,
+	ProvideTasksSlice,
 	ProvideManager,
 )
+
+// ProvideTasksSlice collects all tasks into a slice.
+// Directly accept concrete types since wire cannot collect multiple implementations of the same interface.
+func ProvideTasksSlice(
+	migrationInit *jobsmigration.Initializer,
+	brokerInit *jobsbroker.Initializer,
+	seederInit *jobsseeder.Initializer,
+) []initizertypes.Task {
+	return []initizertypes.Task{
+		migrationInit,
+		brokerInit,
+		seederInit,
+	}
+}
 
 // ProvideManager provides the Manager with all registered initialization tasks.
 // Tasks will be executed in phase order (Schema -> Infrastructure -> Data -> Finalize),
 // and by priority within each phase.
 func ProvideManager(
 	logger log.Logger,
-	brokerInit initizertypes.Task,
-	migrationInit initizertypes.Task,
-	seederInit initizertypes.Task,
+	tasks []initizertypes.Task,
 ) *Manager {
-	tasks := []initizertypes.Task{
-		migrationInit,
-		brokerInit,
-		seederInit,
-	}
 	return NewManager(tasks, logger)
 }

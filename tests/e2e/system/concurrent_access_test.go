@@ -28,7 +28,7 @@ func TestConcurrentPermissionAccess(t *testing.T) {
 
 	// Find Core Resources (APIs)
 	t.Run("FindResources", func(t *testing.T) {
-		resp := e2e.DoRequest(t, "GET", "/api/v1/sys/resources?page_size=1000", nil, adminToken)
+		resp := e2e.DoRequest(t, "GET", "sys/resources?page_size=1000", nil, adminToken)
 		defer resp.Body.Close()
 		require.Equal(t, http.StatusOK, resp.StatusCode)
 

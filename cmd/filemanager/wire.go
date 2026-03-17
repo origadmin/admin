@@ -10,6 +10,7 @@ import (
 	"github.com/origadmin/runtime"
 	objclient "origadmin/application/admin/api/v1/services/objectstore"
 	confpb "origadmin/application/admin/internal/conf/pb"
+	"origadmin/application/admin/internal/data"
 	"origadmin/application/admin/internal/features/filemanager/biz"
 	"origadmin/application/admin/internal/features/filemanager/dal"
 	"origadmin/application/admin/internal/features/filemanager/server"
@@ -42,13 +43,12 @@ func wireApp(app *runtime.App, b *confpb.Bootstrap) (*kratos.App, func(), error)
 		// Clients
 		NewObjectStoreServiceClient,
 
-		// Server
-		server.ProviderSet,
-
 		// FileManager Feature
+		data.ProviderSet,
 		biz.ProviderSet,
 		dal.ProviderSet,
 		service.ProviderSet,
+		server.ProviderSet,
 
 		NewApp,
 	))

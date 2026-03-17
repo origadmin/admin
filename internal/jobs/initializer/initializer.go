@@ -35,35 +35,23 @@ func NewManager(tasks []initizertypes.Task, logger log.Logger) *Manager {
 func (m *Manager) Init(ctx context.Context) error {
 	m.log.Info("Starting layered initialization...")
 
-	// Group tasks by phase
-	phases := make(map[initizertypes.Phase][]initizertypes.Task)
-	for _, task := range m.tasks {
-		phases[task.Phase()] = append(phases[task.Phase()], task)
-	}
+	// Create a copy to avoid modifying the original slice
+	tasks := make([]initizertypes.Task, len(m.tasks))
+	copy(tasks, m.tasks)
 
-	// Get sorted phase list
-	sortedPhases := make([]initizertypes.Phase, 0, len(phases))
-	for phase := range phases {
-		sortedPhases = append(sortedPhases, phase)
-	}
-	sort.Slice(sortedPhases, func(i, j int) bool {
-		return sortedPhases[i] < sortedPhases[j]
+	// Sort all tasks by phase first, then by priority (both descending)
+	sort.Slice(tasks, func(i, j int) bool {
+		if tasks[i].Phase() != tasks[j].Phase() {
+			return tasks[i].Phase() < tasks[j].Phase() // Lower phase first
+		}
+		return tasks[i].Priority() > tasks[j].Priority() // Higher priority first
 	})
 
-	// Execute tasks in phase order
-	for _, phase := range sortedPhases {
-		tasksInPhase := phases[phase]
-		// Sort tasks by priority (higher first)
-		sort.Slice(tasksInPhase, func(i, j int) bool {
-			return tasksInPhase[i].Priority() > tasksInPhase[j].Priority()
-		})
-
-		m.log.Infof("Executing Phase %d with %d tasks...", phase, len(tasksInPhase))
-		for _, task := range tasksInPhase {
-			m.log.Infof("Executing task: %s (Phase: %d, Priority: %d)", task.Name(), task.Phase(), task.Priority())
-			if err := task.Init(ctx); err != nil {
-				return fmt.Errorf("task '%s' failed: %w", task.Name(), err)
-			}
+	// Execute tasks in sorted order
+	for _, task := range tasks {
+		m.log.Infof("Executing task: %s (Phase: %d, Priority: %d)", task.Name(), task.Phase(), task.Priority())
+		if err := task.Init(ctx); err != nil {
+			return fmt.Errorf("task '%s' failed: %w", task.Name(), err)
 		}
 	}
 

@@ -8,6 +8,7 @@ import (
 
 	"github.com/origadmin/runtime"
 	confpb "origadmin/application/admin/internal/conf/pb"
+	"origadmin/application/admin/internal/data"
 	"origadmin/application/admin/internal/features/system/biz"
 	"origadmin/application/admin/internal/features/system/dal"
 	"origadmin/application/admin/internal/helpers/providers"
@@ -21,6 +22,7 @@ func wireApp(rt *runtime.App, b *confpb.Bootstrap) (*initializer.Manager, func()
 		providers.ProviderBackendSet,
 
 		// Add providers from the 'system' feature, which are required by the seeder.
+		data.ProviderSet,
 		dal.ProviderSet,
 		biz.ProviderSet,
 

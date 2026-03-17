@@ -14,21 +14,20 @@ import (
 	initizertypes "origadmin/application/admin/internal/jobs/initializer/types"
 )
 
-// ProviderSet exports the Seeder initializer and its dependencies.
+// ProviderSet exports the TaskSeeder initializer and its dependencies.
 var ProviderSet = wire.NewSet(
 	taskseeder.ProviderSet, // Include the actual task implementation
 	NewInitializer,
-	wire.Bind(new(initizertypes.Task), new(*Initializer)),
 )
 
 // Initializer implements the Task interface for data seeding.
 type Initializer struct {
-	seeder *taskseeder.Seeder
+	seeder *taskseeder.TaskSeeder
 	log    *log.Helper
 }
 
 // NewInitializer creates a new DataSeederInitializer.
-func NewInitializer(s *taskseeder.Seeder, logger log.Logger) *Initializer {
+func NewInitializer(s *taskseeder.TaskSeeder, logger log.Logger) *Initializer {
 	return &Initializer{
 		seeder: s,
 		log:    log.NewHelper(log.With(logger, "module", "initializer.data_seeder")),
@@ -50,7 +49,7 @@ func (d *Initializer) Priority() int {
 	return 100
 }
 
-// Init executes the data seeding logic by calling the Seeder's Run method.
+// Init executes the data seeding logic by calling the TaskSeeder's Run method.
 func (d *Initializer) Init(ctx context.Context) error {
 	d.log.Info("Starting data seeding initialization...")
 	if err := d.seeder.Run(); err != nil {

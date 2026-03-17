@@ -15,16 +15,22 @@ import (
 	"github.com/google/wire"
 
 	"github.com/origadmin/runtime"
+	"github.com/origadmin/runtime/contracts/component"
 	"github.com/origadmin/runtime/helpers/comp"
 	"github.com/origadmin/runtime/log"
 	"origadmin/application/admin/internal/data/entity/ent"
 	"origadmin/application/admin/internal/data/entity/ent/user"
 )
 
+const (
+	CategoryEnt component.Category = "ent"
+)
+
 // ProviderSet is data providers.
 var ProviderSet = wire.NewSet(
-	NewData,
-	NewAdapter,
+	//NewData,
+	//NewAdapter,
+	NewDatabase,
 )
 
 // systemUserID holds the ID of the system user. It is 0 if no system user is found.
@@ -77,7 +83,7 @@ type Data struct {
 // NewDatabase extracts the initialized *ent.Database from the runtime container
 // and performs business-level initialization (System User caching).
 func NewDatabase(app *runtime.App) (*ent.Database, func(), error) {
-	db, err := comp.GetDefault[*ent.Database](app.Context(), app.Container().In("infrastructure/ent"))
+	db, err := comp.GetDefault[*ent.Database](app.Context(), app.Container().In(CategoryEnt))
 	if err != nil {
 		return nil, nil, err
 	}

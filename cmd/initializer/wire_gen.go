@@ -9,14 +9,15 @@ package main
 import (
 	"github.com/origadmin/runtime"
 	"origadmin/application/admin/internal/conf/pb"
+	"origadmin/application/admin/internal/data"
 	"origadmin/application/admin/internal/features/system/biz"
 	"origadmin/application/admin/internal/features/system/dal"
 	"origadmin/application/admin/internal/helpers/providers"
 	"origadmin/application/admin/internal/jobs/initializer"
 	"origadmin/application/admin/internal/jobs/initializer/broker"
 	"origadmin/application/admin/internal/jobs/initializer/migration"
-	"origadmin/application/admin/internal/jobs/initializer/seeder"
-	tasksseeder "origadmin/application/admin/internal/jobs/tasks/seeder"
+	seeder2 "origadmin/application/admin/internal/jobs/initializer/seeder"
+	"origadmin/application/admin/internal/jobs/tasks/seeder"
 )
 
 import (
@@ -35,12 +36,12 @@ import (
 // wireApp init the initializer service.
 func wireApp(rt *runtime.App, b *confpb.Bootstrap) (*initializer.Manager, func(), error) {
 	v := providers.ProvideLogger(rt)
-	brokerInitializer := broker.NewInitializer(b, v)
-	database, err := providers.ProvideEntDatabase(rt)
+	database, cleanup, err := data.NewDatabase(rt)
 	if err != nil {
 		return nil, nil, err
 	}
 	migrationInitializer := migration.NewInitializer(database, v)
+	brokerInitializer := broker.NewInitializer(b, v)
 	userRepo := dal.NewUserRepo(database, v)
 	userUseCase := biz.NewUserUseCase(userRepo, v)
 	resourceRepo := dal.NewResourceRepo(database, v)
@@ -49,14 +50,18 @@ func wireApp(rt *runtime.App, b *confpb.Bootstrap) (*initializer.Manager, func()
 	viewUseCase := biz.NewViewUseCase(viewRepo)
 	crypto, err := providers.ProvideHasher()
 	if err != nil {
+		cleanup()
 		return nil, nil, err
 	}
-	seeder2, err := tasksseeder.NewSeeder(userUseCase, resourceUseCase, viewUseCase, crypto, b, v)
+	taskSeeder, err := seeder.NewTaskSeeder(userUseCase, resourceUseCase, viewUseCase, crypto, b, v)
 	if err != nil {
+		cleanup()
 		return nil, nil, err
 	}
-	seederInitializer := seeder.NewInitializer(seeder2, v)
-	initializerManager := initializer.ProvideManager(v, brokerInitializer, migrationInitializer, seederInitializer)
-	return initializerManager, func() {
+	seederInitializer := seeder2.NewInitializer(taskSeeder, v)
+	v2 := initializer.ProvideTasksSlice(migrationInitializer, brokerInitializer, seederInitializer)
+	manager := initializer.ProvideManager(v, v2)
+	return manager, func() {
+		cleanup()
 	}, nil
 }
