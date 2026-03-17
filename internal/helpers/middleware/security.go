@@ -30,9 +30,9 @@ var (
 )
 
 const (
-	PolicyNamePublic  = "public"
-	PolicyNameAuthN   = "authn"
-	NameCaptcha       = "captcha"
+	PolicyNamePublic = "public"
+	PolicyNameAuthN  = "authn"
+
 	NameCasbinAdapter = "casbin-adapter"
 )
 
@@ -58,32 +58,6 @@ func RegisterFilterPolicies() {
 			backendSkipMap[p.ServiceMethod] = struct{}{}
 		}
 	}
-}
-
-// NewCaptcha is the engine provider for *captcha.Captcha.
-func NewCaptcha(ctx context.Context, h component.Handle) (any, error) {
-	cfg, err := comp.AsConfig[confpb.Captcha](h)
-	if err != nil {
-		return nil, err
-	}
-
-	cacheName := cfg.GetCacheName()
-	l := h.Locator().In(runtime.CategoryCache)
-
-	cache, err := comp.Get[storageiface.Cache](ctx, l, cacheName)
-	if err != nil || cache == nil {
-		cache, err = comp.GetDefault[storageiface.Cache](ctx, l)
-	}
-
-	if err != nil || cache == nil {
-		return nil, fmt.Errorf("engine: failed to resolve any cache for captcha (requested: %s)", cacheName)
-	}
-
-	c := &captcha.Config{
-		Store:   captcha.NewStore(cache),
-		Captcha: cfg,
-	}
-	return captcha.NewCaptcha(c), nil
 }
 
 // GatewaySkipperProvider creates the gateway skipper.
@@ -113,21 +87,6 @@ func BackendSkipperProvider(ctx context.Context, h component.Handle) (any, error
 		return ok
 	}
 	return skip.Composite(adminSkipper, pathSkipper), nil
-}
-
-func CaptchaResolver(ctx context.Context, source any, opts *component.LoadOptions) (*component.ModuleConfig, error) {
-	v, ok := source.(*confpb.Bootstrap)
-	if !ok {
-		return nil, fmt.Errorf("source is not a *confpb.Bootstrap")
-	}
-	return &component.ModuleConfig{
-		Entries: []component.ConfigEntry{
-			{
-				Name:  NameCaptcha,
-				Value: v.GetCaptcha(),
-			},
-		},
-	}, nil
 }
 
 func AuthzRequirementResolver(ctx context.Context, h component.Handle, purpose string) (any, error) {

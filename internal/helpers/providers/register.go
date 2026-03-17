@@ -9,6 +9,7 @@ import (
 	"github.com/origadmin/runtime"
 	"github.com/origadmin/runtime/contracts/component"
 	"origadmin/application/admin/internal/data"
+	"origadmin/application/admin/internal/helpers/captcha"
 	"origadmin/application/admin/internal/helpers/debounce"
 	"origadmin/application/admin/internal/helpers/middleware"
 	"origadmin/application/admin/internal/helpers/pubsub"
@@ -42,14 +43,14 @@ func init() {
 }
 
 func registerInfrastructure() {
+	// Register Ent Database
+	runtime.Register(CategoryEnt, data.NewEnt,
+		runtime.WithResolver(data.EntResolver))
+
 	// Register Authn
 	runtime.Register(CategoryAuthn, jwt.Provider,
 		runtime.WithResolver(authn.ConfigResolver),
 	)
-
-	// Register Ent Database
-	runtime.Register(CategoryEnt, data.NewEnt,
-		runtime.WithResolver(data.EntResolver))
 
 	// Register Casbin Adapter
 	runtime.Register(runtime.CategoryStorage, data.CasbinAdapterProvider,
@@ -62,7 +63,7 @@ func registerInfrastructure() {
 	)
 
 	// Register Captcha
-	runtime.Register(runtime.CategorySecurity, middleware.NewCaptcha, runtime.WithResolver(middleware.CaptchaResolver))
+	runtime.Register(runtime.CategorySecurity, captcha.NewCaptchaHandle, runtime.WithResolver(captcha.Resolver))
 
 	// Register NATS Publisher
 	runtime.Register(CategoryPublisher, pubsub.NewPublisherHandle, runtime.WithResolver(pubsub.Resolver))
